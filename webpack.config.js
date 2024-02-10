@@ -1,0 +1,127 @@
+const dotenv = require('dotenv').config();
+const path = require('path');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+
+module.exports = (env, argv) => {
+	let upstream = '';
+	if (env.WEBPACK_SERVE) {
+		if ((dotenv.error || !dotenv.parsed.upstream) && !env.upstream) {
+			console.log('Missing options:\n');
+			return false;
+		}
+		
+		if (env.upstream) {
+			upstream = env.upstream;
+		} else if (!dotenv.error && dotenv.parsed.upstream) {
+			upstream = dotenv.parsed.upstream;
+		}
+	}
+		
+	return {
+		devtool: (argv.mode === 'production' ? 'source-map' : 'eval'),
+		devServer: {
+			server: 'https',
+			port: 443,
+			compress: true,
+			historyApiFallback: true,
+			open: true,
+			hot: false,
+			devMiddleware: {
+				writeToDisk: true
+			},
+			client: {
+				overlay: false,
+				progress: false,
+				reconnect: true
+			},
+			static: {
+				directory: './dist',
+				publicPath: '/'
+			}
+		},
+		entry: {
+			app: './src/index.js'
+		},
+		output: {
+			publicPath: '/',
+			path: path.resolve(__dirname, 'dist'),
+			filename: 'assets/js/[name].[fullhash].js',
+			chunkFilename: 'assets/js/[name].[chunkhash].js',
+			// assetModuleFilename: 'assets/img/[name].[hash].[ext][query]',
+			clean: true
+		},
+		plugins: [
+			new webpack.ProvidePlugin({
+				'_': 'lodash',
+				'popper': '@popperjs/core',
+				'bootstrap': 'bootstrap'
+			}),
+			new HtmlWebpackPlugin({
+				minify: false,
+				scriptLoading: 'defer',
+				inject: true,
+				chunks: ['app'],
+				filename: path.resolve(__dirname, './dist/index.html'),
+				template: './src/index.html'
+			}),
+			new MiniCssExtractPlugin({
+				filename: 'assets/css/[name].[contenthash].css',
+				chunkFilename: 'assets/css/[name].[contenthash].css',
+			}),
+			new CopyWebpackPlugin({'patterns': [
+				{ from: './src/img', to: 'assets/img' }
+			]})
+		],
+		externals: {
+			window: 'window',
+			document: 'document'
+		},
+		module: {
+			rules: [
+				{
+					test: /\.js$/,
+					include: path.resolve(__dirname, 'src'),
+					use: {
+						loader: 'babel-loader'
+					}
+				},
+				{
+					test: /\.(sa|sc|c)ss$/,
+					use: [
+						MiniCssExtractPlugin.loader,
+						'css-loader',
+						'postcss-loader',
+						'sass-loader'
+					]
+				},
+				{
+					test: /\.svg$/,
+					include: path.resolve(__dirname, 'src/img/weather'),
+					use: {
+						loader: 'raw-loader'
+					}
+				}
+			]
+		},
+		optimization: {
+			minimize: true,
+			runtimeChunk: 'single',
+			splitChunks: {
+				cacheGroups: {
+					vendor: {
+						test: /[\\/]node_modules[\\/]/,
+						name: 'vendors',
+						chunks: 'all'
+					}
+				}
+			},
+			minimizer: [
+				new CssMinimizerPlugin()
+			]
+		}
+	}
+};
