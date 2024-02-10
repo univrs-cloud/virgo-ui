@@ -20,7 +20,7 @@ fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${l
 		let weather = weatherCondition(data.current_weather.weathercode, timeOfDay);
 		document.querySelector('#weather .icon').innerHTML = weather.icon
 		document.querySelector('#weather .condition').innerHTML = _.capitalize(weather.condition);
-		document.querySelector('#weather .temperature').innerHTML = `${data.current_weather.temperature} ${data.current_weather_units.temperature}`;
+		document.querySelector('#weather .temperature').innerHTML = `${data.current_weather.temperature.toFixed(0)} ${data.current_weather_units.temperature}`;
 	})
 	.catch((error) => {
 		console.log(error);
