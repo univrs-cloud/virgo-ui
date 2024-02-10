@@ -1,0 +1,32 @@
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+	transition: background-color 600000s 0s, color 600000s 0s;
+}
+
+.invalid-feedback {
+	padding: 0 0.75rem;
+}
+
+.form-floating {
+	&:not(.form-control:disabled)::before {
+		display: none;
+	}
+	label {
+		transition: transform .1s ease-in-out;
+	}
+	.form-control {
+		&:focus::placeholder {
+			color: revert;
+		}
+		&:not(:placeholder-shown) ~ label {
+			opacity: 1;
+			height: auto;
+			color: rgba(33, 37, 41, 0.65);
+			background-color: $white;
+			padding-top: 0.4rem;
+			padding-bottom: 0;
+			margin-top: 0.5rem;
+			border-radius: $input-border-radius;
+		}
+	}
+}
