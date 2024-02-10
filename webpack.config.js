@@ -5,6 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = (env, argv) => {
 	let upstream = '';
@@ -55,6 +56,7 @@ module.exports = (env, argv) => {
 			clean: true
 		},
 		plugins: [
+			new CleanWebpackPlugin(),
 			new webpack.ProvidePlugin({
 				'_': 'lodash',
 				'popper': '@popperjs/core',
