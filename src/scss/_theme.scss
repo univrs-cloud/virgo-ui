@@ -87,10 +87,6 @@ img {
 	background: transparent;
 	margin-bottom: 1rem;
 }
-.card-body > hr {
-	margin-top: 0.5rem;
-	margin-bottom: 1.75rem;
-}
 .item {
 	.card:hover {
 		.dropdown {
@@ -103,11 +99,14 @@ img {
 		max-height: 35px;
 	}
 	.indicator {
+		z-index: 1;
 		position: absolute;
 		top: 0.45rem;
 		right: -0.65rem;
 	}
 	.dropdown {
+		position: relative;
+		z-index: 2;
 		display: none;
 	}
 }
