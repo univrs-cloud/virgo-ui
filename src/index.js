@@ -1,6 +1,10 @@
 import './index.scss';
 import weatherCondition from './js/openmeteo_condition';
 import networkUsage from './js/network_usage';
+import { categories, configuration } from './js/configuration';
+import categoryPartial from './partials/category.html';
+import servicePartial from './partials/service.html';
+import bookmarkPartial from './partials/bookmark.html';
 
 bootstrap.Tooltip.Default.container = 'body';
 bootstrap.Tooltip.Default.html = true;
@@ -34,3 +38,21 @@ setInterval(() => {
 	];
 	networkUsage.updateSeries(data);
 }, 2000);
+
+let container = document.querySelector('main > .container > .row');
+_.each(categories, (cat) => {
+	let collection = _.filter(configuration, { category: cat.id });
+	container.insertAdjacentHTML('beforeend', categoryPartial);
+	let category = container.querySelector('.item:last-child');
+	category.querySelector('h5').innerHTML = cat.name;
+	_.each(collection, (entity) => {
+		if (entity.type === 'service') {
+			let template = _.template(servicePartial);
+			category.insertAdjacentHTML('beforeend', template({ service: entity }));
+		}
+		if (entity.type === 'bookmark') {
+			let template = _.template(bookmarkPartial);
+			category.insertAdjacentHTML('beforeend', template({ bookmark: entity }));
+		}
+	});
+});

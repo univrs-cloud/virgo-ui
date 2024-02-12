@@ -101,6 +101,12 @@ module.exports = (env, argv) => {
 					]
 				},
 				{
+					test: /\.html$/,
+					use: {
+						loader: 'raw-loader'
+					}
+				},
+				{
 					test: /\.svg$/,
 					include: path.resolve(__dirname, 'src/img/weather'),
 					use: {

@@ -1,0 +1,31 @@
+<div class="card text-bg-light rounded-4 border-0">
+	<div class="row g-0 align-items-center">
+		<div class="col-2 p-2">
+			<img src="<%=service.icon%>" class="card-image">
+		</div>
+		<div class="col">
+			<div class="card-body ps-0">
+				<%=service.name%>
+				<%if (service.canBeRemoved) {%>
+					<div class="dropdown float-end">
+						<span type="button" data-bs-toggle="dropdown" class="btn btn-sm mt-n1">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 512" class="fa"><path fill="var(--bs-secondary)" d="M64 360a56 56 0 1 0 0 112 56 56 0 1 0 0-112zm0-160a56 56 0 1 0 0 112 56 56 0 1 0 0-112zM120 96A56 56 0 1 0 8 96a56 56 0 1 0 112 0z"/></svg>
+						</span>
+						<ul class="dropdown-menu">
+							<li><a href="#" class="dropdown-item <%=(service.status === 'running' ? 'disabled' : '')%>">Start</a></li>
+							<li><hr class="dropdown-divider"></li>
+							<li><a href="#" class="dropdown-item <%=(service.status === 'running' ? 'text-danger' : 'disabled')%>">Stop</a></li>
+							<li><a href="#" class="dropdown-item <%=(service.status === 'running' ? 'text-danger' : 'disabled')%>">Kill</a></li>
+							<li><a href="#" class="dropdown-item <%=(service.status === 'running' ? 'text-danger' : 'disabled')%>">Restart</a></li>
+							<li><a href="#" class="dropdown-item <%=(service.canBeRemoved ? 'text-danger' : 'disabled')%>">Remove</a></li>
+						</ul>
+					</div>
+				<%}%>
+			</div>
+		</div>
+	</div>
+	<%if (service.status === 'running' && !_.isEmpty(service.url)) {%>
+		<a href="<%=service.url%>" target="_blank" class="stretched-link"></a>
+	<%}%>
+	<span class="indicator translate-middle p-2 border border-light rounded-circle <%=(service.status === 'running' ? 'bg-green-300' : 'bg-red-300')%>"></span>
+</div>
