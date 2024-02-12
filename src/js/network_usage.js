@@ -67,6 +67,10 @@ const updateSeries = (data) => {
 	cleanupSeries();
 };
 
-export default {
-	updateSeries
-};
+setInterval(() => {
+	let data = [
+		Math.floor(Math.random() * 101),
+		Math.floor(Math.random() * 101)
+	];
+	updateSeries(data);
+}, 2000);

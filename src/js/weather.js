@@ -286,10 +286,29 @@ const conditions = [
 	}
 ];
 
-export default function weatherCondition(weatherStatusCode, timeOfDay) {
+const weatherCondition = (weatherStatusCode, timeOfDay) => {
 	const mapping = conditions.find((condition) => { return condition.code === weatherStatusCode; });
 	return {
 		icon: mapping.icon[timeOfDay],
 		condition: wmo[`${weatherStatusCode}-${timeOfDay}`]
    };
 };
+
+const latitude = '45.749';
+const longitude = '21.227';
+const timezeone = 'Europe/Bucharest';
+
+fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=sunrise,sunset&current_weather=true&temperature_unit=celsius&timezone=${timezeone}`)
+	.then((response) => {
+		return response.json();
+	})
+	.then((data) => {
+		let timeOfDay = (data.current_weather.time > data.daily.sunrise[0] && data.current_weather.time < data.daily.sunset[0] ? 'day' : 'night');
+		let weather = weatherCondition(data.current_weather.weathercode, timeOfDay);
+		document.querySelector('#weather .icon').innerHTML = weather.icon
+		document.querySelector('#weather .condition').innerHTML = _.capitalize(weather.condition);
+		document.querySelector('#weather .temperature').innerHTML = `${data.current_weather.temperature.toFixed(0)} ${data.current_weather_units.temperature}`;
+	})
+	.catch((error) => {
+		console.log(error);
+	});

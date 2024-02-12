@@ -1,58 +1,11 @@
 import './index.scss';
-import weatherCondition from './js/openmeteo_condition';
-import networkUsage from './js/network_usage';
-import { categories, configuration } from './js/configuration';
-import categoryPartial from './partials/category.html';
-import servicePartial from './partials/service.html';
-import bookmarkPartial from './partials/bookmark.html';
+import './js/weather';
+import './js/network_usage';
+import './js/services_bookmarks';
 
 bootstrap.Tooltip.Default.container = 'body';
 bootstrap.Tooltip.Default.html = true;
 bootstrap.Tooltip.Default.sanitize = false;
 _.each(document.querySelectorAll('[data-bs-toggle="tooltip"]'), (element) => {
 	new bootstrap.Tooltip(element);
-});
-
-let latitude = '45.749';
-let longitude = '21.227';
-let timezeone = 'Europe/Bucharest';
-fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=sunrise,sunset&current_weather=true&temperature_unit=celsius&timezone=${timezeone}`)
-	.then((response) => {
-		return response.json();
-	})
-	.then((data) => {
-		let timeOfDay = (data.current_weather.time > data.daily.sunrise[0] && data.current_weather.time < data.daily.sunset[0] ? 'day' : 'night');
-		let weather = weatherCondition(data.current_weather.weathercode, timeOfDay);
-		document.querySelector('#weather .icon').innerHTML = weather.icon
-		document.querySelector('#weather .condition').innerHTML = _.capitalize(weather.condition);
-		document.querySelector('#weather .temperature').innerHTML = `${data.current_weather.temperature.toFixed(0)} ${data.current_weather_units.temperature}`;
-	})
-	.catch((error) => {
-		console.log(error);
-	});
-
-setInterval(() => {
-	let data = [
-		Math.floor(Math.random() * 101),
-		Math.floor(Math.random() * 101)
-	];
-	networkUsage.updateSeries(data);
-}, 2000);
-
-let container = document.querySelector('main > .container > .row');
-_.each(categories, (cat) => {
-	let collection = _.filter(configuration, { category: cat.id });
-	container.insertAdjacentHTML('beforeend', categoryPartial);
-	let category = container.querySelector('.item:last-child');
-	category.querySelector('h5').innerHTML = cat.name;
-	_.each(collection, (entity) => {
-		if (entity.type === 'service') {
-			let template = _.template(servicePartial);
-			category.insertAdjacentHTML('beforeend', template({ service: entity }));
-		}
-		if (entity.type === 'bookmark') {
-			let template = _.template(bookmarkPartial);
-			category.insertAdjacentHTML('beforeend', template({ bookmark: entity }));
-		}
-	});
 });
