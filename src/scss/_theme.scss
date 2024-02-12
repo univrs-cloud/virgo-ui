@@ -80,11 +80,11 @@ img {
 }
 
 .card {
-	background: transparent;
 	margin-bottom: 1rem;
 }
 .item {
 	.card:hover {
+		background: var(--bs-white) !important;
 		.dropdown {
 			display: block;
 		}
