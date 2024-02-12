@@ -1,5 +1,6 @@
 import './index.scss';
-import weatherCondition from './js/openmeteo-condition-map';
+import weatherCondition from './js/openmeteo_condition';
+import networkUsage from './js/network_usage';
 
 bootstrap.Tooltip.Default.container = 'body';
 bootstrap.Tooltip.Default.html = true;
@@ -25,3 +26,11 @@ fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${l
 	.catch((error) => {
 		console.log(error);
 	});
+
+setInterval(() => {
+	let data = [
+		Math.floor(Math.random() * 101),
+		Math.floor(Math.random() * 101)
+	];
+	networkUsage.updateSeries(data);
+}, 2000);

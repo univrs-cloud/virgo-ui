@@ -292,4 +292,4 @@ export default function weatherCondition(weatherStatusCode, timeOfDay) {
 		icon: mapping.icon[timeOfDay],
 		condition: wmo[`${weatherStatusCode}-${timeOfDay}`]
    };
-}
+};
