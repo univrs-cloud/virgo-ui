@@ -55,7 +55,7 @@ const render = (state) => {
 			}
 		}
 	);
-	networkUsage.render(_.find(state.network, { iface: 'wlan0' }));
+	networkUsage.render(_.first(state.network));
 };
 
 fetchStats();
