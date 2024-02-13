@@ -1,3 +1,5 @@
+import weatherPartial from '../partials/weather.html';
+
 // see https://open-meteo.com/en/docs
 
 import iconClearDay from '../img/weather/clear-day.svg';
@@ -297,18 +299,42 @@ const weatherCondition = (weatherStatusCode, timeOfDay) => {
 const latitude = '45.749';
 const longitude = '21.227';
 const timezeone = 'Europe/Bucharest';
+let fetchRetries = 5;
+let fetchDelay = 60000;
 
-fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=sunrise,sunset&current_weather=true&temperature_unit=celsius&timezone=${timezeone}`)
-	.then((response) => {
-		return response.json();
-	})
-	.then((data) => {
-		let timeOfDay = (data.current_weather.time > data.daily.sunrise[0] && data.current_weather.time < data.daily.sunset[0] ? 'day' : 'night');
-		let weather = weatherCondition(data.current_weather.weathercode, timeOfDay);
-		document.querySelector('#weather .icon').innerHTML = weather.icon
-		document.querySelector('#weather .condition').innerHTML = _.capitalize(weather.condition);
-		document.querySelector('#weather .temperature').innerHTML = `${data.current_weather.temperature.toFixed(0)} ${data.current_weather_units.temperature}`;
-	})
-	.catch((error) => {
-		console.log(error);
-	});
+const fetchWeather = () => {
+	fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=sunrise,sunset&current_weather=true&temperature_unit=celsius&timezone=${timezeone}`)
+		.then((response) => {
+			if (response.ok) {
+				return response.json();
+			}
+			return Promise.reject(response);
+		})
+		.then((data) => {
+			fetchRetries = 5;
+			fetchDelay = 60000;
+			render(data);
+		})
+		.catch((error) => {
+			console.log('error:', error);
+			fetchRetries--;
+			fetchDelay = 1000;
+		})
+		.then(() => {
+			if (fetchRetries > 0) {
+				setTimeout(() => {
+					fetchWeather();
+				}, fetchDelay);
+			}
+		});
+};
+
+const render = (state) => {
+	const template = _.template(weatherPartial);
+	let timeOfDay = (state.current_weather.time > state.daily.sunrise[0] && state.current_weather.time < state.daily.sunset[0] ? 'day' : 'night');
+	let weather = weatherCondition(state.current_weather.weathercode, timeOfDay);
+	weather.temperature = `${state.current_weather.temperature.toFixed(0)} ${state.current_weather_units.temperature}`;
+	morphdom(document.querySelector('#weather'), template({ weather }));
+};
+
+fetchWeather();

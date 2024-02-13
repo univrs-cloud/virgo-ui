@@ -60,7 +60,8 @@ module.exports = (env, argv) => {
 			new webpack.ProvidePlugin({
 				'_': 'lodash',
 				'popper': '@popperjs/core',
-				'bootstrap': 'bootstrap'
+				'bootstrap': 'bootstrap',
+				'morphdom': ['morphdom', 'default']
 			}),
 			new HtmlWebpackPlugin({
 				minify: false,

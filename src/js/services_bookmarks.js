@@ -19,6 +19,7 @@ const categories = [
 
 const configuration = [
 	{
+		id: 'nextcloud',
 		type: 'service',
 		canBeRemoved: true,
 		status: 'running',
@@ -28,6 +29,7 @@ const configuration = [
 		url: 'https://nextcloud.origin.univrs.cloud'
 	},
 	{
+		id: 'qbittorrent',
 		type: 'service',
 		canBeRemoved: true,
 		status: 'running',
@@ -37,6 +39,7 @@ const configuration = [
 		url: 'https://torrent.origin.univrs.cloud'
 	},
 	{
+		id: 'wetty',
 		type: 'service',
 		canBeRemoved: true,
 		status: 'running',
@@ -46,6 +49,7 @@ const configuration = [
 		url: 'https://terminal.origin.univrs.cloud/wetty'
 	},
 	{
+		id: 'pihole',
 		type: 'service',
 		canBeRemoved: true,
 		status: 'running',
@@ -55,6 +59,7 @@ const configuration = [
 		url: 'https://pihole.origin.univrs.cloud/admin/'
 	},
 	{
+		id: 'wireguard',
 		type: 'service',
 		canBeRemoved: true,
 		status: 'running',
@@ -64,6 +69,7 @@ const configuration = [
 		url: 'https://vpn.origin.univrs.cloud'
 	},
 	{
+		id: 'nginx-proxy-manager',
 		type: 'service',
 		canBeRemoved: true,
 		status: 'running',
@@ -73,6 +79,7 @@ const configuration = [
 		url: 'https://proxy.origin.univrs.cloud'
 	},
 	{
+		id: 'ddclient',
 		type: 'service',
 		canBeRemoved: true,
 		status: 'exited',
@@ -82,6 +89,7 @@ const configuration = [
 		url: ''
 	},
 	{
+		id: 'dream-machine-pro',
 		type: 'bookmark',
 		canBeRemoved: true,
 		status: 'running',
@@ -91,6 +99,7 @@ const configuration = [
 		url: 'https://192.168.100.1'
 	},
 	{
+		id: 'portainer',
 		type: 'service',
 		canBeRemoved: false,
 		status: 'running',
@@ -100,6 +109,7 @@ const configuration = [
 		url: 'https://portainer.origin.univrs.cloud'
 	},
 	{
+		id: 'authelia',
 		type: 'service',
 		canBeRemoved: true,
 		status: 'running',
@@ -109,6 +119,7 @@ const configuration = [
 		url: 'https://auth.origin.univrs.cloud'
 	},
 	{
+		id: 'watchtower',
 		type: 'service',
 		canBeRemoved: true,
 		status: 'running',
@@ -122,16 +133,15 @@ const configuration = [
 let container = document.querySelector('main > .container > .row');
 _.each(categories, (cat) => {
 	let collection = _.filter(configuration, { category: cat.id });
-	container.insertAdjacentHTML('beforeend', categoryPartial);
+	container.insertAdjacentHTML('beforeend', _.template(categoryPartial)({ name: cat.name }));
 	let category = container.querySelector('.item:last-child');
-	category.querySelector('h5').innerHTML = cat.name;
 	_.each(collection, (entity) => {
 		if (entity.type === 'service') {
-			let template = _.template(servicePartial);
+			const template = _.template(servicePartial);
 			category.insertAdjacentHTML('beforeend', template({ service: entity }));
 		}
 		if (entity.type === 'bookmark') {
-			let template = _.template(bookmarkPartial);
+			const template = _.template(bookmarkPartial);
 			category.insertAdjacentHTML('beforeend', template({ bookmark: entity }));
 		}
 	});
