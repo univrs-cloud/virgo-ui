@@ -1,10 +1,16 @@
 {
-	"name": "virgo",
+	"name": "virgo-ui",
+	"description": "virgo UI",
 	"version": "1.0.0",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"build": "webpack --mode production",
 		"serve": "webpack serve --mode development --env=upstream=$npm_config_upstream"
+	},
+	"node_deb": {
+		"init": "none",
+		"version": "1.0.0",
+		"install_dir": "/var/www"
 	},
 	"engines": {
 		"node": ">=20.11.0",
