@@ -70,7 +70,8 @@ module.exports = (env, argv) => {
 				'_': 'lodash',
 				'popper': '@popperjs/core',
 				'bootstrap': 'bootstrap',
-				'morphdom': ['morphdom', 'default']
+				'morphdom': ['morphdom', 'default'],
+				'prettyBytes': [path.join(__dirname, 'node_modules/pretty-bytes/index.js'), 'default']
 			}),
 			new HtmlWebpackPlugin({
 				minify: false,

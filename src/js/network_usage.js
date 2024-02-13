@@ -1,5 +1,4 @@
 import ApexCharts from 'apexcharts';
-import prettyBytes from 'pretty-bytes';
 
 let rendered = false;
 let chart = null;

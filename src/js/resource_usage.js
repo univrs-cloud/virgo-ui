@@ -1,6 +1,5 @@
 import resourceUsagePartial from '../partials/resource_usage.html';
 import * as networkUsage from './network_usage';
-import prettyBytes from 'pretty-bytes';
 
 let fetchRetries = 5;
 let fetchDelay = 2000;
@@ -45,7 +44,7 @@ const render = (state) => {
 	const template = _.template(resourceUsagePartial);
 	morphdom(
 		document.querySelector('#resource-usage'),
-		template({ ...state, prettyBytes: prettyBytes }),
+		template({ ...state, prettyBytes }),
 		{
 			onBeforeElUpdated: (fromEl, toEl) => {
 				if (fromEl.classList.contains('network-chart')) {
