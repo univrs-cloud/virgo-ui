@@ -1,5 +1,8 @@
 import ApexCharts from 'apexcharts';
+import prettyBytes from 'pretty-bytes';
 
+let rendered = false;
+let chart = null;
 let series = [
 	{
 		name: 'RX',
@@ -10,45 +13,6 @@ let series = [
 		data: Array.from({ length: 20 }, () => { return 0 })
 	}
 ];
-
-let chart = new ApexCharts(
-	document.querySelector('.chart'),
-	{
-		noData: {
-			text: 'Loading...'
-		},
-		series: series,
-		colors: ['var(--bs-gray-600)', 'var(--bs-gray-400)'],
-		chart: {
-			sparkline: {
-				enabled: true,
-			},
-			type: 'area',
-			width: '100%',
-			height: 100
-		},
-		xaxis: {
-			type: 'numeric',
-			range: 10
-		},
-		yaxis: {
-			max: 130
-		},
-		dataLabels: {
-			enabled: false
-		},
-		stroke: {
-			curve: 'smooth',
-			width: 1
-		},
-		tooltip: {
-			x: {
-				show: false
-			}
-		}
-	}
-);
-chart.render();
 
 const cleanupSeries = () => {
 	if (series[0].data.length < 100) {
@@ -67,10 +31,61 @@ const updateSeries = (data) => {
 	cleanupSeries();
 };
 
-setInterval(() => {
-	let data = [
-		Math.floor(Math.random() * 101),
-		Math.floor(Math.random() * 101)
-	];
-	updateSeries(data);
-}, 2000);
+const render = (iface) => {
+	if (rendered) {
+		updateSeries([
+			iface.rx_sec,
+			iface.tx_sec
+		]);
+		return;
+	}
+
+	chart = new ApexCharts(
+		document.querySelector('#resource-usage .network-chart'),
+		{
+			noData: {
+				text: 'Loading...'
+			},
+			series: series,
+			colors: ['var(--bs-gray-600)', 'var(--bs-gray-400)'],
+			chart: {
+				sparkline: {
+					enabled: true,
+				},
+				type: 'area',
+				width: '100%',
+				height: 100
+			},
+			xaxis: {
+				type: 'numeric',
+				range: 10
+			},
+			yaxis: {
+				// max: 125000000
+			},
+			dataLabels: {
+				enabled: false
+			},
+			stroke: {
+				curve: 'smooth',
+				width: 1
+			},
+			tooltip: {
+				x: {
+					show: false
+				},
+				y: {
+					formatter: (value) => {
+						return `${prettyBytes(value)}/s`;
+					}
+				}
+			}
+		}
+	);
+	chart.render();
+	rendered = true;
+}
+
+export {
+	render
+};

@@ -21,6 +21,7 @@ module.exports = (env, argv) => {
 			upstream = dotenv.parsed.upstream;
 		}
 	}
+	console.log(upstream);
 		
 	return {
 		devtool: (argv.mode === 'production' ? 'source-map' : 'eval'),
@@ -42,7 +43,15 @@ module.exports = (env, argv) => {
 			static: {
 				directory: './dist',
 				publicPath: '/'
-			}
+			},
+			proxy: [
+				{
+					context: ['/api'],
+					secure: false,
+					target: `https://${upstream}/api`,
+					pathRewrite: { '^/api': '' }
+				}
+			]
 		},
 		entry: {
 			app: './src/index.js'

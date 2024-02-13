@@ -1,22 +1,24 @@
 import resourceUsagePartial from '../partials/resource_usage.html';
+import * as networkUsage from './network_usage';
 import prettyBytes from 'pretty-bytes';
-//import './network_usage';
 
 let fetchRetries = 5;
 let fetchDelay = 2000;
 
 const fetchStats = () => {
 	Promise.allSettled([
-		fetch(`https://192.168.100.102:3000/api/3/cpu`),
-		fetch(`https://192.168.100.102:3000/api/3/mem`),
-		fetch(`https://192.168.100.102:3000/api/3/fs`),
-		fetch(`https://192.168.100.102:3000/api/v1/devices/ups`)
+		fetch(`/api/v1/cpu`),
+		fetch(`/api/v1/mem`),
+		fetch(`/api/v1/fs`),
+		fetch(`/api/v1/network`),
+		fetch(`/api/v1/devices/ups`)
 	])
-		.then(async ([responseCpu, responseMemory, responseFilesystem, responseUps]) => {
+		.then(async ([responseCpu, responseMemory, responseFilesystem, responseNetwork, responseUps]) => {
 			return { 
 				cpu: await responseCpu.value.json(),
 				memory: await responseMemory.value.json(),
 				filesystem: await responseFilesystem.value.json(),
+				network: await responseNetwork.value.json(),
 				ups: await responseUps.value.json()
 			};
 		})
@@ -41,7 +43,20 @@ const fetchStats = () => {
 
 const render = (state) => {
 	const template = _.template(resourceUsagePartial);
-	morphdom(document.querySelector('#resource-usage'), template({ ...state, prettyBytes: prettyBytes }));
+	morphdom(
+		document.querySelector('#resource-usage'),
+		template({ ...state, prettyBytes: prettyBytes }),
+		{
+			onBeforeElUpdated: (fromEl, toEl) => {
+				if (fromEl.classList.contains('network-chart')) {
+					return false;
+				}
+
+				return true;
+			}
+		}
+	);
+	networkUsage.render(_.find(state.network, { iface: 'wlan0' }));
 };
 
 fetchStats();
