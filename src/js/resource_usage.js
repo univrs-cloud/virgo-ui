@@ -55,7 +55,7 @@ const render = (state) => {
 			}
 		}
 	);
-	networkUsage.render(_.first(state.network));
+	networkUsage.render(state.network);
 };
 
 fetchStats();

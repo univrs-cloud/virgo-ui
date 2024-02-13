@@ -1,7 +1,6 @@
 <%
 let fsSystem = _.find(filesystem, (fs) => { return fs.mount === '/'; });
 let fsData = _.find(filesystem, (fs) => { return fs.mount === '/messier'; });
-let interface = _.find(network, { iface: 'wlan0' });
 %>
 <div id="resource-usage" class="card text-bg-light rounded-4 border-0">
 	<div class="card-body p-0">
@@ -92,14 +91,14 @@ let interface = _.find(network, { iface: 'wlan0' });
 										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" class="fa"><path fill="var(--bs-gray-600)" d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/></svg>
 										<small>RX:</small>
 									</td>
-									<td><small><%=prettyBytes(interface.rx_sec)%>/s</small></td>
+									<td><small><%=prettyBytes(network.rx_sec)%>/s</small></td>
 								</tr>
 								<tr>
 									<td>
 										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" class="fa"><path fill="var(--bs-gray-400)" d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"/></svg>
 										<small>TX:</small>
 									</td>
-									<td><small><%=prettyBytes(interface.tx_sec)%>/s</small></td>
+									<td><small><%=prettyBytes(network.tx_sec)%>/s</small></td>
 								</tr>
 							</tbody>
 						</table>
