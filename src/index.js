@@ -1,6 +1,6 @@
 import './index.scss';
 import './js/weather';
-import './js/network_usage';
+import './js/resource_usage';
 import './js/services_bookmarks';
 
 bootstrap.Tooltip.Default.container = 'body';
