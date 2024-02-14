@@ -35,19 +35,7 @@
 							<svg xmlns="http://www.w3.org/2000/svg" class="fa fa-fw" viewBox="0 0 128 512"><path d="M48 464a48 48 0 1 1 0-96 48 48 0 1 1 0 96zm0-160a48 48 0 1 1 0-96 48 48 0 1 1 0 96zM0 96a48 48 0 1 1 96 0A48 48 0 1 1 0 96z"/></svg>
 						</button>
 						
-						<div class="account float-end me-2 d-none">
-							<div class="dropdown dropup d-flex align-items-center" style="height: 40px;">
-								<img src="/assets/img/user-circle.svg" alt="profile" class="rounded-circle" data-bs-toggle="dropdown" style="width: 31px; height: 31px;">
-								<div class="dropdown-menu dropdown-menu-end" style="width: max-content;">
-									<h6 class="dropdown-header">Logged in as</h6>
-									<p class="d-flex flex-row align-items-center px-2 pb-1 mb-0">
-										<span class="name">Robert</span>
-									</p>
-									<div class="dropdown-divider"></div>
-									<a href="/api/auth/logout/?returnTo=/" rel=“nofollow“ class="sign-out dropdown-item">Sign out</a>
-								</div>
-							</div>
-						</div>
+						<div id="account"></div>
 
 						<div id="weather"></div>
 					</div>

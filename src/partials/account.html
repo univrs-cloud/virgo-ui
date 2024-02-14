@@ -1,0 +1,15 @@
+<%if (!isAuthenticated) {%>
+	<div id="account"></div>
+<%} else {%>
+	<div id="account" class="float-end me-2">
+		<div class="dropdown dropup d-flex align-items-center" style="height: 40px;">
+			<img src="/assets/img/user-circle.svg" alt="profile" class="rounded-circle" data-bs-toggle="dropdown" style="width: 31px; height: 31px;">
+			<div class="dropdown-menu dropdown-menu-end" style="width: max-content;">
+				<h6 class="dropdown-header">Logged in as</h6>
+				<p class="d-flex flex-row align-items-center px-2 pb-1 mb-0"><%=account.name%></p>
+				<div class="dropdown-divider d-none"></div>
+				<a href="#" rel=“nofollow“ class="sign-out dropdown-item d-none">Sign out</a>
+			</div>
+		</div>
+	</div>
+<%}%>
