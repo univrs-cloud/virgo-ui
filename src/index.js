@@ -9,3 +9,11 @@ bootstrap.Tooltip.Default.sanitize = false;
 _.each(document.querySelectorAll('[data-bs-toggle="tooltip"]'), (element) => {
 	new bootstrap.Tooltip(element);
 });
+
+axios.get('/api/v1/system')
+	.then((response) => {
+		document.querySelector('footer .serial-number').innerHTML = `SN:${response.data.serial}`;
+	})
+	.catch((error) => {
+		console.log(error);
+	});

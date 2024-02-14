@@ -24,7 +24,8 @@
 		"bootstrap": "^5.3.2",
 		"lodash": "^4.17.21",
 		"morphdom": "^2.7.2",
-		"pretty-bytes": "^6.1.1"
+		"pretty-bytes": "^6.1.1",
+		"pretty-ms": "^9.0.0"
 	},
 	"devDependencies": {
 		"@babel/cli": "^7.23.9",
