@@ -68,6 +68,7 @@ module.exports = (env, argv) => {
 			new CleanWebpackPlugin(),
 			new webpack.ProvidePlugin({
 				'_': 'lodash',
+				'axios': ['axios', 'default'],
 				'popper': '@popperjs/core',
 				'bootstrap': 'bootstrap',
 				'morphdom': ['morphdom', 'default'],

@@ -31,6 +31,10 @@ const updateSeries = (data) => {
 };
 
 const render = (iface) => {
+	if (iface === false) {
+		return;
+	}
+	
 	if (rendered) {
 		updateSeries([
 			iface.rx_sec,
