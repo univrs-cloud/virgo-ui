@@ -149,7 +149,7 @@ let fsData = (filesystem === false ? false : _.find(filesystem, (fs) => { return
 					<%}%>
 				</li>
 				<li class="list-group-item">
-					<%if (ups === false) {%>
+					<%if (time === false) {%>
 						<span class="text-red-300">Error fetching data</span>
 					<%} else {%>
 						<small class="text-body-tertiary">Uptime: <%=prettyMilliseconds(time.uptime * 1000, { secondsDecimalDigits: 0 })%></small>
