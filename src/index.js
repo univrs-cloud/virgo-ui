@@ -1,7 +1,12 @@
 import './index.scss';
-import './js/weather';
-import './js/resource_usage';
-import './js/services_bookmarks';
+
+window.account = JSON.parse(document.cookie.match('(^|;)\\s*' + 'account' + '\\s*=\\s*([^;]+)')?.pop() || '{}');
+window.isAuthenticated = !_.isEmpty(account);
+
+import('./js/account');
+import('./js/weather');
+import('./js/resource_usage');
+import('./js/services_bookmarks');
 
 bootstrap.Tooltip.Default.container = 'body';
 bootstrap.Tooltip.Default.html = true;

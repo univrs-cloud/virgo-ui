@@ -21,7 +21,6 @@ module.exports = (env, argv) => {
 			upstream = dotenv.parsed.upstream;
 		}
 	}
-	console.log(upstream);
 		
 	return {
 		devtool: (argv.mode === 'production' ? 'source-map' : 'eval'),
