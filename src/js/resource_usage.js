@@ -6,28 +6,27 @@ let fetchDelay = 2000;
 
 const fetchStats = () => {
 	Promise.allSettled([
-		fetch(`/api/v1/cpu`),
-		fetch(`/api/v1/mem`),
-		fetch(`/api/v1/fs`),
-		fetch(`/api/v1/network`),
-		fetch(`/api/v1/devices/ups`)
+		axios.get('/api/v1/cpu'),
+		axios.get('/api/v1/mem'),
+		axios.get('/api/v1/fs'),
+		axios.get('/api/v1/network'),
+		axios.get('/api/v1/devices/ups')
 	])
-		.then(async ([responseCpu, responseMemory, responseFilesystem, responseNetwork, responseUps]) => {
-			return { 
-				cpu: await responseCpu.value.json(),
-				memory: await responseMemory.value.json(),
-				filesystem: await responseFilesystem.value.json(),
-				network: await responseNetwork.value.json(),
-				ups: await responseUps.value.json()
+		.then(([responseCpu, responseMemory, responseFilesystem, responseNetwork, responseUps]) => {
+			let data = { 
+				cpu: (responseCpu.status === 'fulfilled' ? responseCpu.value.data : false),
+				memory: (responseMemory.status === 'fulfilled' ? responseMemory.value.data : false),
+				filesystem: (responseFilesystem.status === 'fulfilled' ? responseFilesystem.value.data : false),
+				network: (responseNetwork.status === 'fulfilled' ? responseNetwork.value.data : false),
+				ups: (responseUps.status === 'fulfilled' ? responseUps.value.data : false)
 			};
-		})
-		.then((data) => {
+
 			fetchRetries = 5;
 			fetchDelay = 2000;
 			render(data);
 		})
 		.catch((error) => {
-			console.log('error:', error);
+			console.log(error);
 			fetchRetries--;
 			fetchDelay = 1000;
 		})

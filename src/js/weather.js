@@ -303,20 +303,14 @@ let fetchRetries = 5;
 let fetchDelay = 60000;
 
 const fetchWeather = () => {
-	fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=sunrise,sunset&current_weather=true&temperature_unit=celsius&timezone=${timezeone}`)
+	axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=sunrise,sunset&current_weather=true&temperature_unit=celsius&timezone=${timezeone}`)
 		.then((response) => {
-			if (response.ok) {
-				return response.json();
-			}
-			return Promise.reject(response);
-		})
-		.then((data) => {
 			fetchRetries = 5;
 			fetchDelay = 60000;
-			render(data);
+			render(response.data);
 		})
 		.catch((error) => {
-			console.log('error:', error);
+			console.log(error);
 			fetchRetries--;
 			fetchDelay = 1000;
 		})

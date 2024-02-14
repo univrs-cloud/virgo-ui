@@ -1,6 +1,6 @@
 <%
-let fsSystem = _.find(filesystem, (fs) => { return fs.mount === '/'; });
-let fsData = _.find(filesystem, (fs) => { return fs.mount === '/messier'; });
+let fsSystem = (filesystem === false ? false : _.find(filesystem, (fs) => { return fs.mount === '/'; }));
+let fsData = (filesystem === false ? false : _.find(filesystem, (fs) => { return fs.mount === '/messier'; }));
 %>
 <div id="resource-usage" class="card text-bg-light rounded-4 border-0">
 	<div class="card-body p-0">
@@ -8,121 +8,145 @@ let fsData = _.find(filesystem, (fs) => { return fs.mount === '/messier'; });
 			<ul class="list-group list-group-flush">
 				<li class="list-group-item">
 					<h5 class="text-body-emphasis mb-0">CPU</h5>
-					<div class="row g-0 d-flex align-items-baseline">
-						<div class="col">
-							<div class="progress" role="progressbar" style="height: 8px;">
-								<div class="progress-bar bg-blue-300" style="width: <%=cpu.currentLoad.toFixed(0)%>%;"></div>
+					<%if (cpu === false) {%>
+						<span class="text-red-300">Error fetching data</span>
+					<%} else {%>
+						<div class="row g-0 d-flex align-items-baseline">
+							<div class="col">
+								<div class="progress" role="progressbar" style="height: 8px;">
+									<div class="progress-bar bg-blue-300" style="width: <%=cpu.currentLoad.toFixed(0)%>%;"></div>
+								</div>
+							</div>
+							<div class="col-auto lh-1 text-body-tertiary text-end" style="width: 45px;">
+								<small><%=cpu.currentLoad.toFixed(0)%>%</small>
 							</div>
 						</div>
-						<div class="col-auto lh-1 text-body-tertiary text-end" style="width: 45px;">
-							<small><%=cpu.currentLoad.toFixed(0)%>%</small>
+						<div class="lh-sm text-body-tertiary mt-1">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="fa"><path fill="var(--bs-gray-500)" d="M160 64c-26.5 0-48 21.5-48 48V276.5c0 17.3-7.1 31.9-15.3 42.5C86.2 332.6 80 349.5 80 368c0 44.2 35.8 80 80 80s80-35.8 80-80c0-18.5-6.2-35.4-16.7-48.9c-8.2-10.6-15.3-25.2-15.3-42.5V112c0-26.5-21.5-48-48-48zM48 112C48 50.2 98.1 0 160 0s112 50.1 112 112V276.5c0 .1 .1 .3 .2 .6c.2 .6 .8 1.6 1.7 2.8c18.9 24.4 30.1 55 30.1 88.1c0 79.5-64.5 144-144 144S16 447.5 16 368c0-33.2 11.2-63.8 30.1-88.1c.9-1.2 1.5-2.2 1.7-2.8c.1-.3 .2-.5 .2-.6V112zM208 368c0 26.5-21.5 48-48 48s-48-21.5-48-48c0-20.9 13.4-38.7 32-45.3V208c0-8.8 7.2-16 16-16s16 7.2 16 16V322.7c18.6 6.6 32 24.4 32 45.3z"/></svg>
+							<small><%=cpu.temperature.main.toFixed(0)%> °C</small>
+							&bull;
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa"><path fill="var(--bs-gray-500)" d="M258.6 0c-1.7 0-3.4 .1-5.1 .5C168 17 115.6 102.3 130.5 189.3c2.9 17 8.4 32.9 15.9 47.4L32 224H29.4C13.2 224 0 237.2 0 253.4c0 1.7 .1 3.4 .5 5.1C17 344 102.3 396.4 189.3 381.5c17-2.9 32.9-8.4 47.4-15.9L224 480v2.6c0 16.2 13.2 29.4 29.4 29.4c1.7 0 3.4-.1 5.1-.5C344 495 396.4 409.7 381.5 322.7c-2.9-17-8.4-32.9-15.9-47.4L480 288h2.6c16.2 0 29.4-13.2 29.4-29.4c0-1.7-.1-3.4-.5-5.1C495 168 409.7 115.6 322.7 130.5c-17 2.9-32.9 8.4-47.4 15.9L288 32V29.4C288 13.2 274.8 0 258.6 0zM256 224a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/></svg>
+							<small><%=cpu.fan%> rpm</small>
 						</div>
-					</div>
-					<div class="lh-sm text-body-tertiary mt-1">
-						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="fa"><path fill="var(--bs-gray-500)" d="M160 64c-26.5 0-48 21.5-48 48V276.5c0 17.3-7.1 31.9-15.3 42.5C86.2 332.6 80 349.5 80 368c0 44.2 35.8 80 80 80s80-35.8 80-80c0-18.5-6.2-35.4-16.7-48.9c-8.2-10.6-15.3-25.2-15.3-42.5V112c0-26.5-21.5-48-48-48zM48 112C48 50.2 98.1 0 160 0s112 50.1 112 112V276.5c0 .1 .1 .3 .2 .6c.2 .6 .8 1.6 1.7 2.8c18.9 24.4 30.1 55 30.1 88.1c0 79.5-64.5 144-144 144S16 447.5 16 368c0-33.2 11.2-63.8 30.1-88.1c.9-1.2 1.5-2.2 1.7-2.8c.1-.3 .2-.5 .2-.6V112zM208 368c0 26.5-21.5 48-48 48s-48-21.5-48-48c0-20.9 13.4-38.7 32-45.3V208c0-8.8 7.2-16 16-16s16 7.2 16 16V322.7c18.6 6.6 32 24.4 32 45.3z"/></svg>
-						<small><%=cpu.temperature.main.toFixed(0)%> °C</small>
-						&bull;
-						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa"><path fill="var(--bs-gray-500)" d="M258.6 0c-1.7 0-3.4 .1-5.1 .5C168 17 115.6 102.3 130.5 189.3c2.9 17 8.4 32.9 15.9 47.4L32 224H29.4C13.2 224 0 237.2 0 253.4c0 1.7 .1 3.4 .5 5.1C17 344 102.3 396.4 189.3 381.5c17-2.9 32.9-8.4 47.4-15.9L224 480v2.6c0 16.2 13.2 29.4 29.4 29.4c1.7 0 3.4-.1 5.1-.5C344 495 396.4 409.7 381.5 322.7c-2.9-17-8.4-32.9-15.9-47.4L480 288h2.6c16.2 0 29.4-13.2 29.4-29.4c0-1.7-.1-3.4-.5-5.1C495 168 409.7 115.6 322.7 130.5c-17 2.9-32.9 8.4-47.4 15.9L288 32V29.4C288 13.2 274.8 0 258.6 0zM256 224a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/></svg>
-						<small><%=cpu.fan%> rpm</small>
-					</div>
+					<%}%>
 				</li>
 				<li class="list-group-item">
 					<h5 class="text-body-emphasis mb-0">RAM</h5>
-					<div class="row g-0 d-flex align-items-baseline">
-						<div class="col">
-							<div class="progress" role="progressbar" style="height: 8px;">
-								<div class="progress-bar bg-blue-300" style="width: <%=(memory.active * 100 / memory.total)%>%;"></div>
+					<%if (memory === false) {%>
+						<span class="text-red-300">Error fetching data</span>
+					<%} else {%>
+						<div class="row g-0 d-flex align-items-baseline">
+							<div class="col">
+								<div class="progress" role="progressbar" style="height: 8px;">
+									<div class="progress-bar bg-blue-300" style="width: <%=(memory.active * 100 / memory.total)%>%;"></div>
+								</div>
+							</div>
+							<div class="col-auto lh-1 text-body-tertiary text-end" style="width: 45px;">
+								<small><%=(memory.active * 100 / memory.total).toFixed(0)%>%</small>
 							</div>
 						</div>
-						<div class="col-auto lh-1 text-body-tertiary text-end" style="width: 45px;">
-							<small><%=(memory.active * 100 / memory.total).toFixed(0)%>%</small>
+						<div class="lh-1 text-body-tertiary mt-1">
+							<small>Size: <%=prettyBytes(memory.total)%></small><br>
+							<small>Used: <%=prettyBytes(memory.active)%></small><br>
+							<small>Free: <%=prettyBytes(memory.available)%></small>
 						</div>
-					</div>
-					<div class="lh-1 text-body-tertiary mt-1">
-						<small>Size: <%=prettyBytes(memory.total)%></small><br>
-						<small>Used: <%=prettyBytes(memory.active)%></small><br>
-						<small>Free: <%=prettyBytes(memory.available)%></small>
-					</div>
+					<%}%>
 				</li>
 				<li class="list-group-item">
 					<h5 class="text-body-emphasis mb-0">Storage <small class="text-body-secondary"> &middot; system</small></h5>
-					<div class="row g-0 d-flex align-items-baseline">
-						<div class="col">
-							<div class="progress" role="progressbar" style="height: 8px;">
-								<div class="progress-bar bg-blue-300" style="width: <%=(fsSystem.used * 100 / fsSystem.size)%>%;"></div>
+					<%if (fsSystem === false) {%>
+						<span class="text-red-300">Error fetching data</span>
+					<%} else {%>
+						<div class="row g-0 d-flex align-items-baseline">
+							<div class="col">
+								<div class="progress" role="progressbar" style="height: 8px;">
+									<div class="progress-bar bg-blue-300" style="width: <%=(fsSystem.used * 100 / fsSystem.size)%>%;"></div>
+								</div>
+							</div>
+							<div class="col-auto lh-1 text-body-tertiary text-end" style="width: 45px;">
+								<small><%=(fsSystem.used * 100 / fsSystem.size).toFixed(0)%>%</small>
 							</div>
 						</div>
-						<div class="col-auto lh-1 text-body-tertiary text-end" style="width: 45px;">
-							<small><%=(fsSystem.used * 100 / fsSystem.size).toFixed(0)%>%</small>
+						<div class="lh-1 text-body-tertiary mt-1">
+							<small>Size: <%=prettyBytes(fsSystem.size)%></small><br>
+							<small>Used: <%=prettyBytes(fsSystem.used)%></small><br>
+							<small>Free: <%=prettyBytes(fsSystem.available)%></small>
 						</div>
-					</div>
-					<div class="lh-1 text-body-tertiary mt-1">
-						<small>Size: <%=prettyBytes(fsSystem.size)%></small><br>
-						<small>Used: <%=prettyBytes(fsSystem.used)%></small><br>
-						<small>Free: <%=prettyBytes(fsSystem.available)%></small>
-					</div>
+					<%}%>
 				</li>
 				<li class="list-group-item">
 					<h5 class="text-body-emphasis mb-0">Storage <small class="text-body-secondary"> &middot; data</small></h5>
-					<div class="row g-0 d-flex align-items-baseline">
-						<div class="col">
-							<div class="progress" role="progressbar" style="height: 8px;">
-								<div class="progress-bar bg-blue-300" style="width: <%=(fsData.used * 100 / fsData.size)%>%;"></div>
+					<%if (fsData === false) {%>
+						<span class="text-red-300">Error fetching data</span>
+					<%} else {%>
+						<div class="row g-0 d-flex align-items-baseline">
+							<div class="col">
+								<div class="progress" role="progressbar" style="height: 8px;">
+									<div class="progress-bar bg-blue-300" style="width: <%=(fsData.used * 100 / fsData.size)%>%;"></div>
+								</div>
+							</div>
+							<div class="col-auto lh-1 text-body-tertiary text-end" style="width: 45px;">
+								<small><%=(fsData.used * 100 / fsData.size).toFixed(0)%>%</small>
 							</div>
 						</div>
-						<div class="col-auto lh-1 text-body-tertiary text-end" style="width: 45px;">
-							<small><%=(fsData.used * 100 / fsData.size).toFixed(0)%>%</small>
+						<div class="lh-1 text-body-tertiary mt-1">
+							<small>Size: <%=prettyBytes(fsData.size)%></small><br>
+							<small>Used: <%=prettyBytes(fsData.used)%></small><br>
+							<small>Free: <%=prettyBytes(fsData.available)%></small>
 						</div>
-					</div>
-					<div class="lh-1 text-body-tertiary mt-1">
-						<small>Size: <%=prettyBytes(fsData.size)%></small><br>
-						<small>Used: <%=prettyBytes(fsData.used)%></small><br>
-						<small>Free: <%=prettyBytes(fsData.available)%></small>
-					</div>
+					<%}%>
 				</li>
 				<li class="list-group-item">
 					<h5 class="text-body-emphasis mb-0">Network <small class="text-body-secondary"> &middot; eth0</small></h5>
-					<div class="network-chart" style="width: 100%; height: 100px;"></div>
-					<div class="lh-1 text-body-tertiary text-end mt-1">
-						<table>
-							<tbody>
-								<tr>
-									<td>
-										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" class="fa"><path fill="var(--bs-gray-600)" d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/></svg>
-										<small>RX:</small>
-									</td>
-									<td><small><%=prettyBytes(network.rx_sec)%>/s</small></td>
-								</tr>
-								<tr>
-									<td>
-										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" class="fa"><path fill="var(--bs-gray-400)" d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"/></svg>
-										<small>TX:</small>
-									</td>
-									<td><small><%=prettyBytes(network.tx_sec)%>/s</small></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
+					<%if (network === false) {%>
+						<span class="text-red-300">Error fetching data</span>
+					<%} else {%>
+						<div class="network-chart" style="width: 100%; height: 100px;"></div>
+						<div class="lh-1 text-body-tertiary text-end mt-1">
+							<table>
+								<tbody>
+									<tr>
+										<td>
+											<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" class="fa"><path fill="var(--bs-gray-600)" d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/></svg>
+											<small>RX:</small>
+										</td>
+										<td><small><%=prettyBytes(network.rx_sec)%>/s</small></td>
+									</tr>
+									<tr>
+										<td>
+											<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" class="fa"><path fill="var(--bs-gray-400)" d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"/></svg>
+											<small>TX:</small>
+										</td>
+										<td><small><%=prettyBytes(network.tx_sec)%>/s</small></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					<%}%>
 				</li>
 				<li class="list-group-item">
 					<h5 class="text-body-emphasis mb-0">UPS</h5>
-					<div class="row g-0 d-flex align-items-baseline">
-						<div class="col">
-							<div class="progress" role="progressbar" style="height: 8px;">
-								<div class="progress-bar <%=(ups.ups_status.toLowerCase() === 'ol' ? 'bg-green-300' : 'progress-bar-striped progress-bar-animated bg-orange-300')%>" style="width: <%=ups.battery_charge%>%;"></div>
+					<%if (ups === false) {%>
+						<span class="text-red-300">Error fetching data</span>
+					<%} else {%>
+						<div class="row g-0 d-flex align-items-baseline">
+							<div class="col">
+								<div class="progress" role="progressbar" style="height: 8px;">
+									<div class="progress-bar <%=(ups.ups_status.toLowerCase() === 'ol' ? 'bg-green-300' : 'progress-bar-striped progress-bar-animated bg-orange-300')%>" style="width: <%=ups.battery_charge%>%;"></div>
+								</div>
+							</div>
+							<div class="col-auto lh-1 text-body-tertiary text-end" style="width: 45px;">
+								<small><%=ups.battery_charge%>%</small>
 							</div>
 						</div>
-						<div class="col-auto lh-1 text-body-tertiary text-end" style="width: 45px;">
-							<small><%=ups.battery_charge%>%</small>
-						</div>
-					</div>
-					<small>
-						<%if (ups.ups_status.toLowerCase() === 'ol') {%>
-							<span class="badge rounded-pill bd-green-100">GRID</span>
-						<%} else {%>
-							<span class="badge rounded-pill bd-orange-100">BATTERY</span>
-						<%}%>
-					</small>
+						<small>
+							<%if (ups.ups_status.toLowerCase() === 'ol') {%>
+								<span class="badge rounded-pill bd-green-100">GRID</span>
+							<%} else {%>
+								<span class="badge rounded-pill bd-orange-100">BATTERY</span>
+							<%}%>
+						</small>
+					<%}%>
 				</li>
 			</ul>
 		</div>
