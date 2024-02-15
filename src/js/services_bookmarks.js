@@ -131,18 +131,18 @@ const configuration = [
 ];
 
 let container = document.querySelector('main > .container > .row');
-_.each(categories, (cat) => {
+_.each(_.reverse(categories), (cat) => {
 	let collection = _.filter(configuration, { category: cat.id });
-	container.insertAdjacentHTML('beforeend', _.template(categoryPartial)({ name: cat.name }));
-	let category = container.querySelector('.item:last-child');
+	container.insertAdjacentHTML('afterbegin', _.template(categoryPartial)({ name: cat.name }));
+	let category = container.querySelector('.item:first-child');
 	_.each(collection, (entity) => {
 		if (entity.type === 'service') {
 			const template = _.template(servicePartial);
-			category.insertAdjacentHTML('beforeend', template({ service: entity }));
+			category.insertAdjacentHTML('beforeend', template({ ...entity }));
 		}
 		if (entity.type === 'bookmark') {
 			const template = _.template(bookmarkPartial);
-			category.insertAdjacentHTML('beforeend', template({ bookmark: entity }));
+			category.insertAdjacentHTML('beforeend', template({ ...entity }));
 		}
 	});
 });

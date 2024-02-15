@@ -3,22 +3,21 @@ import './index.scss';
 window.account = JSON.parse(document.cookie.match('(^|;)\\s*' + 'account' + '\\s*=\\s*([^;]+)')?.pop() || '{}');
 window.isAuthenticated = !_.isEmpty(account);
 
-import('./js/account');
-import('./js/weather');
-import('./js/resource_usage');
-import('./js/services_bookmarks');
+Promise.allSettled([
+	import('./js/header'),
+	import('./js/main'),
+	import('./js/footer')
+])
+	.then(() => {
+		import('./js/account');
+		import('./js/weather');
+		import('./js/resource_usage');
+		import('./js/services_bookmarks');
 
-bootstrap.Tooltip.Default.container = 'body';
-bootstrap.Tooltip.Default.html = true;
-bootstrap.Tooltip.Default.sanitize = false;
-_.each(document.querySelectorAll('[data-bs-toggle="tooltip"]'), (element) => {
-	new bootstrap.Tooltip(element);
-});
-
-axios.get('/api/v1/system')
-	.then((response) => {
-		document.querySelector('footer .serial-number').innerHTML = `SN:${response.data.serial}`;
-	})
-	.catch((error) => {
-		console.log(error);
+		bootstrap.Tooltip.Default.container = 'body';
+		bootstrap.Tooltip.Default.html = true;
+		bootstrap.Tooltip.Default.sanitize = false;
+		_.each(document.querySelectorAll('[data-bs-toggle="tooltip"]'), (element) => {
+			new bootstrap.Tooltip(element);
+		});		
 	});
