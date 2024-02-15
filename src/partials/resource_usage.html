@@ -7,7 +7,7 @@ let fsData = (filesystem === false ? false : _.find(filesystem, (fs) => { return
 		<div class="p-2">
 			<ul class="list-group list-group-flush">
 				<li class="list-group-item">
-					<h5 class="text-body-emphasis mb-0">CPU</h5>
+					<h6 class="text-body-emphasis mb-0">CPU</h6>
 					<%if (cpu === false) {%>
 						<span class="text-red-300">Error fetching data</span>
 					<%} else {%>
@@ -34,7 +34,7 @@ let fsData = (filesystem === false ? false : _.find(filesystem, (fs) => { return
 					<%}%>
 				</li>
 				<li class="list-group-item">
-					<h5 class="text-body-emphasis mb-0">RAM</h5>
+					<h6 class="text-body-emphasis mb-0">RAM</h6>
 					<%if (memory === false) {%>
 						<span class="text-red-300">Error fetching data</span>
 					<%} else {%>
@@ -56,7 +56,7 @@ let fsData = (filesystem === false ? false : _.find(filesystem, (fs) => { return
 					<%}%>
 				</li>
 				<li class="list-group-item">
-					<h5 class="text-body-emphasis mb-0">Storage <small class="text-body-secondary"> &middot; system</small></h5>
+					<h6 class="text-body-emphasis mb-0">Storage <small class="text-body-secondary"> &middot; system</small></h6>
 					<%if (fsSystem === false) {%>
 						<span class="text-red-300">Error fetching data</span>
 					<%} else {%>
@@ -78,7 +78,7 @@ let fsData = (filesystem === false ? false : _.find(filesystem, (fs) => { return
 					<%}%>
 				</li>
 				<li class="list-group-item">
-					<h5 class="text-body-emphasis mb-0">Storage <small class="text-body-secondary"> &middot; data</small></h5>
+					<h6 class="text-body-emphasis mb-0">Storage <small class="text-body-secondary"> &middot; data</small></h6>
 					<%if (fsData === false) {%>
 						<span class="text-red-300">Error fetching data</span>
 					<%} else {%>
@@ -100,7 +100,7 @@ let fsData = (filesystem === false ? false : _.find(filesystem, (fs) => { return
 					<%}%>
 				</li>
 				<li class="list-group-item">
-					<h5 class="text-body-emphasis mb-0">Network <small class="text-body-secondary"> &middot; eth0</small></h5>
+					<h6 class="text-body-emphasis mb-0">Network <small class="text-body-secondary"> &middot; eth0</small></h6>
 					<%if (network === false) {%>
 						<span class="text-red-300">Error fetching data</span>
 					<%} else {%>
@@ -128,7 +128,7 @@ let fsData = (filesystem === false ? false : _.find(filesystem, (fs) => { return
 					<%}%>
 				</li>
 				<li class="list-group-item">
-					<h5 class="text-body-emphasis mb-0">UPS</h5>
+					<h6 class="text-body-emphasis mb-0">UPS</h6>
 					<%if (ups === false) {%>
 						<span class="text-red-300">Error fetching data</span>
 					<%} else {%>

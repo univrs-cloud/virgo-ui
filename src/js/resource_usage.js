@@ -5,7 +5,7 @@ import prettyMilliseconds from 'pretty-ms';
 let fetchRetries = 5;
 let fetchDelay = 2000;
 
-const fetchStats = () => {
+const fetchData = () => {
 	Promise.allSettled([
 		axios.get('/api/v1/cpu'),
 		axios.get('/api/v1/mem'),
@@ -36,7 +36,7 @@ const fetchStats = () => {
 		.then(() => {
 			if (fetchRetries > 0) {
 				setTimeout(() => {
-					fetchStats();
+					fetchData();
 				}, fetchDelay);
 			}
 		});
@@ -60,4 +60,4 @@ const render = (state) => {
 	networkUsage.render(state.network);
 };
 
-fetchStats();
+fetchData();

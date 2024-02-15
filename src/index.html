@@ -9,58 +9,16 @@
 		<title>Spica</title>
 	</head>
 	<body id="app" class="bg-secondary-subtle">
-		<header>
-			<div class="navbar navbar-position navbar-light mx-2">
-				<div class="container bg-white rounded-pill px-2 ps-3 py-2">
-					<span class="navbar-brand fw-bold me-2 order-sm-0">Spica</span>
-					<div id="navbar" class="offcanvas-md offcanvas-bottom flex-grow-1" data-bs-scroll="true" tabindex="-1">
-						<div class="offcanvas-body pb-0">
-							<div class="navbar-nav position-relative">
-								<a href="#" class="nav-item nav-link" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Coming soon">App store</a>
-								<a href="#" class="nav-item nav-link" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Coming soon">Settings</a>
-								<div class="position-absolute h-100 d-sm-none d-flex align-items-start flex-column">
-									<div class="mb-auto">
-										<span class="navbar-item nav-link">v1.0.0</span>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="offcanvas-header border-top pe-4">
-							<h5 class="offcanvas-title">&nbsp;</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#navbar" aria-label="Close"></button>
-						</div>
-					</div>
-					<div class="order-sm-2">
-						<button type="button" class="navbar-toggler float-end border-0 p-2" data-bs-toggle="offcanvas" data-bs-target="#navbar" role="button" aria-label="Navbar toggler">
-							<svg xmlns="http://www.w3.org/2000/svg" class="fa fa-fw" viewBox="0 0 128 512"><path d="M48 464a48 48 0 1 1 0-96 48 48 0 1 1 0 96zm0-160a48 48 0 1 1 0-96 48 48 0 1 1 0 96zM0 96a48 48 0 1 1 96 0A48 48 0 1 1 0 96z"/></svg>
-						</button>
-						
-						<div id="account"></div>
+		<header></header>
 
-						<div id="weather"></div>
-					</div>
-				</div>
-			</div>
-		</header>
-
-		<main>
-			<div class="container pt-4">
-				<div class="row">
-					<div class="col col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12 item">
-						<div id="resource-usage"></div>
-					</div>
+		<main class="position-absolute top-0 w-100 h-100">
+			<div class="d-flex justify-content-center align-items-center h-100">
+				<div class="spinner-border text-gray-600" role="status">
 				</div>
 			</div>
 		</main>
 
-		<footer class="d-none d-sm-block">
-			<div class="navbar navbar-light fixed-bottom">
-				<div class="container">
-					<small class="navbar-text serial-number px-1"></small>
-					<span class="navbar-text ms-auto version">v1.0.0</span>
-				</div>
-			</div>
-		</footer>
+		<footer></footer>
 
 		<div class="toast-container position-absolute bottom-0 end-0 p-3 mb-5"></div>
 	</body>
