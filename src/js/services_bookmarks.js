@@ -96,7 +96,7 @@ const configuration = [
 		category: 'networking',
 		name: 'Dream Machine Pro',
 		icon: '/assets/img/apps/ubiquiti.png',
-		url: 'https://192.168.100.1'
+		url: 'https://router.origin.univrs.cloud'
 	},
 	{
 		id: 'portainer',
@@ -116,7 +116,8 @@ const configuration = [
 		category: 'system',
 		name: 'Authelia',
 		icon: '/assets/img/apps/authelia.png',
-		url: 'https://auth.origin.univrs.cloud'
+		url: `https://auth.origin.univrs.cloud/?rd=${window.location.href}`,
+		target: '_self'
 	},
 	{
 		id: 'watchtower',
