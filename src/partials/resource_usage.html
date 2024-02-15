@@ -135,7 +135,7 @@ let fsData = (filesystem === false ? false : _.find(filesystem, (fs) => { return
 						<div class="row g-0 d-flex align-items-baseline">
 							<div class="col">
 								<div class="progress" role="progressbar">
-									<div class="progress-bar <%=(ups.status.toLowerCase() === 'ol' ? 'bg-green-300' : 'progress-bar-striped progress-bar-animated bg-orange-300')%>" style="width: <%=ups.batteryCharge%>%;"></div>
+									<div class="progress-bar <%=(ups.status === 'grid' ? 'bg-green-300' : (ups.status === 'battery' ? 'progress-bar-striped progress-bar-animated bg-orange-300' : ''))%>" style="width: <%=ups.batteryCharge%>%;"></div>
 								</div>
 							</div>
 							<div class="col-auto lh-1 text-body-tertiary text-end" style="width: 45px;">
@@ -143,9 +143,10 @@ let fsData = (filesystem === false ? false : _.find(filesystem, (fs) => { return
 							</div>
 						</div>
 						<small>
-							<%if (ups.status.toLowerCase() === 'ol') {%>
+							<%if (ups.status === 'grid') {%>
 								<span class="badge rounded-pill bd-green-100">GRID</span>
-							<%} else {%>
+							<%}%>
+							<%if (ups.status === 'battery') {%>
 								<span class="badge rounded-pill bd-orange-100">BATTERY</span>
 							<%}%>
 						</small>
