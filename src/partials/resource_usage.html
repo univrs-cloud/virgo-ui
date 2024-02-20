@@ -127,31 +127,33 @@ let fsData = (filesystem === false ? false : _.find(filesystem, (fs) => { return
 						</div>
 					<%}%>
 				</li>
-				<li class="list-group-item">
-					<h6 class="text-body-emphasis mb-0">UPS</h6>
-					<%if (ups === false) {%>
-						<span class="text-red-300">Error fetching data</span>
-					<%} else {%>
-						<div class="row g-0 d-flex align-items-baseline">
-							<div class="col">
-								<div class="progress" role="progressbar">
-									<div class="progress-bar <%=(ups.status === 'grid' ? 'bg-green-300' : (ups.status === 'battery' ? 'progress-bar-striped progress-bar-animated bg-orange-300' : ''))%>" style="width: <%=ups.batteryCharge%>%;"></div>
+				<%if (ups === false || !_.isEmpty(ups)) {%>
+					<li class="list-group-item">
+						<h6 class="text-body-emphasis mb-0">UPS</h6>
+						<%if (ups === false) {%>
+							<span class="text-red-300">Error fetching data</span>
+						<%} else {%>
+							<div class="row g-0 d-flex align-items-baseline">
+								<div class="col">
+									<div class="progress" role="progressbar">
+										<div class="progress-bar <%=(ups.powerSource === 'grid' ? 'bg-green-300' : (ups.powerSource === 'battery' ? 'progress-bar-striped progress-bar-animated bg-orange-300' : ''))%>" style="width: <%=ups.batteryCharge%>%;"></div>
+									</div>
+								</div>
+								<div class="col-auto lh-1 text-body-tertiary text-end" style="width: 45px;">
+									<small class="fw-light"><%=ups.batteryCharge%>%</small>
 								</div>
 							</div>
-							<div class="col-auto lh-1 text-body-tertiary text-end" style="width: 45px;">
-								<small class="fw-light"><%=ups.batteryCharge%>%</small>
-							</div>
-						</div>
-						<small>
-							<%if (ups.status === 'grid') {%>
-								<span class="badge rounded-pill bd-green-100">GRID</span>
-							<%}%>
-							<%if (ups.status === 'battery') {%>
-								<span class="badge rounded-pill bd-orange-100">BATTERY</span>
-							<%}%>
-						</small>
-					<%}%>
-				</li>
+							<small>
+								<%if (ups.powerSource === 'grid') {%>
+									<span class="badge rounded-pill bd-green-100">GRID</span>
+								<%}%>
+								<%if (ups.powerSource === 'battery') {%>
+									<span class="badge rounded-pill bd-orange-100">BATTERY</span>
+								<%}%>
+							</small>
+						<%}%>
+					</li>
+				<%}%>
 				<li class="list-group-item">
 					<%if (time === false) {%>
 						<span class="text-red-300">Error fetching data</span>
