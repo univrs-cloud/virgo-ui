@@ -13,13 +13,13 @@
 		"install_dir": "/var/www"
 	},
 	"engines": {
-		"node": ">=20.11.0",
+		"node": ">=20.11.1",
 		"npm": ">=10.4.0"
 	},
 	"dependencies": {
 		"@babel/runtime": "^7.23.9",
 		"@popperjs/core": "^2.11.8",
-		"apexcharts": "^3.45.2",
+		"apexcharts": "^3.46.0",
 		"axios": "^1.6.7",
 		"bootstrap": "^5.3.2",
 		"lodash": "^4.17.21",
@@ -37,18 +37,18 @@
 		"copy-webpack-plugin": "^12.0.2",
 		"css-loader": "^6.10.0",
 		"css-minimizer-webpack-plugin": "^6.0.0",
-		"dotenv": "^16.4.3",
+		"dotenv": "^16.4.5",
 		"html-webpack-plugin": "^5.6.0",
 		"mini-css-extract-plugin": "^2.8.0",
 		"postcss": "^8.4.35",
 		"postcss-cli": "^11.0.0",
 		"postcss-loader": "^8.1.0",
 		"raw-loader": "^4.0.2",
-		"sass": "^1.70.0",
-		"sass-loader": "^14.1.0",
-		"webpack": "^5.90.1",
+		"sass": "^1.71.0",
+		"sass-loader": "^14.1.1",
+		"webpack": "^5.90.3",
 		"webpack-cli": "^5.1.4",
-		"webpack-dev-server": "^5.0.0"
+		"webpack-dev-server": "^5.0.2"
 	},
 	"author": "Robert Calin",
 	"license": "UNLICENSED"

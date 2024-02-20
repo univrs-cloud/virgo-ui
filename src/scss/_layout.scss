@@ -44,8 +44,12 @@ header {
 		}
 	}
 	.navbar-brand {
-		padding: 0;
-		margin: 0;
+		padding: 0 0 0 2.75rem;
+		margin: 0 0 0 -0.25rem;
+		background-image: url('/assets/img/virgo.png');
+		background-size: 40px;
+		background-position: 0 50%;
+		background-repeat: no-repeat;
 	}
 	.navbar-toggler {
 		&:focus {
