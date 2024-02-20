@@ -13,7 +13,7 @@
 		"install_dir": "/var/www",
 		"templates": {
 			"postinst": "templates/generate-data-file"
-		},
+		}
 	},
 	"engines": {
 		"node": ">=20.11.1",
