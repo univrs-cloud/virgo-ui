@@ -20,7 +20,7 @@
 		</div>
 	</div>
 	<%if (!_.isEmpty(url)) {%>
-		<a href="<%=url%>" target="<%=(_.first(arguments).target ?? '_blank')%>" class="stretched-link"></a>
+		<a href="<%=url.replace('{{url}}', window.location.href)%>" target="<%=(_.first(arguments).target ?? '_blank')%>" class="stretched-link"></a>
 	<%}%>
 	<span class="indicator translate-middle p-2 border border-light rounded-circle <%=(status === 'running' ? 'bg-green-300' : 'bg-red-300')%>"></span>
 </div>
