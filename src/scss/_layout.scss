@@ -16,7 +16,7 @@ body {
 	font-weight: 300;
 	margin-bottom: 56px;
 	&[style*="overflow: hidden;"] {
-		position: fixed;
+		padding-right: 0 !important;
 	}
 }
 
@@ -71,6 +71,9 @@ footer {
 	.fixed-bottom {
 		position: absolute;
 	}
+	.navbar {
+		padding-right: 0 !important;
+	}
 }
 
 main {
@@ -86,6 +89,16 @@ main {
 	backdrop-filter: blur(2px);
 	background-color: transparent;
 	background-image: linear-gradient(to bottom right, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.1));
+}
+
+.line-clamp {
+	overflow: hidden;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	&.two-line {
+		min-height: 3rem;
+		-webkit-line-clamp: 2;
+	}
 }
 
 @media (max-width: 575px) {

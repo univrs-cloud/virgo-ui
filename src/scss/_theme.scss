@@ -68,7 +68,7 @@ img {
 	overflow: auto;
 	max-height: calc(100vh - 170px);
 }
-.modal-open header,
+.modal-open header .navbar,
 .modal-open main,
 .modal-open footer {
 	cursor: default;
