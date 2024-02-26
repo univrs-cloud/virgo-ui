@@ -11,8 +11,9 @@ Promise.allSettled([
 	.then(() => {
 		import('./js/account');
 		import('./js/weather');
-		import('./js/resource_usage');
-		import('./js/services_bookmarks');
+		import('./js/resources_monitor');
+		import('./js/apps_bookmarks');
+		import('./js/app_store');
 
 		bootstrap.Tooltip.Default.container = 'body';
 		bootstrap.Tooltip.Default.html = true;

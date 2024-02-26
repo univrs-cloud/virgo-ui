@@ -1,9 +1,10 @@
-import resourceUsagePartial from '../partials/resource_usage.html';
+import resourcesMonitorPartial from '../partials/resources_monitor.html';
 import * as networkUsage from './network_usage';
 import prettyMilliseconds from 'pretty-ms';
 
 let fetchRetries = 5;
 let fetchDelay = 2000;
+let container = document.querySelector('#resources-monitor');
 
 const fetchData = () => {
 	Promise.allSettled([
@@ -43,9 +44,9 @@ const fetchData = () => {
 };
 
 const render = (state) => {
-	const template = _.template(resourceUsagePartial);
+	const template = _.template(resourcesMonitorPartial);
 	morphdom(
-		document.querySelector('#resource-usage'),
+		container,
 		template({ ...state, prettyBytes, prettyMilliseconds }),
 		{
 			onBeforeElUpdated: (fromEl, toEl) => {

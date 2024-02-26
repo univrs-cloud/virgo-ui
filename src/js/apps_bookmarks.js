@@ -1,17 +1,26 @@
 import categoryPartial from '../partials/category.html';
-import servicePartial from '../partials/service.html';
+import appPartial from '../partials/app.html';
 import bookmarkPartial from '../partials/bookmark.html';
 
-let container = document.querySelector('main > .container > .row');
+let request = null;
+let container = document.querySelector('#apps-bookmars');
 
 const fetchData = () => {
-	axios.get('/data.json')
+	request = new AbortController();
+	axios.get('/data.json', { signal: request.signal })
 		.then((response) => {
 			render(response.data);
 		})
 		.catch((error) => {
+			if (error.name === 'CanceledError') {
+				return;
+			}
+			
 			console.log(error);
-			container.insertAdjacentHTML('afterbegin', '<div class="col align-self-center text-center"><span class="text-red-300">Error fetching data</span></div>');
+			container.insertAdjacentHTML('afterbegin', '<span class="text-red-300">Error fetching data</span>');
+		})
+		.then(() => {
+			request = null;
 		});
 };
 
@@ -21,8 +30,8 @@ const render = (state) => {
 		container.insertAdjacentHTML('afterbegin', _.template(categoryPartial)({ name: cat.name }));
 		let category = container.querySelector('.item:first-child');
 		_.each(collection, (entity) => {
-			if (entity.type === 'service') {
-				const template = _.template(servicePartial);
+			if (entity.type === 'app') {
+				const template = _.template(appPartial);
 				category.insertAdjacentHTML('beforeend', template({ ...entity }));
 			}
 			if (entity.type === 'bookmark') {
