@@ -7,7 +7,7 @@ let container = document.querySelector('#apps-bookmars');
 
 const fetchData = () => {
 	request = new AbortController();
-	axios.get('/data.json', { signal: request.signal })
+	axios.get('/api/v1/docker/configured', { signal: request.signal })
 		.then((response) => {
 			render(response.data);
 		})

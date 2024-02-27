@@ -288,14 +288,6 @@ const conditions = [
 	}
 ];
 
-const weatherCondition = (weatherStatusCode, timeOfDay) => {
-	const mapping = conditions.find((condition) => { return condition.code === weatherStatusCode; });
-	return {
-		icon: mapping.icon[timeOfDay],
-		condition: wmo[`${weatherStatusCode}-${timeOfDay}`]
-   };
-};
-
 const latitude = '45.749';
 const longitude = '21.227';
 const timezeone = 'Europe/Bucharest';
@@ -323,12 +315,19 @@ const fetchWeather = () => {
 		});
 };
 
+const weatherCondition = (weatherStatusCode, timeOfDay) => {
+	const mapping = conditions.find((condition) => { return condition.code === weatherStatusCode; });
+	return {
+		icon: mapping.icon[timeOfDay],
+		condition: wmo[`${weatherStatusCode}-${timeOfDay}`]
+   };
+};
+
 const render = (state) => {
-	const template = _.template(weatherPartial);
 	let timeOfDay = (state.current_weather.time > state.daily.sunrise[0] && state.current_weather.time < state.daily.sunset[0] ? 'day' : 'night');
 	let weather = weatherCondition(state.current_weather.weathercode, timeOfDay);
 	weather.temperature = `${state.current_weather.temperature.toFixed(0)} ${state.current_weather_units.temperature}`;
-	morphdom(document.querySelector('#weather'), template({ ...weather }));
+	morphdom(document.querySelector('#weather'), _.template(weatherPartial)({ ...weather }));
 };
 
 fetchWeather();

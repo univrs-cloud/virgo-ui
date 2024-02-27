@@ -1,5 +1,8 @@
 import accountPartial from '../partials/account.html';
 
+let header = document.querySelector('header');
+let account = document.querySelector('#account');
+
 const logout = (event) => {
 	if (!event.target.classList.contains('sign-out')) {
 		return;
@@ -17,11 +20,6 @@ const logout = (event) => {
 		});
 };
 
-const render = () => {
-	const template = _.template(accountPartial);
-	morphdom(document.querySelector('#account'), template());
-};
+morphdom(account, _.template(accountPartial)());
 
-document.querySelector('header').addEventListener('click', logout);
-
-render();
+header.addEventListener('click', logout);
