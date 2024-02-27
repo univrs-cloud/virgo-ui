@@ -1,9 +1,9 @@
 import storePartial from '../partials/app_store.html';
 import itemPartial from '../partials/app_store_item.html';
 
-let request = null;
+document.querySelector('body').insertAdjacentHTML('beforeend', storePartial);
 
-document.querySelector('#app').insertAdjacentHTML('beforeend', storePartial);
+let request = null;
 let modal = document.querySelector('#app-store');
 let modalBody = modal.querySelector('.modal-body');
 let loading = modalBody.querySelector('.loading');
@@ -25,7 +25,7 @@ modal.addEventListener('hidden.bs.modal', (event) => {
 
 const fetchData = () => {
 	request = new AbortController();
-	axios.get('https://raw.githubusercontent.com/univrs-cloud/portainer/main/template.json', { signal: request.signal })
+	axios.get('/api/v1/docker/templates', { signal: request.signal })
 		.then((response) => {
 			render(response.data);
 		})
@@ -45,7 +45,7 @@ const fetchData = () => {
 
 const render = (state) => {
 	loading.classList.add('d-none');
-	_.each(_.orderBy(state.templates, 'title'), (app) => {
+	_.each(_.orderBy(state, 'title'), (app) => {
 		const template = _.template(itemPartial);
 		row.insertAdjacentHTML('beforeend', template({ ...app }));
 	});
