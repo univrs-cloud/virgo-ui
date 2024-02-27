@@ -10,10 +10,7 @@
 	"node_deb": {
 		"init": "none",
 		"version": "1.0.0",
-		"install_dir": "/var/www",
-		"templates": {
-			"postinst": "templates/generate-data-file"
-		}
+		"install_dir": "/var/www"
 	},
 	"engines": {
 		"node": ">=20.11.1",
