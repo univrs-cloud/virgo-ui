@@ -1,22 +1,22 @@
-<div id="<%=id%>" class="card text-bg-light rounded-4 border-0">
+<div id="<%=name%>" class="card text-bg-light rounded-4 border-0">
 	<div class="row g-0 align-items-center">
 		<div class="col-2 p-2">
 			<img src="<%=icon%>" class="card-image">
 		</div>
 		<div class="col">
 			<div class="card-body ps-0">
-				<%=name%>
+				<%=title%>
 				<%if (canBeRemoved) {%>
 					<div class="dropdown float-end <%=(!isAuthenticated ? 'd-none' : '')%>">
 						<span type="button" data-bs-toggle="dropdown" class="btn btn-sm mt-n1">
 							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 512" class="fa"><path fill="var(--bs-secondary)" d="M64 360a56 56 0 1 0 0 112 56 56 0 1 0 0-112zm0-160a56 56 0 1 0 0 112 56 56 0 1 0 0-112zM120 96A56 56 0 1 0 8 96a56 56 0 1 0 112 0z"/></svg>
 						</span>
 						<ul class="dropdown-menu">
-							<li><a href="#" class="dropdown-item <%=(status === 'running' ? 'disabled' : '')%>">Start</a></li>
+							<li><a href="#" class="dropdown-item <%=(state === 'running' ? 'disabled' : '')%>">Start</a></li>
 							<li><hr class="dropdown-divider"></li>
-							<li><a href="#" class="dropdown-item <%=(status === 'running' ? 'text-danger' : 'disabled')%>">Stop</a></li>
-							<li><a href="#" class="dropdown-item <%=(status === 'running' ? 'text-danger' : 'disabled')%>">Kill</a></li>
-							<li><a href="#" class="dropdown-item <%=(status === 'running' ? 'text-danger' : 'disabled')%>">Restart</a></li>
+							<li><a href="#" class="dropdown-item <%=(state === 'running' ? 'text-danger' : 'disabled')%>">Stop</a></li>
+							<li><a href="#" class="dropdown-item <%=(state === 'running' ? 'text-danger' : 'disabled')%>">Kill</a></li>
+							<li><a href="#" class="dropdown-item <%=(state === 'running' ? 'text-danger' : 'disabled')%>">Restart</a></li>
 							<li><a href="#" class="dropdown-item <%=(canBeRemoved ? 'text-danger' : 'disabled')%>">Remove</a></li>
 						</ul>
 					</div>
@@ -24,8 +24,8 @@
 			</div>
 		</div>
 	</div>
-	<%if (status === 'running' && !_.isEmpty(url)) {%>
+	<%if (state === 'running' && !_.isEmpty(url)) {%>
 		<a href="<%=url.replace('{{url}}', window.location.href)%>" target="<%=(_.first(arguments).target ?? '_blank')%>" class="stretched-link"></a>
 	<%}%>
-	<span class="indicator translate-middle p-2 border border-light rounded-circle <%=(status === 'running' ? 'bg-green-300' : 'bg-red-300')%>"></span>
+	<span class="indicator translate-middle p-2 border border-light rounded-circle <%=(state === 'running' ? 'bg-green-300' : 'bg-red-300')%>"></span>
 </div>

@@ -7,6 +7,7 @@ const logout = (event) => {
 	if (!event.target.classList.contains('sign-out')) {
 		return;
 	}
+	
 	event.preventDefault();
 	axios.post('https://auth.origin.univrs.cloud/api/logout', null, { withCredentials: true })
 		.then(() => {
