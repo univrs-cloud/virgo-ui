@@ -37,7 +37,7 @@ const render = (state) => {
 	let configuration = state.configuration;
 	let dockerContainers = state.containers;
 	configuration = _.groupBy(configuration, 'category');
-	configuration = _.pick(configuration, _.reverse(_.keys(configuration)));
+	configuration = _.pick(configuration, _.keys(configuration));
 	let template = document.createElement('template');
 	_.each(configuration, (collection, cat) => {
 		let categoryTemplate = document.createElement('template');
