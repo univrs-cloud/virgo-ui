@@ -294,7 +294,7 @@ const timezeone = 'Europe/Bucharest';
 let fetchRetries = 5;
 let fetchDelay = 60000;
 
-const fetchWeather = () => {
+const fetchData = () => {
 	axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=sunrise,sunset&current_weather=true&temperature_unit=celsius&timezone=${timezeone}`)
 		.then((response) => {
 			fetchRetries = 5;
@@ -309,7 +309,7 @@ const fetchWeather = () => {
 		.then(() => {
 			if (fetchRetries > 0) {
 				setTimeout(() => {
-					fetchWeather();
+					fetchData();
 				}, fetchDelay);
 			}
 		});
@@ -330,4 +330,4 @@ const render = (state) => {
 	morphdom(document.querySelector('#weather'), _.template(weatherPartial)({ ...weather }));
 };
 
-fetchWeather();
+fetchData();
