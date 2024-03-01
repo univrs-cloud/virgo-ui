@@ -1,5 +1,5 @@
 import mainPartial from '../partials/main.html';
 
-let main = document.querySelector('main');
+let container = document.querySelector('main');
 
-morphdom(main, mainPartial);
+morphdom(container, mainPartial);
