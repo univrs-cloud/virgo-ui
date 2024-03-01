@@ -1,7 +1,9 @@
 import accountPartial from '../partials/account.html';
 
 let header = document.querySelector('header');
-let account = document.querySelector('#account');
+let container = document.querySelector('#account');
+let auth = _.find(proxies, { forwardPort: 9091 });
+let authDomain = _.first(auth.domainNames);
 
 const logout = (event) => {
 	if (!event.target.classList.contains('sign-out')) {
@@ -9,7 +11,7 @@ const logout = (event) => {
 	}
 	
 	event.preventDefault();
-	axios.post('https://auth.origin.univrs.cloud/api/logout', null, { withCredentials: true })
+	axios.post(`https://${authDomain}/api/logout`, null, { withCredentials: true })
 		.then(() => {
 
 		})
@@ -21,6 +23,6 @@ const logout = (event) => {
 		});
 };
 
-morphdom(account, _.template(accountPartial)());
+morphdom(container, _.template(accountPartial)({ account }));
 
 header.addEventListener('click', logout);

@@ -2,13 +2,18 @@ import './index.scss';
 
 window.account = JSON.parse(document.cookie.match('(^|;)\\s*' + 'account' + '\\s*=\\s*([^;]+)')?.pop() || '{}');
 window.isAuthenticated = !_.isEmpty(account);
+window.proxies = [];
 
 Promise.allSettled([
+	axios.get('/api/v1/proxies'),
 	import('./js/header'),
 	import('./js/main'),
 	import('./js/footer')
 ])
-	.then(() => {
+	.then(([responseProxies]) => {
+		if (responseProxies.status === 'fulfilled') {
+			proxies = responseProxies.value.data;
+		} 
 		import('./js/account');
 		import('./js/weather');
 		import('./js/resources_monitor');

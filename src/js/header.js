@@ -1,5 +1,5 @@
 import headerPartial from '../partials/header.html';
 
-let header = document.querySelector('header');
+let container = document.querySelector('header');
 
-morphdom(header, headerPartial);
+morphdom(container, headerPartial);

@@ -1,6 +1,6 @@
 import footerPartial from '../partials/footer.html';
 
-let footer = document.querySelector('footer');
+let container = document.querySelector('footer');
 
 const fetchData = () => {
 	axios.get('/api/v1/system')
@@ -17,9 +17,9 @@ const fetchData = () => {
 };
 
 const render = (state) => {
-	footer.querySelector('.serial-number').innerHTML = `SN:${state.serial || '&mdash;'}`;
+	container.querySelector('.serial-number').innerHTML = `SN:${state.serial || '&mdash;'}`;
 };
 
-morphdom(footer, footerPartial);
+morphdom(container, footerPartial);
 
 fetchData();
