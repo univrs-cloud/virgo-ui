@@ -3,16 +3,16 @@
 		<div class="card-body ps-0 pt-0">
 			<div class="row g-0 align-items-center">
 				<div class="col-2 p-2">
-					<img src="<%=logo%>" class="card-image">
+					<img src="<%=app.logo%>" class="card-image">
 				</div>
 				<div class="col">
-					<span class="fw-medium"><%=title%></span>
+					<span class="fw-medium"><%=app.title%></span>
 				</div>
 			</div>
 			<div class="row g-0">
 				<div class="col offset-2">
-					<p class="line-clamp two-line"><%=description%></p>
-					<a href="#" class="install btn btn-outline-primary btn-sm">Install</a>
+					<p class="line-clamp two-line"><%=app.description%></p>
+					<a href="#" class="install btn btn-sm <%=(app.installed ? 'btn-outline-secondary disabled' : 'btn-outline-primary')%>"><%=(app.installed ? 'Installed' : 'Install')%></a>
 				</div>
 			</div>
 		</div>
