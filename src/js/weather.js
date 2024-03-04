@@ -328,7 +328,7 @@ const render = (state) => {
 	let timeOfDay = (state.current_weather.time > state.daily.sunrise[0] && state.current_weather.time < state.daily.sunset[0] ? 'day' : 'night');
 	let weather = weatherCondition(state.current_weather.weathercode, timeOfDay);
 	weather.temperature = `${state.current_weather.temperature.toFixed(0)} ${state.current_weather_units.temperature}`;
-	morphdom(container, _.template(weatherPartial)({ ...weather }));
+	morphdom(container, _.template(weatherPartial)({ weather }));
 };
 
 fetchData();

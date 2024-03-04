@@ -47,7 +47,7 @@ const render = (state) => {
 	loading.classList.add('d-none');
 	_.each(_.orderBy(state, 'title'), (app) => {
 		const template = _.template(itemPartial);
-		row.insertAdjacentHTML('beforeend', template({ ...app }));
+		row.insertAdjacentHTML('beforeend', template({ app }));
 	});
 	_.each(modalBody.querySelectorAll('.install'), (button) => {
 		button.addEventListener('click', (event) => {

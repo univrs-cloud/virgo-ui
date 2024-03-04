@@ -51,11 +51,11 @@ const render = (state) => {
 			}
 			if (entity.type === 'app') {
 				const template = _.template(appPartial);
-				category.insertAdjacentHTML('beforeend', template({ ...entity }));
+				category.insertAdjacentHTML('beforeend', template({ entity }));
 			}
 			if (entity.type === 'bookmark') {
 				const template = _.template(bookmarkPartial);
-				category.insertAdjacentHTML('beforeend', template({ ...entity }));
+				category.insertAdjacentHTML('beforeend', template({ entity }));
 			}
 		});
 		template.innerHTML += category.outerHTML;
