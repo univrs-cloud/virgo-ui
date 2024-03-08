@@ -6,7 +6,7 @@ How to build DEB
 
 `npm run build`
 
-`node-deb --no-default-package-dependencies --no-rebuild --install-strategy copy -- dist/`
+`npm run deb`
 
 
 How to install DEB
