@@ -19,7 +19,7 @@
 	"dependencies": {
 		"@babel/runtime": "^7.24.0",
 		"@popperjs/core": "^2.11.8",
-		"apexcharts": "^3.46.0",
+		"apexcharts": "^3.47.0",
 		"axios": "^1.6.7",
 		"bootstrap": "^5.3.3",
 		"lodash": "^4.17.21",
