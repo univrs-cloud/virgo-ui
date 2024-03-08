@@ -16,5 +16,6 @@ How to install DEB
 
 How to access UI
 ---
-It required [virgo-api](https://github.com/univrs-cloud/virgo-api) to be installed and running.
+It requires [virgo-api](https://github.com/univrs-cloud/virgo-api) to be installed and running.
+
 `https://ip:3000`
