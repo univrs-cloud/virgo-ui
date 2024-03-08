@@ -1,8 +1,12 @@
 <%if (!isAuthenticated) {%>
-	<div id="account" class="float-end"></div>
+	<div id="account">
+		<%if (authDomain) {%>
+			<a href="https://<%=authDomain%>/?rd=<%=window.location%>" class="btn btn-sm btn-primary me-2">Sign in</a>
+		<%}%>
+	</div>
 <%} else {%>
-	<div id="account" class="float-end me-2">
-		<div class="dropdown dropup d-flex align-items-center" style="height: 40px;">
+	<div id="account">
+		<div class="dropdown dropup d-flex align-items-center me-2" style="height: 40px;">
 			<img src="/assets/img/user-circle.svg" alt="profile" class="rounded-circle" data-bs-toggle="dropdown" style="width: 31px; height: 31px;">
 			<div class="dropdown-menu dropdown-menu-end" style="width: max-content;">
 				<h6 class="dropdown-header">Logged in as</h6>

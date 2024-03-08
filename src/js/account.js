@@ -23,6 +23,6 @@ const logout = (event) => {
 		});
 };
 
-morphdom(container, _.template(accountPartial)({ account }));
+morphdom(container, _.template(accountPartial)({ account, authDomain }));
 
 header.addEventListener('click', logout);
