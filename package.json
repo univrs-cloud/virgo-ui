@@ -45,11 +45,11 @@
 		"postcss-cli": "^11.0.0",
 		"postcss-loader": "^8.1.1",
 		"raw-loader": "^4.0.2",
-		"sass": "^1.71.1",
+		"sass": "^1.72.0",
 		"sass-loader": "^14.1.1",
 		"webpack": "^5.90.3",
 		"webpack-cli": "^5.1.4",
-		"webpack-dev-server": "^5.0.2"
+		"webpack-dev-server": "^5.0.3"
 	},
 	"author": "Robert Calin",
 	"license": "UNLICENSED"
