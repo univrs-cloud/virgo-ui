@@ -22,5 +22,5 @@
 	<%if (!_.isEmpty(entity.url)) {%>
 		<a href="<%=entity.url%>" target="<%=(entity.target ?? '_blank')%>" class="stretched-link"></a>
 	<%}%>
-	<span class="indicator translate-middle p-2 border border-light rounded-circle <%=(entity.state === 'running' ? 'bg-green-300' : 'bg-red-300')%>"></span>
+	<span class="d-none indicator translate-middle p-2 border border-light rounded-circle <%=(entity.state === 'running' ? 'bg-green-300' : 'bg-red-300')%>"></span>
 </div>
