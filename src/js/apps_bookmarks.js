@@ -33,6 +33,10 @@ const fetchData = () => {
 		});
 };
 
+const composeUrlFromProxy = (proxy) => {
+	return `${proxy.sslForced ? 'https://' : 'http://'}${_.first(proxy.domainNames)}`;
+};
+
 const render = (state) => {
 	let configuration = state.configuration;
 	let dockerContainers = state.containers;
@@ -48,13 +52,16 @@ const render = (state) => {
 			entity.state = '';
 			if (dockerContainer) {
 				entity.state = dockerContainer.state;
-				if (!_.isEmpty(dockerContainer.ports)) {
+				let proxy = _.find(proxies, { forwardHost: dockerContainer.name });
+				if (!_.isEmpty(proxy)) {
+					entity.url = composeUrlFromProxy(proxy);
+				} else if (!_.isEmpty(dockerContainer.ports)) {
 					let ports = _.filter(dockerContainer.ports, { IP: '0.0.0.0' });
 					if (!_.isEmpty(ports)) {
 						_.each(ports, (port) => {
 							let proxy = _.find(proxies, { forwardPort: port.PublicPort });
 							if (!_.isEmpty(proxy)) {
-								entity.url = `${proxy.sslForced ? 'https://' : 'http://'}${_.first(proxy.domainNames)}`;
+								entity.url = composeUrlFromProxy(proxy);
 							}
 						});
 					}
