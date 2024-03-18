@@ -6,6 +6,8 @@ let fetchRetries = 5;
 let fetchDelay = 2000;
 let request = null;
 let container = document.querySelector('#apps-bookmars');
+const appTemplate = _.template(appPartial);
+const bookmarkTemplate = _.template(bookmarkPartial);
 
 const fetchData = () => {
 	request = new AbortController();
@@ -68,12 +70,10 @@ const render = (state) => {
 				}
 			}
 			if (entity.type === 'app') {
-				const template = _.template(appPartial);
-				category.insertAdjacentHTML('beforeend', template({ entity }));
+				category.insertAdjacentHTML('beforeend', appTemplate({ entity }));
 			}
 			if (entity.type === 'bookmark') {
-				const template = _.template(bookmarkPartial);
-				category.insertAdjacentHTML('beforeend', template({ entity }));
+				category.insertAdjacentHTML('beforeend', bookmarkTemplate({ entity }));
 			}
 		});
 		template.innerHTML += category.outerHTML;

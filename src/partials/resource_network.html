@@ -1,0 +1,33 @@
+<li class="list-group-item network">
+	<h6 class="text-body-emphasis mb-0">
+		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="fa"><path fill="var(--bs-gray-500)" d="M400 48v96H240V48H400zM240 0c-26.5 0-48 21.5-48 48v96c0 26.5 21.5 48 48 48h56v40H24c-13.3 0-24 10.7-24 24s10.7 24 24 24H136v40H80c-26.5 0-48 21.5-48 48v96c0 26.5 21.5 48 48 48H240c26.5 0 48-21.5 48-48V368c0-26.5-21.5-48-48-48H184V280H456v40H400c-26.5 0-48 21.5-48 48v96c0 26.5 21.5 48 48 48H560c26.5 0 48-21.5 48-48V368c0-26.5-21.5-48-48-48H504V280H616c13.3 0 24-10.7 24-24s-10.7-24-24-24H344V192h56c26.5 0 48-21.5 48-48V48c0-26.5-21.5-48-48-48H240zM80 368H240v96H80V368zm480 0v96H400V368H560z"/></svg>
+		Network <small class="text-body-secondary"> &middot; eth0</small>
+	</h6>
+	<%if (state.network === null) {%>
+		<div class="spinner-border spinner-border-sm text-gray-600"></div>
+	<%} else if (state.network === false) {%>
+		<span class="text-red-300">Error fetching data</span>
+	<%} else {%>
+		<div class="network-chart" style="width: 100%; height: 100px;"></div>
+		<div class="lh-1 text-body-tertiary text-end mt-1">
+			<table>
+				<tbody>
+					<tr>
+						<td>
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" class="fa"><path fill="var(--bs-gray-600)" d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/></svg>
+							<small>RX:</small>
+						</td>
+						<td><small><%=prettyBytes(state.network.rx_sec)%>/s</small></td>
+					</tr>
+					<tr>
+						<td>
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" class="fa"><path fill="var(--bs-gray-400)" d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"/></svg>
+							<small>TX:</small>
+						</td>
+						<td><small><%=prettyBytes(state.network.tx_sec)%>/s</small></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	<%}%>
+</li>
