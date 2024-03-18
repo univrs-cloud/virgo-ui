@@ -9,6 +9,7 @@ let modalBody = modal.querySelector('.modal-body');
 let loading = modalBody.querySelector('.loading');
 let oops = modalBody.querySelector('.oops');
 let row = modalBody.querySelector('.row');
+const template = _.template(itemPartial);
 
 modal.addEventListener('show.bs.modal', (event) => {
 	fetchData();
@@ -46,7 +47,6 @@ const fetchData = () => {
 const render = (state) => {
 	loading.classList.add('d-none');
 	_.each(_.orderBy(state, 'title'), (app) => {
-		const template = _.template(itemPartial);
 		row.insertAdjacentHTML('beforeend', template({ app }));
 	});
 	_.each(modalBody.querySelectorAll('.install'), (button) => {

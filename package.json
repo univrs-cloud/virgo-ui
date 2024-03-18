@@ -26,7 +26,8 @@
 		"lodash": "^4.17.21",
 		"morphdom": "^2.7.2",
 		"pretty-bytes": "^6.1.1",
-		"pretty-ms": "^9.0.0"
+		"pretty-ms": "^9.0.0",
+		"socket.io-client": "^4.7.5"
 	},
 	"devDependencies": {
 		"@babel/cli": "^7.23.9",

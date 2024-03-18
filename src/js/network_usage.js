@@ -31,7 +31,7 @@ const updateSeries = (data) => {
 };
 
 const render = (iface) => {
-	if (iface === false) {
+	if (iface === false || iface === null) {
 		return;
 	}
 	
