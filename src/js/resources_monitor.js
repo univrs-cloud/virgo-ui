@@ -27,7 +27,7 @@ let upsTemplate = _.template(resourceUpsPartial);
 let timeTemplate = _.template(resourceTimePartial);
 let container = document.querySelector('#resources-monitor');
 
-const socket = io('https://dash.origin.univrs.cloud');
+const socket = io();
 socket.on('connect', () => {
 	render(state);
 });
