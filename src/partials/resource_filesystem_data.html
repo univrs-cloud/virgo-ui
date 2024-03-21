@@ -14,11 +14,11 @@ let fsData = (state.filesystem === false ? false : _.find(state.filesystem, (fs)
 		<div class="row g-0 d-flex align-items-baseline">
 			<div class="col">
 				<div class="progress" role="progressbar">
-					<div class="progress-bar bg-blue-300" style="width: <%=(fsData.used * 100 / fsData.size)%>%;"></div>
+					<div class="progress-bar bg-blue-300" style="width: <%=(fsData.use)%>%;"></div>
 				</div>
 			</div>
 			<div class="col-auto lh-1 text-body-tertiary text-end" style="width: 45px;">
-				<small class="fw-light"><%=(fsData.used * 100 / fsData.size).toFixed(0)%>%</small>
+				<small class="fw-light"><%=(fsData.use).toFixed(0)%>%</small>
 			</div>
 		</div>
 		<div class="lh-1 text-body-tertiary mt-1">
