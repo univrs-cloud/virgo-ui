@@ -45,6 +45,14 @@ module.exports = (env, argv) => {
 			},
 			proxy: [
 				{
+					context: ['/'],
+					secure: false,
+					target: `https://${upstream}/`,
+					wss: true,
+					changeOrigin: true,
+					headers: { connection: 'keep-alive' }
+				},
+				{
 					context: ['/api'],
 					secure: false,
 					target: `https://${upstream}/api`,
