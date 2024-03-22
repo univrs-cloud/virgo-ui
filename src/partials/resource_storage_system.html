@@ -1,30 +1,30 @@
 <%
-let fsSystem = (state.filesystem === false ? false : _.find(state.filesystem, (fs) => { return fs.mount === '/'; }));
+let pool = (state.storage === false ? false : _.find(state.storage, (pool) => { return pool.name === 'system'; }));
 %>
-<li class="list-group-item filesystem-system">
+<li class="list-group-item storage-system">
 	<h6 class="text-body-emphasis mb-0">
 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa"><path fill="var(--bs-gray-500)" d="M64 80c-8.8 0-16 7.2-16 16V258c5.1-1.3 10.5-2 16-2H448c5.5 0 10.9 .7 16 2V96c0-8.8-7.2-16-16-16H64zM48 320v96c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V320c0-8.8-7.2-16-16-16H64c-8.8 0-16 7.2-16 16zM0 320V96C0 60.7 28.7 32 64 32H448c35.3 0 64 28.7 64 64V320v96c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V320zm280 48a24 24 0 1 1 48 0 24 24 0 1 1 -48 0zm120-24a24 24 0 1 1 0 48 24 24 0 1 1 0-48z"/></svg>
 		Storage <small class="text-body-secondary"> &middot; system</small>
 	</h6>
-	<%if (state.filesystem === null) {%>
+	<%if (state.storage === null) {%>
 		<div class="spinner-border spinner-border-sm text-gray-600"></div>
-	<%} else if (fsSystem === false) {%>
+	<%} else if (pool === false) {%>
 		<span class="text-red-300">Error fetching data</span>
 	<%} else {%>
 		<div class="row g-0 d-flex align-items-baseline">
 			<div class="col">
 				<div class="progress" role="progressbar">
-					<div class="progress-bar bg-blue-300" style="width: <%=(fsSystem.used * 100 / fsSystem.size)%>%;"></div>
+					<div class="progress-bar bg-blue-300" style="width: <%=(pool.cap)%>%;"></div>
 				</div>
 			</div>
 			<div class="col-auto lh-1 text-body-tertiary text-end" style="width: 45px;">
-				<small class="fw-light"><%=(fsSystem.used * 100 / fsSystem.size).toFixed(0)%>%</small>
+				<small class="fw-light"><%=pool.cap.toFixed(0)%>%</small>
 			</div>
 		</div>
 		<div class="lh-1 text-body-tertiary mt-1">
-			<small>Size: <%=prettyBytes(fsSystem.size)%></small><br>
-			<small>Used: <%=prettyBytes(fsSystem.used)%></small><br>
-			<small>Free: <%=prettyBytes(fsSystem.available)%></small>
+			<small>Size: <%=prettyBytes(pool.size)%></small><br>
+			<small>Used: <%=prettyBytes(pool.alloc)%></small><br>
+			<small>Free: <%=prettyBytes(pool.free)%></small>
 		</div>
 	<%}%>
 </li>
