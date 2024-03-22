@@ -8,11 +8,11 @@ let shares = [
 		isPrivate: false
 	},
 	{
-		name: 'user 1',
+		name: 'time machine user 1',
 		isPrivate: true
 	},
 	{
-		name: 'user 2',
+		name: 'time machine user 2',
 		isPrivate: true
 
 	},
