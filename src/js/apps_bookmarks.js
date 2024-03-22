@@ -48,7 +48,7 @@ const render = (state) => {
 	_.each(configuration, (collection, cat) => {
 		let categoryTemplate = document.createElement('template');
 		categoryTemplate.innerHTML = _.template(categoryPartial)({ name: cat });
-		let category = categoryTemplate.content.firstChild;
+		let category = categoryTemplate.content.querySelector('.col');
 		_.each(collection, (entity) => {
 			let dockerContainer = _.find(dockerContainers, { name: entity.name });
 			entity.state = '';

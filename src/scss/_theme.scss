@@ -90,9 +90,23 @@ img {
 		}
 	}
 	.card-image {
-		overflow: hidden;
-		display: flex;
-		max-height: 35px;
+		img {
+			overflow: hidden;
+			object-fit: contain;
+			display: flex;
+			width: 100%;
+			min-height: 30px;
+			max-height: 30px;
+		}
+		svg {
+			overflow: hidden;
+			object-fit: contain;
+			display: flex;
+			width: 100%;
+			min-height: 26px;
+			max-height: 26px;
+			padding: 0.2rem;
+		}
 	}
 	.indicator {
 		z-index: 1;

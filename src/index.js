@@ -25,4 +25,5 @@ Promise.allSettled([
 		import('./js/resources_monitor');
 		import('./js/apps_bookmarks');
 		import('./js/app_store');
+		import('./js/shares');
 	});
