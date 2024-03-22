@@ -2,6 +2,7 @@ const dotenv = require('dotenv').config();
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const WepackPwaManifest = require('webpack-pwa-manifest');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -88,6 +89,21 @@ module.exports = (env, argv) => {
 				chunks: ['app'],
 				filename: path.resolve(__dirname, './dist/index.html'),
 				template: './src/index.html'
+			}),
+			new WepackPwaManifest({
+				name: 'univrs',
+				short_name: 'univrs',
+				start_url: '/?utm_source=pwa',
+				background_color: '#e2e3e5',
+				theme_color: '#658ffc',
+				orientation: 'any',
+				icons: [
+					{
+						src: path.resolve(__dirname, './src/img/virgo.png'),
+						destination: 'assets/icons/',
+						sizes: [36, 48, 72, 96, 144, 192, 512]
+					}
+				]
 			}),
 			new MiniCssExtractPlugin({
 				filename: 'assets/css/[name].[contenthash].css',
