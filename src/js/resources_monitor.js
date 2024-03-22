@@ -1,8 +1,8 @@
 import resourcesMonitorPartial from '../partials/resources_monitor.html';
 import resourceCpuPartial from '../partials/resource_cpu.html';
 import resourceMemoryPartial from '../partials/resource_memory.html';
-import resourceFsSystemPartial from '../partials/resource_filesystem_system.html';
-import resourceFsDataPartial from '../partials/resource_filesystem_data.html';
+import resourceStorageSystemPartial from '../partials/resource_storage_system.html';
+import resourceStorageDataPartial from '../partials/resource_storage_data.html';
 import resourceNetworkPartial from '../partials/resource_network.html';
 import resourceUpsPartial from '../partials/resource_ups.html';
 import resourceTimePartial from '../partials/resource_time.html';
@@ -13,15 +13,15 @@ import prettyMilliseconds from 'pretty-ms';
 let state = {
 	cpu: null,
 	memory: null,
-	filesystem: null,
+	storage: null,
 	network: null,
 	ups: null,
 	time: null
 };
 let cpuTemplate = _.template(resourceCpuPartial);
 let memoryTemplate = _.template(resourceMemoryPartial);
-let fsSystemTemplate = _.template(resourceFsSystemPartial);
-let fsDataTemplate = _.template(resourceFsDataPartial);
+let storageSystemTemplate = _.template(resourceStorageSystemPartial);
+let storageDataTemplate = _.template(resourceStorageDataPartial);
 let networkTemplate = _.template(resourceNetworkPartial);
 let upsTemplate = _.template(resourceUpsPartial);
 let timeTemplate = _.template(resourceTimePartial);
@@ -50,15 +50,15 @@ socket.on('memory', (memory) => {
 		memoryTemplate({ state, prettyBytes })
 	);
 });
-socket.on('filesystem', (filesystem) => {
-	state.filesystem = filesystem;
+socket.on('storage', (storage) => {
+	state.storage = storage;
 	morphdom(
-		container.querySelector('.list-group-item.filesystem-system'),
-		fsSystemTemplate({ state, prettyBytes })
+		container.querySelector('.list-group-item.storage-system'),
+		storageSystemTemplate({ state, prettyBytes })
 	);
 	morphdom(
-		container.querySelector('.list-group-item.filesystem-data'),
-		fsDataTemplate({ state, prettyBytes })
+		container.querySelector('.list-group-item.storage-data'),
+		storageDataTemplate({ state, prettyBytes })
 	);
 });
 socket.on('network', (network) => {
@@ -97,8 +97,8 @@ const render = (state) => {
 	container.innerHTML = _.template(resourcesMonitorPartial)({
 		cpu: cpuTemplate({ state }),
 		memory: memoryTemplate({ state }),
-		fsSystem: fsSystemTemplate({ state }),
-		fsData: fsDataTemplate({ state }),
+		storageSystem: storageSystemTemplate({ state }),
+		storageData: storageDataTemplate({ state }),
 		network: networkTemplate({ state }),
 		ups: upsTemplate({ state }),
 		time: timeTemplate({ state }),
