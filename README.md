@@ -11,7 +11,7 @@ How to build DEB
 
 How to install DEB
 ---
-`apt install -y ./virgo-ui_1.0.0_all.deb`
+`apt install -y --reinstall ./virgo-ui_1.0.0_all.deb`
 
 
 How to access UI
