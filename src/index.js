@@ -9,17 +9,24 @@ new bootstrap.Tooltip(document.querySelector('body'));
 window.account = JSON.parse(document.cookie.match('(^|;)\\s*' + 'account' + '\\s*=\\s*([^;]+)')?.pop() || '{}');
 window.isAuthenticated = !_.isEmpty(account);
 window.proxies = [];
+window.updates = [];
 
 Promise.allSettled([
 	axios.get('/api/v1/proxies'),
+	axios.get('/api/v1/updates'),
 	import('./js/header'),
 	import('./js/main'),
 	import('./js/footer')
 ])
-	.then(([responseProxies]) => {
+	.then(([responseProxies, responseUpdates]) => {
 		if (responseProxies.status === 'fulfilled') {
 			proxies = responseProxies.value.data;
-		} 
+		}
+		if (responseUpdates.status === 'fulfilled') {
+			updates = responseUpdates.value.data;
+		}
+
+		import('./js/update');
 		import('./js/account');
 		import('./js/weather');
 		import('./js/resources_monitor');
