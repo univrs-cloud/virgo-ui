@@ -9,7 +9,6 @@ const fetchData = () => {
 			return response.data;
 		})
 		.catch((error) => {
-			console.log(error);
 			return {};
 		})
 		.then((data) => {
