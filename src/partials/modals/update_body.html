@@ -1,0 +1,6 @@
+<h6><%=_.size(updates)%> updates available:</h6>
+<ul class="ps-3">
+	<%_.each(updates, (update) => {%>
+		<li><%=update.package%> <small class="text-secondary">(<%=update.version.installed%> &rarr; <%=update.version.upgradableTo%>)</small></li>
+	<%})%>
+</ul>

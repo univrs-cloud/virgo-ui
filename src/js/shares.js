@@ -15,11 +15,6 @@ let shares = [
 		name: 'time machine user 2',
 		isPrivate: true
 
-	},
-	{
-		name: 'some fancy long name for a share',
-		isPrivate: true
-
 	}
 ];
 

@@ -11,19 +11,16 @@ window.isAuthenticated = !_.isEmpty(account);
 window.proxies = [];
 window.updates = [];
 
+import('./js/header');
+import('./js/main');
+import('./js/footer');
+
 Promise.allSettled([
-	axios.get('/api/v1/proxies'),
-	axios.get('/api/v1/updates'),
-	import('./js/header'),
-	import('./js/main'),
-	import('./js/footer')
+	axios.get('/api/v1/proxies')
 ])
-	.then(([responseProxies, responseUpdates]) => {
+	.then(([responseProxies]) => {
 		if (responseProxies.status === 'fulfilled') {
 			proxies = responseProxies.value.data;
-		}
-		if (responseUpdates.status === 'fulfilled') {
-			updates = responseUpdates.value.data;
 		}
 
 		import('./js/update');
