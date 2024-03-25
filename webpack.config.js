@@ -28,6 +28,7 @@ module.exports = (env, argv) => {
 		devServer: {
 			server: 'https',
 			port: 443,
+			allowedHosts: 'all',
 			compress: true,
 			historyApiFallback: true,
 			open: true,
