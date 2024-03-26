@@ -19,6 +19,8 @@
 	},
 	"dependencies": {
 		"@babel/runtime": "^7.24.1",
+		"@codewithdan/observable-store": "^2.2.15",
+		"@codewithdan/observable-store-extensions": "^2.2.9",
 		"@popperjs/core": "^2.11.8",
 		"apexcharts": "^3.48.0",
 		"axios": "^1.6.8",
@@ -27,6 +29,7 @@
 		"morphdom": "^2.7.2",
 		"pretty-bytes": "^6.1.1",
 		"pretty-ms": "^9.0.0",
+		"rxjs": "^7.8.1",
 		"socket.io-client": "^4.7.5"
 	},
 	"devDependencies": {
