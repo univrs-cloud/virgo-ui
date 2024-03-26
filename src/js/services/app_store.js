@@ -1,0 +1,24 @@
+import Docker from '../stores/docker';
+
+let callbackCollection = [];
+
+const handleSubscription = (store) => {
+	if (!store) {
+		return;
+	}
+
+	let state = store.state;
+	_.each(callbackCollection, (callback) => {
+		callback(state);
+	});
+};
+
+const subscribe = (callbacks) => {
+	callbackCollection = _.concat(callbackCollection, callbacks);
+};
+
+Docker.subscribeToProperties(['templates'], handleSubscription);
+
+export {
+	subscribe
+};

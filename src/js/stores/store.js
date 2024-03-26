@@ -1,5 +1,6 @@
 import { ObservableStore } from '@codewithdan/observable-store';
 import { ReduxDevToolsExtension } from '@codewithdan/observable-store-extensions';
+import { io } from 'socket.io-client';
 
 ObservableStore.globalSettings = {  
     trackStateHistory: true,
@@ -10,6 +11,7 @@ ObservableStore.addExtension(new ReduxDevToolsExtension());
 class Store extends ObservableStore {
 	constructor(settings) {
 		super(settings);
+		this.socket = io();
 	}
 
 	subscribeToProperties(properties, callback) {
