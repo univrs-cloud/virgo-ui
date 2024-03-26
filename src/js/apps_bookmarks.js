@@ -1,49 +1,24 @@
 import categoryPartial from '../partials/category.html';
 import appPartial from '../partials/app.html';
 import bookmarkPartial from '../partials/bookmark.html';
-import * as proxyService from './services/proxy';
+import * as appService from './services/app';
 
-let fetchRetries = 5;
-let fetchDelay = 2000;
-let request = null;
-let proxies = null;
 let container = document.querySelector('#apps-bookmars');
 const appTemplate = _.template(appPartial);
 const bookmarkTemplate = _.template(bookmarkPartial);
-
-const fetchData = () => {
-	request = new AbortController();
-	axios.get('/api/v1/docker/configured', { signal: request.signal })
-		.then((response) => {
-			fetchRetries = 5;
-			renderr(response.data);
-		})
-		.catch((error) => {
-			if (error.name === 'CanceledError') {
-				return;
-			}
-			
-			console.log(error);
-			fetchRetries--;
-			container.innerHTML = '<span class="text-red-300">Error fetching data</span>';
-		})
-		.then(() => {
-			request = null;
-			if (fetchRetries > 0) {
-				setTimeout(() => {
-					fetchData();
-				}, fetchDelay);
-			}
-		});
-};
 
 const composeUrlFromProxy = (proxy) => {
 	return `${proxy.sslForced ? 'https://' : 'http://'}${_.first(proxy.domainNames)}`;
 };
 
-const renderr = (state) => {
-	let configuration = state.configuration;
-	let dockerContainers = state.containers;
+const render = (state) => {
+	if (_.isNull(state.proxies) || _.isNull(state.configured)) {
+		return;
+	}
+
+	let proxies = state.proxies;
+	let configuration = state.configured.configuration;
+	let dockerContainers = state.configured.containers;
 	configuration = _.groupBy(configuration, 'category');
 	configuration = _.pick(configuration, _.keys(configuration));
 	let template = document.createElement('template');
@@ -96,13 +71,4 @@ const renderr = (state) => {
 	);
 };
 
-const render = (state) => {
-	if (_.isNull(state.proxies)) {
-		return;
-	}
-
-	proxies = state.proxies;
-	fetchData();
-};
-
-proxyService.subscribe([render]);
+appService.subscribe([render]);
