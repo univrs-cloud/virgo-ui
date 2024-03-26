@@ -1,10 +1,12 @@
 import categoryPartial from '../partials/category.html';
 import appPartial from '../partials/app.html';
 import bookmarkPartial from '../partials/bookmark.html';
+import * as proxyService from './services/proxy';
 
 let fetchRetries = 5;
 let fetchDelay = 2000;
 let request = null;
+let proxies = null;
 let container = document.querySelector('#apps-bookmars');
 const appTemplate = _.template(appPartial);
 const bookmarkTemplate = _.template(bookmarkPartial);
@@ -14,7 +16,7 @@ const fetchData = () => {
 	axios.get('/api/v1/docker/configured', { signal: request.signal })
 		.then((response) => {
 			fetchRetries = 5;
-			render(response.data);
+			renderr(response.data);
 		})
 		.catch((error) => {
 			if (error.name === 'CanceledError') {
@@ -39,7 +41,7 @@ const composeUrlFromProxy = (proxy) => {
 	return `${proxy.sslForced ? 'https://' : 'http://'}${_.first(proxy.domainNames)}`;
 };
 
-const render = (state) => {
+const renderr = (state) => {
 	let configuration = state.configuration;
 	let dockerContainers = state.containers;
 	configuration = _.groupBy(configuration, 'category');
@@ -94,4 +96,13 @@ const render = (state) => {
 	);
 };
 
-fetchData();
+const render = (state) => {
+	if (_.isNull(state.proxies)) {
+		return;
+	}
+
+	proxies = state.proxies;
+	fetchData();
+};
+
+proxyService.subscribe([render]);

@@ -1,9 +1,9 @@
 import accountPartial from '../partials/account.html';
+import * as proxyService from './services/proxy';
 
 let header = document.querySelector('header');
 let container = document.querySelector('#account');
-let auth = _.find(proxies, { forwardPort: 9091 });
-let authDomain = _.first(auth?.domainNames);
+let authDomain = null;
 
 const logout = (event) => {
 	if (!event.target.classList.contains('sign-out') || !authDomain) {
@@ -12,17 +12,23 @@ const logout = (event) => {
 	
 	event.preventDefault();
 	axios.post(`https://${authDomain}/api/logout`, null, { withCredentials: true })
-		.then(() => {
-
-		})
-		.catch((error) => {
-
-		})
+		.then(() => { })
+		.catch((error) => { })
 		.then(() => {
 			location.reload();
 		});
 };
 
-morphdom(container, _.template(accountPartial)({ account, authDomain }));
+const render = (state) => {
+	if (_.isNull(state.proxies)) {
+		return;
+	}
+
+	let auth = _.find(state.proxies, { forwardPort: 9091 });
+	authDomain = _.first(auth?.domainNames);
+	morphdom(container, _.template(accountPartial)({ account, authDomain }));
+};
 
 header.addEventListener('click', logout);
+
+proxyService.subscribe([render]);

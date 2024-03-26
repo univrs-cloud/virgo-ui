@@ -7,6 +7,7 @@ class Host extends Store {
 	constructor() {
 		const initialState = {
 			system: null,
+			updates: null,
 			proxies: null,
 			cpu: null,
 			memory: null,
@@ -25,6 +26,18 @@ class Host extends Store {
 			_.each(_.keys(initialState), (key) => { initialState[key] = false; });
 			this.setState(initialState, 'socket_disconnect');
 			_.each(_.keys(initialState), (key) => { initialState[key] = null; });
+		});
+
+		socket.on('system', (system) => {
+			this.setState({ system }, 'set_system');
+		});
+
+		socket.on('updates', (updates) => {
+			this.setState({ updates }, 'set_updates');
+		});
+
+		socket.on('proxies', (proxies) => {
+			this.setState({ proxies }, 'set_proxies');
 		});
 
 		socket.on('cpu', (cpu) => {
