@@ -31,7 +31,7 @@ const updateSeries = (data) => {
 };
 
 const render = (iface) => {
-	if (iface === false || _.isNull(iface)) {
+	if (iface === false || _.isNull(iface) || _.isNull(iface.rx_sec) || _.isNull(iface.tx_sec)) {
 		return;
 	}
 	
@@ -44,7 +44,7 @@ const render = (iface) => {
 	}
 
 	chart = new ApexCharts(
-		document.querySelector('#resource-usage .network-chart'),
+		document.querySelector('#resources-monitor .network-chart'),
 		{
 			noData: {
 				text: 'Loading...'
