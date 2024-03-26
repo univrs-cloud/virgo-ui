@@ -15,9 +15,7 @@ class Host extends Store {
 		};
 		super();
 		
-		this.socket.on('connect', () => {
-			this.setState(initialState, 'socket_connect');
-		});
+		this.setState(initialState, 'socket_connect');
 
 		this.socket.on('disconnect', () => {
 			_.each(_.keys(initialState), (key) => { initialState[key] = false; });
