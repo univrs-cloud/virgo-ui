@@ -1,4 +1,4 @@
-<div id="<%=entity.name%>" class="card text-bg-light rounded-4 border-0">
+<div id="<%=entity.name%>" class="card position-relative text-bg-light rounded-4 border-0">
 	<div class="card-body ps-0 py-1">
 		<div class="row g-0 align-items-center">
 			<div class="col-2 p-2 card-image">
@@ -29,5 +29,8 @@
 				</div>
 			<%}%>
 		</div>
+	</div>
+	<div class="progress rounded-pill rounded-top-0 shadow-none position-absolute bottom-0 mx-2" role="progressbar" style="width: calc(100% - 1rem); height: 4px;">
+		<div class="progress-bar bg-blue-300" style="width: <%=entity.cap%>%;"></div>
 	</div>
 </div>
