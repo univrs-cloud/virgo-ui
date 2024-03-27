@@ -5,15 +5,18 @@ let container = document.querySelector('#shares');
 let shares = [
 	{
 		name: 'downloads',
-		isPrivate: false
+		isPrivate: false,
+		cap: 47
 	},
 	{
 		name: 'time machine user 1',
-		isPrivate: true
+		isPrivate: true,
+		cap: 22
 	},
 	{
 		name: 'time machine user 2',
-		isPrivate: true
+		isPrivate: true,
+		cap: 33
 
 	}
 ];
