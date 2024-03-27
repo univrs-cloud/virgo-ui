@@ -17,6 +17,7 @@ $utilities: map-merge(
 		(
 			"color": map-merge(map-get($utilities, "color"), (values: map-merge(map-get(map-get($utilities, "color"), "values"), ($all-colors)))),
 			"background-color": map-merge(map-get($utilities, "background-color"), (values: map-merge(map-get(map-get($utilities, "background-color"), "values"), ($all-colors)))),
+			"border-color": map-merge(map-get($utilities, "border-color"), (values: map-merge(map-get(map-get($utilities, "border-color"), "values"), ($all-colors))))
 		)
 );
 
