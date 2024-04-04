@@ -6,7 +6,9 @@ class Docker extends Store {
 			configured: null,
 			templates: null
 		};
-		super();
+		super({
+			namespace: 'docker'
+		});
 
 		this.setState(initialState, 'socket_connect');
 

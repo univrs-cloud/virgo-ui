@@ -47,10 +47,10 @@ module.exports = (env, argv) => {
 			},
 			proxy: [
 				{
-					context: ['/'],
+					context: ['/socket.io'],
 					secure: false,
 					target: `https://${upstream}/`,
-					wss: true,
+					ws: true,
 					changeOrigin: true,
 					headers: { connection: 'keep-alive' }
 				},
