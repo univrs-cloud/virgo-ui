@@ -1,13 +1,12 @@
 import Store from "./store";
 
-class Docker extends Store {
+class Share extends Store {
 	constructor() {
 		const initialState = {
-			configured: null,
-			templates: null
+			shares: null
 		};
 		super({
-			namespace: 'docker'
+			namespace: 'share'
 		});
 
 		this.setState(initialState, 'socket_connect');
@@ -18,18 +17,10 @@ class Docker extends Store {
 			_.each(_.keys(initialState), (key) => { initialState[key] = null; });
 		});
 
-		this.socket.on('configured', (configured) => {
-			this.setState({ configured }, 'set_configured');
+		this.socket.on('shares', (shares) => {
+			this.setState({ shares }, 'set_shares');
 		});
-
-		this.socket.on('templates', (templates) => {
-			this.setState({ templates }, 'set_templates');
-		});
-	}
-
-	install(config) {
-		this.socket.emit('install', config);
 	}
 }
 
-export default new Docker();
+export default new Share();

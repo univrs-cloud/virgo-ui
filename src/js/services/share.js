@@ -1,10 +1,6 @@
-import Docker from '../stores/docker';
+import Share from '../stores/share';
 
 let callbackCollection = [];
-
-const install = (config) => {
-	Docker.install(config);
-};
 
 const handleSubscription = (store) => {
 	if (!store) {
@@ -21,9 +17,8 @@ const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 };
 
-Docker.subscribeToProperties(['templates'], handleSubscription);
+Share.subscribeToProperties(['shares'], handleSubscription);
 
 export {
-	subscribe,
-	install
+	subscribe
 };

@@ -5,6 +5,9 @@ import * as updateService from './services/update';
 
 if (isAuthenticated) {
 	document.querySelector('body').insertAdjacentHTML('beforeend', updateModal);
+	
+	const badgeTemplate = _.template(badgePartial);
+	const modalBodyTemplate = _.template(updateBody);
 	let modal = document.querySelector('#update');
 	let container = document.querySelector('header');
 
@@ -20,8 +23,8 @@ if (isAuthenticated) {
 		}
 
 		let updates = state.updates;
-		morphdom(container.querySelector('header .nav-item.updates'), _.template(badgePartial)({ updates }));
-		modal.querySelector('.modal-body').innerHTML = _.template(updateBody)({ updates });
+		morphdom(container.querySelector('header .nav-item.updates'), badgeTemplate({ updates }));
+		modal.querySelector('.modal-body').innerHTML = modalBodyTemplate({ updates });
 	};
 
 	modal.querySelector('.install').addEventListener('click', install);

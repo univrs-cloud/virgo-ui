@@ -1,29 +1,15 @@
 import sharesPartial from '../partials/shares.html';
 import sharePartial from '../partials/share.html';
-
-let container = document.querySelector('#shares');
-let shares = [
-	{
-		name: 'downloads',
-		isPrivate: false,
-		cap: 47
-	},
-	{
-		name: 'time machine user 1',
-		isPrivate: true,
-		cap: 22
-	},
-	{
-		name: 'time machine user 2',
-		isPrivate: true,
-		cap: 33
-
-	}
-];
+import * as shareService from './services/share';
 
 const shareTemplate = _.template(sharePartial);
+let container = document.querySelector('#shares');
 
 const render = (state) => {
+	if (_.isNull(state.shares)) {
+		return;
+	}
+
 	let template = document.createElement('template');
 	template.innerHTML = _.template(sharesPartial)();
 	let shares = template.content.querySelector('.col');
@@ -46,4 +32,4 @@ const render = (state) => {
 	);
 };
 
-render({ shares });
+shareService.subscribe([render]);

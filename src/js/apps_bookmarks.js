@@ -3,9 +3,9 @@ import appPartial from '../partials/app.html';
 import bookmarkPartial from '../partials/bookmark.html';
 import * as appService from './services/app';
 
-let container = document.querySelector('#apps-bookmars');
 const appTemplate = _.template(appPartial);
 const bookmarkTemplate = _.template(bookmarkPartial);
+let container = document.querySelector('#apps-bookmars');
 
 const render = (state) => {
 	if (_.isNull(state.apps)) {
