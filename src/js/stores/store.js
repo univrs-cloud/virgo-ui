@@ -8,12 +8,10 @@ ObservableStore.globalSettings = {
 };
 ObservableStore.addExtension(new ReduxDevToolsExtension());
 
-let socket = io();
-
 class Store extends ObservableStore {
 	constructor(settings) {
 		super(settings);
-		this.socket = socket;
+		this.socket = io(`/${settings.namespace}`);
 	}
 
 	subscribeToProperties(properties, callback) {
