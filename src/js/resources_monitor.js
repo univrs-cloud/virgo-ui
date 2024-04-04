@@ -10,13 +10,13 @@ import * as networkUsage from './network_usage';
 import * as resourceMonitorService from './services/resource_monitor';
 import prettyMilliseconds from 'pretty-ms';
 
-let cpuTemplate = _.template(resourceCpuPartial);
-let memoryTemplate = _.template(resourceMemoryPartial);
-let storageSystemTemplate = _.template(resourceStorageSystemPartial);
-let storageDataTemplate = _.template(resourceStorageDataPartial);
-let networkTemplate = _.template(resourceNetworkPartial);
-let upsTemplate = _.template(resourceUpsPartial);
-let timeTemplate = _.template(resourceTimePartial);
+const cpuTemplate = _.template(resourceCpuPartial);
+const memoryTemplate = _.template(resourceMemoryPartial);
+const storageSystemTemplate = _.template(resourceStorageSystemPartial);
+const storageDataTemplate = _.template(resourceStorageDataPartial);
+const networkTemplate = _.template(resourceNetworkPartial);
+const upsTemplate = _.template(resourceUpsPartial);
+const timeTemplate = _.template(resourceTimePartial);
 let container = document.querySelector('#resources-monitor');
 
 const render = (state) => {

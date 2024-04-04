@@ -1,15 +1,14 @@
 import storePartial from '../partials/app_center.html';
 import itemPartial from '../partials/app_center_item.html';
-import * as appStoreService from './services/app_center';
+import * as appCenterService from './services/app_center';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', storePartial);
 
+const itemTemplate = _.template(itemPartial);
 let modal = document.querySelector('#app-center');
 let modalBody = modal.querySelector('.modal-body');
 let loading = modalBody.querySelector('.loading');
-let oops = modalBody.querySelector('.oops');
 let row = modalBody.querySelector('.row');
-const template = _.template(itemPartial);
 
 const render = (state) => {
 	if (_.isNull(state.templates)) {
@@ -18,13 +17,15 @@ const render = (state) => {
 
 	loading.classList.add('d-none');
 	_.each(_.orderBy(state.templates, 'title'), (app) => {
-		row.insertAdjacentHTML('beforeend', template({ app }));
+		row.insertAdjacentHTML('beforeend', itemTemplate({ app }));
 	});
 	_.each(modalBody.querySelectorAll('.install'), (button) => {
 		button.addEventListener('click', (event) => {
 			event.preventDefault();
+			let config = {};
+			appCenterService.install(config);
 		});
 	});
 };
 
-appStoreService.subscribe([render]);
+appCenterService.subscribe([render]);

@@ -2,6 +2,10 @@ import Docker from '../stores/docker';
 
 let callbackCollection = [];
 
+const install = (config) => {
+	Docker.install(config);
+};
+
 const handleSubscription = (store) => {
 	if (!store) {
 		return;
@@ -20,5 +24,6 @@ const subscribe = (callbacks) => {
 Docker.subscribeToProperties(['templates'], handleSubscription);
 
 export {
-	subscribe
+	subscribe,
+	install
 };

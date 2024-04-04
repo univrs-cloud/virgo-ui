@@ -26,6 +26,10 @@ class Docker extends Store {
 			this.setState({ templates }, 'set_templates');
 		});
 	}
+
+	install(config) {
+		this.socket.emit('install', config);
+	}
 }
 
 export default new Docker();
