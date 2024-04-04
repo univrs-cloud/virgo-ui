@@ -2,7 +2,6 @@ import badgePartial from '../partials/update_badge.html';
 import updateModal from '../partials/modals/update.html';
 import updateBody from '../partials/modals/update_body.html';
 import * as updateService from './services/update';
-import morphdom from 'morphdom';
 
 if (isAuthenticated) {
 	document.querySelector('body').insertAdjacentHTML('beforeend', updateModal);
@@ -12,6 +11,7 @@ if (isAuthenticated) {
 	const install = (event) => {
 		event.preventDefault();
 		console.log('Installing...');
+		updateService.upgrade();
 	};
 
 	const render = (state) => {

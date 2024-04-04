@@ -13,7 +13,9 @@ class Host extends Store {
 			ups: null,
 			time: null
 		};
-		super();
+		super({
+			namespace: 'host'
+		});
 		
 		this.setState(initialState, 'socket_connect');
 
@@ -58,7 +60,11 @@ class Host extends Store {
 		this.socket.on('time', (time) => {
 			this.setState({ time }, 'set_time');
 		});
-	}	
+	}
+
+	upgrade() {
+		this.socket.emit('upgrade');
+	}
 }
 
 export default new Host();
