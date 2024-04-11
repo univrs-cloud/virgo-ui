@@ -14,8 +14,8 @@
 		"install_dir": "/var/www"
 	},
 	"engines": {
-		"node": ">=20.11.1",
-		"npm": ">=10.4.0"
+		"node": ">=20.12.2",
+		"npm": ">=10.5.0"
 	},
 	"dependencies": {
 		"@babel/runtime": "^7.24.4",
@@ -56,6 +56,6 @@
 		"webpack-dev-server": "^5.0.4",
 		"webpack-pwa-manifest": "^4.3.0"
 	},
-	"author": "Robert Calin",
+	"author": "univrs",
 	"license": "UNLICENSED"
 }
