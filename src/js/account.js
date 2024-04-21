@@ -1,6 +1,7 @@
 import accountPartial from '../partials/account.html';
 import * as proxyService from './services/proxy';
 
+const accountTemplate = _.template(accountPartial);
 let header = document.querySelector('header');
 let container = document.querySelector('#account');
 let authDomain = null;
@@ -26,7 +27,7 @@ const render = (state) => {
 
 	let auth = _.find(state.proxies, { forwardPort: 9091 });
 	authDomain = _.first(auth?.domainNames);
-	morphdom(container, _.template(accountPartial)({ account, authDomain }));
+	morphdom(container, accountTemplate({ account, authDomain }));
 };
 
 header.addEventListener('click', logout);

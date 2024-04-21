@@ -10,6 +10,7 @@ import * as networkUsage from './network_usage';
 import * as resourceMonitorService from './services/resource_monitor';
 import prettyMilliseconds from 'pretty-ms';
 
+const resourcesMonitorTemplate = _.template(resourcesMonitorPartial);
 const cpuTemplate = _.template(resourceCpuPartial);
 const memoryTemplate = _.template(resourceMemoryPartial);
 const storageSystemTemplate = _.template(resourceStorageSystemPartial);
@@ -22,7 +23,7 @@ let container = document.querySelector('#resources-monitor');
 const render = (state) => {
 	morphdom(
 		container,
-		 _.template(resourcesMonitorPartial)({
+		resourcesMonitorTemplate({
 			cpu: cpuTemplate({ state }),
 			memory: memoryTemplate({ state, prettyBytes }),
 			storageSystem: storageSystemTemplate({ state, prettyBytes }),
