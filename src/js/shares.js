@@ -2,6 +2,7 @@ import sharesPartial from '../partials/shares.html';
 import sharePartial from '../partials/share.html';
 import * as shareService from './services/share';
 
+const sharesTemplate = _.template(sharesPartial);
 const shareTemplate = _.template(sharePartial);
 let container = document.querySelector('#shares');
 
@@ -11,7 +12,7 @@ const render = (state) => {
 	}
 
 	let template = document.createElement('template');
-	template.innerHTML = _.template(sharesPartial)();
+	template.innerHTML = sharesTemplate();
 	let shares = template.content.querySelector('.col');
 	_.each(state.shares, (entity) => {
 		shares.insertAdjacentHTML('beforeend', shareTemplate({ entity }));
