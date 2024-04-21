@@ -1,7 +1,7 @@
 {
 	"name": "virgo-ui",
 	"description": "virgo UI",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"build": "webpack --mode production",
@@ -10,7 +10,7 @@
 	},
 	"node_deb": {
 		"init": "none",
-		"version": "1.0.1",
+		"version": "1.0.2",
 		"install_dir": "/var/www"
 	},
 	"engines": {
@@ -22,7 +22,7 @@
 		"@codewithdan/observable-store": "^2.2.15",
 		"@codewithdan/observable-store-extensions": "^2.2.9",
 		"@popperjs/core": "^2.11.8",
-		"apexcharts": "^3.48.0",
+		"apexcharts": "^3.49.0",
 		"axios": "^1.6.8",
 		"bootstrap": "^5.3.3",
 		"lodash": "^4.17.21",
