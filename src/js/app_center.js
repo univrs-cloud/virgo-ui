@@ -1,8 +1,8 @@
-import storePartial from '../partials/app_center.html';
-import itemPartial from '../partials/app_center_item.html';
+import appCenterModal from '../partials/modals/app_center.html';
+import itemPartial from '../partials/modals/app_center_item.html';
 import * as appCenterService from './services/app_center';
 
-document.querySelector('body').insertAdjacentHTML('beforeend', storePartial);
+document.querySelector('body').insertAdjacentHTML('beforeend', appCenterModal);
 
 const itemTemplate = _.template(itemPartial);
 let modal = document.querySelector('#app-center');
