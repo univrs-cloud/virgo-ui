@@ -53,9 +53,6 @@ img {
 	border-radius: 0.1rem;
 }
 
-.modal-dialog {
-	margin-top: 0;
-}
 .modal-content {
 	background-clip: initial;
 	border: 0;
@@ -149,6 +146,11 @@ img {
 			width: 100%;
 			height: 56px;
 		}
+	}
+}
+#update {
+	.modal-body {
+		min-height: calc(100vh - var(--bs-modal-margin) * 2 - 134px);
 	}
 }
 #resource-usage {

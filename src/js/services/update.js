@@ -21,7 +21,7 @@ const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 };
 
-Host.subscribeToProperties(['updates'], handleSubscription);
+Host.subscribeToProperties(['updates', 'upgrade'], handleSubscription);
 
 export {
 	subscribe,

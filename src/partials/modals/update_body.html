@@ -1,6 +1,20 @@
-<h6><%=_.size(updates)%> updates available:</h6>
-<ul class="ps-3">
-	<%_.each(updates, (update) => {%>
-		<li><%=update.package%> <small class="text-secondary">(<%=update.version.installed%> &rarr; <%=update.version.upgradableTo%>)</small></li>
-	<%})%>
-</ul>
+<%if (_.isNull(upgrade)) {%>
+	<h6><%=_.size(updates)%> updates available:</h6>
+	<ul class="ps-3">
+		<%_.each(updates, (update) => {%>
+			<li><%=update.package%> <small class="text-secondary">(<%=update.version.installed%> &rarr; <%=update.version.upgradableTo%>)</small></li>
+		<%})%>
+	</ul>
+<%} else {%>
+	<ul class="ps-3">
+		<%_.each(upgrade.steps, (step) => {%>
+			<li><%=step%></li>
+		<%})%>
+		<%if (upgrade.state === 'succeeded') {%>
+			<li class="text-success">Update succeeded</li>
+		<%}%>	
+		<%if (upgrade.state === 'failed') {%>
+			<li class="text-danger">Something went wrong, could not update</li>
+		<%}%>
+	</ul>
+<%}%>
