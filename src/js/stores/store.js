@@ -3,7 +3,7 @@ import { ReduxDevToolsExtension } from '@codewithdan/observable-store-extensions
 import { io } from 'socket.io-client';
 
 ObservableStore.globalSettings = {  
-    trackStateHistory: true,
+    trackStateHistory: false,
 	logStateChanges: false
 };
 ObservableStore.addExtension(new ReduxDevToolsExtension());
