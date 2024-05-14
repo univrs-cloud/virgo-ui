@@ -1,7 +1,7 @@
 {
 	"name": "virgo-ui",
 	"description": "virgo UI",
-	"version": "1.0.6",
+	"version": "1.0.7",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"build": "webpack --mode production",
@@ -10,7 +10,7 @@
 	},
 	"node_deb": {
 		"init": "none",
-		"version": "1.0.6",
+		"version": "1.0.7",
 		"install_dir": "/var/www"
 	},
 	"engines": {
@@ -49,7 +49,7 @@
 		"postcss-cli": "^11.0.0",
 		"postcss-loader": "^8.1.1",
 		"raw-loader": "^4.0.2",
-		"sass": "^1.77.0",
+		"sass": "^1.77.1",
 		"sass-loader": "^14.2.1",
 		"webpack": "^5.91.0",
 		"webpack-cli": "^5.1.4",
