@@ -1,8 +1,10 @@
 <hr class="border-secondary-subtle my-3">
 
 <div class="col col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 item align-items">
-	<%if (isAuthenticated) {%>
-		<button type="button" class="btn btn-sm btn-outline-secondary px-1 py-0 float-end">Create</button>
-	<%}%>
-	<h5>Shares</h5>
+	<h5 class="d-flex align-items-center">
+		Shares
+		<%if (isAuthenticated) {%>
+			<button type="button" class="btn btn-sm btn-outline-secondary px-1 py-0 ms-auto">Create</button>
+		<%}%>
+	</h5>
 </div>
