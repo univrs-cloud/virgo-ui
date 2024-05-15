@@ -1,7 +1,7 @@
 {
 	"name": "virgo-ui",
 	"description": "virgo UI",
-	"version": "1.0.8",
+	"version": "1.0.9",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"build": "webpack --mode production",
@@ -10,7 +10,6 @@
 	},
 	"node_deb": {
 		"init": "none",
-		"version": "1.0.8",
 		"install_dir": "/var/www"
 	},
 	"engines": {
