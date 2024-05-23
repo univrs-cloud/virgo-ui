@@ -18,6 +18,24 @@ class Share extends Store {
 		});
 
 		this.socket.on('shares', (shares) => {
+			// shares = [
+			// 	{
+			// 		name: 'downloads',
+			// 		isPrivate: false,
+			// 		cap: 47
+			// 	},
+			// 	{
+			// 		name: 'time machine user 1',
+			// 		isPrivate: true,
+			// 		cap: 22
+			// 	},
+			// 	{
+			// 		name: 'time machine user 2',
+			// 		isPrivate: true,
+			// 		cap: 33
+			
+			// 	}
+			// ];
 			this.setState({ shares }, 'set_shares');
 		});
 	}
