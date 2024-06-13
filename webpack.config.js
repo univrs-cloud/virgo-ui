@@ -98,6 +98,7 @@ module.exports = (env, argv) => {
 				background_color: '#e2e3e5',
 				theme_color: '#658ffc',
 				orientation: 'any',
+				crossorigin: 'use-credentials',
 				icons: [
 					{
 						src: path.resolve(__dirname, './src/img/virgo.png'),
