@@ -5,7 +5,10 @@ const footerTemplate = _.template(footerPartial);
 let container = document.querySelector('footer');
 
 const render = (state) => {
-	morphdom(container, footerTemplate({ system: state.system }));
+	morphdom(
+		container,
+		footerTemplate({ system: state.system })
+	);
 };
 
 systemService.subscribe([render]);
