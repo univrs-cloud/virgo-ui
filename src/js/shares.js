@@ -26,16 +26,7 @@ const render = (state) => {
 	morphdom(
 		container,
 		`<div>${template.innerHTML}</div>`,
-		{
-			 childrenOnly: true,
-			 onBeforeElUpdated: (fromEl, toEl) => {
-				if (fromEl.classList.contains('dropdown')) {
-					return false;
-				}
-
-				return true;
-			 }
-		}
+		{ childrenOnly: true }
 	);
 };
 

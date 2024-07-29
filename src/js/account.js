@@ -27,7 +27,10 @@ const render = (state) => {
 
 	let auth = _.find(state.proxies, { forwardPort: 9091 });
 	authDomain = _.first(auth?.domainNames);
-	morphdom(container, accountTemplate({ account, authDomain }));
+	morphdom(
+		container,
+		 accountTemplate({ account, authDomain })
+	);
 };
 
 header.addEventListener('click', logout);

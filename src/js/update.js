@@ -24,7 +24,10 @@ if (isAuthenticated) {
 		let updates = state.updates;
 		let upgrade = state.upgrade;
 		let modalBody = modal.querySelector('.modal-body');
-		morphdom(container.querySelector('header .updates'), badgeTemplate({ updates, upgrade }));
+		morphdom(
+			container.querySelector('header .updates'),
+			badgeTemplate({ updates, upgrade })
+		);
 		modalBody.innerHTML = updateBodyTemplate({ updates, upgrade });
 		if (!_.isNull(upgrade)) {
 			modalBody.scrollTop = modalBody.scrollHeight;
