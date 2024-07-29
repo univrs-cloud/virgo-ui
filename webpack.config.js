@@ -80,7 +80,7 @@ module.exports = (env, argv) => {
 				'axios': ['axios', 'default'],
 				'popper': '@popperjs/core',
 				'bootstrap': 'bootstrap',
-				'morphdom': ['morphdom', 'default'],
+				'morphdom': [path.join(__dirname, 'src/js/common/morphdom.js'), 'morphdom'],
 				'prettyBytes': [path.join(__dirname, 'node_modules/pretty-bytes/index.js'), 'default']
 			}),
 			new HtmlWebpackPlugin({
