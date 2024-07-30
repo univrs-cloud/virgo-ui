@@ -11,6 +11,7 @@ class Host extends Store {
 			memory: null,
 			network: null,
 			storage: null,
+			drives: null,
 			ups: null,
 			time: null
 		};
@@ -56,6 +57,10 @@ class Host extends Store {
 
 		this.socket.on('storage', (storage) => {
 			this.setState({ storage }, 'get_storage');
+		});
+
+		this.socket.on('drives', (drives) => {
+			this.setState({ drives }, 'get_drives');
 		});
 
 		this.socket.on('ups', (ups) => {
