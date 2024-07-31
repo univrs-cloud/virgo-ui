@@ -30,6 +30,10 @@ class Docker extends Store {
 	install(config) {
 		this.socket.emit('install', config);
 	}
+
+	performAction(config) {
+		this.socket.emit('performAction', config);
+	}
 }
 
 export default new Docker();
