@@ -8,6 +8,16 @@ const appTemplate = _.template(appPartial);
 const bookmarkTemplate = _.template(bookmarkPartial);
 let container = document.querySelector('#apps-bookmars');
 
+const performAction = (event) => {
+	event.preventDefault();
+	let button = event.currentTarget;
+	let config = {
+		id: button.closest('.card').getAttribute('data-id'),
+		action: button.getAttribute('data-action')
+	};
+	appService.performAction(config);
+};
+
 const render = (state) => {
 	if (_.isNull(state.apps)) {
 		return;
@@ -33,6 +43,9 @@ const render = (state) => {
 		`<div>${template.innerHTML}</div>`,
 		{ childrenOnly: true }
 	);
+	_.each(container.querySelectorAll('.app .dropdown-menu a:not(.disabled)'), (button) => {
+		button.addEventListener('click', performAction);
+	});
 };
 
 appService.subscribe([render]);

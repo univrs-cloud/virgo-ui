@@ -7,6 +7,10 @@ const composeUrlFromProxy = (proxy) => {
 	return `${proxy.sslForced ? 'https://' : 'http://'}${_.first(proxy.domainNames)}`;
 };
 
+const performAction = (config) => {
+	Docker.performAction(config);
+};
+
 const handleSubscription = (store) => {
 	if (!store) {
 		return;
@@ -55,5 +59,6 @@ Host.subscribeToProperties(['proxies'], handleSubscription);
 Docker.subscribeToProperties(['configured'], handleSubscription);
 
 export {
-	subscribe
+	subscribe,
+	performAction
 };
