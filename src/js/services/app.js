@@ -23,8 +23,10 @@ const handleSubscription = (store) => {
 
 	let apps = _.map(state.configured.configuration, (entity) => {
 		let dockerContainer = _.find(state.configured.containers, { name: entity.name });
+		entity.id = entity.name;
 		entity.state = '';
 		if (dockerContainer) {
+			entity.id = dockerContainer.id;
 			entity.state = dockerContainer.state;
 			let proxy = _.find(state.proxies, { forwardHost: dockerContainer.name });
 			if (!_.isEmpty(proxy)) {
