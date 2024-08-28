@@ -12,12 +12,12 @@ const morphdom = (fromNode, toNode, options) => {
 		}
 
 		if (fromEl.getAttribute('data-bs-toggle') === 'tooltip') {
-			mdom(fromEl, toEl, { childrenOnly: true });
+			morphdom(fromEl, toEl, { childrenOnly: true });
 			return false;
 		}
 
 		if (fromEl.classList.contains('dropdown-menu')) {
-			mdom(fromEl, toEl, { childrenOnly: true });
+			morphdom(fromEl, toEl, { childrenOnly: true });
 		}
 		if ((fromEl.getAttribute('data-bs-toggle') === 'dropdown' || fromEl.classList.contains('dropdown-menu')) && fromEl.classList.contains('show')) {
 			return false;
