@@ -22,4 +22,5 @@ Promise.allSettled([
 		import('./js/apps_bookmarks');
 		import('./js/shares');
 		import('./js/app_center');
+		import('./js/settings');
 	});

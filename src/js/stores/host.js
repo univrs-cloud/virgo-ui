@@ -13,7 +13,8 @@ class Host extends Store {
 			storage: null,
 			drives: null,
 			ups: null,
-			time: null
+			time: null,
+			settings: null
 		};
 		super({
 			namespace: 'host'
@@ -70,6 +71,11 @@ class Host extends Store {
 		this.socket.on('time', (time) => {
 			this.setState({ time }, 'get_time');
 		});
+
+		setTimeout(() => {
+			let settings = {'weather': {}};
+			this.setState({ settings }, 'get_settings');
+		}, 3000);
 	}
 
 	upgrade() {
