@@ -15,7 +15,7 @@
 					<%if (app.isInstalled) {%>
 						<span class="badge bd-blue-200">Installed</span>
 					<%}%>
-					<a href="#" class="install btn btn-sm btn-outline-primary <%=(app.isInstalled || !isAuthenticated ? 'invisible' : '')%>">Install</a>
+					<a href="#" class="install btn btn-sm btn-outline-primary <%=(app.isInstalled || !isAuthenticated ? 'invisible' : '')%>" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Coming soon">Install</a>
 				</div>
 			</div>
 		</div>
