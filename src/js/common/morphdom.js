@@ -11,7 +11,7 @@ const morphdom = (fromNode, toNode, options) => {
 			}
 		}
 
-		if (fromEl.getAttribute('data-bs-toggle') === 'tooltip') {
+		if (fromEl.hasAttribute('data-bs-toggle') && (fromEl.getAttribute('data-bs-toggle') === 'tooltip' || fromEl.getAttribute('data-bs-toggle') === 'popover' || fromEl.getAttribute('data-bs-toggle') === 'tab')) {
 			morphdom(fromEl, toEl, { childrenOnly: true });
 			return false;
 		}
