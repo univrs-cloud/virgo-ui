@@ -17,12 +17,12 @@
 		"npm": ">=10.5.0"
 	},
 	"dependencies": {
-		"@babel/runtime": "^7.25.4",
+		"@babel/runtime": "^7.25.6",
 		"@codewithdan/observable-store": "^2.2.15",
 		"@codewithdan/observable-store-extensions": "^2.2.9",
 		"@popperjs/core": "^2.11.8",
 		"apexcharts": "3.48.0",
-		"axios": "^1.7.5",
+		"axios": "^1.7.7",
 		"bootstrap": "^5.3.3",
 		"lodash": "^4.17.21",
 		"morphdom": "^2.7.4",
@@ -32,7 +32,7 @@
 		"socket.io-client": "^4.7.5"
 	},
 	"devDependencies": {
-		"@babel/cli": "^7.24.8",
+		"@babel/cli": "^7.25.6",
 		"@babel/core": "^7.25.2",
 		"@babel/preset-env": "^7.25.4",
 		"autoprefixer": "^10.4.20",
@@ -44,7 +44,7 @@
 		"dotenv": "^16.4.5",
 		"html-webpack-plugin": "^5.6.0",
 		"mini-css-extract-plugin": "^2.9.1",
-		"postcss": "^8.4.41",
+		"postcss": "^8.4.44",
 		"postcss-cli": "^11.0.0",
 		"postcss-loader": "^8.1.1",
 		"raw-loader": "^4.0.2",
