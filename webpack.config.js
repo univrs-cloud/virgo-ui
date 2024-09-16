@@ -76,7 +76,7 @@ module.exports = (env, argv) => {
 		plugins: [
 			new CleanWebpackPlugin(),
 			new webpack.ProvidePlugin({
-				'_': 'lodash',
+				'_': ['lodash-es', 'default'],
 				'axios': ['axios', 'default'],
 				'popper': '@popperjs/core',
 				'bootstrap': 'bootstrap',
@@ -170,7 +170,8 @@ module.exports = (env, argv) => {
 				}
 			},
 			minimizer: [
-				new CssMinimizerPlugin()
+				new CssMinimizerPlugin(),
+				'...'
 			]
 		}
 	}
