@@ -9,6 +9,10 @@ const reboot = (event) => {
 	}
 
 	event.preventDefault();
+	if (!confirm('Are you sure you want to reboot?')) {
+		return;
+	}
+
 	event.target.classList.add('disabled');
 	powerService.reboot();
 };
@@ -19,6 +23,10 @@ const shutdown = (event) => {
 	}
 
 	event.preventDefault();
+	if (!confirm('Are you sure you want to shutdown?')) {
+		return;
+	}
+	
 	event.target.classList.add('disabled');
 	powerService.shutdown();
 };
