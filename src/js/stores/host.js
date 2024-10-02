@@ -4,6 +4,8 @@ class Host extends Store {
 	constructor() {
 		const initialState = {
 			system: null,
+			reboot: null,
+			shutdown: null,
 			updates: null,
 			upgrade: null,
 			proxies: null,
@@ -23,13 +25,26 @@ class Host extends Store {
 		this.setState(initialState, 'socket_connect');
 
 		this.socket.on('disconnect', () => {
+			if (this.getStateProperty('reboot') || this.getStateProperty('shutdown')) {
+				return;
+			}
+
 			_.each(_.keys(initialState), (key) => { initialState[key] = false; });
 			this.setState(initialState, 'socket_disconnect');
 			_.each(_.keys(initialState), (key) => { initialState[key] = null; });
+		
 		});
 
 		this.socket.on('upgrade', (upgrade) => {
 			this.setState({ upgrade }, 'upgrade');
+		});
+
+		this.socket.on('reboot', (reboot) => {
+			this.setState({ reboot }, 'reboot');
+		});
+
+		this.socket.on('shutdown', (shutdown) => {
+			this.setState({ shutdown }, 'shutdown');
 		});
 
 		this.socket.on('system', (system) => {
@@ -82,6 +97,14 @@ class Host extends Store {
 		let upgrade = {};
 		this.setState({ upgrade }, 'start_upgrade');
 		this.socket.emit('upgrade');
+	}
+
+	reboot() {
+		this.socket.emit('reboot');
+	}
+
+	shutdown() {
+		this.socket.emit('shutdown');
 	}
 }
 
