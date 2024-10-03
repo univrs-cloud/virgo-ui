@@ -15,9 +15,8 @@ Promise.allSettled([
 	import('./js/footer')
 ])
 	.then(() => {
-		import('./js/update');
-		import('./js/account');
-		import('./js/weather');
+		import('./js/power');
+		import('./js/upgrade');
 		import('./js/resources_monitor');
 		import('./js/apps_bookmarks');
 		import('./js/shares');

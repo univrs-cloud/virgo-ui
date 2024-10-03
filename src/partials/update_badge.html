@@ -1,5 +1,5 @@
 <%
-let badge;
+let badge = '';
 if (_.isNull(upgrade)) {
 	badge = `
 	<span class="badge d-flex align-items-center p-1 px-2 bd-green-100 border border-green-200 rounded-pill float-end" style="width: max-content;">
@@ -8,41 +8,41 @@ if (_.isNull(upgrade)) {
 	</span>
 	`;
 } else {
-	if (upgrade.state === 'running') {
-		badge = `
-		<span class="badge d-flex align-items-center p-1 px-2 bd-blue-100 border border-blue-200 rounded-pill float-end" style="width: max-content;">
-			<div class="spinner-border me-1" style="--bs-spinner-width: 0.7rem; --bs-spinner-height: 0.7rem; --bs-spinner-border-width: 0.2em;"></div>
-			Updating...
-		</span>
-		`;
-	}
-	if (upgrade.state === 'succeeded') {
-		badge = `
-		<span class="badge d-flex align-items-center p-1 px-2 bd-green-100 border border-green-200 rounded-pill float-end" style="width: max-content;">
-			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa me-1" style="width: 14px; height: 14px;"><path class="fa-secondary" opacity=".4" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/><path class="fa-primary" d="M369 175c9.4 9.4 9.4 24.6 0 33.9L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0z"/></svg>
-			Update succeeded
-		</span>
-		`;
-	}
-	if (upgrade.state === 'failed') {
-		badge = `
-		<span class="badge d-flex align-items-center p-1 px-2 bd-red-100 border border-red-200 rounded-pill float-end" style="width: max-content;">
-			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa me-1" style="width: 14px; height: 14px;"><path class="fa-secondary" opacity=".4" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z"/><path class="fa-primary" d="M209 175c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47z"/></svg>
-			Update failed
-		</span>
-		`;
-	}
+	//if (upgrade.state === 'running') {
+	//	badge = `
+	//	<span class="badge d-flex align-items-center p-1 px-2 bd-blue-100 border border-blue-200 rounded-pill float-end" style="width: max-content;">
+	//		<div class="spinner-border me-1" style="--bs-spinner-width: 0.7rem; --bs-spinner-height: 0.7rem; --bs-spinner-border-width: 0.2em;"></div>
+	//		Updating...
+	//	</span>
+	//	`;
+	//}
+	//if (upgrade.state === 'succeeded') {
+	//	badge = `
+	//	<span class="badge d-flex align-items-center p-1 px-2 bd-green-100 border border-green-200 rounded-pill float-end" style="width: max-content;">
+	//		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa me-1" style="width: 14px; height: 14px;"><path class="fa-secondary" opacity=".4" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/><path class="fa-primary" d="M369 175c9.4 9.4 9.4 24.6 0 33.9L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0z"/></svg>
+	//		Update succeeded
+	//	</span>
+	//	`;
+	//}
+	//if (upgrade.state === 'failed') {
+	//	badge = `
+	//	<span class="badge d-flex align-items-center p-1 px-2 bd-red-100 border border-red-200 rounded-pill float-end" style="width: max-content;">
+	//		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa me-1" style="width: 14px; height: 14px;"><path class="fa-secondary" opacity=".4" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z"/><path class="fa-primary" d="M209 175c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47z"/></svg>
+	//		Update failed
+	//	</span>
+	//	`;
+	//}
 }
 %>
 <%if (_.isEmpty(updates)) {%>
 	<div class="updates"></div>
 <%} else {%>
 	<%if (isAuthenticated) {%>
-		<a href="#update" class="nav-item nav-link updates" data-bs-toggle="modal">
+		<a href="#update" class="updates nav-item nav-link" data-bs-toggle="modal">
 			<%=badge%>
 		</a>
 	<%} else {%>
-		<div class="nav-item nav-link updates">
+		<div class="updates nav-item nav-link">
 			<%=badge%>
 		</div>
 	<%}%>

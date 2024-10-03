@@ -99,6 +99,11 @@ class Host extends Store {
 		this.socket.emit('upgrade');
 	}
 
+	completeUpgrade() {
+		let upgrade = null;
+		this.setState({ upgrade }, 'complete_upgrade');
+	}
+
 	reboot() {
 		this.socket.emit('reboot');
 	}

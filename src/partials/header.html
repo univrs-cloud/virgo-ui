@@ -5,7 +5,7 @@
 			<div id="navbar" class="offcanvas-md offcanvas-bottom flex-grow-1" data-bs-scroll="true" tabindex="-1">
 				<div class="offcanvas-body pb-0">
 					<div class="navbar-nav position-relative">
-						<%if (isAuthenticated) {%>
+						<%if (isAuthenticated && _.isEmpty(upgrade)) {%>
 							<a href="#app-center" class="nav-item nav-link" data-bs-toggle="modal">
 								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa" style="margin-bottom: -1px; transform: rotate(180deg);"><path class="fa-secondary" opacity=".4" d="M224 128A96 96 0 1 1 32 128a96 96 0 1 1 192 0zm0 256A96 96 0 1 1 32 384a96 96 0 1 1 192 0zM384 224a96 96 0 1 1 0-192 96 96 0 1 1 0 192z"/><path class="fa-primary" d="M408 296c0-13.3-10.7-24-24-24s-24 10.7-24 24v64H296c-13.3 0-24 10.7-24 24s10.7 24 24 24h64v64c0 13.3 10.7 24 24 24s24-10.7 24-24V408h64c13.3 0 24-10.7 24-24s-10.7-24-24-24H408V296z"/></svg>
 								App center
@@ -38,7 +38,7 @@
 
 				<div id="account"></div>
 
-				<button type="button" class="navbar-toggler border-0 p-2" data-bs-toggle="offcanvas" data-bs-target="#navbar" role="button" aria-label="Navbar toggler">
+				<button type="button" class="navbar-toggler border-0 p-2 <%=(!_.isEmpty(upgrade) ? 'd-none' : '')%>" data-bs-toggle="offcanvas" data-bs-target="#navbar" role="button" aria-label="Navbar toggler">
 					<svg xmlns="http://www.w3.org/2000/svg" class="fa fa-fw" viewBox="0 0 128 512"><path d="M48 464a48 48 0 1 1 0-96 48 48 0 1 1 0 96zm0-160a48 48 0 1 1 0-96 48 48 0 1 1 0 96zM0 96a48 48 0 1 1 96 0A48 48 0 1 1 0 96z"/></svg>
 				</button>
 			</div>

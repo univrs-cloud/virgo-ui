@@ -1,4 +1,6 @@
-<%if (!isAuthenticated) {%>
+<%if (!_.isEmpty(upgrade)) {%>
+	<div id="account"></div>
+<%} else if (!isAuthenticated) {%>
 	<div id="account">
 		<%if (authDomain) {%>
 			<a href="https://<%=authDomain%>/?rd=<%=window.location%>" class="btn btn-sm btn-primary me-2">Sign in</a>

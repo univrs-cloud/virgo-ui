@@ -6,6 +6,10 @@ const upgrade = () => {
 	return Host.upgrade();
 };
 
+const completeUpgrade = () => {
+	return Host.completeUpgrade();
+};
+
 const handleSubscription = (store) => {
 	if (!store) {
 		return;
@@ -25,5 +29,6 @@ Host.subscribeToProperties(['updates', 'upgrade'], handleSubscription);
 
 export {
 	subscribe,
-	upgrade
+	upgrade,
+	completeUpgrade
 };
