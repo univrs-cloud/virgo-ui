@@ -16,7 +16,9 @@ const complete = (event) => {
 	}
 
 	event.preventDefault();
-	softwareService.completeUpgrade();
+	event.target.disabled = true;
+	location.reload();
+	// softwareService.completeUpgrade();
 };
 
 const render = (state) => {
