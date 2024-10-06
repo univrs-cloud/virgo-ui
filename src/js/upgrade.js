@@ -38,6 +38,10 @@ const render = (state) => {
 	modal.querySelector('.modal-footer .install').classList.toggle('d-none', !_.isNull(upgrade));
 	modal.querySelector('.modal-footer .install').disabled = false;
 
+	if (upgrade === false) {
+		return;
+	}
+
 	if (_.isNull(upgrade)) {
 		modal.querySelector('.modal-body').innerHTML = upgradeBodyTemplate({ updates, upgrade });
 		document.querySelector('#upgrade .steps').innerHTML = '';
@@ -46,7 +50,7 @@ const render = (state) => {
 		_.each(document.querySelectorAll('main, footer .navbar'), (element) => { element.classList.remove('d-none'); });
 		return;
 	}
-
+	
 	bootstrap.Modal.getInstance(modal)?.hide();
 	_.each(document.querySelectorAll('main, footer .navbar'), (element) => { element.classList.add('d-none'); });
 	if (!_.isUndefined(upgrade.state)) {
