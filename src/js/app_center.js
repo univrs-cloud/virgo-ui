@@ -16,6 +16,7 @@ const render = (state) => {
 	}
 
 	loading.classList.add('d-none');
+	row.innerHTML = '';
 	_.each(_.orderBy(state.templates, 'title'), (app) => {
 		row.insertAdjacentHTML('beforeend', itemTemplate({ app }));
 	});
