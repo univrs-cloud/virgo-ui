@@ -2,6 +2,10 @@ import Host from '../stores/host';
 
 let callbackCollection = [];
 
+const checkUpdates = () => {
+	return Host.checkUpdates();
+};
+
 const upgrade = () => {
 	return Host.upgrade();
 };
@@ -25,10 +29,11 @@ const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 };
 
-Host.subscribeToProperties(['updates', 'upgrade'], handleSubscription);
+Host.subscribeToProperties(['checkUpdates', 'updates', 'upgrade'], handleSubscription);
 
 export {
 	subscribe,
+	checkUpdates,
 	upgrade,
 	completeUpgrade
 };

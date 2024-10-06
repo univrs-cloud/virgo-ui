@@ -1,41 +1,32 @@
 <%
 let badge = '';
 if (_.isNull(upgrade)) {
-	badge = `
-	<span class="badge d-flex align-items-center p-1 px-2 bd-green-100 border border-green-200 rounded-pill float-end" style="width: max-content;">
-		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="fa me-1" style="width: 14px; height: 14px;"><path class="fa-secondary" opacity=".4" d="M50.7 58.5C58.9 42.3 75.5 32 93.7 32H192L160 160H0L50.7 58.5zM288 160v96c0 17.7-14.3 32-32 32H192c-17.7 0-32-14.3-32-32V160H288zm0 0L256 32h98.3c18.2 0 34.8 10.3 42.9 26.5L448 160H288z"/><path class="fa-primary" d="M160 160H0V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V160H288v96c0 17.7-14.3 32-32 32H192c-17.7 0-32-14.3-32-32V160z"/></svg>
-		Updates available
-	</span>
-	`;
-} else {
-	//if (upgrade.state === 'running') {
-	//	badge = `
-	//	<span class="badge d-flex align-items-center p-1 px-2 bd-blue-100 border border-blue-200 rounded-pill float-end" style="width: max-content;">
-	//		<div class="spinner-border me-1" style="--bs-spinner-width: 0.7rem; --bs-spinner-height: 0.7rem; --bs-spinner-border-width: 0.2em;"></div>
-	//		Updating...
-	//	</span>
-	//	`;
-	//}
-	//if (upgrade.state === 'succeeded') {
-	//	badge = `
-	//	<span class="badge d-flex align-items-center p-1 px-2 bd-green-100 border border-green-200 rounded-pill float-end" style="width: max-content;">
-	//		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa me-1" style="width: 14px; height: 14px;"><path class="fa-secondary" opacity=".4" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/><path class="fa-primary" d="M369 175c9.4 9.4 9.4 24.6 0 33.9L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0z"/></svg>
-	//		Update succeeded
-	//	</span>
-	//	`;
-	//}
-	//if (upgrade.state === 'failed') {
-	//	badge = `
-	//	<span class="badge d-flex align-items-center p-1 px-2 bd-red-100 border border-red-200 rounded-pill float-end" style="width: max-content;">
-	//		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa me-1" style="width: 14px; height: 14px;"><path class="fa-secondary" opacity=".4" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z"/><path class="fa-primary" d="M209 175c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47z"/></svg>
-	//		Update failed
-	//	</span>
-	//	`;
-	//}
+	if (_.isEmpty(updates)) {
+		badge = `
+		<span class="badge d-flex align-items-center p-1 px-2 bd-gray-200 border border-gray-300 rounded-pill float-end" style="width: max-content;">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="fa me-1" style="width: 14px; height: 14px;"><path class="fa-secondary" opacity=".4" d="M50.7 58.5C58.9 42.3 75.5 32 93.7 32H192L160 160H0L50.7 58.5zM288 160v96c0 17.7-14.3 32-32 32H192c-17.7 0-32-14.3-32-32V160H288zm0 0L256 32h98.3c18.2 0 34.8 10.3 42.9 26.5L448 160H288z"/><path class="fa-primary" d="M160 160H0V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V160H288v96c0 17.7-14.3 32-32 32H192c-17.7 0-32-14.3-32-32V160z"/></svg>
+			<span class="${(checkUpdates ? 'd-none' : '')}">No updates available</span>
+			<span class="${(!checkUpdates ? 'd-none' : '')}">Checking for updates...</span>
+			<span class="vr mx-2"></span>
+			<a href="#" class="check-updates ${(checkUpdates ? 'cursor-default' : '')}" data-bs-toggle="tooltip" title="${(!checkUpdates ? 'Check for updates' : '')}">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa ${(checkUpdates ? 'fa-spin' : '')}"><path fill="var(--bs-green)" d="M142.9 142.9c-17.5 17.5-30.1 38-37.8 59.8c-5.9 16.7-24.2 25.4-40.8 19.5s-25.4-24.2-19.5-40.8C55.6 150.7 73.2 122 97.6 97.6c87.2-87.2 228.3-87.5 315.8-1L455 55c6.9-6.9 17.2-8.9 26.2-5.2s14.8 12.5 14.8 22.2l0 128c0 13.3-10.7 24-24 24l-8.4 0c0 0 0 0 0 0L344 224c-9.7 0-18.5-5.8-22.2-14.8s-1.7-19.3 5.2-26.2l41.1-41.1c-62.6-61.5-163.1-61.2-225.3 1zM16 312c0-13.3 10.7-24 24-24l7.6 0 .7 0L168 288c9.7 0 18.5 5.8 22.2 14.8s1.7 19.3-5.2 26.2l-41.1 41.1c62.6 61.5 163.1 61.2 225.3-1c17.5-17.5 30.1-38 37.8-59.8c5.9-16.7 24.2-25.4 40.8-19.5s25.4 24.2 19.5 40.8c-10.8 30.6-28.4 59.3-52.9 83.8c-87.2 87.2-228.3 87.5-315.8 1L57 457c-6.9 6.9-17.2 8.9-26.2 5.2S16 449.7 16 440l0-119.6 0-.7 0-7.6z"/></svg>
+			</a>
+		</span>
+		`;
+	} else {
+		badge = `
+		<span class="badge d-flex align-items-center p-1 px-2 bd-green-100 border border-green-200 rounded-pill float-end" style="width: max-content;">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="fa me-1" style="width: 14px; height: 14px;"><path class="fa-secondary" opacity=".4" d="M50.7 58.5C58.9 42.3 75.5 32 93.7 32H192L160 160H0L50.7 58.5zM288 160v96c0 17.7-14.3 32-32 32H192c-17.7 0-32-14.3-32-32V160H288zm0 0L256 32h98.3c18.2 0 34.8 10.3 42.9 26.5L448 160H288z"/><path class="fa-primary" d="M160 160H0V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V160H288v96c0 17.7-14.3 32-32 32H192c-17.7 0-32-14.3-32-32V160z"/></svg>
+			Updates available (${_.size(updates)})
+		</span>
+		`;
+	}
 }
 %>
 <%if (_.isEmpty(updates)) {%>
-	<div class="updates"></div>
+	<div class="updates nav-item nav-link">
+		<%=badge%>
+	</div>
 <%} else {%>
 	<%if (isAuthenticated) {%>
 		<a href="#update" class="updates nav-item nav-link" data-bs-toggle="modal">
