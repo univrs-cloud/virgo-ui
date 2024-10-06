@@ -36,6 +36,14 @@ class Host extends Store {
 		
 		});
 
+		this.socket.on('checkUpdates', (checkUpdates) => {
+			this.setState({ checkUpdates }, 'check_updates');
+		});
+
+		this.socket.on('updates', (updates) => {
+			this.setState({ updates }, 'get_updates');
+		});
+
 		this.socket.on('upgrade', (upgrade) => {
 			this.setState({ upgrade }, 'upgrade');
 		});
@@ -50,10 +58,6 @@ class Host extends Store {
 
 		this.socket.on('system', (system) => {
 			this.setState({ system }, 'get_system');
-		});
-
-		this.socket.on('updates', (updates) => {
-			this.setState({ updates, checkUpdates: false }, 'get_updates');
 		});
 
 		this.socket.on('proxies', (proxies) => {
@@ -96,7 +100,7 @@ class Host extends Store {
 
 	checkUpdates() {
 		this.setState({ checkUpdates: true }, 'check_updates');
-		this.socket.emit('updates');
+		this.socket.emit('checkUpdates');
 	}
 
 	upgrade() {
