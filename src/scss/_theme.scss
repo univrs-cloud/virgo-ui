@@ -128,7 +128,28 @@ img {
 }
 .fa-fw {
 	width: 1.25em;
-		text-align: center;
+	text-align: center;
+}
+.fa-spin {
+	animation-name: fa-spin;
+	animation-duration: var(--fa-animation-duration, 2s);
+	animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+	animation-timing-function: var(--fa-animation-timing, linear);
+	animation-delay: var(--fa-animation-delay, 0s);
+	animation-direction: var(--fa-animation-direction, normal);
+}
+@media (prefers-reduced-motion: reduce) {
+	.fa-spin {
+		animation-delay: -1ms;
+		animation-duration: 1ms;
+		animation-iteration-count: 1;
+		transition-delay: 0s;
+		transition-duration: 0s;
+	}
+}
+@keyframes fa-spin {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
 }
 
 .progress {

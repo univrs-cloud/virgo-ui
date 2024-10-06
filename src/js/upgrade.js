@@ -26,12 +26,13 @@ const render = (state) => {
 		return;
 	}
 
+	let checkUpdates = state.checkUpdates;
 	let updates = state.updates;
 	let upgrade = state.upgrade;
 
 	morphdom(
 		document.querySelector('header .updates'),
-		badgeTemplate({ updates, upgrade })
+		badgeTemplate({ checkUpdates, updates, upgrade })
 	);
 	
 	modal.querySelector('.modal-footer .install').classList.toggle('d-none', !_.isNull(upgrade));
@@ -52,6 +53,10 @@ const render = (state) => {
 		_.each(document.querySelectorAll(`#upgrade .state:not(.${upgrade.state})`), (element) => { element.classList.add('d-none'); });
 		document.querySelector(`#upgrade .state.${upgrade.state}`).classList.remove('d-none');
 		document.querySelector('#upgrade .steps').innerHTML = upgradeBodyTemplate({ updates, upgrade });
+		let stepsList = document.querySelector('#upgrade .steps ul');
+		if (!_.isNull(stepsList)) {
+			stepsList.scrollTop = stepsList.scrollHeight;
+		}
 		document.querySelector('#upgrade').classList.remove('d-none');
 	}
 };

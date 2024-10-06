@@ -6,6 +6,7 @@ class Host extends Store {
 			system: null,
 			reboot: null,
 			shutdown: null,
+			checkUpdates: false,
 			updates: null,
 			upgrade: null,
 			proxies: null,
@@ -52,7 +53,7 @@ class Host extends Store {
 		});
 
 		this.socket.on('updates', (updates) => {
-			this.setState({ updates }, 'get_updates');
+			this.setState({ updates, checkUpdates: false }, 'get_updates');
 		});
 
 		this.socket.on('proxies', (proxies) => {
@@ -91,6 +92,11 @@ class Host extends Store {
 			let settings = {'weather': {}};
 			this.setState({ settings }, 'get_settings');
 		}, 3000);
+	}
+
+	checkUpdates() {
+		this.socket.emit('updates');
+		this.setState({ checkUpdates: true }, 'check_updates');
 	}
 
 	upgrade() {

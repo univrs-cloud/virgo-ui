@@ -11,6 +11,7 @@ const reboot = (event) => {
 	}
 
 	event.target.classList.add('disabled');
+	bootstrap.Modal.getInstance(event.target.closest('.modal'))?.hide();
 	powerService.reboot();
 };
 
@@ -25,6 +26,7 @@ const shutdown = (event) => {
 	}
 	
 	event.target.classList.add('disabled');
+	bootstrap.Modal.getInstance(event.target.closest('.modal'))?.hide();
 	powerService.shutdown();
 };
 
