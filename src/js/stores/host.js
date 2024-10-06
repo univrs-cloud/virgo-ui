@@ -89,14 +89,14 @@ class Host extends Store {
 		});
 
 		setTimeout(() => {
-			let settings = {'weather': {}};
+			let settings = { 'weather': {} };
 			this.setState({ settings }, 'get_settings');
-		}, 3000);
+		}, 100);
 	}
 
 	checkUpdates() {
-		this.socket.emit('updates');
 		this.setState({ checkUpdates: true }, 'check_updates');
+		this.socket.emit('updates');
 	}
 
 	upgrade() {
