@@ -26,7 +26,7 @@ class Host extends Store {
 		this.setState(initialState, 'socket_connect');
 
 		this.socket.on('disconnect', () => {
-			if (this.getStateProperty('reboot') || this.getStateProperty('shutdown')) {
+			if (this.getStateProperty('reboot') || this.getStateProperty('shutdown') || this.getStateProperty('upgrade')?.state === 'running') {
 				return;
 			}
 
