@@ -11,9 +11,14 @@ let container = document.querySelector('#apps-bookmars');
 const performAction = (event) => {
 	event.preventDefault();
 	let button = event.currentTarget;
+	let card = button.closest('.card');
+	if (button.classList.contains('text-danger') && !confirm(`Are you sure you want to ${button.dataset.action} ${card.dataset.title}?`)) {
+		return;
+	}
+
 	let config = {
-		id: button.closest('.card').getAttribute('data-id'),
-		action: button.getAttribute('data-action')
+		id: card.dataset.id,
+		action: button.dataset.action
 	};
 	appService.performAction(config);
 };
@@ -43,7 +48,7 @@ const render = (state) => {
 		`<div>${template.innerHTML}</div>`,
 		{ childrenOnly: true }
 	);
-	_.each(container.querySelectorAll('.app .dropdown-menu a:not(.disabled)'), (button) => {
+	_.each(container.querySelectorAll('.dropdown-menu a:not(.disabled)'), (button) => {
 		button.addEventListener('click', performAction);
 	});
 };
