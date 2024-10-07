@@ -120,6 +120,26 @@ class Host extends Store {
 	shutdown() {
 		this.socket.emit('shutdown');
 	}
+
+	getProxies() {
+		return this.getStateProperty('proxies');
+	}
+
+	getCheckUpdates() {
+		return this.getStateProperty('checkUpdates');
+	}
+
+	getUpdates() {
+		return this.getStateProperty('updates');
+	}
+
+	getUpgrade() {
+		return this.getStateProperty('upgrade');
+	}
+
+	getSettings() {
+		return this.getStateProperty('settings');
+	};
 }
 
 export default new Host();
