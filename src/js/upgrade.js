@@ -42,27 +42,27 @@ const render = (state) => {
 		return;
 	}
 
-	_.each(document.querySelectorAll('main, footer .navbar'), (element) => { element.classList.add('d-none'); });
-	if (_.isNull(upgrade)) {
-		modal.querySelector('.modal-body').innerHTML = upgradeBodyTemplate({ updates, upgrade });
-		document.querySelector('#upgrade .steps').innerHTML = '';
-		document.querySelector('#upgrade').classList.add('d-none');
-		_.each(document.querySelectorAll('#upgrade .state'), (element) => { element.classList.add('d-none') });
-		_.each(document.querySelectorAll('main, footer .navbar'), (element) => { element.classList.remove('d-none'); });
+	if (!_.isNull(upgrade)) {
+		_.each(document.querySelectorAll('main, footer .navbar'), (element) => { element.classList.add('d-none'); });
+		bootstrap.Modal.getInstance(modal)?.hide();
+		if (!_.isUndefined(upgrade.state)) {
+			_.each(document.querySelectorAll(`#upgrade .state:not(.${upgrade.state})`), (element) => { element.classList.add('d-none'); });
+			document.querySelector(`#upgrade .state.${upgrade.state}`).classList.remove('d-none');
+			document.querySelector('#upgrade .steps').innerHTML = upgradeBodyTemplate({ updates, upgrade });
+			let stepsList = document.querySelector('#upgrade .steps ul');
+			if (!_.isNull(stepsList)) {
+				stepsList.scrollTop = stepsList.scrollHeight;
+			}
+			document.querySelector('#upgrade').classList.remove('d-none');
+		}
 		return;
 	}
-	
-	bootstrap.Modal.getInstance(modal)?.hide();
-	if (!_.isUndefined(upgrade.state)) {
-		_.each(document.querySelectorAll(`#upgrade .state:not(.${upgrade.state})`), (element) => { element.classList.add('d-none'); });
-		document.querySelector(`#upgrade .state.${upgrade.state}`).classList.remove('d-none');
-		document.querySelector('#upgrade .steps').innerHTML = upgradeBodyTemplate({ updates, upgrade });
-		let stepsList = document.querySelector('#upgrade .steps ul');
-		if (!_.isNull(stepsList)) {
-			stepsList.scrollTop = stepsList.scrollHeight;
-		}
-		document.querySelector('#upgrade').classList.remove('d-none');
-	}
+
+	modal.querySelector('.modal-body').innerHTML = upgradeBodyTemplate({ updates, upgrade });
+	document.querySelector('#upgrade .steps').innerHTML = '';
+	document.querySelector('#upgrade').classList.add('d-none');
+	_.each(document.querySelectorAll('#upgrade .state'), (element) => { element.classList.add('d-none') });
+	_.each(document.querySelectorAll('main, footer .navbar'), (element) => { element.classList.remove('d-none'); });
 };
 
 if (isAuthenticated) {
