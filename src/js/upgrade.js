@@ -42,6 +42,7 @@ const render = (state) => {
 		return;
 	}
 
+	_.each(document.querySelectorAll('main, footer .navbar'), (element) => { element.classList.add('d-none'); });
 	if (_.isNull(upgrade)) {
 		modal.querySelector('.modal-body').innerHTML = upgradeBodyTemplate({ updates, upgrade });
 		document.querySelector('#upgrade .steps').innerHTML = '';
@@ -52,7 +53,6 @@ const render = (state) => {
 	}
 	
 	bootstrap.Modal.getInstance(modal)?.hide();
-	_.each(document.querySelectorAll('main, footer .navbar'), (element) => { element.classList.add('d-none'); });
 	if (!_.isUndefined(upgrade.state)) {
 		_.each(document.querySelectorAll(`#upgrade .state:not(.${upgrade.state})`), (element) => { element.classList.add('d-none'); });
 		document.querySelector(`#upgrade .state.${upgrade.state}`).classList.remove('d-none');
