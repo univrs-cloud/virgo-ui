@@ -1,5 +1,4 @@
 import weatherPartial from '../partials/weather.html';
-import * as softwareService from './services/software';
 
 // see https://open-meteo.com/en/docs
 

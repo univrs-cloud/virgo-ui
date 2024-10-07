@@ -1,13 +1,10 @@
-<%if (!_.isEmpty(upgrade)) {%>
-	<div id="account"></div>
-<%} else if (!isAuthenticated) {%>
-	<div id="account">
+<div id="account">
+	<%if (!_.isNull(upgrade)) {%>	
+	<%} else if (!isAuthenticated) {%>
 		<%if (authDomain) {%>
 			<a href="https://<%=authDomain%>/?rd=<%=window.location%>" class="btn btn-sm btn-primary me-2">Sign in</a>
 		<%}%>
-	</div>
-<%} else {%>
-	<div id="account">
+	<%} else {%>
 		<div class="dropdown dropup d-flex align-items-center me-2" style="height: 38px;">
 			<img src="/assets/img/user-circle.svg" alt="profile" class="rounded-circle" data-bs-toggle="dropdown" style="width: 30px; height: 30px;">
 			<div class="dropdown-menu dropdown-menu-end" style="width: max-content;">
@@ -17,5 +14,5 @@
 				<a href="#" rel=“nofollow“ class="sign-out dropdown-item">Sign out</a>
 			</div>
 		</div>
-	</div>
-<%}%>
+	<%}%>
+</div>
