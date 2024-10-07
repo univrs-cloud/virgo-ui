@@ -14,6 +14,18 @@ const completeUpgrade = () => {
 	return Host.completeUpgrade();
 };
 
+const getCheckUpdates = () => {
+	return Host.getCheckUpdates();
+};
+
+const getUpdates = () => {
+	return Host.getUpdates();
+};
+
+const getUpgrade = () => {
+	return Host.getUpgrade();
+};
+
 const handleSubscription = (store) => {
 	if (!store) {
 		return;
@@ -29,11 +41,14 @@ const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 };
 
-Host.subscribeToProperties(['checkUpdates', 'updates', 'upgrade'], handleSubscription);
+Host.subscribeToProperties(['checkUpdates', 'updates'], handleSubscription);
 
 export {
 	subscribe,
 	checkUpdates,
 	upgrade,
-	completeUpgrade
+	completeUpgrade,
+	getCheckUpdates,
+	getUpdates,
+	getUpgrade
 };

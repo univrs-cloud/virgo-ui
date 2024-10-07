@@ -2,7 +2,6 @@ import accountPartial from '../partials/account.html';
 import * as proxyService from './services/proxy';
 
 const accountTemplate = _.template(accountPartial);
-let state;
 let authDomain = null;
 
 const logout = (event) => {
@@ -19,25 +18,27 @@ const logout = (event) => {
 		});
 };
 
-const render = (data) => {
-	state = { ...state, ...data };
-	if (_.isNull(state.proxies) || _.isUndefined(state.upgrade)) {
+const render = (state) => {
+	if (_.isNull(state.proxies)) {
 		return;
 	}
 
-	let upgrade = state.upgrade;
 	let auth = _.find(state.proxies, { forwardPort: 9091 });
 	authDomain = _.first(auth?.domainNames);
 	morphdom(
 		document.querySelector('#account'),
-		accountTemplate({ account, authDomain, upgrade })
+		accountTemplate({ account, authDomain })
 	);
 };
 
-document.body.addEventListener('click', logout);
+const init = () => {
+	render({ proxies: proxyService.getProxies() });
 
-proxyService.subscribe([render]);
+	proxyService.subscribe([render]);
+
+	document.body.addEventListener('click', logout);
+};
 
 export {
-	render
+	init
 };

@@ -1,6 +1,6 @@
 <%
 let badge = '';
-if (_.isNull(upgrade)) {
+if (isAuthenticated) {
 	if (_.isEmpty(updates)) {
 		badge = `
 		<span class="badge d-flex align-items-center p-1 px-2 bd-gray-200 border border-gray-300 rounded-pill float-end" style="width: max-content;">
@@ -23,18 +23,16 @@ if (_.isNull(upgrade)) {
 	}
 }
 %>
-<%if (_.isEmpty(updates)) {%>
-	<div class="updates nav-item nav-link">
-		<%=badge%>
-	</div>
-<%} else {%>
-	<%if (isAuthenticated) {%>
-		<a href="#update" class="updates nav-item nav-link" data-bs-toggle="modal">
-			<%=badge%>
-		</a>
-	<%} else {%>
+<%if (isAuthenticated) {%>
+	<%if (_.isEmpty(updates)) {%>
 		<div class="updates nav-item nav-link">
 			<%=badge%>
 		</div>
+	<%} else {%>
+		<a href="#update" class="updates nav-item nav-link" data-bs-toggle="modal">
+			<%=badge%>
+		</a>
 	<%}%>
+<%} else {%>
+	<div class="updates nav-item nav-link"></div>
 <%}%>

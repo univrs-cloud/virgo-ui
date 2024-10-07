@@ -294,9 +294,8 @@ const timezeone = 'Europe/Bucharest';
 const weatherTemplate = _.template(weatherPartial);
 let fetchRetries = 5;
 let fetchDelay = 60000;
-let state;
 
-const fetchData = (state) => {
+const fetchData = () => {
 	axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=sunrise,sunset&current_weather=true&temperature_unit=celsius&timezone=${timezeone}`)
 		.then((response) => {
 			fetchRetries = 5;
@@ -317,19 +316,17 @@ const fetchData = (state) => {
 		});
 };
 
-const render = (data) => {
-	state = { ...state, ...data };
-	if (_.isUndefined(state.current_weather) || _.isUndefined(state.upgrade)) {
+const render = (state) => {
+	if (_.isUndefined(state.current_weather)) {
 		return;
 	}
 
-	let upgrade = state.upgrade;
 	let timeOfDay = (state.current_weather.time > state.daily.sunrise[0] && state.current_weather.time < state.daily.sunset[0] ? 'day' : 'night');
 	let weather = weatherCondition(state.current_weather.weathercode, timeOfDay);
 	weather.temperature = `${state.current_weather.temperature.toFixed(0)} ${state.current_weather_units.temperature}`;
 	morphdom(
 		document.querySelector('#weather'),
-		weatherTemplate({ weather, upgrade })
+		weatherTemplate({ weather })
 	);
 
 	function weatherCondition(weatherStatusCode, timeOfDay) {
@@ -341,8 +338,10 @@ const render = (data) => {
 	};
 };
 
-fetchData();
+const init = () => {
+	fetchData();
+};
 
 export {
-	render
+	init
 };

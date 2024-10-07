@@ -2,6 +2,10 @@ import Host from '../stores/host';
 
 let callbackCollection = [];
 
+const getSettings = () => {
+	return Host.getSettings();
+};
+
 const handleSubscription = (store) => {
 	if (!store) {
 		return;
@@ -20,5 +24,6 @@ const subscribe = (callbacks) => {
 Host.subscribeToProperties(['settings'], handleSubscription);
 
 export {
-	subscribe
+	subscribe,
+	getSettings
 };
