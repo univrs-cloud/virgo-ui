@@ -2,6 +2,7 @@ import badgePartial from '../partials/updates_badge.html';
 import updateModal from '../partials/modals/update.html';
 import upgradeBodyPartial from '../partials/upgrade_body.html';
 import * as softwareService from './services/software';
+import morphdom from 'morphdom';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', updateModal);
 
@@ -24,12 +25,11 @@ const upgrade = (event) => {
 
 const checkUpdates = (event) => {
 	let target = event.target.closest('.check-updates');
-	if (_.isNull(target) || target.classList.contains('fa-spin')) {
+	if (_.isNull(target) || target.classList.contains('cursor-default')) {
 		return;
 	}
 
 	event.preventDefault();
-	target.classList.add('fa-spin');
 	bootstrap.Tooltip.getInstance(target).hide();
 	softwareService.checkUpdates();
 };
@@ -39,7 +39,12 @@ const render = (state) => {
 	let updates = state.updates;
 	morphdom(
 		document.querySelector('header .updates'),
-		badgeTemplate({ checkUpdates, updates })
+		badgeTemplate({ checkUpdates, updates }, {
+			onBeforeElUpdated: (fromEl, toEl) => {
+				morphdom(fromEl, toEl);
+				return false;
+			}
+		})
 	);
 	modal.querySelector('.modal-body').innerHTML = upgradeBodyTemplate({ updates, upgrade: null });
 };
