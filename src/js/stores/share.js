@@ -12,7 +12,7 @@ class Share extends Store {
 		this.setState(initialState, 'socket_connect');
 
 		this.socket.on('disconnect', () => {
-			if (this.getStateProperty('reboot') || this.getStateProperty('shutdown') || this.getStateProperty('upgrade')?.state === 'running') {
+			if (this.getStateProperty('reboot') || this.getStateProperty('shutdown') || !_.isNull(this.getStateProperty('upgrade'))) {
 				return;
 			}
 			
