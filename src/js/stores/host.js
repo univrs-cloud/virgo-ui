@@ -110,8 +110,7 @@ class Host extends Store {
 	}
 
 	completeUpgrade() {
-		let upgrade = null;
-		this.setState({ upgrade }, 'complete_upgrade');
+		this.socket.emit('completeUpgrade');
 	}
 
 	reboot() {
