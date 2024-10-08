@@ -8,7 +8,7 @@ class Host extends Store {
 			shutdown: null,
 			checkUpdates: false,
 			updates: null,
-			upgrade: null,
+			upgrade: -1,
 			proxies: null,
 			cpu: null,
 			memory: null,

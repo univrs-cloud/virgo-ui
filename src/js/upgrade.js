@@ -15,13 +15,17 @@ const complete = (event) => {
 	event.preventDefault();
 	event.target.disabled = true;
 	softwareService.completeUpgrade();
-	location.reload();
 };
 
 const render = (state) => {
 	let upgrade = state.upgrade;
+	if (_.isNull(upgrade)) {
+		location.reload();
+		return;
+	}
+
 	document.querySelector('main').classList.add('d-none');
-	if (!_.isUndefined(upgrade.state)) {
+	if (!_.isUndefined(upgrade.state) || !_.isEmpty(upgrade.state)) {
 		_.each(container.querySelectorAll(`.state:not(.${upgrade.state})`), (element) => { element.classList.add('d-none'); });
 		container.querySelector(`.state.${upgrade.state}`).classList.remove('d-none');
 		container.querySelector('.steps').innerHTML = upgradeBodyTemplate({ updates: null, upgrade });

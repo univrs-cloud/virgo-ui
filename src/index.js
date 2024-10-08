@@ -11,6 +11,10 @@ window.account = JSON.parse(document.cookie.match('(^|;)\\s*' + 'account' + '\\s
 window.isAuthenticated = !_.isEmpty(account);
 
 const render = (state) => {
+	if (state.upgrade === -1) {
+		return;
+	}
+
 	if (!isAuthenticated || _.isNull(state.upgrade)) {
 		Promise.allSettled([
 			import('./js/header'),
@@ -28,6 +32,7 @@ const render = (state) => {
 	} else {
 		import('./js/upgrade');
 	}
+	bootstrapService.unsubscribe();
 };
 
 bootstrapService.subscribe([render]);
