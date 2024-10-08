@@ -11,4 +11,6 @@ const render = (state) => {
 	);
 };
 
+render({ system: systemService.getSystem() });
+
 systemService.subscribe([render]);
