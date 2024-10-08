@@ -38,12 +38,7 @@ const render = (state) => {
 	let updates = state.updates;
 	morphdom(
 		document.querySelector('header .updates'),
-		badgeTemplate({ checkUpdates, updates }, {
-			onBeforeElUpdated: (fromEl, toEl) => {
-				morphdom(fromEl, toEl);
-				return false;
-			}
-		})
+		badgeTemplate({ checkUpdates, updates })
 	);
 	modal.querySelector('.modal-body').innerHTML = upgradeBodyTemplate({ updates, upgrade: null });
 };
