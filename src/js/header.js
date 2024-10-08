@@ -8,7 +8,7 @@ let container = document.querySelector('header');
 
 morphdom(
 	container,
-	headerTemplate()
+	headerTemplate({ version: VERSION })
 );
 
 updates.init();
