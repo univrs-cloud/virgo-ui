@@ -121,6 +121,10 @@ class Host extends Store {
 		this.socket.emit('shutdown');
 	}
 
+	getSystem() {
+		return this.getStateProperty('system');
+	}
+
 	getProxies() {
 		return this.getStateProperty('proxies');
 	}
