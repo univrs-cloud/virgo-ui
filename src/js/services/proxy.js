@@ -19,9 +19,9 @@ const handleSubscription = (store) => {
 
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
-};
 
-Host.subscribeToProperties(['proxies'], handleSubscription);
+	Host.subscribeToProperties(['proxies'], handleSubscription);
+};
 
 export {
 	subscribe,
