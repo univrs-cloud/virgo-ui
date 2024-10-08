@@ -7,7 +7,7 @@ let container = document.querySelector('footer');
 const render = (state) => {
 	morphdom(
 		container,
-		footerTemplate({ system: state.system })
+		footerTemplate({ system: state.system, version: VERSION })
 	);
 };
 

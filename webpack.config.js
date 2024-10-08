@@ -74,6 +74,9 @@ module.exports = (env, argv) => {
 			clean: true
 		},
 		plugins: [
+			new webpack.DefinePlugin({
+				VERSION: JSON.stringify(require('./package.json').version)
+			}),
 			new CleanWebpackPlugin(),
 			new webpack.ProvidePlugin({
 				'_': ['lodash-es', 'default'],
