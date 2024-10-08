@@ -2,7 +2,6 @@ import badgePartial from '../partials/updates_badge.html';
 import updateModal from '../partials/modals/update.html';
 import upgradeBodyPartial from '../partials/upgrade_body.html';
 import * as softwareService from './services/software';
-import morphdom from 'morphdom';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', updateModal);
 
@@ -58,7 +57,7 @@ const init = () => {
 	container.addEventListener('click', checkUpdates);
 	modal.querySelector('.modal-footer .install').addEventListener('click', upgrade);
 
-	softwareService.subscribe([render]);
+	softwareService.subscribeToUpdates([render]);
 };
 
 export {

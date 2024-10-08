@@ -55,10 +55,10 @@ const handleSubscription = (store) => {
 
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
+	
+	Host.subscribeToProperties(['proxies'], handleSubscription);
+	Docker.subscribeToProperties(['configured'], handleSubscription);
 };
-
-Host.subscribeToProperties(['proxies'], handleSubscription);
-Docker.subscribeToProperties(['configured'], handleSubscription);
 
 export {
 	subscribe,

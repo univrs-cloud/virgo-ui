@@ -19,9 +19,9 @@ const handleSubscription = (store) => {
 
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
-};
 
-Docker.subscribeToProperties(['templates'], handleSubscription);
+	Docker.subscribeToProperties(['templates'], handleSubscription);
+};
 
 export {
 	subscribe,

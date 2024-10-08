@@ -42,4 +42,4 @@ render({ upgrade: softwareService.getUpgrade() });
 
 container.addEventListener('click', complete);
 
-softwareService.subscribe([render]);
+softwareService.subscribeToUpgrade([render]);

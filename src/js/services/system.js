@@ -19,9 +19,9 @@ const handleSubscription = (store) => {
 
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
-};
 
-Host.subscribeToProperties(['system'], handleSubscription);
+	Host.subscribeToProperties(['system'], handleSubscription);
+};
 
 export {
 	subscribe,
