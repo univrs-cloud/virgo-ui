@@ -1,6 +1,7 @@
 import Host from '../stores/host';
 
 let callbackCollection = [];
+let subscription = null;
 
 const handleSubscription = (store) => {
 	if (!store) {
@@ -16,9 +17,17 @@ const handleSubscription = (store) => {
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 	
-	Host.subscribeToProperties(['upgrade'], handleSubscription);
+	subscription = Host.subscribeToProperties(['upgrade'], handleSubscription);
+};
+
+const unsubscribe = () => {
+	if (subscription) {
+		subscription.unsubscribe();
+		subscription = null;
+	}
 };
 
 export {
 	subscribe,
+	unsubscribe
 };
