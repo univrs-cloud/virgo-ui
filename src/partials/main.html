@@ -1,12 +1,19 @@
 <main>
 	<div class="container pt-4">
 		<div class="row">
-			<div class="col col-xl-9 col-lg-9 col-md-8 col-sm-12 col-12">
+			<div class="col col-xl-3 col-lg-3 col-md-4 col-sm-12 col-12 order-last order-sm-first">
+				<h5>Status</h5>
+				<div id="resources-monitor" class="card text-bg-light rounded-4 border-0">
+					<div class="card-body p-2">
+						<div class="d-flex justify-content-center p-5">
+							<div class="spinner-border spinner-border-sm text-gray-600"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col col-xl-9 col-lg-9 col-md-8 col-sm-12 col-12 order-first order-sm-last">
 				<div id="apps-bookmars" class="row"></div>
 				<div id="shares" class="row"></div>
-			</div>
-			<div class="col col-xl-3 col-lg-3 col-md-4 col-sm-12 col-12">
-				<div id="resources-monitor"></div>
 			</div>
 		</div>
 	</div>
