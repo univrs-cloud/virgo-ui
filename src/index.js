@@ -7,7 +7,13 @@ bootstrap.Tooltip.Default.sanitize = false;
 bootstrap.Tooltip.Default.selector = '[data-bs-toggle="tooltip"]';
 new bootstrap.Tooltip(document.querySelector('body'));
 
-window.account = JSON.parse(document.cookie.match('(^|;)\\s*' + 'account' + '\\s*=\\s*([^;]+)')?.pop() || '{}');
+try {
+	let encodedAccount = (document.cookie.match('(^|;)\\s*' + 'account' + '\\s*=\\s*([^;]+)')?.pop());
+	let decodedAccountJson = atob(encodedAccount);
+	window.account = JSON.parse(decodedAccountJson);
+} catch (error) {
+	window.account = {};
+}
 window.isAuthenticated = !_.isEmpty(account);
 
 const render = (state) => {
