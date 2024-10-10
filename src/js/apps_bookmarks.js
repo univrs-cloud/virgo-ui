@@ -49,7 +49,7 @@ const render = (state) => {
 		{ childrenOnly: true }
 	);
 	_.each(container.querySelectorAll('.dropdown-menu a:not(.disabled)'), (button) => {
-		// button.addEventListener('click', performAction);
+		button.addEventListener('click', performAction);
 	});
 };
 

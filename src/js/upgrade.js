@@ -44,6 +44,6 @@ morphdom(
 
 render({ upgrade: softwareService.getUpgrade() });
 
-// container.addEventListener('click', complete);
+container.addEventListener('click', complete);
 
 softwareService.subscribeToUpgrade([render]);

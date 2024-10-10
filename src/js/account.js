@@ -36,7 +36,7 @@ const init = () => {
 
 	proxyService.subscribe([render]);
 
-	// document.body.addEventListener('click', logout);
+	document.body.addEventListener('click', logout);
 };
 
 export {
