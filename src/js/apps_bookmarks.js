@@ -1,7 +1,7 @@
-import categoryPartial from '../partials/category.html';
-import appPartial from '../partials/app.html';
-import bookmarkPartial from '../partials/bookmark.html';
-import * as appService from './services/app';
+import categoryPartial from 'partials/category.html';
+import appPartial from 'partials/app.html';
+import bookmarkPartial from 'partials/bookmark.html';
+import * as appService from 'js/services/app';
 
 const categorySomething = _.template(categoryPartial);
 const appTemplate = _.template(appPartial);
@@ -49,7 +49,7 @@ const render = (state) => {
 		{ childrenOnly: true }
 	);
 	_.each(container.querySelectorAll('.dropdown-menu a:not(.disabled)'), (button) => {
-		button.addEventListener('click', performAction);
+		// button.addEventListener('click', performAction);
 	});
 };
 

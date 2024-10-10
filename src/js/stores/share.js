@@ -1,4 +1,4 @@
-import Store from "./store";
+import Store from 'js/stores/store';
 
 class Share extends Store {
 	constructor() {
@@ -22,7 +22,7 @@ class Share extends Store {
 		});
 
 		this.socket.on('shares', (shares) => {
-			this.setState({ shares }, 'set_shares');
+			this.setState({ shares }, 'get_shares');
 		});
 	}
 }

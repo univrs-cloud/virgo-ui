@@ -1,7 +1,11 @@
-import Host from 'js/stores/host';
+import Configuration from 'js/stores/configuration';
+import { map, distinctUntilChanged } from 'rxjs/operators';
 
 let callbackCollection = [];
-let subscription = null;
+
+const getConfiguration = () => {
+	return Configuration.getConfiguration();
+};
 
 const handleSubscription = (updatedProperties) => {
 	_.each(callbackCollection, (callback) => {
@@ -11,18 +15,11 @@ const handleSubscription = (updatedProperties) => {
 
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
-	
-	subscription = Host.subscribeToProperties(['upgrade'], handleSubscription);
-};
 
-const unsubscribe = () => {
-	if (subscription) {
-		subscription();
-		subscription = null;
-	}
+	Configuration.subscribeToProperties(['configuration'], handleSubscription);
 };
 
 export {
 	subscribe,
-	unsubscribe
+	getConfiguration
 };

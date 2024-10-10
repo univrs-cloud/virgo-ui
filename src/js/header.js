@@ -1,7 +1,7 @@
-import headerPartial from '../partials/header.html';
-import * as updates from  './updates';
-import * as weather from  './weather';
-import * as account from  './account';
+import headerPartial from 'partials/header.html';
+import * as updates from 'js/updates';
+import * as weather from 'js/weather';
+import * as account from 'js/account';
 
 const headerTemplate = _.template(headerPartial);
 let container = document.querySelector('header');

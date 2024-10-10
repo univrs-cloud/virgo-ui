@@ -1,4 +1,4 @@
-import mainPartial from '../partials/main.html';
+import mainPartial from 'partials/main.html';
 
 const mainTemplate = _.template(mainPartial);
 let container = document.querySelector('main');

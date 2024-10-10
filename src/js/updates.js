@@ -1,7 +1,7 @@
-import badgePartial from '../partials/updates_badge.html';
-import updateModal from '../partials/modals/update.html';
-import upgradeBodyPartial from '../partials/upgrade_body.html';
-import * as softwareService from './services/software';
+import badgePartial from 'partials/updates_badge.html';
+import updateModal from 'partials/modals/update.html';
+import upgradeBodyPartial from 'partials/upgrade_body.html';
+import * as softwareService from 'js/services/software';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', updateModal);
 
@@ -49,8 +49,8 @@ const init = () => {
 		updates: softwareService.getUpdates() //[{ package: 'package 1', version: { installed: '1.0.0', upgradableTo: '2.0.0' } }]
 	});
 
-	container.addEventListener('click', checkUpdates);
-	modal.querySelector('.modal-footer .install').addEventListener('click', upgrade);
+	// container.addEventListener('click', checkUpdates);
+	// modal.querySelector('.modal-footer .install').addEventListener('click', upgrade);
 
 	softwareService.subscribeToUpdates([render]);
 };
