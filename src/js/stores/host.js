@@ -1,4 +1,4 @@
-import Store from "./store";
+import Store from 'js/stores/store';
 
 class Host extends Store {
 	constructor() {
@@ -16,8 +16,7 @@ class Host extends Store {
 			storage: null,
 			drives: null,
 			ups: null,
-			time: null,
-			settings: null
+			time: null
 		};
 		super({
 			namespace: 'host'
@@ -45,15 +44,15 @@ class Host extends Store {
 		});
 
 		this.socket.on('upgrade', (upgrade) => {
-			this.setState({ upgrade }, 'upgrade');
+			this.setState({ upgrade }, 'get_upgrade');
 		});
 
 		this.socket.on('reboot', (reboot) => {
-			this.setState({ reboot }, 'reboot');
+			this.setState({ reboot }, 'get_reboot');
 		});
 
 		this.socket.on('shutdown', (shutdown) => {
-			this.setState({ shutdown }, 'shutdown');
+			this.setState({ shutdown }, 'get_shutdown');
 		});
 
 		this.socket.on('system', (system) => {
@@ -91,11 +90,6 @@ class Host extends Store {
 		this.socket.on('time', (time) => {
 			this.setState({ time }, 'get_time');
 		});
-
-		setTimeout(() => {
-			let settings = { 'weather': {} };
-			this.setState({ settings }, 'get_settings');
-		}, 100);
 	}
 
 	checkUpdates() {
@@ -140,10 +134,6 @@ class Host extends Store {
 	getUpgrade() {
 		return this.getStateProperty('upgrade');
 	}
-
-	getSettings() {
-		return this.getStateProperty('settings');
-	};
 }
 
 export default new Host();

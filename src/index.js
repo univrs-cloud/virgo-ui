@@ -1,5 +1,5 @@
-import './index.scss';
-import * as bootstrapService from './js/services/bootstrap';
+import 'index.scss';
+import * as bootstrapService from 'js/services/bootstrap';
 
 bootstrap.Tooltip.Default.container = 'body';
 bootstrap.Tooltip.Default.html = true;
@@ -17,20 +17,20 @@ const render = (state) => {
 
 	if (!isAuthenticated || _.isNull(state.upgrade)) {
 		Promise.allSettled([
-			import('./js/header'),
-			import('./js/main'),
-			import('./js/footer')
+			import('js/header'),
+			import('js/main'),
+			import('js/footer')
 		])
 			.then(() => {
-				import('./js/power');
-				import('./js/resources_monitor');
-				import('./js/apps_bookmarks');
-				import('./js/shares');
-				import('./js/app_center');
-				import('./js/settings');
+				import('js/power');
+				import('js/resources_monitor');
+				import('js/apps_bookmarks');
+				import('js/shares');
+				import('js/app_center');
+				import('js/configuration');
 			});
 	} else {
-		import('./js/upgrade');
+		import('js/upgrade');
 	}
 	bootstrapService.unsubscribe();
 };

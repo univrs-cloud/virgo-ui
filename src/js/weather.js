@@ -1,34 +1,35 @@
-import weatherPartial from '../partials/weather.html';
+import weatherPartial from 'partials/weather.html';
+import * as configurationService from 'js/services/configuration';
 
 // see https://open-meteo.com/en/docs
 
-import iconClearDay from '../img/weather/clear-day.svg';
-import iconClearNight from '../img/weather/clear-night.svg';
-import iconPartlyCloudyDay from '../img/weather/partly-cloudy-day.svg';
-import iconPartlyCloudyNight from '../img/weather/partly-cloudy-night.svg';
-import iconOvercast from '../img/weather/overcast.svg';
-import iconFogDay from '../img/weather/fog-day.svg';
-import iconFogNight from '../img/weather/fog-night.svg';
-import iconPartlyCloudyDrizzleDay from '../img/weather/partly-cloudy-day-drizzle.svg';
-import iconPartlyCloudyDrizzleNight from '../img/weather/partly-cloudy-night-drizzle.svg';
-import iconOvercastDrizzleDay from '../img/weather/overcast-day-drizzle.svg';
-import iconOvercastDrizzleNight from '../img/weather/overcast-night-drizzle.svg';
-import iconDrizzle from '../img/weather/drizzle.svg';
-import iconPartlyCloudySleetDay from '../img/weather/partly-cloudy-day-sleet.svg';
-import iconPartlyCloudySleetNight from '../img/weather/partly-cloudy-night-sleet.svg';
-import iconSleet from '../img/weather/sleet.svg';
-import iconPartlyCloudyRainDay from '../img/weather/partly-cloudy-day-rain.svg';
-import iconPartlyCloudyRainNight from '../img/weather/partly-cloudy-night-rain.svg';
-import iconRain from '../img/weather/rain.svg';
-import iconOvercastRainDay from '../img/weather/overcast-day-rain.svg';
-import iconOvercastRainNight from '../img/weather/overcast-night-rain.svg';
-import iconOvercastRain from '../img/weather/overcast-rain.svg';
-import iconPartlyCloudySnowDay from '../img/weather/partly-cloudy-day-snow.svg';
-import iconPartlyCloudySnowNight from '../img/weather/partly-cloudy-night-snow.svg';
-import iconOvercastSnow from '../img/weather/overcast-snow.svg';
-import iconSnow from '../img/weather/snow.svg';
-import iconThunderstormsOvercast from '../img/weather/thunderstorms-overcast.svg';
-import iconThunderstormsExtremeRain from '../img/weather/thunderstorms-extreme-rain.svg';
+import iconClearDay from 'img/weather/clear-day.svg';
+import iconClearNight from 'img/weather/clear-night.svg';
+import iconPartlyCloudyDay from 'img/weather/partly-cloudy-day.svg';
+import iconPartlyCloudyNight from 'img/weather/partly-cloudy-night.svg';
+import iconOvercast from 'img/weather/overcast.svg';
+import iconFogDay from 'img/weather/fog-day.svg';
+import iconFogNight from 'img/weather/fog-night.svg';
+import iconPartlyCloudyDrizzleDay from 'img/weather/partly-cloudy-day-drizzle.svg';
+import iconPartlyCloudyDrizzleNight from 'img/weather/partly-cloudy-night-drizzle.svg';
+import iconOvercastDrizzleDay from 'img/weather/overcast-day-drizzle.svg';
+import iconOvercastDrizzleNight from 'img/weather/overcast-night-drizzle.svg';
+import iconDrizzle from 'img/weather/drizzle.svg';
+import iconPartlyCloudySleetDay from 'img/weather/partly-cloudy-day-sleet.svg';
+import iconPartlyCloudySleetNight from 'img/weather/partly-cloudy-night-sleet.svg';
+import iconSleet from 'img/weather/sleet.svg';
+import iconPartlyCloudyRainDay from 'img/weather/partly-cloudy-day-rain.svg';
+import iconPartlyCloudyRainNight from 'img/weather/partly-cloudy-night-rain.svg';
+import iconRain from 'img/weather/rain.svg';
+import iconOvercastRainDay from 'img/weather/overcast-day-rain.svg';
+import iconOvercastRainNight from 'img/weather/overcast-night-rain.svg';
+import iconOvercastRain from 'img/weather/overcast-rain.svg';
+import iconPartlyCloudySnowDay from 'img/weather/partly-cloudy-day-snow.svg';
+import iconPartlyCloudySnowNight from 'img/weather/partly-cloudy-night-snow.svg';
+import iconOvercastSnow from 'img/weather/overcast-snow.svg';
+import iconSnow from 'img/weather/snow.svg';
+import iconThunderstormsOvercast from 'img/weather/thunderstorms-overcast.svg';
+import iconThunderstormsExtremeRain from 'img/weather/thunderstorms-extreme-rain.svg';
 
 const wmo =  {
 	"0-day": "Sunny",
@@ -288,15 +289,20 @@ const conditions = [
 	}
 ];
 
-const latitude = '45.749';
-const longitude = '21.227';
-const timezeone = 'Europe/Bucharest';
 const weatherTemplate = _.template(weatherPartial);
 let fetchRetries = 5;
 let fetchDelay = 60000;
+let request = null;
 
-const fetchData = () => {
-	axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=sunrise,sunset&current_weather=true&temperature_unit=celsius&timezone=${timezeone}`)
+const fetchData = (state) => {
+	if (request || _.isNull(state.configuration) || _.isUndefined(state.configuration.location) || _.isEmpty(state.configuration.location)) {
+		return;
+	}
+
+	let latitude = state.configuration.location.latitude;
+	let longitude = state.configuration.location.longitude;
+
+	request = axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=sunrise,sunset&current_weather=true&temperature_unit=celsius`)
 		.then((response) => {
 			fetchRetries = 5;
 			fetchDelay = 60000;
@@ -308,9 +314,10 @@ const fetchData = () => {
 			fetchDelay = 1000;
 		})
 		.then(() => {
+			request = null;
 			if (fetchRetries > 0) {
 				setTimeout(() => {
-					fetchData();
+					fetchData({ configuration: configurationService.getConfiguration() });
 				}, fetchDelay);
 			}
 		});
@@ -339,7 +346,9 @@ const render = (state) => {
 };
 
 const init = () => {
-	fetchData();
+	fetchData({ configuration: configurationService.getConfiguration() });
+
+	configurationService.subscribe([fetchData]);
 };
 
 export {

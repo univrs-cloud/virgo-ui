@@ -1,6 +1,6 @@
-import headerPartial from '../partials/header_upgrade.html';
-import upgradeBodyPartial from '../partials/upgrade_body.html';
-import * as softwareService from './services/software';
+import headerPartial from 'partials/header_upgrade.html';
+import upgradeBodyPartial from 'partials/upgrade_body.html';
+import * as softwareService from 'js/services/software';
 
 const headerTemplate = _.template(headerPartial);
 const upgradeBodyTemplate = _.template(upgradeBodyPartial);
@@ -44,6 +44,6 @@ morphdom(
 
 render({ upgrade: softwareService.getUpgrade() });
 
-container.addEventListener('click', complete);
+// container.addEventListener('click', complete);
 
 softwareService.subscribeToUpgrade([render]);

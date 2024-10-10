@@ -1,5 +1,4 @@
-import Host from '../stores/host';
-import Docker from '../stores/docker';
+import Docker from 'js/stores/docker';
 
 let callbackCollection = [];
 
@@ -11,31 +10,26 @@ const performAction = (config) => {
 	Docker.performAction(config);
 };
 
-const handleSubscription = (store) => {
-	if (!store) {
+const handleSubscription = (updatedProperties) => {
+	if (_.isNull(updatedProperties.configured)) {
 		return;
 	}
 
-	let state = store.state;
-	if (_.isNull(state.proxies) || _.isNull(state.configured)) {
-		return;
-	}
-
-	let apps = _.map(state.configured.configuration, (entity) => {
-		let dockerContainer = _.find(state.configured.containers, { name: entity.name });
+	let apps = _.map(updatedProperties.configured.configuration, (entity) => {
+		let dockerContainer = _.find(updatedProperties.configured.containers, { name: entity.name });
 		entity.id = entity.name;
 		entity.state = '';
 		if (dockerContainer) {
 			entity.id = dockerContainer.id;
 			entity.state = dockerContainer.state;
-			let proxy = _.find(state.proxies, { forwardHost: dockerContainer.name });
+			let proxy = _.find(updatedProperties.proxies, { forwardHost: dockerContainer.name });
 			if (!_.isEmpty(proxy)) {
 				entity.url = composeUrlFromProxy(proxy);
 			} else if (!_.isEmpty(dockerContainer.ports)) {
 				let ports = _.filter(dockerContainer.ports, { IP: '0.0.0.0' });
 				if (!_.isEmpty(ports)) {
 					_.each(ports, (port) => {
-						let proxy = _.find(state.proxies, { forwardPort: port.PublicPort });
+						let proxy = _.find(updatedProperties.proxies, { forwardPort: port.PublicPort });
 						if (!_.isEmpty(proxy)) {
 							entity.url = composeUrlFromProxy(proxy);
 						}
@@ -56,8 +50,7 @@ const handleSubscription = (store) => {
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 	
-	Host.subscribeToProperties(['proxies'], handleSubscription);
-	Docker.subscribeToProperties(['configured'], handleSubscription);
+	Docker.subscribeToProperties(['proxies', 'configured'], handleSubscription);
 };
 
 export {

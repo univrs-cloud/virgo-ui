@@ -1,5 +1,5 @@
-import accountPartial from '../partials/account.html';
-import * as proxyService from './services/proxy';
+import accountPartial from 'partials/account.html';
+import * as proxyService from 'js/services/proxy';
 
 const accountTemplate = _.template(accountPartial);
 let authDomain = null;
@@ -36,7 +36,7 @@ const init = () => {
 
 	proxyService.subscribe([render]);
 
-	document.body.addEventListener('click', logout);
+	// document.body.addEventListener('click', logout);
 };
 
 export {

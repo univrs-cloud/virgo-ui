@@ -1,6 +1,6 @@
-import appCenterModal from '../partials/modals/app_center.html';
-import itemPartial from '../partials/modals/app_center_item.html';
-import * as appCenterService from './services/app_center';
+import appCenterModal from 'partials/modals/app_center.html';
+import itemPartial from 'partials/modals/app_center_item.html';
+import * as appCenterService from 'js/services/app_center';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', appCenterModal);
 
@@ -21,11 +21,11 @@ const render = (state) => {
 		row.insertAdjacentHTML('beforeend', itemTemplate({ app }));
 	});
 	_.each(modalBody.querySelectorAll('.install'), (button) => {
-		button.addEventListener('click', (event) => {
-			event.preventDefault();
-			let config = {};
-			appCenterService.install(config);
-		});
+		// button.addEventListener('click', (event) => {
+		// 	event.preventDefault();
+		// 	let config = {};
+		// 	appCenterService.install(config);
+		// });
 	});
 };
 

@@ -1,16 +1,11 @@
-import Host from '../stores/host';
+import Host from 'js/stores/host';
 
 let callbackCollection = [];
 let subscription = null;
 
-const handleSubscription = (store) => {
-	if (!store) {
-		return;
-	}
-
-	let state = store.state;
+const handleSubscription = (updatedProperties) => {
 	_.each(callbackCollection, (callback) => {
-		callback(state);
+		callback(updatedProperties);
 	});
 };
 
@@ -22,7 +17,7 @@ const subscribe = (callbacks) => {
 
 const unsubscribe = () => {
 	if (subscription) {
-		subscription.unsubscribe();
+		subscription();
 		subscription = null;
 	}
 };

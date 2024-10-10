@@ -1,4 +1,4 @@
-import Docker from '../stores/docker';
+import Docker from 'js/stores/docker';
 
 let callbackCollection = [];
 
@@ -6,14 +6,9 @@ const install = (config) => {
 	Docker.install(config);
 };
 
-const handleSubscription = (store) => {
-	if (!store) {
-		return;
-	}
-
-	let state = store.state;
+const handleSubscription = (updatedProperties) => {
 	_.each(callbackCollection, (callback) => {
-		callback(state);
+		callback(updatedProperties);
 	});
 };
 

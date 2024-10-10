@@ -160,6 +160,12 @@ module.exports = (env, argv) => {
 				}
 			]
 		},
+		resolve: {
+			modules: [
+				path.resolve(__dirname, 'src'),
+				'node_modules'
+			]
+		},
 		optimization: {
 			minimize: true,
 			runtimeChunk: 'single',

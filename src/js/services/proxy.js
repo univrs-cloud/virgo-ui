@@ -6,14 +6,9 @@ const getProxies = () => {
 	return Host.getProxies();
 };
 
-const handleSubscription = (store) => {
-	if (!store) {
-		return;
-	}
-
-	let state = store.state;
+const handleSubscription = (updatedProperties) => {
 	_.each(callbackCollection, (callback) => {
-		callback(state);
+		callback(updatedProperties);
 	});
 };
 

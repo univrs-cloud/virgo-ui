@@ -1,13 +1,13 @@
-import resourcesMonitorPartial from '../partials/resources_monitor.html';
-import resourceCpuPartial from '../partials/resource_cpu.html';
-import resourceMemoryPartial from '../partials/resource_memory.html';
-import resourceStorageSystemPartial from '../partials/resource_storage_system.html';
-import resourceStorageDataPartial from '../partials/resource_storage_data.html';
-import resourceNetworkPartial from '../partials/resource_network.html';
-import resourceUpsPartial from '../partials/resource_ups.html';
-import resourceTimePartial from '../partials/resource_time.html';
-import * as networkUsage from './network_usage';
-import * as resourceMonitorService from './services/resource_monitor';
+import resourcesMonitorPartial from 'partials/resources_monitor.html';
+import resourceCpuPartial from 'partials/resource_cpu.html';
+import resourceMemoryPartial from 'partials/resource_memory.html';
+import resourceStorageSystemPartial from 'partials/resource_storage_system.html';
+import resourceStorageDataPartial from 'partials/resource_storage_data.html';
+import resourceNetworkPartial from 'partials/resource_network.html';
+import resourceUpsPartial from 'partials/resource_ups.html';
+import resourceTimePartial from 'partials/resource_time.html';
+import * as networkUsage from 'js/network_usage';
+import * as resourceMonitorService from 'js/services/resource_monitor';
 import prettyMilliseconds from 'pretty-ms';
 
 const resourcesMonitorTemplate = _.template(resourcesMonitorPartial);

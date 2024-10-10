@@ -1,7 +1,7 @@
-import sharesPartial from '../partials/shares.html';
-import sharesEmptyPartial from '../partials/shares_empty.html';
-import sharePartial from '../partials/share.html';
-import * as shareService from './services/share';
+import sharesPartial from 'partials/shares.html';
+import sharesEmptyPartial from 'partials/shares_empty.html';
+import sharePartial from 'partials/share.html';
+import * as shareService from 'js/services/share';
 
 const sharesTemplate = _.template(sharesPartial);
 const sharesEmptyTemplate = _.template(sharesEmptyPartial);

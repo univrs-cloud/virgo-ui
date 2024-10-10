@@ -1,4 +1,4 @@
-import Store from "./store";
+import Store from 'js/stores/store';
 
 class Docker extends Store {
 	constructor() {

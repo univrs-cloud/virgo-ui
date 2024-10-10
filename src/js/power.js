@@ -1,7 +1,11 @@
-import * as powerService from './services/power';
+import * as powerService from 'js/services/power';
 
 const reboot = (event) => {
-	if (!event.target.classList.contains('reboot') || event.target.classList.contains('disabled')) {
+	if (!event.target.classList.contains('reboot')) {
+		return;
+	}
+	
+	if (event.target.classList.contains('disabled')) {
 		return;
 	}
 
@@ -16,7 +20,11 @@ const reboot = (event) => {
 };
 
 const shutdown = (event) => {
-	if (!event.target.classList.contains('shutdown') || event.target.classList.contains('disabled')) {
+	if (!event.target.classList.contains('shutdown')) {
+		return;
+	}
+
+	if (event.target.classList.contains('disabled')) {
 		return;
 	}
 
@@ -47,7 +55,7 @@ const render = (state) => {
 	_.each(document.body.querySelectorAll('#navbar, #weather, #account, .navbar-toggler, main, footer .navbar'), (element) => { element.classList.remove('d-none'); });
 };
 
-document.body.addEventListener('click', reboot);
-document.body.addEventListener('click', shutdown);
+// document.body.addEventListener('click', reboot);
+// document.body.addEventListener('click', shutdown);
 
 powerService.subscribe([render]);
