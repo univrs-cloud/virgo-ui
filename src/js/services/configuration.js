@@ -7,6 +7,10 @@ const getConfiguration = () => {
 	return Configuration.getConfiguration();
 };
 
+const setLocation = (config) => {
+	Configuration.setLocation(config);
+};
+
 const handleSubscription = (updatedProperties) => {
 	_.each(callbackCollection, (callback) => {
 		callback(updatedProperties);
@@ -21,5 +25,6 @@ const subscribe = (callbacks) => {
 
 export {
 	subscribe,
-	getConfiguration
+	getConfiguration,
+	setLocation
 };
