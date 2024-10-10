@@ -49,8 +49,8 @@ const init = () => {
 		updates: softwareService.getUpdates() //[{ package: 'package 1', version: { installed: '1.0.0', upgradableTo: '2.0.0' } }]
 	});
 
-	// container.addEventListener('click', checkUpdates);
-	// modal.querySelector('.modal-footer .install').addEventListener('click', upgrade);
+	container.addEventListener('click', checkUpdates);
+	modal.querySelector('.modal-footer .install').addEventListener('click', upgrade);
 
 	softwareService.subscribeToUpdates([render]);
 };

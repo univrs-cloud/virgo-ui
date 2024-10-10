@@ -21,11 +21,11 @@ const render = (state) => {
 		row.insertAdjacentHTML('beforeend', itemTemplate({ app }));
 	});
 	_.each(modalBody.querySelectorAll('.install'), (button) => {
-		// button.addEventListener('click', (event) => {
-		// 	event.preventDefault();
-		// 	let config = {};
-		// 	appCenterService.install(config);
-		// });
+		button.addEventListener('click', (event) => {
+			event.preventDefault();
+			let config = {};
+			appCenterService.install(config);
+		});
 	});
 };
 

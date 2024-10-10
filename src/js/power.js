@@ -55,7 +55,7 @@ const render = (state) => {
 	_.each(document.body.querySelectorAll('#navbar, #weather, #account, .navbar-toggler, main, footer .navbar'), (element) => { element.classList.remove('d-none'); });
 };
 
-// document.body.addEventListener('click', reboot);
-// document.body.addEventListener('click', shutdown);
+document.body.addEventListener('click', reboot);
+document.body.addEventListener('click', shutdown);
 
 powerService.subscribe([render]);
