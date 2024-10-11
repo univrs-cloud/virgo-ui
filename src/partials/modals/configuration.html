@@ -10,25 +10,30 @@
 				<div class="oops d-flex justify-content-center align-items-center h-100 d-none"><span class="text-red-300">Error fetching data</span></div>
 				<div class="container-fluid d-none">
 					<div class="row">
-						<div class="col-4">
+						<div class="col-12 col-md-6 col-lg-4">
 							<form id="location">
 								<div class="card">
 									<div class="card-body">
-										<h5 class="card-title">Location</h5>
+										<h5 class="card-title d-flex align-items-center">
+											Location
+											<a href="#" class="get-geo-location btn btn-link p-0 ms-auto">Get location</a>
+										</h5>
 										<div class="form-floating mb-3">
 											<input type="text" class="latitude form-control" placeholder="">
 											<label>Latitude</label>
+											<div class="invalid-feedback"></div>
 										</div>
 										<div class="form-floating mb-3">
 											<input type="text" class="longitude form-control" placeholder="">
 											<label>Longitude</label>
+											<div class="invalid-feedback"></div>
 										</div>
 										<button type="submit" class="btn btn-primary d-flex ms-auto">Save</button>
 									</div>
 								</div>
 							</form>
 						</div>
-						<div class="col-4">
+						<div class="col-12 col-md-6 col-lg-4">
 							<div class="card">
 								<div class="card-body">
 									<h5 class="card-title">Power</h5>
