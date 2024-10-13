@@ -1,8 +1,10 @@
+import appsEmptyPartial from 'partials/apps_empty.html';
 import categoryPartial from 'partials/category.html';
 import appPartial from 'partials/app.html';
 import bookmarkPartial from 'partials/bookmark.html';
 import * as appService from 'js/services/app';
 
+const appsEmptyTemplate = _.template(appsEmptyPartial);
 const categorySomething = _.template(categoryPartial);
 const appTemplate = _.template(appPartial);
 const bookmarkTemplate = _.template(bookmarkPartial);
@@ -27,22 +29,26 @@ const render = (state) => {
 	if (_.isNull(state.apps)) {
 		return;
 	}
-	
+
 	let template = document.createElement('template');
-	_.each(state.apps, (apps, key) => {
-		let categoryTemplate = document.createElement('template');
-		categoryTemplate.innerHTML = categorySomething({ name: key });
-		let category = categoryTemplate.content.querySelector('.col');
-		_.each(apps, (app) => {
-			if (app.type === 'app') {
-				category.insertAdjacentHTML('beforeend', appTemplate({ entity: app }));
-			}
-			if (app.type === 'bookmark') {
-				category.insertAdjacentHTML('beforeend', bookmarkTemplate({ entity: app }));
-			}
+	if (_.isEmpty(state.apps)) {
+		template.innerHTML = appsEmptyTemplate();
+	} else {
+		_.each(state.apps, (apps, key) => {
+			let categoryTemplate = document.createElement('template');
+			categoryTemplate.innerHTML = categorySomething({ name: key });
+			let category = categoryTemplate.content.querySelector('.col');
+			_.each(apps, (app) => {
+				if (app.type === 'app') {
+					category.insertAdjacentHTML('beforeend', appTemplate({ entity: app }));
+				}
+				if (app.type === 'bookmark') {
+					category.insertAdjacentHTML('beforeend', bookmarkTemplate({ entity: app }));
+				}
+			});
+			template.innerHTML += category.outerHTML;
 		});
-		template.innerHTML += category.outerHTML;
-	});
+	}
 	morphdom(
 		container,
 		`<div>${template.innerHTML}</div>`,
