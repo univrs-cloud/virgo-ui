@@ -1,7 +1,7 @@
 <div id="account">
 	<%if (!isAuthenticated) {%>
 		<%if (authDomain) {%>
-			<a href="https://<%=authDomain%>/?rd=<%=window.location%>" class="btn btn-sm btn-primary me-2">Sign in</a>
+			<a href="https://<%=authDomain%>/?rd=<%=window.location%>" class="btn btn-sm btn-outline-light me-2">Sign in</a>
 		<%}%>
 	<%} else {%>
 		<div class="dropdown dropup d-flex align-items-center me-2" style="height: 38px;">
