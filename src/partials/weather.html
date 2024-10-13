@@ -1,11 +1,11 @@
 <div id="weather" class="me-3">
 	<div class="row g-0 align-items-center" style="height: 40px;">
 		<div class="col" style="width: 55px;">
-			<div class="icon text-body-secondary"><%=weather.icon%></div>
+			<div class="icon"><%=weather.icon%></div>
 		</div>
 		<div class="col lh-1">
-			<small class="temperature fw-bold"><%=weather.temperature%></small><br>
-			<small class="condition d-inline-block text-body-tertiary text-truncate" style="max-width: 120px; line-height: 1.1;"><%=_.capitalize(weather.condition)%></small>
+			<small class="temperature fw-bold text-light text-opacity-75"><%=weather.temperature%></small><br>
+			<small class="condition d-inline-block text-light text-opacity-75 text-truncate" style="max-width: 120px; line-height: 1.1;"><%=_.capitalize(weather.condition)%></small>
 		</div>
 	</div>
 </div>

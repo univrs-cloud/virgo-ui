@@ -3,7 +3,7 @@ let badge = '';
 if (isAuthenticated) {
 	if (_.isEmpty(updates)) {
 		badge = `
-		<span class="badge d-flex align-items-center p-1 px-2 bd-gray-200 border border-gray-300 rounded-pill float-end" style="width: max-content;">
+		<span class="badge d-flex align-items-center p-1 px-2 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-pill float-end" style="width: max-content;">
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="fa me-1" style="width: 14px; height: 14px;"><path class="fa-secondary" opacity=".4" d="M50.7 58.5C58.9 42.3 75.5 32 93.7 32H192L160 160H0L50.7 58.5zM288 160v96c0 17.7-14.3 32-32 32H192c-17.7 0-32-14.3-32-32V160H288zm0 0L256 32h98.3c18.2 0 34.8 10.3 42.9 26.5L448 160H288z"/><path class="fa-primary" d="M160 160H0V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V160H288v96c0 17.7-14.3 32-32 32H192c-17.7 0-32-14.3-32-32V160z"/></svg>
 			<span class="${(checkUpdates ? 'd-none' : '')}">No updates available</span>
 			<span class="${(!checkUpdates ? 'd-none' : '')}">Checking for updates...</span>
@@ -25,11 +25,11 @@ if (isAuthenticated) {
 %>
 <%if (isAuthenticated) {%>
 	<%if (_.isEmpty(updates)) {%>
-		<div class="updates nav-item nav-link">
+		<div class="updates nav-item nav-link ms-1">
 			<%=badge%>
 		</div>
 	<%} else {%>
-		<a href="#update" class="updates nav-item nav-link" data-bs-toggle="modal">
+		<a href="#update" class="updates nav-item nav-link ms-1" data-bs-toggle="modal">
 			<%=badge%>
 		</a>
 	<%}%>
