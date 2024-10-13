@@ -17,6 +17,8 @@ const complete = (event) => {
 	softwareService.completeUpgrade();
 };
 
+let isScrollEventAttached = false;
+let shouldScroll = true;
 const render = (state) => {
 	let upgrade = state.upgrade;
 	if (_.isNull(upgrade)) {
@@ -28,9 +30,18 @@ const render = (state) => {
 	if (!_.isUndefined(upgrade.state) || !_.isEmpty(upgrade.state)) {
 		_.each(container.querySelectorAll(`.state:not(.${upgrade.state})`), (element) => { element.classList.add('d-none'); });
 		container.querySelector(`.state.${upgrade.state}`).classList.remove('d-none');
-		container.querySelector('.steps').innerHTML = upgradeBodyTemplate({ updates: null, upgrade });
+		morphdom(
+			container.querySelector('.steps'),
+			upgradeBodyTemplate({ updates: null, upgrade })
+		);
 		let stepsList = container.querySelector('.steps ul');
-		if (!_.isNull(stepsList)) {
+		if (!isScrollEventAttached) {
+			stepsList.addEventListener('scroll', (event) => {
+				shouldScroll = (Math.abs(stepsList.scrollHeight - stepsList.scrollTop - stepsList.clientHeight) < 1);
+			});
+			isScrollEventAttached = true;
+		}
+		if (!_.isNull(stepsList) && shouldScroll) {
 			stepsList.scrollTop = stepsList.scrollHeight;
 		}
 		container.classList.remove('d-none');
