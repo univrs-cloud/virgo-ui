@@ -24,8 +24,7 @@ const render = (state) => {
 	if (!isAuthenticated || _.isNull(state.upgrade)) {
 		Promise.allSettled([
 			import('js/header'),
-			import('js/main'),
-			import('js/footer')
+			import('js/main')
 		])
 			.then(() => {
 				import('js/power');
