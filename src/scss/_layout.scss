@@ -185,6 +185,11 @@ main {
 			.navbar-nav {
 				flex-direction: row;
 				.nav-link {
+					&:hover {
+						color: $white;
+						background-color: #82a7ff;
+						border-radius: $border-radius;
+					}
 					padding-right: 0.5rem;
 					padding-left: 0.5rem;
 				}

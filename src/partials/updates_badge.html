@@ -25,14 +25,14 @@ if (isAuthenticated) {
 %>
 <%if (isAuthenticated) {%>
 	<%if (_.isEmpty(updates)) {%>
-		<div class="updates nav-item nav-link ms-1">
+		<div class="updates d-flex align-items-center ms-3">
 			<%=badge%>
 		</div>
 	<%} else {%>
-		<a href="#update" class="updates nav-item nav-link ms-1" data-bs-toggle="modal">
+		<a href="#update" class="updates d-flex align-items-center ms-3" data-bs-toggle="modal">
 			<%=badge%>
 		</a>
 	<%}%>
 <%} else {%>
-	<div class="updates nav-item nav-link"></div>
+	<div class="updates"></div>
 <%}%>
