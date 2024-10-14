@@ -162,6 +162,7 @@ img {
 
 #account {
 	.dropdown-toggle {
+		cursor: pointer;
 		&:after {
 			display: none;
 		}
@@ -191,6 +192,18 @@ img {
 	}
 	small.fw-light {
 		font-size: 0.775em;
+	}
+}
+.updates {
+	.badge {
+		.fa {
+			.fa-primary {
+				fill: #212f52;
+			}
+			.fa-secondary {
+				fill: #32477c;
+			}
+		}
 	}
 }
 
