@@ -78,6 +78,7 @@ img {
 
 .card {
 	margin-bottom: 1rem;
+	box-shadow: 0 7px 14px 0 rgba(65, 69, 88, 0.1), 0 3px 6px 0 rgba(0, 0, 0, 0.07);
 }
 .item {
 	.card:hover {
@@ -160,14 +161,6 @@ img {
 	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-#account {
-	.dropdown-toggle {
-		cursor: pointer;
-		&:after {
-			display: none;
-		}
-	}
-}
 #weather {
 	.icon {
 		position: relative;
@@ -180,9 +173,22 @@ img {
 		}
 	}
 }
+#account {
+	.dropdown-toggle {
+		cursor: pointer;
+		&:after {
+			display: none;
+		}
+	}
+}
 #update {
 	.modal-body {
 		min-height: calc(100vh - var(--bs-modal-margin) * 2 - 134px);
+	}
+}
+#upgrade {
+	ul {
+		height: calc(100vh - 330px);
 	}
 }
 #resource-usage {

@@ -36,10 +36,12 @@ const checkUpdates = (event) => {
 const render = (state) => {
 	let checkUpdates = state.checkUpdates;
 	let updates = state.updates;
-	morphdom(
-		document.querySelector('header .updates'),
-		badgeTemplate({ checkUpdates, updates })
-	);
+	_.each(document.querySelectorAll('header .updates'), (element) => {
+		morphdom(
+			element,
+			badgeTemplate({ checkUpdates, updates })
+		);
+	});
 	modal.querySelector('.modal-body').innerHTML = upgradeBodyTemplate({ updates, upgrade: null });
 };
 

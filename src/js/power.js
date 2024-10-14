@@ -45,14 +45,14 @@ const render = (state) => {
 
 	let reboot = state.reboot;
 	if (reboot) {
-		_.each(document.body.querySelectorAll('#navbar, #weather, #account, .navbar-toggler, main, footer .navbar'), (element) => { element.classList.add('d-none'); });
+		document.body.classList.add('reboot');
 		document.body.querySelector('#power').classList.remove('d-none');
 		return;
 	}
 
+	document.body.classList.remove('reboot');
 	document.body.querySelector('#power').classList.add('d-none');
 	document.body.querySelector('.reboot')?.classList.remove('disabled');
-	_.each(document.body.querySelectorAll('#navbar, #weather, #account, .navbar-toggler, main, footer .navbar'), (element) => { element.classList.remove('d-none'); });
 };
 
 document.body.addEventListener('click', reboot);
