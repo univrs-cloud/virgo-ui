@@ -29,7 +29,7 @@ body {
 			display: none !important;
 		}
 		nav,
-		.shadow {
+		.navbar-glass {
 			height: 72px;
 		}
 	}
@@ -37,9 +37,9 @@ body {
 
 header {
 	.navbar {
-		.shadow {
-			background-color: rgba(226, 227, 228, 0.96);
-			box-shadow: none !important;
+		box-shadow: 0 -0.5rem 0.5rem -0.5rem rgba(0, 0, 0, 0.2);
+		.navbar-glass {
+			background-color: rgba(237, 242, 249, 0.96);
 		}
 		&.navbar-position {
 			z-index: 1030;
@@ -78,9 +78,9 @@ header {
 		}
 	}
 	.offcanvas {
-		--bs-offcanvas-height: 360px;
+		--bs-offcanvas-height: 590px;
 		--bs-border-color: transparent;
-		background-color: rgba(226, 227, 228, 0.96);
+		background-color: rgba(237, 242, 249, 0.96);
 	}
 	.offcanvas-title {
 		line-height: 1.15;
@@ -120,7 +120,7 @@ main {
 			font-weight: bold;
 		}
 		.navbar {
-			background-color: rgba(226, 227, 228, 0.96);
+			background-color: rgba(237, 242, 249, 0.96);
 			padding-left: 0;
 			padding-right: 0;
 			.navbar-nav {
@@ -130,7 +130,7 @@ main {
 					padding-bottom: 1rem;
 				}
 			}
-			.shadow {
+			.navbar-glass {
 				width: auto !important;
 			}
 		}
@@ -149,7 +149,6 @@ main {
 			height: 100vh;
 			.navbar {
 				height: 100%;
-				box-shadow: none !important;
 				padding: 4.5rem 1rem 1rem 1rem;
 			}
 			.nav {
@@ -180,14 +179,19 @@ main {
 		.navbar {
 			flex-flow: row nowrap;
 			justify-content: flex-start;
+			box-shadow: none !important;
 			&.navbar-position {
 				top: 0;
 				bottom: auto;
 				left: 0;
 				right: 0;
 			}
-			.shadow {
+			.navbar-glass {
 				width: calc(100% - 15.625rem + 1rem) !important;
+				box-shadow: none;
+			}
+			.navbar-glass-shadow {
+				box-shadow: 0 0.5rem 0.5rem -0.5rem rgba(0, 0, 0, 0.2);
 			}
 			.navbar-toggler {
 				display: none;

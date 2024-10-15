@@ -1,8 +1,17 @@
 <hr class="border-secondary-subtle my-3">
 
-<div class="col col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 item align-items">
+<div class="smb-shares col col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 item align-items">
 	<h5 class="d-flex align-items-center">
 		Shares
+		<%if (isAuthenticated) {%>
+			<button type="button" class="btn btn-sm btn-outline-secondary px-1 py-0 ms-auto d-none">Create</button>
+		<%}%>
+	</h5>
+</div>
+
+<div class="time-machine-backups col col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 item align-items">
+	<h5 class="d-flex align-items-center">
+		Time machine backups
 		<%if (isAuthenticated) {%>
 			<button type="button" class="btn btn-sm btn-outline-secondary px-1 py-0 ms-auto d-none">Create</button>
 		<%}%>
