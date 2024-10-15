@@ -41,3 +41,7 @@ const render = (state) => {
 };
 
 bootstrapService.subscribe([render]);
+
+window.addEventListener('scroll', () => {
+	document.body.querySelector('.navbar-glass').classList[document.documentElement.scrollTop > 0 ? 'add' : 'remove']('navbar-glass-shadow');
+});

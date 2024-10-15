@@ -19,7 +19,7 @@
 							<li><a href="#" class="dropdown-item <%=(entity.state === 'running' ? 'text-danger' : 'disabled')%>" data-action="stop">Stop</a></li>
 							<li><a href="#" class="dropdown-item <%=(entity.state === 'running' ? 'text-danger' : 'disabled')%>" data-action="kill">Kill</a></li>
 							<li><a href="#" class="dropdown-item <%=(entity.state === 'running' ? 'text-danger' : 'disabled')%>" data-action="restart">Restart</a></li>
-							<li><a href="#" class="dropdown-item <%=(entity.canBeRemoved ? 'text-danger-' : 'disabled')%> disabled" data-action="remove">Remove</a></li>
+							<li class="d-none"><a href="#" class="dropdown-item <%=(entity.canBeRemoved ? 'text-danger-' : 'disabled')%> disabled" data-action="remove">Remove</a></li>
 						</ul>
 					</div>
 				</div>
