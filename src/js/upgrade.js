@@ -1,11 +1,15 @@
-import headerPartial from 'partials/header_upgrade.html';
+import headerPartial from 'partials/header.html';
 import upgradeBodyPartial from 'partials/upgrade_body.html';
+import * as account from 'js/account';
+import * as systemService from 'js/services/system';
 import * as softwareService from 'js/services/software';
 
 const headerTemplate = _.template(headerPartial);
 const upgradeBodyTemplate = _.template(upgradeBodyPartial);
 let header = document.querySelector('header');
 let container = document.querySelector('#upgrade');
+let isScrollEventAttached = false;
+let shouldScroll = true;
 
 const complete = (event) => {
 	if (!event.target.classList.contains('complete')) {
@@ -17,8 +21,11 @@ const complete = (event) => {
 	softwareService.completeUpgrade();
 };
 
-let isScrollEventAttached = false;
-let shouldScroll = true;
+const renderSerialNumber = (state) => {
+	_.each(document.querySelectorAll('header .serial-number'), (element) => { element.innerHTML = `SN:${state.system?.serial || '&mdash;'}`; });
+	systemService.unsubscribe();
+};
+
 const render = (state) => {
 	let upgrade = state.upgrade;
 	if (_.isNull(upgrade)) {
@@ -50,11 +57,16 @@ const render = (state) => {
 
 morphdom(
 	header,
-	headerTemplate()
+	headerTemplate({ navigationTemplate: () => {}, isUpgrading: true })
 );
+_.each(document.querySelectorAll('header .version'), (element) => { element.innerHTML = `v${VERSION}`; });
 
+renderSerialNumber({ system: systemService.getSystem() });
 render({ upgrade: softwareService.getUpgrade() });
 
-container.addEventListener('click', complete);
-
+systemService.subscribe([renderSerialNumber]);
 softwareService.subscribeToUpgrade([render]);
+
+account.init();
+
+container.addEventListener('click', complete);

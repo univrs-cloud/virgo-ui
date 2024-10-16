@@ -1,10 +1,7 @@
-<div id="<%=entity.name%>" class="card position-relative text-bg-light rounded-4 border-0">
+<div id="<%=entity.name%>" class="card position-relative rounded-4 border-0">
 	<div class="card-body ps-0 py-1">
 		<div class="row g-0 align-items-center">
 			<div class="col-2 p-2 card-image">
-				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa m-auto" data-bs-toggle="tooltip" data-bs-original-title="Time machine backups"><path d="M32 132l0-84 0-16L0 32 0 48 0 176l0 16 16 0 128 0 16 0 0-32-16 0-90.4 0C89.5 84.3 166.7 32 256 32c123.7 0 224 100.3 224 224s-100.3 224-224 224c-73.3 0-138.3-35.2-179.2-89.6l-9.6-12.8L41.6 396.8l9.6 12.8C97.9 471.8 172.2 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C159.6 0 75.7 53.3 32 132zm240-4l-32 0 0 16 0 112 0 6.6 4.7 4.7 80 80L336 358.6 358.6 336l-11.3-11.3L272 249.4 272 144l0-16z"/></svg>
-			</div>
-			<div class="col-auto">
 				<%if (entity.isPrivate) {%>
 					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="fa me-2" data-bs-toggle="tooltip" data-bs-original-title="Password protected"><path d="M144 128v64H304V128c0-44.2-35.8-80-80-80s-80 35.8-80 80zM96 192V128C96 57.3 153.3 0 224 0s128 57.3 128 128v64h32c35.3 0 64 28.7 64 64V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V256c0-35.3 28.7-64 64-64H96zM48 256V448c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V256c0-8.8-7.2-16-16-16H64c-8.8 0-16 7.2-16 16z"/></svg>
 				<%} else {%>
