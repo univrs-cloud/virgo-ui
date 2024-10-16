@@ -149,11 +149,11 @@ if ('geolocation' in navigator) {
 	locationForm.querySelector('.get-geo-location').classList.remove('d-none');
 }
 
+render({ configuration: configurationService.getConfiguration() });
+
+configurationService.subscribe([render]);
+
 locationForm.querySelector('.get-geo-location').addEventListener('click', getLocation);
 locationForm.querySelector('.latitude').addEventListener('input', validateLatitude);
 locationForm.querySelector('.longitude').addEventListener('input', validateLongitude);
 locationForm.addEventListener('submit', setLocation);
-
-render({ configuration: configurationService.getConfiguration() });
-
-configurationService.subscribe([render]);

@@ -10,23 +10,34 @@ let modalBody = modal.querySelector('.modal-body');
 let loading = modalBody.querySelector('.loading');
 let row = modalBody.querySelector('.row');
 
+const install = (event) => {
+	if (!event.target.classList.contains('install')) {
+		return;
+	}
+	
+	event.preventDefault();
+	let config = {};
+	appCenterService.install(config);
+};
+
 const render = (state) => {
 	if (_.isNull(state.templates)) {
 		return;
 	}
 
+	let template = document.createElement('template');
+	template.innerHTML = _.join(_.map(_.orderBy(state.templates, 'title'), (app) => {
+		return itemTemplate({ app });
+	}), '');
+
 	loading.classList.add('d-none');
-	row.innerHTML = '';
-	_.each(_.orderBy(state.templates, 'title'), (app) => {
-		row.insertAdjacentHTML('beforeend', itemTemplate({ app }));
-	});
-	_.each(modalBody.querySelectorAll('.install'), (button) => {
-		button.addEventListener('click', (event) => {
-			event.preventDefault();
-			let config = {};
-			appCenterService.install(config);
-		});
-	});
+	morphdom(
+		row,
+		`<div>${template.innerHTML}</div>`,
+		{ childrenOnly: true }
+	);
 };
+
+modalBody.addEventListener('click', install);
 
 appCenterService.subscribe([render]);

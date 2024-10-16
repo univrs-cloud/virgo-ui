@@ -14,23 +14,15 @@ body {
 	width: 100%;
 	height: 100%;
 	font-weight: 300;
-	background-color: #ffffff;
+	background-color: rgba(237, 242, 249, 0.96);
 	margin-bottom: 64px;
 	&[style*="overflow: hidden;"] {
 		padding-right: 0 !important;
 	}
 	&.reboot {
-		main,
-		#navbar,
-		#account,
-		#weather,
-		.offcanvas,
-		.updates {
+		header,
+		main {
 			display: none !important;
-		}
-		nav,
-		.navbar-glass {
-			height: 72px;
 		}
 	}
 }
@@ -65,7 +57,25 @@ header {
 		background-position: 0 50%;
 		background-repeat: no-repeat;
 	}
+	.nav-title {
+		color: $gray-300;
+	}
 	.nav-link {
+		color: var(--bs-white);
+		text-decoration-color: RGBA(var(--bs-white), var(--bs-link-underline-opacity,1));
+		&:not(.active):hover {
+			color: var(--bs-white);
+		}
+		&.active,
+		&:hover {
+			color: var(--bs-white) !important;
+			svg {
+				fill: var(--bs-white);
+			}
+		}
+		svg {
+			fill: var(--bs-white);
+		}
 		.fa-primary {
 			fill: rgba(255,255,255,0.85);
 		}
@@ -76,27 +86,21 @@ header {
 		}
 	}
 	.offcanvas {
-		--bs-offcanvas-height: 585px;
-		--bs-border-color: transparent;
+		--bs-offcanvas-height: 613px;
+		--bs-offcanvas-padding-y: 1.375rem;
 		background-color: rgba(237, 242, 249, 0.96);
 	}
 	.offcanvas-header {
-		padding-top: 1.36rem;
-		padding-bottom: 1.36rem;
+		box-shadow: 0 -0.5rem 0.5rem -0.5rem rgba(0, 0, 0, 0.2);
 	}
 	.offcanvas-title {
 		line-height: 1.15;
 	}
 }
 
-main {
+main,
+#upgrade {
 	padding-top: 1rem;
-	padding-left: 0.5rem;
-	.content {
-		max-width: 710px;
-		margin-left: auto;
-		margin-right: auto;
-	}
 }
 
 .offcanvas-backdrop {
@@ -120,6 +124,9 @@ main {
 	header {
 		.navbar-brand {
 			font-weight: bold;
+		}
+		.nav-title {
+			text-align: right;
 		}
 		.navbar {
 			background-color: rgba(237, 242, 249, 0.96);
@@ -156,27 +163,18 @@ main {
 			.nav {
 				width: 100%;
 				.nav-link {
-					color: var(--bs-nav-pills-link-active-color);
-					text-decoration-color: RGBA(var(--bs-nav-pills-link-active-color), var(--bs-link-underline-opacity,1));
 					&:not(.active):hover {
-						color: $white;
 						background-color: #82a7ff;
-					}
-					svg {
-						fill: $white;
 					}
 					&.active,
 					&:hover {
 						background-color: #407cfc;
-						svg {
-							fill: $white;
-						}
 					}
 				}
 			}
 		}
 		.navbar-brand {
-			color: $white;
+			color: var(--bs-white);
 		}
 		.navbar {
 			flex-flow: row nowrap;
@@ -206,7 +204,7 @@ main {
 				flex-direction: row;
 				.nav-link {
 					&:hover {
-						color: $white;
+						color: var(--bs-white);
 						background-color: #82a7ff;
 						border-radius: $border-radius;
 					}
@@ -222,7 +220,8 @@ main {
 			}
 		}
 	}
-	main {
+	main,
+	#upgrade {
 		margin-left: 15.625rem;
 	}
 }

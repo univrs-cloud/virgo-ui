@@ -1,15 +1,15 @@
 import smbSharesEmptyPartial from 'partials/smb_shares_empty.html';
-import timeMachineBackupsEmptyPartial from 'partials/time_machine_backups_empty.html';
+import timeMachineEmptyPartial from 'partials/time_machine_empty.html';
 import sharesPartial from 'partials/shares.html';
 import smbSharePartial from 'partials/smb_share.html';
-import timeMachineBackupPartial from 'partials/time_machine_backup.html';
+import timeMachinePartial from 'partials/time_machine.html';
 import * as shareService from 'js/services/share';
 
 const sharesEmptyTemplate = _.template(smbSharesEmptyPartial);
-const timeMachineNackupsEmptyTemplate = _.template(timeMachineBackupsEmptyPartial);
+const timeMachineEmptyTemplate = _.template(timeMachineEmptyPartial);
 const sharesTemplate = _.template(sharesPartial);
 const smbShareTemplate = _.template(smbSharePartial);
-const timeMachineBackupTemplate = _.template(timeMachineBackupPartial);
+const timeMachineTemplate = _.template(timeMachinePartial);
 let container = document.querySelector('#shares');
 
 const render = (state) => {
@@ -30,13 +30,13 @@ const render = (state) => {
 		});
 	}
 
-	let timeMachineBackups = template.content.querySelector('.time-machine-backups');
-	let timeMachineBackupsCollection = _.filter(state.shares, { isTimeMachine: true });
-	if (_.isEmpty(timeMachineBackupsCollection)) {
-		timeMachineBackups.insertAdjacentHTML('beforeend', timeMachineNackupsEmptyTemplate());
+	let timeMachine = template.content.querySelector('.time-machine');
+	let timeMachineCollection = _.filter(state.shares, { isTimeMachine: true });
+	if (_.isEmpty(timeMachineCollection)) {
+		timeMachine.insertAdjacentHTML('beforeend', timeMachineEmptyTemplate());
 	} else {
-		_.each(timeMachineBackupsCollection, (entity) => {
-			timeMachineBackups.insertAdjacentHTML('beforeend', timeMachineBackupTemplate({ entity }));
+		_.each(timeMachineCollection, (entity) => {
+			timeMachine.insertAdjacentHTML('beforeend', timeMachineTemplate({ entity }));
 		});
 	}
 

@@ -20,7 +20,7 @@ const render = (state) => {
 	if (state.upgrade === -1) {
 		return;
 	}
-
+	
 	if (!isAuthenticated || _.isNull(state.upgrade)) {
 		Promise.allSettled([
 			import('js/header'),
@@ -37,11 +37,8 @@ const render = (state) => {
 	} else {
 		import('js/upgrade');
 	}
+
 	bootstrapService.unsubscribe();
 };
 
 bootstrapService.subscribe([render]);
-
-window.addEventListener('scroll', () => {
-	document.body.querySelector('.navbar-glass').classList[document.documentElement.scrollTop > 0 ? 'add' : 'remove']('navbar-glass-shadow');
-});
