@@ -38,9 +38,6 @@ body {
 header {
 	.navbar {
 		box-shadow: 0 -0.5rem 0.5rem -0.5rem rgba(0, 0, 0, 0.2);
-		.navbar-glass {
-			background-color: rgba(237, 242, 249, 0.96);
-		}
 		&.navbar-position {
 			z-index: 1030;
 			position: fixed;
@@ -48,10 +45,11 @@ header {
 			left: 0;
 			right: 0;
 		}
-		.account {
-			.dropdown > img {
-				cursor: pointer;
-			}
+		.nav-pills {
+			--bs-nav-link-padding-x: 0.5rem;
+		}
+		.navbar-glass {
+			background-color: rgba(237, 242, 249, 0.96);
 		}
 		.sign-in,
 		.sign-out {
@@ -78,9 +76,13 @@ header {
 		}
 	}
 	.offcanvas {
-		--bs-offcanvas-height: 590px;
+		--bs-offcanvas-height: 585px;
 		--bs-border-color: transparent;
 		background-color: rgba(237, 242, 249, 0.96);
+	}
+	.offcanvas-header {
+		padding-top: 1.36rem;
+		padding-bottom: 1.36rem;
 	}
 	.offcanvas-title {
 		line-height: 1.15;
@@ -126,8 +128,8 @@ main {
 			.navbar-nav {
 				.nav-link {
 					text-align: right;
-					padding-top: 1rem;
-					padding-bottom: 1rem;
+					padding-top: 0.75rem;
+					padding-bottom: 0.75rem;
 				}
 			}
 			.navbar-glass {
