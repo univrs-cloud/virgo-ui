@@ -83,7 +83,7 @@ module.exports = (env, argv) => {
 				'axios': ['axios', 'default'],
 				'popper': '@popperjs/core',
 				'bootstrap': 'bootstrap',
-				'morphdom': [path.join(__dirname, 'src/js/common/morphdom.js'), 'morphdom'],
+				'morphdom': [path.join(__dirname, 'src/libs/morphdom.js'), 'morphdom'],
 				'prettyBytes': [path.join(__dirname, 'node_modules/pretty-bytes/index.js'), 'default']
 			}),
 			new HtmlWebpackPlugin({
@@ -104,7 +104,7 @@ module.exports = (env, argv) => {
 				crossorigin: 'use-credentials',
 				icons: [
 					{
-						src: path.resolve(__dirname, './src/img/virgo.png'),
+						src: path.resolve(__dirname, './src/assets/img/virgo.png'),
 						destination: 'assets/icons/',
 						sizes: [36, 48, 72, 96, 144, 192, 512]
 					}
@@ -115,7 +115,7 @@ module.exports = (env, argv) => {
 				chunkFilename: 'assets/css/[name].[contenthash].css',
 			}),
 			new CopyWebpackPlugin({'patterns': [
-				{ from: './src/img', to: 'assets/img' }
+				{ from: './src/assets/img', to: 'assets/img' }
 			]})
 		],
 		externals: {
@@ -153,7 +153,7 @@ module.exports = (env, argv) => {
 				},
 				{
 					test: /\.svg$/,
-					include: path.resolve(__dirname, 'src/img/weather'),
+					include: path.resolve(__dirname, 'src/assets/img/weather'),
 					use: {
 						loader: 'raw-loader'
 					}
