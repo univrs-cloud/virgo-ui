@@ -7,6 +7,10 @@
 				</div>
 				<div class="col flex-grow-1 text-truncate">
 					<%=app.title%>
+					<%if (!_.isEmpty(app.url)) {%>
+						<br>
+						<a href="<%=app.url%>" target="<%=(app.target ?? app.name)%>"><small><%=app.url%></small></a>
+					<%}%>
 				</div>
 				<%if (isAuthenticated && app.canBeRemoved) {%>
 					<div class="col-auto">
@@ -27,9 +31,6 @@
 				<%}%>
 			</div>
 		</div>
-		<%if (app.state === 'running' && !_.isEmpty(app.url)) {%>
-			<a href="<%=app.url%>" target="<%=(app.target ?? app.name)%>" class="stretched-link"></a>
-		<%}%>
 		<span class="indicator translate-middle p-2 border border-light rounded-circle <%=(app.state === 'running' ? 'bg-green-300' : 'bg-red-300')%>"></span>
 	</div>
 </div>

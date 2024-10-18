@@ -1,0 +1,32 @@
+<div class="col col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 item">
+	<div class="bookmark card rounded-4 border-0" data-id="<%=bookmark.id%>" data-title="<%=bookmark.title%>">
+		<div class="card-body ps-0 py-1">
+			<div class="row g-0 align-items-center">
+				<div class="col-2 p-2 card-image">
+					<img src="<%=bookmark.icon%>">
+				</div>
+				<div class="col flex-grow-1 text-truncate">
+					<%=bookmark.title%>
+					<%if (!_.isEmpty(bookmark.url)) {%>
+						<br>
+						<a href="<%=bookmark.url%>" target="<%=(bookmark.target ?? bookmark.name)%>"><small><%=bookmark.url%></small></a>
+					<%}%>
+				</div>
+				<%if (isAuthenticated) {%>
+					<div class="col-auto">
+						<div class="dropdown d-none">
+							<span data-bs-toggle="dropdown" class="dropdown-toggle btn btn-sm">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 512" class="fa"><path fill="var(--bs-secondary)" d="M64 360a56 56 0 1 0 0 112 56 56 0 1 0 0-112zm0-160a56 56 0 1 0 0 112 56 56 0 1 0 0-112zM120 96A56 56 0 1 0 8 96a56 56 0 1 0 112 0z"/></svg>
+							</span>
+							<ul class="dropdown-menu">
+								<li><a href="#" class="dropdown-item" data-action="edit">Edit</a></li>
+								<li><hr class="dropdown-divider"></li>
+								<li><a href="#" class="dropdown-item text-danger" data-action="remove">Remove</a></li>
+							</ul>
+						</div>
+					</div>
+				<%}%>
+			</div>
+		</div>
+	</div>	
+</div>

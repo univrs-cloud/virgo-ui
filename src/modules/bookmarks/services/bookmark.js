@@ -6,13 +6,13 @@ const composeUrlFromProxy = (proxy) => {
 	return `${proxy.sslForced ? 'https://' : 'http://'}${_.first(proxy.domainNames)}`;
 };
 
-const composeApps = (configured, proxies) => {
+const composeBookmark = (configured, proxies) => {
 	if (_.isNull(configured)) {
 		return;
 	}
 	
 	return _.map(
-		_.orderBy(_.filter(configured.configuration, { type: 'app' }), ['title'], ['asc']),
+		_.orderBy(_.filter(configured.configuration, { type: 'bookmark' }), ['title'], ['asc']),
 		(entity) => {
 			let dockerContainer = _.find(configured.containers, { name: entity.name });
 			entity.id = entity.name;
@@ -39,8 +39,8 @@ const composeApps = (configured, proxies) => {
 		});
 }
 
-const getApps = () => {
-	return composeApps(Docker.getConfigured(), Docker.getProxies());
+const getBookmarks = () => {
+	return composeBookmark(Docker.getConfigured(), Docker.getProxies());
 };
 
 const performAction = (config) => {
@@ -48,10 +48,10 @@ const performAction = (config) => {
 };
 
 const handleSubscription = (updatedProperties) => {
-	let apps = composeApps(updatedProperties.configured, updatedProperties.proxies);
+	let bookmarks = composeBookmark(updatedProperties.configured, updatedProperties.proxies);
 
 	_.each(callbackCollection, (callback) => {
-		callback({ apps });
+		callback({ bookmarks });
 	});
 };
 
@@ -63,6 +63,6 @@ const subscribe = (callbacks) => {
 
 export {
 	subscribe,
-	getApps,
+	getBookmarks,
 	performAction
 };
