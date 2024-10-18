@@ -29,7 +29,7 @@ const checkUpdates = (event) => {
 	}
 
 	event.preventDefault();
-	bootstrap.Tooltip.getInstance(target).hide();
+	bootstrap.Tooltip.getInstance(target)?.hide();
 	softwareService.checkUpdates();
 };
 
