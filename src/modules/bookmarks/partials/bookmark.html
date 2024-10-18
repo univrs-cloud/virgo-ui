@@ -7,25 +7,28 @@
 				</div>
 				<div class="col flex-grow-1 text-truncate">
 					<%=bookmark.title%>
+				</div>
+				<div class="col-auto">
+					<div class="dropdown">
+						<span data-bs-toggle="dropdown" class="dropdown-toggle btn btn-sm">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 512" class="fa"><path fill="var(--bs-secondary)" d="M64 360a56 56 0 1 0 0 112 56 56 0 1 0 0-112zm0-160a56 56 0 1 0 0 112 56 56 0 1 0 0-112zM120 96A56 56 0 1 0 8 96a56 56 0 1 0 112 0z"/></svg>
+						</span>
+						<ul class="dropdown-menu">
+							<li><a href="#" class="dropdown-item" data-action="edit">Edit</a></li>
+							<li><hr class="dropdown-divider"></li>
+							<li><a href="#" class="dropdown-item text-danger" data-action="remove">Remove</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="row g-0 mt-n2 mb-2">
+				<div class="col offset-2 flex-grow-1 text-secondary">
 					<%if (!_.isEmpty(bookmark.url)) {%>
-						<br>
 						<a href="<%=bookmark.url%>" target="<%=(bookmark.target ?? bookmark.name)%>"><small><%=bookmark.url%></small></a>
+					<%} else {%>
+						&mdash;
 					<%}%>
 				</div>
-				<%if (isAuthenticated) {%>
-					<div class="col-auto">
-						<div class="dropdown">
-							<span data-bs-toggle="dropdown" class="dropdown-toggle btn btn-sm">
-								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 512" class="fa"><path fill="var(--bs-secondary)" d="M64 360a56 56 0 1 0 0 112 56 56 0 1 0 0-112zm0-160a56 56 0 1 0 0 112 56 56 0 1 0 0-112zM120 96A56 56 0 1 0 8 96a56 56 0 1 0 112 0z"/></svg>
-							</span>
-							<ul class="dropdown-menu">
-								<li><a href="#" class="dropdown-item" data-action="edit">Edit</a></li>
-								<li><hr class="dropdown-divider"></li>
-								<li><a href="#" class="dropdown-item text-danger" data-action="remove">Remove</a></li>
-							</ul>
-						</div>
-					</div>
-				<%}%>
 			</div>
 		</div>
 	</div>
