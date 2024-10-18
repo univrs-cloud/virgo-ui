@@ -2,12 +2,16 @@ import Docker from 'stores/docker';
 
 let callbackCollection = [];
 
+const composeUrlFromProxy = (proxy) => {
+	return `${proxy.sslForced ? 'https://' : 'http://'}${_.first(proxy.domainNames)}`;
+};
+
 const composeApps = (configured, proxies) => {
 	if (_.isNull(configured)) {
 		return;
 	}
 	
-	let apps = _.map(
+	return _.map(
 		_.orderBy(_.filter(configured.configuration, { type: 'app' }), ['title'], ['asc']),
 		(entity) => {
 			let dockerContainer = _.find(configured.containers, { name: entity.name });
@@ -33,15 +37,10 @@ const composeApps = (configured, proxies) => {
 			}
 			return entity;
 		});
-	return apps;
 }
 
 const getApps = () => {
 	return composeApps(Docker.getConfigured(), Docker.getProxies());
-};
-
-const composeUrlFromProxy = (proxy) => {
-	return `${proxy.sslForced ? 'https://' : 'http://'}${_.first(proxy.domainNames)}`;
 };
 
 const performAction = (config) => {
