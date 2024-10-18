@@ -47,8 +47,8 @@ const performAction = (config) => {
 	Docker.performAction(config);
 };
 
-const handleSubscription = (updatedProperties) => {
-	let apps = composeApps(updatedProperties.configured, updatedProperties.proxies);
+const handleSubscription = (properties) => {
+	let apps = composeApps(properties.configured, properties.proxies);
 
 	_.each(callbackCollection, (callback) => {
 		callback({ apps });

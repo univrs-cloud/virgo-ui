@@ -24,7 +24,7 @@ const performAction = (event) => {
 		id: card.dataset.id,
 		action: button.dataset.action
 	};
-	bookmarkService.performAction(config);
+	// bookmarkService.performAction(config);
 };
 
 const render = (state) => {

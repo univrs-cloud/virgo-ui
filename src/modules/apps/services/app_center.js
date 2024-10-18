@@ -6,9 +6,9 @@ const install = (config) => {
 	Docker.install(config);
 };
 
-const handleSubscription = (updatedProperties) => {
+const handleSubscription = (properties) => {
 	_.each(callbackCollection, (callback) => {
-		callback(updatedProperties);
+		callback(properties);
 	});
 };
 

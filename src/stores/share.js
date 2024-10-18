@@ -25,6 +25,14 @@ class Share extends Store {
 			this.setState({ shares }, 'get_shares');
 		});
 	}
+
+	getShares() {
+		return this.getStateProperty('shares');
+	}
+
+	performAction(config) {
+		// this.socket.emit('performAction', config);
+	}
 }
 
 export default new Share();

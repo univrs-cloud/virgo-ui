@@ -2,9 +2,9 @@ import Host from 'stores/host';
 
 let callbackCollection = [];
 
-const handleSubscription = (updatedProperties) => {
+const handleSubscription = (properties) => {
 	_.each(callbackCollection, (callback) => {
-		callback(updatedProperties);
+		callback(properties);
 	});
 };
 
