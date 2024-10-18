@@ -1,0 +1,35 @@
+<div class="col col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 item">
+	<div class="app card rounded-4 border-0" data-id="<%=app.id%>" data-title="<%=app.title%>">
+		<div class="card-body ps-0 py-1">
+			<div class="row g-0 align-items-center">
+				<div class="col-2 p-2 card-image">
+					<img src="<%=app.icon%>">
+				</div>
+				<div class="col flex-grow-1 text-truncate">
+					<%=app.title%>
+				</div>
+				<%if (isAuthenticated && app.canBeRemoved) {%>
+					<div class="col-auto">
+						<div class="dropdown">
+							<span data-bs-toggle="dropdown" class="dropdown-toggle btn btn-sm">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 512" class="fa"><path fill="var(--bs-secondary)" d="M64 360a56 56 0 1 0 0 112 56 56 0 1 0 0-112zm0-160a56 56 0 1 0 0 112 56 56 0 1 0 0-112zM120 96A56 56 0 1 0 8 96a56 56 0 1 0 112 0z"/></svg>
+							</span>
+							<ul class="dropdown-menu">
+								<li><a href="#" class="dropdown-item <%=(app.state === 'running' ? 'disabled' : '')%>" data-action="start">Start</a></li>
+								<li><hr class="dropdown-divider"></li>
+								<li><a href="#" class="dropdown-item <%=(app.state === 'running' ? 'text-danger' : 'disabled')%>" data-action="stop">Stop</a></li>
+								<li><a href="#" class="dropdown-item <%=(app.state === 'running' ? 'text-danger' : 'disabled')%>" data-action="kill">Kill</a></li>
+								<li><a href="#" class="dropdown-item <%=(app.state === 'running' ? 'text-danger' : 'disabled')%>" data-action="restart">Restart</a></li>
+								<li><a href="#" class="dropdown-item <%=(app.canBeRemoved ? 'text-danger-' : 'disabled')%> disabled" data-action="remove">Remove</a></li>
+							</ul>
+						</div>
+					</div>
+				<%}%>
+			</div>
+		</div>
+		<%if (app.state === 'running' && !_.isEmpty(app.url)) {%>
+			<a href="<%=app.url%>" target="<%=(app.target ?? app.name)%>" class="stretched-link"></a>
+		<%}%>
+		<span class="indicator translate-middle p-2 border border-light rounded-circle <%=(app.state === 'running' ? 'bg-green-300' : 'bg-red-300')%>"></span>
+	</div>
+</div>

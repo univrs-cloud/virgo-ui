@@ -31,6 +31,14 @@ class Docker extends Store {
 		});
 	}
 
+	getConfigured() {
+		return this.getStateProperty('configured');
+	}
+
+	getProxies() {
+		return this.getStateProperty('proxies');
+	}
+
 	install(config) {
 		this.socket.emit('install', config);
 	}
