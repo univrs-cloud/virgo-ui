@@ -47,8 +47,8 @@ const performAction = (config) => {
 	Docker.performAction(config);
 };
 
-const handleSubscription = (updatedProperties) => {
-	let bookmarks = composeBookmark(updatedProperties.configured, updatedProperties.proxies);
+const handleSubscription = (properties) => {
+	let bookmarks = composeBookmark(properties.configured, properties.proxies);
 
 	_.each(callbackCollection, (callback) => {
 		callback({ bookmarks });

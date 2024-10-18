@@ -10,26 +10,26 @@ const performAction = (config) => {
 	Docker.performAction(config);
 };
 
-const handleSubscription = (updatedProperties) => {
-	if (_.isNull(updatedProperties.configured)) {
+const handleSubscription = (properties) => {
+	if (_.isNull(properties.configured)) {
 		return;
 	}
 
-	let apps = _.map(updatedProperties.configured.configuration, (entity) => {
-		let dockerContainer = _.find(updatedProperties.configured.containers, { name: entity.name });
+	let apps = _.map(properties.configured.configuration, (entity) => {
+		let dockerContainer = _.find(properties.configured.containers, { name: entity.name });
 		entity.id = entity.name;
 		entity.state = '';
 		if (dockerContainer) {
 			entity.id = dockerContainer.id;
 			entity.state = dockerContainer.state;
-			let proxy = _.find(updatedProperties.proxies, { forwardHost: dockerContainer.name });
+			let proxy = _.find(properties.proxies, { forwardHost: dockerContainer.name });
 			if (!_.isEmpty(proxy)) {
 				entity.url = composeUrlFromProxy(proxy);
 			} else if (!_.isEmpty(dockerContainer.ports)) {
 				let ports = _.filter(dockerContainer.ports, { IP: '0.0.0.0' });
 				if (!_.isEmpty(ports)) {
 					_.each(ports, (port) => {
-						let proxy = _.find(updatedProperties.proxies, { forwardPort: port.PublicPort });
+						let proxy = _.find(properties.proxies, { forwardPort: port.PublicPort });
 						if (!_.isEmpty(proxy)) {
 							entity.url = composeUrlFromProxy(proxy);
 						}

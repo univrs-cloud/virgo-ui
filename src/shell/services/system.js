@@ -7,9 +7,9 @@ const getSystem = () => {
 	return Host.getSystem();
 };
 
-const handleSubscription = (updatedProperties) => {
+const handleSubscription = (properties) => {
 	_.each(callbackCollection, (callback) => {
-		callback(updatedProperties);
+		callback(properties);
 	});
 };
 

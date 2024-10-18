@@ -29,15 +29,15 @@ const getUpgrade = () => {
 	return Host.getUpgrade();
 };
 
-const handleUpdatesSubscription = (updatedProperties) => {
+const handleUpdatesSubscription = (properties) => {
 	_.each(callbackCollection.updates, (callback) => {
-		callback(updatedProperties);
+		callback(properties);
 	});
 };
 
-const handleUpgradeSubscription = (updatedProperties) => {
+const handleUpgradeSubscription = (properties) => {
 	_.each(callbackCollection.upgrade, (callback) => {
-		callback(updatedProperties);
+		callback(properties);
 	});
 };
 

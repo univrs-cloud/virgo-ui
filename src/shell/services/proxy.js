@@ -7,9 +7,9 @@ const getProxies = () => {
 	return Docker.getProxies();
 };
 
-const handleSubscription = (updatedProperties) => {
+const handleSubscription = (properties) => {
 	_.each(callbackCollection, (callback) => {
-		callback(updatedProperties);
+		callback(properties);
 	});
 };
 
