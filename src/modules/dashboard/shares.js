@@ -30,13 +30,13 @@ const render = (state) => {
 		});
 	}
 
-	let timeMachine = template.content.querySelector('.time-machine');
+	let timeMachines = template.content.querySelector('.time-machines');
 	let timeMachineCollection = _.filter(state.shares, { isTimeMachine: true });
 	if (_.isEmpty(timeMachineCollection)) {
-		timeMachine.insertAdjacentHTML('beforeend', timeMachineEmptyTemplate());
+		timeMachines.insertAdjacentHTML('beforeend', timeMachineEmptyTemplate());
 	} else {
 		_.each(timeMachineCollection, (entity) => {
-			timeMachine.insertAdjacentHTML('beforeend', timeMachineTemplate({ entity }));
+			timeMachines.insertAdjacentHTML('beforeend', timeMachineTemplate({ entity }));
 		});
 	}
 

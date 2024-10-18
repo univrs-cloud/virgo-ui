@@ -4,7 +4,7 @@ let callbackCollection = [];
 
 const filterSmbShares = (shares) => {
 	if (_.isNull(shares)) {
-		return;
+		return null;
 	}
 	return _.filter(shares, { isTimeMachine: false });
 }

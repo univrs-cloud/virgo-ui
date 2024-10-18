@@ -2,7 +2,7 @@ import('modules/dashboard');
 import('modules/apps');
 import('modules/bookmarks');
 import('modules/smb_shares');
-import('modules/time_machine');
+import('modules/time_machines');
 import('modules/users');
 import('modules/storage');
 import('modules/network');

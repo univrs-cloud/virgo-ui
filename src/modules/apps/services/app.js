@@ -8,7 +8,7 @@ const composeUrlFromProxy = (proxy) => {
 
 const composeApps = (configured, proxies) => {
 	if (_.isNull(configured)) {
-		return;
+		return null;
 	}
 	
 	return _.map(

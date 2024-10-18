@@ -8,7 +8,7 @@ const composeUrlFromProxy = (proxy) => {
 
 const composeBookmark = (configured, proxies) => {
 	if (_.isNull(configured)) {
-		return;
+		return null;
 	}
 	
 	return _.map(
