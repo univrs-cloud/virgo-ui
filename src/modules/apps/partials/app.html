@@ -7,12 +7,8 @@
 				</div>
 				<div class="col flex-grow-1 text-truncate">
 					<%=app.title%>
-					<%if (!_.isEmpty(app.url)) {%>
-						<br>
-						<a href="<%=app.url%>" target="<%=(app.target ?? app.name)%>"><small><%=app.url%></small></a>
-					<%}%>
 				</div>
-				<%if (isAuthenticated && app.canBeRemoved) {%>
+				<%if (app.canBeRemoved) {%>
 					<div class="col-auto">
 						<div class="dropdown">
 							<span data-bs-toggle="dropdown" class="dropdown-toggle btn btn-sm">
@@ -29,6 +25,15 @@
 						</div>
 					</div>
 				<%}%>
+			</div>
+			<div class="row g-0 mt-n2 mb-2">
+				<div class="col offset-2 flex-grow-1">
+					<%if (!_.isEmpty(app.url)) {%>
+						<a href="<%=app.url%>" target="<%=(app.target ?? app.name)%>"><small><%=app.url%></small></a>
+					<%} else {%>
+						&mdash;
+					<%}%>
+				</div>
 			</div>
 		</div>
 		<span class="indicator translate-middle p-2 border border-light rounded-circle <%=(app.state === 'running' ? 'bg-green-300' : 'bg-red-300')%>"></span>

@@ -6,7 +6,7 @@ const filterSmbShares = (shares) => {
 	if (_.isNull(shares)) {
 		return null;
 	}
-	return _.filter(shares, { isTimeMachine: false });
+	return _.orderBy(_.filter(shares, { isTimeMachine: false }), ['name'], ['asv']);
 }
 
 const getShares = () => {
