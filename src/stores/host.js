@@ -119,10 +119,6 @@ class Host extends Store {
 		return this.getStateProperty('system');
 	}
 
-	getProxies() {
-		return this.getStateProperty('proxies');
-	}
-
 	getCheckUpdates() {
 		return this.getStateProperty('checkUpdates');
 	}

@@ -1,37 +1,41 @@
 <div id="settings" class="d-none">
-	<h5>Settings</h5>
-	<div class="loading d-flex justify-content-center align-items-center h-100"><div class="spinner-border text-gray-600"></div></div>
-	<div class="oops d-flex justify-content-center align-items-center h-100 d-none"><span class="text-red-300">Error fetching data</span></div>
-	<div class="container-fluid p-0 d-none">
-		<div class="row">
-			<div class="col-12 col-md-6 col-lg-4">
-				<form id="location">
+	<div class="row">
+		<div class="col-12 position-relative mb-1">
+			<h5>Settings</h5>
+		</div>
+		<div class="loading d-flex justify-content-center align-items-center h-100"><div class="spinner-border text-gray-600"></div></div>
+		<div class="oops d-flex justify-content-center align-items-center h-100 d-none"><span class="text-red-300">Error fetching data</span></div>
+		<div class="container-fluid d-none">
+			<div class="row">
+				<div class="col-12 col-md-6 col-lg-4">
+					<form id="location">
+						<div class="card shadow-none">
+							<div class="card-body">
+								<h5 class="card-title d-flex align-items-center">
+									Location
+									<a href="#" class="get-geo-location btn btn-link p-0 ms-auto">Get location</a>
+								</h5>
+								<div class="form-floating mb-3">
+									<input type="text" class="latitude form-control" placeholder="">
+									<label>Latitude</label>
+									<div class="invalid-feedback"></div>
+								</div>
+								<div class="form-floating mb-3">
+									<input type="text" class="longitude form-control" placeholder="">
+									<label>Longitude</label>
+									<div class="invalid-feedback"></div>
+								</div>
+								<button type="submit" class="btn btn-outline-primary d-flex ms-auto">Save</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="col-12 col-md-6 col-lg-4">
 					<div class="card shadow-none">
 						<div class="card-body">
-							<h5 class="card-title d-flex align-items-center">
-								Location
-								<a href="#" class="get-geo-location btn btn-link p-0 ms-auto">Get location</a>
-							</h5>
-							<div class="form-floating mb-3">
-								<input type="text" class="latitude form-control" placeholder="">
-								<label>Latitude</label>
-								<div class="invalid-feedback"></div>
-							</div>
-							<div class="form-floating mb-3">
-								<input type="text" class="longitude form-control" placeholder="">
-								<label>Longitude</label>
-								<div class="invalid-feedback"></div>
-							</div>
-							<button type="submit" class="btn btn-outline-primary d-flex ms-auto">Save</button>
+							<h5 class="card-title">Power</h5>
+							<a href="#" class="reboot card-link">Reboot</a>
 						</div>
-					</div>
-				</form>
-			</div>
-			<div class="col-12 col-md-6 col-lg-4">
-				<div class="card shadow-none">
-					<div class="card-body">
-						<h5 class="card-title">Power</h5>
-						<a href="#" class="reboot card-link">Reboot</a>
 					</div>
 				</div>
 			</div>
