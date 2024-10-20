@@ -7,8 +7,9 @@ const install = (config) => {
 };
 
 const handleSubscription = (properties) => {
+	let templates = _.orderBy(properties.templates, ['title'], ['asc']);
 	_.each(callbackCollection, (callback) => {
-		callback(properties);
+		callback({ templates });
 	});
 };
 

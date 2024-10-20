@@ -20,25 +20,26 @@ class Store extends ObservableStore {
 		this.propertySubscribers = [];
 		this.previousState = this.getState() || {};
 
-		this.stateChanged.subscribe((newState) => {
-			newState = newState || {};
-			this.propertySubscribers.forEach((subscriber) => {
-				const propertiesChanged = subscriber.properties.some((propertyName) => {
-					const prevValue = this.previousState[propertyName];
-					const newValue = newState[propertyName];
-					return prevValue !== newValue;
+		this.globalStateWithPropertyChanges.subscribe((stateChange) => {
+			if (stateChange === null) {
+				return;
+			}
+
+			const newState = stateChange.state || {};
+      		const stateChanges = stateChange.stateChanges || [];
+			  this.propertySubscribers.forEach((subscriber) => {
+				const hasChanged = subscriber.properties.some((propertyName) => {
+					return Object.prototype.hasOwnProperty.call(stateChanges, propertyName);
 				});
-			
-				if (propertiesChanged) {
-					const currentProperties = {};
-					subscriber.properties.forEach((propertyName) => {
-						currentProperties[propertyName] = newState[propertyName];
-					});
-					subscriber.callback(currentProperties);
+				if (hasChanged) {
+				  const currentProperties = {};
+				  subscriber.properties.forEach((propertyName) => {
+					currentProperties[propertyName] = newState[propertyName];
+				  });
+				  subscriber.callback(currentProperties);
 				}
-			});
-			// Update previousState for the next comparison
-			this.previousState = newState;
+			  });
+			  this.previousState = newState;
 		});
 	}
 

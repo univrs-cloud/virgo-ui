@@ -1,13 +1,13 @@
-import modulePartial from 'modules/smb_shares/partials/index.html';
-import emptyPartial from 'modules/smb_shares/partials/empty.html';
-import smbSharePartial from 'modules/smb_shares/partials/smb_share.html';
-import * as smbShareService from 'modules/smb_shares/services/smb_share';
+import modulePartial from 'modules/folders/partials/index.html';
+import emptyPartial from 'modules/folders/partials/empty.html';
+import folderPartial from 'modules/folders/partials/folder.html';
+import * as folderService from 'modules/folders/services/folder';
 
 const moduleTemplate = _.template(modulePartial);
 const emptyTemplate = _.template(emptyPartial);
-const smbShareTemplate = _.template(smbSharePartial);
+const folterTemplate = _.template(folderPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
-let module = document.querySelector('#smb-shares');
+let module = document.querySelector('#folders');
 let loading = module.querySelector('.loading');
 let container = module.querySelector('.container-fluid');
 let row = container.querySelector('.row');
@@ -24,20 +24,20 @@ const performAction = (event) => {
 		id: card.dataset.id,
 		action: button.dataset.action
 	};
-	// smbShareService.performAction(config);
+	// folderService.performAction(config);
 };
 
 const render = (state) => {
-	if (_.isNull(state.smbShares)) {
+	if (_.isNull(state.folders)) {
 		return;
 	}
 	
 	let template = document.createElement('template');
-	if (_.isEmpty(state.smbShares)) {
+	if (_.isEmpty(state.folders)) {
 		template.innerHTML = emptyTemplate();
 	} else {
-		_.each(state.smbShares, (smbShare) => {
-			template.innerHTML += smbShareTemplate({ smbShare });
+		_.each(state.folders, (folder) => {
+			template.innerHTML += folterTemplate({ folder: folder });
 		});
 	}
 	loading.classList.add('d-none');
@@ -51,6 +51,6 @@ const render = (state) => {
 	});
 };
 
-render({ smbShares: smbShareService.getShares() });
+render({ folders: folderService.getFolders() });
 
-smbShareService.subscribe([render]);
+folderService.subscribe([render]);

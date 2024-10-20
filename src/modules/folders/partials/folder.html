@@ -3,14 +3,14 @@
 		<div class="card-body ps-0 py-1">
 			<div class="row g-0 align-items-center">
 				<div class="col-2 p-2 card-image">
-					<%if (smbShare.isPrivate) {%>
+					<%if (folder.isPrivate) {%>
 						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="fa me-2" data-bs-toggle="tooltip" data-bs-original-title="Password protected"><path d="M144 128v64H304V128c0-44.2-35.8-80-80-80s-80 35.8-80 80zM96 192V128C96 57.3 153.3 0 224 0s128 57.3 128 128v64h32c35.3 0 64 28.7 64 64V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V256c0-35.3 28.7-64 64-64H96zM48 256V448c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V256c0-8.8-7.2-16-16-16H64c-8.8 0-16 7.2-16 16z"/></svg>
 					<%} else {%>
 						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="fa me-2" data-bs-toggle="tooltip" data-bs-original-title="Public"><path d="M144 128c0-44.2 35.8-80 80-80c35.6 0 65.8 23.2 76.1 55.4c4.1 12.6 17.6 19.5 30.2 15.5s19.5-17.6 15.5-30.2C329.2 37.2 281 0 224 0C153.3 0 96 57.3 96 128v64H64c-35.3 0-64 28.7-64 64V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V256c0-35.3-28.7-64-64-64H144V128zM48 256c0-8.8 7.2-16 16-16H384c8.8 0 16 7.2 16 16V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V256z"/></svg>
 					<%}%>
 				</div>
 				<div class="col flex-grow-1 text-truncate">
-					<%=smbShare.name%>
+					<%=folder.name%>
 				</div>
 				<div class="col-auto">
 					<div class="dropdown">
@@ -30,8 +30,8 @@
 					<dl class="m-0">
 						<dt class="fw-lighter"><small>Access</small></dt>
 						<dd class="m-0">
-							<%if (smbShare.validUsers) {%>
-								<%=_.join(smbShare.validUsers, ', ')%>
+							<%if (folder.validUsers) {%>
+								<%=_.join(folder.validUsers, ', ')%>
 							<%} else {%>
 								Guest
 							<%}%>
@@ -41,7 +41,7 @@
 			</div>
 		</div>
 		<div class="progress rounded-pill rounded-top-0 shadow-none position-absolute bottom-0 mx-2" role="progressbar" style="width: calc(100% - 1rem); height: 4px;">
-			<div class="progress-bar bg-blue-300" style="width: <%=smbShare.cap%>%;"></div>
+			<div class="progress-bar bg-blue-300" style="width: <%=folder.cap%>%;"></div>
 		</div>
 	</div>
 </div>

@@ -2,15 +2,15 @@ import Share from 'stores/share';
 
 let callbackCollection = [];
 
-const filterSmbShares = (shares) => {
+const filter = (shares) => {
 	if (_.isNull(shares)) {
 		return null;
 	}
-	return _.orderBy(_.filter(shares, { isTimeMachine: false }), ['name'], ['asv']);
+	return _.orderBy(_.filter(shares, { isTimeMachine: false }), ['name'], ['asc']);
 }
 
-const getShares = () => {
-	return filterSmbShares(Share.getShares());
+const getFolders = () => {
+	return filter(Share.getShares());
 };
 
 const performAction = (config) => {
@@ -18,10 +18,10 @@ const performAction = (config) => {
 };
 
 const handleSubscription = (properties) => {
-	let smbShares = filterSmbShares(properties.shares);
+	let folders = filter(properties.shares);
 
 	_.each(callbackCollection, (callback) => {
-		callback({ smbShares });
+		callback({ folders });
 	});
 };
 
@@ -33,6 +33,6 @@ const subscribe = (callbacks) => {
 
 export {
 	subscribe,
-	getShares,
+	getFolders,
 	performAction
 };

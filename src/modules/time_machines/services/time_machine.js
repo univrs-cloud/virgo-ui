@@ -2,15 +2,15 @@ import Share from 'stores/share';
 
 let callbackCollection = [];
 
-const filterTimeMachines = (shares) => {
+const filter = (shares) => {
 	if (_.isNull(shares)) {
 		return null;
 	}
-	return _.orderBy(_.filter(shares, { isTimeMachine: true }), ['name'], ['asv']);
+	return _.orderBy(_.filter(shares, { isTimeMachine: true }), ['name'], ['asc']);
 }
 
 const getTimeMachines = () => {
-	return filterTimeMachines(Share.getShares());
+	return filter(Share.getShares());
 };
 
 const performAction = (config) => {
@@ -18,7 +18,7 @@ const performAction = (config) => {
 };
 
 const handleSubscription = (properties) => {
-	let timeMachines = filterTimeMachines(properties.shares);
+	let timeMachines = filter(properties.shares);
 
 	_.each(callbackCollection, (callback) => {
 		callback({ timeMachines });
