@@ -1,14 +1,14 @@
-import smbSharesEmptyPartial from 'modules/dashboard/partials/smb_shares_empty.html';
+import foldersEmptyPartial from 'modules/dashboard/partials/folders_empty.html';
 import timeMachineEmptyPartial from 'modules/dashboard/partials/time_machine_empty.html';
-import sharesPartial from 'modules/dashboard/partials/shares.html';
-import smbSharePartial from 'modules/dashboard/partials/smb_share.html';
+import foldersPartial from 'modules/dashboard/partials/shares.html';
+import folderPartial from 'modules/dashboard/partials/folder.html';
 import timeMachinePartial from 'modules/dashboard/partials/time_machine.html';
 import * as shareService from 'modules/dashboard/services/share';
 
-const sharesEmptyTemplate = _.template(smbSharesEmptyPartial);
+const foldersEmptyTemplate = _.template(foldersEmptyPartial);
 const timeMachineEmptyTemplate = _.template(timeMachineEmptyPartial);
-const sharesTemplate = _.template(sharesPartial);
-const smbShareTemplate = _.template(smbSharePartial);
+const foldersTemplate = _.template(foldersPartial);
+const folderTemplate = _.template(folderPartial);
 const timeMachineTemplate = _.template(timeMachinePartial);
 let container = document.querySelector('#shares');
 
@@ -18,15 +18,15 @@ const render = (state) => {
 	}
 
 	let template = document.createElement('template');
-	template.innerHTML = sharesTemplate();
+	template.innerHTML = foldersTemplate();
 	
-	let smbShares = template.content.querySelector('.smb-shares');
-	let smbSharesCollection = _.filter(state.shares, { isTimeMachine: false });
-	if (_.isEmpty(smbSharesCollection)) {
-		smbShares.insertAdjacentHTML('beforeend', sharesEmptyTemplate());
+	let folders = template.content.querySelector('.folders');
+	let foldersCollection = _.filter(state.shares, { isTimeMachine: false });
+	if (_.isEmpty(foldersCollection)) {
+		folders.insertAdjacentHTML('beforeend', foldersEmptyTemplate());
 	} else {
-		_.each(smbSharesCollection, (entity) => {
-			smbShares.insertAdjacentHTML('beforeend', smbShareTemplate({ entity }));
+		_.each(foldersCollection, (entity) => {
+			folders.insertAdjacentHTML('beforeend', folderTemplate({ entity }));
 		});
 	}
 

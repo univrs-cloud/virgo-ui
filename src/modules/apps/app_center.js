@@ -26,7 +26,7 @@ const render = (state) => {
 	}
 
 	let template = document.createElement('template');
-	template.innerHTML = _.join(_.map(_.orderBy(state.templates, 'title'), (app) => {
+	template.innerHTML = _.join(_.map(state.templates, (app) => {
 		return itemTemplate({ app });
 	}), '');
 
