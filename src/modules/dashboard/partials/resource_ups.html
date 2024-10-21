@@ -1,4 +1,4 @@
-<%if (state.ups === 'remote i/o error') {%>
+<%if (state.ups === 'remote i/o error' || state.ups?.batteryCharge === false) {%>
 	<%return;%>
 <%}%>
 <li class="list-group-item ups py-3">
