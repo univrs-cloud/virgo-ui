@@ -6,6 +6,7 @@ const filter = (shares) => {
 	if (_.isNull(shares)) {
 		return null;
 	}
+	
 	return _.orderBy(_.filter(shares, { isTimeMachine: true }), ['name'], ['asc']);
 }
 
