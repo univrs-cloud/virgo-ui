@@ -5,7 +5,7 @@ import * as folderService from 'modules/folders/services/folder';
 
 const moduleTemplate = _.template(modulePartial);
 const emptyTemplate = _.template(emptyPartial);
-const folterTemplate = _.template(folderPartial);
+const folderTemplate = _.template(folderPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
 let module = document.querySelector('#folders');
 let loading = module.querySelector('.loading');
@@ -37,7 +37,7 @@ const render = (state) => {
 		template.innerHTML = emptyTemplate();
 	} else {
 		_.each(state.folders, (folder) => {
-			template.innerHTML += folterTemplate({ folder: folder });
+			template.innerHTML += folderTemplate({ folder });
 		});
 	}
 	loading.classList.add('d-none');
