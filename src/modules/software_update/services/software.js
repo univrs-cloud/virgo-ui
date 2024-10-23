@@ -15,7 +15,7 @@ const upgrade = () => {
 };
 
 const handleSubscription = (properties) => {
-	_.each(callbackCollection.updates, (callback) => {
+	_.each(callbackCollection, (callback) => {
 		callback(properties);
 	});
 };
