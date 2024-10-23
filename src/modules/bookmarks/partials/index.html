@@ -2,11 +2,9 @@
 	<div class="row">
 		<div class="col-12 position-relative mb-1">
 			<h5>Bookmarks</h5>
-			<%if (isAuthenticated) {%>
-				<div class="position-absolute top-0 end-0 pe-3">
-					<a href="#bookmark" class="btn btn-sm btn-outline-secondary px-1 py-0 ms-auto" data-bs-toggle="modal">Create</a>
-				</div>
-			<%}%>
+			<div class="position-absolute top-0 end-0 pe-3">
+				<a href="#bookmark" class="btn btn-sm btn-outline-secondary px-1 py-0 ms-auto" data-bs-toggle="modal">Create</a>
+			</div>
 		</div>
 		<div class="loading d-flex justify-content-center align-items-center h-100"><div class="spinner-border text-gray-600"></div></div>
 		<div class="oops d-flex justify-content-center align-items-center h-100 d-none"><span class="text-red-300">Error fetching data</span></div>
