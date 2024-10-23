@@ -1,0 +1,13 @@
+<div class="col-12">
+	<div class="card shadow-none">
+		<div class="card-body">
+			<h5 class="card-title"><%=_.pluralize('update', _.size(updates), true)%> available:</h5>
+			<ul class="ps-3">
+				<%_.each(updates, (update) => {%>
+					<li><%=update.package%> <small class="text-secondary">(<%=update.version.installed%> &rarr; <%=update.version.upgradableTo%>)</small></li>
+				<%})%>
+			</ul>
+			<button type="button" class="install btn btn-outline-primary d-flex ms-auto">Install</button>
+		</div>
+	</div>
+</div>

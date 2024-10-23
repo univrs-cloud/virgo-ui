@@ -1,29 +1,20 @@
-<%if (_.isNull(upgrade)) {%>
-	<h6><%=_.size(updates)%> updates available:</h6>
-	<ul class="ps-3">
-		<%_.each(updates, (update) => {%>
-			<li><%=update.package%> <small class="text-secondary">(<%=update.version.installed%> &rarr; <%=update.version.upgradableTo%>)</small></li>
-		<%})%>
-	</ul>
-<%} else {%>
-	<div class="steps text-secondary">
-		<div class="card mt-2">
-			<div class="card-body pe-0">
-				<ul class="list-unstyled overflow-y-scroll m-0">
-					<%_.each(upgrade.steps, (step) => {%>
-						<li><%=step%></li>
-					<%})%>
-					<%if (upgrade.state === 'succeeded') {%>
-						<li class="text-success">Upgrade succeeded</li>
-					<%}%>
-					<%if (upgrade.state === 'failed') {%>
-						<li class="text-danger">Something went wrong, could not update</li>
-					<%}%>
-				</ul>
-			</div>
+<div class="steps text-secondary">
+	<div class="card mt-2">
+		<div class="card-body pe-0">
+			<ul class="list-unstyled overflow-y-scroll m-0">
+				<%_.each(upgrade.steps, (step) => {%>
+					<li><%=step%></li>
+				<%})%>
+				<%if (upgrade.state === 'succeeded') {%>
+					<li class="text-success">Upgrade succeeded</li>
+				<%}%>
+				<%if (upgrade.state === 'failed') {%>
+					<li class="text-danger">Something went wrong, could not update</li>
+				<%}%>
+			</ul>
 		</div>
-		<%if (_.includes(['succeeded', 'failed'], upgrade.state)) {%>
-			<button type="button" class="complete btn btn-outline-primary d-flex ms-auto mt-4">Continue</button>
-		<%}%>
 	</div>
-<%}%>
+	<%if (_.includes(['succeeded', 'failed'], upgrade.state)) {%>
+		<button type="button" class="complete btn btn-outline-primary d-flex ms-auto mt-4">Continue</button>
+	<%}%>
+</div>
