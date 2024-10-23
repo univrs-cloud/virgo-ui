@@ -20,6 +20,4 @@ const morphdom = (fromNode, toNode, options) => {
 	});
 };
 
-export {
-	morphdom
-};
+export default morphdom;

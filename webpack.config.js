@@ -79,11 +79,11 @@ module.exports = (env, argv) => {
 			}),
 			new CleanWebpackPlugin(),
 			new webpack.ProvidePlugin({
-				'_': ['lodash-es', 'default'],
 				'axios': ['axios', 'default'],
 				'popper': '@popperjs/core',
 				'bootstrap': 'bootstrap',
-				'morphdom': [path.join(__dirname, 'src/libs/morphdom.js'), 'morphdom'],
+				'_': [path.join(__dirname, 'src/libs/lodash.js'), 'default'],
+				'morphdom': [path.join(__dirname, 'src/libs/morphdom.js'), 'default'],
 				'prettyBytes': [path.join(__dirname, 'node_modules/pretty-bytes/index.js'), 'default']
 			}),
 			new HtmlWebpackPlugin({
