@@ -39,6 +39,9 @@ header {
 		}
 		.nav-pills {
 			--bs-nav-link-padding-x: 0.5rem;
+			display: block;
+			overflow: auto;
+			height: calc(100vh - 165px);
 		}
 		.navbar-glass {
 			background-color: rgba(237, 242, 249, 0.96);

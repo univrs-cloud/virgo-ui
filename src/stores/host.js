@@ -131,6 +131,14 @@ class Host extends Store {
 	getUpgrade() {
 		return this.getStateProperty('upgrade');
 	}
+
+	getStorage() {
+		return this.getStateProperty('storage');
+	}
+
+	getDrives() {
+		return this.getStateProperty('drives');
+	}
 }
 
 export default new Host();
