@@ -176,14 +176,9 @@ img {
 		}
 	}
 }
-#update {
-	.modal-body {
-		min-height: calc(100vh - var(--bs-modal-margin) * 2 - 134px);
-	}
-}
 #upgrade {
 	ul {
-		height: calc(100vh - 330px);
+		height: calc(100vh - 282px);
 	}
 }
 .updates {
