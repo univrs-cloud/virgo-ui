@@ -1,6 +1,6 @@
 <div class="steps text-secondary">
-	<div class="card mt-2">
-		<div class="card-body pe-0">
+	<div class="card position-relative rounded-4 border-0">
+		<div class="card-body">
 			<ul class="list-unstyled overflow-y-scroll m-0">
 				<%_.each(upgrade.steps, (step) => {%>
 					<li><%=step%></li>
@@ -12,9 +12,9 @@
 					<li class="text-danger">Something went wrong, could not update</li>
 				<%}%>
 			</ul>
+			<%if (_.includes(['succeeded', 'failed'], upgrade.state)) {%>
+				<button type="button" class="complete btn btn-outline-primary d-flex ms-auto mt-4">Continue</button>
+			<%}%>
 		</div>
 	</div>
-	<%if (_.includes(['succeeded', 'failed'], upgrade.state)) {%>
-		<button type="button" class="complete btn btn-outline-primary d-flex ms-auto mt-4">Continue</button>
-	<%}%>
 </div>
