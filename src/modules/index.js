@@ -1,13 +1,18 @@
-import('modules/dashboard');
+const importPromises = [];
+
+importPromises.push(import('modules/not_found'));
+importPromises.push(import('modules/dashboard'));
 
 if (isAuthenticated) {
-	import('modules/apps');
-	import('modules/bookmarks');
-	import('modules/folders');
-	import('modules/time_machines');
-	import('modules/users');
-	import('modules/storage');
-	import('modules/network');
-	import('modules/settings');
-	import('modules/software_update');		
+	importPromises.push(import('modules/apps'));
+	importPromises.push(import('modules/bookmarks'));
+	importPromises.push(import('modules/folders'));
+	importPromises.push(import('modules/time_machines'));
+	importPromises.push(import('modules/users'));
+	importPromises.push(import('modules/storage'));
+	importPromises.push(import('modules/network'));
+	importPromises.push(import('modules/settings'));
+	importPromises.push(import('modules/software_update'));
 }
+
+export const modulesLoaded = Promise.all(importPromises);

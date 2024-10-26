@@ -1,5 +1,6 @@
 import 'assets/scss/index.scss';
 import * as bootstrapService from 'shell/services/bootstrap';
+import page from 'page';
 
 bootstrap.Tooltip.Default.container = 'body';
 bootstrap.Tooltip.Default.html = true;
@@ -27,7 +28,13 @@ const render = (state) => {
 			import('shell/main')
 		])
 			.then(() => {
-				import('modules');
+				import('modules')
+					.then(({ modulesLoaded }) => {
+						modulesLoaded
+							.then(() => {
+								page.start({ hashbang: true });
+							});
+					});
 			});
 	} else {
 		import('shell/upgrade');
