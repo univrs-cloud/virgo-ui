@@ -1,0 +1,33 @@
+<form id="network-interface" class="modal fade" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Network interface</h5>
+			</div>
+			<div class="modal-body">
+				<div class="form-floating mb-3">
+					<input type="text" value="" class="name form-control-plaintext rounded-2 border" placeholder="" readonly>
+					<label>Name</label>
+				</div>
+				<div class="form-check form-switch mb-3">
+					<input type="checkbox" class="dhcp form-check-input" role="switch">
+					<label class="form-check-label">DHCP</label>
+				</div>
+				<div class="form-floating mb-3">
+					<input type="text" class="ip-address form-control" placeholder="###.###.###.###">
+					<label>IP address</label>
+					<div class="invalid-feedback"></div>
+				</div>
+				<div class="form-floating mb-3">
+					<input type="text" class="subnet-mask form-control" placeholder="###.###.###.###">
+					<label>Subnet mask</label>
+					<div class="invalid-feedback"></div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-outline-secondary d-flex ms-auto" data-bs-dismiss="modal">Cancel</button>
+				<button type="submit" class="btn btn-outline-primary">Save</button>
+			</div>
+		</div>
+	</div>
+</form>

@@ -31,7 +31,7 @@ import iconSnow from 'assets/img/weather/snow.svg';
 import iconThunderstormsOvercast from 'assets/img/weather/thunderstorms-overcast.svg';
 import iconThunderstormsExtremeRain from 'assets/img/weather/thunderstorms-extreme-rain.svg';
 
-const wmo =  {
+const wmo = {
 	"0-day": "Sunny",
 	"0-night": "Clear",
 	"1-day": "Mainly Sunny",
@@ -341,7 +341,7 @@ const render = (state) => {
 		return {
 			icon: mapping.icon[timeOfDay],
 			condition: wmo[`${weatherStatusCode}-${timeOfDay}`]
-	   };
+		};
 	};
 };
 

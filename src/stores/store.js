@@ -26,20 +26,20 @@ class Store extends ObservableStore {
 			}
 
 			const newState = stateChange.state || {};
-      		const stateChanges = stateChange.stateChanges || [];
-			  this.propertySubscribers.forEach((subscriber) => {
+			const stateChanges = stateChange.stateChanges || [];
+			this.propertySubscribers.forEach((subscriber) => {
 				const hasChanged = subscriber.properties.some((propertyName) => {
 					return Object.prototype.hasOwnProperty.call(stateChanges, propertyName);
 				});
 				if (hasChanged) {
-				  const currentProperties = {};
-				  subscriber.properties.forEach((propertyName) => {
-					currentProperties[propertyName] = newState[propertyName];
-				  });
-				  subscriber.callback(currentProperties);
+					const currentProperties = {};
+					subscriber.properties.forEach((propertyName) => {
+						currentProperties[propertyName] = newState[propertyName];
+					});
+					subscriber.callback(currentProperties);
 				}
-			  });
-			  this.previousState = newState;
+			});
+			this.previousState = newState;
 		});
 	}
 
