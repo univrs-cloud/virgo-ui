@@ -156,6 +156,13 @@ img {
 	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
+#not-found {
+	height: calc(100vh - 152px);
+	.fa {
+		width: 70px;
+		height: 70px;
+	}
+}
 #weather {
 	.icon {
 		position: relative;
