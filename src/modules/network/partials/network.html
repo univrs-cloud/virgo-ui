@@ -39,11 +39,12 @@
 				<dl class="m-0">
 					<dt class="fw-lighter"><small>Name</small></dt>
 					<dd><%=system.networkInterface.ifaceName%></dd>
-					<dt class="fw-lighter"><small>DHCP</small></dt>
-					<dd><%=system.networkInterface.dhcp ? 'yes' : 'no'%></dd>
-					<dt class="fw-lighter"><small>Address</small></dt>
-					<dd><%=system.networkInterface.ip4%></dd>
-					<dt class="fw-lighter"><small>Netmask</small></dt>
+					<dt class="fw-lighter"><small>IP address</small></dt>
+					<dd class="d-flex align-items-center">
+						<%=system.networkInterface.ip4%>
+						<span class="badge rounded-pill bd-gray-200 ms-1"><%=system.networkInterface.dhcp ? 'DHCP' : 'STATIC'%></span>
+					</dd>
+					<dt class="fw-lighter"><small>Subnet mask</small></dt>
 					<dd><%=system.networkInterface.ip4subnet%></dd>
 					<dt class="fw-lighter"><small>MTU</small></dt>
 					<dd><%=system.networkInterface.mtu%></dd>

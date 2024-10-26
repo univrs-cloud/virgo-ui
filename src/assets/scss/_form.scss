@@ -14,6 +14,11 @@ input:-webkit-autofill:focus {
 	label {
 		transition: transform .1s ease-in-out;
 	}
+	:disabled {
+		&~label {
+			background-color: transparent !important;
+		}
+	}
 	.form-control {
 		&:focus::placeholder {
 			color: revert;
@@ -21,7 +26,7 @@ input:-webkit-autofill:focus {
 		&:not(:placeholder-shown) ~ label {
 			opacity: 1;
 			height: auto;
-			color: rgba(33, 37, 41, 0.65);
+			color: var(--bs-tertiary-color);
 			background-color: var(--bs-white);
 			padding-top: 0.4rem;
 			padding-bottom: 0;

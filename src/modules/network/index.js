@@ -52,7 +52,8 @@ const render = (state) => {
 	gatewayForm.querySelector('.gateway').value = state.system.defaultGateway;
 	hostForm.querySelector('.hostname').value = tldts.getSubdomain(state.system.osInfo.fqdn, { extractHostname: false });
 	hostForm.querySelector('.domain-name').value = tldts.getDomain(state.system.osInfo.fqdn, { extractHostname: false });
-	interfaceForm.querySelector('.name').value = state.system.networkInterface.ifaceName;
+	interfaceForm.querySelector('.alert .name').innerHTML = state.system.networkInterface.ifaceName;
+	interfaceForm.querySelector('input.name').value = state.system.networkInterface.ifaceName;
 	interfaceForm.querySelector('.dhcp').checked = state.system.networkInterface.dhcp;
 	interfaceForm.querySelector('.ip-address').value = state.system.networkInterface.ip4;
 	interfaceForm.querySelector('.subnet-mask').value = state.system.networkInterface.ip4subnet;
