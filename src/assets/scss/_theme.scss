@@ -53,6 +53,9 @@ img {
 	border-radius: 0.1rem;
 }
 
+.modal {
+	backdrop-filter: blur(6px) grayscale(0.8);
+}
 .modal-content {
 	background-clip: initial;
 	border: 0;
@@ -60,16 +63,16 @@ img {
 .modal-header {
 	border-top-left-radius: 0;
 	border-top-right-radius: 0;
+	border-bottom: 0;
+	padding-bottom: 0;
 }
 .modal-body {
 	overflow: auto;
 	max-height: calc(100vh - 170px);
 }
-.modal-open header .navbar,
-.modal-open main,
-.modal-open footer {
-	cursor: default;
-	filter: blur(3px) grayscale(80);
+.modal-footer {
+	border-top: 0;
+	padding-top: 0;
 }
 
 .toast-container {
