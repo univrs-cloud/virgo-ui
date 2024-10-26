@@ -5,6 +5,7 @@ import hostModalPartial from 'modules/network/partials/modals/host.html';
 import interfaceModalPartial from 'modules/network/partials/modals/interface.html';
 import * as networkService from 'modules/network/services/network';
 import * as tldts from 'tldts';
+import { Netmask } from 'netmask';
 
 const moduleTemplate = _.template(modulePartial);
 const networkTemplate = _.template(networkPartial);
@@ -34,7 +35,7 @@ const setInterface = (event) => {
 
 const toggleDhcp = (event) => {
 	interfaceForm.querySelector('.ip-address').disabled = event.target.checked;
-	interfaceForm.querySelector('.subnet-mask').disabled = event.target.checked;
+	interfaceForm.querySelector('.netmask').disabled = event.target.checked;
 };
 
 const render = (state) => {
@@ -44,9 +45,10 @@ const render = (state) => {
 
 	loading.classList.add('d-none');
 	
+	const block = new Netmask(`${state.system.networkInterface.ip4}/${state.system.networkInterface.ip4subnet}`);
 	morphdom(
 		container,
-		`<div>${networkTemplate({ system: state.system, tldts })}</div>`,
+		`<div>${networkTemplate({ system: state.system, block, tldts })}</div>`,
 		{ childrenOnly: true }
 	);
 	gatewayForm.querySelector('.gateway').value = state.system.defaultGateway;
@@ -56,7 +58,7 @@ const render = (state) => {
 	interfaceForm.querySelector('input.name').value = state.system.networkInterface.ifaceName;
 	interfaceForm.querySelector('.dhcp').checked = state.system.networkInterface.dhcp;
 	interfaceForm.querySelector('.ip-address').value = state.system.networkInterface.ip4;
-	interfaceForm.querySelector('.subnet-mask').value = state.system.networkInterface.ip4subnet;
+	interfaceForm.querySelector('.netmask').value = block.bitmask;
 };
 
 render({ system: networkService.getSystem() });

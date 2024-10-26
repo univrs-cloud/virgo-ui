@@ -27,6 +27,7 @@
 		"lodash": "^4.17.21",
 		"lodash-inflection": "^1.5.0",
 		"morphdom": "^2.7.4",
+		"netmask": "^2.0.2",
 		"page": "^1.11.6",
 		"pretty-bytes": "^6.1.1",
 		"pretty-ms": "^9.1.0",
