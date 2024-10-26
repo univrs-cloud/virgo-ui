@@ -1,10 +1,13 @@
 import('modules/dashboard');
-import('modules/apps');
-import('modules/bookmarks');
-import('modules/folders');
-import('modules/time_machines');
-import('modules/users');
-import('modules/storage');
-import('modules/network');
-import('modules/settings');
-import('modules/software_update');
+
+if (isAuthenticated) {
+	import('modules/apps');
+	import('modules/bookmarks');
+	import('modules/folders');
+	import('modules/time_machines');
+	import('modules/users');
+	import('modules/storage');
+	import('modules/network');
+	import('modules/settings');
+	import('modules/software_update');		
+}
