@@ -44,7 +44,8 @@ header {
 			height: calc(100vh - 165px);
 		}
 		.navbar-glass {
-			background-color: rgba(237, 242, 249, 0.96);
+			background-color: rgba(237, 242, 249, 0.25);
+			backdrop-filter: blur(8px);
 		}
 		.sign-in,
 		.sign-out {
