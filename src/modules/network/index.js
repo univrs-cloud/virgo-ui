@@ -43,8 +43,7 @@ const render = (state) => {
 	}
 
 	loading.classList.add('d-none');
-
-	console.log(state.system);
+	
 	morphdom(
 		container,
 		`<div>${networkTemplate({ system: state.system, tldts })}</div>`,
