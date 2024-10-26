@@ -109,7 +109,7 @@ main,
 
 .offcanvas-backdrop {
 	opacity: 1 !important;
-	backdrop-filter: blur(2px);
+	backdrop-filter: blur(6px) grayscale(0.8);
 	background-color: transparent;
 	background-image: linear-gradient(to bottom right, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.1));
 }
