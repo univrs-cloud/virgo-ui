@@ -45,7 +45,10 @@ const render = (state) => {
 
 	loading.classList.add('d-none');
 	
-	const block = new Netmask(`${state.system.networkInterface.ip4}/${state.system.networkInterface.ip4subnet}`);
+	let block = null;
+	try {
+		block = new Netmask(`${state.system.networkInterface.ip4}/${state.system.networkInterface.ip4subnet}`);
+	} catch (error) {}
 	morphdom(
 		container,
 		`<div>${networkTemplate({ system: state.system, block, tldts })}</div>`,
@@ -58,7 +61,7 @@ const render = (state) => {
 	interfaceForm.querySelector('input.name').value = state.system.networkInterface.ifaceName;
 	interfaceForm.querySelector('.dhcp').checked = state.system.networkInterface.dhcp;
 	interfaceForm.querySelector('.ip-address').value = state.system.networkInterface.ip4;
-	interfaceForm.querySelector('.netmask').value = block.bitmask;
+	interfaceForm.querySelector('.netmask').value = block?.bitmask ?? 'error';
 };
 
 render({ system: networkService.getSystem() });
