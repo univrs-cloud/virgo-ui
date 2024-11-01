@@ -13,8 +13,8 @@
 		"install_dir": "/var/www"
 	},
 	"engines": {
-		"node": ">=20.12.2",
-		"npm": ">=10.5.0"
+		"node": ">=22.11.0",
+		"npm": ">=10.9.0"
 	},
 	"dependencies": {
 		"@babel/runtime": "^7.26.0",
