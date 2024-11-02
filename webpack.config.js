@@ -84,6 +84,7 @@ module.exports = (env, argv) => {
 				'bootstrap': 'bootstrap',
 				'_': [path.join(__dirname, 'src/libs/lodash.js'), 'default'],
 				'morphdom': [path.join(__dirname, 'src/libs/morphdom.js'), 'default'],
+				'moment': 'moment',
 				'prettyBytes': [path.join(__dirname, 'node_modules/pretty-bytes/index.js'), 'default']
 			}),
 			new HtmlWebpackPlugin({

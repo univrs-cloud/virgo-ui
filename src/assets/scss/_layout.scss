@@ -10,11 +10,12 @@ html {
 }
 
 body {
+	--bs-bg: rgba(237, 242, 249, 0.96);
 	overflow-y: scroll !important;
 	width: 100%;
 	height: 100%;
 	font-weight: 300;
-	background-color: rgba(237, 242, 249, 0.96);
+	background-color: var(--bs-bg);
 	margin-bottom: 64px;
 	&[style*="overflow: hidden;"] {
 		padding-right: 0 !important;

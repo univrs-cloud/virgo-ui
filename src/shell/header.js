@@ -1,8 +1,9 @@
 import headerPartial from 'shell/partials/header.html';
 import * as navigation from 'shell/navigation';
-import * as updates from 'shell/updates';
-import * as weather from 'shell/weather';
 import * as account from 'shell/account';
+import * as updates from 'shell/updates';
+import * as notifications from 'shell/notifications';
+import * as weather from 'shell/weather';
 import * as systemService from 'shell/services/system';
 
 const headerTemplate = _.template(headerPartial);
@@ -23,6 +24,7 @@ render({ system: systemService.getSystem() });
 
 systemService.subscribe([render]);
 
-updates.init();
-weather.init();
 account.init();
+updates.init();
+notifications.init();
+weather.init();
