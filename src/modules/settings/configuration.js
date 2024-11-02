@@ -117,7 +117,7 @@ const getLocation = (event) => {
 			document.querySelector('.toast-container').insertAdjacentHTML('beforeend',
 				`<div class="toast bd-red-500 border-0" data-bs-autohide="false">
 					<div class="d-flex">
-						<div class="toast-body">Unable to retrieve your location.<br>Reset permission and try again.</div>
+						<div class="toast-body">Unable to retrieve your location.<br>Reset permissions and try again.</div>
 						<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 					</div>
 				</div>`
