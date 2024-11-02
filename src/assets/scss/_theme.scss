@@ -13,20 +13,6 @@ img {
 .btn {
 	outline: none !important;
 	transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-	&.focus,
-	&:focus,
-	&.active,
-	&:active,
-	&.disabled,
-	&:disabled,
-	&[disabled] {
-		outline: none !important;
-		box-shadow: none !important;
-	}
-}
-.btn-link,
-.btn-link:hover {
-	box-shadow: none;
 }
 
 .dropdown-toggle:after {
