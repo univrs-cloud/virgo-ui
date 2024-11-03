@@ -163,6 +163,10 @@ img {
 			height: 56px;
 		}
 	}
+	.condition {
+		max-width: 85px;
+		line-height: 1.1;
+	}
 }
 #notifications,
 #account {
@@ -176,8 +180,8 @@ img {
 #notifications {
 	.dropdown-toggle {
 		svg {
-			width: 1.3em;
-			height: 1.3em;
+			width: 1.4em;
+			height: 1.4em;
 		}
 		&:before {
 			content: "";
