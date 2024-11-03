@@ -3,7 +3,12 @@
 		<div class="card-body">
 			<ul class="list-unstyled overflow-y-scroll m-0">
 				<%_.each(upgrade.steps, (step) => {%>
-					<li><%=step%></li>
+					<%if (_.includes(step, '\r')) {%>
+						<%step = _.last(_.initial(_.split(step, '\r')))%>
+					<%}%>
+					<%if (!_.isEmpty(step)) {%>
+						<li><%=step%></li>
+					<%}%>
 				<%})%>
 				<%if (upgrade.state === 'succeeded') {%>
 					<li class="text-success">Upgrade succeeded</li>
