@@ -12,11 +12,20 @@
 				<%if (_.isEmpty(notifications)) {%>
 					<p class="text-body-tertiary text-center p-4 mb-0">No notifications</p>
 				<%} else {%>
-					<%_.each(notifications, (notification) => {%>
-						<div class="dropdown-item bd-blue-100 text-wrap">
-							<strong><small><%=notification.title%></small></strong>
-							<div class="fw-light"><small><%=notification.message%></small></div>
-							<div><small><%=moment(notification.createdOn).fromNow()%></small></div>
+					<%_.each(notifications, (notification, index) => {%>
+						<%let color = 'blue'%>
+						<%if (notification.type === 'warning') {%>
+							<%color = 'yellow'%>
+						<%}%>
+						<div class="toast show bd-<%=color%>-100 shadow-none border-0 <%=(index < _.size(notifications) - 1 ? 'mb-2' : '')%>">
+							<div class="d-flex">
+								<div class="toast-body">
+									<strong><%=notification.title%></strong>
+									<div class="fw-light"><small><%=notification.message%></small></div>
+									<div><small><%=moment(notification.createdOn).fromNow()%></small></div>
+								</div>
+								<button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"></button>
+							</div>
 						</div>
 					<%})%>
 				<%}%>
