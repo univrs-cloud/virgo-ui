@@ -1,13 +1,13 @@
 import headerPartial from 'shell/partials/header.html';
 import navigationPartial from 'shell/partials/navigation_upgrade.html';
-import upgradeBodyPartial from 'shell/partials/upgrade_body.html';
+import upgradeStepsPartial from 'shell/partials/upgrade_steps.html';
 import * as account from 'shell/account';
 import * as systemService from 'shell/services/system';
 import * as softwareService from 'shell/services/software';
 
 const headerTemplate = _.template(headerPartial);
 const navigationTemplate = _.template(navigationPartial);
-const upgradeBodyTemplate = _.template(upgradeBodyPartial);
+const upgradeStepsTemplate = _.template(upgradeStepsPartial);
 let header = document.querySelector('header');
 let container = document.querySelector('#upgrade');
 let isScrollEventAttached = false;
@@ -31,7 +31,7 @@ const renderSerialNumber = (state) => {
 const render = (state) => {
 	let upgrade = state.upgrade;
 	if (_.isNull(upgrade)) {
-		location.reload();
+		location.replace('/');
 		return;
 	}
 
@@ -41,7 +41,7 @@ const render = (state) => {
 		container.querySelector(`.state.${upgrade.state}`).classList.remove('d-none');
 		morphdom(
 			container.querySelector('.steps'),
-			upgradeBodyTemplate({ upgrade })
+			upgradeStepsTemplate({ upgrade })
 		);
 		let stepsList = container.querySelector('.steps ul');
 		if (!isScrollEventAttached) {
