@@ -55,7 +55,7 @@ const render = (state) => {
 		{ childrenOnly: true }
 	);
 	gatewayForm.querySelector('.gateway').value = state.system.defaultGateway;
-	hostForm.querySelector('.hostname').value = tldts.getSubdomain(state.system.osInfo.fqdn, { extractHostname: false });
+	hostForm.querySelector('.hostname').value = state.system.osInfo.hostname;
 	hostForm.querySelector('.domain-name').value = tldts.getDomain(state.system.osInfo.fqdn, { extractHostname: false });
 	interfaceForm.querySelector('.alert .name').innerHTML = state.system.networkInterface.ifaceName;
 	interfaceForm.querySelector('input.name').value = state.system.networkInterface.ifaceName;

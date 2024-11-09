@@ -8,7 +8,7 @@
 				</h5>
 				<dl class="m-0">
 					<dt class="fw-lighter"><small>Hostname</small></dt>
-					<dd><%=tldts.getSubdomain(system.osInfo.fqdn, { extractHostname: false })%></dd>
+					<dd><%=system.osInfo.hostname%></dd>
 					<dt class="fw-lighter"><small>Domain name</small></dt>
 					<dd class="m-0"><%=tldts.getDomain(system.osInfo.fqdn, { extractHostname: false }) || '&mdash;'%></dd>
 				</dl>
