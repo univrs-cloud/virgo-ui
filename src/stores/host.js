@@ -10,9 +10,9 @@ class Host extends Store {
 			updates: null,
 			upgrade: -1,
 			proxies: null,
-			cpu: null,
+			cpuStats: null,
 			memory: null,
-			network: null,
+			networkStats: null,
 			storage: null,
 			drives: null,
 			ups: null,
@@ -64,16 +64,16 @@ class Host extends Store {
 			this.setState({ proxies }, 'get_proxies');
 		});
 
-		this.socket.on('cpu', (cpu) => {
-			this.setState({ cpu }, 'get_cpu');
+		this.socket.on('cpuStats', (cpuStats) => {
+			this.setState({ cpuStats }, 'get_cpu_stats');
 		});
 
 		this.socket.on('memory', (memory) => {
 			this.setState({ memory }, 'get_memory');
 		});
 
-		this.socket.on('network', (network) => {
-			this.setState({ network }, 'get_network');
+		this.socket.on('networkStats', (networkStats) => {
+			this.setState({ networkStats }, 'get_network_stats');
 		});
 
 		this.socket.on('storage', (storage) => {
@@ -118,6 +118,10 @@ class Host extends Store {
 
 	getSystem() {
 		return this.getStateProperty('system');
+	}
+
+	getMemory() {
+		return this.getStateProperty('memory');
 	}
 
 	getCheckUpdates() {

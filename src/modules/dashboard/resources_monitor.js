@@ -25,10 +25,10 @@ const render = (state) => {
 		container,
 		resourcesMonitorTemplate({
 			cpu: cpuTemplate({ state }),
-			memory: memoryTemplate({ state, prettyBytes }),
-			storageSystem: storageSystemTemplate({ state, prettyBytes }),
-			storageData: storageDataTemplate({ state, prettyBytes }),
-			network: networkTemplate({ state, prettyBytes }),
+			memory: memoryTemplate({ state, bytes }),
+			storageSystem: storageSystemTemplate({ state, bytes }),
+			storageData: storageDataTemplate({ state, bytes }),
+			network: networkTemplate({ state, bytes }),
 			ups: upsTemplate({ state }),
 			time: timeTemplate({ state, prettyMilliseconds })
 		}),
@@ -42,7 +42,7 @@ const render = (state) => {
 			}
 		}
 	);
-	networkUsage.render(state.network);
+	networkUsage.render(state.networkStats);
 };
 
 resourceMonitorService.subscribe([render]);

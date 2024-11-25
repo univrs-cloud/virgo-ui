@@ -27,8 +27,8 @@ let pool = (state.storage === false ? false : _.find(state.storage, (pool) => { 
 			</div>
 		</div>
 		<div class="lh-1 text-body-tertiary mt-1">
-			<small><strong class="fw-semibold"><%=prettyBytes(pool.alloc)%></strong> used from <%=prettyBytes(pool.size)%></small><br>
-			<small class="d-none">Free: <%=prettyBytes(pool.free)%></small>
+			<small><strong class="fw-semibold"><%=bytes(pool.alloc)%></strong> used from <%=bytes(pool.size)%></small><br>
+			<small class="d-none">Free: <%=bytes(pool.free)%></small>
 		</div>
 		<div class="mt-1">
 			<%_.each(state.drives, (drive) => {%>

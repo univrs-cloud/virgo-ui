@@ -45,6 +45,7 @@ if (isAuthenticated) {
 	page('/network', () => { showPage('#network'); });
 	page('/settings', () => { showPage('#settings'); });
 	page('/software-update', () => { showPage('#software-update'); });
+	page('/about', () => { showPage('#about'); });
 }
 page('*', () => { showPage('#not-found'); });
 

@@ -13,6 +13,7 @@ if (isAuthenticated) {
 	importPromises.push(import('modules/network'));
 	importPromises.push(import('modules/settings'));
 	importPromises.push(import('modules/software_update'));
+	importPromises.push(import('modules/about'));
 }
 
 export const modulesLoaded = Promise.all(importPromises);
