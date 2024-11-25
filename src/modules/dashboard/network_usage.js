@@ -79,7 +79,7 @@ const render = (iface) => {
 				},
 				y: {
 					formatter: (value) => {
-						return `${prettyBytes(value)}/s`;
+						return `${bytes(value)}/s`;
 					}
 				}
 			}

@@ -25,15 +25,15 @@
 						<dt class="fw-lighter"><small>Health</small></dt>
 						<dd><span class="badge rounded-pill bd-<%=(pool.health.toLowerCase() === 'online' ? 'green' : 'red')%>-100"><%=pool.health%></span></dd>
 						<dt class="fw-lighter"><small>Capacity</small></dt>
-						<dd><%=prettyBytes(pool.size)%></dd>
+						<dd><%=bytes(pool.size)%></dd>
 						<div class="d-flex justify-content-between">
 							<div>
 								<dt class="fw-lighter"><small>Used</small></dt>
-								<dd class="m-0"><%=prettyBytes(pool.alloc)%></dd>
+								<dd class="m-0"><%=bytes(pool.alloc)%></dd>
 							</div>
 							<div class="text-end">
 								<dt class="fw-lighter"><small>Free</small></dt>
-								<dd class="m-0"><%=prettyBytes(pool.free)%></dd>
+								<dd class="m-0"><%=bytes(pool.free)%></dd>
 							</div>
 						</div>
 						<div class="progress mt-1" role="progressbar">
