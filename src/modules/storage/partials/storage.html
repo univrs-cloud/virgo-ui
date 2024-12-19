@@ -40,8 +40,8 @@
 							<div class="progress-bar bg-blue-300" style="width: <%=(pool.cap)%>%;"></div>
 						</div>
 						<div class="d-flex justify-content-between lh-1 text-body-tertiary mt-1 mb-2">
-							<small class="text-body-tertiary"><%=pool.cap.toFixed(0)%>%</small>
-							<small class="text-body-tertiary"><%=(100 - pool.cap).toFixed(0)%>%</small>
+							<small class="text-body-tertiary"><%=pool.cap?.toFixed(0)%>%</small>
+							<small class="text-body-tertiary"><%=(100 - pool.cap)?.toFixed(0)%>%</small>
 						</div>
 						<%if (pool.name === 'messier') {%>
 							<dt class="fw-lighter d-none"><small>Drives</small></dt>
