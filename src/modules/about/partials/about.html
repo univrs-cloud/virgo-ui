@@ -24,11 +24,11 @@
 				</h5>
 				<dl class="m-0">
 					<dt class="fw-lighter"><small>CPU</small></dt>
-					<dd><%=system.cpu.cores%>x <%=system.cpu.vendor%> <%=system.cpu.family%> @ <%=system.cpu.speedMax%>GHz</dd>
+					<dd><%=system?.cpu?.cores%>x <%=system?.cpu?.vendor%> <%=system?.cpu?.family%> @ <%=system?.cpu?.speedMax%>GHz</dd>
 					<dt class="fw-lighter"><small>RAM</small></dt>
 					<dd><%=bytes(memory.total)%></dd>
 					<dt class="fw-lighter"><small>Network</small></dt>
-					<dd><%=prettyBytes(system.networkInterface.speed * 1000 * 1000, { bits: true })%>/s</dd>
+					<dd><%=prettyBytes(system?.networkInterface?.speed * 1000 * 1000, { bits: true })%>/s</dd>
 					<dt class="fw-lighter"><small>Drives</small></dt>
 					<dd class="m-0">
 						<%_.each(drives, (drive) => {%>
