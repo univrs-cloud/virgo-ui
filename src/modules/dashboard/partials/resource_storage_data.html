@@ -33,10 +33,10 @@ let pool = (state.storage === false ? false : _.find(state.storage, (pool) => { 
 		<div class="mt-1">
 			<%_.each(state.drives, (drive) => {%>
 				<%let color = 'gray'%>
-				<%if (drive.temperature >= 70 && drive.temperature < 80) {%>
+				<%if (drive.temperature >= drive.temperatureWarningThreshold && drive.temperature < drive.temperatureCriticalThreshold) {%>
 					<%color = 'yellow'%>
 				<%}%>
-				<%if (drive.temperature >= 80) {%>
+				<%if (drive.temperature >= drive.temperatureCriticalThreshold) {%>
 					<%color = 'red'%>
 				<%}%>
 				<small class="badge rounded-pill bd-<%=color%>-200 fw-light me-1" data-bs-toggle="tooltip" data-bs-original-title="<%=_.last(drive.name.split('/'))%>">
