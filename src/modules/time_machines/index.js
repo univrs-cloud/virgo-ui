@@ -37,7 +37,7 @@ const render = (state) => {
 		template.innerHTML = emptyTemplate();
 	} else {
 		_.each(state.timeMachines, (timeMachine) => {
-			template.innerHTML += timeMachineTemplate({ timeMachine });
+			template.innerHTML += timeMachineTemplate({ timeMachine, bytes });
 		});
 	}
 	loading.classList.add('d-none');

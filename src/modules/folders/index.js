@@ -37,7 +37,7 @@ const render = (state) => {
 		template.innerHTML = emptyTemplate();
 	} else {
 		_.each(state.folders, (folder) => {
-			template.innerHTML += folderTemplate({ folder });
+			template.innerHTML += folderTemplate({ folder, bytes });
 		});
 	}
 	loading.classList.add('d-none');

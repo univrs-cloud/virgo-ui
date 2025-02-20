@@ -43,7 +43,7 @@
 							<small class="text-body-tertiary"><%=pool.cap?.toFixed(0)%>%</small>
 							<small class="text-body-tertiary"><%=(100 - pool.cap)?.toFixed(0)%>%</small>
 						</div>
-						<%if (pool.name === 'messier') {%>
+						<%if (pool.config) {%>
 							<dt class="fw-lighter d-none"><small>Drives</small></dt>
 							<%_.each(drives, (drive) => {%>
 								<dd class="d-flex align-items-center m-0 d-none">
@@ -57,7 +57,7 @@
 								<div class="row g-0 d-flex align-items-baseline">
 									<div class="col">
 										<div class="progress" role="progressbar">
-											<div class="progress-bar bg-blue-300 progress-bar-striped progress-bar-animated" style="width: <%=(pool.scanResults.progress)%>%;"></div>
+											<div class="progress-bar bg-cyan-300 progress-bar-striped progress-bar-animated" style="width: <%=(pool.scanResults.progress)%>%;"></div>
 										</div>
 									</div>
 									<div class="col-auto lh-1 text-body-tertiary text-end" style="width: 45px;">
