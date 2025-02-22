@@ -45,14 +45,20 @@ let pool = (state.storage === false ? false : _.find(state.storage, (pool) => { 
 				</small>
 			<%})%>
 		</div>
-		<%if (pool.scanResults.status === 'running') {%>
+		<%if (pool.scanResults.status === 'running' || pool.scanResults.status === 'paused') {%>
 			<div class="lh-1 text-body-tertiary mt-3">
-				<small>Running data integrity check...</small>
+				<small>
+					<%if (pool.scanResults.status === 'running') {%>
+						Running data integrity check...
+					<%} else if (pool.scanResults.status === 'paused') {%>
+						Data integrity check paused
+					<%}%>
+				</small>
 			</div>
 			<div class="row g-0 d-flex align-items-baseline">
 				<div class="col">
 					<div class="progress" role="progressbar">
-						<div class="progress-bar bg-cyan-300 progress-bar-striped progress-bar-animated" style="width: <%=(pool.scanResults.progress)%>%;"></div>
+						<div class="progress-bar bg-cyan-300 <%=(pool.scanResults.status === 'running' ? 'progress-bar-striped progress-bar-animated' : '')%>" style="width: <%=(pool.scanResults.progress)%>%;"></div>
 					</div>
 				</div>
 				<div class="col-auto lh-1 text-body-tertiary text-end" style="width: 45px;">
