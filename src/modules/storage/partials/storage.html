@@ -53,11 +53,22 @@
 							<%})%>
 
 							<%if (pool.scanResults.status === 'running') {%>
-								<dt class="fw-lighter"><small>Running data integrity check...</small></dt>
+								<dt class="fw-lighter">
+									<small>
+										<%if (pool.scanResults.status === 'running') {%>
+											Running data integrity check...
+										<%} else if (pool.scanResults.status === 'paused') {%>
+											Data integrity check paused
+										<%}%>
+									</small>
+								</dt>
+								<%if (pool.scanResults.status === 'paused') {%>
+									<dd class="d-flex align-items-center m-0"><%=_.upperFirst(pool.scan)%></dd>
+								<%}%>
 								<div class="row g-0 d-flex align-items-baseline">
 									<div class="col">
 										<div class="progress" role="progressbar">
-											<div class="progress-bar bg-cyan-300 progress-bar-striped progress-bar-animated" style="width: <%=(pool.scanResults.progress)%>%;"></div>
+											<div class="progress-bar bg-cyan-300 <%=(pool.scanResults.status === 'running' ? 'progress-bar-striped progress-bar-animated' : '')%>" style="width: <%=(pool.scanResults.progress)%>%;"></div>
 										</div>
 									</div>
 									<div class="col-auto lh-1 text-body-tertiary text-end" style="width: 45px;">
