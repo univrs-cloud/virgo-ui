@@ -35,7 +35,7 @@
 		"pretty-ms": "^9.2.0",
 		"rxjs": "^7.8.2",
 		"socket.io-client": "^4.8.1",
-		"tldts": "^6.1.79",
+		"tldts": "^6.1.82",
 		"validator": "^13.12.0"
 	},
 	"devDependencies": {
