@@ -45,7 +45,7 @@ let pool = (state.storage === false ? false : _.find(state.storage, (pool) => { 
 				</small>
 			<%})%>
 		</div>
-		<%if (pool.scanResults.status === 'running' || pool.scanResults.status === 'paused') {%>
+		<%if (pool.scanResults?.status === 'running' || pool.scanResults?.status === 'paused') {%>
 			<div class="lh-1 text-body-tertiary mt-3">
 				<small>
 					<%if (pool.scanResults.status === 'running') {%>
