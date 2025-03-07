@@ -61,7 +61,6 @@ const setSmtp = (event) => {
 		password: form.querySelector('.password').value,
 		sender: form.querySelector('.sender').value
 	}
-	console.log(config);
 	configurationService.setSmtp(config);
 	bootstrap.Modal.getInstance(form.closest('.modal'))?.hide();
 	submitButton.disabled = false;
