@@ -5,15 +5,36 @@
 				<h5 class="modal-title">Notification server</h5>
 			</div>
 			<div class="modal-body">
-				<div class="form-floating mb-3">
-					<input type="text" class="address form-control" placeholder="">
-					<label>Address</label>
-					<div class="invalid-feedback"></div>
+				<div class="mb-3">
+					<div><label class="form-label">Encryption</label></div>
+					<div class="form-check form-check-inline">
+						<label class="form-check-label">
+							<input type="radio" name="encryption" value="" class="form-check-input encryption">
+							None/StartTLS
+						</label>
+					</div>
+					<div class="form-check form-check-inline">
+						<label class="form-check-label">
+							<input type="radio" name="encryption" value="ssl" class="form-check-input encryption">
+							SSL
+						</label>
+					</div>
 				</div>
-				<div class="form-floating mb-3">
-					<input type="text" class="port form-control" placeholder="">
-					<label>Port</label>
-					<div class="invalid-feedback"></div>
+				<div class="row">
+					<div class="col-9">
+						<div class="form-floating mb-3">
+							<input type="text" class="address form-control" placeholder="">
+							<label>Address</label>
+							<div class="invalid-feedback"></div>
+						</div>
+					</div>
+					<div class="col-3">
+						<div class="form-floating mb-3">
+							<input type="text" class="port form-control" placeholder="">
+							<label>Port</label>
+							<div class="invalid-feedback"></div>
+						</div>
+					</div>
 				</div>
 				<div class="form-floating mb-3">
 					<input type="text" class="username form-control" placeholder="">
