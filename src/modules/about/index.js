@@ -24,12 +24,14 @@ const render = (state) => {
 		bytes,
 		prettyBytes
 	});
-	loading.classList.add('d-none');
 	morphdom(
 		row,
 		`<div>${template}</div>`,
 		{ childrenOnly: true }
 	);
+
+	loading.classList.add('d-none');
+	container.classList.remove('d-none');
 };
 
 render({ system: aboutService.getSystem(), memory: aboutService.getMemory(), drives: aboutService.getDrives() });

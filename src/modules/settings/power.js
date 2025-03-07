@@ -15,7 +15,6 @@ const reboot = (event) => {
 	}
 
 	event.target.classList.add('disabled');
-	bootstrap.Modal.getInstance(event.target.closest('.modal'))?.hide();
 	powerService.reboot();
 };
 
@@ -34,7 +33,6 @@ const shutdown = (event) => {
 	}
 	
 	event.target.classList.add('disabled');
-	bootstrap.Modal.getInstance(event.target.closest('.modal'))?.hide();
 	powerService.shutdown();
 };
 
@@ -55,7 +53,7 @@ const render = (state) => {
 	document.querySelector('.reboot')?.classList.remove('disabled');
 };
 
+powerService.subscribe([render]);
+
 document.body.addEventListener('click', reboot);
 document.body.addEventListener('click', shutdown);
-
-powerService.subscribe([render]);

@@ -25,12 +25,15 @@ const render = (state) => {
 			template.innerHTML += userTemplate({ user });
 		});
 	}
-	loading.classList.add('d-none');
+	
 	morphdom(
 		row,
 		`<div>${template.innerHTML}</div>`,
 		{ childrenOnly: true }
 	);
+
+	loading.classList.add('d-none');
+	container.classList.remove('d-none');
 };
 
 render({ users: userService.getUsers() });

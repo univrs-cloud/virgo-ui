@@ -30,12 +30,13 @@ const render = (state) => {
 		return itemTemplate({ app });
 	}), '');
 
-	loading.classList.add('d-none');
 	morphdom(
 		row,
 		`<div>${template.innerHTML}</div>`,
 		{ childrenOnly: true }
 	);
+
+	loading.classList.add('d-none');
 };
 
 modalBody.addEventListener('click', install);

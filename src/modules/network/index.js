@@ -42,8 +42,6 @@ const render = (state) => {
 	if (_.isNull(state.system)) {
 		return;
 	}
-
-	loading.classList.add('d-none');
 	
 	let block = null;
 	try {
@@ -54,6 +52,10 @@ const render = (state) => {
 		`<div>${networkTemplate({ system: state.system, block, tldts })}</div>`,
 		{ childrenOnly: true }
 	);
+
+	loading.classList.add('d-none');
+	container.classList.remove('d-none');
+
 	gatewayForm.querySelector('.gateway').value = state.system.defaultGateway;
 	hostForm.querySelector('.hostname').value = state.system.osInfo.hostname;
 	hostForm.querySelector('.domain-name').value = tldts.getDomain(state.system.osInfo.fqdn, { extractHostname: false });

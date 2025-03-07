@@ -38,12 +38,15 @@ const render = (state) => {
 	} else {
 		template.innerHTML += updatesTemplate({ updates: state.updates });
 	}
-	loading.classList.add('d-none');
+	
 	morphdom(
 		row,
 		`<div>${template.innerHTML}</div>`,
 		{ childrenOnly: true }
 	);
+
+	loading.classList.add('d-none');
+	container.classList.remove('d-none');
 };
 
 render({

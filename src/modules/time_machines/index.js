@@ -40,12 +40,16 @@ const render = (state) => {
 			template.innerHTML += timeMachineTemplate({ timeMachine, bytes });
 		});
 	}
-	loading.classList.add('d-none');
+	
 	morphdom(
 		row,
 		`<div>${template.innerHTML}</div>`,
 		{ childrenOnly: true }
 	);
+
+	loading.classList.add('d-none');
+	container.classList.remove('d-none');
+
 	_.each(module.querySelectorAll('.dropdown-menu a:not(.disabled)'), (button) => {
 		button.addEventListener('click', performAction);
 	});
