@@ -1,0 +1,20 @@
+<div class="col-12 col-md-6 col-lg-4">
+	<div class="card position-relative rounded-4 border-0">
+		<div class="card-body">
+			<h5 class="card-title d-flex align-items-center">
+				Location
+				<a href="#location" class="btn btn-link p-0 ms-auto" data-bs-toggle="modal">Edit</a>
+			</h5>
+			<%if (_.isNull(location)) {%>
+				Not configured
+			<%} else {%>
+				<dl class="m-0">
+					<dt class="fw-lighter"><small>Longitude</small></dt>
+					<dd><%=location?.longitude%></dd>
+					<dt class="fw-lighter"><small>Latitude</small></dt>
+					<dd class="m-0"><%=location?.latitude%></dd>
+				</dl>
+			<%}%>
+		</div>
+	</div>
+</div>

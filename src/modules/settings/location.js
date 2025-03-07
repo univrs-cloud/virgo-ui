@@ -1,11 +1,11 @@
+import locationModalPartial from 'modules/settings/partials/modals/location.html';
 import * as configurationService from 'modules/settings/services/configuration';
 import validator from 'validator';
 
+document.querySelector('body').insertAdjacentHTML('beforeend', locationModalPartial);
+
 const timeouts = {};
-let module = document.querySelector('#settings');
-let locationForm = module.querySelector('#location');
-let loading = module.querySelector('.loading');
-let container = module.querySelector('.container-fluid');
+let locationForm = document.querySelector('#location');
 
 const validateLatitude = (event) => {
 	if (event) {
@@ -91,6 +91,7 @@ const setLocation = (event) => {
 		longitude: form.querySelector('.longitude').value
 	}
 	configurationService.setLocation(config);
+	bootstrap.Modal.getInstance(form.closest('.modal'))?.hide();
 	submitButton.disabled = false;
 	_.each(locationForm.querySelectorAll('input'), (element) => { element.classList.remove('is-valid'); });
 	document.querySelector('.toast-container').insertAdjacentHTML('beforeend',
@@ -132,13 +133,9 @@ const render = (state) => {
 	if (_.isNull(state.configuration)) {
 		return;
 	}
-	
-	loading.classList.add('d-none');
-	container.classList.remove('d-none');
 
-	
-	locationForm.querySelector('.latitude').value = state.configuration.location.latitude;
-	locationForm.querySelector('.longitude').value = state.configuration.location.longitude;
+	locationForm.querySelector('.latitude').value = state.configuration?.location?.latitude ?? '';
+	locationForm.querySelector('.longitude').value = state.configuration?.location?.longitude ?? '';
 };
 
 if ('geolocation' in navigator) {

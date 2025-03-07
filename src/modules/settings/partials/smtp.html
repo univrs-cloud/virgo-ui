@@ -1,0 +1,26 @@
+<div class="col-12 col-md-6 col-lg-4">
+	<div class="card position-relative rounded-4 border-0">
+		<div class="card-body">
+			<h5 class="card-title d-flex align-items-center">
+				Notification server
+				<a href="#smtp" class="btn btn-link p-0 ms-auto" data-bs-toggle="modal">Edit</a>
+			</h5>
+			<%if (_.isNull(smtp)) {%>
+				Not configured
+			<%} else {%>
+				<dl class="m-0">
+					<dt class="fw-lighter"><small>Address</small></dt>
+					<dd><%=smtp?.address%></dd>
+					<dt class="fw-lighter"><small>Port</small></dt>
+					<dd><%=smtp?.port%></dd>
+					<dt class="fw-lighter"><small>Requires TLS</small></dt>
+					<dd></dd>
+					<dt class="fw-lighter"><small>Username</small></dt>
+					<dd><%=smtp?.username%></dd>
+					<dt class="fw-lighter"><small>Sender email</small></dt>
+					<dd class="m-0"><%=smtp?.sender%></dd>
+				</dl>
+			<%}%>
+		</div>
+	</div>
+</div>

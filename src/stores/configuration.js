@@ -16,6 +16,10 @@ class Configuration extends Store {
 		});
 	}
 
+	setSmtp(config) {
+		this.socket.emit('smtp', config);
+	}
+
 	setLocation(config) {
 		this.socket.emit('location', config);
 	}

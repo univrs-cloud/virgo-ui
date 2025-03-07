@@ -6,6 +6,10 @@ const getConfiguration = () => {
 	return Configuration.getConfiguration();
 };
 
+const setSmtp = (config) => {
+	Configuration.setSmtp(config);
+};
+
 const setLocation = (config) => {
 	Configuration.setLocation(config);
 };
@@ -25,5 +29,6 @@ const subscribe = (callbacks) => {
 export {
 	subscribe,
 	getConfiguration,
+	setSmtp,
 	setLocation
 };

@@ -19,12 +19,15 @@ const render = (state) => {
 	_.each(state.storage, (pool) => {
 		template.innerHTML += storageTemplate({ pool, drives: state.drives, bytes });
 	});
-	loading.classList.add('d-none');
+	
 	morphdom(
 		row,
 		`<div>${template.innerHTML}</div>`,
 		{ childrenOnly: true }
 	);
+
+	loading.classList.add('d-none');
+	container.classList.remove('d-none');
 };
 
 render({ storage: storageService.getStorage(), drives: storageService.getDrives() });
