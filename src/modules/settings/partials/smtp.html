@@ -2,7 +2,7 @@
 	<div class="card position-relative rounded-4 border-0">
 		<div class="card-body">
 			<h5 class="card-title d-flex align-items-center">
-				Notification server
+				Notifications
 				<a href="#smtp" class="btn btn-link p-0 ms-auto" data-bs-toggle="modal">Edit</a>
 			</h5>
 			<%if (_.isNull(smtp)) {%>
@@ -18,7 +18,16 @@
 					<dt class="fw-lighter"><small>Username</small></dt>
 					<dd><%=smtp?.username%></dd>
 					<dt class="fw-lighter"><small>Sender email</small></dt>
-					<dd class="m-0"><%=smtp?.sender%></dd>
+					<dd><%=smtp?.sender%></dd>
+					<dt class="fw-lighter"><small>Recipients</small></dt>
+					<dd class="m-0">
+						<div class="d-flex gap-2">
+							<span class="badge d-flex align-items-center p-1 pe-2 text-secondary-emphasis bg-secondary-subtle border border-secondary-subtle rounded-pill">
+								<span class="px-1">voyager@univrs.cloud</span>
+								<a href="#"><svg class="bi" width="16" height="16"><use xlink:href="#x-circle-fill"></use></svg></a>
+							</span>
+						</div>
+					</dd>
 				</dl>
 			<%}%>
 		</div>
