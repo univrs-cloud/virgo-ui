@@ -8,7 +8,8 @@ const itemTemplate = _.template(itemPartial);
 let modal = document.querySelector('#app-center');
 let modalBody = modal.querySelector('.modal-body');
 let loading = modalBody.querySelector('.loading');
-let row = modalBody.querySelector('.row');
+let container = modalBody.querySelector('.container-fluid');
+let row = container.querySelector('.row');
 
 const install = (event) => {
 	if (!event.target.classList.contains('install')) {
@@ -37,6 +38,7 @@ const render = (state) => {
 	);
 
 	loading.classList.add('d-none');
+	container.classList.remove('d-none');
 };
 
 modalBody.addEventListener('click', install);
