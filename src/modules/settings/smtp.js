@@ -53,17 +53,16 @@ const setSmtp = (event) => {
 	let form = event.target;
 	let submitButton = form.querySelector('button[type="submit"]');
 	submitButton.disabled = true;
-	let config = {
-		encryption: form.querySelector('.encryption:checked').value,
-		address: form.querySelector('.address').value,
-		port: form.querySelector('.port').value,
-		username: form.querySelector('.username').value,
-		password: form.querySelector('.password').value,
-		sender: form.querySelector('.sender').value
-	}
+	let config = configurationService.getConfiguration().smtp;
+	config.encryption = form.querySelector('.encryption:checked').value;
+	config.address = form.querySelector('.address').value;
+	config.port = form.querySelector('.port').value;
+	config.username = form.querySelector('.username').value;
+	config.password = form.querySelector('.password').value;
+	config.sender = form.querySelector('.sender').value;
+	
 	configurationService.setSmtp(config);
 	bootstrap.Modal.getInstance(form.closest('.modal'))?.hide();
-	submitButton.disabled = false;
 	_.each(smtpForm.querySelectorAll('input'), (element) => { element.classList.remove('is-valid'); });
 	document.querySelector('.toast-container').insertAdjacentHTML('beforeend',
 		`<div class="toast bd-green-500 border-0" data-bs-autohide="true">
@@ -77,24 +76,30 @@ const setSmtp = (event) => {
 	toast.show();
 };
 
-const render = (state) => {
-	if (_.isNull(state.configuration)) {
-		return;
-	}
-	
-	let encryption = state.configuration?.smtp?.encryption ?? '';
-	smtpForm.querySelector(`.encryption[value="${encryption}"]`).checked = true;
-	smtpForm.querySelector('.address').value = state.configuration?.smtp?.address ?? '';
-	smtpForm.querySelector('.port').value = state.configuration?.smtp?.port ?? '';
-	smtpForm.querySelector('.username').value = state.configuration?.smtp?.username ?? '';
-	smtpForm.querySelector('.password').value = state.configuration?.smtp?.password ?? '';
-	smtpForm.querySelector('.sender').value = state.configuration?.smtp?.sender ?? '';
+const restore = (event) => {
+	smtpForm.reset();
+	smtpForm.querySelector('button[type="submit"]').disabled = false;
+	_.each(smtpForm.querySelectorAll('.form-floating'), (input) => {
+		input.querySelector('input').classList.remove('is-invalid');
+		input.querySelector('.invalid-feedback').innerHTML = '';
+	});
 };
 
-render({ configuration: configurationService.getConfiguration() });
+const render = (event) => {
+	let configuration = configurationService.getConfiguration();
+	let encryption = configuration?.smtp?.encryption ?? '';
+	smtpForm.querySelector(`.encryption[value="${encryption}"]`).checked = true;
+	smtpForm.querySelector('.address').value = configuration?.smtp?.address ?? '';
+	smtpForm.querySelector('.port').value = configuration?.smtp?.port ?? '';
+	smtpForm.querySelector('.username').value = configuration?.smtp?.username ?? '';
+	smtpForm.querySelector('.password').value = configuration?.smtp?.password ?? '';
+	smtpForm.querySelector('.sender').value = configuration?.smtp?.sender ?? '';
+};
 
 configurationService.subscribe([render]);
 
 smtpForm.querySelector('.address').addEventListener('input', validateAddress);
 smtpForm.querySelector('.port').addEventListener('input', validatePort);
 smtpForm.addEventListener('submit', setSmtp);
+smtpForm.addEventListener('show.bs.modal', render);
+smtpForm.addEventListener('hidden.bs.modal', restore);
