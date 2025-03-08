@@ -60,6 +60,7 @@ const setSmtp = (event) => {
 	config.username = form.querySelector('.username').value;
 	config.password = form.querySelector('.password').value;
 	config.sender = form.querySelector('.sender').value;
+	config.recipients = _.split(_.trim(form.querySelector('.recipients').value), '\n');
 	
 	configurationService.setSmtp(config);
 	bootstrap.Modal.getInstance(form.closest('.modal'))?.hide();
@@ -94,6 +95,7 @@ const render = (event) => {
 	smtpForm.querySelector('.username').value = configuration?.smtp?.username ?? '';
 	smtpForm.querySelector('.password').value = configuration?.smtp?.password ?? '';
 	smtpForm.querySelector('.sender').value = configuration?.smtp?.sender ?? '';
+	smtpForm.querySelector('.recipients').innerHTML = configuration?.smtp?.recipients?.join('\n');
 };
 
 configurationService.subscribe([render]);
