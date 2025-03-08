@@ -133,7 +133,7 @@ const restore = (event) => {
 	locationForm.reset();
 	locationForm.querySelector('button[type="submit"]').disabled = false;
 	_.each(locationForm.querySelectorAll('.form-floating'), (input) => {
-		input.querySelector('input').classList.remove('is-invalid');
+		input.querySelector('input')?.classList?.remove('is-invalid');
 		input.querySelector('.invalid-feedback').innerHTML = '';
 	});
 };

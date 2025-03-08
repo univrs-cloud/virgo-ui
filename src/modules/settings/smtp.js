@@ -60,7 +60,7 @@ const setSmtp = (event) => {
 	config.username = form.querySelector('.username').value;
 	config.password = form.querySelector('.password').value;
 	config.sender = form.querySelector('.sender').value;
-	config.recipients = _.split(_.trim(form.querySelector('.recipients').value), '\n');
+	config.recipients = _.compact(_.split(_.trim(form.querySelector('.recipients').value), '\n'));
 	
 	configurationService.setSmtp(config);
 	bootstrap.Modal.getInstance(form.closest('.modal'))?.hide();
@@ -81,7 +81,7 @@ const restore = (event) => {
 	smtpForm.reset();
 	smtpForm.querySelector('button[type="submit"]').disabled = false;
 	_.each(smtpForm.querySelectorAll('.form-floating'), (input) => {
-		input.querySelector('input').classList.remove('is-invalid');
+		input.querySelector('input')?.classList?.remove('is-invalid');
 		input.querySelector('.invalid-feedback').innerHTML = '';
 	});
 };
