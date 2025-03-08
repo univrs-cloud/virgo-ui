@@ -95,7 +95,7 @@ const render = (event) => {
 	smtpForm.querySelector('.username').value = configuration?.smtp?.username ?? '';
 	smtpForm.querySelector('.password').value = configuration?.smtp?.password ?? '';
 	smtpForm.querySelector('.sender').value = configuration?.smtp?.sender ?? '';
-	smtpForm.querySelector('.recipients').innerHTML = configuration?.smtp?.recipients?.join('\n');
+	smtpForm.querySelector('.recipients').innerHTML = configuration?.smtp?.recipients?.join('\n') || '';
 };
 
 configurationService.subscribe([render]);

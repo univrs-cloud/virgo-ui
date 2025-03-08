@@ -22,11 +22,15 @@
 					<dt class="fw-lighter"><small>Recipients</small></dt>
 					<dd class="m-0">
 						<div class="recipients d-flex flex-wrap gap-2">
-							<%_.each(smtp?.recipients, (recipient) => {%>
-								<span class="badge d-flex align-items-center p-1 pe-2 text-light-emphasis bg-light-subtle border border-dark-subtle rounded-pill">
-									<span class="fs-6 fw-normal px-1"><%=recipient%></span>
-								</span>
-							<%})%>
+							<%if (!smtp?.recipients) {%>
+								<span class="text-danger">No recipient configured</span>
+							<%} else {%>
+								<%_.each(smtp?.recipients, (recipient) => {%>
+									<span class="badge d-flex align-items-center p-1 pe-2 text-light-emphasis bg-light-subtle border border-dark-subtle rounded-pill">
+										<span class="fs-6 fw-normal px-1"><%=recipient%></span>
+									</span>
+								<%})%>
+							<%}%>
 						</div>
 					</dd>
 				</dl>
