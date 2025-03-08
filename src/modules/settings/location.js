@@ -129,20 +129,24 @@ const getLocation = (event) => {
 	);
 };
 
-const render = (state) => {
-	if (_.isNull(state.configuration)) {
-		return;
-	}
+const restore = (event) => {
+	locationForm.reset();
+	locationForm.querySelector('button[type="submit"]').disabled = false;
+	_.each(locationForm.querySelectorAll('.form-floating'), (input) => {
+		input.querySelector('input').classList.remove('is-invalid');
+		input.querySelector('.invalid-feedback').innerHTML = '';
+	});
+};
 
-	locationForm.querySelector('.latitude').value = state.configuration?.location?.latitude ?? '';
-	locationForm.querySelector('.longitude').value = state.configuration?.location?.longitude ?? '';
+const render = (event) => {
+	let configuration = configurationService.getConfiguration();
+	locationForm.querySelector('.latitude').value = configuration?.location?.latitude ?? '';
+	locationForm.querySelector('.longitude').value = configuration?.location?.longitude ?? '';
 };
 
 if ('geolocation' in navigator) {
 	locationForm.querySelector('.get-geo-location').classList.remove('d-none');
 }
-
-render({ configuration: configurationService.getConfiguration() });
 
 configurationService.subscribe([render]);
 
@@ -150,3 +154,5 @@ locationForm.querySelector('.get-geo-location').addEventListener('click', getLoc
 locationForm.querySelector('.latitude').addEventListener('input', validateLatitude);
 locationForm.querySelector('.longitude').addEventListener('input', validateLongitude);
 locationForm.addEventListener('submit', setLocation);
+locationForm.addEventListener('show.bs.modal', render);
+locationForm.addEventListener('hidden.bs.modal', restore);

@@ -21,11 +21,12 @@
 					<dd><%=smtp?.sender%></dd>
 					<dt class="fw-lighter"><small>Recipients</small></dt>
 					<dd class="m-0">
-						<div class="d-flex gap-2">
-							<span class="badge d-flex align-items-center p-1 pe-2 text-secondary-emphasis bg-secondary-subtle border border-secondary-subtle rounded-pill">
-								<span class="px-1">voyager@univrs.cloud</span>
-								<a href="#"><svg class="bi" width="16" height="16"><use xlink:href="#x-circle-fill"></use></svg></a>
-							</span>
+						<div class="recipients d-flex flex-wrap gap-2">
+							<%_.each(smtp?.recipients, (recipient) => {%>
+								<span class="badge d-flex align-items-center p-1 pe-2 text-light-emphasis bg-light-subtle border border-dark-subtle rounded-pill">
+									<span class="fs-6 fw-normal px-1"><%=recipient%></span>
+								</span>
+							<%})%>
 						</div>
 					</dd>
 				</dl>
