@@ -1,11 +1,11 @@
 import modulePartial from 'modules/settings/partials/index.html';
-import smtpPartial from 'modules/settings/partials/smtp.html';
+import notificationsPartial from 'modules/settings/partials/notifications.html';
 import locationPartial from 'modules/settings/partials/location.html';
 import powerPartial from 'modules/settings/partials/power.html';
 import * as configurationService from 'modules/settings/services/configuration';
 
 const moduleTemplate = _.template(modulePartial);
-const smtpTemplate = _.template(smtpPartial);
+const notificationsTemplate = _.template(notificationsPartial);
 const locationTemplate = _.template(locationPartial);
 const powerTemplate = _.template(powerPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
@@ -23,7 +23,7 @@ const render = (state) => {
 	morphdom(
 		row,
 		`<div>
-			${smtpTemplate({ smtp: state.configuration?.smtp ?? null })}
+			${notificationsTemplate({ smtp: state.configuration?.smtp ?? null })}
 			${locationTemplate({ location: state.configuration?.location ?? null })}
 			${powerTemplate()}
 		</div>`,
@@ -38,6 +38,6 @@ render({ configuration: configurationService.getConfiguration() });
 
 configurationService.subscribe([render]);
 
-import('modules/settings/smtp');
+import('modules/settings/notifications');
 import('modules/settings/location');
 import('modules/settings/power');

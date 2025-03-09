@@ -5,8 +5,9 @@
 				<h5 class="modal-title">Notifications</h5>
 			</div>
 			<div class="modal-body">
-				<div class="mb-3">
-					<div><label class="form-label">Encryption</label></div>
+				<h6 class="mb-3">SMTP server</h6>
+				<div class="mb-2">
+					<label class="form-label me-2">Encryption</label>
 					<div class="form-check form-check-inline">
 						<label class="form-check-label">
 							<input type="radio" name="encryption" value="" class="form-check-input encryption">
@@ -48,13 +49,17 @@
 				</div>
 				<div class="form-floating mb-3">
 					<input type="text" class="sender form-control" placeholder="">
-					<label>Sender email</label>
+					<label>Sender email address</label>
 					<div class="invalid-feedback"></div>
 				</div>
+
+				<hr class="border-secondary-subtle my-4">
+				
+				<h6 class="mb-3">Recipients</h6>
 				<div class="form-floating mb-3">
 					<textarea class="recipients form-control" placeholder="" style="height: 100px;"></textarea>
-					<label>Recipients</label>
-					<div class="form-text">One recipient per line.</div>
+					<label>List of email addresses</label>
+					<div class="form-text">One email address per line.</div>
 					<div class="invalid-feedback"></div>
 				</div>
 			</div>
