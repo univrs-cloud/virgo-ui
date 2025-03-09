@@ -28,11 +28,7 @@
 				<div class="col offset-2 flex-grow-1 text-secondary">
 					<dl class="m-0">
 						<dt class="fw-lighter"><small>Username</small></dt>
-						<dd>
-							<%=user.username%>
-						</dd>
-					</dl>
-					<dl class="m-0">
+						<dd><%=user.username%></dd>
 						<dt class="fw-lighter"><small>Group</small></dt>
 						<dd class="m-0">
 							<%=_.join(_.map(user.groups, (group) => { return group.groupname; }), ', ')%>

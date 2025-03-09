@@ -21,18 +21,16 @@ const composeApps = (configured, proxies) => {
 				entity.id = dockerContainer.id;
 				entity.state = dockerContainer.state;
 				let proxy = _.find(proxies, { forwardHost: dockerContainer.name });
+				entity.ports = _.orderBy(_.filter(dockerContainer.ports, { IP: '0.0.0.0' }), ['PrivatePort'], ['asc']);
 				if (!_.isEmpty(proxy)) {
 					entity.url = composeUrlFromProxy(proxy);
-				} else if (!_.isEmpty(dockerContainer.ports)) {
-					let ports = _.filter(dockerContainer.ports, { IP: '0.0.0.0' });
-					if (!_.isEmpty(ports)) {
-						_.each(ports, (port) => {
-							let proxy = _.find(proxies, { forwardPort: port.PublicPort });
-							if (!_.isEmpty(proxy)) {
-								entity.url = composeUrlFromProxy(proxy);
-							}
-						});
-					}
+				} else if (!_.isEmpty(entity.ports)) {
+					_.each(entity.ports, (port) => {
+						let proxy = _.find(proxies, { forwardPort: port.PublicPort });
+						if (!_.isEmpty(proxy)) {
+							entity.url = composeUrlFromProxy(proxy);
+						}
+					});
 				}
 			}
 			return entity;
