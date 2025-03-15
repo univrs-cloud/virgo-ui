@@ -30,7 +30,7 @@ const updateSeries = (data) => {
 	cleanupSeries();
 };
 
-const render = (iface) => {
+const render = (iface, yAxisMax) => {
 	if (iface === false || _.isNull(iface) || _.isNull(iface.rx_sec) || _.isNull(iface.tx_sec)) {
 		return;
 	}
@@ -64,7 +64,7 @@ const render = (iface) => {
 				range: 10
 			},
 			yaxis: {
-				// max: 125000000
+				max: yAxisMax
 			},
 			dataLabels: {
 				enabled: false

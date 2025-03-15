@@ -18,6 +18,7 @@ const storageDataTemplate = _.template(resourceStorageDataPartial);
 const networkTemplate = _.template(resourceNetworkPartial);
 const upsTemplate = _.template(resourceUpsPartial);
 const timeTemplate = _.template(resourceTimePartial);
+
 let container = document.querySelector('#resources-monitor');
 
 const render = (state) => {
@@ -42,7 +43,7 @@ const render = (state) => {
 			}
 		}
 	);
-	networkUsage.render(state.networkStats);
+	networkUsage.render(state.networkStats, (state.system?.networkInterface?.speed * 1_000_000 / 8));
 };
 
 resourceMonitorService.subscribe([render]);
