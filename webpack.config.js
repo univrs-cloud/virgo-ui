@@ -7,6 +7,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const { version } = require('./package.json');
 
 module.exports = (env, argv) => {
 	let upstream = '';
@@ -75,7 +76,7 @@ module.exports = (env, argv) => {
 		},
 		plugins: [
 			new webpack.DefinePlugin({
-				VERSION: JSON.stringify(require('./package.json').version)
+				VERSION: JSON.stringify(version)
 			}),
 			new CleanWebpackPlugin(),
 			new webpack.ProvidePlugin({
