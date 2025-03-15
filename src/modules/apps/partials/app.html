@@ -33,7 +33,6 @@
 					<%}%>
 					<%if (!_.isEmpty(app.ports)) {%>
 						<dl class="m-0 mt-2">
-							<%console.log(app.ports)%>
 							<dt class="fw-lighter"><small>Published ports (public:private)</small></dt>
 							<%_.each(app.ports, (port, index) => {%>
 								<dd class="mb-0"><%=port.PublicPort%>:<%=port.PrivatePort%></dd>
