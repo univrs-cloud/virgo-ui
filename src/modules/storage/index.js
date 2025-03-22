@@ -17,7 +17,7 @@ const render = (state) => {
 	
 	let template = document.createElement('template');
 	_.each(state.storage, (pool) => {
-		template.innerHTML += storageTemplate({ pool, drives: state.drives, bytes });
+		template.innerHTML += storageTemplate({ pool, drives: state.drives, bytes, moment });
 	});
 	
 	morphdom(

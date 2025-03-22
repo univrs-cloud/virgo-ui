@@ -7,7 +7,7 @@ let pool = (state.storage === false ? false : _.find(state.storage, (pool) => { 
 		Data
 		<%if (state.storage !== null && pool !== false) {%>
 			<small class="ms-1">
-				<span class="badge rounded-pill bd-<%=(pool.health.toLowerCase() === 'online' ? 'green' : 'red')%>-100"><%=pool.health%></span>
+				<span class="badge rounded-pill bd-<%=(pool.properties.health.value.toLowerCase() === 'online' ? 'green' : 'red')%>-100"><%=pool.properties.health.value%></span>
 			</small>
 		<%}%>
 	</h6>
@@ -19,16 +19,16 @@ let pool = (state.storage === false ? false : _.find(state.storage, (pool) => { 
 		<div class="row g-0 d-flex align-items-baseline">
 			<div class="col">
 				<div class="progress" role="progressbar">
-					<div class="progress-bar bg-blue-300" style="width: <%=(pool.cap)%>%;"></div>
+					<div class="progress-bar bg-blue-300" style="width: <%=(pool.properties.capacity.value)%>%;"></div>
 				</div>
 			</div>
 			<div class="col-auto lh-1 text-body-tertiary text-end" style="width: 45px;">
-				<small class="fw-light"><%=pool.cap?.toFixed(0)%>%</small>
+				<small class="fw-light"><%=pool.properties.capacity.value?.toFixed(0)%>%</small>
 			</div>
 		</div>
 		<div class="lh-1 text-body-tertiary mt-1">
-			<small><strong class="fw-semibold"><%=bytes(pool.alloc)%></strong> used from <%=bytes(pool.size)%></small><br>
-			<small class="d-none">Free: <%=bytes(pool.free)%></small>
+			<small><strong class="fw-semibold"><%=bytes(pool.properties.allocated.value)%></strong> used from <%=bytes(pool.properties.size.value)%></small><br>
+			<small class="d-none">Free: <%=bytes(pool.properties.free.value)%></small>
 		</div>
 		<div class="mt-1">
 			<%_.each(state.drives, (drive) => {%>
@@ -45,12 +45,13 @@ let pool = (state.storage === false ? false : _.find(state.storage, (pool) => { 
 				</small>
 			<%})%>
 		</div>
-		<%if (pool.scanResults?.status === 'running' || pool.scanResults?.status === 'paused') {%>
+		<%if (pool.scan_stats?.state.toLowerCase() !== 'finished') {%>
+			<%let progress = (pool.scan_stats.to_examine === 0 ? 0 : (pool.scan_stats.issued / pool.scan_stats.to_examine) * 100)%>
 			<div class="lh-1 text-body-tertiary mt-3">
 				<small>
-					<%if (pool.scanResults.status === 'running') {%>
+					<%if (pool.scan_stats.scrub_pause === 0) {%>
 						Running data integrity check...
-					<%} else if (pool.scanResults.status === 'paused') {%>
+					<%} else if (pool.scan_stats.scrub_pause !== 0) {%>
 						Data integrity check paused
 					<%}%>
 				</small>
@@ -58,11 +59,11 @@ let pool = (state.storage === false ? false : _.find(state.storage, (pool) => { 
 			<div class="row g-0 d-flex align-items-baseline">
 				<div class="col">
 					<div class="progress" role="progressbar">
-						<div class="progress-bar bg-cyan-300 <%=(pool.scanResults.status === 'running' ? 'progress-bar-striped progress-bar-animated' : '')%>" style="width: <%=(pool.scanResults.progress)%>%;"></div>
+						<div class="progress-bar bg-cyan-300 <%=(pool.scan_stats.scrub_pause === 0 ? 'progress-bar-striped progress-bar-animated' : '')%>" style="width: <%=progress%>%;"></div>
 					</div>
 				</div>
 				<div class="col-auto lh-1 text-body-tertiary text-end" style="width: 45px;">
-					<small class="fw-light"><%=pool.scanResults.progress?.toFixed(0)%>%</small>
+					<small class="fw-light"><%=progress.toFixed(0)%>%</small>
 				</div>
 			</div>
 		<%}%>
