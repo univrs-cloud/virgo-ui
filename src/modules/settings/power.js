@@ -1,11 +1,12 @@
 import * as powerService from 'modules/settings/services/power';
 
 const reboot = (event) => {
-	if (!event.target.classList.contains('reboot')) {
+	if (!event.target.closest('a').classList.contains('reboot')) {
 		return;
 	}
 	
-	if (event.target.classList.contains('disabled')) {
+	if (event.target.closest('a').classList.contains('disabled')) {
+		event.preventDefault();
 		return;
 	}
 
@@ -14,16 +15,16 @@ const reboot = (event) => {
 		return;
 	}
 
-	event.target.classList.add('disabled');
+	event.target.closest('a').classList.add('disabled');
 	powerService.reboot();
 };
 
 const shutdown = (event) => {
-	if (!event.target.classList.contains('shutdown')) {
+	if (!event.target.closest('a').classList.contains('shutdown')) {
 		return;
 	}
 
-	if (event.target.classList.contains('disabled')) {
+	if (event.target.closest('a').classList.contains('disabled')) {
 		return;
 	}
 
@@ -32,7 +33,7 @@ const shutdown = (event) => {
 		return;
 	}
 	
-	event.target.classList.add('disabled');
+	event.target.closest('a').classList.add('disabled');
 	powerService.shutdown();
 };
 

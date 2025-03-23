@@ -2,6 +2,7 @@ import modulePartial from 'modules/folders/partials/index.html';
 import emptyPartial from 'modules/folders/partials/empty.html';
 import folderPartial from 'modules/folders/partials/folder.html';
 import * as folderService from 'modules/folders/services/folder';
+import copy from 'copy-to-clipboard';
 
 const moduleTemplate = _.template(modulePartial);
 const emptyTemplate = _.template(emptyPartial);
@@ -12,19 +13,47 @@ let loading = module.querySelector('.loading');
 let container = module.querySelector('.container-fluid');
 let row = container.querySelector('.row');
 
-const performAction = (event) => {
-	event.preventDefault();
-	let button = event.currentTarget;
-	let card = button.closest('.card');
-	if (button.classList.contains('text-danger') && !confirm(`Are you sure you want to ${button.dataset.action} ${card.dataset.title}?`)) {
+const copyToClipboard = (event) => {
+	if (event.target.closest('a').dataset.action !== 'copy-to-clipboard') {
 		return;
 	}
 
-	let config = {
-		id: card.dataset.id,
-		action: button.dataset.action
-	};
-	// folderService.performAction(config);
+	event.preventDefault();
+	let button = event.target.closest('a');
+	let text = button.nextElementSibling.innerHTML;
+	if (copy(text)) {
+		let tooltip = bootstrap.Tooltip.getInstance(button);
+		let originalTitle = button.dataset.bsOriginalTitle;
+		tooltip.setContent({ '.tooltip-inner': 'Copied!' });
+		setTimeout(() => {
+			tooltip.hide();
+			tooltip.setContent({ '.tooltip-inner': originalTitle });
+		}, 1000);
+	}
+};
+
+const remove = (event) => {
+	if (event.target.closest('a').dataset.action !== 'remove') {
+		return;
+	}
+
+	if (event.target.closest('a').classList.contains('disabled')) {
+		event.preventDefault();
+		return;
+	}
+	
+	event.preventDefault();
+	let button = event.target.closest('a');
+	let card = button.closest('.card');
+	if (!confirm(`Are you sure you want to ${button.dataset.action} ${card.dataset.title}?`)) {
+		return;
+	}
+
+	// let config = {
+	// 	id: card.dataset.id,
+	// 	action: button.dataset.action
+	// };
+	// folderService.performAction(config);	
 };
 
 const render = (state) => {
@@ -36,8 +65,9 @@ const render = (state) => {
 	if (_.isEmpty(state.folders)) {
 		template.innerHTML = emptyTemplate();
 	} else {
+		let networkInterface = state.networkInterface;
 		_.each(state.folders, (folder) => {
-			template.innerHTML += folderTemplate({ folder, bytes });
+			template.innerHTML += folderTemplate({ folder, networkInterface, bytes });
 		});
 	}
 	
@@ -49,12 +79,15 @@ const render = (state) => {
 
 	loading.classList.add('d-none');
 	container.classList.remove('d-none');
-
-	_.each(module.querySelectorAll('.dropdown-menu a:not(.disabled)'), (button) => {
-		button.addEventListener('click', performAction);
-	});
 };
 
-render({ folders: folderService.getFolders() });
+render({ folders: folderService.getFolders(), networkInterface: folderService.getSystem().networkInterface, bytes });
 
 folderService.subscribe([render]);
+
+_.each(module.querySelectorAll('.dropdown-menu a:not(.disabled)'), (button) => {
+	button.addEventListener('click', performAction);
+});
+
+module.addEventListener('click', copyToClipboard);
+module.addEventListener('click', remove);
