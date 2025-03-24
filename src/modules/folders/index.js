@@ -14,7 +14,7 @@ let container = module.querySelector('.container-fluid');
 let row = container.querySelector('.row');
 
 const copyToClipboard = (event) => {
-	if (event.target.closest('a').dataset.action !== 'copy-to-clipboard') {
+	if (event.target.closest('a')?.dataset.action !== 'copy-to-clipboard') {
 		return;
 	}
 
@@ -33,7 +33,7 @@ const copyToClipboard = (event) => {
 };
 
 const remove = (event) => {
-	if (event.target.closest('a').dataset.action !== 'remove') {
+	if (event.target.closest('a')?.dataset.action !== 'remove') {
 		return;
 	}
 
@@ -84,10 +84,6 @@ const render = (state) => {
 render({ folders: folderService.getFolders(), networkInterface: folderService.getSystem().networkInterface, bytes });
 
 folderService.subscribe([render]);
-
-_.each(module.querySelectorAll('.dropdown-menu a:not(.disabled)'), (button) => {
-	button.addEventListener('click', performAction);
-});
 
 module.addEventListener('click', copyToClipboard);
 module.addEventListener('click', remove);
