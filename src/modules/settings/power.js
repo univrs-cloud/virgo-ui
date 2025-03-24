@@ -1,7 +1,9 @@
 import * as powerService from 'modules/settings/services/power';
 
+let module = document.querySelector('#settings');
+
 const reboot = (event) => {
-	if (!event.target.closest('a').classList.contains('reboot')) {
+	if (event.target.closest('a')?.dataset.action !== 'reboot') {
 		return;
 	}
 	
@@ -20,7 +22,7 @@ const reboot = (event) => {
 };
 
 const shutdown = (event) => {
-	if (!event.target.closest('a').classList.contains('shutdown')) {
+	if (event.target.closest('a')?.dataset.action !== 'shut-down') {
 		return;
 	}
 
@@ -29,7 +31,7 @@ const shutdown = (event) => {
 	}
 
 	event.preventDefault();
-	if (!confirm('Are you sure you want to shutdown?')) {
+	if (!confirm('Are you sure you want to shut down?')) {
 		return;
 	}
 	
@@ -56,5 +58,5 @@ const render = (state) => {
 
 powerService.subscribe([render]);
 
-document.body.addEventListener('click', reboot);
-document.body.addEventListener('click', shutdown);
+module.addEventListener('click', reboot);
+module.addEventListener('click', shutdown);
