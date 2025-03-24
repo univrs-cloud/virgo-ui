@@ -30,11 +30,12 @@
 					<dt class="fw-lighter"><small>RAM</small></dt>
 					<dd><%=bytes(memory.total)%></dd>
 					<dt class="fw-lighter"><small>Network</small></dt>
-					<dd><%=prettyBytes(system?.networkInterface?.speed * 1000 * 1000, { bits: true })%>/s</dd>
+					<dd><%=prettyBytes(system?.networkInterface?.speed * 1000 * 1000, { bits: true })%>/s <small class="text-body-tertiary">(<%=system?.networkInterface?.mac%>)</small></dd>
 					<dt class="fw-lighter"><small>Drives</small></dt>
 					<dd class="m-0">
 						<%_.each(drives, (drive) => {%>
-							<%=drive.model%> @ <%=bytes(drive.capcity.bytes)%><br>
+							<%console.log(drive)%>
+							<%=drive.model%> @ <%=bytes(drive.capcity.bytes)%> <small class="text-body-tertiary">(<%=drive.serialNumber%>)</small><br>
 						<%})%>
 					</dd>
 				</dl>
