@@ -34,7 +34,6 @@
 					<dt class="fw-lighter"><small>Drives</small></dt>
 					<dd class="m-0">
 						<%_.each(drives, (drive) => {%>
-							<%console.log(drive)%>
 							<%=drive.model%> @ <%=bytes(drive.capcity.bytes)%> <small class="text-body-tertiary">(<%=drive.serialNumber%>)</small><br>
 						<%})%>
 					</dd>
