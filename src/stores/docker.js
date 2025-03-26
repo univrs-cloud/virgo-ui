@@ -24,12 +24,10 @@ class Docker extends Store {
 		});
 
 		this.socket.on('configured', (configured) => {
-			console.log('configured', configured);
 			this.setState({ configured }, 'set_configured');
 		});
 
 		this.socket.on('containers', (containers) => {
-			console.log('containers', containers);
 			this.setState({ containers }, 'set_containers');
 		});
 
