@@ -6,15 +6,15 @@ const composeUrlFromProxy = (proxy) => {
 	return `${proxy.sslForced ? 'https://' : 'http://'}${_.first(proxy.domainNames)}`;
 };
 
-const composeApps = (configured, proxies) => {
-	if (_.isNull(configured)) {
+const composeApps = (configured, containers, proxies) => {
+	if (_.isNull(configured) || _.isNull(containers)) {
 		return null;
 	}
 	
 	return _.map(
 		_.orderBy(_.filter(configured.configuration, { type: 'app' }), ['title'], ['asc']),
 		(entity) => {
-			let dockerContainer = _.find(configured.containers, { name: entity.name });
+			let dockerContainer = _.find(containers, { name: entity.name });
 			entity.id = entity.name;
 			entity.state = '';
 			if (dockerContainer) {
@@ -38,7 +38,7 @@ const composeApps = (configured, proxies) => {
 }
 
 const getApps = () => {
-	return composeApps(Docker.getConfigured(), Docker.getProxies());
+	return composeApps(Docker.getConfigured(), Docker.getContainers(), Docker.getProxies());
 };
 
 const performAction = (config) => {
@@ -46,7 +46,7 @@ const performAction = (config) => {
 };
 
 const handleSubscription = (properties) => {
-	let apps = composeApps(properties.configured, properties.proxies);
+	let apps = composeApps(properties.configured, properties.containers, properties.proxies);
 
 	_.each(callbackCollection, (callback) => {
 		callback({ apps });
@@ -56,7 +56,7 @@ const handleSubscription = (properties) => {
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 	
-	Docker.subscribeToProperties(['configured', 'proxies'], handleSubscription);
+	Docker.subscribeToProperties(['configured', 'containers', 'proxies'], handleSubscription);
 };
 
 export {

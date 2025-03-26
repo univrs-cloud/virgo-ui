@@ -11,12 +11,12 @@ const performAction = (config) => {
 };
 
 const handleSubscription = (properties) => {
-	if (_.isNull(properties.configured)) {
+	if (_.isNull(properties.configured) || _.isNull(properties.containers)) {
 		return;
 	}
 
 	let apps = _.map(properties.configured.configuration, (entity) => {
-		let dockerContainer = _.find(properties.configured.containers, { name: entity.name });
+		let dockerContainer = _.find(properties.containers, { name: entity.name });
 		entity.id = entity.name;
 		entity.state = '';
 		if (dockerContainer) {
@@ -50,7 +50,7 @@ const handleSubscription = (properties) => {
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 	
-	Docker.subscribeToProperties(['proxies', 'configured'], handleSubscription);
+	Docker.subscribeToProperties(['configured', 'containers', 'proxies'], handleSubscription);
 };
 
 export {

@@ -4,6 +4,7 @@ class Docker extends Store {
 	constructor() {
 		const initialState = {
 			configured: null,
+			containers: null,
 			templates: null
 		};
 		super({
@@ -23,7 +24,13 @@ class Docker extends Store {
 		});
 
 		this.socket.on('configured', (configured) => {
+			console.log('configured', configured);
 			this.setState({ configured }, 'set_configured');
+		});
+
+		this.socket.on('containers', (containers) => {
+			console.log('containers', containers);
+			this.setState({ containers }, 'set_containers');
 		});
 
 		this.socket.on('templates', (templates) => {
@@ -33,6 +40,10 @@ class Docker extends Store {
 
 	getConfigured() {
 		return this.getStateProperty('configured');
+	}
+
+	getContainers() {
+		return this.getStateProperty('containers');
 	}
 
 	getProxies() {
