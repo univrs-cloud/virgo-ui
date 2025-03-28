@@ -6,7 +6,7 @@ let container = document.querySelector('header');
 
 const showPage = (href) => {
 	_.each(container.querySelectorAll('.nav-link.active'), (element) => { element.classList.remove('active'); });
-	_.each(container.querySelectorAll(`.nav-link[href="${href}"]`), (element) => { element.classList.add('active'); });
+	_.each(container.querySelectorAll(`.nav-link[href="${_.replace(href, '#', '/')}"]`), (element) => { element.classList.add('active'); });
 
 	_.each(document.querySelectorAll('.modules > div'), (element) => { element.classList.add('d-none') });
 	document.querySelector(`${href}`)?.classList.remove('d-none');
@@ -19,15 +19,6 @@ const navigate = (event) => {
 	}
 
 	let offcanvas = navLink.closest('.offcanvas');
-	let href = navLink.getAttribute('href');
-	if (href === '#' || _.startsWith(href, '#')) {
-		event.preventDefault();
-	}
-
-	if (_.startsWith(href, '#')) {
-		page(`/${href.substring(1)}`);
-	}
-
 	if (!_.isNull(offcanvas)) {
 		bootstrap.Offcanvas.getInstance(offcanvas)?.hide();
 	}
@@ -41,6 +32,7 @@ if (isAuthenticated) {
 	page('/folders', () => { showPage('#folders'); });
 	page('/time-machines', () => { showPage('#time-machines'); });
 	page('/users', () => { showPage('#users'); });
+	page('/users/profile', () => { showPage('#profile'); });
 	page('/storage', () => { showPage('#storage'); });
 	page('/network', () => { showPage('#network'); });
 	page('/settings', () => { showPage('#settings'); });
