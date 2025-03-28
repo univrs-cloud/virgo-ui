@@ -84,15 +84,14 @@ const setLocation = (event) => {
 	}
 
 	let form = event.target;
-	let submitButton = form.querySelector('button[type="submit"]');
-	submitButton.disabled = true;
+	let buttons = form.querySelectorAll('button');
+	_.each(buttons, (button) => { button.disabled = true; });
 	let config = {
 		latitude: form.querySelector('.latitude').value,
 		longitude: form.querySelector('.longitude').value
 	}
 	configurationService.setLocation(config);
 	bootstrap.Modal.getInstance(form.closest('.modal'))?.hide();
-	submitButton.disabled = false;
 	_.each(locationForm.querySelectorAll('input'), (element) => { element.classList.remove('is-valid'); });
 	document.querySelector('.toast-container').insertAdjacentHTML('beforeend',
 		`<div class="toast bd-green-500 border-0" data-bs-autohide="true">
@@ -131,9 +130,9 @@ const getLocation = (event) => {
 
 const restore = (event) => {
 	locationForm.reset();
-	locationForm.querySelector('button[type="submit"]').disabled = false;
+	_.each(locationForm.querySelectorAll('button'), (button) => { button.disabled = false });
 	_.each(locationForm.querySelectorAll('.form-floating'), (input) => {
-		input.querySelector('input')?.classList?.remove('is-invalid');
+		input.querySelector('input')?.classList?.remove('is-invalid', 'is-valid');
 		input.querySelector('.invalid-feedback').innerHTML = '';
 	});
 };
@@ -147,8 +146,6 @@ const render = (event) => {
 if ('geolocation' in navigator) {
 	locationForm.querySelector('.get-geo-location').classList.remove('d-none');
 }
-
-configurationService.subscribe([render]);
 
 locationForm.querySelector('.get-geo-location').addEventListener('click', getLocation);
 locationForm.querySelector('.latitude').addEventListener('input', validateLatitude);

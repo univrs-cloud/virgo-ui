@@ -41,6 +41,6 @@ const render = (state) => {
 	container.classList.remove('d-none');
 };
 
-modalBody.addEventListener('click', install);
-
 appCenterService.subscribe([render]);
+
+modalBody.addEventListener('click', install);

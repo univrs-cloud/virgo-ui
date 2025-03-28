@@ -9,6 +9,7 @@ if (isAuthenticated) {
 	importPromises.push(import('modules/folders'));
 	importPromises.push(import('modules/time_machines'));
 	importPromises.push(import('modules/users'));
+	importPromises.push(import('modules/users/profile'));
 	importPromises.push(import('modules/storage'));
 	importPromises.push(import('modules/network'));
 	importPromises.push(import('modules/settings'));

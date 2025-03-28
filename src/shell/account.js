@@ -4,6 +4,14 @@ import * as proxyService from 'shell/services/proxy';
 const accountTemplate = _.template(accountPartial);
 let authDomain = null;
 
+const changePassword = (event) => {
+	if (!event.target.classList.contains('change-password') || !authDomain) {
+		return;
+	}
+
+	event.preventDefault();
+};
+
 const logout = (event) => {
 	if (!event.target.classList.contains('sign-out') || !authDomain) {
 		return;
