@@ -54,7 +54,6 @@ const changePassword = (event) => {
 	let buttons = form.querySelectorAll('button');
 	_.each(buttons, (button) => { button.disabled = true; });
 	let config = {
-		username: form.querySelector('.username').value,
 		password: form.querySelector('.password').value
 	};
 
@@ -85,7 +84,6 @@ const render = (event) => {
 	let users = userService.getUsers();
 	let profile = _.find(users, { username: account.user });
 	profileForm.querySelector('.title-username').innerHTML = profile.username;
-	profileForm.querySelector('.username').value = profile.username;
 };
 
 passwordForm.querySelector('.password').addEventListener('input', validatePassword);
