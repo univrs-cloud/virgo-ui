@@ -21,6 +21,7 @@
 		"@codewithdan/observable-store": "^2.2.15",
 		"@codewithdan/observable-store-extensions": "^2.2.9",
 		"@popperjs/core": "^2.11.8",
+		"@xterm/xterm": "^5.5.0",
 		"apexcharts": "3.48.0",
 		"axios": "^1.8.4",
 		"bootstrap": "^5.3.3",

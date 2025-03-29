@@ -59,4 +59,5 @@ render({ apps: appService.getApps() });
 
 appService.subscribe([render]);
 
+import('modules/apps/console');
 import('modules/apps/app_center');
