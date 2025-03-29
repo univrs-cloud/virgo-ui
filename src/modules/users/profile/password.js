@@ -4,7 +4,7 @@ import validator from 'validator';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', passwordModalPartial);
 
-let passwordForm = document.querySelector('#profile-change-password');
+let passwordForm = document.querySelector('#profile-password');
 
 const validatePassword = (event) => {
 	let input = passwordForm.querySelector('.password');
@@ -53,7 +53,23 @@ const changePassword = (event) => {
 	let form = event.target;
 	let buttons = form.querySelectorAll('button');
 	_.each(buttons, (button) => { button.disabled = true; });
-	console.log(userService.changePassword);
+	let config = {
+		username: form.querySelector('.username').value,
+		password: form.querySelector('.password').value
+	};
+
+	userService.changePassword(config);
+	bootstrap.Modal.getInstance(form.closest('.modal'))?.hide();
+	document.querySelector('.toast-container').insertAdjacentHTML('beforeend',
+		`<div class="toast bd-green-500 border-0" data-bs-autohide="true">
+			<div class="d-flex">
+				<div class="toast-body">Password saved.</div>
+				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+			</div>
+		</div>`
+	);
+	let toast = new bootstrap.Toast(document.querySelector('.toast-container .toast:last-of-type'));
+	toast.show();
 };
 
 const restore = (event) => {
@@ -66,6 +82,10 @@ const restore = (event) => {
 };
 
 const render = (event) => {
+	let users = userService.getUsers();
+	let profile = _.find(users, { username: account.user });
+	profileForm.querySelector('.title-username').innerHTML = profile.username;
+	profileForm.querySelector('.username').value = profile.username;
 };
 
 passwordForm.querySelector('.password').addEventListener('input', validatePassword);

@@ -92,7 +92,6 @@ const setLocation = (event) => {
 	}
 	configurationService.setLocation(config);
 	bootstrap.Modal.getInstance(form.closest('.modal'))?.hide();
-	_.each(locationForm.querySelectorAll('input'), (element) => { element.classList.remove('is-valid'); });
 	document.querySelector('.toast-container').insertAdjacentHTML('beforeend',
 		`<div class="toast bd-green-500 border-0" data-bs-autohide="true">
 			<div class="d-flex">

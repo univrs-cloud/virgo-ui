@@ -14,6 +14,14 @@ const getUsers = () => {
 	return filter(User.getUsers());
 };
 
+const updateProfile = (config) => {
+	User.updateProfile(config);
+};
+
+const changePassword = (config) => {
+	User.changePassword(config);
+};
+
 const handleSubscription = (properties) => {
 	let users = filter(properties.users);
 
@@ -30,5 +38,7 @@ const subscribe = (callbacks) => {
 
 export {
 	subscribe,
-	getUsers
+	getUsers,
+	updateProfile,
+	changePassword
 };

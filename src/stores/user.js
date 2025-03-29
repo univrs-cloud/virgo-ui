@@ -30,6 +30,14 @@ class User extends Store {
 	getUsers() {
 		return this.getStateProperty('users');
 	}
+
+	updateProfile(config) {
+		this.socket.emit('profile', config);
+	}
+
+	changePassword(config) {
+		this.socket.emit('password', config);
+	}
 }
 
 export default new User();
