@@ -2,6 +2,10 @@ import Docker from 'stores/docker';
 
 let callbackCollection = [];
 
+const getSocket = () => {
+	return Docker.socket;
+};
+
 const composeUrlFromProxy = (proxy) => {
 	return `${proxy.sslForced ? 'https://' : 'http://'}${_.first(proxy.domainNames)}`;
 };
@@ -61,6 +65,7 @@ const subscribe = (callbacks) => {
 
 export {
 	subscribe,
+	getSocket,
 	getApps,
 	performAction
 };
