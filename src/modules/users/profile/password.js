@@ -83,7 +83,7 @@ const restore = (event) => {
 const render = (event) => {
 	let users = userService.getUsers();
 	let profile = _.find(users, { username: account.user });
-	profileForm.querySelector('.title-username').innerHTML = profile.username;
+	passwordForm.querySelector('.title-username').innerHTML = profile.username;
 };
 
 passwordForm.querySelector('.password').addEventListener('input', validatePassword);
