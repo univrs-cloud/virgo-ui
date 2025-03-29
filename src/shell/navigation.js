@@ -6,10 +6,10 @@ let container = document.querySelector('header');
 
 const showPage = (href) => {
 	_.each(container.querySelectorAll('.nav-link.active'), (element) => { element.classList.remove('active'); });
-	_.each(container.querySelectorAll(`.nav-link[href="${_.replace(href, '#', '/')}"]`), (element) => { element.classList.add('active'); });
+	_.each(container.querySelectorAll(`.nav-link[href="/${href}"]`), (element) => { element.classList.add('active'); });
 
 	_.each(document.querySelectorAll('.modules > div'), (element) => { element.classList.add('d-none') });
-	document.querySelector(`${href}`)?.classList.remove('d-none');
+	document.querySelector(`#${href}`)?.classList.remove('d-none');
 };
 
 const navigate = (event) => {
@@ -24,22 +24,22 @@ const navigate = (event) => {
 	}
 };
 
-page('/', () => { showPage('#dashboard'); });
-page('/dashboard', () => { showPage('#dashboard'); });
+page('/', () => { showPage('dashboard'); });
+page('/dashboard', () => { showPage('dashboard'); });
 if (isAuthenticated) {
-	page('/apps', () => { showPage('#apps'); });
-	page('/bookmarks', () => { showPage('#bookmarks'); });
-	page('/folders', () => { showPage('#folders'); });
-	page('/time-machines', () => { showPage('#time-machines'); });
-	page('/users', () => { showPage('#users'); });
-	page('/users/profile', () => { showPage('#profile'); });
-	page('/storage', () => { showPage('#storage'); });
-	page('/network', () => { showPage('#network'); });
-	page('/settings', () => { showPage('#settings'); });
-	page('/software-update', () => { showPage('#software-update'); });
-	page('/about', () => { showPage('#about'); });
+	page('/apps', () => { showPage('apps'); });
+	page('/bookmarks', () => { showPage('bookmarks'); });
+	page('/folders', () => { showPage('folders'); });
+	page('/time-machines', () => { showPage('time-machines'); });
+	page('/users', () => { showPage('users'); });
+	page('/users/profile', () => { showPage('profile'); });
+	page('/storage', () => { showPage('storage'); });
+	page('/network', () => { showPage('network'); });
+	page('/settings', () => { showPage('settings'); });
+	page('/software-update', () => { showPage('software-update'); });
+	page('/about', () => { showPage('about'); });
 }
-page('*', () => { showPage('#not-found'); });
+page('*', () => { showPage('not-found'); });
 
 container.addEventListener('click', navigate);
 
