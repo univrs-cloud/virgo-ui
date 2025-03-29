@@ -54,7 +54,6 @@ const updateProfile = (event) => {
 	let buttons = form.querySelectorAll('button');
 	_.each(buttons, (button) => { button.disabled = true; });
 	let config = {
-		username: form.querySelector('.username').value,
 		fullname: form.querySelector('.fullname').value,
 		email: form.querySelector('.email').value
 	};
@@ -86,7 +85,6 @@ const render = (event) => {
 	let users = userService.getUsers();
 	let profile = _.find(users, { username: account.user });
 	profileForm.querySelector('.title-username').innerHTML = profile.username;
-	profileForm.querySelector('.username').value = profile.username;
 	profileForm.querySelector('.fullname').value = profile.fullname || profile.username;
 	profileForm.querySelector('.email').value = account.email ?? '';
 };
