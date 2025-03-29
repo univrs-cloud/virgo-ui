@@ -1,10 +1,17 @@
 <form id="profile-edit" class="modal fade" tabindex="-1">
+	<input type="hidden" name="Username" value="" class="username">
 	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title">Edit profile</h5>
 			</div>
 			<div class="modal-body">
+				<div class="alert alert-light">
+					<dl class="m-0">
+						<dt class="fw-light text-body-tertiary"><small>Username</small></dt>
+						<dd class="title-username m-0"></dd>
+					</dl>
+				</div>
 				<div class="form-floating mb-3">
 					<input type="text" name="fullname" class="fullname form-control" placeholder="">
 					<label>Name</label>

@@ -53,7 +53,24 @@ const updateProfile = (event) => {
 	let form = event.target;
 	let buttons = form.querySelectorAll('button');
 	_.each(buttons, (button) => { button.disabled = true; });
-	console.log(userService?.updateProfile);
+	let config = {
+		username: form.querySelector('.username').value,
+		fullname: form.querySelector('.fullname').value,
+		email: form.querySelector('.email').value
+	};
+
+	userService.updateProfile(config);
+	bootstrap.Modal.getInstance(form.closest('.modal'))?.hide();
+	document.querySelector('.toast-container').insertAdjacentHTML('beforeend',
+		`<div class="toast bd-green-500 border-0" data-bs-autohide="true">
+			<div class="d-flex">
+				<div class="toast-body">Profile saved.</div>
+				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+			</div>
+		</div>`
+	);
+	let toast = new bootstrap.Toast(document.querySelector('.toast-container .toast:last-of-type'));
+	toast.show();
 };
 
 const restore = (event) => {
@@ -68,6 +85,8 @@ const restore = (event) => {
 const render = (event) => {
 	let users = userService.getUsers();
 	let profile = _.find(users, { username: account.user });
+	profileForm.querySelector('.title-username').innerHTML = profile.username;
+	profileForm.querySelector('.username').value = profile.username;
 	profileForm.querySelector('.fullname').value = profile.fullname || profile.username;
 	profileForm.querySelector('.email').value = account.email ?? '';
 };
