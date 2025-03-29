@@ -9,7 +9,7 @@ bootstrap.Tooltip.Default.selector = '[data-bs-toggle="tooltip"]';
 new bootstrap.Tooltip(document.querySelector('body'));
 
 document.addEventListener('shown.bs.modal', (event) => { // focus 1st input after modal is shown
-	event.target.querySelector('input')?.focus();
+	event.target.querySelector('input:not([type="hidden"])')?.focus();
 });
 
 try {
