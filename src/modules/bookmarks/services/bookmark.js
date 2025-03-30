@@ -6,49 +6,33 @@ const composeUrlFromProxy = (proxy) => {
 	return `${proxy.sslForced ? 'https://' : 'http://'}${_.first(proxy.domainNames)}`;
 };
 
-const composeBookmark = (configured, containers, proxies) => {
+const composeBookmark = (configured) => {
 	if (_.isNull(configured)) {
 		return null;
 	}
 	
 	return _.map(
-		_.orderBy(_.filter(configured.configuration, { type: 'bookmark' }), ['title'], ['asc']),
+		_.orderBy(
+			_.filter(configured.configuration, { type: 'bookmark' }),
+			['title'],
+			['asc']
+		),
 		(entity) => {
-			let dockerContainer = _.find(containers, { name: entity.name });
 			entity.id = entity.name;
-			entity.state = '';
-			if (dockerContainer) {
-				entity.id = dockerContainer.id;
-				entity.state = dockerContainer.state;
-				let proxy = _.find(proxies, { forwardHost: dockerContainer.name });
-				if (!_.isEmpty(proxy)) {
-					entity.url = composeUrlFromProxy(proxy);
-				} else if (!_.isEmpty(dockerContainer.ports)) {
-					let ports = _.filter(dockerContainer.ports, { IP: '0.0.0.0' });
-					if (!_.isEmpty(ports)) {
-						_.each(ports, (port) => {
-							let proxy = _.find(proxies, { forwardPort: port.PublicPort });
-							if (!_.isEmpty(proxy)) {
-								entity.url = composeUrlFromProxy(proxy);
-							}
-						});
-					}
-				}
-			}
 			return entity;
 		});
 }
 
 const getBookmarks = () => {
-	return composeBookmark(Docker.getConfigured(), Docker.getContainers(), Docker.getProxies());
+	return composeBookmark(Docker.getConfigured());
 };
 
 const performAction = (config) => {
-	Docker.performAction(config);
+	
 };
 
 const handleSubscription = (properties) => {
-	let bookmarks = composeBookmark(properties.configured, properties.containers, properties.proxies);
+	let bookmarks = composeBookmark(properties.configured);
 
 	_.each(callbackCollection, (callback) => {
 		callback({ bookmarks });
@@ -58,7 +42,7 @@ const handleSubscription = (properties) => {
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 	
-	Docker.subscribeToProperties(['configured', 'containers', 'proxies'], handleSubscription);
+	Docker.subscribeToProperties(['configured'], handleSubscription);
 };
 
 export {
