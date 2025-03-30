@@ -16,24 +16,26 @@ const handleSubscription = (properties) => {
 	}
 
 	let apps = _.map(properties.configured.configuration, (entity) => {
-		let dockerContainer = _.find(properties.containers, { name: entity.name });
 		entity.id = entity.name;
-		entity.state = '';
-		if (dockerContainer) {
-			entity.id = dockerContainer.id;
-			entity.state = dockerContainer.state;
-			let proxy = _.find(properties.proxies, { forwardHost: dockerContainer.name });
-			if (!_.isEmpty(proxy)) {
-				entity.url = composeUrlFromProxy(proxy);
-			} else if (!_.isEmpty(dockerContainer.ports)) {
-				let ports = _.filter(dockerContainer.ports, { IP: '0.0.0.0' });
-				if (!_.isEmpty(ports)) {
-					_.each(ports, (port) => {
-						let proxy = _.find(properties.proxies, { forwardPort: port.PublicPort });
-						if (!_.isEmpty(proxy)) {
-							entity.url = composeUrlFromProxy(proxy);
-						}
-					});
+		if (entity.type === 'app') {
+			let container = _.find(properties.containers, (container) => { return _.includes(container.names, `/${entity.name}`) });
+			if (container) {
+				entity.id = container.id;
+				entity.state = container.state;
+				entity.composeProject = container.labels.comDockerComposeProject ?? false;
+				let proxy = _.find(properties.proxies, { forwardHost: entity.name });
+				if (!_.isEmpty(proxy)) {
+					entity.url = composeUrlFromProxy(proxy);
+				} else if (!_.isEmpty(container.ports)) {
+					let ports = _.filter(container.ports, { ip: '0.0.0.0' });
+					if (!_.isEmpty(ports)) {
+						_.each(ports, (port) => {
+							let proxy = _.find(properties.proxies, { forwardPort: port.publicPort });
+							if (!_.isEmpty(proxy)) {
+								entity.url = composeUrlFromProxy(proxy);
+							}
+						});
+					}
 				}
 			}
 		}

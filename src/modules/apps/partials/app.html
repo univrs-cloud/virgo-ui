@@ -1,5 +1,5 @@
 <div class="col col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 item">
-	<div class="app card rounded-4 border-0" data-id="<%=app.id%>" data-title="<%=app.title%>">
+	<div class="app card rounded-4 border-0" data-id="<%=app.id%>" data-compose-project="<%=app?.composeProject || ''%>" data-title="<%=app.title%>">
 		<div class="card-body ps-0 py-1">
 			<div class="row g-0 align-items-center">
 				<div class="col-2 p-2 card-image">
@@ -33,14 +33,20 @@
 					<%}%>
 					<dl class="m-0 mt-2">
 						<dt class="fw-lighter"><small>Console</small></dt>
-						<dd class="d-flex align-items-center">
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa fa-fw me-1"><path d="M448 64c17.7 0 32 14.3 32 32l0 320c0 17.7-14.3 32-32 32L64 448c-17.7 0-32-14.3-32-32L32 96c0-17.7 14.3-32 32-32l384 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32zM99.9 149.6c-5.8 6.7-5 16.8 1.7 22.6L199.4 256l-97.8 83.9c-6.7 5.8-7.5 15.8-1.7 22.6s15.9 7.5 22.6 1.7l112-96c3.5-3 5.6-7.5 5.6-12.1s-2-9.1-5.6-12.1l-112-96c-6.7-5.8-16.8-5-22.6 1.7zM224 352c-8.8 0-16 7.2-16 16s7.2 16 16 16l176 0c8.8 0 16-7.2 16-16s-7.2-16-16-16l-176 0z"/></svg>
-							<a href="#console" class="btn btn-link link-offset-2 link-underline p-0 <%=(app.state !== 'running' ? 'link-underline-opacity-0 disabled' : 'link-underline-opacity-25 link-underline-opacity-75-hover')%>" data-bs-toggle="modal">Connect</a>
-						</dd>
+						<%_.each(app.projectContainers, (container) => {%>
+							<dd class="console d-flex align-items-center" data-id="<%=container.id%>">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa fa-fw me-1"><path d="M448 64c17.7 0 32 14.3 32 32l0 320c0 17.7-14.3 32-32 32L64 448c-17.7 0-32-14.3-32-32L32 96c0-17.7 14.3-32 32-32l384 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32zM99.9 149.6c-5.8 6.7-5 16.8 1.7 22.6L199.4 256l-97.8 83.9c-6.7 5.8-7.5 15.8-1.7 22.6s15.9 7.5 22.6 1.7l112-96c3.5-3 5.6-7.5 5.6-12.1s-2-9.1-5.6-12.1l-112-96c-6.7-5.8-16.8-5-22.6 1.7zM224 352c-8.8 0-16 7.2-16 16s7.2 16 16 16l176 0c8.8 0 16-7.2 16-16s-7.2-16-16-16l-176 0z"/></svg>
+								<a href="#console" class="btn btn-link link-offset-2 link-underline p-0 <%=(container.state !== 'running' ? 'link-underline-opacity-0 disabled' : 'link-underline-opacity-25 link-underline-opacity-75-hover')%>" data-bs-toggle="modal">Connect to <%=(app.composeProject ? container.labels.comDockerComposeService : app.name)%></a>
+							</dd>
+						<%})%>
+
+						<dt class="fw-lighter"><small>Logs</small></dt>
+						<dd>&mdash;</dd>
+
 						<%if (!_.isEmpty(app.ports)) {%>
 							<dt class="fw-lighter"><small>Published ports (public:private)</small></dt>
 							<%_.each(app.ports, (port, index) => {%>
-								<dd class="mb-0"><%=port.PublicPort%>:<%=port.PrivatePort%></dd>
+								<dd class="mb-0"><%=port.publicPort%>:<%=port.privatePort%></dd>
 							<%})%>
 						<%}%>
 					</dl>

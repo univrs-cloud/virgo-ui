@@ -22,6 +22,7 @@ const performAction = (event) => {
 
 	let config = {
 		id: card.dataset.id,
+		composeProject: card.dataset.composeProject,
 		action: button.dataset.action
 	};
 	appService.performAction(config);

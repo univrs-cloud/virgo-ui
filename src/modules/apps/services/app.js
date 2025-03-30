@@ -15,22 +15,38 @@ const composeApps = (configured, containers, proxies) => {
 		return null;
 	}
 	
+	console.log(containers);
 	return _.map(
-		_.orderBy(_.filter(configured.configuration, { type: 'app' }), ['title'], ['asc']),
+		_.orderBy(
+			_.filter(configured.configuration, { type: 'app' }),
+			 ['title'],
+			 ['asc']
+		),
 		(entity) => {
-			let dockerContainer = _.find(containers, { name: entity.name });
 			entity.id = entity.name;
-			entity.state = '';
-			if (dockerContainer) {
-				entity.id = dockerContainer.id;
-				entity.state = dockerContainer.state;
-				let proxy = _.find(proxies, { forwardHost: dockerContainer.name });
-				entity.ports = _.orderBy(_.filter(dockerContainer.ports, { IP: '0.0.0.0' }), ['PrivatePort'], ['asc']);
+			let container = _.find(containers, (container) => { return _.includes(container.names, `/${entity.name}`) });
+			if (container) {
+				entity.id = container.id;
+				entity.state = container.state;
+				entity.composeProject = container.labels.comDockerComposeProject ?? false;
+				if (entity.composeProject) {
+					entity.projectContainers = _.orderBy(
+						_.filter(containers, (container) => {
+							return container.labels && container.labels['comDockerComposeProject'] === entity.composeProject;
+						}),
+						 ['labels.comDockerComposeService'],
+						 ['asc']
+					);
+				} else {
+					entity.projectContainers = [container];
+				}
+				let proxy = _.find(proxies, { forwardHost: entity.name });
+				entity.ports = _.orderBy(_.filter(container.ports, { ip: '0.0.0.0' }), ['privatePort'], ['asc']);
 				if (!_.isEmpty(proxy)) {
 					entity.url = composeUrlFromProxy(proxy);
 				} else if (!_.isEmpty(entity.ports)) {
 					_.each(entity.ports, (port) => {
-						let proxy = _.find(proxies, { forwardPort: port.PublicPort });
+						let proxy = _.find(proxies, { forwardPort: port.publicPort });
 						if (!_.isEmpty(proxy)) {
 							entity.url = composeUrlFromProxy(proxy);
 						}

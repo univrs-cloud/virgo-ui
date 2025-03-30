@@ -11,7 +11,7 @@ let terminal = null;
 
 const render = (event) => {
 	let link = event.relatedTarget;
-	let card = link.closest('.card');
+	let card = link.closest('.console');
 	socket.emit('terminalConnect', card.dataset.id);
 };
 

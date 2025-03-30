@@ -7,22 +7,6 @@
 			<div class="col flex-grow-1 text-truncate">
 				<%=entity.title%>
 			</div>
-			<%if (isAuthenticated && entity.canBeRemoved) {%>
-				<div class="col-auto">
-					<div class="dropdown">
-						<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm">
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 512" class="fa"><path fill="var(--bs-secondary)" d="M64 360a56 56 0 1 0 0 112 56 56 0 1 0 0-112zm0-160a56 56 0 1 0 0 112 56 56 0 1 0 0-112zM120 96A56 56 0 1 0 8 96a56 56 0 1 0 112 0z"/></svg>
-						</span>
-						<ul class="dropdown-menu">
-							<li><a href="#" class="dropdown-item <%=(entity.state === 'running' ? 'disabled' : '')%>" data-action="start">Start</a></li>
-							<li><hr class="dropdown-divider"></li>
-							<li><a href="#" class="dropdown-item <%=(entity.state === 'running' ? 'text-danger' : 'disabled')%>" data-action="stop">Stop</a></li>
-							<li><a href="#" class="dropdown-item <%=(entity.state === 'running' ? 'text-danger' : 'disabled')%>" data-action="kill">Kill</a></li>
-							<li><a href="#" class="dropdown-item <%=(entity.state === 'running' ? 'text-danger' : 'disabled')%>" data-action="restart">Restart</a></li>
-						</ul>
-					</div>
-				</div>
-			<%}%>
 		</div>
 	</div>
 	<%if (entity.state === 'running' && !_.isEmpty(entity.url)) {%>
