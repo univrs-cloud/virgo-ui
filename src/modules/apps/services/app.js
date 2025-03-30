@@ -15,7 +15,6 @@ const composeApps = (configured, containers, proxies) => {
 		return null;
 	}
 	
-	console.log(containers);
 	return _.map(
 		_.orderBy(
 			_.filter(configured.configuration, { type: 'app' }),
