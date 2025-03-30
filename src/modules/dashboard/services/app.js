@@ -23,19 +23,22 @@ const handleSubscription = (properties) => {
 				entity.id = container.id;
 				entity.state = container.state;
 				entity.composeProject = container.labels.comDockerComposeProject ?? false;
+				
 				let proxy = _.find(properties.proxies, { forwardHost: entity.name });
 				if (!_.isEmpty(proxy)) {
 					entity.url = composeUrlFromProxy(proxy);
-				} else if (!_.isEmpty(container.ports)) {
-					let ports = _.filter(container.ports, { ip: '0.0.0.0' });
-					if (!_.isEmpty(ports)) {
-						_.each(ports, (port) => {
-							let proxy = _.find(properties.proxies, { forwardPort: port.publicPort });
-							if (!_.isEmpty(proxy)) {
-								entity.url = composeUrlFromProxy(proxy);
-							}
-						});
-					}
+				} else {
+					_.each(entity.projectContainers, (container) => {
+						let ports = _.filter(container.ports, { ip: '0.0.0.0' });
+						if (!_.isEmpty(ports)) {
+							_.each(ports, (port) => {
+								let proxy = _.find(properties.proxies, { forwardPort: port.publicPort });
+								if (!_.isEmpty(proxy)) {
+									entity.url = composeUrlFromProxy(proxy);
+								}
+							});
+						}
+					});
 				}
 			}
 		}
