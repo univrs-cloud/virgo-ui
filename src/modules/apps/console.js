@@ -10,8 +10,8 @@ let modalBody = modal.querySelector('.modal-body');
 let terminal = null;
 
 const render = (event) => {
-	let dropdownItem = event.relatedTarget;
-	let card = dropdownItem.closest('.card');
+	let link = event.relatedTarget;
+	let card = link.closest('.card');
 	socket.emit('terminalConnect', card.dataset.id);
 };
 
