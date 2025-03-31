@@ -1,0 +1,7 @@
+<div class="form-floating mb-3">
+	<select name="<%=env.name%>" class="form-select">
+		<%=_.join(_.map(env.select, (option) => { return `<option value="${option.value}" ${option.default ? 'selected' : ''}>${option.text}</option>`; }), '')%>
+	</select>
+	<label><%=env.label%></label>
+	<div class="invalid-feedback"></div>
+</div>
