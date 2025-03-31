@@ -3,7 +3,7 @@
 		<div class="card-body ps-0 py-1">
 			<div class="row g-0 align-items-center">
 				<div class="col-2 p-2 card-image">
-					<img src="<%=bookmark.icon%>">
+					<img src="<%=(_.includes(bookmark.icon, '/') ? bookmark.icon : `/assets/img/apps/${bookmark.icon}`)%>">
 				</div>
 				<div class="col flex-grow-1 text-truncate">
 					<%=bookmark.title%>
