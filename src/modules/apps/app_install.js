@@ -44,7 +44,7 @@ const install = (event) => {
 	document.querySelector('.toast-container').insertAdjacentHTML('beforeend',
 		`<div class="toast bd-green-500 border-0" data-bs-autohide="true">
 			<div class="d-flex">
-				<div class="toast-body">Installing ${app.name}.</div>
+				<div class="toast-body">Installing new app: <strong>${app.title}</strong>.</div>
 				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
 			</div>
 		</div>`
