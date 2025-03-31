@@ -55,6 +55,7 @@ const render = (event) => {
 	appForm.querySelector('.description').innerHTML = app.description;
 	_.each(app.env, (env) => {
 		if (env?.preset === true) {
+			appForm.querySelector('.inputs').innerHTML += `<input type="hidden" name="${env.name}" value="${env.default}">`;
 			return;
 		}
 
