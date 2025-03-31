@@ -108,6 +108,10 @@ class Host extends Store {
 		this.socket.emit('completeUpgrade');
 	}
 
+	getProxies() {
+		return this.getStateProperty('proxies');
+	}
+
 	reboot() {
 		this.socket.emit('reboot');
 	}

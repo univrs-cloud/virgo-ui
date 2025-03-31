@@ -1,5 +1,5 @@
 <div class="col col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
-	<div class="card rounded-4 border-0" data-name="<%=app.name%>">
+	<div class="card rounded-4 border-0" data-id="<%=app.id%>" data-name="<%=app.name%>">
 		<div class="card-body ps-0 pt-0">
 			<div class="row g-0 align-items-center">
 				<div class="col-2" style="height: 50px;">
@@ -13,11 +13,12 @@
 				<div class="col offset-2">
 					<p class="card-text line-clamp two-line"><%=app.description%></p>
 					<%if (app.isInstalled) {%>
-						<span class="badge rounded-pill bd-blue-200 ">Installed</span>
+						<span class="badge rounded-pill bd-blue-200">Installed</span>
 					<%}%>
-					<div class="d-inline-flex">
-						<a href="#" class="install btn btn-sm btn-primary <%=(app.isInstalled ? 'invisible' : '')%>">Install</a>
-					</div>
+					<%if (app.progress?.install) {%>
+						<button class="btn btn-sm btn-secondary" disabled><div class="spinner-border spinner-border-sm me-2"></div>Installing...</button>
+					<%}%>
+					<a href="#app-install" class="btn btn-sm btn-primary <%=(app.isInstalled || app.progress?.install ? 'invisible' : '')%>" data-bs-toggle="modal">Install</a>
 				</div>
 			</div>
 		</div>
