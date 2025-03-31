@@ -11,16 +11,6 @@ let loading = modalBody.querySelector('.loading');
 let container = modalBody.querySelector('.container-fluid');
 let row = container.querySelector('.row');
 
-const install = (event) => {
-	if (!event.target.classList.contains('install')) {
-		return;
-	}
-	
-	event.preventDefault();
-	let config = {};
-	appCenterService.install(config);
-};
-
 const render = (state) => {
 	if (_.isNull(state.templates)) {
 		return;
@@ -28,6 +18,7 @@ const render = (state) => {
 
 	let template = document.createElement('template');
 	template.innerHTML = _.join(_.map(state.templates, (app) => {
+		app.progress = state.progress?.[app.id] ?? null;
 		return itemTemplate({ app });
 	}), '');
 
@@ -41,6 +32,14 @@ const render = (state) => {
 	container.classList.remove('d-none');
 };
 
-appCenterService.subscribe([render]);
-
-modalBody.addEventListener('click', install);
+modal.addEventListener('show.bs.modal', () => {
+	appCenterService.subscribe([render])
+});
+modal.addEventListener('hide.bs.modal', () => {
+	appCenterService.unsubscribe();
+});
+modal.addEventListener('hidden.bs.modal', () => {
+	row.innerHTML = '';
+	container.classList.add('d-none');
+	loading.classList.remove('d-none');
+});

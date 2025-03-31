@@ -62,3 +62,4 @@ appService.subscribe([render]);
 
 import('modules/apps/console');
 import('modules/apps/app_center');
+import('modules/apps/app_install');

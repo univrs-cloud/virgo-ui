@@ -1,10 +1,9 @@
 import Host from 'stores/host';
-import Docker from 'stores/docker';
 
 let callbackCollection = [];
 
 const getProxies = () => {
-	return Docker.getProxies();
+	return Host.getProxies();
 };
 
 const handleSubscription = (properties) => {

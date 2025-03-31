@@ -1,3 +1,4 @@
+import Host from 'stores/host';
 import Docker from 'stores/docker';
 
 let callbackCollection = [];
@@ -64,7 +65,7 @@ const composeApps = (configured, containers, proxies) => {
 }
 
 const getApps = () => {
-	return composeApps(Docker.getConfigured(), Docker.getContainers(), Docker.getProxies());
+	return composeApps(Docker.getConfigured(), Docker.getContainers(), Host.getProxies());
 };
 
 const performAction = (config) => {
