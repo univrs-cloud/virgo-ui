@@ -36,7 +36,7 @@ const install = (event) => {
 		env: {}
 	};
 	_.each(app.env, (env) => {
-		config.env[env.name] = form.querySelector(`input[name="${env.name}"]`).value;
+		config.env[env.name] = form.querySelector(`[name="${env.name}"]`).value;
 	});
 	
 	appCenterService.install(config);
