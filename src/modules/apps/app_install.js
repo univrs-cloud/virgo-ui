@@ -1,6 +1,12 @@
 import appModalPartial from 'modules/apps/partials/modal/app_install.html';
+import inputHiddenPartial from 'modules/apps/partials/modal/app_install/input_hidden.html';
+import inputTextPartial from 'modules/apps/partials/modal/app_install/input_text.html';
+import selectPartial from 'modules/apps/partials/modal/app_install/select.html';
 import * as appCenterService from 'modules/apps/services/app_center';
 
+const inputHiddenTemplate = _.template(inputHiddenPartial);
+const inputTextTemplate = _.template(inputTextPartial);
+const selectTemplate = _.template(selectPartial);
 document.querySelector('body').insertAdjacentHTML('beforeend', appModalPartial);
 
 let appForm = document.querySelector('#app-install');
@@ -55,17 +61,16 @@ const render = (event) => {
 	appForm.querySelector('.description').innerHTML = app.description;
 	_.each(app.env, (env) => {
 		if (env?.preset === true) {
-			appForm.querySelector('.inputs').innerHTML += `<input type="hidden" name="${env.name}" value="${env.default}">`;
+			appForm.querySelector('.inputs').innerHTML += inputHiddenTemplate({ env });
 			return;
 		}
 
-		appForm.querySelector('.inputs').innerHTML += `
-		<div class="form-floating mb-3">
-			<input type="text" name="${env.name}" value="${env.default}" class="form-control" placeholder="">
-			<label>${env.label}</label>
-			<div class="invalid-feedback"></div>
-		</div>
-		`;
+		if (env?.select) {
+			appForm.querySelector('.inputs').innerHTML += selectTemplate({ env });
+			return;
+		}
+
+		appForm.querySelector('.inputs').innerHTML += inputTextTemplate({ env });
 	});
 };
 
