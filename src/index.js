@@ -6,10 +6,12 @@ bootstrap.Tooltip.Default.container = 'body';
 bootstrap.Tooltip.Default.html = true;
 bootstrap.Tooltip.Default.sanitize = false;
 bootstrap.Tooltip.Default.selector = '[data-bs-toggle="tooltip"]';
+bootstrap.Modal.Default.backdrop = 'static';
+bootstrap.Modal.Default.keyboard = false;
+bootstrap.Modal.Default.focus = false;
 new bootstrap.Tooltip(document.querySelector('body'));
-
-document.addEventListener('shown.bs.modal', (event) => { // focus 1st input after modal is shown
-	event.target.querySelector('input:not([type="hidden"])')?.focus();
+document.addEventListener('shown.bs.modal', function (event) {
+	event.target.querySelector('input:not([type="hidden"])')?.focus(); // focus 1st input after modal is shown
 });
 
 try {
