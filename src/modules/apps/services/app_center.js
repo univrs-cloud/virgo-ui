@@ -18,14 +18,14 @@ const handleSubscription = (properties) => {
 		return template;
 	});
 	_.each(callbackCollection, (callback) => {
-		callback({ templates, progress: properties.progress });
+		callback({ templates, jobs: properties.jobs });
 	});
 };
 
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 
-	subscription = Docker.subscribeToProperties(['containers', 'templates', 'progress'], handleSubscription);
+	subscription = Docker.subscribeToProperties(['containers', 'templates', 'jobs'], handleSubscription);
 };
 
 const unsubscribe = () => {

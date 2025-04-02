@@ -15,10 +15,10 @@
 					<%if (app.isInstalled) {%>
 						<span class="badge rounded-pill bd-blue-200">Installed</span>
 					<%}%>
-					<%if (app.progress?.install) {%>
+					<%if (!_.isEmpty(jobs)) {%>
 						<button class="btn btn-sm btn-secondary" disabled><div class="spinner-border spinner-border-sm me-2"></div>Installing...</button>
 					<%}%>
-					<a href="#app-install" class="btn btn-sm btn-primary <%=(app.isInstalled || app.progress?.install ? 'invisible' : '')%>" data-bs-toggle="modal">Install</a>
+					<a href="#app-install" class="btn btn-sm btn-primary <%=(app.isInstalled || !_.isEmpty(jobs) ? 'invisible' : '')%>" data-bs-toggle="modal">Install</a>
 				</div>
 			</div>
 		</div>

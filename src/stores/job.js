@@ -3,7 +3,7 @@ import Store from 'stores/store';
 class Job extends Store {
 	constructor() {
 		const initialState = {
-			jobs: null
+			jobs: []
 		};
 		super({
 			namespace: 'job'
@@ -21,7 +21,18 @@ class Job extends Store {
 			_.each(_.keys(initialState), (key) => { initialState[key] = null; });
 		});
 
-		this.socket.on('jobs', (jobs) => {
+		// this.socket.on('jobs', (jobs) => {
+		// 	this.setState({ jobs }, 'set_jobs');
+		// });
+
+		this.socket.on('job', (job) => {
+			let jobs = this.getStateProperty('jobs');
+			const index = _.findIndex(jobs, { id: job.id });
+			if (index !== -1) {
+				jobs[index] = job;
+			  } else {
+				jobs.push(job);
+			  }
 			this.setState({ jobs }, 'set_jobs');
 		});
 	}
