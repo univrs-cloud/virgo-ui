@@ -5,8 +5,7 @@ class Docker extends Store {
 		const initialState = {
 			configured: null,
 			containers: null,
-			templates: null,
-			progress: null
+			templates: null
 		};
 		super({
 			namespace: 'docker'
@@ -34,10 +33,6 @@ class Docker extends Store {
 
 		this.socket.on('templates', (templates) => {
 			this.setState({ templates }, 'set_templates');
-		});
-
-		this.socket.on('progress', (progress) => {
-			this.setState({ progress }, 'set_progress');
 		});
 	}
 

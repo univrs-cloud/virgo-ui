@@ -18,8 +18,8 @@ const render = (state) => {
 
 	let template = document.createElement('template');
 	template.innerHTML = _.join(_.map(state.templates, (app) => {
-		app.progress = state.progress?.[app.id] ?? null;
-		return itemTemplate({ app });
+		let jobs = _.filter(state.jobs, (job) => { return job.name === 'appInstall' && job.data.config.id === app.id && job.progress?.state === 'active'; });
+		return itemTemplate({ app, jobs });
 	}), '');
 
 	morphdom(
