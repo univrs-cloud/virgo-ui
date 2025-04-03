@@ -87,6 +87,8 @@ img {
 		background: var(--bs-light) !important;
 	}
 	.card-image {
+		min-width: 3rem;
+		max-width: 3rem;
 		img {
 			overflow: hidden;
 			object-fit: contain;
@@ -238,6 +240,48 @@ img {
 			z-index: 2;
 			display: none;
 		}
+	}
+}
+#apps {
+	.container-fluid > .row {
+		&.expand {
+			.item {
+				&:not(.expand) {
+					display: none;
+				}
+				&.expand {
+					width: 100%;
+					min-height: calc(100vh - 188px);
+					.expand,
+					.badge {
+						display: none;
+					}
+				}
+			}
+		}
+		&:not(.expand) {
+			.terminal-container {
+				display: none;
+			}
+			.item {
+				.compress {
+					display: none;
+				}
+			}
+			.details {
+				display: none;
+			}
+		}
+	}
+	.terminal-container {
+		z-index: 1;
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		min-height: calc(100vh - 322px);
+		padding-left: map-get($spacers, 3);
 	}
 }
 

@@ -15,13 +15,13 @@ let row = container.querySelector('.row');
 const performAction = (event) => {
 	event.preventDefault();
 	let button = event.currentTarget;
-	let card = button.closest('.card');
-	if (button.classList.contains('text-danger') && !confirm(`Are you sure you want to ${button.dataset.action} ${card.dataset.title}?`)) {
+	let timeMachine = button.closest('.time-machines');
+	if (button.classList.contains('text-danger') && !confirm(`Are you sure you want to ${button.dataset.action} ${timeMachine.dataset.title}?`)) {
 		return;
 	}
 
 	let config = {
-		id: card.dataset.id,
+		id: timeMachine.dataset.id,
 		action: button.dataset.action
 	};
 	// timeMachineService.performAction(config);
