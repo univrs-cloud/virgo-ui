@@ -1,7 +1,7 @@
 <div class="bookmark card rounded-4 border-0" data-id="<%=entity.id%>" data-title="<%=entity.title%>">
 	<div class="card-body ps-0 py-1">
 		<div class="row g-0 align-items-center">
-			<div class="col-2 p-2 card-image">
+			<div class="col-auto p-2 card-image">
 				<img src="<%=(_.includes(entity.icon, '/') ? entity.icon : `/assets/img/apps/${entity.icon}`)%>">
 			</div>
 			<div class="col flex-grow-1 text-truncate">

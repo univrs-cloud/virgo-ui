@@ -12,17 +12,45 @@ let loading = module.querySelector('.loading');
 let container = module.querySelector('.container-fluid');
 let row = container.querySelector('.row');
 
-const performAction = (event) => {
+const expand = (event) => {
+	if (!event.target.closest('span')?.classList.contains('expand')) {
+		return;
+	}
+
 	event.preventDefault();
-	let button = event.currentTarget;
-	let card = button.closest('.card');
-	if (button.classList.contains('text-danger') && !confirm(`Are you sure you want to ${button.dataset.action} ${card.dataset.title}?`)) {
+	let button = event.target;
+	let item = button.closest('.item');
+	item.closest('.row').classList.add('expand');
+	item.classList.add('expand');
+};
+
+const compress = (event) => {
+	if (!event.target.closest('span')?.classList.contains('compress')) {
+		return;
+	}
+
+	event.preventDefault();
+	let button = event.target;
+	let item = button.closest('.item');
+	item.classList.remove('expand');
+	item.closest('.row').classList.remove('expand');
+};
+
+const performAction = (event) => {
+	if (!event.target.closest('a')?.classList.contains('dropdown-item')) {
+		return;
+	}
+
+	event.preventDefault();
+	let button = event.target;
+	let app = button.closest('.app');
+	if (button.classList.contains('text-danger') && !confirm(`Are you sure you want to ${button.dataset.action} ${app.dataset.title}?`)) {
 		return;
 	}
 
 	let config = {
-		id: card.dataset.id,
-		composeProject: card.dataset.composeProject,
+		id: app.dataset.id,
+		composeProject: app.dataset.composeProject,
 		action: button.dataset.action
 	};
 	appService.performAction(config);
@@ -45,20 +73,35 @@ const render = (state) => {
 	morphdom(
 		row,
 		`<div>${template.innerHTML}</div>`,
-		{ childrenOnly: true }
+		{
+			childrenOnly: true,
+			onBeforeElUpdated: (fromEl, toEl) => {
+				if (fromEl.classList.contains('expand')) {
+					morphdom(fromEl, toEl, {
+						childrenOnly: true,
+						onBeforeElUpdated: (fromEl, toEl) => {
+							if (fromEl.classList.contains('terminal-container')) {
+								return false;
+							}
+						}
+					});
+					return false;
+				}
+			}
+		}
 	);
 	
 	loading.classList.add('d-none');
 	container.classList.remove('d-none');
-
-	_.each(module.querySelectorAll('.dropdown-menu a:not(.disabled)'), (button) => {
-		button.addEventListener('click', performAction);
-	});
 };
 
 render({ apps: appService.getApps() });
 
 appService.subscribe([render]);
+
+module.addEventListener('click', expand);
+module.addEventListener('click', compress);
+module.addEventListener('click', performAction);
 
 import('modules/apps/console');
 import('modules/apps/app_center');

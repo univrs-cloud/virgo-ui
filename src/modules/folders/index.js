@@ -44,13 +44,13 @@ const remove = (event) => {
 	
 	event.preventDefault();
 	let button = event.target.closest('a');
-	let card = button.closest('.card');
-	if (!confirm(`Are you sure you want to ${button.dataset.action} ${card.dataset.title}?`)) {
+	let folder = button.closest('.folder');
+	if (!confirm(`Are you sure you want to ${button.dataset.action} ${folder.dataset.title}?`)) {
 		return;
 	}
 
 	// let config = {
-	// 	id: card.dataset.id,
+	// 	id: folder.dataset.id,
 	// 	action: button.dataset.action
 	// };
 	// folderService.performAction(config);	
