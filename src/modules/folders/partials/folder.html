@@ -2,7 +2,7 @@
 	<div class="folder card position-relative rounded-4 border-0" data-id="<%=folder.name%>" data-title="<%=folder.comment%>">
 		<div class="card-body ps-0 py-1">
 			<div class="row g-0 align-items-center">
-				<div class="col-auto p-2 card-image">
+				<div class="card-image card-spacer col-auto p-2">
 					<%if (folder.isPrivate) {%>
 						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="fa me-2" data-bs-toggle="tooltip" data-bs-original-title="Password protected"><path d="M128 128l0 64 192 0 0-64c0-53-43-96-96-96s-96 43-96 96zM96 192l0-64C96 57.3 153.3 0 224 0s128 57.3 128 128l0 64 16 0c44.2 0 80 35.8 80 80l0 160c0 44.2-35.8 80-80 80L80 512c-44.2 0-80-35.8-80-80L0 272c0-44.2 35.8-80 80-80l16 0zM32 272l0 160c0 26.5 21.5 48 48 48l288 0c26.5 0 48-21.5 48-48l0-160c0-26.5-21.5-48-48-48L80 224c-26.5 0-48 21.5-48 48z"/></svg>
 					<%} else {%>
@@ -26,7 +26,8 @@
 				</div>
 			</div>
 			<div class="row g-0 mt-n2 mb-2">
-				<div class="col offset-2 flex-grow-1 text-secondary">
+				<div class="card-spacer col-auto p-2"></div>
+				<div class="col flex-grow-1 text-secondary">
 					<dl class="m-0">
 						<dt class="fw-lighter"><small>Access</small></dt>
 						<dd>

@@ -2,7 +2,7 @@
 	<div class="app card rounded-4 border-0 h-100 mb-0" data-id="<%=app.id%>" data-compose-project="<%=app?.composeProject || ''%>" data-title="<%=app.title%>">
 		<div class="card-body ps-0 py-1">
 			<div class="row g-0 align-items-center">
-				<div class="col-auto p-2 card-image">
+				<div class="card-image card-spacer col-auto p-2 ">
 					<img src="<%=(_.includes(app.icon, '/') ? app.icon : `/assets/img/apps/${app.icon}`)%>">
 				</div>
 				<div class="col flex-grow-1 text-truncate">
@@ -43,9 +43,7 @@
 						<span class="name"></span>
 					</div>
 				</div>
-				<div class="col-auto p-2 card-image invisible">
-					<img src="<%=(_.includes(app.icon, '/') ? app.icon : `/assets/img/apps/${app.icon}`)%>">
-				</div>
+				<div class="card-spacer col-auto p-2"></div>
 				<div class="col flex-grow-1">
 					<div class="mb-2">
 						<%if (!_.isEmpty(app.url)) {%>
@@ -55,24 +53,40 @@
 						<%}%>
 					</div>
 					<div class="badge bg-dark-subtle text-dark-emphasis rounded-pill">
-						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa me-1"><path d="M261.5 35.1c-3.6-1.3-7.5-1.3-11 0L44.1 110.7 256 194l211.9-83.2L261.5 35.1zM32 385.7c0 6.7 4.2 12.7 10.5 15L240 473.1l0-251L32 140.3l0 245.3zm240 87.4l197.5-72.4c6.3-2.3 10.5-8.3 10.5-15l0-245.3L272 222l0 251zM239.5 5c10.7-3.9 22.4-3.9 33 0l208 76.3c18.9 6.9 31.5 24.9 31.5 45.1l0 259.3c0 20.1-12.6 38.1-31.5 45.1L272.5 507c-10.7 3.9-22.4 3.9-33 0l-208-76.3C12.6 423.8 0 405.8 0 385.7L0 126.3c0-20.1 12.6-38.1 31.5-45.1L239.5 5z"/></svg>
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa me-2"><path d="M261.5 35.1c-3.6-1.3-7.5-1.3-11 0L44.1 110.7 256 194l211.9-83.2L261.5 35.1zM32 385.7c0 6.7 4.2 12.7 10.5 15L240 473.1l0-251L32 140.3l0 245.3zm240 87.4l197.5-72.4c6.3-2.3 10.5-8.3 10.5-15l0-245.3L272 222l0 251zM239.5 5c10.7-3.9 22.4-3.9 33 0l208 76.3c18.9 6.9 31.5 24.9 31.5 45.1l0 259.3c0 20.1-12.6 38.1-31.5 45.1L272.5 507c-10.7 3.9-22.4 3.9-33 0l-208-76.3C12.6 423.8 0 405.8 0 385.7L0 126.3c0-20.1 12.6-38.1 31.5-45.1L239.5 5z"/></svg>
 						<%=_.pluralize('service', _.size(app.projectContainers), true)%>
 					</div>
 					<div class="details row mt-2">
 						<dl class="col-auto">
 							<dt class="fw-lighter"><small>Services</small></dt>
 							<%_.each(app.projectContainers, (container, index) => {%>
-								<%let publishedPorts = _.filter(container.ports, { ip: '0.0.0.0' });%>
-								<%let publishedPortsTooltip = (!_.isEmpty(publishedPorts) ? `&nbsp;public &middot; private` : `no published ports`)%>
-								<%_.each(_.orderBy(publishedPorts, ['privatePort'], ['asc']), (port, index) => {%>
-									<%publishedPortsTooltip += `<div>${port.publicPort} &rlarr; ${port.privatePort}</div>`%>
-								<%})%>
 								<dd class="<%=(index + 1 == _.size(app.projectContainers) ? 'mb-0' : '')%>">
 									<div class="d-flex align-items-center">
 										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa me-1"><path fill="var(--bs-gray-500)" d="M261.5 35.1c-3.6-1.3-7.5-1.3-11 0L44.1 110.7 256 194l211.9-83.2L261.5 35.1zM32 385.7c0 6.7 4.2 12.7 10.5 15L240 473.1l0-251L32 140.3l0 245.3zm240 87.4l197.5-72.4c6.3-2.3 10.5-8.3 10.5-15l0-245.3L272 222l0 251zM239.5 5c10.7-3.9 22.4-3.9 33 0l208 76.3c18.9 6.9 31.5 24.9 31.5 45.1l0 259.3c0 20.1-12.6 38.1-31.5 45.1L272.5 507c-10.7 3.9-22.4 3.9-33 0l-208-76.3C12.6 423.8 0 405.8 0 385.7L0 126.3c0-20.1 12.6-38.1 31.5-45.1L239.5 5z"/></svg>
 										<span><%=container.name%></span>
 									</div>
-									<div class="d-flex align-items-center" style="margin-left: 1.1rem;">
+									<div style="margin-left: 1.2rem;">
+										<div class="d-flex align-items-center">
+											<%if (container.state === 'running') {%>
+												<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" class="fa me-1"><path fill="var(--bs-green-300)" d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80L0 432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg>
+											<%} else {%>
+												<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" class="fa me-1"><path fill="var(--bs-red-300)" d="M0 128C0 92.7 28.7 64 64 64H320c35.3 0 64 28.7 64 64V384c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V128z"/></svg>
+											<%}%>
+											<span><%=_.upperFirst(container.state)%></span>
+										</div>
+										<%if (container.state === 'running') {%>
+											<div class="ports">
+												<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa me-1"><path d="M128 96c0-17.7 14.3-32 32-32l192 0c17.7 0 32 14.3 32 32l0 32 32 0c17.7 0 32 14.3 32 32l0 32 32 0c17.7 0 32 14.3 32 32l0 192c0 17.7-14.3 32-32 32l-80 0-96 0-96 0-96 0-80 0c-17.7 0-32-14.3-32-32L0 224c0-17.7 14.3-32 32-32l32 0 0-32c0-17.7 14.3-32 32-32l32 0 0-32zm224 0L160 96l0 48c0 8.8-7.2 16-16 16l-48 0 0 48c0 8.8-7.2 16-16 16l-48 0 0 192 64 0 0-80c0-8.8 7.2-16 16-16s16 7.2 16 16l0 80 64 0 0-80c0-8.8 7.2-16 16-16s16 7.2 16 16l0 80 64 0 0-80c0-8.8 7.2-16 16-16s16 7.2 16 16l0 80 64 0 0-80c0-8.8 7.2-16 16-16s16 7.2 16 16l0 80 64 0 0-192-48 0c-8.8 0-16-7.2-16-16l0-48-48 0c-8.8 0-16-7.2-16-16l0-48z"/></svg>
+												<span>Published ports</span>
+												<ul class="list-unstyled ps-4 m-0">
+													<%let publishedPorts = _.filter(container.ports, { ip: '0.0.0.0' });%>
+													<%let publishedPortsTooltip = (!_.isEmpty(publishedPorts) ? `&nbsp;public &middot; private` : `no published ports`)%>
+													<%_.each(_.orderBy(publishedPorts, ['privatePort'], ['asc']), (port, index) => {%>
+														<li><%=`${port.publicPort} &rlarr; ${port.privatePort}`%></li>
+													<%})%>
+												</ul>
+											</div>
+										<%}%>
 										<div class="d-flex align-items-center me-3">
 											<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" class="fa me-1"><path fill="var(--bs-primary)" d="M64 32C46.3 32 32 46.3 32 64l0 384c0 17.7 14.3 32 32 32l256 0c17.7 0 32-14.3 32-32l0-384c0-17.7-14.3-32-32-32L64 32zM0 64C0 28.7 28.7 0 64 0L320 0c35.3 0 64 28.7 64 64l0 384c0 35.3-28.7 64-64 64L64 512c-35.3 0-64-28.7-64-64L0 64zm80 64l224 0c8.8 0 16 7.2 16 16s-7.2 16-16 16L80 160c-8.8 0-16-7.2-16-16s7.2-16 16-16zm0 96l224 0c8.8 0 16 7.2 16 16s-7.2 16-16 16L80 256c-8.8 0-16-7.2-16-16s7.2-16 16-16zm0 96l128 0c8.8 0 16 7.2 16 16s-7.2 16-16 16L80 352c-8.8 0-16-7.2-16-16s7.2-16 16-16z"/></svg>
 											<a href="#" class="logs btn btn-link p-0 disabled" data-id="<%=container.id%>">Logs</a>
@@ -81,12 +95,6 @@
 											<div class="d-flex align-items-center me-3">
 												<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa me-1"><path fill="var(--bs-primary)" d="M448 64c17.7 0 32 14.3 32 32l0 320c0 17.7-14.3 32-32 32L64 448c-17.7 0-32-14.3-32-32L32 96c0-17.7 14.3-32 32-32l384 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32zM99.9 149.6c-5.8 6.7-5 16.8 1.7 22.6L199.4 256l-97.8 83.9c-6.7 5.8-7.5 15.8-1.7 22.6s15.9 7.5 22.6 1.7l112-96c3.5-3 5.6-7.5 5.6-12.1s-2-9.1-5.6-12.1l-112-96c-6.7-5.8-16.8-5-22.6 1.7zM224 352c-8.8 0-16 7.2-16 16s7.2 16 16 16l176 0c8.8 0 16-7.2 16-16s-7.2-16-16-16l-176 0z"/></svg>	
 												<a href="#" class="console btn btn-link p-0" data-id="<%=container.id%>">Console</a>
-											</div>
-										<%}%>
-										<%if (container.state === 'running') {%>
-											<div class="ports d-flex align-items-center me-3">
-												<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa me-1"><path fill="var(--bs-primary)" d="M128 96c0-17.7 14.3-32 32-32l192 0c17.7 0 32 14.3 32 32l0 32 32 0c17.7 0 32 14.3 32 32l0 32 32 0c17.7 0 32 14.3 32 32l0 192c0 17.7-14.3 32-32 32l-80 0-96 0-96 0-96 0-80 0c-17.7 0-32-14.3-32-32L0 224c0-17.7 14.3-32 32-32l32 0 0-32c0-17.7 14.3-32 32-32l32 0 0-32zm224 0L160 96l0 48c0 8.8-7.2 16-16 16l-48 0 0 48c0 8.8-7.2 16-16 16l-48 0 0 192 64 0 0-80c0-8.8 7.2-16 16-16s16 7.2 16 16l0 80 64 0 0-80c0-8.8 7.2-16 16-16s16 7.2 16 16l0 80 64 0 0-80c0-8.8 7.2-16 16-16s16 7.2 16 16l0 80 64 0 0-80c0-8.8 7.2-16 16-16s16 7.2 16 16l0 80 64 0 0-192-48 0c-8.8 0-16-7.2-16-16l0-48-48 0c-8.8 0-16-7.2-16-16l0-48z"/></svg>
-												<span class="btn btn-link p-0" data-bs-toggle="tooltip" data-bs-original-title="<%=publishedPortsTooltip%>">Ports</span>
 											</div>
 										<%}%>
 									</div>

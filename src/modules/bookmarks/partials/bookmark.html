@@ -2,7 +2,7 @@
 	<div class="bookmark card rounded-4 border-0" data-id="<%=bookmark.id%>" data-title="<%=bookmark.title%>">
 		<div class="card-body ps-0 py-1">
 			<div class="row g-0 align-items-center">
-				<div class="col-auto p-2 card-image">
+				<div class="card-image card-spacer col-auto p-2">
 					<img src="<%=(_.includes(bookmark.icon, '/') ? bookmark.icon : `/assets/img/apps/${bookmark.icon}`)%>">
 				</div>
 				<div class="col flex-grow-1 text-truncate">
@@ -22,7 +22,8 @@
 				</div>
 			</div>
 			<div class="row g-0 mt-n2 mb-2">
-				<div class="col offset-2 flex-grow-1 text-secondary">
+				<div class="card-spacer col-auto p-2"></div>
+				<div class="col flex-grow-1 text-secondary">
 					<%if (!_.isEmpty(bookmark.url)) {%>
 						<a href="<%=bookmark.url%>" target="<%=(bookmark.target ?? bookmark.name)%>"><small><%=bookmark.url%></small></a>
 					<%} else {%>
