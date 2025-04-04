@@ -21,6 +21,12 @@ $utilities: map-merge(
 		)
 );
 
+:root {
+	@each $color-key, $color-value in $all-colors {
+		--bs-#{$color-key}: #{$color-value};
+	}
+}
+
 .bd-blue-100 { color: color-contrast($blue-100); background-color: $blue-100; }
 .bd-blue-200 { color: color-contrast($blue-200); background-color: $blue-200; }
 .bd-blue-300 { color: color-contrast($blue-300); background-color: $blue-300; }
