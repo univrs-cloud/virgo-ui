@@ -81,14 +81,11 @@ img {
 
 .card {
 	margin-bottom: 1rem;
-}
-.item {
-	.card:hover {
-		background: var(--bs-light) !important;
-	}
-	.card-image {
+	.card-spacer {
 		min-width: 3rem;
 		max-width: 3rem;
+	}
+	.card-image {
 		img {
 			overflow: hidden;
 			object-fit: contain;
@@ -113,6 +110,11 @@ img {
 		position: absolute;
 		top: 0.45rem;
 		right: -0.65rem;
+	}
+}
+.item {
+	.card:hover {
+		background: var(--bs-light) !important;
 	}
 }
 
