@@ -124,11 +124,11 @@ img {
 }
 .fa-spin {
 	animation-name: fa-spin;
-	animation-duration: var(--fa-animation-duration, 2s);
-	animation-iteration-count: var(--fa-animation-iteration-count, infinite);
-	animation-timing-function: var(--fa-animation-timing, linear);
-	animation-delay: var(--fa-animation-delay, 0s);
-	animation-direction: var(--fa-animation-direction, normal);
+	animation-duration: 2s;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+	animation-delay: 0s;
+	animation-direction: normal;
 }
 @media (prefers-reduced-motion: reduce) {
 	.fa-spin {

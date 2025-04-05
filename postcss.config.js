@@ -9,7 +9,7 @@ module.exports = () => {
 						autoprefixer: {
 								cascade: false
 						},
-						rtlcss:false
+						rtlcss: false
 				}
 		};
 };
