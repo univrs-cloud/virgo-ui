@@ -23,12 +23,12 @@ const render = (state) => {
 			let categoryTemplate = document.createElement('template');
 			categoryTemplate.innerHTML = categorySomething({ name: key });
 			let category = categoryTemplate.content.querySelector('.col');
-			_.each(apps, (app) => {
-				if (app.type === 'app') {
-					category.insertAdjacentHTML('beforeend', appTemplate({ entity: app }));
+			_.each(apps, (entity) => {
+				if (entity.type === 'app') {
+					category.insertAdjacentHTML('beforeend', appTemplate({ app: entity }));
 				}
-				if (app.type === 'bookmark') {
-					category.insertAdjacentHTML('beforeend', bookmarkTemplate({ entity: app }));
+				if (entity.type === 'bookmark') {
+					category.insertAdjacentHTML('beforeend', bookmarkTemplate({ bookmark: entity }));
 				}
 			});
 			template.innerHTML += category.outerHTML;

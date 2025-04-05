@@ -27,7 +27,6 @@ const composeApps = (configured, containers, proxies) => {
 			let container = _.find(containers, (container) => { return _.includes(container.names, `/${entity.name}`) });
 			if (container) {
 				entity.id = container.id;
-				entity.state = container.state;
 				entity.composeProject = container.labels.comDockerComposeProject ?? false;
 				if (entity.composeProject) {
 					entity.projectContainers = _.orderBy(
@@ -39,6 +38,14 @@ const composeApps = (configured, containers, proxies) => {
 					);
 				} else {
 					entity.projectContainers = [container];
+				}
+				let activeCount = _.size(_.filter(entity.projectContainers, (container) => { return _.includes(['running', 'restarting'], container.state); }));
+				if (activeCount === _.size(entity.projectContainers)) {
+					entity.state = 'success';  // All containers are running or restarting
+				} else if (activeCount === 0) {
+					entity.state = 'danger';   // No containers are running or restarting
+				} else {
+					entity.state = 'warning';  // Some containers are running/restarting, others are not
 				}
 
 				let proxy = _.find(proxies, { forwardHost: entity.name });

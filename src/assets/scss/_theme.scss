@@ -112,11 +112,6 @@ img {
 		right: -0.65rem;
 	}
 }
-.item {
-	.card:hover {
-		background: var(--bs-light) !important;
-	}
-}
 
 .fa {
 	width: 1em;
@@ -234,6 +229,7 @@ img {
 #dashboard {
 	.item {
 		.card:hover {
+			background: var(--bs-light) !important;
 			.dropdown {
 				display: block;
 			}
