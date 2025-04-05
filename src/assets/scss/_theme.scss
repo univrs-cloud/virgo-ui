@@ -130,15 +130,6 @@ img {
 	animation-delay: 0s;
 	animation-direction: normal;
 }
-@media (prefers-reduced-motion: reduce) {
-	.fa-spin {
-		animation-delay: -1ms;
-		animation-duration: 1ms;
-		animation-iteration-count: 1;
-		transition-delay: 0s;
-		transition-duration: 0s;
-	}
-}
 @keyframes fa-spin {
 	0% { transform: rotate(0deg); }
 	100% { transform: rotate(360deg); }
