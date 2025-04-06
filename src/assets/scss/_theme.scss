@@ -244,7 +244,7 @@ img {
 				}
 				&.expand {
 					width: 100%;
-					min-height: calc(100vh - 188px);
+					min-height: calc(100vh - 140px);
 					.expand,
 					.badge {
 						display: none;
@@ -266,6 +266,7 @@ img {
 			}
 		}
 	}
+	.logs-container,
 	.terminal-container {
 		z-index: 1;
 		position: absolute;
@@ -273,7 +274,7 @@ img {
 		bottom: 0;
 		left: 0;
 		right: 0;
-		min-height: calc(100vh - 322px);
+		min-height: calc(100vh - 280px);
 		padding-left: map-get($spacers, 3);
 	}
 }
