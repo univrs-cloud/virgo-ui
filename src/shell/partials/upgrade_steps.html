@@ -14,7 +14,7 @@
 					<li class="text-success">Upgrade succeeded</li>
 				<%}%>
 				<%if (upgrade.state === 'failed') {%>
-					<li class="text-danger">Something went wrong, could not update</li>
+					<li class="text-danger">Something went wrong, could not update.</li>
 				<%}%>
 			</ul>
 			<button type="button" class="complete btn btn-primary d-flex ms-auto mt-4 <%=(!_.includes(['succeeded', 'failed'], upgrade.state) ? 'invisible' : '')%>">Continue</button>

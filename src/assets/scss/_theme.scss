@@ -139,12 +139,16 @@ img {
 	height: 8px;
 	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
 }
-
-#not-found {
-	height: calc(100vh - 152px);
+.no-content {
+	height: calc(100vh - 140px);
 	.fa {
 		width: 70px;
 		height: 70px;
+	}
+}
+#not-found {
+	.no-content {
+		height: calc(100vh - 104px);
 	}
 }
 #weather {
@@ -193,7 +197,7 @@ img {
 }
 #upgrade {
 	ul {
-		height: calc(100vh - 282px);
+		height: calc(100vh - 234px);
 	}
 }
 .updates {
