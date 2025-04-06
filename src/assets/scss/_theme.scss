@@ -167,15 +167,6 @@ img {
 		line-height: 1.1;
 	}
 }
-#notifications,
-#account {
-	.dropdown-toggle {
-		cursor: pointer;
-		&:after {
-			display: none;
-		}
-	}
-}
 #notifications {
 	.dropdown-toggle {
 		svg {
