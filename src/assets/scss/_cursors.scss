@@ -5,7 +5,7 @@ $utilities: map-merge(
 			property: cursor,
 			class: cursor,
 			responsive: true,
-			values: default auto pointer grab
+			values: auto default pointer wait text move help not-allowed
 		)
 	)
 );

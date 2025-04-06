@@ -20,7 +20,8 @@
 								<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="stop">Stop</a></li>
 								<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="kill">Kill</a></li>
 								<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="restart">Restart</a></li>
-								<li><a href="#" class="dropdown-item <%=(app.canBeRemoved ? 'text-danger-' : 'disabled')%> disabled" data-action="remove">Remove</a></li>
+								<li><hr class="dropdown-divider"></li>
+								<li><a href="#" class="dropdown-item <%=(app.canBeRemoved ? 'text-danger' : 'disabled')%>" data-action="remove">Remove</a></li>
 							</ul>
 						</div>
 					</div>
