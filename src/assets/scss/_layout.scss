@@ -16,7 +16,7 @@ body {
 	height: 100%;
 	font-weight: 300;
 	background-color: var(--bs-bg);
-	margin-bottom: 64px;
+	margin-bottom: 72px;
 	&[style*="overflow: hidden;"] {
 		padding-right: 0 !important;
 	}
@@ -105,7 +105,7 @@ header {
 
 main,
 #upgrade {
-	padding-top: 1rem;
+	padding-top: map-get($spacers, 3);
 }
 
 .offcanvas-backdrop {
@@ -154,6 +154,7 @@ main,
 @media (min-width: 576px) {
 	body {
 		margin-top: 4.5rem;
+		margin-bottom: 0;
 	}
 	header {
 		nav {
