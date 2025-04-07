@@ -43,14 +43,15 @@ const performAction = (event) => {
 
 	event.preventDefault();
 	let button = event.target;
-	let app = button.closest('.app');
-	if (button.classList.contains('text-danger') && !confirm(`Are you sure you want to ${button.dataset.action} ${app.dataset.title}?`)) {
+	let card = button.closest('.app');
+	let app = _.find(appService.getApps(), { name: card.dataset.name });
+
+	if (button.classList.contains('text-danger') && !confirm(`Are you sure you want to ${button.dataset.action} ${app.title}?`)) {
 		return;
 	}
 
 	let config = {
-		id: app.dataset.id,
-		composeProject: app.dataset.composeProject,
+		name: app.name,
 		action: button.dataset.action
 	};
 	appService.performAction(config);

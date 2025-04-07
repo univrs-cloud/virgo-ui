@@ -1,4 +1,5 @@
 import notificationsPartial from 'shell/partials/notifications.html';
+import * as jobs from 'shell/jobs';
 
 const notificationsTemplate = _.template(notificationsPartial);
 
@@ -20,6 +21,8 @@ const init = () => {
 		// { type: 'warning', title: 'Drive temperature warning', message: 'Drive nvme0 is experiencing temperatures (75°C) above typical operating levels.', createdOn: '2024-10-30T12:11:26.000Z' }
 	] });
 };
+
+jobs.init();
 
 export {
 	init

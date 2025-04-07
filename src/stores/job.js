@@ -15,7 +15,7 @@ class Job extends Store {
 			if (this.getStateProperty('reboot') || this.getStateProperty('shutdown') || !_.isNull(this.getStateProperty('upgrade'))) {
 				return;
 			}
-			
+
 			_.each(_.keys(initialState), (key) => { initialState[key] = false; });
 			this.setState(initialState, 'socket_disconnect');
 			_.each(_.keys(initialState), (key) => { initialState[key] = null; });
@@ -30,9 +30,9 @@ class Job extends Store {
 			const index = _.findIndex(jobs, { id: job.id });
 			if (index !== -1) {
 				jobs[index] = job;
-			  } else {
+			} else {
 				jobs.push(job);
-			  }
+			}
 			this.setState({ jobs }, 'set_jobs');
 		});
 	}
