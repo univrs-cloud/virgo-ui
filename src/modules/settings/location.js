@@ -92,16 +92,6 @@ const setLocation = (event) => {
 	}
 	configurationService.setLocation(config);
 	bootstrap.Modal.getInstance(form.closest('.modal'))?.hide();
-	document.querySelector('.toast-container').insertAdjacentHTML('beforeend',
-		`<div class="toast bd-green-500 border-0" data-bs-autohide="true">
-			<div class="d-flex">
-				<div class="toast-body">Location saved.</div>
-				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-			</div>
-		</div>`
-	);
-	let toast = new bootstrap.Toast(document.querySelector('.toast-container .toast:last-of-type'));
-	toast.show();
 };
 
 const getLocation = (event) => {
