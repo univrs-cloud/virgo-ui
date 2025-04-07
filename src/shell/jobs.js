@@ -1,8 +1,18 @@
 import morphdom from 'morphdom';
 import * as jobService from 'shell/services/job';
 
+const shownJobIds = new Set();
+
 const render = (state) => {
 	_.each(state.jobs, (job) => {
+		if (shownJobIds.has(job.id)) {
+			return;
+		}
+		
+		if (job.progress.state !== 'active') {
+			shownJobIds.add(job.id);
+		}
+
 		let hasToast = !_.isNull(document.querySelector(`#toast-${job.id}`));
 		let toastAutoHide = 'false';
 		let toastColor = 'blue';

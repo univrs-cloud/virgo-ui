@@ -1,6 +1,5 @@
 import headerPartial from 'shell/partials/header.html';
 import * as navigation from 'shell/navigation';
-import * as jobs from 'shell/jobs';
 import * as account from 'shell/account';
 import * as updates from 'shell/updates';
 import * as notifications from 'shell/notifications';
@@ -25,7 +24,6 @@ render({ system: systemService.getSystem() });
 
 systemService.subscribe([render]);
 
-jobs.init();
 account.init();
 updates.init();
 notifications.init();
