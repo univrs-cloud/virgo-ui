@@ -116,7 +116,7 @@ class Host extends Store {
 		this.socket.emit('reboot');
 	}
 
-	shutdown() {
+	shutDown() {
 		this.socket.emit('shutdown');
 	}
 

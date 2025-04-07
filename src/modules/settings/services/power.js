@@ -6,8 +6,8 @@ const reboot = () => {
 	return Host.reboot();
 };
 
-const shutdown = () => {
-	return Host.shutdown();
+const shutDown = () => {
+	return Host.shutDown();
 };
 
 const handleSubscription = (properties) => {
@@ -25,5 +25,5 @@ const subscribe = (callbacks) => {
 export {
 	subscribe,
 	reboot,
-	shutdown
+	shutDown
 };

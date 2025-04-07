@@ -20,7 +20,8 @@ body {
 	&[style*="overflow: hidden;"] {
 		padding-right: 0 !important;
 	}
-	&.reboot {
+	&.reboot,
+	&.powered-off {
 		header,
 		main {
 			display: none !important;

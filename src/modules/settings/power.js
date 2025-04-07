@@ -36,24 +36,32 @@ const shutdown = (event) => {
 	}
 	
 	event.target.closest('a').classList.add('disabled');
-	powerService.shutdown();
+	powerService.shutDown();
 };
 
 const render = (state) => {
-	if (_.isNull(state.reboot)) {
+	if (_.isNull(state.reboot) || _.isNull(state.shutdown)) {
 		return;
 	}
 
 	let reboot = state.reboot;
 	if (reboot) {
 		document.body.classList.add('reboot');
+		document.querySelector('#power .rebooting').classList.remove('d-none');
 		document.querySelector('#power').classList.remove('d-none');
 		return;
 	}
 
-	document.body.classList.remove('reboot');
-	document.querySelector('#power').classList.add('d-none');
-	document.querySelector('.reboot')?.classList.remove('disabled');
+	let shutdown = state.shutdown;
+	if (shutdown) {
+		document.querySelector('#power .powered-off').classList.remove('d-none');
+		document.body.classList.add('powered-off');
+		document.querySelector('#power').classList.remove('d-none');
+		return;
+	}
+
+	document.body.classList.remove('reboot', 'powered-off');
+	_.each(document.querySelectorAll('#power, #power .rebooting, #power .powered-off'), (element) => { element.classList.add('d-none') });
 };
 
 powerService.subscribe([render]);
