@@ -10,8 +10,19 @@ bootstrap.Modal.Default.backdrop = 'static';
 bootstrap.Modal.Default.keyboard = false;
 bootstrap.Modal.Default.focus = false;
 new bootstrap.Tooltip(document.querySelector('body'));
-document.addEventListener('shown.bs.modal', function (event) {
+document.addEventListener('shown.bs.modal', (event) => {
 	event.target.querySelector('input:not([type="hidden"])')?.focus(); // focus 1st input after modal is shown
+});
+document.addEventListener('click', (event) => {
+	if (!event.target.classList.contains('password-toggle')) {
+		return;
+	}
+
+	event.preventDefault();
+	let types = { text: 'password', password: 'text' };
+	let input = event.target.closest('.form-floating').querySelector('input');
+	input.type = types[input.type];
+	input.focus();
 });
 
 try {
