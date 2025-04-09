@@ -30,6 +30,12 @@ const validateEmailAddress = (event) => {
 		invalidFeedback.innerHTML = `Can't be empty`;
 		return;
 	}
+	if (!validator.isEmail(value)) {
+		input.classList.remove('is-valid');
+		input.classList.add('is-invalid');
+		invalidFeedback.innerHTML = `Invalid email address`;
+		return;
+	}
 	input.classList.remove('is-invalid');
 	input.classList.add('is-valid');
 };
@@ -60,16 +66,6 @@ const updateProfile = (event) => {
 
 	userService.updateProfile(config);
 	bootstrap.Modal.getInstance(form.closest('.modal'))?.hide();
-	document.querySelector('.toast-container').insertAdjacentHTML('beforeend',
-		`<div class="toast bd-green-500 border-0" data-bs-autohide="true">
-			<div class="d-flex">
-				<div class="toast-body">Profile saved.</div>
-				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-			</div>
-		</div>`
-	);
-	let toast = new bootstrap.Toast(document.querySelector('.toast-container .toast:last-of-type'));
-	toast.show();
 };
 
 const restore = (event) => {
