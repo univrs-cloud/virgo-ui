@@ -49,6 +49,9 @@ header {
 			background-color: rgba(237, 242, 249, 0.25);
 			backdrop-filter: blur(8px);
 		}
+		.dropdown-menu {
+			--bs-dropdown-bg: var(--bs-body-bg);
+		}
 		.sign-in,
 		.sign-out {
 			margin-top: 0.28rem;
