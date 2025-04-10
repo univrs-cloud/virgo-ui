@@ -73,4 +73,4 @@ const restore = (event) => {
 
 appForm.addEventListener('submit', install);
 appForm.addEventListener('show.bs.modal', render);
-appForm.addEventListener('hidden.bs.modal', restore)
+appForm.addEventListener('hidden.bs.modal', restore);

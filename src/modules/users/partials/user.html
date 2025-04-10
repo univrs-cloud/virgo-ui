@@ -35,10 +35,12 @@
 					<dl class="m-0">
 						<dt class="fw-lighter"><small>Username</small></dt>
 						<dd><%=user.username%></dd>
-						<dt class="fw-lighter"><small>Group</small></dt>
+						<dt class="fw-lighter"><small>Groups</small></dt>
 						<dd>
 							<%=_.join(_.map(user.groups, (group) => { return group.groupname; }), ', ')%>
 						</dd>
+						<dt class="fw-lighter"><small>Shell access</small></dt>
+						<dd><%=(_.includes(user.shell, 'nologin') ? 'no' : 'yes')%></dd>
 						<dt class="fw-lighter"><small>Email address</small></dt>
 						<dd class="m-0"><%=user.email || '&mdash;'%></dd>
 					</dl>
