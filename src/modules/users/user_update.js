@@ -1,10 +1,11 @@
-import userModalPartial from 'modules/users/partials/modal/user_create.html';
+import userModalPartial from 'modules/users/partials/modal/user_update.html';
 import * as userService from 'modules/users/services/user';
 import validator from 'validator';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', userModalPartial);
 
-let userForm = document.querySelector('#user-create');
+let userForm = document.querySelector('#user-update');
+let user;
 
 const validateFullname = (event) => {
 	let input = userForm.querySelector('.fullname');
@@ -40,60 +41,9 @@ const validateEmailAddress = (event) => {
 	input.classList.add('is-valid');
 };
 
-const validateUsername = (event) => {
-	let input = userForm.querySelector('.username');
-	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
-	let value = input.value;
-	if (validator.isEmpty(value)) {
-		input.classList.remove('is-valid');
-		input.classList.add('is-invalid');
-		invalidFeedback.innerHTML = `Can't be empty`;
-		return;
-	}
-	input.classList.remove('is-invalid');
-	input.classList.add('is-valid');
-};
-
-const validatePassword = (event) => {
-	let input = userForm.querySelector('.password');
-	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
-	let value = input.value;
-	if (validator.isEmpty(value)) {
-		input.classList.remove('is-valid');
-		input.classList.add('is-invalid');
-		invalidFeedback.innerHTML = `Can't be empty`;
-		return;
-	}
-	input.classList.remove('is-invalid');
-	input.classList.add('is-valid');
-};
-
-const validatePasswordCheck = (event) => {
-	let input = userForm.querySelector('.password-check');
-	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
-	let value = input.value;
-	if (validator.isEmpty(value)) {
-		input.classList.remove('is-valid');
-		input.classList.add('is-invalid');
-		invalidFeedback.innerHTML = `Can't be empty`;
-		return;
-	}
-	if (!validator.equals(value, userForm.querySelector('.password').value)) {
-		input.classList.remove('is-valid');
-		input.classList.add('is-invalid');
-		invalidFeedback.innerHTML = `Passwords do not match`;
-		return;
-	}
-	input.classList.remove('is-invalid');
-	input.classList.add('is-valid');
-};
-
 const validateForm = () => {
 	validateFullname();
 	validateEmailAddress();
-	validateUsername();
-	validatePassword();
-	validatePasswordCheck();
 };
 
 const isFormValid = () => {
@@ -101,7 +51,7 @@ const isFormValid = () => {
 	return _.isEmpty(userForm.querySelectorAll('.is-invalid'));
 };
 
-const createUser = (event) => {
+const updateUser = (event) => {
 	event.preventDefault();
 	if (!isFormValid()) {
 		return;
@@ -112,17 +62,25 @@ const createUser = (event) => {
 	_.each(buttons, (button) => { button.disabled = true; });
 
 	let config = {
-		username: form.querySelector('.username').value,
-		password: form.querySelector('.password').value,
+		username: user.username,
 		fullname: form.querySelector('.fullname').value,
 		email: form.querySelector('.email').value
 	};
 
-	userService.createUser(config);
+	userService.updateUser(config);
 	bootstrap.Modal.getInstance(form.closest('.modal'))?.hide();
 };
 
+const render = (event) => {
+	let uid = event.relatedTarget.closest('.user').dataset.uid;
+	let users = userService.getUsers();
+	user = _.find(users, { uid: Number(uid) });
+	userForm.querySelector('.fullname').value = user.fullname;
+	userForm.querySelector('.email').value = user.email;
+};
+
 const restore = (event) => {
+	user = null;
 	userForm.reset();
 	_.each(userForm.querySelectorAll('button'), (button) => { button.disabled = false });
 	_.each(userForm.querySelectorAll('.form-floating'), (input) => {
@@ -133,8 +91,6 @@ const restore = (event) => {
 
 userForm.querySelector('.fullname').addEventListener('input', validateFullname);
 userForm.querySelector('.email').addEventListener('input', validateEmailAddress);
-userForm.querySelector('.username').addEventListener('input', validateUsername);
-userForm.querySelector('.password').addEventListener('input', validatePassword);
-userForm.querySelector('.password-check').addEventListener('input', validatePasswordCheck);
-userForm.addEventListener('submit', createUser);
+userForm.addEventListener('submit', updateUser);
+userForm.addEventListener('show.bs.modal', render);
 userForm.addEventListener('hidden.bs.modal', restore);
