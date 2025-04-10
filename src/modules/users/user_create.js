@@ -101,7 +101,7 @@ const isFormValid = () => {
 	return _.isEmpty(userForm.querySelectorAll('.is-invalid'));
 };
 
-const create = (event) => {
+const createUser = (event) => {
 	event.preventDefault();
 	if (!isFormValid()) {
 		return;
@@ -136,5 +136,5 @@ userForm.querySelector('.email').addEventListener('input', validateEmailAddress)
 userForm.querySelector('.username').addEventListener('input', validateUsername);
 userForm.querySelector('.password').addEventListener('input', validatePassword);
 userForm.querySelector('.password-check').addEventListener('input', validatePasswordCheck);
-userForm.addEventListener('submit', create);
+userForm.addEventListener('submit', createUser);
 userForm.addEventListener('hidden.bs.modal', restore);

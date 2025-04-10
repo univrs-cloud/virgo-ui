@@ -45,8 +45,7 @@ const install = (event) => {
 
 const render = (event) => {
 	let id = event.relatedTarget.closest('.app').dataset.id;
-	let apps = appCenterService.getTemplates();
-	app = _.find(apps, { id: Number(id) });
+	app = _.find(appCenterService.getTemplates(), { id: Number(id) });
 	appForm.querySelector('.modal-title').innerHTML = app.title;
 	appForm.querySelector('.description').innerHTML = app.description;
 	_.each(app.env, (env) => {

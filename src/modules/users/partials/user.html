@@ -1,5 +1,5 @@
 <div class="col col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 item">
-	<div class="card position-relative rounded-4 border-0">
+	<div class="user card position-relative rounded-4 border-0" data-uid="<%=user.uid%>">
 		<div class="card-body ps-0 py-1">
 			<div class="row g-0 align-items-center">
 				<div class="card-image card-spacer col-auto p-2">
@@ -18,12 +18,12 @@
 							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 512" class="fa"><path fill="var(--bs-secondary)" d="M64 360a56 56 0 1 0 0 112 56 56 0 1 0 0-112zm0-160a56 56 0 1 0 0 112 56 56 0 1 0 0-112zM120 96A56 56 0 1 0 8 96a56 56 0 1 0 112 0z"/></svg>
 						</span>
 						<ul class="dropdown-menu">
-							<li><a href="#" class="dropdown-item">Edit</a></li>
+							<li><a href="#user-update" class="dropdown-item" data-bs-toggle="modal">Edit</a></li>
 							<%if (!user.isOwner && user.username !== account.user) {%>
 								<li><hr class="dropdown-divider"></li>
 								<li><a href="#" class="dropdown-item text-danger">Lock</a></li>
 								<li><hr class="dropdown-divider"></li>
-								<li><a href="#" class="dropdown-item text-danger">Remove</a></li>
+								<li><a href="#" class="delete dropdown-item text-danger">Delete</a></li>
 							<%}%>
 						</ul>
 					</div>

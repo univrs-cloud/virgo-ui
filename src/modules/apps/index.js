@@ -46,7 +46,7 @@ const performAction = (event) => {
 	let card = button.closest('.app');
 	let app = _.find(appService.getApps(), { name: card.dataset.name });
 
-	if (button.classList.contains('text-danger') && !confirm(`Are you sure you want to ${button.dataset.action} ${app.title}?`)) {
+	if (button.classList.contains('text-danger') && !confirm(`Are you sure you want to ${button.dataset.action} the app ${app.title}?`)) {
 		return;
 	}
 
