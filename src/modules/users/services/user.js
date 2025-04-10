@@ -14,6 +14,18 @@ const getUsers = () => {
 	return filter(User.getUsers());
 };
 
+const createUser = (config) => {
+	User.createUser(config);
+};
+
+const updateUser = (config) => {
+	User.updateUser(config);
+};
+
+const deleteUser = (config) => {
+	User.deleteUser(config);
+};
+
 const updateProfile = (config) => {
 	User.updateProfile(config);
 };
@@ -39,6 +51,9 @@ const subscribe = (callbacks) => {
 export {
 	subscribe,
 	getUsers,
+	createUser,
+	updateUser,
+	deleteUser,
 	updateProfile,
 	changePassword
 };

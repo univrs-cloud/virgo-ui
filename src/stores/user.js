@@ -31,6 +31,18 @@ class User extends Store {
 		return this.getStateProperty('users');
 	}
 
+	createUser(config) {
+		this.socket.emit('create', config);
+	}
+
+	updateUser(config) {
+		this.socket.emit('update', config);
+	}
+
+	deleteUser(config) {
+		this.socket.emit('delete', config);
+	}
+
 	updateProfile(config) {
 		this.socket.emit('profile', config);
 	}
