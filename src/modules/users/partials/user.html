@@ -20,10 +20,12 @@
 						<ul class="dropdown-menu">
 							<li><a href="#user-update" class="dropdown-item" data-bs-toggle="modal">Edit</a></li>
 							<%if (!user.isOwner && user.username !== account.user) {%>
-								<li><a href="#user-password" class="dropdown-item" data-bs-toggle="modal">Change password</a></li>
+								<%if (!user.isDisabled) {%>
+									<li><a href="#user-password" class="dropdown-item" data-bs-toggle="modal">Change password</a></li>
+								<%}%>
 								<li><hr class="dropdown-divider"></li>
 								<li>
-									<%if(user.isDisabled) {%>
+									<%if (user.isDisabled) {%>
 										<a href="#" class="dropdown-item">Unlock</a>
 									<%} else {%>
 										<a href="#" class="dropdown-item text-danger">Lock</a>
