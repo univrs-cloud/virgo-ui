@@ -22,7 +22,13 @@
 							<%if (!user.isOwner && user.username !== account.user) {%>
 								<li><a href="#user-password" class="dropdown-item" data-bs-toggle="modal">Change password</a></li>
 								<li><hr class="dropdown-divider"></li>
-								<li><a href="#" class="dropdown-item text-danger">Lock</a></li>
+								<li>
+									<%if(user.isDisabled) {%>
+										<a href="#" class="dropdown-item">Unlock</a>
+									<%} else {%>
+										<a href="#" class="dropdown-item text-danger">Lock</a>
+									<%}%>
+								</li>
 								<li><hr class="dropdown-divider"></li>
 								<li><a href="#" class="delete dropdown-item text-danger">Delete</a></li>
 							<%}%>
@@ -38,16 +44,17 @@
 						<dd><%=user.username%></dd>
 						<dt class="fw-lighter"><small>Groups</small></dt>
 						<dd>
-							<%=_.join(_.map(user.groups, (group) => { return group.groupname; }), ', ')%>
+							<%=_.join(_.sortBy(_.map(user.groups, (group) => { if (typeof group === 'string') { return group; } return group.groupname; })), ', ')%>
 						</dd>
 						<dt class="fw-lighter"><small>Shell access</small></dt>
-						<dd><%=(_.includes(user.shell, 'nologin') ? 'no' : 'yes')%></dd>
+						<dd><%=(_.includes(user.shell, 'nologin') ? 'No' : 'Yes')%></dd>
 						<dt class="fw-lighter"><small>Email address</small></dt>
 						<dd class="m-0"><%=user.email || '&mdash;'%></dd>
 					</dl>
 				</div>
 			</div>
 		</div>
-		<span class="indicator translate-middle p-2 border border-light rounded-circle <%=(user ? 'bg-green-300' : 'bg-red-300')%>"></span>
+		<span class="indicator translate-middle p-2 border border-light rounded-circle <%=(user.isDisabled ? 'bg-red-300' : 'bg-green-300')%>"></span>
+		<%console.log(user)%>
 	</div>
 </div>
