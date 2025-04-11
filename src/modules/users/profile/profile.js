@@ -80,10 +80,10 @@ const restore = (event) => {
 
 const render = (event) => {
 	let users = userService.getUsers();
-	let profile = _.find(users, { username: account.user });
-	profileForm.querySelector('.title-username').innerHTML = profile.username;
-	profileForm.querySelector('.fullname').value = profile.fullname || profile.username;
-	profileForm.querySelector('.email').value = account.email ?? '';
+	let user = _.find(users, { username: account.user });
+	profileForm.querySelector('.title-username').innerHTML = user.username;
+	profileForm.querySelector('.fullname').value = user.fullname || user.username;
+	profileForm.querySelector('.email').value = user.email;
 };
 
 profileForm.querySelector('.fullname').addEventListener('input', validateFullname);
