@@ -272,6 +272,18 @@ img {
 		padding-left: map-get($spacers, 3);
 	}
 }
+#app-center {
+	.nav-pills {
+		--bs-nav-pills-link-active-color: var(--bs-white);
+		--bs-nav-pills-link-active-bg: var(--bs-indigo-500);
+		--bs-nav-link-color: var(--bs-white);
+		--bs-nav-link-hover-color: var(--bs-gray-100);
+		.nav-link:not(.active) {
+			color: var(--bs-black);
+			background-color: var(--bs-indigo-100);
+		}
+	}
+}
 
 [class*="z-depth-"] {
 	transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);

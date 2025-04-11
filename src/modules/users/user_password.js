@@ -1,10 +1,10 @@
-import passwordModalPartial from 'modules/users/profile/partials/modals/password.html';
+import passwordModalPartial from 'modules/users/partials/modal/user_password.html';
 import * as userService from 'modules/users/services/user';
 import validator from 'validator';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', passwordModalPartial);
 
-let passwordForm = document.querySelector('#profile-password');
+let passwordForm = document.querySelector('#user-password');
 let user;
 
 const validatePassword = (event) => {
@@ -80,8 +80,9 @@ const restore = (event) => {
 };
 
 const render = (event) => {
+	let uid = event.relatedTarget.closest('.user').dataset.uid;
 	let users = userService.getUsers();
-	user = _.find(users, { username: account.user });
+	user = _.find(users, { uid: Number(uid) });
 	passwordForm.querySelector('.title-username').innerHTML = user.username;
 };
 

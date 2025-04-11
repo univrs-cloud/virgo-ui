@@ -13,16 +13,18 @@
 				<div class="card-spacer col-auto p-2"></div>
 				<div class="col">
 					<p class="card-text line-clamp two-line"><%=app.description%></p>
-					<%if (app.isInstalled) {%>
-						<span class="badge rounded-pill bd-blue-200">Installed</span>
-					<%}%>
-					<%if (!_.isEmpty(jobs)) {%>
-						<button class="btn btn-sm btn-secondary" disabled><div class="spinner-border spinner-border-sm me-2"></div>Installing...</button>
-					<%}%>
-					<a href="#app-install" class="btn btn-sm btn-primary <%=(app.isInstalled || !_.isEmpty(jobs) ? 'invisible' : '')%>" data-bs-toggle="modal">Install</a>
+					<div class="d-flex align-items-center justify-content-end">
+						<%if (!_.isEmpty(jobs)) {%>
+							<button class="btn btn-sm btn-secondary" disabled><div class="spinner-border spinner-border-sm me-2"></div>Installing...</button>
+						<%}%>
+						<a href="#app-install" class="btn btn-sm btn-primary <%=(app.isInstalled || !_.isEmpty(jobs) ? 'invisible' : '')%>" data-bs-toggle="modal">Install</a>
+						<%if (app.isInstalled) {%>
+							<span class="badge rounded-pill bd-blue-200">Installed</span>
+						<%}%>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	<hr class="border-secondary-subtle my-3">
+	<hr class="border-secondary-subtle mt-0">
 </div>
