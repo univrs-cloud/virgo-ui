@@ -26,10 +26,6 @@ const deleteUser = (config) => {
 	User.deleteUser(config);
 };
 
-const updateProfile = (config) => {
-	User.updateProfile(config);
-};
-
 const changePassword = (config) => {
 	User.changePassword(config);
 };
@@ -54,6 +50,5 @@ export {
 	createUser,
 	updateUser,
 	deleteUser,
-	updateProfile,
 	changePassword
 };
