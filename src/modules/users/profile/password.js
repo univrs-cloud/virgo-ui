@@ -5,7 +5,6 @@ import validator from 'validator';
 document.querySelector('body').insertAdjacentHTML('beforeend', passwordModalPartial);
 
 let passwordForm = document.querySelector('#profile-password');
-let user;
 
 const validatePassword = (event) => {
 	let input = passwordForm.querySelector('.password');
@@ -61,7 +60,7 @@ const changePassword = (event) => {
 	let buttons = form.querySelectorAll('button');
 	_.each(buttons, (button) => { button.disabled = true; });
 	let config = {
-		username: user.username,
+		username: account.user,
 		password: form.querySelector('.password').value
 	};
 
@@ -70,7 +69,6 @@ const changePassword = (event) => {
 };
 
 const restore = (event) => {
-	user = null;
 	passwordForm.reset();
 	_.each(passwordForm.querySelectorAll('button'), (button) => { button.disabled = false });
 	_.each(passwordForm.querySelectorAll('.form-floating'), (input) => {
@@ -80,9 +78,7 @@ const restore = (event) => {
 };
 
 const render = (event) => {
-	let users = userService.getUsers();
-	user = _.find(users, { username: account.user });
-	passwordForm.querySelector('.title-username').innerHTML = user.username;
+	passwordForm.querySelector('.title-username').innerHTML = account.user;
 };
 
 passwordForm.querySelector('.password').addEventListener('input', validatePassword);

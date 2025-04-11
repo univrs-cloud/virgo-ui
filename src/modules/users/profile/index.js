@@ -16,10 +16,10 @@ const render = (state) => {
 		return;
 	}
 
-	let profile = _.find(state.users, { username: account.user });
+	let user = _.find(state.users, { username: account.user });
 
 	let template = document.createElement('template');
-	template.innerHTML += profileTemplate({ profile, account });
+	template.innerHTML += profileTemplate({ user: user });
 
 	morphdom(
 		row,

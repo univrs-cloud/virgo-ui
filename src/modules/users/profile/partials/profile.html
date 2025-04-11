@@ -2,7 +2,7 @@
 	<div class="card position-relative rounded-4 border-0">
 		<div class="card-body">
 			<h5 class="card-title d-flex align-items-center">
-				<%=profile.fullname || profile.username%>
+				<%=user.fullname || user.username%>
 				<div class="dropdown ms-auto">
 					<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm">
 						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 512" class="fa"><path fill="var(--bs-secondary)" d="M64 360a56 56 0 1 0 0 112 56 56 0 1 0 0-112zm0-160a56 56 0 1 0 0 112 56 56 0 1 0 0-112zM120 96A56 56 0 1 0 8 96a56 56 0 1 0 112 0z"/></svg>
@@ -15,9 +15,9 @@
 			</h5>
 			<dl class="m-0">
 				<dt class="fw-lighter"><small>Username</small></dt>
-				<dd><%=profile.username%></dd>
+				<dd><%=user.username%></dd>
 				<dt class="fw-lighter"><small>Email address</small></dt>
-				<dd class="m-0"><%=account.email || '&mdash;'%></dd>
+				<dd class="m-0"><%=user.email || '&mdash;'%></dd>
 			</dl>
 		</div>
 	</div>
