@@ -43,10 +43,6 @@ class User extends Store {
 		this.socket.emit('delete', config);
 	}
 
-	updateProfile(config) {
-		this.socket.emit('profile', config);
-	}
-
 	changePassword(config) {
 		this.socket.emit('password', config);
 	}

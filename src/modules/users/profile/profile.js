@@ -60,11 +60,12 @@ const updateProfile = (event) => {
 	let buttons = form.querySelectorAll('button');
 	_.each(buttons, (button) => { button.disabled = true; });
 	let config = {
+		username: account.user,
 		fullname: form.querySelector('.fullname').value,
 		email: form.querySelector('.email').value
 	};
 
-	userService.updateProfile(config);
+	userService.updateUser(config);
 	bootstrap.Modal.getInstance(form.closest('.modal'))?.hide();
 };
 
