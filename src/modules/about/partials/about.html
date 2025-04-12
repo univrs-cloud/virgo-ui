@@ -1,43 +1,44 @@
-
-<div class="col-12 col-md-4 col-lg-4">
-	<div class="card position-relative rounded-4 border-0">
-		<div class="card-body">
-			<h5 class="card-title d-flex align-items-center">
-				Software
-			</h5>
-			<dl class="m-0">
-				<dt class="fw-lighter"><small>UI version</small></dt>
-				<dd><%=VERSION%></dd>
-				<dt class="fw-lighter"><small>API version</small></dt>
-				<dd><%=system.api.version%></dd>
-				<dt class="fw-lighter"><small>Kernel version</small></dt>
-				<dd class="m-0"><%=system?.osInfo?.kernel%></dd>
-			</dl>
+<div class="row">
+	<div class="col-12 col-md-4 col-lg-4">
+		<div class="card position-relative rounded-4 border-0">
+			<div class="card-body">
+				<h5 class="card-title d-flex align-items-center">
+					Software
+				</h5>
+				<dl class="m-0">
+					<dt class="fw-lighter"><small>UI version</small></dt>
+					<dd><%=VERSION%></dd>
+					<dt class="fw-lighter"><small>API version</small></dt>
+					<dd><%=system.api.version%></dd>
+					<dt class="fw-lighter"><small>Kernel version</small></dt>
+					<dd class="m-0"><%=system?.osInfo?.kernel%></dd>
+				</dl>
+			</div>
 		</div>
 	</div>
-</div>
-<div class="col-12 col-md-6 col-lg-6">
-	<div class="card position-relative rounded-4 border-0">
-		<div class="card-body">
-			<h5 class="card-title d-flex align-items-center">
-				Hardware
-			</h5>
-			<dl class="m-0">
-				<dt class="fw-lighter"><small>Serial number</small></dt>
-				<dd><%=system?.serial%></dd>
-				<dt class="fw-lighter"><small>CPU</small></dt>
-				<dd><%=system?.cpu?.cores%>x <%=system?.cpu?.vendor%> <%=system?.cpu?.family%> @ <%=system?.cpu?.speedMax%>GHz</dd>
-				<dt class="fw-lighter"><small>RAM</small></dt>
-				<dd><%=bytes(memory.total)%></dd>
-				<dt class="fw-lighter"><small>Network</small></dt>
-				<dd><%=prettyBytes(system?.networkInterface?.speed * 1000 * 1000, { bits: true })%>/s <small class="text-body-tertiary">(<%=system?.networkInterface?.mac%>)</small></dd>
-				<dt class="fw-lighter"><small>Drives</small></dt>
-				<dd class="m-0">
-					<%_.each(drives, (drive) => {%>
-						<%=drive.model%> @ <%=bytes(drive.capcity.bytes)%> <small class="text-body-tertiary">(<%=drive.serialNumber%>)</small><br>
-					<%})%>
-				</dd>
-			</dl>
+	<div class="col-12 col-md-6 col-lg-6">
+		<div class="card position-relative rounded-4 border-0">
+			<div class="card-body">
+				<h5 class="card-title d-flex align-items-center">
+					Hardware
+				</h5>
+				<dl class="m-0">
+					<dt class="fw-lighter"><small>Serial number</small></dt>
+					<dd><%=system?.serial%></dd>
+					<dt class="fw-lighter"><small>CPU</small></dt>
+					<dd><%=system?.cpu?.cores%>x <%=system?.cpu?.vendor%> <%=system?.cpu?.family%> @ <%=system?.cpu?.speedMax%>GHz</dd>
+					<dt class="fw-lighter"><small>RAM</small></dt>
+					<dd><%=bytes(memory.total)%></dd>
+					<dt class="fw-lighter"><small>Network</small></dt>
+					<dd><%=prettyBytes(system?.networkInterface?.speed * 1000 * 1000, { bits: true })%>/s <small class="text-body-tertiary">(<%=system?.networkInterface?.mac%>)</small></dd>
+					<dt class="fw-lighter"><small>Drives</small></dt>
+					<dd class="m-0">
+						<%_.each(drives, (drive) => {%>
+							<%=drive.model%> @ <%=bytes(drive.capcity.bytes)%> <small class="text-body-tertiary">(<%=drive.serialNumber%>)</small><br>
+						<%})%>
+					</dd>
+				</dl>
+			</div>
 		</div>
 	</div>
 </div>

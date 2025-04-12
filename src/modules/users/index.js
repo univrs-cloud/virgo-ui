@@ -44,3 +44,4 @@ import('modules/users/user_create');
 import('modules/users/user_update');
 import('modules/users/user_password');
 import('modules/users/user_delete');
+import('modules/users/user_access_control');

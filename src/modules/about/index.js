@@ -26,8 +26,7 @@ const render = (state) => {
 	});
 	morphdom(
 		row,
-		`<div>${template}</div>`,
-		{ childrenOnly: true }
+		`${template}`
 	);
 
 	loading.classList.add('d-none');

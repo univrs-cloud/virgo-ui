@@ -26,6 +26,14 @@ const deleteUser = (config) => {
 	User.deleteUser(config);
 };
 
+const lockUser = (config) => {
+	User.lockUser(config);
+};
+
+const unlockUser = (config) => {
+	User.unlockUser(config);
+};
+
 const changePassword = (config) => {
 	User.changePassword(config);
 };
@@ -50,5 +58,7 @@ export {
 	createUser,
 	updateUser,
 	deleteUser,
+	lockUser,
+	unlockUser,
 	changePassword
 };
