@@ -14,7 +14,6 @@ let appForm = document.querySelector('#app-install');
 let app;
 
 const validateField = (field) => {
-	console.log(field);
 	let invalidFeedback = field.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = field.value;
 	if (validator.isEmpty(value)) {
