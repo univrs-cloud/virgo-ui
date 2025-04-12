@@ -3,6 +3,7 @@ import inputHiddenPartial from 'modules/apps/partials/modal/app_install/input_hi
 import inputTextPartial from 'modules/apps/partials/modal/app_install/input_text.html';
 import selectPartial from 'modules/apps/partials/modal/app_install/select.html';
 import * as appCenterService from 'modules/apps/services/app_center';
+import validator from 'validator';
 
 const inputHiddenTemplate = _.template(inputHiddenPartial);
 const inputTextTemplate = _.template(inputTextPartial);
@@ -12,8 +13,24 @@ document.querySelector('body').insertAdjacentHTML('beforeend', appModalPartial);
 let appForm = document.querySelector('#app-install');
 let app;
 
+const validateField = (field) => {
+	console.log(field);
+	let invalidFeedback = field.closest('.form-floating').querySelector('.invalid-feedback');
+	let value = field.value;
+	if (validator.isEmpty(value)) {
+		field.classList.remove('is-valid');
+		field.classList.add('is-invalid');
+		invalidFeedback.innerHTML = `Can't be empty`;
+		return;
+	}
+	field.classList.remove('is-invalid');
+	field.classList.add('is-valid');
+};
+
 const validateForm = () => {
-	//
+	_.each(appForm.querySelectorAll('input, textarea'), (field) => {
+		validateField(field);
+	});
 };
 
 const isFormValid = () => {
@@ -61,6 +78,7 @@ const render = (event) => {
 
 		appForm.querySelector('.inputs').innerHTML += inputTextTemplate({ env });
 	});
+	_.each(appForm.querySelectorAll('input, textarea'), (field) => { field.addEventListener('input', (event) => { validateField(event.target); }) });
 };
 
 const restore = (event) => {
