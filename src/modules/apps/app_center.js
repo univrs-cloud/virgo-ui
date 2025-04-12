@@ -55,7 +55,8 @@ modal.addEventListener('hide.bs.modal', () => {
 	appCenterService.unsubscribe();
 });
 modal.addEventListener('hidden.bs.modal', () => {
-	row.innerHTML = '';
+	rowExplore.innerHTML = '';
+	rowInstalled.innerHTML = '';
 	container.classList.add('d-none');
 	loading.classList.remove('d-none');
 });
