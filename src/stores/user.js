@@ -43,6 +43,14 @@ class User extends Store {
 		this.socket.emit('delete', config);
 	}
 
+	lockUser(config) {
+		this.socket.emit('lock', config);
+	}
+
+	unlockUser(config) {
+		this.socket.emit('unlock', config);
+	}
+
 	changePassword(config) {
 		this.socket.emit('password', config);
 	}
