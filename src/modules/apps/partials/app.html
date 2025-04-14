@@ -38,10 +38,17 @@
 				</div>
 			</div>
 			<div class="row g-0 mt-n2 mb-2 position-relative">
-				<div class="terminal-container logs-container d-none">
-					<div class="service d-flex align-items-center bg-white p-2 pt-3">
-						<a href="#" class="close-terminal btn btn-link p-0 me-2">Close</a>
+				<div class="logs-container d-none">
+					<div class="service d-flex align-items-center justify-content-between bg-white p-2 ps-0 pt-3">
 						<span class="name"></span>
+						<a href="#" class="close-logs btn btn-link p-0 ms-2">Close</a>
+					</div>
+					<ul class="list-unstyled overflow-y-scroll m-0"></ul>
+				</div>
+				<div class="terminal-container d-none">
+					<div class="service d-flex align-items-center justify-content-between bg-white p-2 ps-0 pt-3">
+						<span class="name"></span>
+						<a href="#" class="close-terminal btn btn-link p-0 ms-2">Close</a>
 					</div>
 				</div>
 				<div class="card-spacer col-auto p-2"></div>
@@ -107,7 +114,7 @@
 											<%}%>
 											<div class="d-flex align-items-center">
 												<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" class="fa fa-fw me-1"><path fill="var(--bs-primary)" d="M64 32C46.3 32 32 46.3 32 64l0 384c0 17.7 14.3 32 32 32l256 0c17.7 0 32-14.3 32-32l0-384c0-17.7-14.3-32-32-32L64 32zM0 64C0 28.7 28.7 0 64 0L320 0c35.3 0 64 28.7 64 64l0 384c0 35.3-28.7 64-64 64L64 512c-35.3 0-64-28.7-64-64L0 64zm80 64l224 0c8.8 0 16 7.2 16 16s-7.2 16-16 16L80 160c-8.8 0-16-7.2-16-16s7.2-16 16-16zm0 96l224 0c8.8 0 16 7.2 16 16s-7.2 16-16 16L80 256c-8.8 0-16-7.2-16-16s7.2-16 16-16zm0 96l128 0c8.8 0 16 7.2 16 16s-7.2 16-16 16L80 352c-8.8 0-16-7.2-16-16s7.2-16 16-16z"/></svg>
-												<a href="#" class="logs btn btn-link p-0 disabled" data-id="<%=container.id%>">Logs</a>
+												<a href="#" class="logs btn btn-link p-0" data-id="<%=container.id%>">Logs</a>
 											</div>
 											<%if (container.state === 'running') {%>
 												<div class="d-flex align-items-center">

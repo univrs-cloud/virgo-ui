@@ -247,6 +247,7 @@ img {
 			}
 		}
 		&:not(.expand) {
+			.logs-container,
 			.terminal-container {
 				display: none;
 			}
@@ -269,7 +270,24 @@ img {
 		left: 0;
 		right: 0;
 		min-height: calc(100vh - 280px);
+		background-color: var(--bs-white);
 		padding-left: map-get($spacers, 3);
+	}
+	.logs-container {
+		ul {
+			height: calc(100vh - 280px);
+			background-color: var(--bs-black);
+		}
+		li {
+			font-family: var(--bs-font-monospace);
+			font-size: 0.813rem;
+			line-height: 1.063rem;
+			color: var(--bs-white);
+			&:hover {
+				color: var(--bs-black);
+				background-color: var(--bs-gray-100);
+			}
+		}
 	}
 }
 #app-center {
