@@ -110,7 +110,7 @@ const render = (state) => {
 					morphdom(fromEl, toEl, {
 						childrenOnly: true,
 						onBeforeElUpdated: (fromEl, toEl) => {
-							if (fromEl.classList.contains('terminal-container')) {
+							if (fromEl.classList.contains('logs-container') || fromEl.classList.contains('terminal-container')) {
 								return false;
 							}
 						}
@@ -134,6 +134,7 @@ module.addEventListener('click', compress);
 module.addEventListener('click', performAppAction);
 module.addEventListener('click', performServiceAction);
 
+import('modules/apps/logs');
 import('modules/apps/console');
 import('modules/apps/app_center');
 import('modules/apps/app_install');

@@ -57,10 +57,6 @@ const restore = () => {
 	}
 };
 
-module.addEventListener('click', render);
-module.addEventListener('click', closeTerminal);
-window.addEventListener('resize', resize);
-
 socket.on('terminalConnected', () => {
 	if (!terminal) {
 		terminal = new Terminal({
@@ -73,6 +69,7 @@ socket.on('terminalConnected', () => {
 		fitAddon = new FitAddon();
 		terminal.loadAddon(fitAddon);
 		terminal.open(terminalContainer);
+		terminal.focus();
 		terminal.onData((data) => {
 			socket.emit('terminalInput', data);
 		});
@@ -98,3 +95,7 @@ socket.on('disconnect', () => {
 		terminal = null;
 	}
 });
+
+module.addEventListener('click', render);
+module.addEventListener('click', closeTerminal);
+window.addEventListener('resize', resize);
