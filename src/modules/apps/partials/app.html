@@ -67,7 +67,7 @@
 							<%}%>
 							<div class="row">
 								<%_.each(app.projectContainers, (container, index) => {%>
-									<dd class="col-auto <%=(index + 1 == _.size(app.projectContainers) ? 'mb-0' : '')%>">
+									<dd class="service col-auto <%=(index + 1 == _.size(app.projectContainers) ? 'mb-0' : '')%>" data-id="<%=container.id%>">
 										<div class="d-flex align-items-center">
 											<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa me-1"><path fill="var(--bs-gray-500)" d="M261.5 35.1c-3.6-1.3-7.5-1.3-11 0L44.1 110.7 256 194l211.9-83.2L261.5 35.1zM32 385.7c0 6.7 4.2 12.7 10.5 15L240 473.1l0-251L32 140.3l0 245.3zm240 87.4l197.5-72.4c6.3-2.3 10.5-8.3 10.5-15l0-245.3L272 222l0 251zM239.5 5c10.7-3.9 22.4-3.9 33 0l208 76.3c18.9 6.9 31.5 24.9 31.5 45.1l0 259.3c0 20.1-12.6 38.1-31.5 45.1L272.5 507c-10.7 3.9-22.4 3.9-33 0l-208-76.3C12.6 423.8 0 405.8 0 385.7L0 126.3c0-20.1 12.6-38.1 31.5-45.1L239.5 5z"/></svg>
 											<span><%=container.name%></span>
@@ -79,7 +79,19 @@
 												<%} else {%>
 													<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" class="fa fa-fw me-1"><path fill="var(--bs-red-300)" d="M0 128C0 92.7 28.7 64 64 64H320c35.3 0 64 28.7 64 64V384c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V128z"/></svg>
 												<%}%>
-												<span><%=_.upperFirst(container.state)%></span>
+												<span class="me-2"><%=_.upperFirst(container.state)%></span>
+												<div class="dropdown">
+													<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm">
+														<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 512" class="fa"><path fill="var(--bs-secondary)" d="M64 360a56 56 0 1 0 0 112 56 56 0 1 0 0-112zm0-160a56 56 0 1 0 0 112 56 56 0 1 0 0-112zM120 96A56 56 0 1 0 8 96a56 56 0 1 0 112 0z"/></svg>
+													</span>
+													<ul class="dropdown-menu">
+														<li><a href="#" class="dropdown-item <%=(app.state === 'success' ? 'disabled' : '')%>" data-action="start">Start</a></li>
+														<li><hr class="dropdown-divider"></li>
+														<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="stop">Stop</a></li>
+														<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="kill">Kill</a></li>
+														<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="restart">Restart</a></li>
+													</ul>
+												</div>
 											</div>
 											<%if (container.state === 'running') {%>
 												<%let publishedPorts = _.filter(container.ports, { ip: '0.0.0.0' });%>

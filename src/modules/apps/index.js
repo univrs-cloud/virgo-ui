@@ -36,7 +36,11 @@ const compress = (event) => {
 	item.closest('.row').classList.remove('expand');
 };
 
-const performAction = (event) => {
+const performAppAction = (event) => {
+	if (!_.isNull(event.target.closest('.service'))) {
+		return;
+	}
+
 	if (!event.target.closest('a')?.classList.contains('dropdown-item')) {
 		return;
 	}
@@ -54,7 +58,32 @@ const performAction = (event) => {
 		name: app.name,
 		action: button.dataset.action
 	};
-	appService.performAction(config);
+	appService.performAppAction(config);
+};
+
+const performServiceAction = (event) => {
+	if (_.isNull(event.target.closest('.service'))) {
+		return;
+	}
+
+	if (!event.target.closest('a')?.classList.contains('dropdown-item')) {
+		return;
+	}
+
+	event.preventDefault();
+	let button = event.target;
+	let card = button.closest('.service');
+	let service = _.find(_.flatMap(appService.getApps(), 'projectContainers'), { id: card.dataset.id });
+
+	if (button.classList.contains('text-danger') && !confirm(`Are you sure you want to ${button.dataset.action} the service ${service.name}?`)) {
+		return;
+	}
+
+	let config = {
+		id: service.id,
+		action: button.dataset.action
+	};
+	appService.performServiceAction(config);
 };
 
 const render = (state) => {
@@ -102,7 +131,8 @@ appService.subscribe([render]);
 
 module.addEventListener('click', expand);
 module.addEventListener('click', compress);
-module.addEventListener('click', performAction);
+module.addEventListener('click', performAppAction);
+module.addEventListener('click', performServiceAction);
 
 import('modules/apps/console');
 import('modules/apps/app_center');

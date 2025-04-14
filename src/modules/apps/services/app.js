@@ -73,8 +73,12 @@ const getApps = () => {
 	return composeApps(Docker.getConfigured(), Docker.getContainers(), Host.getProxies());
 };
 
-const performAction = (config) => {
-	Docker.performAction(config);
+const performAppAction = (config) => {
+	Docker.performAppAction(config);
+};
+
+const performServiceAction = (config) => {
+	Docker.performServiceAction(config);
 };
 
 const handleSubscription = (properties) => {
@@ -95,5 +99,6 @@ export {
 	subscribe,
 	getSocket,
 	getApps,
-	performAction
+	performAppAction,
+	performServiceAction
 };
