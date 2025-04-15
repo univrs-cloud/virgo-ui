@@ -76,7 +76,7 @@ const render = (state) => {
 	});
 };
 
-render({ timeMachines: timeMachineService.getTimeMachines() });
+render({ timeMachines: timeMachineService.getTimeMachines(), networkInterface: folderService.getSystem().networkInterface, bytes });
 
 timeMachineService.subscribe([render]);
 
