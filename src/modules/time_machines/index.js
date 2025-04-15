@@ -2,6 +2,7 @@ import modulePartial from 'modules/time_machines/partials/index.html';
 import emptyPartial from 'modules/time_machines/partials/empty.html';
 import timeMachinePartial from 'modules/time_machines/partials/time_machine.html';
 import * as timeMachineService from 'modules/time_machines/services/time_machine';
+import copy from 'copy-to-clipboard';
 
 const moduleTemplate = _.template(modulePartial);
 const emptyTemplate = _.template(emptyPartial);
@@ -11,6 +12,25 @@ let module = document.querySelector('#time-machines');
 let loading = module.querySelector('.loading');
 let container = module.querySelector('.container-fluid');
 let row = container.querySelector('.row');
+
+const copyToClipboard = (event) => {
+	if (event.target.closest('a')?.dataset.action !== 'copy-to-clipboard') {
+		return;
+	}
+
+	event.preventDefault();
+	let button = event.target.closest('a');
+	let text = button.nextElementSibling.innerHTML;
+	if (copy(text)) {
+		let tooltip = bootstrap.Tooltip.getInstance(button);
+		let originalTitle = button.dataset.bsOriginalTitle;
+		tooltip.setContent({ '.tooltip-inner': 'Copied!' });
+		setTimeout(() => {
+			tooltip.hide();
+			tooltip.setContent({ '.tooltip-inner': originalTitle });
+		}, 1000);
+	}
+};
 
 const performAction = (event) => {
 	event.preventDefault();
@@ -58,3 +78,5 @@ const render = (state) => {
 render({ timeMachines: timeMachineService.getTimeMachines() });
 
 timeMachineService.subscribe([render]);
+
+module.addEventListener('click', copyToClipboard);
