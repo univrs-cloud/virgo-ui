@@ -56,8 +56,9 @@ const render = (state) => {
 	if (_.isEmpty(state.timeMachines)) {
 		template.innerHTML = emptyTemplate();
 	} else {
+		let networkInterface = state.networkInterface;
 		_.each(state.timeMachines, (timeMachine) => {
-			template.innerHTML += timeMachineTemplate({ timeMachine, bytes });
+			template.innerHTML += timeMachineTemplate({ timeMachine, networkInterface, bytes });
 		});
 	}
 	
