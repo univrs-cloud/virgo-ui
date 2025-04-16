@@ -127,6 +127,10 @@ main,
 		min-height: 3rem;
 		-webkit-line-clamp: 2;
 	}
+	&.three-line {
+		min-height: 4.5rem;
+		-webkit-line-clamp: 3;
+	}
 }
 
 @media (max-width: 575px) {
