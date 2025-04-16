@@ -97,13 +97,11 @@ img {
 			min-height: 30px;
 			max-height: 30px;
 		}
-		svg {
-			overflow: hidden;
-			object-fit: contain;
+		.icon-light {
+			font-size: 1.24em;
 			display: flex;
+			justify-content: center;
 			width: 100%;
-			min-height: 26px;
-			max-height: 26px;
 			padding: 0.2rem;
 			margin: 0.125rem 0;
 		}
@@ -144,10 +142,6 @@ img {
 }
 .no-content {
 	height: calc(100vh - 140px);
-	.fa {
-		width: 70px;
-		height: 70px;
-	}
 }
 #not-found {
 	.no-content {
@@ -155,7 +149,7 @@ img {
 	}
 }
 #weather {
-	.icon {
+	.weather-icon {
 		position: relative;
 		svg {
 			position: absolute;
@@ -172,12 +166,13 @@ img {
 }
 #notifications {
 	.dropdown-toggle {
-		svg {
-			width: 1.4em;
-			height: 1.4em;
+		.icon-bell {
+			font-size: 1.6em;
+			margin-top: 1px;
 		}
 		&:before {
 			content: "";
+			z-index: 1;
 			position: absolute;
 			top: 0.5rem;
 			right: -0.125rem;

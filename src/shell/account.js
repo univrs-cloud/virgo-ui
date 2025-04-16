@@ -18,12 +18,13 @@ const logout = (event) => {
 	}
 	
 	event.preventDefault();
-	axios.post(`https://${authDomain}/api/logout`, null, { withCredentials: true })
-		.then(() => { })
-		.catch((error) => { })
-		.then(() => {
-			location.reload();
-		});
+	location = `https://${authDomain}/logout`;
+	// axios.post(`https://${authDomain}/api/logout`, null, { withCredentials: true })
+	// 	.then(() => { })
+	// 	.catch((error) => { })
+	// 	.then(() => {
+	// 		location.reload();
+	// 	});
 };
 
 const render = (state) => {

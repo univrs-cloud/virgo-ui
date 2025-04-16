@@ -14,6 +14,20 @@
 @import "@xterm/xterm/css/xterm";
 
 // --------
+// webfonts
+// --------
+@import "webfonts/fontawesome";
+@import "webfonts/brands";
+@import "webfonts/solid";
+@import "webfonts/regular";
+@import "webfonts/light";
+@import "webfonts/thin";
+@import "webfonts/duotone";
+@import "webfonts/duotone-regular";
+@import "webfonts/duotone-light";
+@import "webfonts/duotone-thin";
+
+// --------
 // Custom styles
 // --------
 @import "colors";
