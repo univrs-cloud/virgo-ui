@@ -16,14 +16,14 @@ module.exports = (env, argv) => {
 			console.log('Missing options:\n');
 			return false;
 		}
-		
+
 		if (env.upstream) {
 			upstream = env.upstream;
 		} else if (!dotenv.error && dotenv.parsed.upstream) {
 			upstream = dotenv.parsed.upstream;
 		}
 	}
-		
+
 	return {
 		devtool: (argv.mode === 'production' ? 'source-map' : 'eval'),
 		devServer: {
@@ -117,9 +117,12 @@ module.exports = (env, argv) => {
 				filename: 'assets/css/[name].[contenthash].css',
 				chunkFilename: 'assets/css/[name].[contenthash].css',
 			}),
-			new CopyWebpackPlugin({'patterns': [
-				{ from: './src/assets/img', to: 'assets/img' }
-			]})
+			new CopyWebpackPlugin({
+				'patterns': [
+					{ from: './src/assets/img', to: 'assets/img' },
+					{ from: './src/assets/webfonts', to: 'assets/webfonts' }
+				]
+			})
 		],
 		externals: {
 			window: 'window',
@@ -149,18 +152,18 @@ module.exports = (env, argv) => {
 					]
 				},
 				{
-					test: /\.html$/,
-					use: {
-						loader: 'raw-loader'
-					}
-				},
-				{
 					test: /\.svg$/,
 					include: path.resolve(__dirname, 'src/assets/img/weather'),
 					use: {
 						loader: 'raw-loader'
 					}
-				}
+				},
+				{
+					test: /\.html$/,
+					use: {
+						loader: 'raw-loader'
+					}
+				},
 			]
 		},
 		resolve: {
