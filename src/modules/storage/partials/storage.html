@@ -53,24 +53,24 @@
 						<%})%>
 						
 						<%if (pool?.type?.toLowerCase() === 'pool') {%>
-							<%if (pool.scan_stats?.state.toLowerCase() !== 'finished') {%>
-								<%let progress = (pool.scan_stats.to_examine === 0 ? 0 : (pool.scan_stats.issued / pool.scan_stats.to_examine) * 100)%>
+							<%if (pool.scanStats && pool.scanStats?.state.toLowerCase() !== 'finished') {%>
+								<%let progress = (pool.scanStats.toExamine === 0 ? 0 : (pool.scanStats.issued / pool.scanStats.toExamine) * 100)%>
 								<dt class="fw-lighter">
 									<small>
-										<%if (pool.scan_stats.scrub_pause === 0) {%>
+										<%if (pool.scanStats.scrubPause === 0) {%>
 											Running data integrity check...
-										<%} else if (pool.scan_stats.scrub_pause !== 0) {%>
+										<%} else if (pool.scanStats.scrubPause !== 0) {%>
 											Data integrity check paused
 										<%}%>
 									</small>
 								</dt>
-								<%if (pool.scan_stats.status === 'paused') {%>
+								<%if (pool.scanStats.status === 'paused') {%>
 									<dd class="d-flex align-items-center m-0"><%=_.upperFirst(pool.scan)%></dd>
 								<%}%>
 								<div class="row g-0 d-flex align-items-baseline">
 									<div class="col">
 										<div class="progress" role="progressbar">
-											<div class="progress-bar bg-cyan-300 <%=(pool.scan_stats.scrub_pause === 0 ? 'progress-bar-striped progress-bar-animated' : '')%>" style="width: <%=(progress)%>%;"></div>
+											<div class="progress-bar bg-cyan-300 <%=(pool.scanStats.scrubPause === 0 ? 'progress-bar-striped progress-bar-animated' : '')%>" style="width: <%=(progress)%>%;"></div>
 										</div>
 									</div>
 									<div class="col-auto lh-1 text-body-tertiary text-end" style="width: 45px;">
@@ -79,7 +79,7 @@
 								</div>
 							<%} else {%>
 								<dt class="fw-lighter"><small>Data integrity</small></dt>
-								<dd class="m-0">Last data integrity check repaired <strong><%=bytes(pool.scan_stats.processed)%></strong> in <%=moment.duration(moment.unix(pool.scan_stats.end_time).diff(moment.unix(pool.scan_stats.start_time))).humanize()%> with <strong><%=pool.scan_stats.errors%> errors</strong> on <%=moment.utc(pool.scan_stats.end_time, 'X').toString()%></dd>
+								<dd class="m-0">Last data integrity check repaired <strong><%=bytes(pool.scanStats.processed)%></strong> in <%=moment.duration(moment.unix(pool.scanStats.endTime).diff(moment.unix(pool.scanStats.startTime))).humanize()%> with <strong><%=pool.scanStats.errors%> errors</strong> on <%=moment.utc(pool.scanStats.endTime, 'X').toString()%></dd>
 							<%}%>
 						<%}%>
 					</dl>
