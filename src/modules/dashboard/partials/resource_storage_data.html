@@ -45,13 +45,13 @@ let pool = (state.storage === false ? false : _.find(state.storage, (pool) => { 
 				</small>
 			<%})%>
 		</div>
-		<%if (pool.scan_stats?.state.toLowerCase() !== 'finished') {%>
-			<%let progress = (pool.scan_stats.to_examine === 0 ? 0 : (pool.scan_stats.issued / pool.scan_stats.to_examine) * 100)%>
+		<%if (pool.scanStats && pool.scanStats?.state?.toLowerCase() !== 'finished') {%>
+			<%let progress = (pool.scanStats.toExamine === 0 ? 0 : (pool.scanStats.issued / pool.scanStats.toExamine) * 100)%>
 			<div class="lh-1 text-body-tertiary mt-3">
 				<small>
-					<%if (pool.scan_stats.scrub_pause === 0) {%>
+					<%if (pool.scanStats.scrubPause === 0) {%>
 						Running data integrity check...
-					<%} else if (pool.scan_stats.scrub_pause !== 0) {%>
+					<%} else if (pool.scanStats.scrubPause !== 0) {%>
 						Data integrity check paused
 					<%}%>
 				</small>
@@ -59,7 +59,7 @@ let pool = (state.storage === false ? false : _.find(state.storage, (pool) => { 
 			<div class="row g-0 d-flex align-items-baseline">
 				<div class="col">
 					<div class="progress" role="progressbar">
-						<div class="progress-bar bg-cyan-300 <%=(pool.scan_stats.scrub_pause === 0 ? 'progress-bar-striped progress-bar-animated' : '')%>" style="width: <%=progress%>%;"></div>
+						<div class="progress-bar bg-cyan-300 <%=(pool.scanStats.scrubPause === 0 ? 'progress-bar-striped progress-bar-animated' : '')%>" style="width: <%=progress%>%;"></div>
 					</div>
 				</div>
 				<div class="col-auto lh-1 text-body-tertiary text-end" style="width: 45px;">
