@@ -1,0 +1,11 @@
+<div class="mb-3">
+	<div class="text-body-secondary"><%=env.label%></div>
+	<%_.each(env.select, (option) => {%>
+		<div class="form-check">
+			<label class="form-check-label">
+				<input type="radio" name="<%=env.name%>" value="<%=option.value%>" class="form-check-input" <%=(option.default ? 'checked' : '')%>>
+				<%=option.text%>
+			</label>
+		</div>
+	<%})%>
+</div>
