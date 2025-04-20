@@ -1,12 +1,16 @@
 import appModalPartial from 'modules/apps/partials/modal/app_install.html';
 import inputHiddenPartial from 'modules/apps/partials/modal/app_install/input_hidden.html';
 import inputTextPartial from 'modules/apps/partials/modal/app_install/input_text.html';
+import inputPasswordPartial from 'modules/apps/partials/modal/app_install/input_password.html';
+import inputRadioPartial from 'modules/apps/partials/modal/app_install/input_radio.html';
 import selectPartial from 'modules/apps/partials/modal/app_install/select.html';
 import * as appCenterService from 'modules/apps/services/app_center';
 import validator from 'validator';
 
 const inputHiddenTemplate = _.template(inputHiddenPartial);
 const inputTextTemplate = _.template(inputTextPartial);
+const inputPasswordTemplate = _.template(inputPasswordPartial);
+const inputRadioTemplate = _.template(inputRadioPartial);
 const selectTemplate = _.template(selectPartial);
 document.querySelector('body').insertAdjacentHTML('beforeend', appModalPartial);
 
@@ -65,17 +69,30 @@ const render = (event) => {
 	appForm.querySelector('.modal-title').innerHTML = app.title;
 	appForm.querySelector('.description').innerHTML = app.description;
 	_.each(app.env, (env) => {
-		if (env?.preset === true) {
+		if (env?.type === 'hidden') {
 			appForm.querySelector('.inputs').innerHTML += inputHiddenTemplate({ env });
 			return;
 		}
 
-		if (env?.select) {
-			appForm.querySelector('.inputs').innerHTML += selectTemplate({ env });
+		if (env?.type === 'text') {
+			appForm.querySelector('.inputs').innerHTML += inputTextTemplate({ env });
 			return;
 		}
 
-		appForm.querySelector('.inputs').innerHTML += inputTextTemplate({ env });
+		if (env?.type === 'password') {
+			appForm.querySelector('.inputs').innerHTML += inputPasswordTemplate({ env });
+			return;
+		}
+
+		if (env?.type === 'radio') {
+			appForm.querySelector('.inputs').innerHTML += inputRadioTemplate({ env });
+			return;
+		}
+
+		if (env?.type === 'select') {
+			appForm.querySelector('.inputs').innerHTML += selectTemplate({ env });
+			return;
+		}
 	});
 	_.each(appForm.querySelectorAll('input, textarea'), (field) => { field.addEventListener('input', (event) => { validateField(event.target); }) });
 };
