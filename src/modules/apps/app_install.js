@@ -1,6 +1,7 @@
 import appModalPartial from 'modules/apps/partials/modal/app_install.html';
 import inputHiddenPartial from 'modules/apps/partials/modal/app_install/input_hidden.html';
 import inputTextPartial from 'modules/apps/partials/modal/app_install/input_text.html';
+import inputEmailPartial from 'modules/apps/partials/modal/app_install/input_email.html';
 import inputPasswordPartial from 'modules/apps/partials/modal/app_install/input_password.html';
 import inputRadioPartial from 'modules/apps/partials/modal/app_install/input_radio.html';
 import selectPartial from 'modules/apps/partials/modal/app_install/select.html';
@@ -9,6 +10,7 @@ import validator from 'validator';
 
 const inputHiddenTemplate = _.template(inputHiddenPartial);
 const inputTextTemplate = _.template(inputTextPartial);
+const inputEmailTemplate = _.template(inputEmailPartial);
 const inputPasswordTemplate = _.template(inputPasswordPartial);
 const inputRadioTemplate = _.template(inputRadioPartial);
 const selectTemplate = _.template(selectPartial);
@@ -76,6 +78,11 @@ const render = (event) => {
 
 		if (env?.type === 'text') {
 			appForm.querySelector('.inputs').innerHTML += inputTextTemplate({ env });
+			return;
+		}
+
+		if (env?.type === 'email') {
+			appForm.querySelector('.inputs').innerHTML += inputEmailTemplate({ env });
 			return;
 		}
 
