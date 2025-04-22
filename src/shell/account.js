@@ -1,16 +1,8 @@
 import accountPartial from 'shell/partials/account.html';
-import * as proxyService from 'shell/services/proxy';
+import * as dockerService from 'shell/services/docker';
 
 const accountTemplate = _.template(accountPartial);
 let authDomain = null;
-
-const changePassword = (event) => {
-	if (!event.target.classList.contains('change-password') || !authDomain) {
-		return;
-	}
-
-	event.preventDefault();
-};
 
 const logout = (event) => {
 	if (!event.target.classList.contains('sign-out') || !authDomain) {
@@ -28,12 +20,12 @@ const logout = (event) => {
 };
 
 const render = (state) => {
-	if (_.isNull(state.proxies)) {
+	if (_.isNull(state.containers)) {
 		return;
 	}
-
-	let auth = _.find(state.proxies, { forwardPort: 9091 });
-	authDomain = _.first(auth?.domainNames);
+	
+	let container = _.find(state.containers, { name: 'authelia' });
+	authDomain = dockerService.composeUrlFromLabels(container?.labables);
 	morphdom(
 		document.querySelector('#account'),
 		accountTemplate({ account, authDomain })
@@ -41,9 +33,9 @@ const render = (state) => {
 };
 
 const init = () => {
-	render({ proxies: proxyService.getProxies() });
+	render({ containers: dockerService.getContainers() });
 
-	proxyService.subscribe([render]);
+	dockerService.subscribe([render]);
 
 	document.body.addEventListener('click', logout);
 };

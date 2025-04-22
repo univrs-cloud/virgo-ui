@@ -59,6 +59,27 @@ class Docker extends Store {
 	performServiceAction(config) {
 		this.socket.emit('performServiceAction', config);
 	}
+
+	composeUrlFromLabels (labels) {
+		const hostKey = _.findKey(labels, (value) => {
+			return _.isString(value) && _.startsWith(value, 'Host');
+		});
+		if (!hostKey) {
+			return '';
+		}
+	
+		const hasTls = _.some(labels, (value, key) => {
+			return key === _.replace(hostKey, 'Rule', 'Entrypoints') && value === 'websecure';
+		});
+		const hostValue = labels[hostKey];
+		const host = _.get(hostValue.match(/Host\(`([^`]+)`\)/), 1);
+		const protocol = _.cond([
+			[() => hasTls, _.constant('https')],
+			[_.stubTrue, _.constant('http')]
+		])();
+		
+		return `${protocol}://${host}`;
+	}
 }
 
 export default new Docker();

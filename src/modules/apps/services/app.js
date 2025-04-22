@@ -1,4 +1,3 @@
-import Host from 'stores/host';
 import Docker from 'stores/docker';
 
 let callbackCollection = [];
@@ -7,11 +6,7 @@ const getSocket = () => {
 	return Docker.socket;
 };
 
-const composeUrlFromProxy = (proxy) => {
-	return `${proxy.sslForced ? 'https://' : 'http://'}${_.first(proxy.domainNames)}`;
-};
-
-const composeApps = (configured, containers, proxies) => {
+const composeApps = (configured, containers) => {
 	if (_.isNull(configured) || _.isNull(containers)) {
 		return null;
 	}
@@ -47,30 +42,15 @@ const composeApps = (configured, containers, proxies) => {
 				} else {
 					entity.state = 'warning';  // Some containers are running/restarting, others are not
 				}
-
-				let proxy = _.find(proxies, { forwardHost: entity.name });
-				if (!_.isEmpty(proxy)) {
-					entity.url = composeUrlFromProxy(proxy);
-				} else {
-					let ports = _.filter(container.ports, { ip: '0.0.0.0' });
-					if (!_.isEmpty(ports)) {
-						_.each(ports, (port) => {
-							let proxy = _.find(proxies, { forwardPort: port.publicPort });
-							if (!_.isEmpty(proxy)) {
-								entity.url = composeUrlFromProxy(proxy);
-							}
-						});
-					}
-				}
-
 				entity.ports = _.orderBy(_.filter(container.ports, { ip: '0.0.0.0' }), ['privatePort'], ['asc']);
+				entity.url = Docker.composeUrlFromLabels(container.labels);
 			}
 			return entity;
 		});
 }
 
 const getApps = () => {
-	return composeApps(Docker.getConfigured(), Docker.getContainers(), Host.getProxies());
+	return composeApps(Docker.getConfigured(), Docker.getContainers());
 };
 
 const performAppAction = (config) => {
@@ -82,7 +62,7 @@ const performServiceAction = (config) => {
 };
 
 const handleSubscription = (properties) => {
-	let apps = composeApps(properties.configured, properties.containers, properties.proxies);
+	let apps = composeApps(properties.configured, properties.containers);
 
 	_.each(callbackCollection, (callback) => {
 		callback({ apps });
@@ -92,7 +72,7 @@ const handleSubscription = (properties) => {
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 	
-	Docker.subscribeToProperties(['configured', 'containers', 'proxies'], handleSubscription);
+	Docker.subscribeToProperties(['configured', 'containers'], handleSubscription);
 };
 
 export {
