@@ -9,7 +9,6 @@ class Host extends Store {
 			checkUpdates: false,
 			updates: null,
 			upgrade: -1,
-			proxies: null,
 			cpuStats: null,
 			memory: null,
 			networkStats: null,
@@ -60,10 +59,6 @@ class Host extends Store {
 			this.setState({ system }, 'get_system');
 		});
 
-		this.socket.on('proxies', (proxies) => {
-			this.setState({ proxies }, 'get_proxies');
-		});
-
 		this.socket.on('cpuStats', (cpuStats) => {
 			this.setState({ cpuStats }, 'get_cpu_stats');
 		});
@@ -106,10 +101,6 @@ class Host extends Store {
 
 	completeUpgrade() {
 		this.socket.emit('completeUpgrade');
-	}
-
-	getProxies() {
-		return this.getStateProperty('proxies');
 	}
 
 	reboot() {

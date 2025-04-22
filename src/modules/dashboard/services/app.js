@@ -2,10 +2,6 @@ import Docker from 'stores/docker';
 
 let callbackCollection = [];
 
-const composeUrlFromProxy = (proxy) => {
-	return `${proxy.sslForced ? 'https://' : 'http://'}${_.first(proxy.domainNames)}`;
-};
-
 const performAction = (config) => {
 	Docker.performAction(config);
 };
@@ -42,20 +38,7 @@ const handleSubscription = (properties) => {
 					entity.state = 'warning';  // Some containers are running/restarting, others are not
 				}
 				
-				let proxy = _.find(properties.proxies, { forwardHost: entity.name });
-				if (!_.isEmpty(proxy)) {
-					entity.url = composeUrlFromProxy(proxy);
-				} else {
-					let ports = _.filter(container.ports, { ip: '0.0.0.0' });
-					if (!_.isEmpty(ports)) {
-						_.each(ports, (port) => {
-							let proxy = _.find(properties.proxies, { forwardPort: port.publicPort });
-							if (!_.isEmpty(proxy)) {
-								entity.url = composeUrlFromProxy(proxy);
-							}
-						});
-					}
-				}
+				entity.url = Docker.composeUrlFromLabels(container.labels);
 			}
 		}
 		return entity;
@@ -71,7 +54,7 @@ const handleSubscription = (properties) => {
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 	
-	Docker.subscribeToProperties(['configured', 'containers', 'proxies'], handleSubscription);
+	Docker.subscribeToProperties(['configured', 'containers'], handleSubscription);
 };
 
 export {
