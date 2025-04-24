@@ -25,7 +25,7 @@ const render = (state) => {
 	}
 	
 	let container = _.find(state.containers, { name: 'authelia' });
-	authDomain = dockerService.composeUrlFromLabels(container?.labables);
+	authDomain = dockerService.composeUrlFromLabels(container?.labels);
 	morphdom(
 		document.querySelector('#account'),
 		accountTemplate({ account, authDomain })
