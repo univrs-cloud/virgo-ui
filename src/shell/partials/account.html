@@ -1,7 +1,7 @@
 <div id="account">
 	<%if (!isAuthenticated) {%>
 		<%if (authDomain) {%>
-			<a href="https://<%=authDomain%>/?rd=<%=window.location%>" class="btn btn-sm btn-primary me-2">
+			<a href="<%=authDomain%>/?rd=<%=window.location%>" class="btn btn-sm btn-primary me-2">
 				<i class="icon-duotone icon-solid icon-person-to-portal icon-fw me-2"></i>
 				Sign in
 			</a>
