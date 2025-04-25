@@ -61,6 +61,10 @@ class Docker extends Store {
 		this.socket.emit('install', config);
 	}
 
+	update(config) {
+		this.socket.emit('update', config);
+	}
+
 	performAppAction(config) {
 		this.socket.emit('performAppAction', config);
 	}

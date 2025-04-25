@@ -59,6 +59,10 @@ const getApps = () => {
 	return composeApps(Docker.getConfigured(), Docker.getContainers(), Docker.getImageUpdates());
 };
 
+const update = (config) => {
+	Docker.update(config);
+};
+
 const performAppAction = (config) => {
 	Docker.performAppAction(config);
 };
@@ -85,6 +89,7 @@ export {
 	subscribe,
 	getSocket,
 	getApps,
+	update,
 	performAppAction,
 	performServiceAction
 };
