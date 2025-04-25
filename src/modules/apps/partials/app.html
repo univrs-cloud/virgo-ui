@@ -2,16 +2,23 @@
 	<div class="app card rounded-4 border-0 h-100 mb-0" data-name="<%=app.name%>">
 		<div class="card-body ps-0 py-1">
 			<div class="row g-0 align-items-center">
-				<div class="card-image card-spacer col-auto p-2 ">
+				<div class="card-image card-spacer col-auto p-2">
 					<img src="<%=(_.includes(app.icon, '/') ? app.icon : `/assets/img/apps/${app.icon}`)%>">
 				</div>
-				<div class="col flex-grow-1 text-truncate">
-					<%=app.title%>
+				<div class="col overflow-hidden">
+					<div class="d-flex align-items-center">
+						<div class="text-truncate"><%=app.title%></div>
+						<%if (app.hasUpdates) {%>
+							<div class="badge bd-green-100 rounded-pill ms-2" data-bs-toggle="tooltip" data-bs-original-title="Updates available">
+								<i class="icon-solid icon-download icon-fw"></i>
+							</div>
+						<%}%>
+					</div>
 				</div>
 				<%if (app.canBeRemoved) {%>
 					<div class="col-auto">
 						<div class="dropdown">
-							<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm">
+							<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm ms-2">
 								<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
 							</span>
 							<ul class="dropdown-menu">
@@ -27,7 +34,7 @@
 					</div>
 				<%}%>
 			</div>
-			<div class="position-absolute z-1 bottom-0 start-0 ms-2 mb-2">
+			<div class="position-absolute z-1 bottom-0 end-0 me-3 mb-2">
 				<div class="dropdown">
 					<span class="dropdown-toggle caret-off btn btn-sm expand">
 						<i class="icon-light icon-expand-wide icon-fw"></i>

@@ -4,8 +4,15 @@
 			<div class="card-image card-spacer col-auto p-2">
 				<img src="<%=(_.includes(app.icon, '/') ? app.icon : `/assets/img/apps/${app.icon}`)%>">
 			</div>
-			<div class="col flex-grow-1 text-truncate">
-				<%=app.title%>
+			<div class="col overflow-hidden">
+				<div class="d-flex align-items-center">
+					<div class="text-truncate"><%=app.title%></div>
+					<%if (app.hasUpdates) {%>
+						<div class="badge bd-green-100 rounded-pill ms-2">
+							<i class="icon-solid icon-download icon-fw"></i>
+						</div>
+					<%}%>
+				</div>
 			</div>
 		</div>
 	</div>

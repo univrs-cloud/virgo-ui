@@ -6,11 +6,11 @@ const getSocket = () => {
 	return Docker.socket;
 };
 
-const composeApps = (configured, containers) => {
+const composeApps = (configured, containers, imageUpdates) => {
 	if (_.isNull(configured) || _.isNull(containers)) {
 		return null;
 	}
-	
+
 	return _.map(
 		_.orderBy(
 			_.filter(configured.configuration, { type: 'app' }),
@@ -34,6 +34,12 @@ const composeApps = (configured, containers) => {
 				} else {
 					entity.projectContainers = [container];
 				}
+				entity.hasUpdates = _.some(imageUpdates, (imageName) => {
+					return _.some(entity.projectContainers, (container) => {
+						const containerImageName = container.image.split(':')[0];
+    					return containerImageName.startsWith(imageName);
+					});
+				});
 				let activeCount = _.size(_.filter(entity.projectContainers, (container) => { return _.includes(['running', 'restarting'], container.state); }));
 				if (activeCount === _.size(entity.projectContainers)) {
 					entity.state = 'success';  // All containers are running or restarting
@@ -50,7 +56,7 @@ const composeApps = (configured, containers) => {
 }
 
 const getApps = () => {
-	return composeApps(Docker.getConfigured(), Docker.getContainers());
+	return composeApps(Docker.getConfigured(), Docker.getContainers(), Docker.getImageUpdates());
 };
 
 const performAppAction = (config) => {
@@ -62,7 +68,7 @@ const performServiceAction = (config) => {
 };
 
 const handleSubscription = (properties) => {
-	let apps = composeApps(properties.configured, properties.containers);
+	let apps = composeApps(properties.configured, properties.containers, properties.imageUpdates);
 
 	_.each(callbackCollection, (callback) => {
 		callback({ apps });
@@ -72,7 +78,7 @@ const handleSubscription = (properties) => {
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 	
-	Docker.subscribeToProperties(['configured', 'containers'], handleSubscription);
+	Docker.subscribeToProperties(['configured', 'containers', 'imageUpdates'], handleSubscription);
 };
 
 export {

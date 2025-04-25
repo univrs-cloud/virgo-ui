@@ -29,6 +29,12 @@ const handleSubscription = (properties) => {
 				} else {
 					entity.projectContainers = [container];
 				}
+				entity.hasUpdates = _.some(properties.imageUpdates, (imageName) => {
+					return _.some(entity.projectContainers, (container) => {
+						const containerImageName = container.image.split(':')[0];
+    					return containerImageName.startsWith(imageName);
+					});
+				});
 				let activeCount = _.size(_.filter(entity.projectContainers, (container) => { return _.includes(['running', 'restarting'], container.state); }));
 				if (activeCount === _.size(entity.projectContainers)) {
 					entity.state = 'success';  // All containers are running or restarting
@@ -54,7 +60,7 @@ const handleSubscription = (properties) => {
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 	
-	Docker.subscribeToProperties(['configured', 'containers'], handleSubscription);
+	Docker.subscribeToProperties(['configured', 'containers', 'imageUpdates'], handleSubscription);
 };
 
 export {
