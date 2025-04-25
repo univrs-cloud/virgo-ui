@@ -15,20 +15,28 @@
 						<%}%>
 					</div>
 				</div>
-				<%if (app.canBeRemoved) {%>
+				<%if (app.canBeRemoved || app.hasUpdates) {%>
 					<div class="col-auto">
 						<div class="dropdown">
 							<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm ms-2">
 								<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
 							</span>
 							<ul class="dropdown-menu">
-								<li><a href="#" class="dropdown-item <%=(app.state === 'success' ? 'disabled' : '')%>" data-action="start">Start</a></li>
-								<li><hr class="dropdown-divider"></li>
-								<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="stop">Stop</a></li>
-								<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="kill">Kill</a></li>
-								<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="restart">Restart</a></li>
-								<li><hr class="dropdown-divider"></li>
-								<li><a href="#" class="dropdown-item <%=(app.canBeRemoved ? 'text-danger' : 'disabled')%>" data-action="remove">Remove</a></li>
+								<%if (app.hasUpdates) {%>
+									<li><a href="#" class="update dropdown-item">Update</a></li>
+								<%}%>
+								<%if (app.canBeRemoved && app.hasUpdates) {%>
+									<li><hr class="dropdown-divider"></li>
+								<%}%>
+								<%if (app.canBeRemoved) {%>
+									<li><a href="#" class="dropdown-item <%=(app.state === 'success' ? 'disabled' : '')%>" data-action="start">Start</a></li>
+									<li><hr class="dropdown-divider"></li>
+									<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="stop">Stop</a></li>
+									<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="kill">Kill</a></li>
+									<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="restart">Restart</a></li>
+									<li><hr class="dropdown-divider"></li>
+									<li><a href="#" class="dropdown-item <%=(app.canBeRemoved ? 'text-danger' : 'disabled')%>" data-action="remove">Remove</a></li>
+								<%}%>
 							</ul>
 						</div>
 					</div>

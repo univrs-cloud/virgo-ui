@@ -36,12 +36,32 @@ const compress = (event) => {
 	item.closest('.row').classList.remove('expand');
 };
 
+const update = (event) => {
+	if (!_.isNull(event.target.closest('.service'))) {
+		return;
+	}
+
+	if (!event.target.closest('a')?.classList.contains('update')) {
+		return;
+	}
+
+	event.preventDefault();
+	let button = event.target;
+	let card = button.closest('.app');
+	let app = _.find(appService.getApps(), { name: card.dataset.name });
+
+	let config = {
+		name: app.name
+	};
+	appService.update(config);
+};
+
 const performAppAction = (event) => {
 	if (!_.isNull(event.target.closest('.service'))) {
 		return;
 	}
 
-	if (!event.target.closest('a')?.classList.contains('dropdown-item')) {
+	if (!event.target.closest('a')?.classList.contains('dropdown-item') || event.target.closest('a').dataset.action === undefined) {
 		return;
 	}
 
@@ -131,6 +151,7 @@ appService.subscribe([render]);
 
 module.addEventListener('click', expand);
 module.addEventListener('click', compress);
+module.addEventListener('click', update);
 module.addEventListener('click', performAppAction);
 module.addEventListener('click', performServiceAction);
 
