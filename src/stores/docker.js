@@ -5,6 +5,7 @@ class Docker extends Store {
 		const initialState = {
 			configured: null,
 			containers: null,
+			imageUpdates: null,
 			templates: null
 		};
 		super({
@@ -31,6 +32,10 @@ class Docker extends Store {
 			this.setState({ containers }, 'set_containers');
 		});
 
+		this.socket.on('updates', (imageUpdates) => {
+			this.setState({ imageUpdates }, 'set_container_updates');
+		});
+
 		this.socket.on('templates', (templates) => {
 			this.setState({ templates }, 'set_templates');
 		});
@@ -42,6 +47,10 @@ class Docker extends Store {
 
 	getContainers() {
 		return this.getStateProperty('containers');
+	}
+
+	getImageUpdates() {
+		return this.getStateProperty('imageUpdates');
 	}
 
 	getTemplates() {
