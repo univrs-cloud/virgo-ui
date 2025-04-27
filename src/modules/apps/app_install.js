@@ -77,7 +77,7 @@ const render = (event) => {
 		}
 
 		if (env?.type === 'text') {
-			appForm.querySelector('.inputs').innerHTML += inputTextTemplate({ env });
+			appForm.querySelector('.inputs').innerHTML += inputTextTemplate({ env, prefix: env?.prefix, suffix: env?.suffix });
 			return;
 		}
 
