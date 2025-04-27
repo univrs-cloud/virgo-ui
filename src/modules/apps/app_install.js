@@ -70,6 +70,7 @@ const render = (event) => {
 	app = _.find(appCenterService.getTemplates(), { id: Number(id) });
 	appForm.querySelector('.modal-title').innerHTML = app.title;
 	appForm.querySelector('.description').innerHTML = app.description;
+	let domain = appCenterService.getDomain();
 	_.each(app.env, (env) => {
 		if (env?.type === 'hidden') {
 			appForm.querySelector('.inputs').innerHTML += inputHiddenTemplate({ env });
@@ -77,6 +78,9 @@ const render = (event) => {
 		}
 
 		if (env?.type === 'text') {
+			if (env.name.toLowerCase() === 'domain') {
+				env.default = domain;
+			}
 			appForm.querySelector('.inputs').innerHTML += inputTextTemplate({ env, prefix: env?.prefix, suffix: env?.suffix });
 			return;
 		}
