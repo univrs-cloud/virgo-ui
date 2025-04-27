@@ -1,7 +1,13 @@
+import Host from 'stores/host';
 import Docker from 'stores/docker';
 
 let callbackCollection = [];
 let subscription = null;
+
+const getDomain = () => {
+	let system = Host.getSystem();
+	return system.osInfo.fqdn;
+};
 
 const getTemplates = () => {
 	return Docker.getTemplates();
@@ -38,6 +44,7 @@ const unsubscribe = () => {
 export {
 	subscribe,
 	unsubscribe,
+	getDomain,
 	getTemplates,
 	install
 };

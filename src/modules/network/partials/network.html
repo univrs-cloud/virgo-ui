@@ -10,7 +10,7 @@
 					<dt class="fw-lighter"><small>Hostname</small></dt>
 					<dd><%=system.osInfo.hostname%></dd>
 					<dt class="fw-lighter"><small>Domain name</small></dt>
-					<dd class="m-0"><%=tldts.getDomain(system.osInfo.fqdn, { extractHostname: false }) || '&mdash;'%></dd>
+					<dd class="m-0"><%=_.replace(system.osInfo.fqdn, `${system.osInfo.hostname}.`, '') || '&mdash;'%></dd>
 				</dl>
 			</div>
 		</div>
