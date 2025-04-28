@@ -37,7 +37,7 @@ const composeApps = (configured, containers, imageUpdates) => {
 				entity.hasUpdates = _.some(imageUpdates, (imageName) => {
 					return _.some(entity.projectContainers, (container) => {
 						const containerImageName = container.image.split(':')[0];
-    					return containerImageName.startsWith(imageName);
+    					return _.includes(containerImageName, imageName);
 					});
 				});
 				let activeCount = _.size(_.filter(entity.projectContainers, (container) => { return _.includes(['running', 'restarting'], container.state); }));

@@ -33,7 +33,7 @@ const validateField = (field) => {
 };
 
 const validateForm = () => {
-	_.each(appForm.querySelectorAll('input, textarea'), (field) => {
+	_.each(appForm.querySelectorAll('input:not([type="radio"]):not([type="checkbox"]), textarea'), (field) => {
 		validateField(field);
 	});
 };
