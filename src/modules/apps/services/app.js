@@ -34,10 +34,9 @@ const composeApps = (configured, containers, imageUpdates) => {
 				} else {
 					entity.projectContainers = [container];
 				}
-				entity.hasUpdates = _.some(imageUpdates, (imageName) => {
+				entity.hasUpdates = _.some(imageUpdates, ({ imageName, containerId }) => {
 					return _.some(entity.projectContainers, (container) => {
-						const containerImageName = container.image.split(':')[0];
-    					return _.includes(containerImageName, imageName);
+						return container.id === containerId;
 					});
 				});
 				let activeCount = _.size(_.filter(entity.projectContainers, (container) => { return _.includes(['running', 'restarting'], container.state); }));
