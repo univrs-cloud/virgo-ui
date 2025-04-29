@@ -82,7 +82,7 @@ class Docker extends Store {
 		}
 	
 		const hasTls = _.some(labels, (value, key) => {
-			return key === _.replace(hostKey, 'Rule', 'Entrypoints') && value === 'websecure';
+			return key === _.replace(hostKey, 'Rule', 'Entrypoints') && value === 'https';
 		});
 		const hostValue = labels[hostKey];
 		const host = _.get(hostValue.match(/Host\(`([^`]+)`\)/), 1);
