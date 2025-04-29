@@ -10,7 +10,6 @@ const logout = (event) => {
 	}
 	
 	event.preventDefault();
-	console.log(authDomain);
 	location = `${authDomain}/logout`;
 	// axios.post(`${authDomain}/api/logout`, null, { withCredentials: true })
 	// 	.then(() => { })
