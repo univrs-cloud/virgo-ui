@@ -10,8 +10,9 @@ const logout = (event) => {
 	}
 	
 	event.preventDefault();
-	location = `https://${authDomain}/logout`;
-	// axios.post(`https://${authDomain}/api/logout`, null, { withCredentials: true })
+	console.log(authDomain);
+	location = `${authDomain}/logout`;
+	// axios.post(`${authDomain}/api/logout`, null, { withCredentials: true })
 	// 	.then(() => { })
 	// 	.catch((error) => { })
 	// 	.then(() => {
