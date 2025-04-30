@@ -1,5 +1,6 @@
 import * as appService from 'modules/apps/services/app';
 import { Terminal } from '@xterm/xterm';
+import { CanvasAddon } from '@xterm/addon-canvas';
 import { FitAddon } from '@xterm/addon-fit';
 
 const socket = appService.getSocket();
@@ -59,6 +60,7 @@ const restore = () => {
 
 socket.on('terminalConnected', () => {
 	if (!terminal) {
+		fitAddon = new FitAddon();
 		terminal = new Terminal({
 			screenKeys: true,
 			useStyle: true,
@@ -66,12 +68,15 @@ socket.on('terminalConnected', () => {
 			cursorStyle: 'bar',
 			allowTransparency: true
 		});
-		fitAddon = new FitAddon();
+		terminal.loadAddon(new CanvasAddon());
 		terminal.loadAddon(fitAddon);
 		terminal.open(terminalContainer);
 		terminal.focus();
 		terminal.onData((data) => {
 			socket.emit('terminalInput', data);
+		});
+		terminal.onResize((size) => {
+			socket.emit('terminalResize', { cols: size.cols, rows: size.rows });
 		});
 		resize();
 	} else {
