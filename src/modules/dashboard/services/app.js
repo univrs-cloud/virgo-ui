@@ -29,10 +29,9 @@ const handleSubscription = (properties) => {
 				} else {
 					entity.projectContainers = [container];
 				}
-				entity.hasUpdates = _.some(properties.imageUpdates, (imageName) => {
+				entity.hasUpdates = _.some(imageUpdates, ({ imageName, containerId }) => {
 					return _.some(entity.projectContainers, (container) => {
-						const containerImageName = container.image.split(':')[0];
-    					return containerImageName.startsWith(imageName);
+						return container.id === containerId;
 					});
 				});
 				let activeCount = _.size(_.filter(entity.projectContainers, (container) => { return _.includes(['running', 'restarting'], container.state); }));
