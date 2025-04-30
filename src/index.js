@@ -34,27 +34,25 @@ try {
 }
 window.isAuthenticated = !_.isEmpty(account);
 
-const render = (state) => {
+const render = async (state) => {
 	if (state.upgrade === -1) {
 		return;
 	}
 	
 	if (!isAuthenticated || _.isNull(state.upgrade)) {
-		Promise.allSettled([
-			import('shell/header'),
-			import('shell/main')
-		])
-			.then(() => {
-				import('modules')
-					.then(({ modulesLoaded }) => {
-						modulesLoaded
-							.then(() => {
-								page.start({ hashbang: true });
-							});
-					});
-			});
+		try {
+			await Promise.allSettled([
+				import('shell/header'),
+				import('shell/main')
+			]);
+			const { modulesLoaded } = await import('modules');
+			await modulesLoaded;
+			page.start({ hashbang: true });
+		} catch (error) {
+			console.error('Error during application initialization:', error);
+		}
 	} else {
-		import('shell/upgrade');
+		await import('shell/upgrade');
 	}
 
 	bootstrapService.unsubscribe();

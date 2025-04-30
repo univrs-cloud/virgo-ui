@@ -294,7 +294,7 @@ let fetchRetries = 5;
 let fetchDelay = 60000;
 let request = null;
 
-const fetchData = (state) => {
+const fetchData = async (state) => {
 	if (request || _.isNull(state.configuration) || _.isUndefined(state.configuration.location) || _.isEmpty(state.configuration.location)) {
 		return;
 	}
@@ -302,25 +302,24 @@ const fetchData = (state) => {
 	let latitude = state.configuration.location.latitude;
 	let longitude = state.configuration.location.longitude;
 
-	request = axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=sunrise,sunset&current_weather=true&temperature_unit=celsius`)
-		.then((response) => {
-			fetchRetries = 5;
-			fetchDelay = 60000;
-			render(response.data);
-		})
-		.catch((error) => {
-			console.log(error);
-			fetchRetries--;
-			fetchDelay = 1000;
-		})
-		.then(() => {
-			request = null;
-			if (fetchRetries > 0) {
-				setTimeout(() => {
-					fetchData({ configuration: configurationService.getConfiguration() });
-				}, fetchDelay);
-			}
-		});
+	try {
+		request = true;
+		const response = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=sunrise,sunset&current_weather=true&temperature_unit=celsius`);
+		fetchRetries = 5;
+		fetchDelay = 60000;
+		render(response.data);
+	} catch (error) {
+		console.log(error);
+		fetchRetries--;
+		fetchDelay = 1000;
+	} finally {	
+		request = null;
+		if (fetchRetries > 0) {
+			setTimeout(() => {
+				fetchData({ configuration: configurationService.getConfiguration() });
+			}, fetchDelay);
+		}
+	};
 };
 
 const render = (state) => {

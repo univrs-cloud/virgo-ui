@@ -11,12 +11,6 @@ const logout = (event) => {
 	
 	event.preventDefault();
 	location = `${authDomain}/logout`;
-	// axios.post(`${authDomain}/api/logout`, null, { withCredentials: true })
-	// 	.then(() => { })
-	// 	.catch((error) => { })
-	// 	.then(() => {
-	// 		location.reload();
-	// 	});
 };
 
 const render = (state) => {
