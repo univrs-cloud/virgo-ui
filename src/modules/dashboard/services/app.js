@@ -29,7 +29,7 @@ const handleSubscription = (properties) => {
 				} else {
 					entity.projectContainers = [container];
 				}
-				entity.hasUpdates = _.some(imageUpdates, ({ imageName, containerId }) => {
+				entity.hasUpdates = _.some(properties.imageUpdates, ({ imageName, containerId }) => {
 					return _.some(entity.projectContainers, (container) => {
 						return container.id === containerId;
 					});
