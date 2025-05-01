@@ -12,6 +12,16 @@ let loading = module.querySelector('.loading');
 let container = module.querySelector('.container-fluid');
 let row = container.querySelector('.row');
 
+const checkUpdates = (event) => {
+	let target = event.target.closest('.check-updates');
+	if (_.isNull(target) || target.classList.contains('cursor-default')) {
+		return;
+	}
+
+	event.preventDefault();
+	softwareService.checkUpdates();
+};
+
 const upgrade = (event) => {
 	if (!isAuthenticated) {
 		return;
@@ -31,14 +41,14 @@ const render = (state) => {
 	if (_.isNull(state.updates)) {
 		return;
 	}
-	
+
 	let template = document.createElement('template');
 	if (_.isEmpty(state.updates)) {
 		template.innerHTML = emptyTemplate();
 	} else {
-		template.innerHTML += updatesTemplate({ updates: state.updates });
+		template.innerHTML += updatesTemplate({ checkUpdates: state.checkUpdates, updates: state.updates });
 	}
-	
+
 	morphdom(
 		row,
 		`<div>${template.innerHTML}</div>`,
@@ -54,6 +64,7 @@ render({
 	updates: softwareService.getUpdates()
 });
 
+container.addEventListener('click', checkUpdates);
 container.addEventListener('click', upgrade);
 
 softwareService.subscribe([render]);

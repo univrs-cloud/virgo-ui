@@ -7,7 +7,12 @@
 					<li><%=update.package%> <small class="text-secondary">(<%=update.version.installed%> &rarr; <%=update.version.upgradableTo%>)</small></li>
 				<%})%>
 			</ul>
-			<button type="button" class="install btn btn-primary d-flex ms-auto">Upgrade now</button>
+			<div class="d-flex align-items-center">
+				<a href="#" class="check-updates btn btn-sm me-auto <%=(checkUpdates ? 'cursor-default' : '')%>">
+					<i class="icon-solid icon-arrows-rotate ${(checkUpdates ? 'icon-spin' : '')} me-1" style="color: var(--bs-green);"></i> Check for new updates
+				</a>
+				<button type="button" class="install btn btn-primary ms-auto" <%=(checkUpdates ? 'disabled' : '')%>>Upgrade now</button>
+			</div>
 		</div>
 	</div>
 </div>
