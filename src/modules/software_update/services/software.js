@@ -10,6 +10,10 @@ const getUpdates = () => {
 	return Host.getUpdates();
 };
 
+const checkUpdates = () => {
+	return Host.checkUpdates();
+};
+
 const upgrade = () => {
 	return Host.upgrade();
 };
@@ -30,5 +34,6 @@ export {
 	subscribe,
 	getCheckUpdates,
 	getUpdates,
+	checkUpdates,
 	upgrade
 };
