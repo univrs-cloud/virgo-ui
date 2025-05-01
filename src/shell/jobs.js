@@ -24,11 +24,12 @@ const render = (state) => {
 			toastColor = 'red';
 		}
 		let toast = `
-		<div id="toast-${job.id}" class="toast ${job.progress.state} bd-${toastColor}-500 border-0 ${(hasToast ? 'fade show' : '')}" data-bs-autohide="${toastAutoHide}">
+		<div id="toast-${job.id}" class="toast ${job.progress.state} bd-${toastColor}-500 border-0 ${(hasToast ? 'fade show' : '')}" data-bs-autohide="${toastAutoHide}" data-bs-delay="8000">
 			<div class="d-flex">
 				<div class="toast-body">
-					${job.progress.message}
-					${(job.progress.state === 'failed' ? job.failedReason : '')}
+					<strong>${job.progress.message}</strong>
+					<div>${(job.progress.state === 'failed' ? job.failedReason : '')}</div>
+					<div><small class="text-${toastColor}-100">${(job.progress.state === 'active' ? moment(job.processedOn).format('LLL') : moment(job.finishedOn).format('LLL'))}</small></div>
 				</div>
 				<button type="button" class="btn-close btn-close-white me-2 m-auto ${(job.progress.state === 'active' ? 'd-none' : '')}" data-bs-dismiss="toast"></button>
 			</div>
