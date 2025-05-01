@@ -76,7 +76,6 @@ img {
 }
 
 .toast-container {
-	z-index: 9999;
 	> :not(:last-child) {
 		margin-bottom: map-get($spacers, 2);
 	}
