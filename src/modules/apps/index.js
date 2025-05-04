@@ -116,7 +116,8 @@ const render = (state) => {
 		template.innerHTML = emptyTemplate();
 	} else {
 		_.each(state.apps, (app) => {
-			template.innerHTML += appTemplate({ app });
+			let jobs = _.filter(state.jobs, (job) => { return job.data.config.name === app.name && job.progress?.state === 'active'; });
+			template.innerHTML += appTemplate({ app, jobs });
 		});
 	}
 	
@@ -145,7 +146,7 @@ const render = (state) => {
 	container.classList.remove('d-none');
 };
 
-render({ apps: appService.getApps() });
+render({ apps: appService.getApps(), jobs: appService.getJobs() });
 
 appService.subscribe([render]);
 

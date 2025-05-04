@@ -15,7 +15,14 @@
 						<%}%>
 					</div>
 				</div>
-				<%if (app.canBeRemoved || app.hasUpdates) {%>
+				<%if (!_.isEmpty(jobs)) {%>
+					<div class="col-auto">
+						<span class="btn btn-sm pe-none ms-2">
+							<i class="icon-solid icon-gear icon-fw icon-spin"></i>
+						</span>
+					</div>
+				<%}%>
+				<%if ((app.canBeRemoved || app.hasUpdates) && _.isEmpty(jobs)) {%>
 					<div class="col-auto">
 						<div class="dropdown">
 							<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm ms-2">
