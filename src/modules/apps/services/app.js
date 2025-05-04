@@ -1,9 +1,18 @@
 import Docker from 'stores/docker';
+import Job from 'stores/job';
 
 let callbackCollection = [];
 
 const getSocket = () => {
 	return Docker.socket;
+};
+
+const getJobs = () => {
+	return Job.getJobs();
+};
+
+const getApps = () => {
+	return composeApps(Docker.getConfigured(), Docker.getContainers(), Docker.getImageUpdates());
 };
 
 const composeApps = (configured, containers, imageUpdates) => {
@@ -54,10 +63,6 @@ const composeApps = (configured, containers, imageUpdates) => {
 		});
 }
 
-const getApps = () => {
-	return composeApps(Docker.getConfigured(), Docker.getContainers(), Docker.getImageUpdates());
-};
-
 const update = (config) => {
 	Docker.update(config);
 };
@@ -74,19 +79,20 @@ const handleSubscription = (properties) => {
 	let apps = composeApps(properties.configured, properties.containers, properties.imageUpdates);
 
 	_.each(callbackCollection, (callback) => {
-		callback({ apps });
+		callback({ apps, jobs: properties.jobs });
 	});
 };
 
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 	
-	Docker.subscribeToProperties(['configured', 'containers', 'imageUpdates'], handleSubscription);
+	Docker.subscribeToProperties(['configured', 'containers', 'imageUpdates', 'jobs'], handleSubscription);
 };
 
 export {
 	subscribe,
 	getSocket,
+	getJobs,
 	getApps,
 	update,
 	performAppAction,
