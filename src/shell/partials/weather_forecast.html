@@ -1,0 +1,26 @@
+<div>
+	<div class="widget-small-content-bounds">
+		<div class="size-h2 color-highlight text-center">{{ .Weather.WeatherCodeAsString }}</div>
+	
+		<div class="weather-columns d-flex mt-4 justify-content-center">
+			{{ range $i, $column := .Weather.Columns }}
+				<div class="weather-column {{ if eq $i $.Weather.CurrentColumn }} weather-column-current {{ end }}">
+					{{ if $column.HasPrecipitation }}
+						<div class="weather-column-rain"></div>
+					{{ end }}
+					{{ if and (ge $i $.Weather.SunriseColumn) (le $i $.Weather.SunsetColumn ) }}
+						<div class="weather-column-daylight {{ if eq $i $.Weather.SunriseColumn }} weather-column-daylight-sunrise {{ else if eq $i $.Weather.SunsetColumn }} weather-column-daylight-sunset{{ end }}"></div>
+					{{ end }}
+					<div class="weather-column-value {{ if lt $column.Temperature 0 }} weather-column-value-negative {{ end }}">{{ $column.Temperature | absInt }}</div>
+					<div class="weather-bar" style='--weather-bar-height: {{ printf "%.2f" $column.Scale }}'></div>
+					<div class="weather-column-time">{{ index $.TimeLabels $i }}</div>
+				</div>
+			{{ end }}
+		</div>
+		
+		<div class="d-flex align-items-center justify-content-center mt-4">
+			<i class="icon-solid icon-location-dot me-2"></i>
+			<span>Timisoara, Romania</span>
+		</div>
+	</div>
+</div>

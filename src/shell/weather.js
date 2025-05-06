@@ -1,4 +1,5 @@
 import weatherPartial from 'shell/partials/weather.html';
+import weatherForecastPartial from 'shell/partials/weather_forecast.html';
 import * as configurationService from 'shell/services/configuration';
 
 // see https://open-meteo.com/en/docs
@@ -30,6 +31,7 @@ import iconOvercastSnow from 'assets/img/weather/overcast-snow.svg';
 import iconSnow from 'assets/img/weather/snow.svg';
 import iconThunderstormsOvercast from 'assets/img/weather/thunderstorms-overcast.svg';
 import iconThunderstormsExtremeRain from 'assets/img/weather/thunderstorms-extreme-rain.svg';
+import morphdom from 'morphdom';
 
 const wmo = {
 	"0-day": "Sunny",
@@ -290,7 +292,9 @@ const conditions = [
 ];
 
 const container = document.querySelector('#weather');
+const weatherForecast = document.querySelector('#weather-forecast');
 const weatherTemplate = _.template(weatherPartial);
+const weatherForecastTemplate = _.template(weatherForecastPartial);
 let fetchRetries = 5;
 let fetchDelay = 60000;
 let request = null;
@@ -324,7 +328,6 @@ const fetchData = async (state) => {
 };
 
 const render = (state) => {
-	console.log(state.weather);
 	if (_.isUndefined(state.weather.current_weather)) {
 		return;
 	}
@@ -335,6 +338,11 @@ const render = (state) => {
 	morphdom(
 		container,
 		weatherTemplate({ weather })
+	);
+	morphdom(
+		weatherForecast,
+		weatherForecastTemplate(),
+		{ childrenOnly: true }
 	);
 
 	function weatherCondition(weatherStatusCode, timeOfDay) {
@@ -348,7 +356,8 @@ const render = (state) => {
 
 const popover = new bootstrap.Popover(container, {
 	content: () => {
-		return document.querySelector('#weather-forecast').innerHTML;
+		return '';
+		// return weatherForecast.innerHTML;
 	},
 	html: true,
 	trigger: 'hover',
