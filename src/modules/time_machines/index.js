@@ -76,8 +76,6 @@ const render = (state) => {
 	});
 };
 
-render({ timeMachines: timeMachineService.getTimeMachines(), networkInterface: timeMachineService.getSystem().networkInterface, bytes });
+module.addEventListener('click', copyToClipboard);
 
 timeMachineService.subscribe([render]);
-
-module.addEventListener('click', copyToClipboard);

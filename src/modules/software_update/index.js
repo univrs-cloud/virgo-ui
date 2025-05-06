@@ -59,11 +59,6 @@ const render = (state) => {
 	container.classList.remove('d-none');
 };
 
-render({
-	checkUpdates: softwareService.getCheckUpdates(),
-	updates: softwareService.getUpdates()
-});
-
 container.addEventListener('click', checkUpdates);
 container.addEventListener('click', upgrade);
 

@@ -31,8 +31,6 @@ const render = (state) => {
 	container.classList.remove('d-none');
 };
 
-render({ users: userService.getUsers() });
-
 userService.subscribe([render]);
 
 import('modules/users/profile/profile');

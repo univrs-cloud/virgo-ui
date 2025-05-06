@@ -60,10 +60,10 @@ const wmo = {
 	"63-night": "Rain",
 	"65-day": "Heavy Rain",
 	"65-night": "Heavy Rain",
-	"66-day": "Freezing Rain",
-	"66-night": "Freezing Rain",
-	"67-day": "Freezing Rain",
-	"67-night": "Freezing Rain",
+	"66-day": "Light Freezing Rain",
+	"66-night": "Light Freezing Rain",
+	"67-day": "Heavy Freezing Rain",
+	"67-night": "Heavy Freezing Rain",
 	"71-day": "Light Snow",
 	"71-night": "Light Snow",
 	"73-day": "Snow",
@@ -72,16 +72,16 @@ const wmo = {
 	"75-night": "Heavy Snow",
 	"77-day": "Snow Grains",
 	"77-night": "Snow Grains",
-	"80-day": "Light Showers",
-	"80-night": "Light Showers",
-	"81-day": "Showers",
-	"81-night": "Showers",
-	"82-day": "Heavy Showers",
-	"82-night": "Heavy Showers",
-	"85-day": "Snow Showers",
-	"85-night": "Snow Showers",
-	"86-day": "Snow Showers",
-	"86-night": "Snow Showers",
+	"80-day": "Slight Rain Showers",
+	"80-night": "Slight Rain Showers",
+	"81-day": "Rain Showers",
+	"81-night": "Rain Showers",
+	"82-day": "Violent Rain Showers",
+	"82-night": "Violent Rain Showers",
+	"85-day": "Slight Snow Showers",
+	"85-night": "Slight Snow Showers",
+	"86-day": "Heavy Snow Showers",
+	"86-night": "HeavySnow Showers",
 	"95-day": "Thunderstorm",
 	"95-night": "Thunderstorm",
 	"96-day": "Thunderstorm With Hail",
@@ -289,6 +289,7 @@ const conditions = [
 	}
 ];
 
+const container = document.querySelector('#weather');
 const weatherTemplate = _.template(weatherPartial);
 let fetchRetries = 5;
 let fetchDelay = 60000;
@@ -299,20 +300,20 @@ const fetchData = async (state) => {
 		return;
 	}
 
-	let latitude = state.configuration.location.latitude;
-	let longitude = state.configuration.location.longitude;
+	const latitude = state.configuration.location.latitude;
+	const longitude = state.configuration.location.longitude;
 
 	try {
 		request = true;
-		const response = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=sunrise,sunset&current_weather=true&temperature_unit=celsius`);
+		const weather = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=sunrise,sunset,temperature_2m_max,temperature_2m_min&current_weather=true&temperature_unit=celsius&timezone=auto`);
 		fetchRetries = 5;
 		fetchDelay = 60000;
-		render(response.data);
+		render({ location: null, weather: weather.data });
 	} catch (error) {
 		console.log(error);
 		fetchRetries--;
 		fetchDelay = 1000;
-	} finally {	
+	} finally {
 		request = null;
 		if (fetchRetries > 0) {
 			setTimeout(() => {
@@ -323,15 +324,16 @@ const fetchData = async (state) => {
 };
 
 const render = (state) => {
-	if (_.isUndefined(state.current_weather)) {
+	console.log(state.weather);
+	if (_.isUndefined(state.weather.current_weather)) {
 		return;
 	}
 
-	let timeOfDay = (state.current_weather.time > state.daily.sunrise[0] && state.current_weather.time < state.daily.sunset[0] ? 'day' : 'night');
-	let weather = weatherCondition(state.current_weather.weathercode, timeOfDay);
-	weather.temperature = `${state.current_weather.temperature?.toFixed(0)} ${state.current_weather_units.temperature}`;
+	let timeOfDay = (state.weather.current_weather.time > state.weather.daily.sunrise[0] && state.weather.current_weather.time < state.weather.daily.sunset[0] ? 'day' : 'night');
+	let weather = weatherCondition(state.weather.current_weather.weathercode, timeOfDay);
+	weather.temperature = `${state.weather.current_weather.temperature?.toFixed(0)} ${state.weather.current_weather_units.temperature}`;
 	morphdom(
-		document.querySelector('#weather'),
+		container,
 		weatherTemplate({ weather })
 	);
 
@@ -344,12 +346,13 @@ const render = (state) => {
 	};
 };
 
-const init = () => {
-	fetchData({ configuration: configurationService.getConfiguration() });
+const popover = new bootstrap.Popover(container, {
+	content: () => {
+		return document.querySelector('#weather-forecast').innerHTML;
+	},
+	html: true,
+	trigger: 'hover',
+	placement: 'bottom'
+});
 
-	configurationService.subscribe([fetchData]);
-};
-
-export {
-	init
-};
+configurationService.subscribe([fetchData]);

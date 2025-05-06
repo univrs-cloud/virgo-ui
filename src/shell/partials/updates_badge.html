@@ -7,7 +7,7 @@ if (isAuthenticated) {
 				<span class="${(checkUpdates ? 'd-none' : '')}">No updates available</span>
 				<span class="${(!checkUpdates ? 'd-none' : '')}">Checking for updates...</span>
 				<span class="vr mx-2"></span>
-				<a href="#" class="check-updates ${(checkUpdates ? 'cursor-default' : '')}" data-bs-toggle="tooltip" data-bs-original-title="${(!checkUpdates ? 'Check for updates' : '')}">
+				<a href="#" class="check-updates ${(checkUpdates ? 'pe-none' : '')}" data-bs-toggle="tooltip" data-bs-original-title="${(!checkUpdates ? 'Check for updates' : '')}">
 					<i class="icon-solid icon-arrows-rotate ${(checkUpdates ? 'icon-spin' : '')}" style="color: var(--bs-green);"></i>
 				</a>
 			</span>

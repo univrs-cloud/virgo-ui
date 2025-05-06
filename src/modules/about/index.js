@@ -33,6 +33,4 @@ const render = (state) => {
 	container.classList.remove('d-none');
 };
 
-render({ system: aboutService.getSystem(), memory: aboutService.getMemory(), drives: aboutService.getDrives() });
-
 aboutService.subscribe([render]);

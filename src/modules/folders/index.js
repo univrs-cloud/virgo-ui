@@ -81,9 +81,7 @@ const render = (state) => {
 	container.classList.remove('d-none');
 };
 
-render({ folders: folderService.getFolders(), networkInterface: folderService.getSystem().networkInterface, bytes });
-
-folderService.subscribe([render]);
-
 module.addEventListener('click', copyToClipboard);
 module.addEventListener('click', remove);
+
+folderService.subscribe([render]);
