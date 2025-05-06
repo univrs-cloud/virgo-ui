@@ -55,6 +55,4 @@ const render = (state) => {
 	});
 };
 
-render({ bookmarks: bookmarkService.getBookmarks() });
-
 bookmarkService.subscribe([render]);

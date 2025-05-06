@@ -65,11 +65,9 @@ const render = (state) => {
 	interfaceForm.querySelector('.netmask').value = block?.bitmask ?? 'error';
 };
 
-render({ system: networkService.getSystem() });
-
-networkService.subscribe([render]);
-
 gatewayForm.addEventListener('submit', setGateway);
 hostForm.addEventListener('submit', setHost);
 interfaceForm.addEventListener('submit', setInterface);
 interfaceForm.querySelector('.dhcp').addEventListener('change', toggleDhcp);
+
+networkService.subscribe([render]);

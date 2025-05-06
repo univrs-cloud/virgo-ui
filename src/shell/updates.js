@@ -27,11 +27,6 @@ const render = (state) => {
 };
 
 const init = () => {
-	render({
-		checkUpdates: softwareService.getCheckUpdates(),
-		updates: softwareService.getUpdates()
-	});
-
 	container.addEventListener('click', checkUpdates);
 
 	softwareService.subscribeToUpdates([render]);

@@ -27,11 +27,9 @@ const render = (state) => {
 };
 
 const init = () => {
-	render({ containers: dockerService.getContainers() });
+	document.body.addEventListener('click', logout);
 
 	dockerService.subscribe([render]);
-
-	document.body.addEventListener('click', logout);
 };
 
 export {

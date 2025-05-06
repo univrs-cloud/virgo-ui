@@ -63,12 +63,9 @@ morphdom(
 );
 _.each(document.querySelectorAll('header .version'), (element) => { element.innerHTML = `v${VERSION}`; });
 
-renderSerialNumber({ system: systemService.getSystem() });
-render({ upgrade: softwareService.getUpgrade() });
-
-systemService.subscribe([renderSerialNumber]);
-softwareService.subscribeToUpgrade([render]);
-
 account.init();
 
 container.addEventListener('click', complete);
+
+systemService.subscribe([renderSerialNumber]);
+softwareService.subscribeToUpgrade([render]);

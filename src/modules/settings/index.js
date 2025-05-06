@@ -34,8 +34,6 @@ const render = (state) => {
 	container.classList.remove('d-none');
 };
 
-render({ configuration: configurationService.getConfiguration() });
-
 configurationService.subscribe([render]);
 
 import('modules/settings/notifications');

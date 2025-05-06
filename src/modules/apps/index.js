@@ -146,15 +146,13 @@ const render = (state) => {
 	container.classList.remove('d-none');
 };
 
-render({ apps: appService.getApps(), jobs: appService.getJobs() });
-
-appService.subscribe([render]);
-
 module.addEventListener('click', expand);
 module.addEventListener('click', compress);
 module.addEventListener('click', update);
 module.addEventListener('click', performAppAction);
 module.addEventListener('click', performServiceAction);
+
+appService.subscribe([render]);
 
 import('modules/apps/logs');
 import('modules/apps/console');

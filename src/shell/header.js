@@ -3,7 +3,6 @@ import * as navigation from 'shell/navigation';
 import * as account from 'shell/account';
 import * as updates from 'shell/updates';
 import * as notifications from 'shell/notifications';
-import * as weather from 'shell/weather';
 import * as systemService from 'shell/services/system';
 
 const headerTemplate = _.template(headerPartial);
@@ -20,11 +19,10 @@ morphdom(
 );
 _.each(container.querySelectorAll('.version'), (element) => { element.innerHTML = `v${VERSION}`; });
 
-render({ system: systemService.getSystem() });
-
-systemService.subscribe([render]);
-
 account.init();
 updates.init();
 notifications.init();
-weather.init();
+
+systemService.subscribe([render]);
+
+import('shell/weather');
