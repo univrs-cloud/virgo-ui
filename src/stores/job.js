@@ -34,6 +34,11 @@ class Job extends Store {
 				jobs.push(job);
 			}
 			this.setState({ jobs }, 'set_jobs');
+			if (_.includes(['completed', 'failed'], job.progress?.state)) {
+				const index = _.findIndex(jobs, { id: job.id });
+				_.pullAt(jobs, index);
+				this.setState({ jobs }, 'set_jobs');
+			}
 		});
 	}
 
