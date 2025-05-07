@@ -32,6 +32,7 @@ import iconSnow from 'assets/img/weather/snow.svg';
 import iconThunderstormsOvercast from 'assets/img/weather/thunderstorms-overcast.svg';
 import iconThunderstormsExtremeRain from 'assets/img/weather/thunderstorms-extreme-rain.svg';
 import morphdom from 'morphdom';
+import moment from 'moment';
 
 const wmo = {
 	"0-day": "Sunny",
@@ -296,7 +297,7 @@ const weatherForecast = document.querySelector('#weather-forecast');
 const weatherTemplate = _.template(weatherPartial);
 const weatherForecastTemplate = _.template(weatherForecastPartial);
 let fetchRetries = 5;
-let fetchDelay = 60000;
+let fetchDelay = 3600000;
 let request = null;
 
 const fetchData = async (state) => {
@@ -309,14 +310,14 @@ const fetchData = async (state) => {
 
 	try {
 		request = true;
-		const weather = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=sunrise,sunset,temperature_2m_max,temperature_2m_min&current_weather=true&temperature_unit=celsius&timezone=auto`);
+		const weather = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=sunrise,sunset&hourly=temperature_2m,precipitation_probability&current_weather=true&temperature_unit=celsius&timezone=auto`);
 		fetchRetries = 5;
-		fetchDelay = 60000;
+		fetchDelay = 3600000;
 		render({ location: null, weather: weather.data });
 	} catch (error) {
 		console.log(error);
 		fetchRetries--;
-		fetchDelay = 1000;
+		fetchDelay = 10000;
 	} finally {
 		request = null;
 		if (fetchRetries > 0) {
@@ -325,6 +326,44 @@ const fetchData = async (state) => {
 			}, fetchDelay);
 		}
 	};
+};
+
+const processWeatherData = (weather) => {
+	const currentHour = moment().tz(weather.timezone).hour();
+	const sunriseHour = moment.tz(weather.daily.sunrise[0], weather.timezone).hour();
+	const sunsetHour = moment.tz(weather.daily.sunset[0], weather.timezone).hour();
+	const temps = weather.hourly.temperature_2m.slice(0, 24);
+	const minTemp = Math.min(...temps);
+	const maxTemp = Math.max(...temps);
+	const tempRange = maxTemp - minTemp;
+	const columns = [];
+	const timeLabels = [];
+	let sunriseColumn = Math.floor((sunriseHour - 2) / 2) + 1;
+	let sunsetColumn = Math.floor((sunsetHour - 10) / 2) + 4;
+	let currentColumn = 0;
+	for (let i = 0; i < 12; i++) {
+		const hour = (i + 1) * 2;
+		const temp = Math.round(weather.hourly.temperature_2m[hour]);
+		const precip = weather.hourly.precipitation_probability ? weather.hourly.precipitation_probability[hour] : 0;
+		const scale = (tempRange > 0 ? (temp - minTemp) / tempRange : 0.5);
+		columns.push({
+			hour: hour,
+			temperature: temp,
+			hasPrecipitation: precip > 20, // Show rain if probability > 20%
+			scale: scale
+		});
+		if (hour === currentHour || (hour < currentHour && currentHour < hour + 2) || (i === 11 && currentHour >= 23)) {
+			currentColumn = i;
+		}
+		timeLabels[i] = `${hour % 12 || 12}${hour >= 12 ? 'pm' : 'am'}`;
+	}
+	return {
+		columns,
+		timeLabels,
+		currentColumn,
+		sunriseColumn,
+		sunsetColumn
+	}
 };
 
 const render = (state) => {
@@ -341,7 +380,7 @@ const render = (state) => {
 	);
 	morphdom(
 		weatherForecast,
-		weatherForecastTemplate(),
+		weatherForecastTemplate({ data: processWeatherData(state.weather) }),
 		{ childrenOnly: true }
 	);
 
@@ -355,12 +394,13 @@ const render = (state) => {
 };
 
 const popover = new bootstrap.Popover(container, {
+	customClass: 'weather-forecast-popover',
+	allowList: { 'div': ['class', 'style'], span: ['class'], i: ['class'] },
 	content: () => {
-		return '';
-		// return weatherForecast.innerHTML;
+		return weatherForecast.innerHTML;
 	},
 	html: true,
-	trigger: 'hover',
+	// trigger: 'hover click',
 	placement: 'bottom'
 });
 
