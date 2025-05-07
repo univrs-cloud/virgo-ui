@@ -33,6 +33,7 @@
 		"lodash": "^4.17.21",
 		"lodash-inflection": "^1.5.0",
 		"moment": "^2.30.1",
+		"moment-timezone": "^0.5.48",
 		"morphdom": "^2.7.5",
 		"netmask": "^2.0.2",
 		"page": "^1.11.6",

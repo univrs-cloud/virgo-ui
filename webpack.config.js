@@ -85,7 +85,7 @@ module.exports = (env, argv) => {
 				'bootstrap': 'bootstrap',
 				'_': [path.join(__dirname, 'src/libs/lodash.js'), 'default'],
 				'morphdom': [path.join(__dirname, 'src/libs/morphdom.js'), 'default'],
-				'moment': 'moment',
+				'moment': 'moment-timezone',
 				'bytes': 'bytes',
 				'prettyBytes': [path.join(__dirname, 'node_modules/pretty-bytes/index.js'), 'default']
 			}),
@@ -185,7 +185,16 @@ module.exports = (env, argv) => {
 				}
 			},
 			minimizer: [
-				new CssMinimizerPlugin(),
+				new CssMinimizerPlugin({
+					minimizerOptions: {
+						preset: [
+							'default',
+							{
+								calc: false
+							}
+						]
+					}
+				}),
 				'...'
 			]
 		}
