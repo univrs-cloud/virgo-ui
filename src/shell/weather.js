@@ -1,6 +1,6 @@
 import weatherPartial from 'shell/partials/weather.html';
 import weatherForecastPartial from 'shell/partials/weather_forecast.html';
-import * as configurationService from 'shell/services/configuration';
+import * as weatherService from 'shell/services/weather';
 
 // see https://open-meteo.com/en/docs
 
@@ -296,37 +296,6 @@ const container = document.querySelector('#weather');
 const weatherForecast = document.querySelector('#weather-forecast');
 const weatherTemplate = _.template(weatherPartial);
 const weatherForecastTemplate = _.template(weatherForecastPartial);
-let fetchRetries = 5;
-let fetchDelay = 3600000;
-let request = null;
-
-const fetchData = async (state) => {
-	if (request || _.isNull(state.configuration) || _.isUndefined(state.configuration.location) || _.isEmpty(state.configuration.location)) {
-		return;
-	}
-
-	const latitude = state.configuration.location.latitude;
-	const longitude = state.configuration.location.longitude;
-
-	try {
-		request = true;
-		const weather = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=sunrise,sunset&hourly=temperature_2m,precipitation_probability&current_weather=true&temperature_unit=celsius&timezone=auto`);
-		fetchRetries = 5;
-		fetchDelay = 3600000;
-		render({ location: null, weather: weather.data });
-	} catch (error) {
-		console.log(error);
-		fetchRetries--;
-		fetchDelay = 10000;
-	} finally {
-		request = null;
-		if (fetchRetries > 0) {
-			setTimeout(() => {
-				fetchData({ configuration: configurationService.getConfiguration() });
-			}, fetchDelay);
-		}
-	};
-};
 
 const processWeatherData = (weather) => {
 	const currentHour = moment().tz(weather.timezone).hour();
@@ -367,7 +336,7 @@ const processWeatherData = (weather) => {
 };
 
 const render = (state) => {
-	if (_.isUndefined(state.weather.current_weather)) {
+	if (_.isNull(state.weather)) {
 		return;
 	}
 
@@ -400,8 +369,7 @@ const popover = new bootstrap.Popover(container, {
 		return weatherForecast.innerHTML;
 	},
 	html: true,
-	// trigger: 'hover click',
 	placement: 'bottom'
 });
 
-configurationService.subscribe([fetchData]);
+weatherService.subscribe([render]);
