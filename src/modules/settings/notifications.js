@@ -53,7 +53,7 @@ const setSmtp = (event) => {
 	let form = event.target;
 	let buttons = form.querySelectorAll('button');
 	_.each(buttons, (button) => { button.disabled = true; });
-	let config = configurationService.getConfiguration().smtp;
+	let config = configurationService.getConfiguration()?.smtp || {};
 	config.encryption = form.querySelector('.encryption:checked').value;
 	config.address = form.querySelector('.address').value;
 	config.port = form.querySelector('.port').value;
