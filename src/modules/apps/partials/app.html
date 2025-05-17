@@ -99,7 +99,12 @@
 									<dd class="service col-auto <%=(index + 1 == _.size(app.projectContainers) ? 'mb-0' : '')%>" data-id="<%=container.id%>">
 										<div class="d-flex align-items-center">
 											<i class="icon-light icon-cube icon-fw me-1 text-gray-500"></i>
-											<span><%=container.name%></span>
+											<div class="text-truncate"><%=container.name%></div>
+											<%if (container.hasUpdates) {%>
+												<div class="badge bd-green-100 rounded-pill ms-2" data-bs-toggle="tooltip" data-bs-original-title="Updates available">
+													<i class="icon-solid icon-download icon-fw"></i>
+												</div>
+											<%}%>
 										</div>
 										<div style="margin-left: 1.2rem;">
 											<div class="d-flex align-items-center">

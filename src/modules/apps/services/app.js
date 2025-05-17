@@ -48,6 +48,10 @@ const composeApps = (configured, containers, imageUpdates) => {
 						return container.id === containerId;
 					});
 				});
+				entity.projectContainers = _.map(entity.projectContainers, (container) => {
+					container.hasUpdates = !_.isEmpty(_.filter(imageUpdates, { containerId: container.id }));
+					return container;
+				});
 				let activeCount = _.size(_.filter(entity.projectContainers, (container) => { return _.includes(['running', 'restarting'], container.state); }));
 				if (activeCount === _.size(entity.projectContainers)) {
 					entity.state = 'success';  // All containers are running or restarting
