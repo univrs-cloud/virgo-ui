@@ -368,8 +368,18 @@ const popover = new bootstrap.Popover(container, {
 	content: () => {
 		return weatherForecast.innerHTML;
 	},
+	trigger: 'manual',
 	html: true,
 	placement: 'bottom'
+});
+container.addEventListener('click', (event) => {
+	event.stopPropagation();
+	popover.toggle();
+});
+document.addEventListener('click', (event) => {
+	if (!container.contains(event.target) && !document.querySelector('.popover')?.contains(event.target)) {
+		popover.hide();
+	}
 });
 
 weatherService.subscribe([render]);
