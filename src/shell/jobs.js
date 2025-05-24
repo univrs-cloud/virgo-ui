@@ -7,6 +7,10 @@ const shownJobIds = new Set();
 
 const render = (state) => {
 	_.each(state.jobs, (job) => {
+		if (job.opts.repeat) {
+			return;
+		}
+		
 		if (shownJobIds.has(job.id)) {
 			return;
 		}
