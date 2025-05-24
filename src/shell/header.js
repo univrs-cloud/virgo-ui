@@ -9,7 +9,7 @@ const headerTemplate = _.template(headerPartial);
 let container = document.querySelector('header');
 
 const render = (state) => {
-	_.each(container.querySelectorAll('.serial-number'), (element) => { element.innerHTML = `SN:${state.system?.serial || '&mdash;'}`; });
+	_.each(container.querySelectorAll('.serial-number'), (element) => { element.innerHTML = `SN:${state.system.serial || '&mdash;'}`; });
 	systemService.unsubscribe();
 };
 
