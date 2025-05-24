@@ -66,7 +66,7 @@
 									<i class="icon-brands icon-apple icon-fw me-1"></i>
 									Finder + Time Machine
 								</a>
-								<span class="copy d-none">smb://<%=(timeMachine.isPrivate ? `${_.first(timeMachine.validUsers)}@` : '')%><%=networkInterface.ip4%>/<%=timeMachine.name%></span>
+								<span class="copy d-none">smb://<%=(timeMachine.isPrivate ? `${_.first(timeMachine.validUsers)}@` : '')%><%=networkInterface?.ip4%>/<%=timeMachine.name%></span>
 							</div>
 						</dd>
 					</dl>

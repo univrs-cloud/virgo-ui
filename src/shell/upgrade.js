@@ -24,7 +24,7 @@ const complete = (event) => {
 };
 
 const renderSerialNumber = (state) => {
-	_.each(document.querySelectorAll('header .serial-number'), (element) => { element.innerHTML = `SN:${state.system?.serial || '&mdash;'}`; });
+	_.each(document.querySelectorAll('header .serial-number'), (element) => { element.innerHTML = `SN:${state.system.serial || '&mdash;'}`; });
 	systemService.unsubscribe();
 };
 

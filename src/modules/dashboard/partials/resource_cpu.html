@@ -21,12 +21,12 @@
 		<div>
 			<small class="badge rounded-pill bd-gray-200 fw-light me-1">
 				<i class="icon-regular icon-temperature-half icon-fw me-1 text-gray-500"></i>
-				<%=state.cpuStats.temperature.main?.toFixed(0)%> °C
+				<%=state.cpuStats?.temperature?.main?.toFixed(0)%> °C
 			</small>
 			<%if (state.cpuStats.fan) {%>
 				<small class="badge rounded-pill bd-gray-200 fw-light">
 					<i class="icon-solid icon-fan icon-fw me-1 text-gray-500"></i>
-					<%=state.cpuStats.fan%> rpm
+					<%=state.cpuStats?.fan%> rpm
 				</small>
 			<%}%>
 		</div>

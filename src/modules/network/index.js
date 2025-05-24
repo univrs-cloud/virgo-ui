@@ -32,6 +32,14 @@ const setInterface = (event) => {
 	event.preventDefault();
 };
 
+const getBlock = (networkInterface) => {
+	let block = null;
+	try {
+		block = new Netmask(`${networkInterface?.ip4}/${networkInterface?.ip4subnet}`);
+	} catch (error) {}
+	return block;
+};
+
 const toggleDhcp = (event) => {
 	interfaceForm.querySelector('.ip-address').disabled = event.target.checked;
 	interfaceForm.querySelector('.netmask').disabled = event.target.checked;
@@ -42,10 +50,7 @@ const render = (state) => {
 		return;
 	}
 	
-	let block = null;
-	try {
-		block = new Netmask(`${state.system.networkInterface.ip4}/${state.system.networkInterface.ip4subnet}`);
-	} catch (error) {}
+	const block = getBlock(state.system.networkInterface);
 	morphdom(
 		container,
 		`<div>${networkTemplate({ system: state.system, block })}</div>`,
@@ -54,20 +59,29 @@ const render = (state) => {
 
 	loading.classList.add('d-none');
 	container.classList.remove('d-none');
-
-	gatewayForm.querySelector('.gateway').value = state.system.defaultGateway;
-	hostForm.querySelector('.hostname').value = state.system.osInfo.hostname;
-	hostForm.querySelector('.domain-name').value = _.replace(state.system.osInfo.fqdn, `${state.system.osInfo.hostname}.`, '');
-	interfaceForm.querySelector('.alert .name').innerHTML = state.system.networkInterface.ifaceName;
-	interfaceForm.querySelector('input.name').value = state.system.networkInterface.ifaceName;
-	interfaceForm.querySelector('.dhcp').checked = state.system.networkInterface.dhcp;
-	interfaceForm.querySelector('.ip-address').value = state.system.networkInterface.ip4;
-	interfaceForm.querySelector('.netmask').value = block?.bitmask ?? 'error';
 };
 
 gatewayForm.addEventListener('submit', setGateway);
+gatewayForm.addEventListener('show.bs.modal', (event) => {
+	let system = networkService.getSystem();
+	gatewayForm.querySelector('.gateway').value = system?.defaultGateway;
+});
 hostForm.addEventListener('submit', setHost);
+hostForm.addEventListener('show.bs.modal', (event) => {
+	let system = networkService.getSystem();
+	hostForm.querySelector('.hostname').value = system?.osInfo?.hostname;
+	hostForm.querySelector('.domain-name').value = _.replace(system?.osInfo?.fqdn, `${system?.osInfo?.hostname}.`, '');
+});
 interfaceForm.addEventListener('submit', setInterface);
+interfaceForm.addEventListener('show.bs.modal', (event) => {
+	let system = networkService.getSystem();
+	const block = getBlock(system.networkInterface);
+	interfaceForm.querySelector('.alert .name').innerHTML = system?.networkInterface?.ifaceName;
+	interfaceForm.querySelector('input.name').value = system?.networkInterface?.ifaceName;
+	interfaceForm.querySelector('.dhcp').checked = system?.networkInterface?.dhcp;
+	interfaceForm.querySelector('.ip-address').value = system?.networkInterface?.ip4;
+	interfaceForm.querySelector('.netmask').value = block?.bitmask ?? 'error';
+});
 interfaceForm.querySelector('.dhcp').addEventListener('change', toggleDhcp);
 
 networkService.subscribe([render]);

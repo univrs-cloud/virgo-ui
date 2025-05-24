@@ -66,21 +66,21 @@
 									<i class="icon-brands icon-windows icon-fw me-1"></i>
 									Windows Explorer
 								</a>
-								<span class="copy d-none">\\<%=networkInterface.ip4%>/<%=folder.name%></span>
+								<span class="copy d-none">\\<%=networkInterface?.ip4%>/<%=folder.name%></span>
 							</div>
 							<div class="d-flex align-items-center">
 								<a href="#" class="link-dark link-underline link-underline-opacity-0 me-2" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="Copy to clipboard">
 									<i class="icon-brands icon-apple icon-fw me-1"></i>
 									Finder
 								</a>
-								<span class="copy d-none">smb://<%=networkInterface.ip4%>/<%=folder.name%></span>
+								<span class="copy d-none">smb://<%=networkInterface?.ip4%>/<%=folder.name%></span>
 							</div>
 							<div class="d-flex align-items-center">
 								<a href="#" class="link-dark link-underline link-underline-opacity-0 me-2" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="Copy to clipboard">
 									<i class="icon-brands icon-linux icon-fw me-1"></i>
 									File manager <small class="fw-lighter">(Nautilus, Dolphin, ...)</small>
 								</a>
-								<span class="copy d-none">smb://<%=networkInterface.ip4%>/<%=folder.name%></span>
+								<span class="copy d-none">smb://<%=networkInterface?.ip4%>/<%=folder.name%></span>
 							</div>
 						</dd>
 					</dl>
