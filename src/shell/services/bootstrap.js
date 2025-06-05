@@ -22,7 +22,17 @@ const unsubscribe = () => {
 	}
 };
 
+const reconnectSocket = () => {
+	Host.socket.connect();
+};
+
+const disconnectSocket = () => {
+	Host.socket.disconnect();
+};
+
 export {
 	subscribe,
-	unsubscribe
+	unsubscribe,
+	reconnectSocket,
+	disconnectSocket
 };
