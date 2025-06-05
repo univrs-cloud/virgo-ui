@@ -10,6 +10,14 @@ bootstrap.Modal.Default.backdrop = 'static';
 bootstrap.Modal.Default.keyboard = false;
 bootstrap.Modal.Default.focus = false;
 new bootstrap.Tooltip(document.querySelector('body'));
+window.addEventListener('beforeunload', (event) => {
+	bootstrapService.disconnectSocket();
+});
+document.addEventListener('visibilitychange', (event) => {
+	if (document.visibilityState === 'visible') {
+		bootstrapService.reconnectSocket();
+	}
+});
 document.addEventListener('shown.bs.modal', (event) => {
 	event.target.querySelector('input:not([type="hidden"])')?.focus(); // focus 1st input after modal is shown
 });
