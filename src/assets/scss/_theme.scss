@@ -268,7 +268,7 @@ img {
 		right: 0;
 		min-height: calc(100vh - 280px);
 		background-color: var(--bs-white);
-		padding-left: map-get($spacers, 3);
+		padding-left: map-get($spacers, 5);
 	}
 	.logs-container {
 		ul {
