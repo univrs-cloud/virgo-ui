@@ -1,6 +1,6 @@
 <%
 let badge = '';
-if (isAuthenticated) {
+if (isAuthenticated && isAdmin) {
 	if (_.isEmpty(updates)) {
 		badge = `
 			<span class="badge d-flex align-items-center text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-pill p-2 ms-auto" style="width: max-content;">
@@ -22,7 +22,7 @@ if (isAuthenticated) {
 	}
 }
 %>
-<%if (isAuthenticated) {%>
+<%if (isAuthenticated && isAdmin) {%>
 	<%if (_.isEmpty(updates)) {%>
 		<div class="updates d-flex align-items-center">
 			<%=badge%>

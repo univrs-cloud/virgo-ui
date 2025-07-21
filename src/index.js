@@ -41,13 +41,14 @@ try {
 	window.account = {};
 }
 window.isAuthenticated = !_.isEmpty(account);
+window.isAdmin = isAuthenticated && _.includes(account.groups, 'admins');
 
 const render = async (state) => {
 	if (state.upgrade === -1) {
 		return;
 	}
 	
-	if (!isAuthenticated || _.isNull(state.upgrade)) {
+	if (!isAuthenticated || !isAdmin || _.isNull(state.upgrade)) {
 		try {
 			await Promise.allSettled([
 				import('shell/header'),
