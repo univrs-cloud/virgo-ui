@@ -26,18 +26,20 @@ const navigate = (event) => {
 
 page('/', () => { showPage('dashboard'); });
 page('/dashboard', () => { showPage('dashboard'); });
-if (isAuthenticated) {
+if (isAuthenticated && isAdmin) {
 	page('/apps', () => { showPage('apps'); });
 	page('/bookmarks', () => { showPage('bookmarks'); });
 	page('/folders', () => { showPage('folders'); });
 	page('/time-machines', () => { showPage('time-machines'); });
 	page('/users', () => { showPage('users'); });
-	page('/users/profile', () => { showPage('profile'); });
 	page('/storage', () => { showPage('storage'); });
 	page('/network', () => { showPage('network'); });
 	page('/settings', () => { showPage('settings'); });
 	page('/software-update', () => { showPage('software-update'); });
 	page('/about', () => { showPage('about'); });
+}
+if (isAuthenticated) {
+	page('/users/profile', () => { showPage('profile'); });
 }
 page('*', () => { showPage('not-found'); });
 

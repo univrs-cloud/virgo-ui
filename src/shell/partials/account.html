@@ -12,7 +12,9 @@
 			<div class="dropdown-menu dropdown-menu-end" style="width: max-content;">
 				<h6 class="dropdown-header">Logged in as</h6>
 				<p class="d-flex flex-row align-items-center px-2 pb-2 mb-0"><%=account.name%></p>
-				<a href="/users/profile" class="dropdown-item">Your profile</a>
+				<%if (!isUpgrading) {%>
+					<a href="/users/profile" class="dropdown-item">Your profile</a>
+				<%}%>
 				<div class="dropdown-divider"></div>
 				<a href="#" rel=“nofollow“ class="sign-out dropdown-item">
 					Sign out

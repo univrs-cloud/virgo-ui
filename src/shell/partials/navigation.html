@@ -2,7 +2,7 @@
 	<i class="icon-duotone icon-solid icon-grid-horizontal icon-fw me-2"></i>
 	Dashboard
 </a>
-<%if (isAuthenticated) {%>
+<%if (isAuthenticated && isAdmin) {%>
 	<div class="nav-title ps-2 mt-2 mt-sm-3"><small>Resources</small></div>
 	<a href="/apps" class="nav-item nav-link">
 		<i class="icon-duotone icon-solid icon-grid-round-2-plus icon-fw me-2" style="transform: rotate(180deg);"></i>
