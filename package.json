@@ -18,7 +18,7 @@
 		"npm": ">=10.9.0"
 	},
 	"dependencies": {
-		"@babel/runtime": "^7.27.6",
+		"@babel/runtime": "^7.28.2",
 		"@codewithdan/observable-store": "^2.2.15",
 		"@codewithdan/observable-store-extensions": "^2.2.9",
 		"@popperjs/core": "^2.11.8",
@@ -26,7 +26,7 @@
 		"@xterm/addon-fit": "^0.10.0",
 		"@xterm/xterm": "^5.5.0",
 		"apexcharts": "3.48.0",
-		"axios": "^1.10.0",
+		"axios": "^1.11.0",
 		"bootstrap": "^5.3.7",
 		"bytes": "^3.1.2",
 		"copy-to-clipboard": "^3.3.3",
@@ -54,7 +54,7 @@
 		"copy-webpack-plugin": "^13.0.0",
 		"css-loader": "^7.1.2",
 		"css-minimizer-webpack-plugin": "^7.0.2",
-		"dotenv": "^17.2.0",
+		"dotenv": "^17.2.1",
 		"html-webpack-plugin": "^5.6.3",
 		"mini-css-extract-plugin": "^2.9.2",
 		"postcss": "^8.5.6",
