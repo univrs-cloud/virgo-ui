@@ -19,7 +19,7 @@ const handleSubscription = (properties) => {
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 
-	Host.subscribeToProperties(['storage', 'drives'], handleSubscription);
+	Host.subscribeToProperties(['drives', 'storage'], handleSubscription);
 };
 
 export {

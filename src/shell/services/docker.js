@@ -1,3 +1,4 @@
+import Host from 'stores/host';
 import Docker from 'stores/docker';
 
 let callbackCollection = [];

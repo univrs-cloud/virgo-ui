@@ -1,7 +1,5 @@
-import navigationPartial from 'shell/partials/navigation.html';
 import page from 'page';
 
-const navigationTemplate = _.template(navigationPartial);
 let container = document.querySelector('header');
 
 const showPage = (href) => {
@@ -44,7 +42,3 @@ if (isAuthenticated) {
 page('*', () => { showPage('not-found'); });
 
 container.addEventListener('click', navigate);
-
-export {
-	navigationTemplate as template
-};

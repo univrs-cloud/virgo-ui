@@ -1,4 +1,5 @@
 import headerPartial from 'shell/partials/header.html';
+import navigationPartial from 'shell/partials/navigation.html';
 import * as navigation from 'shell/navigation';
 import * as account from 'shell/account';
 import * as updates from 'shell/updates';
@@ -6,6 +7,7 @@ import * as notifications from 'shell/notifications';
 import * as systemService from 'shell/services/system';
 
 const headerTemplate = _.template(headerPartial);
+const navigationTemplate = _.template(navigationPartial);
 let container = document.querySelector('header');
 
 const render = (state) => {
@@ -15,7 +17,7 @@ const render = (state) => {
 
 morphdom(
 	container,
-	headerTemplate({ navigationTemplate: navigation.template, isUpgrading: false })
+	headerTemplate({ navigationTemplate, isUpgrading: false })
 );
 _.each(container.querySelectorAll('.version'), (element) => { element.innerHTML = `v${VERSION}`; });
 

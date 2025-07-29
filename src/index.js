@@ -43,13 +43,9 @@ try {
 window.isAuthenticated = !_.isEmpty(account);
 window.isAdmin = isAuthenticated && _.includes(account.groups, 'admins');
 
-const checkSetupIsRequired = (state) => {
-	return false;
-};
-
 const render = async (state) => {
-	const isSetupRequired = checkSetupIsRequired(state);
-	if (state.upgrade === -1 && !_.isNull(isSetupRequired)) {
+	const isSetupRequired = bootstrapService.checkIfSetupIsRequired(state);
+	if (state.upgrade === -1 || _.isNull(isSetupRequired)) {
 		return;
 	}
 
@@ -65,12 +61,12 @@ const render = async (state) => {
 			]);
 			const { modulesLoaded } = await import('modules');
 			await modulesLoaded;
-			page.start({ hashbang: true });
 		} catch (error) {
 			console.error('Error during application initialization:', error);
 		}
 	}
 
+	page.start({ hashbang: true });
 	bootstrapService.unsubscribe();
 };
 
