@@ -43,12 +43,21 @@ try {
 window.isAuthenticated = !_.isEmpty(account);
 window.isAdmin = isAuthenticated && _.includes(account.groups, 'admins');
 
+const checkSetupIsRequired = (state) => {
+	return false;
+};
+
 const render = async (state) => {
-	if (state.upgrade === -1) {
+	const isSetupRequired = checkSetupIsRequired(state);
+	if (state.upgrade === -1 && !_.isNull(isSetupRequired)) {
 		return;
 	}
-	
-	if (!isAuthenticated || !isAdmin || _.isNull(state.upgrade)) {
+
+	if (isSetupRequired) {
+		await import('shell/setup');
+	} else if (isAuthenticated && isAdmin && !_.isNull(state.upgrade)) {
+		await import('shell/upgrade');
+	} else {
 		try {
 			await Promise.allSettled([
 				import('shell/header'),
@@ -60,8 +69,6 @@ const render = async (state) => {
 		} catch (error) {
 			console.error('Error during application initialization:', error);
 		}
-	} else {
-		await import('shell/upgrade');
 	}
 
 	bootstrapService.unsubscribe();
