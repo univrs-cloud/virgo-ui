@@ -2,5 +2,10 @@
 	<div class="no-content d-flex flex-column justify-content-center align-items-center bd-gray-200 rounded-4 border border-1">
 		<i class="icon-duotone icon-solid icon-face-party icon-4x"></i>
 		<h5 class="text-body-tertiary mt-4">Up to date</h5>
+		<div class="d-flex align-items-center">
+			<a href="#" class="check-updates btn btn-sm me-auto <%=(checkUpdates ? 'cursor-default' : '')%>">
+				<i class="icon-solid icon-arrows-rotate ${(checkUpdates ? 'icon-spin' : '')} me-1" style="color: var(--bs-green);"></i> Check for new updates
+			</a>
+		</div>
 	</div>
 </div>
