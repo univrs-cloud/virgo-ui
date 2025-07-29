@@ -46,6 +46,7 @@ header {
 			height: calc(100vh - 165px);
 		}
 		.navbar-glass {
+			min-height: 4.5rem;
 			background-color: rgba(237, 242, 249, 0.25);
 			backdrop-filter: blur(8px);
 		}

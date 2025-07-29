@@ -1,0 +1,35 @@
+<form id="network-interface">
+	<input type="hidden" name="name" value="" class="name">
+	<h5>Network interface</h5>
+
+	<div class="alert alert-light">
+		<dl class="m-0">
+			<dt class="fw-light text-body-tertiary"><small>Name</small></dt>
+			<dd class="name m-0"></dd>
+		</dl>
+	</div>
+	<small class="fw-light text-body-tertiary">Configuration method</small>
+	<div class="d-flex align-items-center mb-3">
+		<div class="form-check form-switch form-check-inline ps-0 mb-0 me-2">
+			<label class="form-check-label">Manual</label>
+		</div>
+		<div class="form-check form-switch form-check-inline mb-0">
+			<input type="checkbox" name="dhcp" class="dhcp form-check-input" role="switch">
+			<label class="form-check-label">Automatic</label>
+		</div>
+	</div>
+	<div class="input-group mb-3">
+		<div class="form-floating">
+			<input type="text" name="ip-address" class="ip-address form-control" placeholder="###.###.###.###">
+			<label>IP address</label>
+			<div class="invalid-feedback"></div>
+		</div>
+		<div class="form-floating">
+			<input type="text" name="netmask" class="netmask form-control w-50" placeholder="##">
+			<label>Netmask</label>
+			<div class="invalid-feedback"></div>
+		</div>
+	</div>
+
+	<button type="submit" class="btn btn-primary">Next</button>
+</form>

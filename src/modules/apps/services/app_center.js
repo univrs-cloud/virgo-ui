@@ -1,5 +1,6 @@
 import Host from 'stores/host';
 import Docker from 'stores/docker';
+import Job from 'stores/job';
 
 let callbackCollection = [];
 let subscription = null;

@@ -1,7 +1,25 @@
 import Host from 'stores/host';
+import Docker from 'stores/docker';
 
 let callbackCollection = [];
 let subscription = null;
+
+const checkIfSetupIsRequired = (state) => {
+	if (_.isNull(state.system) || _.isNull(state.storage) || _.isNull(state.containers)) {
+		return null;
+	}
+	
+	if (
+		!state.system.networkInterface.dhcp &&
+		!_.isEmpty(state.drives) &&
+		!_.isEmpty(_.filter(state.storage, (storage) => { return storage?.type?.toLowerCase() === 'pool'; })) &&
+		_.size(_.filter(state.containers, (container) => { return _.includes(['authelia', 'traefik'], container.name); })) === 2
+	) {
+		return false;
+	}
+
+	return true;
+};
 
 const handleSubscription = (properties) => {
 	_.each(callbackCollection, (callback) => {
@@ -12,7 +30,7 @@ const handleSubscription = (properties) => {
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 	
-	subscription = Host.subscribeToProperties(['upgrade'], handleSubscription);
+	subscription = Host.subscribeToProperties(['upgrade', 'system', 'drives', 'storage', 'containers'], handleSubscription);
 };
 
 const unsubscribe = () => {
@@ -34,5 +52,6 @@ export {
 	subscribe,
 	unsubscribe,
 	reconnectSocket,
-	disconnectSocket
+	disconnectSocket,
+	checkIfSetupIsRequired
 };
