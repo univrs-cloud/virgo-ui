@@ -15,6 +15,9 @@ let row = container.querySelector('.row');
 const checkUpdates = (event) => {
 	let target = event.target.closest('.check-updates');
 	if (_.isNull(target) || target.classList.contains('cursor-default')) {
+		if (target.classList.contains('cursor-default')) {
+			event.preventDefault();
+		}
 		return;
 	}
 
@@ -44,7 +47,7 @@ const render = (state) => {
 
 	let template = document.createElement('template');
 	if (_.isEmpty(state.updates)) {
-		template.innerHTML = emptyTemplate();
+		template.innerHTML = emptyTemplate({ checkUpdates: state.checkUpdates });
 	} else {
 		template.innerHTML += updatesTemplate({ checkUpdates: state.checkUpdates, updates: state.updates });
 	}
