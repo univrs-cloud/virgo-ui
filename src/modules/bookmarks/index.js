@@ -12,21 +12,6 @@ let loading = module.querySelector('.loading');
 let container = module.querySelector('.container-fluid');
 let row = container.querySelector('.row');
 
-const performAction = (event) => {
-	event.preventDefault();
-	let button = event.currentTarget;
-	let bookmark = button.closest('.bookmark');
-	if (button.classList.contains('text-danger') && !confirm(`Are you sure you want to ${button.dataset.action} ${bookmark.dataset.title}?`)) {
-		return;
-	}
-
-	let config = {
-		id: bookmark.dataset.id,
-		action: button.dataset.action
-	};
-	// bookmarkService.performAction(config);
-};
-
 const render = (state) => {
 	if (_.isNull(state.bookmarks)) {
 		return;
@@ -37,7 +22,8 @@ const render = (state) => {
 		template.innerHTML = emptyTemplate();
 	} else {
 		_.each(state.bookmarks, (bookmark) => {
-			template.innerHTML += bookmarkTemplate({ bookmark });
+			let jobs = _.filter(state.jobs, (job) => { return job.data?.config?.name === bookmark.name && job.progress?.state === 'active'; });
+			template.innerHTML += bookmarkTemplate({ bookmark, jobs });
 		});
 	}
 	
@@ -49,10 +35,10 @@ const render = (state) => {
 
 	loading.classList.add('d-none');
 	container.classList.remove('d-none');
-
-	_.each(module.querySelectorAll('.dropdown-menu a:not(.disabled)'), (button) => {
-		button.addEventListener('click', performAction);
-	});
 };
 
 bookmarkService.subscribe([render]);
+
+import('modules/bookmarks/bookmark_create');
+import('modules/bookmarks/bookmark_update');
+import('modules/bookmarks/bookmark_delete');

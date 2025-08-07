@@ -1,4 +1,4 @@
-import userModalPartial from 'modules/users/partials/modal/user_create.html';
+import userModalPartial from 'modules/users/partials/modals/user_create.html';
 import * as userService from 'modules/users/services/user';
 import validator from 'validator';
 

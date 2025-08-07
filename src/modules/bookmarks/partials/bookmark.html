@@ -1,5 +1,5 @@
 <div class="col col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 item">
-	<div class="bookmark card rounded-4 border-0 h-100 mb-0" data-id="<%=bookmark.id%>">
+	<div class="bookmark card rounded-4 border-0 h-100 mb-0" data-name="<%=bookmark.name%>">
 		<div class="card-body ps-0 py-1">
 			<div class="row g-0 align-items-center">
 				<div class="card-image card-spacer col-auto p-2">
@@ -8,18 +8,27 @@
 				<div class="col flex-grow-1 text-truncate">
 					<%=bookmark.title%>
 				</div>
-				<div class="col-auto">
-					<div class="dropdown">
-						<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm">
-							<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
+				<%if (!_.isEmpty(jobs)) {%>
+					<div class="col-auto">
+						<span class="btn btn-sm pe-none ms-2">
+							<i class="icon-solid icon-gear icon-fw icon-spin"></i>
 						</span>
-						<ul class="dropdown-menu">
-							<li><a href="#" class="dropdown-item" data-action="edit">Edit</a></li>
-							<li><hr class="dropdown-divider"></li>
-							<li><a href="#" class="dropdown-item text-danger" data-action="remove">Remove</a></li>
-						</ul>
 					</div>
-				</div>
+				<%}%>
+				<%if (_.isEmpty(jobs)) {%>
+					<div class="col-auto">
+						<div class="dropdown">
+							<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm">
+								<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
+							</span>
+							<ul class="dropdown-menu">
+								<li><a href="#bookmark-update" class="dropdown-item" data-bs-toggle="modal">Edit</a></li>
+								<li><hr class="dropdown-divider"></li>
+								<li><a href="#" class="delete dropdown-item text-danger">Remove</a></li>
+							</ul>
+						</div>
+					</div>
+				<%}%>
 			</div>
 			<div class="row g-0 mt-n2 mb-2">
 				<div class="card-spacer col-auto p-2"></div>
