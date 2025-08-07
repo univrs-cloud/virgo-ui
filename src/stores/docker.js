@@ -93,6 +93,18 @@ class Docker extends Store {
 		
 		return `${protocol}://${host}`;
 	}
+
+	createBookmark (config) {
+		this.socket.emit('createBookmark', config);
+	}
+
+	updateBookmark (config) {
+		this.socket.emit('updateBookmark', config);
+	}
+
+	deleteBookmark (config) {
+		this.socket.emit('deleteBookmark', config);
+	}
 }
 
 export default new Docker();

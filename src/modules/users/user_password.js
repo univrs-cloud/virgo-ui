@@ -1,4 +1,4 @@
-import passwordModalPartial from 'modules/users/partials/modal/user_password.html';
+import passwordModalPartial from 'modules/users/partials/modals/user_password.html';
 import * as userService from 'modules/users/services/user';
 import validator from 'validator';
 
