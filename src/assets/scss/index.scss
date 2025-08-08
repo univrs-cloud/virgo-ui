@@ -1,4 +1,22 @@
 // --------
+// webfonts
+// --------
+@use "webfonts/variables" with (
+  $font-path: "../webfonts",
+  $css-prefix: "icon"
+);
+@use "webfonts/fontawesome";
+@use "webfonts/brands";
+@use "webfonts/solid";
+@use "webfonts/regular";
+@use "webfonts/light";
+@use "webfonts/thin";
+@use "webfonts/duotone";
+@use "webfonts/duotone-regular";
+@use "webfonts/duotone-light";
+@use "webfonts/duotone-thin";
+
+// --------
 // Custom variables, functions and mixins
 // --------
 @import "variables";
@@ -12,20 +30,6 @@
 // xterm
 // --------
 @import "@xterm/xterm/css/xterm";
-
-// --------
-// webfonts
-// --------
-@import "webfonts/fontawesome";
-@import "webfonts/brands";
-@import "webfonts/solid";
-@import "webfonts/regular";
-@import "webfonts/light";
-@import "webfonts/thin";
-@import "webfonts/duotone";
-@import "webfonts/duotone-regular";
-@import "webfonts/duotone-light";
-@import "webfonts/duotone-thin";
 
 // --------
 // Custom styles
