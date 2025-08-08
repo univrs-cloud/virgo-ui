@@ -81,20 +81,20 @@
 // if agent or operating system prefers reduced motion, disable animations
 // see: https://www.smashingmagazine.com/2020/09/design-reduced-motion-sensitivities/
 // see: https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion
-@media (prefers-reduced-motion: reduce) {
-  .#{v.$css-prefix}-beat,
-  .#{v.$css-prefix}-bounce,
-  .#{v.$css-prefix}-fade,
-  .#{v.$css-prefix}-beat-fade,
-  .#{v.$css-prefix}-flip,
-  .#{v.$css-prefix}-pulse,
-  .#{v.$css-prefix}-shake,
-  .#{v.$css-prefix}-spin,
-  .#{v.$css-prefix}-spin-pulse {
-    animation: none !important;
-    transition: none !important;
-  }
-}
+// @media (prefers-reduced-motion: reduce) {
+//   .#{v.$css-prefix}-beat,
+//   .#{v.$css-prefix}-bounce,
+//   .#{v.$css-prefix}-fade,
+//   .#{v.$css-prefix}-beat-fade,
+//   .#{v.$css-prefix}-flip,
+//   .#{v.$css-prefix}-pulse,
+//   .#{v.$css-prefix}-shake,
+//   .#{v.$css-prefix}-spin,
+//   .#{v.$css-prefix}-spin-pulse {
+//     animation: none !important;
+//     transition: none !important;
+//   }
+// }
 
 @keyframes #{v.$css-prefix}-beat {
   0%, 90% { transform: scale(1); }
