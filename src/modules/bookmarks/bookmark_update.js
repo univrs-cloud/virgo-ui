@@ -61,7 +61,7 @@ const updateBookmark = (event) => {
 		url: form.querySelector('.url').value
 	};
 
-	bookmarkService.updateUser(config);
+	bookmarkService.updateBookmark(config);
 	bootstrap.Modal.getInstance(form.closest('.modal'))?.hide();
 };
 
