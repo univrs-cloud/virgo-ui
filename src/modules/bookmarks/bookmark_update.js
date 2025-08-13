@@ -57,6 +57,7 @@ const updateBookmark = (event) => {
 
 	let config = {
 		name: bookmark.name,
+		category: form.querySelector('.category').value,
 		title: form.querySelector('.title').value,
 		url: form.querySelector('.url').value
 	};
@@ -71,6 +72,7 @@ const render = (event) => {
 	bookmark = _.find(bookmarks, { name: name });
 	bookmarkForm.querySelector('.title').value = bookmark.title;
 	bookmarkForm.querySelector('.url').value = bookmark.url;
+	bookmarkForm.querySelector('.category').value = bookmark.category;
 };
 
 const restore = (event) => {
