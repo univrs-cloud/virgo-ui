@@ -22,7 +22,7 @@ const render = (state) => {
 		template.innerHTML = emptyTemplate();
 	} else {
 		_.each(state.bookmarks, (bookmark) => {
-			let jobs = _.filter(state.jobs, (job) => { return job.data?.config?.name === bookmark.name && job.progress?.state === 'active'; });
+			let jobs = _.filter(state.jobs, (job) => { return job.data?.config?.name === bookmark.name; });
 			template.innerHTML += bookmarkTemplate({ bookmark, jobs });
 		});
 	}
