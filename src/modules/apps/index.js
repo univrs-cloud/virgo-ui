@@ -116,7 +116,7 @@ const render = (state) => {
 		template.innerHTML = emptyTemplate();
 	} else {
 		_.each(state.apps, (app) => {
-			let jobs = _.filter(state.jobs, (job) => { return job.data?.config?.name === app.name && job.progress?.state === 'active'; });
+			let jobs = _.filter(state.jobs, (job) => { return job.data?.config?.name === app.name; });
 			template.innerHTML += appTemplate({ app, jobs });
 		});
 	}
