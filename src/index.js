@@ -48,7 +48,7 @@ const render = async (state) => {
 	if (state.upgrade === -1 || _.isNull(isSetupRequired)) {
 		return;
 	}
-
+	
 	if (isSetupRequired) {
 		await import('shell/setup');
 	} else if (isAuthenticated && isAdmin && !_.isNull(state.upgrade)) {
