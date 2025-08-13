@@ -55,6 +55,7 @@ const createBookmark = (event) => {
 	_.each(buttons, (button) => { button.disabled = true; });
 
 	let config = {
+		category: form.querySelector('.category').value,
 		title: form.querySelector('.title').value,
 		url: form.querySelector('.url').value
 	};
