@@ -2,7 +2,6 @@
 // webfonts
 // --------
 @use "webfonts/variables" with (
-  $font-path: "../webfonts",
   $css-prefix: "icon",
   $icon-property: "--icon"
 );
