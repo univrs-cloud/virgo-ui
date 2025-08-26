@@ -70,7 +70,9 @@ const performAppAction = (event) => {
 	let card = button.closest('.app');
 	let app = _.find(appService.getApps(), { name: card.dataset.name });
 
-	if (button.classList.contains('text-danger') && !confirm(`Are you sure you want to ${button.dataset.action} the app ${app.title}?`)) {
+	let action = (button.dataset.action === 'down' ? 'remove' : button.dataset.action);
+	let actionMessage = (button.dataset.action === 'down' ? '\n\nData will not deleted.' : '');
+	if (button.classList.contains('text-danger') && !confirm(`Are you sure you want to ${action} the app ${app.title}?${actionMessage}`)) {
 		return;
 	}
 
