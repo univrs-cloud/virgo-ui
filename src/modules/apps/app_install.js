@@ -58,7 +58,8 @@ const install = (event) => {
 		env: {}
 	};
 	_.each(app.env, (env) => {
-		config.env[env.name] = form.querySelector(`[name="${env.name}"]`).value;
+		let input = form.querySelector(`input[name="${env.name}"]:checked`) || form.querySelector(`input[name="${env.name}"]`);
+		config.env[env.name] = input.value;
 	});
 	
 	appCenterService.install(config);
@@ -105,7 +106,7 @@ const render = (event) => {
 			return;
 		}
 	});
-	_.each(appForm.querySelectorAll('input, textarea'), (field) => { field.addEventListener('input', (event) => { validateField(event.target); }) });
+	_.each(appForm.querySelectorAll('input:not([type="radio"]):not([type="checkbox"]), textarea'), (field) => { field.addEventListener('input', (event) => { validateField(event.target); }) });
 };
 
 const restore = (event) => {
