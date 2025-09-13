@@ -61,7 +61,6 @@ morphdom(
 	header,
 	headerTemplate({ navigationTemplate, isUpgrading: true })
 );
-_.each(document.querySelectorAll('header .version'), (element) => { element.innerHTML = `v${VERSION}`; });
 
 account.init();
 

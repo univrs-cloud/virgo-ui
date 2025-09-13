@@ -18,7 +18,6 @@ morphdom(
 	header,
 	headerTemplate({ navigationTemplate, isUpgrading: false })
 );
-_.each(document.querySelectorAll('header .version'), (element) => { element.innerHTML = `v${VERSION}`; });
 
 morphdom(
 	container,
