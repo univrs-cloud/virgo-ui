@@ -2022,6 +2022,7 @@ $var-image-music: \e770;
 $var-image-stack: \e771;
 $var-rectangle-4k: \e772;
 $var-rectangle-high-dynamic-range: \e773;
+$var-rectangle-hdr: \e773;
 $var-rectangle-video-on-demand: \e774;
 $var-user-viewfinder: \e775;
 $var-video-down-to-line: \e776;
@@ -2179,6 +2180,17 @@ $var-bus-stop: \e81e;
 $var-train-stop: \e81f;
 $var-septagon: \e820;
 $var-heptagon: \e820;
+$var-mailbox-open-empty: \e821;
+$var-mailbox-open-letter: \e823;
+$var-lychee: \e824;
+$var-tank-recovery: \e825;
+$var-transducer: \e826;
+$var-box-arrow-up: \e827;
+$var-box-magnifying-glass: \e828;
+$var-envelope-ribbon: \e829;
+$var-envelope-certificate: \e829;
+$var-water-temperature: \e82a;
+$var-water-temp: \e82a;
 $var-martini-glass-empty: \f000;
 $var-glass-martini: \f000;
 $var-music: \f001;
@@ -7251,6 +7263,7 @@ $icons: (
   "image-stack": $var-image-stack,
   "rectangle-4k": $var-rectangle-4k,
   "rectangle-high-dynamic-range": $var-rectangle-high-dynamic-range,
+  "rectangle-hdr": $var-rectangle-hdr,
   "rectangle-video-on-demand": $var-rectangle-video-on-demand,
   "user-viewfinder": $var-user-viewfinder,
   "video-down-to-line": $var-video-down-to-line,
@@ -7408,6 +7421,17 @@ $icons: (
   "train-stop": $var-train-stop,
   "septagon": $var-septagon,
   "heptagon": $var-heptagon,
+  "mailbox-open-empty": $var-mailbox-open-empty,
+  "mailbox-open-letter": $var-mailbox-open-letter,
+  "lychee": $var-lychee,
+  "tank-recovery": $var-tank-recovery,
+  "transducer": $var-transducer,
+  "box-arrow-up": $var-box-arrow-up,
+  "box-magnifying-glass": $var-box-magnifying-glass,
+  "envelope-ribbon": $var-envelope-ribbon,
+  "envelope-certificate": $var-envelope-certificate,
+  "water-temperature": $var-water-temperature,
+  "water-temp": $var-water-temp,
   "martini-glass-empty": $var-martini-glass-empty,
   "glass-martini": $var-glass-martini,
   "music": $var-music,
