@@ -112,8 +112,64 @@
   .#{v.$css-prefix}-whiteboard,
   .fa
 )::before {
-  content: var(#{v.$icon-property});
   content: var(#{v.$icon-property})/"";
+}
+
+@supports not (content: ''/'') {
+:is(
+  .fas,
+  .fass,
+  .far,
+  .fasr,
+  .fal,
+  .fasl,
+  .fat,
+  .fast,
+  .fad,
+  .fadr,
+  .fadl,
+  .fadt,
+  .fasds,
+  .fasdr,
+  .fasdl,
+  .fasdt,
+  .fab,
+  .faslr,
+  .faslpr,
+  .fawsb,
+  .fatl,
+  .fans,
+  .fands,
+  .faes,
+  .fajr,
+  .fajfr,
+  .fajdr,
+  .facr,
+  .#{v.$css-prefix}-solid,
+  .#{v.$css-prefix}-semibold,
+  .#{v.$css-prefix}-regular,
+  .#{v.$css-prefix}-light,
+  .#{v.$css-prefix}-thin,
+  .#{v.$css-prefix}-brands,
+  .#{v.$css-prefix}-classic,
+  .#{v.$css-prefix}-duotone,
+  .#{v.$css-prefix}-sharp,
+  .#{v.$css-prefix}-sharp-duotone,
+  .#{v.$css-prefix}-chisel,
+  .#{v.$css-prefix}-etch,
+  .#{v.$css-prefix}-jelly,
+  .#{v.$css-prefix}-jelly-duo,
+  .#{v.$css-prefix}-jelly-fill,
+  .#{v.$css-prefix}-notdog,
+  .#{v.$css-prefix}-notdog-duo,
+  .#{v.$css-prefix}-slab,
+  .#{v.$css-prefix}-slab-press,
+  .#{v.$css-prefix}-thumbprint,
+  .#{v.$css-prefix}-whiteboard,
+  .fa
+)::before {
+    content: var(#{v.$icon-property});
+  }
 }
 :is(
   .fad,
@@ -134,6 +190,28 @@
   .#{v.$css-prefix}-jelly-duo
 )::after {
   content: var(#{v.$icon-property});
-  content: var(#{v.$icon-property})/"";
   font-feature-settings: "ss01";
+}
+
+@supports not (content: ''/'') {
+:is(
+  .fad,
+  .#{v.$css-prefix}-duotone,
+  .fadr,
+  .fadl,
+  .fadt,
+  .fasds,
+  .#{v.$css-prefix}-sharp-duotone,
+  .fasdr,
+  .fasdl,
+  .fasdt,
+  .fatl,
+  .#{v.$css-prefix}-thumbprint,
+  .fands,
+  .#{v.$css-prefix}-notdog-duo,
+  .fajdr,
+  .#{v.$css-prefix}-jelly-duo
+)::after {
+    content: var(#{v.$icon-property});
+  }
 }
