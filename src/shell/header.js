@@ -19,7 +19,6 @@ morphdom(
 	container,
 	headerTemplate({ navigationTemplate, isUpgrading: false })
 );
-_.each(container.querySelectorAll('.version'), (element) => { element.innerHTML = `v${VERSION}`; });
 
 account.init();
 updates.init();
