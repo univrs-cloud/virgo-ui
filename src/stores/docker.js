@@ -24,19 +24,19 @@ class Docker extends Store {
 			_.each(_.keys(initialState), (key) => { initialState[key] = null; });
 		});
 
-		this.socket.on('configured', (configured) => {
+		this.socket.on('app:configured', (configured) => {
 			this.setState({ configured }, 'set_configured');
 		});
 
-		this.socket.on('containers', (containers) => {
+		this.socket.on('app:containers', (containers) => {
 			this.setState({ containers }, 'set_containers');
 		});
 
-		this.socket.on('updates', (imageUpdates) => {
+		this.socket.on('app:updates', (imageUpdates) => {
 			this.setState({ imageUpdates }, 'set_container_updates');
 		});
 
-		this.socket.on('templates', (templates) => {
+		this.socket.on('app:templates', (templates) => {
 			this.setState({ templates }, 'set_templates');
 		});
 	}
@@ -58,19 +58,19 @@ class Docker extends Store {
 	}
 
 	install(config) {
-		this.socket.emit('install', config);
+		this.socket.emit('app:install', config);
 	}
 
 	update(config) {
-		this.socket.emit('update', config);
+		this.socket.emit('app:update', config);
 	}
 
 	performAppAction(config) {
-		this.socket.emit('performAppAction', config);
+		this.socket.emit('app:performAction', config);
 	}
 
 	performServiceAction(config) {
-		this.socket.emit('performServiceAction', config);
+		this.socket.emit('service:performAction', config);
 	}
 
 	composeUrlFromLabels (labels) {
@@ -95,15 +95,15 @@ class Docker extends Store {
 	}
 
 	createBookmark (config) {
-		this.socket.emit('createBookmark', config);
+		this.socket.emit('bookmark:create', config);
 	}
 
 	updateBookmark (config) {
-		this.socket.emit('updateBookmark', config);
+		this.socket.emit('bookmark:update', config);
 	}
 
 	deleteBookmark (config) {
-		this.socket.emit('deleteBookmark', config);
+		this.socket.emit('bookmark:delete', config);
 	}
 }
 

@@ -27,7 +27,7 @@ const render = (event) => {
 	logsContainer = app.querySelector('.logs-container');
 	logsContainer.querySelector('.service .name').innerHTML = service.name;
 	logsContainer.classList.remove('d-none');
-	socket.emit('logsConnect', link.dataset.id);
+	socket.emit('logs:connect', link.dataset.id);
 };
 
 const closeLogs = (event) => {
@@ -42,7 +42,7 @@ const closeLogs = (event) => {
 const restore = () => {
 	if (logs) {
 		logsContainer.classList.add('d-none');
-		socket.emit('logsDisconnect');
+		socket.emit('logs:disconnect');
 		logs.removeEventListener('scroll', shouldScrollEvent);
 		logs = null;
 		logsContainer = null;
@@ -54,7 +54,7 @@ const shouldScrollEvent = (event) => {
 	shouldScroll = (Math.abs(logs.scrollHeight - logs.scrollTop - logs.clientHeight) < 1);
 }
 
-socket.on('logsConnected', () => {
+socket.on('logs:connected', () => {
 	if (!logs) {
 		logs = logsContainer.querySelector('ul');
 		logs.innerHTML = '';
@@ -64,7 +64,7 @@ socket.on('logsConnected', () => {
 		}
 	}
 });
-socket.on('logsOutput', (data) => {
+socket.on('logs:output', (data) => {
 	if (logs) {
 		logs.innerHTML += `<li>${data}</li>`;
 		if (!_.isNull(logs) && shouldScroll) {
@@ -72,7 +72,7 @@ socket.on('logsOutput', (data) => {
 		}
 	}
 });
-socket.on('logsError', (error) => {
+socket.on('logs:error', (error) => {
 	if (logs) {
 		logs.innerHTML = `<li>${error.message}</li>`;
 	}
