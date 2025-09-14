@@ -31,7 +31,7 @@ class Share extends Store {
 	}
 
 	performAction(config) {
-		// this.socket.emit('performAction', config);
+		// this.socket.emit('share:performAction', config);
 	}
 }
 

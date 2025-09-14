@@ -34,80 +34,80 @@ class Host extends Store {
 		
 		});
 
-		this.socket.on('checkUpdates', (checkUpdates) => {
+		this.socket.on('host:updates:check', (checkUpdates) => {
 			this.setState({ checkUpdates }, 'check_updates');
 		});
 
-		this.socket.on('updates', (updates) => {
+		this.socket.on('host:updates', (updates) => {
 			this.setState({ updates }, 'get_updates');
 		});
 
-		this.socket.on('upgrade', (upgrade) => {
+		this.socket.on('host:upgrade', (upgrade) => {
 			this.setState({ upgrade }, 'get_upgrade');
 		});
 
-		this.socket.on('reboot', (reboot) => {
+		this.socket.on('host:reboot', (reboot) => {
 			this.setState({ reboot }, 'get_reboot');
 		});
 
-		this.socket.on('shutdown', (shutdown) => {
+		this.socket.on('host:shutdown', (shutdown) => {
 			this.setState({ shutdown }, 'get_shutdown');
 		});
 
-		this.socket.on('system', (system) => {
+		this.socket.on('host:system', (system) => {
 			this.setState({ system }, 'get_system');
 		});
 
-		this.socket.on('cpuStats', (cpuStats) => {
+		this.socket.on('host:cpu:stats', (cpuStats) => {
 			this.setState({ cpuStats }, 'get_cpu_stats');
 		});
 
-		this.socket.on('memory', (memory) => {
+		this.socket.on('host:memory', (memory) => {
 			this.setState({ memory }, 'get_memory');
 		});
 
-		this.socket.on('networkStats', (networkStats) => {
+		this.socket.on('host:network:stats', (networkStats) => {
 			this.setState({ networkStats }, 'get_network_stats');
 		});
 
-		this.socket.on('storage', (storage) => {
+		this.socket.on('host:storage', (storage) => {
 			this.setState({ storage }, 'get_storage');
 		});
 
-		this.socket.on('drives', (drives) => {
+		this.socket.on('host:drives', (drives) => {
 			this.setState({ drives }, 'get_drives');
 		});
 
-		this.socket.on('ups', (ups) => {
+		this.socket.on('host:ups', (ups) => {
 			this.setState({ ups }, 'get_ups');
 		});
 
-		this.socket.on('time', (time) => {
+		this.socket.on('host:time', (time) => {
 			this.setState({ time }, 'get_time');
 		});
 	}
 
 	checkUpdates() {
 		this.setState({ checkUpdates: true }, 'check_updates');
-		this.socket.emit('checkUpdates');
+		this.socket.emit('host:updates:check');
 	}
 
 	upgrade() {
 		let upgrade = {};
 		this.setState({ upgrade }, 'start_upgrade');
-		this.socket.emit('upgrade');
+		this.socket.emit('host:upgrade');
 	}
 
 	completeUpgrade() {
-		this.socket.emit('completeUpgrade');
+		this.socket.emit('host:upgrade:complete');
 	}
 
 	reboot() {
-		this.socket.emit('reboot');
+		this.socket.emit('host:reboot');
 	}
 
 	shutDown() {
-		this.socket.emit('shutdown');
+		this.socket.emit('host:shutdown');
 	}
 
 	getSystem() {

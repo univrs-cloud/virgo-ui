@@ -32,27 +32,27 @@ class User extends Store {
 	}
 
 	createUser(config) {
-		this.socket.emit('create', config);
+		this.socket.emit('user:create', config);
 	}
 
 	updateUser(config) {
-		this.socket.emit('update', config);
+		this.socket.emit('user:update', config);
 	}
 
 	deleteUser(config) {
-		this.socket.emit('delete', config);
+		this.socket.emit('user:delete', config);
 	}
 
 	lockUser(config) {
-		this.socket.emit('lock', config);
+		this.socket.emit('user:lock', config);
 	}
 
 	unlockUser(config) {
-		this.socket.emit('unlock', config);
+		this.socket.emit('user:unlock', config);
 	}
 
 	changePassword(config) {
-		this.socket.emit('password', config);
+		this.socket.emit('user:password', config);
 	}
 }
 

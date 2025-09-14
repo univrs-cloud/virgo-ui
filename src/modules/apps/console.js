@@ -29,7 +29,7 @@ const render = (event) => {
 	terminalContainer = app.querySelector('.terminal-container');
 	terminalContainer.querySelector('.service .name').innerHTML = service.name;
 	terminalContainer.classList.remove('d-none');
-	socket.emit('terminalConnect', link.dataset.id);
+	socket.emit('terminal:connect', link.dataset.id);
 };
 
 const closeTerminal = (event) => {
@@ -50,7 +50,7 @@ const resize = (event) => {
 const restore = () => {
 	if (terminal) {
 		terminalContainer.classList.add('d-none');
-		socket.emit('terminalDisconnect');
+		socket.emit('terminal:disconnect');
 		terminal.dispose();
 		terminal = null;
 		fitAddon = null;
@@ -58,7 +58,7 @@ const restore = () => {
 	}
 };
 
-socket.on('terminalConnected', () => {
+socket.on('terminal:connected', () => {
 	if (!terminal) {
 		fitAddon = new FitAddon();
 		terminal = new Terminal({
@@ -73,22 +73,22 @@ socket.on('terminalConnected', () => {
 		terminal.open(terminalContainer);
 		terminal.focus();
 		terminal.onData((data) => {
-			socket.emit('terminalInput', data);
+			socket.emit('terminal:input', data);
 		});
 		terminal.onResize((size) => {
-			socket.emit('terminalResize', { cols: size.cols, rows: size.rows });
+			socket.emit('terminal:resize', { cols: size.cols, rows: size.rows });
 		});
 		resize();
 	} else {
 		terminal.clear();
 	}
 });
-socket.on('terminalOutput', (data) => {
+socket.on('terminal:output', (data) => {
 	if (terminal) {
 		terminal.write(data);
 	}
 });
-socket.on('terminalError', (error) => {
+socket.on('terminal:rrror', (error) => {
 	if (terminal) {
 		terminal.dispose();
 		terminal = null;
