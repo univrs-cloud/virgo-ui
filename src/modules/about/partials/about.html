@@ -36,7 +36,7 @@
 					<dt class="fw-lighter"><small>Drives</small></dt>
 					<dd class="m-0">
 						<%_.each(drives, (drive) => {%>
-							<div><%=drive.model%> @ <%=bytes(drive.capcity.bytes)%></div>
+							<div><%=drive.model%> @ <%=bytes(drive.capacity.bytes)%></div>
 							<small class="d-block text-body-tertiary mt-n1">SN: <%=drive.serialNumber%></small>
 						<%})%>
 					</dd>
