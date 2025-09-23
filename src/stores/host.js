@@ -39,6 +39,7 @@ class Host extends Store {
 		});
 
 		this.socket.on('host:updates', (updates) => {
+			// updates = [{ package: 'package 1', version: { installed: '1.0.0', upgradableTo: '2.0.0' } }];
 			this.setState({ updates }, 'get_updates');
 		});
 
