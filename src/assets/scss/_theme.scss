@@ -54,6 +54,7 @@ img {
 }
 
 .modal {
+	--bs-modal-border-radius: var(--bs-border-radius-xl);
 	backdrop-filter: blur(6px) grayscale(0.8);
 }
 .modal-content {
