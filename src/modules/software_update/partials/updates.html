@@ -1,8 +1,8 @@
-<div class="col-12">
+<div class="col-12 text-secondary">
 	<div class="card position-relative rounded-4 border-0">
 		<div class="card-body">
 			<h5 class="card-title"><%=_.pluralize('update', _.size(updates), true)%> available:</h5>
-			<ul class="ps-3">
+			<ul class="overflow-y-scroll">
 				<%_.each(updates, (update) => {%>
 					<li><%=update.package%> <small class="text-secondary">(<%=update.version.installed%> &rarr; <%=update.version.upgradableTo%>)</small></li>
 				<%})%>
