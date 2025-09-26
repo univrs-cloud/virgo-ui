@@ -143,11 +143,7 @@ img {
 }
 #notifications {
 	.dropdown-toggle {
-		.icon-bell {
-			font-size: 1.6em;
-			margin-top: 1px;
-		}
-		&::before {
+		&.icon-dot::before {
 			content: '';
 			z-index: 1;
 			position: absolute;
@@ -158,6 +154,10 @@ img {
 			border-radius: 50%;
 			background-color: var(--bs-primary);
 			border: 2px solid #ecf2f8;
+		}
+		.icon-bell {
+			font-size: 1.6em;
+			margin-top: 1px;
 		}
 	}
 }

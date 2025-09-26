@@ -1,6 +1,6 @@
 import modulePartial from 'modules/network/partials/index.html';
 import networkPartial from 'modules/network/partials/network.html';
-import gatewayModalPartial from 'modules/network/partials/modals/gateway.html';
+import routingModalPartial from 'modules/network/partials/modals/routing.html';
 import hostModalPartial from 'modules/network/partials/modals/host.html';
 import interfaceModalPartial from 'modules/network/partials/modals/interface.html';
 import * as networkService from 'modules/network/services/network';
@@ -9,18 +9,18 @@ import { Netmask } from 'netmask';
 const moduleTemplate = _.template(modulePartial);
 const networkTemplate = _.template(networkPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
-document.querySelector('body').insertAdjacentHTML('beforeend', gatewayModalPartial);
+document.querySelector('body').insertAdjacentHTML('beforeend', routingModalPartial);
 document.querySelector('body').insertAdjacentHTML('beforeend', hostModalPartial);
 document.querySelector('body').insertAdjacentHTML('beforeend', interfaceModalPartial);
 
 let module = document.querySelector('#network');
-let gatewayForm = document.querySelector('#network-gateway');
+let routingForm = document.querySelector('#network-routing');
 let hostForm = document.querySelector('#network-host');
 let interfaceForm = document.querySelector('#network-interface');
 let loading = module.querySelector('.loading');
 let container = module.querySelector('.container-fluid');
 
-const setGateway = (event) => {
+const setDefaultGateway = (event) => {
 	event.preventDefault();
 };
 
@@ -61,10 +61,10 @@ const render = (state) => {
 	container.classList.remove('d-none');
 };
 
-gatewayForm.addEventListener('submit', setGateway);
-gatewayForm.addEventListener('show.bs.modal', (event) => {
+routingForm.addEventListener('submit', setDefaultGateway);
+routingForm.addEventListener('show.bs.modal', (event) => {
 	let system = networkService.getSystem();
-	gatewayForm.querySelector('.gateway').value = system?.defaultGateway;
+	routingForm.querySelector('.gateway').value = system?.defaultGateway;
 });
 hostForm.addEventListener('submit', setHost);
 hostForm.addEventListener('show.bs.modal', (event) => {
