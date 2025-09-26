@@ -1,10 +1,8 @@
 <div class="col-12 col-md-6 col-lg-4">
 	<div class="card position-relative rounded-4 border-0">
 		<div class="card-body">
-			<h5 class="card-title d-flex align-items-center">
-				Location
-				<a href="#location" class="btn btn-link p-0 ms-auto" data-bs-toggle="modal">Edit</a>
-			</h5>
+			<a href="#location" class="btn btn-link p-0 float-end" data-bs-toggle="modal">Edit</a>
+			<h5 class="card-title d-flex align-items-center">Location</h5>
 			<%if (_.isNull(location)) {%>
 				Not configured
 			<%} else {%>

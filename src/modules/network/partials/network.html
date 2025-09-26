@@ -2,10 +2,8 @@
 	<div class="col-12 col-md-6 col-lg-4">
 		<div class="card position-relative rounded-4 border-0">
 			<div class="card-body">
-				<h5 class="card-title d-flex align-items-center">
-					Host
-					<a href="#network-host" class="btn btn-link p-0 ms-auto" data-bs-toggle="modal">Edit</a>
-				</h5>
+				<a href="#network-host" class="btn btn-link p-0 float-end" data-bs-toggle="modal">Edit</a>
+				<h5 class="card-title d-flex align-items-center">Host</h5>
 				<dl class="m-0">
 					<dt class="fw-lighter"><small>Hostname</small></dt>
 					<dd><%=system?.osInfo?.hostname%></dd>
@@ -18,12 +16,10 @@
 	<div class="col-12 col-md-6 col-lg-4">
 		<div class="card position-relative rounded-4 border-0">
 			<div class="card-body">
-				<h5 class="card-title d-flex align-items-center">
-					Gateway
-					<a href="#network-gateway" class="btn btn-link p-0 ms-auto" data-bs-toggle="modal">Edit</a>
-				</h5>
+				<a href="#network-routing" class="btn btn-link p-0 float-end" data-bs-toggle="modal">Edit</a>
+				<h5 class="card-title d-flex align-items-center">Routing</h5>
 				<dl class="m-0">
-					<dt class="fw-lighter"><small>Gateway</small></dt>
+					<dt class="fw-lighter"><small>Default gateway</small></dt>
 					<dd class="m-0"><%=system?.defaultGateway%></dd>
 				</dl>
 			</div>
@@ -32,10 +28,8 @@
 	<div class="col-12 col-md-6 col-lg-4">
 		<div class="card position-relative rounded-4 border-0">
 			<div class="card-body">
-				<h5 class="card-title d-flex align-items-center">
-					Interface
-					<a href="#network-interface" class="btn btn-link p-0 ms-auto" data-bs-toggle="modal">Edit</a>
-				</h5>
+				<a href="#network-interface" class="btn btn-link p-0 float-end" data-bs-toggle="modal">Edit</a>
+				<h5 class="card-title d-flex align-items-center">Interface</h5>
 				<dl class="m-0">
 					<dt class="fw-lighter"><small>Name</small></dt>
 					<dd><%=system?.networkInterface?.ifaceName%></dd>

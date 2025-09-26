@@ -1,18 +1,16 @@
 <div class="col">
 	<div class="card position-relative rounded-4 border-0">
 		<div class="card-body">
-			<h5 class="card-title d-flex align-items-center">
-				<%=user.fullname || user.username%>
-				<div class="dropdown ms-auto">
-					<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm">
-						<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
-					</span>
-					<ul class="dropdown-menu">
-						<li><a href="#profile-edit" class="dropdown-item" data-bs-toggle="modal">Edit profile</a></li>
-						<li><a href="#profile-password" class="dropdown-item" data-bs-toggle="modal">Change password</a></li>
-					</ul>
-				</div>
-			</h5>
+			<div class="dropdown float-end mt-n1">
+				<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm">
+					<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
+				</span>
+				<ul class="dropdown-menu">
+					<li><a href="#profile-edit" class="dropdown-item" data-bs-toggle="modal">Edit profile</a></li>
+					<li><a href="#profile-password" class="dropdown-item" data-bs-toggle="modal">Change password</a></li>
+				</ul>
+			</div>
+			<h5 class="card-title d-flex align-items-center"><%=user.fullname || user.username%></h5>
 			<dl class="m-0">
 				<dt class="fw-lighter"><small>Username</small></dt>
 				<dd><%=user.username%></dd>
