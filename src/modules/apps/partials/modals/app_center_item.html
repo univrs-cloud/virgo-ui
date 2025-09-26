@@ -12,6 +12,9 @@
 			<div class="row g-0">
 				<div class="card-spacer col-auto p-2"></div>
 				<div class="col">
+					<%_.each(app.categories, (category) => {%>
+						<div class="badge bg-dark-subtle text-dark-emphasis rounded-pill mb-1"><%=category%></div>
+					<%})%>
 					<p class="card-text line-clamp three-line"><%=app.description%></p>
 					<div class="d-flex align-items-center justify-content-end">
 						<%if (!_.isEmpty(jobs)) {%>
