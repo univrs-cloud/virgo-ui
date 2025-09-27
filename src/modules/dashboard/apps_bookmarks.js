@@ -23,6 +23,7 @@ const render = (state) => {
 			let categoryTemplate = document.createElement('template');
 			categoryTemplate.innerHTML = categorySomething({ name: key });
 			let category = categoryTemplate.content.querySelector('.col');
+			apps = _.orderBy(apps, ['order'], ['asc']);
 			_.each(apps, (entity) => {
 				if (entity.type === 'app') {
 					category.insertAdjacentHTML('beforeend', appTemplate({ app: entity }));
