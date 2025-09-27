@@ -1,7 +1,9 @@
 {
 	"name": "virgo-ui",
-	"description": "virgo UI",
 	"version": "2.5.4",
+	"description": "virgo UI",
+	"author": "univrs",
+	"license": "UNLICENSED",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"build": "webpack --mode production",
@@ -67,7 +69,5 @@
 		"webpack-cli": "^6.0.1",
 		"webpack-dev-server": "^5.2.2",
 		"webpack-pwa-manifest": "^4.3.0"
-	},
-	"author": "univrs",
-	"license": "UNLICENSED"
+	}
 }
