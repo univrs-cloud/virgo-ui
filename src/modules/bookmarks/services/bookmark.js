@@ -1,10 +1,6 @@
-import Docker from 'stores/docker';
+import Bookmark from 'stores/bookmark';
 
 let callbackCollection = [];
-
-const composeUrlFromProxy = (proxy) => {
-	return `${proxy.sslForced ? 'https://' : 'http://'}${_.first(proxy.domainNames)}`;
-};
 
 const composeBookmark = (configured) => {
 	if (_.isNull(configured)) {
@@ -24,23 +20,19 @@ const composeBookmark = (configured) => {
 }
 
 const getBookmarks = () => {
-	return composeBookmark(Docker.getConfigured());
+	return composeBookmark(Bookmark.getConfigured());
 };
 
 const createBookmark = (config) => {
-	Docker.createBookmark(config);
+	Bookmark.createBookmark(config);
 };
 
 const updateBookmark = (config) => {
-	Docker.updateBookmark(config);
+	Bookmark.updateBookmark(config);
 };
 
 const deleteBookmark = (config) => {
-	Docker.deleteBookmark(config);
-};
-
-const performAction = (config) => {
-	
+	Bookmark.deleteBookmark(config);
 };
 
 const handleSubscription = (properties) => {
@@ -54,7 +46,7 @@ const handleSubscription = (properties) => {
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 	
-	Docker.subscribeToProperties(['configured', 'jobs'], handleSubscription);
+	Bookmark.subscribeToProperties(['configured', 'jobs'], handleSubscription);
 };
 
 export {
@@ -62,6 +54,5 @@ export {
 	getBookmarks,
 	createBookmark,
 	updateBookmark,
-	deleteBookmark,
-	performAction
+	deleteBookmark
 };

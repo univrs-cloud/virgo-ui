@@ -73,7 +73,7 @@ class Docker extends Store {
 		this.socket.emit('service:performAction', config);
 	}
 
-	composeUrlFromLabels (labels) {
+	composeUrlFromLabels(labels) {
 		const hostKey = _.findKey(labels, (value) => {
 			return _.isString(value) && _.startsWith(value, 'Host');
 		});
@@ -92,18 +92,6 @@ class Docker extends Store {
 		])();
 		
 		return `${protocol}://${host}`;
-	}
-
-	createBookmark (config) {
-		this.socket.emit('bookmark:create', config);
-	}
-
-	updateBookmark (config) {
-		this.socket.emit('bookmark:update', config);
-	}
-
-	deleteBookmark (config) {
-		this.socket.emit('bookmark:delete', config);
 	}
 }
 
