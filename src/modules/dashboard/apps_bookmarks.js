@@ -40,8 +40,8 @@ const disableDragDrop = (container) => {
 		card.classList.remove('drag-drop-item');
 	});
 	let icon = container.querySelector('.icon-solid');
-	icon.classList.remove('icon-check');
-	icon.classList.add('icon-bars-staggered');
+	icon.classList.remove('icon-check', 'text-green-500');
+	icon.classList.add('icon-bars-staggered', 'text-gray-500');
 	isDragging = false;
 };
 
@@ -52,8 +52,8 @@ const enableDragDrop = (container) => {
 
 	isDragging = true;
 	let icon = container.querySelector('.icon-solid');
-	icon.classList.remove('icon-bars-staggered');
-	icon.classList.add('icon-check');
+	icon.classList.remove('icon-bars-staggered', 'text-gray-500');
+	icon.classList.add('icon-check', 'text-green-500');
 	_.each(container.querySelectorAll('.card'), (card) => {
 		card.classList.add('drag-drop-item');
 	});
