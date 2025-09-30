@@ -4,10 +4,10 @@ import validator from 'validator';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', profileModalPartial);
 
-let profileForm = document.querySelector('#profile-edit');
+let form = document.querySelector('#profile-edit');
 
 const validateFullname = (event) => {
-	let input = profileForm.querySelector('.fullname');
+	let input = form.querySelector('.fullname');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
 	if (validator.isEmpty(value)) {
@@ -21,7 +21,7 @@ const validateFullname = (event) => {
 };
 
 const validateEmailAddress = (event) => {
-	let input = profileForm.querySelector('.email');
+	let input = form.querySelector('.email');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
 	if (validator.isEmpty(value)) {
@@ -47,7 +47,7 @@ const validateForm = () => {
 
 const isFormValid = () => {
 	validateForm();
-	return _.isEmpty(profileForm.querySelectorAll('.is-invalid'));
+	return _.isEmpty(form.querySelectorAll('.is-invalid'));
 };
 
 const updateProfile = (event) => {
@@ -70,9 +70,9 @@ const updateProfile = (event) => {
 };
 
 const restore = (event) => {
-	profileForm.reset();
-	_.each(profileForm.querySelectorAll('button'), (button) => { button.disabled = false });
-	_.each(profileForm.querySelectorAll('.form-floating'), (input) => {
+	form.reset();
+	_.each(form.querySelectorAll('button'), (button) => { button.disabled = false });
+	_.each(form.querySelectorAll('.form-floating'), (input) => {
 		input.querySelector('input')?.classList?.remove('is-invalid', 'is-valid');
 		input.querySelector('.invalid-feedback').innerHTML = '';
 	});
@@ -81,13 +81,13 @@ const restore = (event) => {
 const render = (event) => {
 	let users = userService.getUsers();
 	let user = _.find(users, { username: account.user });
-	profileForm.querySelector('.title-username').innerHTML = user.username;
-	profileForm.querySelector('.fullname').value = user.fullname || user.username;
-	profileForm.querySelector('.email').value = user.email;
+	form.querySelector('.title-username').innerHTML = user.username;
+	form.querySelector('.fullname').value = user.fullname || user.username;
+	form.querySelector('.email').value = user.email;
 };
 
-profileForm.querySelector('.fullname').addEventListener('input', validateFullname);
-profileForm.querySelector('.email').addEventListener('input', validateEmailAddress);
-profileForm.addEventListener('submit', updateProfile);
-profileForm.addEventListener('show.bs.modal', render);
-profileForm.addEventListener('hidden.bs.modal', restore);
+form.querySelector('.fullname').addEventListener('input', validateFullname);
+form.querySelector('.email').addEventListener('input', validateEmailAddress);
+form.addEventListener('submit', updateProfile);
+form.addEventListener('show.bs.modal', render);
+form.addEventListener('hidden.bs.modal', restore);

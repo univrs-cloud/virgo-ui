@@ -88,6 +88,18 @@ class Host extends Store {
 		});
 	}
 
+	updateDefaultGateway(config) {
+		this.socket.emit('host:network:gateway:update', config);
+	}
+
+	updateHostIdentifier(config) {
+		this.socket.emit('host:network:identifier:update', config);
+	}
+
+	updateInterface(config) {
+		this.socket.emit('host:network:interface:update', config);
+	}
+
 	checkUpdates() {
 		this.setState({ checkUpdates: true }, 'check_updates');
 		this.socket.emit('host:updates:check');

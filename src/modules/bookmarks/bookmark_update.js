@@ -4,11 +4,11 @@ import validator from 'validator';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', bookmarkModalPartial);
 
-let bookmarkForm = document.querySelector('#bookmark-update');
+let form = document.querySelector('#bookmark-update');
 let bookmark;
 
 const validateTitle = (event) => {
-	let input = bookmarkForm.querySelector('.title');
+	let input = form.querySelector('.title');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
 	if (validator.isEmpty(value)) {
@@ -22,7 +22,7 @@ const validateTitle = (event) => {
 };
 
 const validateUrl = (event) => {
-	let input = bookmarkForm.querySelector('.url');
+	let input = form.querySelector('.url');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
 	if (validator.isEmpty(value)) {
@@ -42,7 +42,7 @@ const validateForm = () => {
 
 const isFormValid = () => {
 	validateForm();
-	return _.isEmpty(bookmarkForm.querySelectorAll('.is-invalid'));
+	return _.isEmpty(form.querySelectorAll('.is-invalid'));
 };
 
 const updateBookmark = (event) => {
@@ -70,23 +70,23 @@ const render = (event) => {
 	let name = event.relatedTarget.closest('.bookmark').dataset.name;
 	let bookmarks = bookmarkService.getBookmarks();
 	bookmark = _.find(bookmarks, { name: name });
-	bookmarkForm.querySelector('.title').value = bookmark.title;
-	bookmarkForm.querySelector('.url').value = bookmark.url;
-	bookmarkForm.querySelector('.category').value = bookmark.category;
+	form.querySelector('.title').value = bookmark.title;
+	form.querySelector('.url').value = bookmark.url;
+	form.querySelector('.category').value = bookmark.category;
 };
 
 const restore = (event) => {
 	bookmark = null;
-	bookmarkForm.reset();
-	_.each(bookmarkForm.querySelectorAll('button'), (button) => { button.disabled = false });
-	_.each(bookmarkForm.querySelectorAll('.form-floating'), (input) => {
+	form.reset();
+	_.each(form.querySelectorAll('button'), (button) => { button.disabled = false });
+	_.each(form.querySelectorAll('.form-floating'), (input) => {
 		input.querySelector('input')?.classList?.remove('is-invalid', 'is-valid');
 		input.querySelector('.invalid-feedback').innerHTML = '';
 	});
 };
 
-bookmarkForm.querySelector('.title').addEventListener('input', validateTitle);
-bookmarkForm.querySelector('.url').addEventListener('input', validateUrl);
-bookmarkForm.addEventListener('submit', updateBookmark);
-bookmarkForm.addEventListener('show.bs.modal', render);
-bookmarkForm.addEventListener('hidden.bs.modal', restore);
+form.querySelector('.title').addEventListener('input', validateTitle);
+form.querySelector('.url').addEventListener('input', validateUrl);
+form.addEventListener('submit', updateBookmark);
+form.addEventListener('show.bs.modal', render);
+form.addEventListener('hidden.bs.modal', restore);

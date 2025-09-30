@@ -4,10 +4,10 @@ import validator from 'validator';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', bookmarkModalPartial);
 
-let bookmarkForm = document.querySelector('#bookmark-create');
+let form = document.querySelector('#bookmark-create');
 
 const validateTitle = (event) => {
-	let input = bookmarkForm.querySelector('.title');
+	let input = form.querySelector('.title');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
 	if (validator.isEmpty(value)) {
@@ -21,7 +21,7 @@ const validateTitle = (event) => {
 };
 
 const validateUrl = (event) => {
-	let input = bookmarkForm.querySelector('.url');
+	let input = form.querySelector('.url');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
 	if (validator.isEmpty(value)) {
@@ -41,7 +41,7 @@ const validateForm = () => {
 
 const isFormValid = () => {
 	validateForm();
-	return _.isEmpty(bookmarkForm.querySelectorAll('.is-invalid'));
+	return _.isEmpty(form.querySelectorAll('.is-invalid'));
 };
 
 const createBookmark = (event) => {
@@ -65,15 +65,15 @@ const createBookmark = (event) => {
 };
 
 const restore = (event) => {
-	bookmarkForm.reset();
-	_.each(bookmarkForm.querySelectorAll('button'), (button) => { button.disabled = false });
-	_.each(bookmarkForm.querySelectorAll('.form-floating'), (input) => {
+	form.reset();
+	_.each(form.querySelectorAll('button'), (button) => { button.disabled = false });
+	_.each(form.querySelectorAll('.form-floating'), (input) => {
 		input.querySelector('input')?.classList?.remove('is-invalid', 'is-valid');
 		input.querySelector('.invalid-feedback').innerHTML = '';
 	});
 };
 
-bookmarkForm.querySelector('.title').addEventListener('input', validateTitle);
-bookmarkForm.querySelector('.url').addEventListener('input', validateUrl);
-bookmarkForm.addEventListener('submit', createBookmark);
-bookmarkForm.addEventListener('hidden.bs.modal', restore);
+form.querySelector('.title').addEventListener('input', validateTitle);
+form.querySelector('.url').addEventListener('input', validateUrl);
+form.addEventListener('submit', createBookmark);
+form.addEventListener('hidden.bs.modal', restore);

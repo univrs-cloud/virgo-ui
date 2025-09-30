@@ -6,12 +6,12 @@ const getConfiguration = () => {
 	return Configuration.getConfiguration();
 };
 
-const setSmtp = (config) => {
-	Configuration.setSmtp(config);
+const updateSmtp = (config) => {
+	Configuration.updateSmtp(config);
 };
 
-const setLocation = (config) => {
-	Configuration.setLocation(config);
+const updateLocation = (config) => {
+	Configuration.updateLocation(config);
 };
 
 const handleSubscription = (properties) => {
@@ -29,6 +29,6 @@ const subscribe = (callbacks) => {
 export {
 	subscribe,
 	getConfiguration,
-	setSmtp,
-	setLocation
+	updateSmtp,
+	updateLocation
 };
