@@ -4,11 +4,11 @@ import validator from 'validator';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', passwordModalPartial);
 
-let passwordForm = document.querySelector('#user-password');
+let form = document.querySelector('#user-password');
 let user;
 
 const validatePassword = (event) => {
-	let input = passwordForm.querySelector('.password');
+	let input = form.querySelector('.password');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
 	if (validator.isEmpty(value)) {
@@ -22,7 +22,7 @@ const validatePassword = (event) => {
 };
 
 const validatePasswordCheck = (event) => {
-	let input = passwordForm.querySelector('.password-check');
+	let input = form.querySelector('.password-check');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
 	if (validator.isEmpty(value)) {
@@ -31,7 +31,7 @@ const validatePasswordCheck = (event) => {
 		invalidFeedback.innerHTML = `Can't be empty`;
 		return;
 	}
-	if (!validator.equals(value, passwordForm.querySelector('.password').value)) {
+	if (!validator.equals(value, form.querySelector('.password').value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
 		invalidFeedback.innerHTML = `Passwords do not match`;
@@ -48,7 +48,7 @@ const validateForm = () => {
 
 const isFormValid = () => {
 	validateForm();
-	return _.isEmpty(passwordForm.querySelectorAll('.is-invalid'));
+	return _.isEmpty(form.querySelectorAll('.is-invalid'));
 };
 
 const changePassword = (event) => {
@@ -71,9 +71,9 @@ const changePassword = (event) => {
 
 const restore = (event) => {
 	user = null;
-	passwordForm.reset();
-	_.each(passwordForm.querySelectorAll('button'), (button) => { button.disabled = false });
-	_.each(passwordForm.querySelectorAll('.form-floating'), (input) => {
+	form.reset();
+	_.each(form.querySelectorAll('button'), (button) => { button.disabled = false });
+	_.each(form.querySelectorAll('.form-floating'), (input) => {
 		input.querySelector('input')?.classList?.remove('is-invalid', 'is-valid');
 		input.querySelector('.invalid-feedback').innerHTML = '';
 	});
@@ -83,11 +83,11 @@ const render = (event) => {
 	let uid = event.relatedTarget.closest('.user').dataset.uid;
 	let users = userService.getUsers();
 	user = _.find(users, { uid: Number(uid) });
-	passwordForm.querySelector('.title-username').innerHTML = user.username;
+	form.querySelector('.title-username').innerHTML = user.username;
 };
 
-passwordForm.querySelector('.password').addEventListener('input', validatePassword);
-passwordForm.querySelector('.password-check').addEventListener('input', validatePasswordCheck);
-passwordForm.addEventListener('submit', changePassword);
-passwordForm.addEventListener('show.bs.modal', render);
-passwordForm.addEventListener('hidden.bs.modal', restore);
+form.querySelector('.password').addEventListener('input', validatePassword);
+form.querySelector('.password-check').addEventListener('input', validatePasswordCheck);
+form.addEventListener('submit', changePassword);
+form.addEventListener('show.bs.modal', render);
+form.addEventListener('hidden.bs.modal', restore);

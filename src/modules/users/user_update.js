@@ -4,11 +4,11 @@ import validator from 'validator';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', userModalPartial);
 
-let userForm = document.querySelector('#user-update');
+let form = document.querySelector('#user-update');
 let user;
 
 const validateFullname = (event) => {
-	let input = userForm.querySelector('.fullname');
+	let input = form.querySelector('.fullname');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
 	if (validator.isEmpty(value)) {
@@ -22,7 +22,7 @@ const validateFullname = (event) => {
 };
 
 const validateEmailAddress = (event) => {
-	let input = userForm.querySelector('.email');
+	let input = form.querySelector('.email');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
 	if (validator.isEmpty(value)) {
@@ -48,7 +48,7 @@ const validateForm = () => {
 
 const isFormValid = () => {
 	validateForm();
-	return _.isEmpty(userForm.querySelectorAll('.is-invalid'));
+	return _.isEmpty(form.querySelectorAll('.is-invalid'));
 };
 
 const updateUser = (event) => {
@@ -75,22 +75,22 @@ const render = (event) => {
 	let uid = event.relatedTarget.closest('.user').dataset.uid;
 	let users = userService.getUsers();
 	user = _.find(users, { uid: Number(uid) });
-	userForm.querySelector('.fullname').value = user.fullname;
-	userForm.querySelector('.email').value = user.email;
+	form.querySelector('.fullname').value = user.fullname;
+	form.querySelector('.email').value = user.email;
 };
 
 const restore = (event) => {
 	user = null;
-	userForm.reset();
-	_.each(userForm.querySelectorAll('button'), (button) => { button.disabled = false });
-	_.each(userForm.querySelectorAll('.form-floating'), (input) => {
+	form.reset();
+	_.each(form.querySelectorAll('button'), (button) => { button.disabled = false });
+	_.each(form.querySelectorAll('.form-floating'), (input) => {
 		input.querySelector('input')?.classList?.remove('is-invalid', 'is-valid');
 		input.querySelector('.invalid-feedback').innerHTML = '';
 	});
 };
 
-userForm.querySelector('.fullname').addEventListener('input', validateFullname);
-userForm.querySelector('.email').addEventListener('input', validateEmailAddress);
-userForm.addEventListener('submit', updateUser);
-userForm.addEventListener('show.bs.modal', render);
-userForm.addEventListener('hidden.bs.modal', restore);
+form.querySelector('.fullname').addEventListener('input', validateFullname);
+form.querySelector('.email').addEventListener('input', validateEmailAddress);
+form.addEventListener('submit', updateUser);
+form.addEventListener('show.bs.modal', render);
+form.addEventListener('hidden.bs.modal', restore);

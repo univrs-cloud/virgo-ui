@@ -4,10 +4,10 @@ import validator from 'validator';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', userModalPartial);
 
-let userForm = document.querySelector('#user-create');
+let form = document.querySelector('#user-create');
 
 const validateFullname = (event) => {
-	let input = userForm.querySelector('.fullname');
+	let input = form.querySelector('.fullname');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
 	if (validator.isEmpty(value)) {
@@ -21,7 +21,7 @@ const validateFullname = (event) => {
 };
 
 const validateEmailAddress = (event) => {
-	let input = userForm.querySelector('.email');
+	let input = form.querySelector('.email');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
 	if (validator.isEmpty(value)) {
@@ -41,7 +41,7 @@ const validateEmailAddress = (event) => {
 };
 
 const validateUsername = (event) => {
-	let input = userForm.querySelector('.username');
+	let input = form.querySelector('.username');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
 	if (validator.isEmpty(value)) {
@@ -55,7 +55,7 @@ const validateUsername = (event) => {
 };
 
 const validatePassword = (event) => {
-	let input = userForm.querySelector('.password');
+	let input = form.querySelector('.password');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
 	if (validator.isEmpty(value)) {
@@ -69,7 +69,7 @@ const validatePassword = (event) => {
 };
 
 const validatePasswordCheck = (event) => {
-	let input = userForm.querySelector('.password-check');
+	let input = form.querySelector('.password-check');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
 	if (validator.isEmpty(value)) {
@@ -78,7 +78,7 @@ const validatePasswordCheck = (event) => {
 		invalidFeedback.innerHTML = `Can't be empty`;
 		return;
 	}
-	if (!validator.equals(value, userForm.querySelector('.password').value)) {
+	if (!validator.equals(value, form.querySelector('.password').value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
 		invalidFeedback.innerHTML = `Passwords do not match`;
@@ -98,7 +98,7 @@ const validateForm = () => {
 
 const isFormValid = () => {
 	validateForm();
-	return _.isEmpty(userForm.querySelectorAll('.is-invalid'));
+	return _.isEmpty(form.querySelectorAll('.is-invalid'));
 };
 
 const createUser = (event) => {
@@ -123,18 +123,18 @@ const createUser = (event) => {
 };
 
 const restore = (event) => {
-	userForm.reset();
-	_.each(userForm.querySelectorAll('button'), (button) => { button.disabled = false });
-	_.each(userForm.querySelectorAll('.form-floating'), (input) => {
+	form.reset();
+	_.each(form.querySelectorAll('button'), (button) => { button.disabled = false });
+	_.each(form.querySelectorAll('.form-floating'), (input) => {
 		input.querySelector('input')?.classList?.remove('is-invalid', 'is-valid');
 		input.querySelector('.invalid-feedback').innerHTML = '';
 	});
 };
 
-userForm.querySelector('.fullname').addEventListener('input', validateFullname);
-userForm.querySelector('.email').addEventListener('input', validateEmailAddress);
-userForm.querySelector('.username').addEventListener('input', validateUsername);
-userForm.querySelector('.password').addEventListener('input', validatePassword);
-userForm.querySelector('.password-check').addEventListener('input', validatePasswordCheck);
-userForm.addEventListener('submit', createUser);
-userForm.addEventListener('hidden.bs.modal', restore);
+form.querySelector('.fullname').addEventListener('input', validateFullname);
+form.querySelector('.email').addEventListener('input', validateEmailAddress);
+form.querySelector('.username').addEventListener('input', validateUsername);
+form.querySelector('.password').addEventListener('input', validatePassword);
+form.querySelector('.password-check').addEventListener('input', validatePasswordCheck);
+form.addEventListener('submit', createUser);
+form.addEventListener('hidden.bs.modal', restore);

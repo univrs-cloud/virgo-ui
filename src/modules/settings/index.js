@@ -36,6 +36,6 @@ const render = (state) => {
 
 configurationService.subscribe([render]);
 
-import('modules/settings/notifications');
-import('modules/settings/location');
+import('modules/settings/notifications_update');
+import('modules/settings/location_update');
 import('modules/settings/power');

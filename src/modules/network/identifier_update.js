@@ -1,14 +1,13 @@
-import bookmarkModalPartial from 'modules/bookmarks/partials/modals/bookmark_update.html';
-import * as bookmarkService from 'modules/bookmarks/services/bookmark';
+import identifierModalPartial from 'modules/network/partials/modals/identifier.html';
+import * as networkService from 'modules/network/services/network';
 import validator from 'validator';
 
-document.querySelector('body').insertAdjacentHTML('beforeend', bookmarkModalPartial);
+document.querySelector('body').insertAdjacentHTML('beforeend', identifierModalPartial);
 
-let form = document.querySelector('#bookmark-update');
-let bookmark;
+let form = document.querySelector('#network-identifier');
 
-const validateTitle = (event) => {
-	let input = form.querySelector('.title');
+const validateHostname = () => {
+	let input = form.querySelector('.hostname');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
 	if (validator.isEmpty(value)) {
@@ -21,8 +20,8 @@ const validateTitle = (event) => {
 	input.classList.add('is-valid');
 };
 
-const validateUrl = (event) => {
-	let input = form.querySelector('.url');
+const validateDomainName = () => {
+	let input = form.querySelector('.domain-name');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
 	if (validator.isEmpty(value)) {
@@ -36,8 +35,8 @@ const validateUrl = (event) => {
 };
 
 const validateForm = () => {
-	validateTitle();
-	validateUrl();
+	validateHostname();
+	validateDomainName();
 };
 
 const isFormValid = () => {
@@ -45,7 +44,7 @@ const isFormValid = () => {
 	return _.isEmpty(form.querySelectorAll('.is-invalid'));
 };
 
-const updateBookmark = (event) => {
+const updateIdentifier = (event) => {
 	event.preventDefault();
 	if (!isFormValid()) {
 		return;
@@ -56,27 +55,14 @@ const updateBookmark = (event) => {
 	_.each(buttons, (button) => { button.disabled = true; });
 
 	let config = {
-		name: bookmark.name,
-		category: form.querySelector('.category').value,
-		title: form.querySelector('.title').value,
-		url: form.querySelector('.url').value
+		hostname: form.querySelector('.hostname').value,
+		domainName: form.querySelector('.domain-name').value
 	};
-
-	bookmarkService.updateBookmark(config);
+	networkService.updateDefaultGateway(config);
 	bootstrap.Modal.getInstance(form.closest('.modal'))?.hide();
 };
 
-const render = (event) => {
-	let name = event.relatedTarget.closest('.bookmark').dataset.name;
-	let bookmarks = bookmarkService.getBookmarks();
-	bookmark = _.find(bookmarks, { name: name });
-	form.querySelector('.title').value = bookmark.title;
-	form.querySelector('.url').value = bookmark.url;
-	form.querySelector('.category').value = bookmark.category;
-};
-
 const restore = (event) => {
-	bookmark = null;
 	form.reset();
 	_.each(form.querySelectorAll('button'), (button) => { button.disabled = false });
 	_.each(form.querySelectorAll('.form-floating'), (input) => {
@@ -85,8 +71,12 @@ const restore = (event) => {
 	});
 };
 
-form.querySelector('.title').addEventListener('input', validateTitle);
-form.querySelector('.url').addEventListener('input', validateUrl);
-form.addEventListener('submit', updateBookmark);
-form.addEventListener('show.bs.modal', render);
+form.querySelector('.hostname').addEventListener('input', validateHostname);
+form.querySelector('.domain-name').addEventListener('input', validateDomainName);
+form.addEventListener('submit', updateIdentifier);
 form.addEventListener('hidden.bs.modal', restore);
+form.addEventListener('show.bs.modal', (event) => {
+	let system = networkService.getSystem();
+	form.querySelector('.hostname').value = system?.osInfo?.hostname;
+	form.querySelector('.domain-name').value = _.replace(system?.osInfo?.fqdn, `${system?.osInfo?.hostname}.`, '');
+});

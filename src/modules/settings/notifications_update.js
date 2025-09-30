@@ -4,10 +4,10 @@ import validator from 'validator';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', notificationModalPartial);
 
-let notificationForm = document.querySelector('#smtp');
+let form = document.querySelector('#smtp');
 
 const validateAddress = (event) => {
-	let input = notificationForm.querySelector('.address');
+	let input = form.querySelector('.address');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
 	if (validator.isEmpty(value)) {
@@ -21,7 +21,7 @@ const validateAddress = (event) => {
 };
 
 const validatePort = (event) => {
-	let input = notificationForm.querySelector('.port');
+	let input = form.querySelector('.port');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
 	if (validator.isEmpty(value)) {
@@ -41,10 +41,10 @@ const validateForm = () => {
 
 const isFormValid = () => {
 	validateForm();
-	return _.isEmpty(notificationForm.querySelectorAll('.is-invalid'));
+	return _.isEmpty(form.querySelectorAll('.is-invalid'));
 };
 
-const setSmtp = (event) => {
+const updateSmtp = (event) => {
 	event.preventDefault();
 	if (!isFormValid()) {
 		return;
@@ -62,14 +62,14 @@ const setSmtp = (event) => {
 	config.sender = form.querySelector('.sender').value;
 	config.recipients = _.compact(_.split(_.trim(form.querySelector('.recipients').value), '\n'));
 	
-	configurationService.setSmtp(config);
+	configurationService.updateSmtp(config);
 	bootstrap.Modal.getInstance(form.closest('.modal'))?.hide();
 };
 
 const restore = (event) => {
-	notificationForm.reset();
-	_.each(notificationForm.querySelectorAll('button'), (button) => { button.disabled = false });
-	_.each(notificationForm.querySelectorAll('.form-floating'), (input) => {
+	form.reset();
+	_.each(form.querySelectorAll('button'), (button) => { button.disabled = false });
+	_.each(form.querySelectorAll('.form-floating'), (input) => {
 		input.querySelector('input')?.classList?.remove('is-invalid', 'is-valid');
 		input.querySelector('.invalid-feedback').innerHTML = '';
 	});
@@ -78,17 +78,17 @@ const restore = (event) => {
 const render = (event) => {
 	let configuration = configurationService.getConfiguration();
 	let encryption = configuration?.smtp?.encryption ?? '';
-	notificationForm.querySelector(`.encryption[value="${encryption}"]`).checked = true;
-	notificationForm.querySelector('.address').value = configuration?.smtp?.address ?? '';
-	notificationForm.querySelector('.port').value = configuration?.smtp?.port ?? '';
-	notificationForm.querySelector('.username').value = configuration?.smtp?.username ?? '';
-	notificationForm.querySelector('.password').value = configuration?.smtp?.password ?? '';
-	notificationForm.querySelector('.sender').value = configuration?.smtp?.sender ?? '';
-	notificationForm.querySelector('.recipients').innerHTML = configuration?.smtp?.recipients?.join('\n') || '';
+	form.querySelector(`.encryption[value="${encryption}"]`).checked = true;
+	form.querySelector('.address').value = configuration?.smtp?.address ?? '';
+	form.querySelector('.port').value = configuration?.smtp?.port ?? '';
+	form.querySelector('.username').value = configuration?.smtp?.username ?? '';
+	form.querySelector('.password').value = configuration?.smtp?.password ?? '';
+	form.querySelector('.sender').value = configuration?.smtp?.sender ?? '';
+	form.querySelector('.recipients').innerHTML = configuration?.smtp?.recipients?.join('\n') || '';
 };
 
-notificationForm.querySelector('.address').addEventListener('input', validateAddress);
-notificationForm.querySelector('.port').addEventListener('input', validatePort);
-notificationForm.addEventListener('submit', setSmtp);
-notificationForm.addEventListener('show.bs.modal', render);
-notificationForm.addEventListener('hidden.bs.modal', restore);
+form.querySelector('.address').addEventListener('input', validateAddress);
+form.querySelector('.port').addEventListener('input', validatePort);
+form.addEventListener('submit', updateSmtp);
+form.addEventListener('show.bs.modal', render);
+form.addEventListener('hidden.bs.modal', restore);

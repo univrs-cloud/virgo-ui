@@ -16,7 +16,7 @@ const inputRadioTemplate = _.template(inputRadioPartial);
 const selectTemplate = _.template(selectPartial);
 document.querySelector('body').insertAdjacentHTML('beforeend', appModalPartial);
 
-let appForm = document.querySelector('#app-install');
+let form = document.querySelector('#app-install');
 let app;
 
 const validateField = (field) => {
@@ -33,14 +33,14 @@ const validateField = (field) => {
 };
 
 const validateForm = () => {
-	_.each(appForm.querySelectorAll('input:not([type="radio"]):not([type="checkbox"]), textarea'), (field) => {
+	_.each(form.querySelectorAll('input:not([type="radio"]):not([type="checkbox"]), textarea'), (field) => {
 		validateField(field);
 	});
 };
 
 const isFormValid = () => {
 	validateForm();
-	return _.isEmpty(appForm.querySelectorAll('.is-invalid'));
+	return _.isEmpty(form.querySelectorAll('.is-invalid'));
 };
 
 const install = (event) => {
@@ -69,12 +69,12 @@ const install = (event) => {
 const render = (event) => {
 	let id = event.relatedTarget.closest('.app').dataset.id;
 	app = _.find(appCenterService.getTemplates(), { id: Number(id) });
-	appForm.querySelector('.modal-title').innerHTML = app.title;
-	appForm.querySelector('.description').innerHTML = app.description;
+	form.querySelector('.modal-title').innerHTML = app.title;
+	form.querySelector('.description').innerHTML = app.description;
 	let domain = appCenterService.getDomain();
 	_.each(app.env, (env) => {
 		if (env?.type === 'hidden') {
-			appForm.querySelector('.inputs').innerHTML += inputHiddenTemplate({ env });
+			form.querySelector('.inputs').innerHTML += inputHiddenTemplate({ env });
 			return;
 		}
 
@@ -82,40 +82,40 @@ const render = (event) => {
 			if (env.name.toLowerCase() === 'domain') {
 				env.default = domain;
 			}
-			appForm.querySelector('.inputs').innerHTML += inputTextTemplate({ env, prefix: env?.prefix, suffix: env?.suffix });
+			form.querySelector('.inputs').innerHTML += inputTextTemplate({ env, prefix: env?.prefix, suffix: env?.suffix });
 			return;
 		}
 
 		if (env?.type === 'email') {
-			appForm.querySelector('.inputs').innerHTML += inputEmailTemplate({ env });
+			form.querySelector('.inputs').innerHTML += inputEmailTemplate({ env });
 			return;
 		}
 
 		if (env?.type === 'password') {
-			appForm.querySelector('.inputs').innerHTML += inputPasswordTemplate({ env });
+			form.querySelector('.inputs').innerHTML += inputPasswordTemplate({ env });
 			return;
 		}
 
 		if (env?.type === 'radio') {
-			appForm.querySelector('.inputs').innerHTML += inputRadioTemplate({ env });
+			form.querySelector('.inputs').innerHTML += inputRadioTemplate({ env });
 			return;
 		}
 
 		if (env?.type === 'select') {
-			appForm.querySelector('.inputs').innerHTML += selectTemplate({ env });
+			form.querySelector('.inputs').innerHTML += selectTemplate({ env });
 			return;
 		}
 	});
-	_.each(appForm.querySelectorAll('input:not([type="radio"]):not([type="checkbox"]), textarea'), (field) => { field.addEventListener('input', (event) => { validateField(event.target); }) });
+	_.each(form.querySelectorAll('input:not([type="radio"]):not([type="checkbox"]), textarea'), (field) => { field.addEventListener('input', (event) => { validateField(event.target); }) });
 };
 
 const restore = (event) => {
 	app = null;
-	_.each(appForm.querySelectorAll('.modal-title, .description, .inputs'), (node) => { node.innerHTML = ''; });
-	appForm.reset();
-	_.each(appForm.querySelectorAll('button'), (button) => { button.disabled = false });
+	_.each(form.querySelectorAll('.modal-title, .description, .inputs'), (node) => { node.innerHTML = ''; });
+	form.reset();
+	_.each(form.querySelectorAll('button'), (button) => { button.disabled = false });
 }
 
-appForm.addEventListener('submit', install);
-appForm.addEventListener('show.bs.modal', render);
-appForm.addEventListener('hidden.bs.modal', restore);
+form.addEventListener('submit', install);
+form.addEventListener('show.bs.modal', render);
+form.addEventListener('hidden.bs.modal', restore);

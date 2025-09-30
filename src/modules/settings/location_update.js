@@ -5,7 +5,7 @@ import validator from 'validator';
 document.querySelector('body').insertAdjacentHTML('beforeend', locationModalPartial);
 
 const timeouts = {};
-let locationForm = document.querySelector('#location');
+let form = document.querySelector('#location');
 
 const validateLatitude = (event) => {
 	if (event) {
@@ -17,7 +17,7 @@ const validateLatitude = (event) => {
 	checkValidity();
 
 	function checkValidity() {
-		let input = locationForm.querySelector('.latitude');
+		let input = form.querySelector('.latitude');
 		let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 		let value = input.value;
 		if (validator.isEmpty(value)) {
@@ -47,7 +47,7 @@ const validateLongitude = (event) => {
 	checkValidity();
 
 	function checkValidity() {
-		let input = locationForm.querySelector('.longitude');
+		let input = form.querySelector('.longitude');
 		let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 		let value = input.value;
 		if (validator.isEmpty(value)) {
@@ -74,10 +74,10 @@ const validateForm = () => {
 
 const isFormValid = () => {
 	validateForm();
-	return _.isEmpty(locationForm.querySelectorAll('.is-invalid'));
+	return _.isEmpty(form.querySelectorAll('.is-invalid'));
 };
 
-const setLocation = (event) => {
+const updateLocation = (event) => {
 	event.preventDefault();
 	if (!isFormValid()) {
 		return;
@@ -90,7 +90,7 @@ const setLocation = (event) => {
 		latitude: form.querySelector('.latitude').value,
 		longitude: form.querySelector('.longitude').value
 	}
-	configurationService.setLocation(config);
+	configurationService.updateLocation(config);
 	bootstrap.Modal.getInstance(form.closest('.modal'))?.hide();
 };
 
@@ -98,8 +98,8 @@ const getLocation = (event) => {
 	event.preventDefault();
 	navigator.geolocation.getCurrentPosition(
 		(position) => {
-			locationForm.querySelector('.latitude').value = position.coords.latitude;
-			locationForm.querySelector('.longitude').value = position.coords.longitude;
+			form.querySelector('.latitude').value = position.coords.latitude;
+			form.querySelector('.longitude').value = position.coords.longitude;
 			validateForm();
 		},
 		() => {
@@ -118,9 +118,9 @@ const getLocation = (event) => {
 };
 
 const restore = (event) => {
-	locationForm.reset();
-	_.each(locationForm.querySelectorAll('button'), (button) => { button.disabled = false });
-	_.each(locationForm.querySelectorAll('.form-floating'), (input) => {
+	form.reset();
+	_.each(form.querySelectorAll('button'), (button) => { button.disabled = false });
+	_.each(form.querySelectorAll('.form-floating'), (input) => {
 		input.querySelector('input')?.classList?.remove('is-invalid', 'is-valid');
 		input.querySelector('.invalid-feedback').innerHTML = '';
 	});
@@ -128,17 +128,17 @@ const restore = (event) => {
 
 const render = (event) => {
 	let configuration = configurationService.getConfiguration();
-	locationForm.querySelector('.latitude').value = configuration?.location?.latitude ?? '';
-	locationForm.querySelector('.longitude').value = configuration?.location?.longitude ?? '';
+	form.querySelector('.latitude').value = configuration?.location?.latitude ?? '';
+	form.querySelector('.longitude').value = configuration?.location?.longitude ?? '';
 };
 
 if ('geolocation' in navigator) {
-	locationForm.querySelector('.get-geo-location').classList.remove('d-none');
+	form.querySelector('.get-geo-location').classList.remove('d-none');
 }
 
-locationForm.querySelector('.get-geo-location').addEventListener('click', getLocation);
-locationForm.querySelector('.latitude').addEventListener('input', validateLatitude);
-locationForm.querySelector('.longitude').addEventListener('input', validateLongitude);
-locationForm.addEventListener('submit', setLocation);
-locationForm.addEventListener('show.bs.modal', render);
-locationForm.addEventListener('hidden.bs.modal', restore);
+form.querySelector('.get-geo-location').addEventListener('click', getLocation);
+form.querySelector('.latitude').addEventListener('input', validateLatitude);
+form.querySelector('.longitude').addEventListener('input', validateLongitude);
+form.addEventListener('submit', updateLocation);
+form.addEventListener('show.bs.modal', render);
+form.addEventListener('hidden.bs.modal', restore);
