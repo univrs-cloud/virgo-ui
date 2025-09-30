@@ -6,17 +6,20 @@ const performAction = (config) => {
 	Docker.performAction(config);
 };
 
+const setOrder = (config) => {
+	Docker.setOrder(config);
+};
+
 const handleSubscription = (properties) => {
 	if (_.isNull(properties.configured) || _.isNull(properties.containers)) {
 		return;
 	}
 
-	let apps = _.map(properties.configured.configuration, (entity) => {
-		entity.id = entity.name;
+	let configuration = { ...properties.configured.configuration };
+	let apps = _.map(configuration, (entity) => {
 		if (entity.type === 'app') {
 			let container = _.find(properties.containers, (container) => { return _.includes(container.names, `/${entity.name}`) });
 			if (container) {
-				entity.id = container.id;
 				entity.composeProject = container.labels.comDockerComposeProject ?? false;
 				if (entity.composeProject) {
 					entity.projectContainers = _.orderBy(
@@ -64,5 +67,6 @@ const subscribe = (callbacks) => {
 
 export {
 	subscribe,
-	performAction
+	performAction,
+	setOrder
 };

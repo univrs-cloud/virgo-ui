@@ -20,17 +20,16 @@ const composeApps = (configured, containers, imageUpdates) => {
 		return null;
 	}
 
+	let configuration = { ...configured.configuration };
 	return _.map(
 		_.orderBy(
-			_.filter(configured.configuration, { type: 'app' }),
+			_.filter(configuration, { type: 'app' }),
 			 ['title'],
 			 ['asc']
 		),
 		(entity) => {
-			entity.id = entity.name;
 			let container = _.find(containers, (container) => { return _.includes(container.names, `/${entity.name}`) });
 			if (container) {
-				entity.id = container.id;
 				entity.composeProject = container.labels.comDockerComposeProject ?? false;
 				if (entity.composeProject) {
 					entity.projectContainers = _.orderBy(

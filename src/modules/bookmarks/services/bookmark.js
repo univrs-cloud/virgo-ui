@@ -7,16 +7,11 @@ const composeBookmark = (configured) => {
 		return null;
 	}
 	
-	return _.map(
-		_.orderBy(
-			_.filter(configured.configuration, { type: 'bookmark' }),
-			['title'],
-			['asc']
-		),
-		(entity) => {
-			entity.id = entity.name;
-			return entity;
-		});
+	return _.orderBy(
+		_.filter(configured.configuration, { type: 'bookmark' }),
+		['title'],
+		['asc']
+	);
 }
 
 const getBookmarks = () => {

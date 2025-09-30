@@ -2,8 +2,8 @@ class DragDropReorder {
 	constructor(container, options = {}) {
 		this.container = container;
 		this.options = {
-			boundrySelector: '.col', // CSS selector for containers
-			itemSelector: '.card', // CSS selector for draggable items
+			boundrySelector: null, // CSS selector for containers
+			itemSelector: '.drag-drop-item', // CSS selector for draggable items
 			axis: 'y', // 'x', 'y', or 'both'
 			dragHandle: null, // CSS selector for drag handle, null means entire item is draggable
 			onReorder: null, // Callback when items are reordered
@@ -17,53 +17,50 @@ class DragDropReorder {
 		this.dragOffset = { x: 0, y: 0 };
 		this.placeholder = null;
 		this.originalPosition = null;
-		this.boundry = null;
+		this.boundry = (this.options.boundrySelector ? this.container.querySelector(this.options.boundrySelector)  : this.container);
+		this.boundry.classList.add('dragging');
 		this.hasStartedDragging = false;
 		
 		this.init();
 	}
 	
 	init() {
+		this.addDragStyles();
 		this.container.addEventListener('mousedown', this.handleMouseDown.bind(this));
 		this.container.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: false });
-		
-		// Prevent default drag behavior on images and links
-		this.container.addEventListener('dragstart', (e) => e.preventDefault());
-		
-		// Add CSS for drag states
-		this.addDragStyles();
+		this.container.addEventListener('dragstart', (event) => event.preventDefault());
 	}
 	
 	addDragStyles() {
-		if (document.getElementById('drag-drop-styles')) return;
+		if (document.getElementById('drag-drop-styles')) {
+			return;
+		}
 		
 		const style = document.createElement('style');
 		style.id = 'drag-drop-styles';
 		style.textContent = `
+			.dragging {
+				background: var(--bs-purple-100);
+				border-radius: var(--bs-border-radius-xl);
+			}
 			.drag-drop-placeholder {
 				transition: all 0.2s ease;
 				opacity: 0 !important;
 			}
-			
 			.drag-drop-item {
 				z-index: 99;
 				position: relative;
 				transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
 				cursor: grab;
 			}
-			
-			.drag-drop-item:hover {
-				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-			}
-			
 			.drag-drop-item.dragging {
 				z-index: 1000;
 				cursor: grabbing;
 				opacity: 0.9;
+				background: var(--bs-bg);
 				box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 				transition: none;
 			}
-			
 			/* Add a subtle drag handle indicator */
 			.drag-drop-item::before {
 				content: '⋮⋮';
@@ -78,11 +75,9 @@ class DragDropReorder {
 				transition: opacity 0.2s ease;
 				pointer-events: none;
 			}
-			
 			.drag-drop-item:hover::before {
-				opacity: 0.5;
+				opacity: 1;
 			}
-			
 			.drag-drop-item.dragging::before {
 				opacity: 0;
 			}
@@ -100,7 +95,9 @@ class DragDropReorder {
 	
 	startDrag(event, type) {
 		const item = event.target.closest(this.options.itemSelector);
-		if (!item) return;
+		if (!item) {
+			return;
+		}
 		
 		// Check if drag handle is specified and click is on handle
 		if (this.options.dragHandle && !event.target.closest(this.options.dragHandle)) {
@@ -110,7 +107,6 @@ class DragDropReorder {
 		event.preventDefault();
 		
 		this.draggedElement = item;
-		this.boundry = item.closest(this.options.boundrySelector);
 		// Calculate offset from mouse/touch to element
 		const rect = item.getBoundingClientRect();
 		this.originalPosition = {
@@ -125,11 +121,10 @@ class DragDropReorder {
 		this.isDragging = true;
 		this.hasStartedDragging = false;
 		item.classList.add('dragging');
-		this.container.classList.add('drag-drop-container', 'dragging');
 		
 		// Add event listeners
-		const moveEvent = type === 'mouse' ? 'mousemove' : 'touchmove';
-		const endEvent = type === 'mouse' ? 'mouseup' : 'touchend';
+		const moveEvent = (type === 'mouse' ? 'mousemove' : 'touchmove');
+		const endEvent = (type === 'mouse' ? 'mouseup' : 'touchend');
 		
 		document.addEventListener(moveEvent, this.handleMove.bind(this));
 		document.addEventListener(endEvent, this.handleEnd.bind(this));
@@ -139,13 +134,15 @@ class DragDropReorder {
 		}
 	}
 	
-	handleMove(e) {
-		if (!this.isDragging || !this.draggedElement) return;
+	handleMove(event) {
+		if (!this.isDragging || !this.draggedElement) {
+			return;
+		}
 		
-		e.preventDefault();
+		event.preventDefault();
 		
-		const clientX = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX;
-		const clientY = e.type === 'mousemove' ? e.clientY : e.touches[0].clientY;
+		const clientX = (event.type === 'mousemove' ? event.clientX : event.touches[0].clientX);
+		const clientY = (event.type === 'mousemove' ? event.clientY : event.touches[0].clientY);
 		
 		// Create placeholder only when actual movement starts
 		if (!this.hasStartedDragging) {
@@ -166,12 +163,12 @@ class DragDropReorder {
 			newY = this.originalPosition.y;
 		}
 		
-		// Constrain to category boundaries
+		// Constrain to boundaries
 		if (this.boundry) {
 			const boundryRect = this.boundry.getBoundingClientRect();
 			const elementRect = this.draggedElement.getBoundingClientRect();
 			
-			// Keep element within category boundaries
+			// Keep element within boundaries
 			if (newX < boundryRect.left) {
 				newX = boundryRect.left;
 			} else if (newX + elementRect.width > boundryRect.right) {
@@ -195,8 +192,10 @@ class DragDropReorder {
 		this.updatePlaceholderPosition(clientX, clientY);
 	}
 	
-	handleEnd(e) {
-		if (!this.isDragging || !this.draggedElement) return;
+	handleEnd(event) {
+		if (!this.isDragging || !this.draggedElement) {
+			return;
+		}
 		
 		this.isDragging = false;
 		this.hasStartedDragging = false;
@@ -207,14 +206,13 @@ class DragDropReorder {
 		document.removeEventListener('touchmove', this.handleMove.bind(this));
 		document.removeEventListener('touchend', this.handleEnd.bind(this));
 		
-		// Remove placeholder first
 		if (this.placeholder) {
 			// Replace placeholder with the dragged element
 			this.placeholder.parentNode.insertBefore(this.draggedElement, this.placeholder);
 			this.placeholder.remove();
 			this.placeholder = null;
 		}
-		
+
 		// Reset styles
 		this.draggedElement.classList.remove('dragging');
 		this.draggedElement.style.position = '';
@@ -222,12 +220,9 @@ class DragDropReorder {
 		this.draggedElement.style.top = '';
 		this.draggedElement.style.pointerEvents = '';
 		
-		// Remove container dragging class
-		this.container.classList.remove('drag-drop-container', 'dragging');
-		
 		// Ensure the dragged element is in the DOM at the correct position
 		if (!this.draggedElement.parentNode || this.draggedElement.parentNode !== this.boundry) {
-			// If the element is not in the correct parent, append it to the current container
+			// If the element is not in the correct parent, append it to the current boundry
 			this.boundry.appendChild(this.draggedElement);
 		}
 		
@@ -244,7 +239,6 @@ class DragDropReorder {
 		}
 		
 		this.draggedElement = null;
-		this.boundry = null;
 	}
 	
 	createPlaceholder() {
@@ -254,22 +248,26 @@ class DragDropReorder {
 		this.placeholder.style.pointerEvents = 'none';
 		
 		// Remove interactive elements from placeholder
-		this.placeholder.querySelectorAll('a, button, input, select, textarea').forEach(el => {
-			el.remove();
+		this.placeholder.querySelectorAll('a, button, input, select, textarea').forEach(element => {
+			element.remove();
 		});
 		
 		this.draggedElement.parentNode.insertBefore(this.placeholder, this.draggedElement);
 	}
 	
 	updatePlaceholderPosition(clientX, clientY) {
-		if (!this.placeholder) return;
+		if (!this.placeholder) {
+			return;
+		}
 		
 		const items = this.boundry.querySelectorAll(this.options.itemSelector);
 		let insertIndex = -1;
 		
 		for (let i = 0; i < items.length; i++) {
 			const item = items[i];
-			if (item === this.draggedElement || item === this.placeholder) continue;
+			if (item === this.draggedElement || item === this.placeholder) {
+				continue;
+			}
 			
 			const rect = item.getBoundingClientRect();
 			const itemCenterY = rect.top + rect.height / 2;
@@ -290,42 +288,16 @@ class DragDropReorder {
 	}
 	
 	getNewOrder() {
-		if (!this.boundry || !this.placeholder) return null;
-		
-		const items = Array.from(this.boundry.querySelectorAll(this.options.itemSelector))
-			.filter(item => item !== this.draggedElement);
-		
-		const placeholderIndex = Array.from(this.boundry.children).indexOf(this.placeholder);
-		
-		// Create new order array
-		const newOrder = [];
-		
-		// Insert items before the placeholder position
-		for (let i = 0; i < placeholderIndex; i++) {
-			if (items[i]) {
-				newOrder.push(items[i]);
-			}
+		if (!this.boundry) {
+			return null;
 		}
 		
-		// Insert the dragged element at the placeholder position
-		newOrder.push(this.draggedElement);
-		
-		// Insert remaining items after the placeholder position
-		for (let i = placeholderIndex; i < items.length; i++) {
-			if (items[i]) {
-				newOrder.push(items[i]);
-			}
-		}
-		
-		return {
-			items: newOrder,
-			draggedItem: this.draggedElement,
-			draggedItemIndex: placeholderIndex,
-			container: this.boundry
-		};
+		return Array.from(this.boundry.querySelectorAll(this.options.itemSelector));
 	}
 	
 	destroy() {
+		document.querySelector('#drag-drop-styles').remove();
+		this.boundry.classList.remove('dragging');
 		this.container.removeEventListener('mousedown', this.handleMouseDown.bind(this));
 		this.container.removeEventListener('touchstart', this.handleTouchStart.bind(this));
 	}
