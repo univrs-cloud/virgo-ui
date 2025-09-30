@@ -70,7 +70,11 @@ class Docker extends Store {
 	}
 
 	performServiceAction(config) {
-		this.socket.emit('service:performAction', config);
+		this.socket.emit('app:service:performAction', config);
+	}
+
+	setOrder(config) {
+		this.socket.emit('app:order', config);
 	}
 
 	composeUrlFromLabels(labels) {

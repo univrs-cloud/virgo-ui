@@ -3,8 +3,7 @@ import categoryPartial from 'modules/dashboard/partials/category.html';
 import appPartial from 'modules/dashboard/partials/app.html';
 import bookmarkPartial from 'modules/dashboard/partials/bookmark.html';
 import * as appService from 'modules/dashboard/services/app';
-// import orderService from 'modules/dashboard/services/order';
-import 'libs/drag-drop.js';
+import 'libs/drag_drop.js';
 
 const appsEmptyTemplate = _.template(appsEmptyPartial);
 const categorySomething = _.template(categoryPartial);
@@ -13,6 +12,72 @@ const bookmarkTemplate = _.template(bookmarkPartial);
 let container = document.querySelector('#apps-bookmars');
 let dragDropInstance = null;
 let isDragging = false;
+
+const order = (event) => {
+	let target = event.target.closest('.order');
+	if (_.isNull(target)) {
+		return;
+	}
+
+	event.preventDefault();
+	if (isDragging) {
+		const shouldEnable = target.querySelector('.icon-solid').classList.contains('icon-bars-staggered');
+		_.each(container.querySelectorAll('.item'), (boundry) => {
+			disableDragDrop(boundry);
+		});
+		if (shouldEnable) {
+			enableDragDrop(target.closest('.item'));
+		}
+	} else {
+		enableDragDrop(target.closest('.item'));
+	}
+};
+
+const disableDragDrop = (container) => {
+	dragDropInstance?.destroy();
+	dragDropInstance = null;
+	_.each(container.querySelectorAll('.card'), (card) => {
+		card.classList.remove('drag-drop-item');
+	});
+	let icon = container.querySelector('.icon-solid');
+	icon.classList.remove('icon-check');
+	icon.classList.add('icon-bars-staggered');
+	isDragging = false;
+};
+
+const enableDragDrop = (container) => {	
+	if (dragDropInstance) {
+		return;
+	}
+
+	isDragging = true;
+	let icon = container.querySelector('.icon-solid');
+	icon.classList.remove('icon-bars-staggered');
+	icon.classList.add('icon-check');
+	_.each(container.querySelectorAll('.card'), (card) => {
+		card.classList.add('drag-drop-item');
+	});
+	dragDropInstance = new DragDropReorder(container, {
+		onReorder: handleReorder
+	});
+};
+
+const handleReorder = (newOrder, draggedElement, boundry) => {
+	if (!newOrder || !draggedElement || !boundry) {
+		return;
+	}
+	
+	let config = [];
+	_.each(newOrder, (card, order) => {
+		let item = {
+			id: card.dataset.id,
+			type: card.dataset.type,
+			order: order + 1
+		};
+		config.push(item);
+	});
+	appService.setOrder(config);
+};
 
 const render = (state) => {
 	if (_.isNull(state.apps)) {
@@ -49,77 +114,8 @@ const render = (state) => {
 		`<div>${template.innerHTML}</div>`,
 		{ childrenOnly: true }
 	);
-	
-	if (!dragDropInstance) {
-		initializeDragDrop();
-	}
 };
 
-const initializeDragDrop = () => {	
-	const cards = container.querySelectorAll('.card');
-	cards.forEach(card => {
-		card.classList.add('drag-drop-item');
-	});
-	
-	let timeout;
-	dragDropInstance = new DragDropReorder(container, {
-		boundrySelector: '.item',
-		itemSelector: '.card',
-		onDragStart: () => {
-			clearTimeout(timeout);
-			isDragging = true;
-		},
-		onDragEnd: () => {
-			timeout = setTimeout(() => {
-				isDragging = false;
-			}, 1000);
-		},
-		onReorder: handleReorder
-	});
-};
-
-const handleReorder = (newOrder, draggedElement, category) => {
-	if (!newOrder || !draggedElement || !category) return;
-	
-	// Get the category name
-	const categoryName = category.querySelector('h5').textContent.trim();
-	
-	// Update the order of items in the category
-	const reorderedItems = newOrder.items;
-	
-	// Clear the category and re-append items in the new order
-	category.innerHTML = '';
-	
-	// Add the category title back
-	const title = document.createElement('h5');
-	title.textContent = categoryName;
-	category.appendChild(title);
-	
-	// Append all items in the new order
-	reorderedItems.forEach((item) => {
-		category.appendChild(item);
-	});
-	
-	// Ensure the dragged element is properly positioned
-	const draggedItemIndex = newOrder.draggedItemIndex;
-	if (draggedItemIndex >= 0 && draggedItemIndex < reorderedItems.length) {
-		// The dragged element should already be in the correct position
-		// but let's verify it's there
-		const currentItems = Array.from(category.querySelectorAll('.card'));
-		const draggedElementInDOM = currentItems.find(item => item === draggedElement);
-		if (!draggedElementInDOM) {
-			// If for some reason the dragged element is not in the DOM, insert it at the correct position
-			const targetPosition = Math.min(draggedItemIndex, currentItems.length);
-			if (targetPosition === currentItems.length) {
-				category.appendChild(draggedElement);
-			} else {
-				category.insertBefore(draggedElement, currentItems[targetPosition]);
-			}
-		}
-	}
-	
-	// Save the new order
-	// orderService.setOrderForCategory(categoryName, reorderedItems);
-};
+container.addEventListener('click', order);
 
 appService.subscribe([render]);
