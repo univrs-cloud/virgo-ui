@@ -55,9 +55,11 @@ const updateInterface = (event) => {
 	let buttons = form.querySelectorAll('button');
 	_.each(buttons, (button) => { button.disabled = true; });
 
+	const isDhcp = form.querySelector('.dhcp').checked;
 	let config = {
-		ipAddress: form.querySelector('.ip-address').value,
-		netmask: form.querySelector('.netmask').value
+		dhcp: isDhcp,
+		ipAddress: (!isDhcp ? form.querySelector('.ip-address').value : null),
+		netmask: (!isDhcp ? form.querySelector('.netmask').value : null)
 	};
 	networkService.updateInterface(config);
 	bootstrap.Modal.getInstance(form.closest('.modal'))?.hide();
@@ -66,6 +68,7 @@ const updateInterface = (event) => {
 const toggleDhcp = (event) => {
 	form.querySelector('.ip-address').disabled = event.target.checked;
 	form.querySelector('.netmask').disabled = event.target.checked;
+	form.querySelector('.input-group').classList[event.target.checked ? 'add' : 'remove']('d-none');
 };
 
 const getBlock = (networkInterface) => {
@@ -83,6 +86,7 @@ const restore = (event) => {
 		input.querySelector('input')?.classList?.remove('is-invalid', 'is-valid');
 		input.querySelector('.invalid-feedback').innerHTML = '';
 	});
+	form.querySelector('.dhcp').dispatchEvent(new Event('change'));
 };
 
 form.querySelector('.ip-address').addEventListener('input', validateIpAddress);
