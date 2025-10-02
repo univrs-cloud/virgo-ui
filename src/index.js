@@ -1,4 +1,5 @@
 import 'assets/scss/index.scss';
+import 'libs/lodash';
 import * as bootstrapService from 'shell/services/bootstrap';
 import page from 'page';
 

@@ -88,7 +88,7 @@ module.exports = (env, argv) => {
 				'axios': ['axios', 'default'],
 				'popper': '@popperjs/core',
 				'bootstrap': 'bootstrap',
-				'_': [path.join(__dirname, 'src/libs/lodash.js'), 'default'],
+				'_': ['lodash-es', 'default'],
 				'morphdom': [path.join(__dirname, 'src/libs/morphdom.js'), 'default'],
 				'moment': 'moment-timezone',
 				'bytes': 'bytes',
