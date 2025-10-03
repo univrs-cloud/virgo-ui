@@ -6,10 +6,6 @@ const getSystem = () => {
 	return Host.getSystem();
 };
 
-const updateDefaultGateway = (config) => {
-	Host.updateDefaultGateway(config);
-};
-
 const updateHostIdentifier = (config) => {
 	Host.updateHostIdentifier(config);
 };
@@ -33,7 +29,6 @@ const subscribe = (callbacks) => {
 export {
 	subscribe,
 	getSystem,
-	updateDefaultGateway,
 	updateHostIdentifier,
 	updateInterface
 };
