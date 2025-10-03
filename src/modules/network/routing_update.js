@@ -46,6 +46,11 @@ const updateDefaultGateway = (event) => {
 	bootstrap.Modal.getInstance(form.closest('.modal'))?.hide();
 };
 
+const render = (event) => {
+	let system = networkService.getSystem();
+	form.querySelector('.gateway').value = system?.defaultGateway;
+};
+
 const restore = (event) => {
 	form.reset();
 	_.each(form.querySelectorAll('button'), (button) => { button.disabled = false });
@@ -57,8 +62,5 @@ const restore = (event) => {
 
 form.querySelector('.gateway').addEventListener('input', validateGateway);
 form.addEventListener('submit', updateDefaultGateway);
+form.addEventListener('show.bs.modal', render);
 form.addEventListener('hidden.bs.modal', restore);
-form.addEventListener('show.bs.modal', (event) => {
-	let system = networkService.getSystem();
-	form.querySelector('.gateway').value = system?.defaultGateway;
-});

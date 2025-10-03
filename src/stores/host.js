@@ -88,14 +88,14 @@ class Host extends Store {
 		});
 	}
 
-	updateDefaultGateway(config) {
-		this.socket.emit('host:network:gateway:update', config);
-	}
-
 	updateHostIdentifier(config) {
 		this.socket.emit('host:network:identifier:update', config);
 	}
 
+	updateDefaultGateway(config) {
+		this.socket.emit('host:network:gateway:update', config);
+	}
+	
 	updateInterface(config) {
 		this.socket.emit('host:network:interface:update', config);
 	}

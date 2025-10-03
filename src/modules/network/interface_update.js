@@ -57,6 +57,7 @@ const updateInterface = (event) => {
 
 	const isDhcp = form.querySelector('.dhcp').checked;
 	let config = {
+		name: form.querySelector('input.name').value,
 		dhcp: isDhcp,
 		ipAddress: (!isDhcp ? form.querySelector('.ip-address').value : null),
 		netmask: (!isDhcp ? form.querySelector('.netmask').value : null)
@@ -79,6 +80,16 @@ const getBlock = (networkInterface) => {
 	return block;
 };
 
+const render = (event) => {
+	const system = networkService.getSystem();
+	const block = getBlock(system.networkInterface);
+	form.querySelector('.alert .name').innerHTML = system?.networkInterface?.ifaceName;
+	form.querySelector('input.name').value = system?.networkInterface?.ifaceName;
+	form.querySelector('.dhcp').checked = system?.networkInterface?.dhcp;
+	form.querySelector('.ip-address').value = system?.networkInterface?.ip4;
+	form.querySelector('.netmask').value = block?.bitmask ?? 'error';
+};
+
 const restore = (event) => {
 	form.reset();
 	_.each(form.querySelectorAll('button'), (button) => { button.disabled = false });
@@ -89,17 +100,9 @@ const restore = (event) => {
 	form.querySelector('.dhcp').dispatchEvent(new Event('change'));
 };
 
+form.querySelector('.dhcp').addEventListener('change', toggleDhcp);
 form.querySelector('.ip-address').addEventListener('input', validateIpAddress);
 form.querySelector('.netmask').addEventListener('input', validateNetmask);
 form.addEventListener('submit', updateInterface);
+form.addEventListener('show.bs.modal', render);
 form.addEventListener('hidden.bs.modal', restore);
-form.addEventListener('show.bs.modal', (event) => {
-	let system = networkService.getSystem();
-	const block = getBlock(system.networkInterface);
-	form.querySelector('.alert .name').innerHTML = system?.networkInterface?.ifaceName;
-	form.querySelector('input.name').value = system?.networkInterface?.ifaceName;
-	form.querySelector('.dhcp').checked = system?.networkInterface?.dhcp;
-	form.querySelector('.ip-address').value = system?.networkInterface?.ip4;
-	form.querySelector('.netmask').value = block?.bitmask ?? 'error';
-});
-form.querySelector('.dhcp').addEventListener('change', toggleDhcp);

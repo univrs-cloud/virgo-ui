@@ -62,6 +62,12 @@ const updateIdentifier = (event) => {
 	bootstrap.Modal.getInstance(form.closest('.modal'))?.hide();
 };
 
+const render = (event) => {
+	let system = networkService.getSystem();
+	form.querySelector('.hostname').value = system?.osInfo?.hostname;
+	form.querySelector('.domain-name').value = _.replace(system?.osInfo?.fqdn, `${system?.osInfo?.hostname}.`, '');
+};
+
 const restore = (event) => {
 	form.reset();
 	_.each(form.querySelectorAll('button'), (button) => { button.disabled = false });
@@ -74,9 +80,5 @@ const restore = (event) => {
 form.querySelector('.hostname').addEventListener('input', validateHostname);
 form.querySelector('.domain-name').addEventListener('input', validateDomainName);
 form.addEventListener('submit', updateIdentifier);
+form.addEventListener('show.bs.modal', render);
 form.addEventListener('hidden.bs.modal', restore);
-form.addEventListener('show.bs.modal', (event) => {
-	let system = networkService.getSystem();
-	form.querySelector('.hostname').value = system?.osInfo?.hostname;
-	form.querySelector('.domain-name').value = _.replace(system?.osInfo?.fqdn, `${system?.osInfo?.hostname}.`, '');
-});
