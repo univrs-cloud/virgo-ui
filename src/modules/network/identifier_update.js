@@ -58,7 +58,7 @@ const updateIdentifier = (event) => {
 		hostname: form.querySelector('.hostname').value,
 		domainName: form.querySelector('.domain-name').value
 	};
-	networkService.updateDefaultGateway(config);
+	networkService.updateHostIdentifier(config);
 	bootstrap.Modal.getInstance(form.closest('.modal'))?.hide();
 };
 
