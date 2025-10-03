@@ -15,6 +15,10 @@ class Docker extends Store {
 		this.setState(initialState, 'socket_connect');
 
 		this.socket.on('disconnect', () => {
+			if (this.getStateProperty('configuringNetworkInterface')) {
+				return;
+			}
+			
 			if (this.getStateProperty('reboot') || this.getStateProperty('shutdown') || !_.isNull(this.getStateProperty('upgrade'))) {
 				return;
 			}
