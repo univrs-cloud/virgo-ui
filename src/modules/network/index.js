@@ -38,5 +38,4 @@ const render = (state) => {
 networkService.subscribe([render]);
 
 import('modules/network/identifier_update');
-import('modules/network/routing_update');
 import('modules/network/interface_update');
