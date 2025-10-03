@@ -16,17 +16,18 @@ class Job extends Store {
 				return;
 			}
 
-			_.each(_.keys(initialState), (key) => { initialState[key] = false; });
-			this.setState(initialState, 'socket_disconnect');
-			_.each(_.keys(initialState), (key) => { initialState[key] = null; });
+			// _.each(_.keys(initialState), (key) => { initialState[key] = false; });
+			// this.setState(initialState, 'socket_disconnect');
+			// _.each(_.keys(initialState), (key) => { initialState[key] = null; });
 		});
 
-		// this.socket.on('jobs', (jobs) => {
-		// 	this.setState({ jobs }, 'set_jobs');
-		// });
+		this.socket.on('jobs', (jobs) => {
+			console.log('jobs', jobs);
+			this.setState({ jobs }, 'set_jobs');
+		});
 
 		this.socket.on('job', (job) => {
-			let jobs = this.getStateProperty('jobs');
+			let jobs = this.getStateProperty('jobs') || [];
 			const index = _.findIndex(jobs, { id: job.id });
 			if (index !== -1) {
 				jobs[index] = job;
