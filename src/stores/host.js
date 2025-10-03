@@ -4,6 +4,7 @@ class Host extends Store {
 	constructor() {
 		const initialState = {
 			system: null,
+			configuringNetworkInterface: false,
 			reboot: null,
 			shutdown: null,
 			checkUpdates: false,
@@ -24,6 +25,10 @@ class Host extends Store {
 		this.setState(initialState, 'socket_connect');
 
 		this.socket.on('disconnect', () => {
+			if (this.getStateProperty('configuringNetworkInterface')) {
+				return;
+			}
+
 			if (this.getStateProperty('reboot') || this.getStateProperty('shutdown') || !_.isNull(this.getStateProperty('upgrade'))) {
 				return;
 			}
@@ -57,6 +62,7 @@ class Host extends Store {
 
 		this.socket.on('host:system', (system) => {
 			this.setState({ system }, 'get_system');
+			this.setState({ 'configuringNetworkInterface': false }, 'set_configuring');
 		});
 
 		this.socket.on('host:cpu:stats', (cpuStats) => {
@@ -94,9 +100,7 @@ class Host extends Store {
 	
 	updateInterface(config) {
 		this.socket.emit('host:network:interface:update', config);
-		setTimeout(() => {
-			location.reload()
-		}, 5000);
+		this.setState({ 'configuringNetworkInterface': true }, 'set_configuring');
 	}
 
 	checkUpdates() {
