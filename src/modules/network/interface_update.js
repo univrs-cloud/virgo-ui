@@ -35,9 +35,24 @@ const validateNetmask = () => {
 	input.classList.add('is-valid');
 };
 
+const validateGateway = () => {
+	let input = form.querySelector('.gateway');
+	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
+	let value = input.value;
+	if (validator.isEmpty(value)) {
+		input.classList.remove('is-valid');
+		input.classList.add('is-invalid');
+		invalidFeedback.innerHTML = `Can't be empty`;
+		return;
+	}
+	input.classList.remove('is-invalid');
+	input.classList.add('is-valid');
+};
+
 const validateForm = () => {
 	validateIpAddress();
 	validateNetmask();
+	validateGateway();
 };
 
 const isFormValid = () => {
@@ -58,9 +73,10 @@ const updateInterface = (event) => {
 	const isDhcp = form.querySelector('.dhcp').checked;
 	let config = {
 		name: form.querySelector('input.name').value,
-		dhcp: isDhcp,
+		method: (!isDhcp ? 'manual' : 'auto'),
 		ipAddress: (!isDhcp ? form.querySelector('.ip-address').value : null),
-		netmask: (!isDhcp ? form.querySelector('.netmask').value : null)
+		netmask: (!isDhcp ? form.querySelector('.netmask').value : null),
+		gateway: (!isDhcp ? form.querySelector('.gateway').value : null)
 	};
 	networkService.updateInterface(config);
 	bootstrap.Modal.getInstance(form.closest('.modal'))?.hide();
@@ -69,7 +85,7 @@ const updateInterface = (event) => {
 const toggleDhcp = (event) => {
 	form.querySelector('.ip-address').disabled = event.target.checked;
 	form.querySelector('.netmask').disabled = event.target.checked;
-	form.querySelector('.input-group').classList[event.target.checked ? 'add' : 'remove']('d-none');
+	_.each(form.querySelectorAll('.input-group'), (element) => { element.classList[event.target.checked ? 'add' : 'remove']('d-none'); });
 };
 
 const getBlock = (networkInterface) => {
@@ -88,6 +104,7 @@ const render = (event) => {
 	form.querySelector('.dhcp').checked = system?.networkInterface?.dhcp;
 	form.querySelector('.ip-address').value = system?.networkInterface?.ip4;
 	form.querySelector('.netmask').value = block?.bitmask ?? 'error';
+	form.querySelector('.gateway').value = system?.defaultGateway;
 };
 
 const restore = (event) => {
@@ -103,6 +120,7 @@ const restore = (event) => {
 form.querySelector('.dhcp').addEventListener('change', toggleDhcp);
 form.querySelector('.ip-address').addEventListener('input', validateIpAddress);
 form.querySelector('.netmask').addEventListener('input', validateNetmask);
+form.querySelector('.gateway').addEventListener('input', validateGateway);
 form.addEventListener('submit', updateInterface);
 form.addEventListener('show.bs.modal', render);
 form.addEventListener('hidden.bs.modal', restore);
