@@ -40,6 +40,7 @@ const updateDefaultGateway = (event) => {
 	_.each(buttons, (button) => { button.disabled = true; });
 
 	let config = {
+		name: form.querySelector('.name').value,
 		gateway: form.querySelector('.gateway').value
 	};
 	networkService.updateDefaultGateway(config);
@@ -47,7 +48,8 @@ const updateDefaultGateway = (event) => {
 };
 
 const render = (event) => {
-	let system = networkService.getSystem();
+	const system = networkService.getSystem();
+	form.querySelector('.name').value = system?.networkInterface?.ifaceName;
 	form.querySelector('.gateway').value = system?.defaultGateway;
 };
 
