@@ -17,7 +17,7 @@ const validateIpAddress = () => {
 		invalidFeedback.innerHTML = `Can't be empty`;
 		return;
 	}
-	if (validator.isIP(value, { version: 4 })) {
+	if (!validator.isIP(value, { version: 4 })) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
 		invalidFeedback.innerHTML = `Invalid IP address`;
@@ -51,7 +51,7 @@ const validateGateway = () => {
 		invalidFeedback.innerHTML = `Can't be empty`;
 		return;
 	}
-	if (validator.isIP(value, { version: 4 })) {
+	if (!validator.isIP(value, { version: 4 })) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
 		invalidFeedback.innerHTML = `Invalid IP address`;
