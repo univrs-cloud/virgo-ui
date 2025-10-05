@@ -17,6 +17,12 @@ const validateIpAddress = () => {
 		invalidFeedback.innerHTML = `Can't be empty`;
 		return;
 	}
+	if (validator.isIP(value, { version: 4 })) {
+		input.classList.remove('is-valid');
+		input.classList.add('is-invalid');
+		invalidFeedback.innerHTML = `Invalid IP address`;
+		return;
+	}
 	input.classList.remove('is-invalid');
 	input.classList.add('is-valid');
 };
@@ -43,6 +49,12 @@ const validateGateway = () => {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
 		invalidFeedback.innerHTML = `Can't be empty`;
+		return;
+	}
+	if (validator.isIP(value, { version: 4 })) {
+		input.classList.remove('is-valid');
+		input.classList.add('is-invalid');
+		invalidFeedback.innerHTML = `Invalid IP address`;
 		return;
 	}
 	input.classList.remove('is-invalid');
