@@ -8,7 +8,7 @@
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"build": "webpack --mode production",
 		"deb": "node-deb --no-default-package-dependencies --no-rebuild --install-strategy auto -- dist/",
-		"serve": "webpack serve --mode production --env=upstream=$npm_config_upstream"
+		"serve": "webpack serve --mode development --env=upstream=$npm_config_upstream"
 	},
 	"node_deb": {
 		"architecture": "arm64",
