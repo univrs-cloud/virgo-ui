@@ -8,6 +8,7 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const { version } = require('./package.json');
+const { default: morphdom } = require('morphdom');
 
 module.exports = (env, argv) => {
 	let upstream = '';
@@ -85,7 +86,6 @@ module.exports = (env, argv) => {
 			}),
 			new CleanWebpackPlugin(),
 			new webpack.ProvidePlugin({
-				'popper': '@popperjs/core',
 				'bootstrap': 'bootstrap',
 				'_': ['lodash-es', 'default'],
 				'morphdom': [path.join(__dirname, 'src/libs/morphdom.js'), 'default'],
@@ -171,7 +171,11 @@ module.exports = (env, argv) => {
 			modules: [
 				path.resolve(__dirname, 'src'),
 				'node_modules'
-			]
+			],
+			alias: {
+				morphdom: require.resolve('morphdom/dist/morphdom-esm.js'),
+				apexcharts: require.resolve('apexcharts/dist/apexcharts.esm.js')
+			}
 		},
 		optimization: {
 			minimize: true,
