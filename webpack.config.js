@@ -136,10 +136,7 @@ module.exports = (env, argv) => {
 			rules: [
 				{
 					test: /\.js$/,
-					include: path.resolve(__dirname, 'src'),
-					use: {
-						loader: 'babel-loader'
-					}
+					include: path.resolve(__dirname, 'src')
 				},
 				{
 					test: /\.(sa|sc|c)ss$/,
