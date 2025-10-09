@@ -1,4 +1,4 @@
-import ApexCharts from 'apexcharts/dist/apexcharts.esm.js';
+import ApexCharts from 'apexcharts';
 
 let rendered = false;
 let chart = null;
