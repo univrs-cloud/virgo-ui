@@ -1,6 +1,6 @@
 import identifierModalPartial from 'modules/network/partials/modals/identifier.html';
 import * as networkService from 'modules/network/services/network';
-import validator from 'validator';
+import isEmpty from 'validator/es/lib/isEmpty';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', identifierModalPartial);
 
@@ -10,7 +10,7 @@ const validateHostname = () => {
 	let input = form.querySelector('.hostname');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
-	if (validator.isEmpty(value)) {
+	if (isEmpty(value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
 		invalidFeedback.innerHTML = `Can't be empty`;
@@ -24,7 +24,7 @@ const validateDomainName = () => {
 	let input = form.querySelector('.domain-name');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
-	if (validator.isEmpty(value)) {
+	if (isEmpty(value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
 		invalidFeedback.innerHTML = `Can't be empty`;

@@ -1,6 +1,7 @@
 import interfaceModalPartial from 'modules/network/partials/modals/interface.html';
 import * as networkService from 'modules/network/services/network';
-import validator from 'validator';
+import isEmpty from 'validator/es/lib/isEmpty';
+import isIP from 'validator/es/lib/isIP';
 import { Netmask } from 'netmask';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', interfaceModalPartial);
@@ -11,13 +12,13 @@ const validateIpAddress = () => {
 	let input = form.querySelector('.ip-address');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
-	if (validator.isEmpty(value)) {
+	if (isEmpty(value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
 		invalidFeedback.innerHTML = `Can't be empty`;
 		return;
 	}
-	if (!validator.isIP(value, { version: 4 })) {
+	if (!isIP(value, { version: 4 })) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
 		invalidFeedback.innerHTML = `Invalid IP address`;
@@ -31,7 +32,7 @@ const validateNetmask = () => {
 	let input = form.querySelector('.netmask');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
-	if (validator.isEmpty(value)) {
+	if (isEmpty(value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
 		invalidFeedback.innerHTML = `Can't be empty`;
@@ -45,13 +46,13 @@ const validateGateway = () => {
 	let input = form.querySelector('.gateway');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
-	if (validator.isEmpty(value)) {
+	if (isEmpty(value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
 		invalidFeedback.innerHTML = `Can't be empty`;
 		return;
 	}
-	if (!validator.isIP(value, { version: 4 })) {
+	if (!isIP(value, { version: 4 })) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
 		invalidFeedback.innerHTML = `Invalid IP address`;

@@ -6,7 +6,7 @@ import inputPasswordPartial from 'modules/apps/partials/modals/app_install/input
 import inputRadioPartial from 'modules/apps/partials/modals/app_install/input_radio.html';
 import selectPartial from 'modules/apps/partials/modals/app_install/select.html';
 import * as appCenterService from 'modules/apps/services/app_center';
-import validator from 'validator';
+import isEmpty from 'validator/es/lib/isEmpty';
 
 const inputHiddenTemplate = _.template(inputHiddenPartial);
 const inputTextTemplate = _.template(inputTextPartial);
@@ -22,7 +22,7 @@ let app;
 const validateField = (field) => {
 	let invalidFeedback = field.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = field.value;
-	if (validator.isEmpty(value)) {
+	if (isEmpty(value)) {
 		field.classList.remove('is-valid');
 		field.classList.add('is-invalid');
 		invalidFeedback.innerHTML = `Can't be empty`;
