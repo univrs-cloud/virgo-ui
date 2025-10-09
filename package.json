@@ -8,7 +8,7 @@
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"build": "webpack --mode production",
 		"deb": "node-deb --no-default-package-dependencies --no-rebuild --install-strategy auto -- dist/",
-		"serve": "webpack serve --mode development --env=upstream=$npm_config_upstream"
+		"serve": "webpack serve --mode production --env=upstream=$npm_config_upstream"
 	},
 	"node_deb": {
 		"architecture": "arm64",
@@ -20,7 +20,6 @@
 		"npm": ">=10.9.0"
 	},
 	"dependencies": {
-		"@babel/runtime": "^7.28.4",
 		"@codewithdan/observable-store": "^2.2.15",
 		"@codewithdan/observable-store-extensions": "^2.2.9",
 		"@popperjs/core": "^2.11.8",
@@ -48,8 +47,6 @@
 	"devDependencies": {
 		"@babel/cli": "^7.28.3",
 		"@babel/core": "^7.28.4",
-		"@babel/plugin-transform-runtime": "^7.28.3",
-		"@babel/preset-env": "^7.28.3",
 		"autoprefixer": "10.4.20",
 		"babel-loader": "^10.0.0",
 		"babel-plugin-lodash": "^3.3.4",
