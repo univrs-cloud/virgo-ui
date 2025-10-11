@@ -2,7 +2,7 @@ import * as userService from 'modules/users/services/user';
 
 let module = document.querySelector('#users');
 
-const lockUser = (event) => {
+const lockUser = async (event) => {
 	if (!event.target.closest('a')?.classList.contains('lock')) {
 		return;
 	}
@@ -12,7 +12,7 @@ const lockUser = (event) => {
 	let card = button.closest('.user');
 	let user = _.find(userService.getUsers(), { uid: Number(card.dataset.uid) });
 	
-	if (!confirm(`Are you sure you want to lock the user ${user.username}?`)) {
+	if (!await confirm(`Are you sure you want to lock the user ${user.username}?`)) {
 		return;
 	}
 
@@ -22,7 +22,7 @@ const lockUser = (event) => {
 	userService.lockUser(config);
 };
 
-const unlockUser = (event) => {
+const unlockUser = async (event) => {
 	if (!event.target.closest('a')?.classList.contains('unlock')) {
 		return;
 	}
@@ -32,7 +32,7 @@ const unlockUser = (event) => {
 	let card = button.closest('.user');
 	let user = _.find(userService.getUsers(), { uid: Number(card.dataset.uid) });
 	
-	if (!confirm(`Are you sure you want to unlock the user ${user.username}?`)) {
+	if (!await confirm(`Are you sure you want to unlock the user ${user.username}?`)) {
 		return;
 	}
 
