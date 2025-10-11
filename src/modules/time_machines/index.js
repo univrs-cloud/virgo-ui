@@ -32,11 +32,11 @@ const copyToClipboard = (event) => {
 	}
 };
 
-const performAction = (event) => {
+const performAction = async (event) => {
 	event.preventDefault();
 	let button = event.currentTarget;
 	let timeMachine = button.closest('.time-machines');
-	if (button.classList.contains('text-danger') && !confirm(`Are you sure you want to ${button.dataset.action} ${timeMachine.dataset.title}?`)) {
+	if (button.classList.contains('text-danger') && !await confirm(`Are you sure you want to ${button.dataset.action} ${timeMachine.dataset.title}?`)) {
 		return;
 	}
 

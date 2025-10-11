@@ -1,5 +1,6 @@
 import 'assets/scss/index.scss';
 import 'libs/lodash';
+import 'libs/dialog';
 import * as bootstrapService from 'shell/services/bootstrap';
 import page from 'page';
 

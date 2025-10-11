@@ -56,7 +56,7 @@ const update = (event) => {
 	appService.update(config);
 };
 
-const performAppAction = (event) => {
+const performAppAction = async (event) => {
 	if (!_.isNull(event.target.closest('.service'))) {
 		return;
 	}
@@ -72,7 +72,7 @@ const performAppAction = (event) => {
 
 	let action = (button.dataset.action === 'down' ? 'remove' : button.dataset.action);
 	let actionMessage = (button.dataset.action === 'down' ? '\n\nData will not deleted.' : '');
-	if (button.classList.contains('text-danger') && !confirm(`Are you sure you want to ${action} the app ${app.title}?${actionMessage}`)) {
+	if (button.classList.contains('text-danger') && !await confirm(`Are you sure you want to ${action} the app ${app.title}?${actionMessage}`)) {
 		return;
 	}
 
@@ -83,7 +83,7 @@ const performAppAction = (event) => {
 	appService.performAppAction(config);
 };
 
-const performServiceAction = (event) => {
+const performServiceAction = async (event) => {
 	if (_.isNull(event.target.closest('.service'))) {
 		return;
 	}
@@ -97,7 +97,7 @@ const performServiceAction = (event) => {
 	let card = button.closest('.service');
 	let service = _.find(_.flatMap(appService.getApps(), 'projectContainers'), { id: card.dataset.id });
 
-	if (button.classList.contains('text-danger') && !confirm(`Are you sure you want to ${button.dataset.action} the service ${service.name}?`)) {
+	if (button.classList.contains('text-danger') && !await confirm(`Are you sure you want to ${button.dataset.action} the service ${service.name}?`)) {
 		return;
 	}
 

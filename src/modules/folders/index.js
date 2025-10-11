@@ -32,7 +32,7 @@ const copyToClipboard = (event) => {
 	}
 };
 
-const remove = (event) => {
+const remove = async (event) => {
 	if (event.target.closest('a')?.dataset.action !== 'remove') {
 		return;
 	}
@@ -45,7 +45,7 @@ const remove = (event) => {
 	event.preventDefault();
 	let button = event.target.closest('a');
 	let folder = button.closest('.folder');
-	if (!confirm(`Are you sure you want to ${button.dataset.action} ${folder.dataset.title}?`)) {
+	if (!await confirm(`Are you sure you want to ${button.dataset.action} ${folder.dataset.title}?`)) {
 		return;
 	}
 

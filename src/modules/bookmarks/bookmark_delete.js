@@ -2,7 +2,7 @@ import * as bookmarkService from 'modules/bookmarks/services/bookmark';
 
 let module = document.querySelector('#bookmarks');
 
-const deleteBookmark = (event) => {
+const deleteBookmark = async (event) => {
 	if (!event.target.closest('a')?.classList.contains('delete')) {
 		return;
 	}
@@ -12,7 +12,7 @@ const deleteBookmark = (event) => {
 	let card = button.closest('.bookmark');
 	let bookmark = _.find(bookmarkService.getBookmarks(), { name: card.dataset.name });
 
-	if (!confirm(`Are you sure you want to delete the bookmark ${bookmark.title}?`)) {
+	if (!await confirm(`Are you sure you want to delete the bookmark ${bookmark.title}?`)) {
 		return;
 	}
 
