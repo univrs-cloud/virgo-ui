@@ -1,6 +1,6 @@
 import notificationModalPartial from 'modules/settings/partials/modals/notifications.html';
 import * as configurationService from 'modules/settings/services/configuration';
-import isEmpty from 'validator/es/lib/isEmpty';
+import validator from 'validator';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', notificationModalPartial);
 
@@ -10,7 +10,7 @@ const validateAddress = (event) => {
 	let input = form.querySelector('.address');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
-	if (isEmpty(value)) {
+	if (validator.isEmpty(value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
 		invalidFeedback.innerHTML = `Can't be empty`;
@@ -24,7 +24,7 @@ const validatePort = (event) => {
 	let input = form.querySelector('.port');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
-	if (isEmpty(value)) {
+	if (validator.isEmpty(value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
 		invalidFeedback.innerHTML = `Can't be empty`;
@@ -41,7 +41,7 @@ const validateForm = () => {
 
 const isFormValid = () => {
 	validateForm();
-	return _.isEmpty(form.querySelectorAll('.is-invalid'));
+	return _.validator.isEmpty(form.querySelectorAll('.is-invalid'));
 };
 
 const updateSmtp = (event) => {

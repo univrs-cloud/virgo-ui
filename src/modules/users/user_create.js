@@ -1,8 +1,6 @@
 import userModalPartial from 'modules/users/partials/modals/user_create.html';
 import * as userService from 'modules/users/services/user';
-import isEmpty from 'validator/es/lib/isEmpty';
-import isEmail from 'validator/es/lib/isEmail';
-import equals from 'validator/es/lib/equals';
+import validator from 'validator';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', userModalPartial);
 
@@ -12,7 +10,7 @@ const validateFullname = (event) => {
 	let input = form.querySelector('.fullname');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
-	if (isEmpty(value)) {
+	if (validator.isEmpty(value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
 		invalidFeedback.innerHTML = `Can't be empty`;
@@ -26,13 +24,13 @@ const validateEmailAddress = (event) => {
 	let input = form.querySelector('.email');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
-	if (isEmpty(value)) {
+	if (validator.isEmpty(value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
 		invalidFeedback.innerHTML = `Can't be empty`;
 		return;
 	}
-	if (!isEmail(value)) {
+	if (!validator.isEmail(value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
 		invalidFeedback.innerHTML = `Invalid email address`;
@@ -46,7 +44,7 @@ const validateUsername = (event) => {
 	let input = form.querySelector('.username');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
-	if (isEmpty(value)) {
+	if (validator.isEmpty(value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
 		invalidFeedback.innerHTML = `Can't be empty`;
@@ -60,7 +58,7 @@ const validatePassword = (event) => {
 	let input = form.querySelector('.password');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
-	if (isEmpty(value)) {
+	if (validator.isEmpty(value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
 		invalidFeedback.innerHTML = `Can't be empty`;
@@ -74,13 +72,13 @@ const validatePasswordCheck = (event) => {
 	let input = form.querySelector('.password-check');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
-	if (isEmpty(value)) {
+	if (validator.isEmpty(value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
 		invalidFeedback.innerHTML = `Can't be empty`;
 		return;
 	}
-	if (!equals(value, form.querySelector('.password').value)) {
+	if (!validator.equals(value, form.querySelector('.password').value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
 		invalidFeedback.innerHTML = `Passwords do not match`;
@@ -100,7 +98,7 @@ const validateForm = () => {
 
 const isFormValid = () => {
 	validateForm();
-	return _.isEmpty(form.querySelectorAll('.is-invalid'));
+	return _.validator.isEmpty(form.querySelectorAll('.is-invalid'));
 };
 
 const createUser = (event) => {

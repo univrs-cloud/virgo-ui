@@ -1,7 +1,6 @@
 import passwordModalPartial from 'modules/users/partials/modals/user_password.html';
 import * as userService from 'modules/users/services/user';
-import isEmpty from 'validator/es/lib/isEmpty';
-import equals from 'validator/es/lib/equals';
+import validator from 'validator';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', passwordModalPartial);
 
@@ -12,7 +11,7 @@ const validatePassword = (event) => {
 	let input = form.querySelector('.password');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
-	if (isEmpty(value)) {
+	if (validator.isEmpty(value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
 		invalidFeedback.innerHTML = `Can't be empty`;
@@ -26,13 +25,13 @@ const validatePasswordCheck = (event) => {
 	let input = form.querySelector('.password-check');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
-	if (isEmpty(value)) {
+	if (validator.isEmpty(value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
 		invalidFeedback.innerHTML = `Can't be empty`;
 		return;
 	}
-	if (!equals(value, form.querySelector('.password').value)) {
+	if (!validator.equals(value, form.querySelector('.password').value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
 		invalidFeedback.innerHTML = `Passwords do not match`;
@@ -49,7 +48,7 @@ const validateForm = () => {
 
 const isFormValid = () => {
 	validateForm();
-	return _.isEmpty(form.querySelectorAll('.is-invalid'));
+	return _.validator.isEmpty(form.querySelectorAll('.is-invalid'));
 };
 
 const changePassword = (event) => {

@@ -1,7 +1,6 @@
 import profileModalPartial from 'modules/users/profile/partials/modals/edit.html';
 import * as userService from 'modules/users/services/user';
-import isEmpty from 'validator/es/lib/isEmpty';
-import isEmail from 'validator/es/lib/isEmail';
+import validator from 'validator';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', profileModalPartial);
 
@@ -11,7 +10,7 @@ const validateFullname = (event) => {
 	let input = form.querySelector('.fullname');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
-	if (isEmpty(value)) {
+	if (validator.isEmpty(value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
 		invalidFeedback.innerHTML = `Can't be empty`;
@@ -25,13 +24,13 @@ const validateEmailAddress = (event) => {
 	let input = form.querySelector('.email');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
-	if (isEmpty(value)) {
+	if (validator.isEmpty(value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
 		invalidFeedback.innerHTML = `Can't be empty`;
 		return;
 	}
-	if (!isEmail(value)) {
+	if (!validator.isEmail(value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
 		invalidFeedback.innerHTML = `Invalid email address`;
@@ -48,7 +47,7 @@ const validateForm = () => {
 
 const isFormValid = () => {
 	validateForm();
-	return _.isEmpty(form.querySelectorAll('.is-invalid'));
+	return _.validator.isEmpty(form.querySelectorAll('.is-invalid'));
 };
 
 const updateProfile = (event) => {

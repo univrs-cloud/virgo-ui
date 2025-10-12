@@ -1,7 +1,6 @@
 import locationModalPartial from 'modules/settings/partials/modals/location.html';
 import * as configurationService from 'modules/settings/services/configuration';
-import isEmpty from 'validator/es/lib/isEmpty';
-import isLatLong from 'validator/es/lib/isLatLong';
+import validator from 'validator';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', locationModalPartial);
 
@@ -21,13 +20,13 @@ const validateLatitude = (event) => {
 		let input = form.querySelector('.latitude');
 		let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 		let value = input.value;
-		if (isEmpty(value)) {
+		if (validator.isEmpty(value)) {
 			input.classList.remove('is-valid');
 			input.classList.add('is-invalid');
 			invalidFeedback.innerHTML = `Can't be empty`;
 			return;
 		}
-		if (!isLatLong(`${value},0.0`)) {
+		if (!validator.isLatLong(`${value},0.0`)) {
 			input.classList.remove('is-valid');
 			input.classList.add('is-invalid');
 			invalidFeedback.innerHTML = `Invalid latitude`;
@@ -51,13 +50,13 @@ const validateLongitude = (event) => {
 		let input = form.querySelector('.longitude');
 		let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 		let value = input.value;
-		if (isEmpty(value)) {
+		if (validator.isEmpty(value)) {
 			input.classList.remove('is-valid');
 			input.classList.add('is-invalid');
 			invalidFeedback.innerHTML = `Can't be empty`;
 			return;
 		}
-		if (!isLatLong(`0.0,${value}`)) {
+		if (!validator.isLatLong(`0.0,${value}`)) {
 			input.classList.remove('is-valid');
 			input.classList.add('is-invalid');
 			invalidFeedback.innerHTML = `Invalid longitude`;
@@ -75,7 +74,7 @@ const validateForm = () => {
 
 const isFormValid = () => {
 	validateForm();
-	return _.isEmpty(form.querySelectorAll('.is-invalid'));
+	return _.validator.isEmpty(form.querySelectorAll('.is-invalid'));
 };
 
 const updateLocation = (event) => {

@@ -1,6 +1,6 @@
 import bookmarkModalPartial from 'modules/bookmarks/partials/modals/bookmark_update.html';
 import * as bookmarkService from 'modules/bookmarks/services/bookmark';
-import isEmpty from 'validator/es/lib/isEmpty';
+import validator from 'validator';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', bookmarkModalPartial);
 
@@ -11,7 +11,7 @@ const validateTitle = (event) => {
 	let input = form.querySelector('.title');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
-	if (isEmpty(value)) {
+	if (validator.isEmpty(value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
 		invalidFeedback.innerHTML = `Can't be empty`;
@@ -25,7 +25,7 @@ const validateUrl = (event) => {
 	let input = form.querySelector('.url');
 	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	let value = input.value;
-	if (isEmpty(value)) {
+	if (validator.isEmpty(value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
 		invalidFeedback.innerHTML = `Can't be empty`;
@@ -42,7 +42,7 @@ const validateForm = () => {
 
 const isFormValid = () => {
 	validateForm();
-	return _.isEmpty(form.querySelectorAll('.is-invalid'));
+	return _.validator.isEmpty(form.querySelectorAll('.is-invalid'));
 };
 
 const updateBookmark = (event) => {
