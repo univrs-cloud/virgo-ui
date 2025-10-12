@@ -1,10 +1,22 @@
 (() => {
+	document.body.addEventListener('show.bs.modal', (event) => {
+		const modal = event.target;
+		const bootstrapModalBackdropZIndex = 2000;
+		const modalZIndex = _.size(document.body.querySelectorAll('.modal.show')) + bootstrapModalBackdropZIndex + 1;
+		modal.style.zIndex = modalZIndex;
+	});
+	document.body.addEventListener('hidden.bs.modal', (event) => {
+		if (!_.isNull(document.body.querySelector('.modal.show'))) {
+			document.body.classList.add('modal-open');
+		}
+	});
+
 	const createModal = (title, content, buttons, focusIndex = 0, escValue = null) => {
 		return new Promise((resolve) => {
             const modalId = `dialog-${Math.random().toString(36).substr(2, 9)}`;
             const modalHtml = `
                 <div id="${modalId}" class="modal fade" tabindex="-1">
-                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                    <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title">${title}</h5>
