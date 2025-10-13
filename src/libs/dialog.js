@@ -34,7 +34,7 @@
                 </div>
             `;
 
-            modalContainer.insertAdjacentHTML('beforeend', modalHtml);
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
             const modalElement = document.getElementById(modalId);
 
             // Show the modal
@@ -65,9 +65,6 @@
             });
         });
 	}
-
-	const modalContainer = document.createElement('div');
-    document.body.appendChild(modalContainer);
 
 	window.alert = async (text) => {
 		const buttons = [{ text: 'OK', class: 'btn-primary', value: true }];
