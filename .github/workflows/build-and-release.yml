@@ -22,10 +22,10 @@ jobs:
         run: npm ci
 
       - name: Run build step
-        run: npx build
+        run: npm run build
 
       - name: Build .deb package
-        run: npx node-deb
+        run: npm run deb
 
       - name: Upload .deb as artifact
         uses: actions/upload-artifact@v4
