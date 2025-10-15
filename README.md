@@ -1,3 +1,5 @@
+[![Build](https://github.com/univrs-cloud/virgo-ui/actions/workflows/build-and-release.yml/badge.svg)](https://github.com/univrs-cloud/virgo-ui/actions/workflows/build-and-release.yml)
+
 How to build DEB
 ---
 `npm install -g node-deb`
