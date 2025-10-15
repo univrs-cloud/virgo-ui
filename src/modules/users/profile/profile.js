@@ -47,7 +47,7 @@ const validateForm = () => {
 
 const isFormValid = () => {
 	validateForm();
-	return _.validator.isEmpty(form.querySelectorAll('.is-invalid'));
+	return _.isEmpty(form.querySelectorAll('.is-invalid'));
 };
 
 const updateProfile = (event) => {
