@@ -2,9 +2,7 @@
 
 How to build DEB
 ---
-`npm install -g node-deb`
-
-`npm install`
+`npm ci`
 
 `npm run build`
 
