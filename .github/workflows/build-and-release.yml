@@ -1,4 +1,4 @@
-name: Build and Release ARM64 .deb
+name: Build and release
 
 on:
   push:
