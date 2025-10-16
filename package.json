@@ -16,8 +16,8 @@
 		"install_dir": "/var/www"
 	},
 	"engines": {
-		"node": ">=20.19.5",
-		"npm": ">=10.8.2"
+		"node": ">=22.20.0",
+		"npm": ">=10.9.3"
 	},
 	"dependencies": {
 		"@codewithdan/observable-store": "^2.2.15",
