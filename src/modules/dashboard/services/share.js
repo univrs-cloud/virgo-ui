@@ -3,8 +3,13 @@ import Share from 'stores/share';
 let callbackCollection = [];
 
 const handleSubscription = (properties) => {
+	let shares = _.orderBy(
+		properties.shares,
+		[(entity) => { return entity.comment.toLowerCase(); }],
+		['asc']
+	);
 	_.each(callbackCollection, (callback) => {
-		callback(properties);
+		callback({ shares });
 	});
 };
 

@@ -8,7 +8,11 @@ const filter = (shares) => {
 		return null;
 	}
 	
-	return _.orderBy(_.filter(shares, { isTimeMachine: false }), ['name'], ['asc']);
+	return _.orderBy(
+		_.filter(shares, { isTimeMachine: false }),
+		[(entity) => { return entity.name.toLowerCase(); }],
+		['asc']
+	);
 }
 
 const getSystem = () => {

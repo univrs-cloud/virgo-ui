@@ -19,7 +19,11 @@ const install = (config) => {
 };
 
 const handleSubscription = (properties) => {
-	let templates = _.orderBy(properties.templates, ['title'], ['asc']);
+	let templates = _.orderBy(
+		properties.templates,
+		[(entity) => { return entity.title.toLowerCase(); }],
+		['asc']
+	);
 	templates = _.map(templates, (template) => {
 		template.isInstalled = (_.find(properties.containers, (container) => { return _.includes(container.names, `/${template.name}`) }) !== undefined);
 		return template;

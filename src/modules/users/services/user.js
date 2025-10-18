@@ -7,7 +7,11 @@ const filter = (users) => {
 		return null;
 	}
 	
-	return _.orderBy(users, ['fullname'], ['asc']);
+	return _.orderBy(
+		users,
+		[(entity) => { return entity.fullname.toLowerCase(); }],
+		['asc']
+	);
 }
 
 const getUsers = () => {
