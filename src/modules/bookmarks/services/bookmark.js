@@ -9,7 +9,7 @@ const composeBookmark = (configured) => {
 	
 	return _.orderBy(
 		_.filter(configured.configuration, { type: 'bookmark' }),
-		['title'],
+		[(entity) => { return entity.title.toLowerCase(); }],
 		['asc']
 	);
 }

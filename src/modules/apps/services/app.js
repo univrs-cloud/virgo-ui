@@ -24,8 +24,8 @@ const composeApps = (configured, containers, imageUpdates) => {
 	return _.map(
 		_.orderBy(
 			_.filter(configuration, { type: 'app' }),
-			 ['title'],
-			 ['asc']
+			[(entity) => { return entity.title.toLowerCase(); }],
+			['asc']
 		),
 		(entity) => {
 			let container = _.find(containers, (container) => { return _.includes(container.names, `/${entity.name}`) });
