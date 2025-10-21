@@ -1,18 +1,5 @@
-// a {
-// 	&:hover,
-// 	&:focus,
-// 	&:active {
-// 		text-decoration: none;
-// 	}
-// }
-
 img {
 	max-width: 100%;
-}
-
-.btn {
-	outline: none !important;
-	transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 .dropdown {
@@ -195,10 +182,14 @@ img {
 }
 #dashboard {
 	.item {
-		.card:hover {
-			background: var(--bs-light) !important;
-			.dropdown {
-				display: block;
+		.card {
+			transition: box-shadow 0.3s ease-in-out;
+			&:hover {
+				background: var(--bs-light) !important;
+				box-shadow: var(--bs-box-shadow-sm);
+				.dropdown {
+					display: block;
+				}
 			}
 		}
 		.dropdown {

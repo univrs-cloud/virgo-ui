@@ -57,11 +57,8 @@
             });
 
             // Set focus on the specified button
-            bootstrapModal._element.addEventListener('shown.bs.modal', () => {
-                const focusButton = modalElement.querySelector(`.modal-footer .btn[data-index="${focusIndex}"]`);
-                if (focusButton) {
-                    focusButton.focus();
-                }
+            bootstrapModal._element.addEventListener('shown.bs.modal', (event) => {
+				modalElement.querySelector(`.modal-footer .btn[data-index="${focusIndex}"]`)?.focus();
             });
         });
 	}

@@ -66,6 +66,13 @@ input:-webkit-autofill:focus {
 	}
 }
 
+.btn {
+	transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+	&:focus {
+		box-shadow: var(--bs-btn-focus-box-shadow);
+	}
+}
+
 .btn-primary {
 	--bs-btn-color: var(--bs-white);
 	--bs-btn-hover-color: var(--bs-white);
