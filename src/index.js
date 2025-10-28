@@ -46,7 +46,7 @@ window.isAdmin = isAuthenticated && _.includes(account.groups, 'admins');
 
 const render = async (state) => {
 	const isSetupRequired = bootstrapService.checkIfSetupIsRequired(state);
-	if (state.upgrade === -1 || _.isNull(isSetupRequired)) {
+	if (_.isNull(isSetupRequired) || state.upgrade === -1) {
 		return;
 	}
 	
@@ -64,12 +64,12 @@ const render = async (state) => {
 			]);
 			const { modulesLoaded } = await import('modules');
 			await modulesLoaded;
+			await import('shell/navigation');
 		} catch (error) {
+			alert(`Error during application initialization<br><br>${error}`, );
 			console.error('Error during application initialization:', error);
 		}
 	}
-	
-	await import('shell/navigation');
 };
 
 bootstrapService.subscribe([render]);
