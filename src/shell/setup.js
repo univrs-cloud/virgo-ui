@@ -1,3 +1,4 @@
+import page from 'page';
 import headerPartial from 'shell/partials/header.html';
 import navigationPartial from 'shell/partials/navigation_setup.html';
 import mainPartial from 'shell/partials/main.html';
@@ -23,5 +24,12 @@ morphdom(
 	container,
 	mainTemplate()
 );
+
+page('*', (ctx) => {
+	if (ctx.path !== '/') {
+		page.redirect('/');
+	}
+});
+page.start();
 
 systemService.subscribe([renderSerialNumber]);

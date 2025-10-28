@@ -1,3 +1,4 @@
+import page from 'page';
 import headerPartial from 'shell/partials/header.html';
 import navigationPartial from 'shell/partials/navigation_upgrade.html';
 import upgradeStepsPartial from 'shell/partials/upgrade_steps.html';
@@ -65,6 +66,13 @@ morphdom(
 account.init();
 
 container.addEventListener('click', complete);
+
+page('*', (ctx) => {
+	if (ctx.path !== '/') {
+		page.redirect('/');
+	}
+});
+page.start();
 
 systemService.subscribe([renderSerialNumber]);
 softwareService.subscribeToUpgrade([render]);
