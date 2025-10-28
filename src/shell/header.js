@@ -1,6 +1,5 @@
 import headerPartial from 'shell/partials/header.html';
 import navigationPartial from 'shell/partials/navigation.html';
-import * as navigation from 'shell/navigation';
 import * as account from 'shell/account';
 import * as updates from 'shell/updates';
 import * as notifications from 'shell/notifications';

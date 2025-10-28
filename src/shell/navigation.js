@@ -1,13 +1,13 @@
 import page from 'page';
 
-let container = document.querySelector('header');
+const showPage = (ctx) => {
+	const module = ctx.params.module || 'dashboard';
 
-const showPage = (href) => {
 	_.each(container.querySelectorAll('.nav-link.active'), (element) => { element.classList.remove('active'); });
-	_.each(container.querySelectorAll(`.nav-link[href="/${href}"]`), (element) => { element.classList.add('active'); });
+	_.each(container.querySelectorAll(`.nav-link[href="/${module}"]`), (element) => { element.classList.add('active'); });
 
 	_.each(document.querySelectorAll('.modules > div'), (element) => { element.classList.add('d-none') });
-	document.querySelector(`#${href}`)?.classList.remove('d-none');
+	document.querySelector(`#${module}`)?.classList.remove('d-none');
 };
 
 const navigate = (event) => {
@@ -22,23 +22,46 @@ const navigate = (event) => {
 	}
 };
 
-page('/', () => { showPage('dashboard'); });
-page('/dashboard', () => { showPage('dashboard'); });
-if (isAuthenticated && isAdmin) {
-	page('/apps', () => { showPage('apps'); });
-	page('/bookmarks', () => { showPage('bookmarks'); });
-	page('/folders', () => { showPage('folders'); });
-	page('/time-machines', () => { showPage('time-machines'); });
-	page('/users', () => { showPage('users'); });
-	page('/storage', () => { showPage('storage'); });
-	page('/network', () => { showPage('network'); });
-	page('/settings', () => { showPage('settings'); });
-	page('/software-update', () => { showPage('software-update'); });
-	page('/about', () => { showPage('about'); });
-}
-if (isAuthenticated) {
-	page('/users/profile', () => { showPage('profile'); });
-}
-page('*', () => { showPage('not-found'); });
+const requireAuth = (ctx, next) => {
+    if (!isAuthenticated) {
+        page.redirect('/');
+        return;
+    }
 
+    next();
+};
+
+const requiresAdmin = (ctx, next) => {
+	if (!isAdmin) {
+		page.redirect('/');
+        return;
+	}
+
+	next();
+};
+
+const container = document.querySelector('header');
 container.addEventListener('click', navigate);
+
+const routes = [
+	{ path: '/', module: 'dashboard' },
+	{ path: '/dashboard', module: 'dashboard' },
+	{ path: '/apps', module: 'apps', middleware: [requireAuth, requiresAdmin] },
+	{ path: '/bookmarks', module: 'bookmarks', middleware: [requireAuth, requiresAdmin] },
+	{ path: '/folders', module: 'folders', middleware: [requireAuth, requiresAdmin] },
+	{ path: '/time-machines', module: 'time-machines', middleware: [requireAuth, requiresAdmin] },
+	{ path: '/users', module: 'users', middleware: [requireAuth, requiresAdmin] },
+	{ path: '/storage', module: 'storage', middleware: [requireAuth, requiresAdmin] },
+	{ path: '/network', module: 'network', middleware: [requireAuth, requiresAdmin] },
+	{ path: '/settings', module: 'settings', middleware: [requireAuth, requiresAdmin] },
+	{ path: '/software-update', module: 'software-update', middleware: [requireAuth, requiresAdmin] },
+	{ path: '/about', module: 'about', middleware: [requireAuth, requiresAdmin] },
+	{ path: '/users/profile', module: 'profile', middleware: [requireAuth] },
+	{ path: '*', module: 'not-found' },
+];
+
+_.each(routes, ({ path, module, middleware = [] }) => {
+	page(path, ...middleware, () => { showPage({ params: { module } }); } );
+});
+
+page.start();

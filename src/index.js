@@ -2,7 +2,6 @@ import 'assets/scss/index.scss';
 import 'libs/lodash';
 import 'libs/dialog';
 import * as bootstrapService from 'shell/services/bootstrap';
-import page from 'page';
 
 bootstrap.Tooltip.Default.container = 'body';
 bootstrap.Tooltip.Default.html = true;
@@ -51,6 +50,8 @@ const render = async (state) => {
 		return;
 	}
 	
+	bootstrapService.unsubscribe();
+
 	if (isSetupRequired) {
 		await import('shell/setup');
 	} else if (isAuthenticated && isAdmin && !_.isNull(state.upgrade)) {
@@ -67,9 +68,8 @@ const render = async (state) => {
 			console.error('Error during application initialization:', error);
 		}
 	}
-
-	page.start({ hashbang: true });
-	bootstrapService.unsubscribe();
+	
+	await import('shell/navigation');
 };
 
 bootstrapService.subscribe([render]);
