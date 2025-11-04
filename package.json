@@ -19,6 +19,7 @@
 		"node": ">=22.20.0",
 		"npm": ">=10.9.3"
 	},
+	"cpu": ["arm64"],
 	"dependencies": {
 		"@codewithdan/observable-store": "^2.2.15",
 		"@codewithdan/observable-store-extensions": "^2.2.9",
@@ -57,7 +58,7 @@
 		"postcss-cli": "^11.0.1",
 		"postcss-loader": "^8.2.0",
 		"raw-loader": "^4.0.2",
-		"sass": "^1.93.2",
+		"sass": "^1.93.3",
 		"sass-loader": "^16.0.6",
 		"webpack": "^5.102.1",
 		"webpack-cli": "^6.0.1",
