@@ -94,11 +94,14 @@ class Docker extends Store {
 		});
 		const hostValue = labels[hostKey];
 		const host = _.get(hostValue.match(/Host\(`([^`]+)`\)/), 1);
+		if (_.isUndefined(host)) {
+			return '';
+		}
+		
 		const protocol = _.cond([
 			[() => hasTls, _.constant('https')],
 			[_.stubTrue, _.constant('http')]
 		])();
-		
 		return `${protocol}://${host}`;
 	}
 }
