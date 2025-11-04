@@ -1,6 +1,6 @@
 {
 	"name": "virgo-ui",
-	"version": "2.6.1",
+	"version": "2.6.2",
 	"description": "virgo UI",
 	"author": "univrs",
 	"license": "UNLICENSED",
@@ -19,7 +19,9 @@
 		"node": ">=22.20.0",
 		"npm": ">=10.9.3"
 	},
-	"cpu": ["arm64"],
+	"cpu": [
+		"arm64"
+	],
 	"dependencies": {
 		"@codewithdan/observable-store": "^2.2.15",
 		"@codewithdan/observable-store-extensions": "^2.2.9",
