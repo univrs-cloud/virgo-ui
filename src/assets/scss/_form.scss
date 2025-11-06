@@ -76,7 +76,7 @@ textarea {
 }
 
 .btn {
-	transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+	transition: all ease-in-out 0.15s;
 	&:focus {
 		box-shadow: var(--bs-btn-focus-box-shadow);
 	}
@@ -87,4 +87,8 @@ textarea {
 	--bs-btn-hover-color: var(--bs-white);
 	--bs-btn-active-color: var(--bs-white);
 	--bs-btn-disabled-color: rgba(var(--bs-emphasis-color-rgb), 0.65);
+	--bs-btn-hover-bg: #{shade-color($primary, 10%)};
+	--bs-btn-active-bg: #{shade-color($primary, 20%)};
+	--bs-btn-hover-border-color: #{shade-color($primary, 10%)};
+	--bs-btn-active-border-color: #{shade-color($primary, 20%)};
 }
