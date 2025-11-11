@@ -14,8 +14,10 @@ if (job.progress.state === 'failed') {
 		<div class="toast-body w-100">
 			<strong>${job.progress.message}</strong>
 			<%_.each(job.progress?.progress, (progress, key) => {%>
-				<%const isActive = _.includes(['pulling', 'downloading', 'extracting'], progress.text?.toLowerCase())%>
-				<%if (!isActive || progress.text?.toLowerCase() === 'pulling') {%>
+				<%const layers = _.values(progress.layers || {})%>
+				<%progress.percent = layers.length ? _.meanBy(layers, l => l.percent || 0) : 0%>
+				<%const isActive = _.includes(['pulling', 'downloading'], progress.text?.toLowerCase())%>
+				<%if (!isActive) {%>
 					<%progress.percent = 100%>
 				<%}%>
 				<div class="my-1">
@@ -24,7 +26,7 @@ if (job.progress.state === 'failed') {
 							<%=progress.text%>
 							<%=key%>
 						</span>
-						<span class="ms-auto"><%=(isActive ? `(${prettyBytes(progress.current)}/${prettyBytes(progress.total)})` : '')%></span>
+						<span class="ms-auto"><%//=(isActive ? `(${prettyBytes(current)}/${prettyBytes(total)})` : '')%></span>
 					</div>
 					<div class="progress" role="progressbar">
 						<div class="progress-bar <%=(isActive ? 'bg-cyan-300 progress-bar-striped progress-bar-animated' : 'bg-green-200')%>" style="width: <%=progress.percent%>%;"></div>
