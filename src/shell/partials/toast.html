@@ -14,8 +14,8 @@ if (job.progress.state === 'failed') {
 		<div class="toast-body w-100">
 			<strong>${job.progress.message}</strong>
 			<%_.each(job.progress?.progress, (progress, key) => {%>
-				<%const isActive = _.includes(['downloading', 'extracting'], (progress.text || '').toLowerCase())%>
-				<%if (!isActive) {%>
+				<%const isActive = _.includes(['pulling', 'downloading', 'extracting'], progress.text?.toLowerCase())%>
+				<%if (!isActive || progress.text?.toLowerCase() === 'pulling') {%>
 					<%progress.percent = 100%>
 				<%}%>
 				<div class="my-1">
