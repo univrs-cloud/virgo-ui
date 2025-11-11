@@ -1,5 +1,6 @@
 import toastPartial from 'shell/partials/toast.html';
 import morphdom from 'morphdom';
+import prettyBytes from 'pretty-bytes';
 import * as jobService from 'shell/services/job';
 
 const toastTemplate = _.template(toastPartial);
@@ -20,7 +21,7 @@ const render = (state) => {
 		}
 
 		let hasToast = !_.isNull(document.querySelector(`#toast-${job.id}`));
-		let toast = toastTemplate({ job, hasToast, moment });
+		let toast = toastTemplate({ job, hasToast, moment, prettyBytes });
 		if (hasToast) {
 			if (!document.querySelector(`#toast-${job.id}`).classList.contains('active') || (document.querySelector(`#toast-${job.id}`).classList.contains('active') && job.progress.state === 'active')) {
 				morphdom(
