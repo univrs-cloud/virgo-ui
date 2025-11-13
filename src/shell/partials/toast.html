@@ -15,7 +15,7 @@ if (job.progress.state === 'failed') {
 			<strong>${job.progress.message}</strong>
 			<%_.each(job.progress?.progress, (progress, key) => {%>
 				<%const layers = _.values(progress.layers || {})%>
-				<%progress.percent = layers.length ? _.meanBy(layers, l => l.percent || 0) : 0%>
+				<%progress.percent = _.meanBy(layers, (l) => { return l.percentWeighted ?? l.percent ?? 0; }) || 0%>
 				<%const isActive = _.includes(['pulling', 'downloading'], progress.text?.toLowerCase())%>
 				<%if (!isActive) {%>
 					<%progress.percent = 100%>
