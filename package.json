@@ -44,10 +44,10 @@
 		"pretty-ms": "^9.3.0",
 		"rxjs": "^7.8.2",
 		"socket.io-client": "^4.8.1",
-		"validator": "^13.15.22"
+		"validator": "^13.15.23"
 	},
 	"devDependencies": {
-		"autoprefixer": "10.4.20",
+		"autoprefixer": "10.4.22",
 		"clean-webpack-plugin": "^4.0.0",
 		"copy-webpack-plugin": "^13.0.1",
 		"css-loader": "^7.1.2",
@@ -60,7 +60,7 @@
 		"postcss-cli": "^11.0.1",
 		"postcss-loader": "^8.2.0",
 		"raw-loader": "^4.0.2",
-		"sass": "^1.93.3",
+		"sass": "^1.94.0",
 		"sass-loader": "^16.0.6",
 		"webpack": "^5.102.1",
 		"webpack-cli": "^6.0.1",

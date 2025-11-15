@@ -17,12 +17,17 @@
 @use "webfonts/duotone-thin";
 
 // --------
-// Custom variables, functions and mixins
+// xterm
 // --------
-@import "variables";
+@use "@xterm/xterm/css/xterm";
 
 // --------
-// Bootstrap 5.3.3
+// Custom variables, functions and mixins
+// --------
+@use "variables" as *;
+
+// --------
+// Bootstrap 5.3.8
 // --------
 @import "bootstrap";
 

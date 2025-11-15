@@ -130,10 +130,12 @@ main,
 	-webkit-box-orient: vertical;
 	&.two-line {
 		min-height: 3rem;
+		line-clamp: 2;
 		-webkit-line-clamp: 2;
 	}
 	&.three-line {
 		min-height: 4.5rem;
+		line-clamp: 3;
 		-webkit-line-clamp: 3;
 	}
 }

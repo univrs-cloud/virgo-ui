@@ -8,7 +8,6 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const { version } = require('./package.json');
-const { default: morphdom } = require('morphdom');
 
 module.exports = (env, argv) => {
 	let upstream = '';
