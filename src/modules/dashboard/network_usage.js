@@ -1,6 +1,5 @@
 import ApexCharts from 'apexcharts';
 
-let rendered = false;
 let chart = null;
 let series = [
 	{
@@ -12,6 +11,15 @@ let series = [
 		data: Array.from({ length: 20 }, () => { return 0 })
 	}
 ];
+
+const isVisible = (element) => {
+	if (!element) {
+		return false;
+	}
+
+	const rect = element.getBoundingClientRect();
+	return rect.width > 0 && rect.height > 0;
+};
 
 const cleanupSeries = () => {
 	if (series[0].data.length < 100) {
@@ -26,25 +34,31 @@ const updateSeries = (data) => {
 	_.each(data, (value, key) => {
 		series[key].data.push(value);
 	});
-	chart.updateSeries(series);
 	cleanupSeries();
 };
 
-const render = (iface, yAxisMax) => {
+const render = (iface, yAxisMax = 1000 * 1_000_000 / 8) => {
 	if (iface === false || _.isNull(iface) || _.isNull(iface.rx_sec) || _.isNull(iface.tx_sec)) {
 		return;
 	}
-	
-	if (rendered) {
-		updateSeries([
-			iface.rx_sec,
-			iface.tx_sec
-		]);
+
+	updateSeries([
+		iface.rx_sec,
+		iface.tx_sec
+	]);
+
+	const networkChart = document.querySelector('#resources-monitor .network-chart');
+	if (!isVisible(networkChart)) {
+		return;
+	}
+
+	if (chart) {
+		chart.updateSeries(series);
 		return;
 	}
 
 	chart = new ApexCharts(
-		document.querySelector('#resources-monitor .network-chart'),
+		networkChart,
 		{
 			noData: {
 				text: 'Loading...'
@@ -57,7 +71,8 @@ const render = (iface, yAxisMax) => {
 				},
 				type: 'area',
 				width: '100%',
-				height: 100
+				height: 100,
+				redrawOnParentResize: false
 			},
 			xaxis: {
 				type: 'numeric',
@@ -86,7 +101,6 @@ const render = (iface, yAxisMax) => {
 		}
 	);
 	chart.render();
-	rendered = true;
 }
 
 export {
