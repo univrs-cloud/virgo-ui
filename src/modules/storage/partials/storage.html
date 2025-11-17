@@ -37,13 +37,32 @@
 								<dd class="m-0"><%=bytes(pool.properties.free.value)%></dd>
 							</div>
 						</div>
-						<div class="progress mt-1" role="progressbar">
-							<div class="progress-bar bg-blue-300" style="width: <%=(pool.properties.capacity.value)%>%;"></div>
-						</div>
+						<%if (pool.name === 'system') {%>
+							<div class="progress mt-1" role="progressbar">
+								<div class="progress-bar bg-blue-300" style="width: <%=(pool.properties.capacity.value)%>%;"></div>
+							</div>
+						<%} else {%>
+							<div class="progress" role="progressbar">
+								<div class="progress-bar bg-blue-300" style="width: <%=pool.properties.usedbydatasets.percent%>%;"></div>
+								<div class="progress-bar bg-indigo-300" style="width: <%=pool.properties.usedbysnapshots.percent%>%;"></div>
+							</div>
+						<%}%>
 						<div class="d-flex justify-content-between lh-1 text-body-tertiary mt-1 mb-2">
 							<small class="text-body-tertiary"><%=pool.properties.capacity.value?.toFixed(0)%>%</small>
 							<small class="text-body-tertiary"><%=(100 - pool.properties.capacity.value)?.toFixed(0)%>%</small>
 						</div>
+						<%if (pool.name !== 'system') {%>
+							<div class="mt-n1 mb-2">
+								<div class="d-flex align-items-center">
+									<i class="icon icon-solid icon-circle-small icon-fw" style="color: var(--bs-blue-300);"></i>
+									<small>Data: <%=bytes(pool.properties.usedbydatasets.value)%> &middot; <%=pool.properties.usedbydatasets.percent.toFixed(0)%>%</small>
+								</div>
+								<div class="d-flex align-items-center">
+									<i class="icon icon-solid icon-circle-small icon-fw" style="color: var(--bs-indigo-300);"></i>
+									<small>Snapshots: <%=bytes(pool.properties.usedbysnapshots.value)%> &middot; <%=pool.properties.usedbysnapshots.percent.toFixed(0)%>%</small>
+								</div>
+							</div>
+						<%}%>
 						<dt class="fw-lighter d-none"><small>Drives</small></dt>
 						<%_.each(drives, (drive) => {%>
 							<dd class="d-flex align-items-center m-0 d-none">

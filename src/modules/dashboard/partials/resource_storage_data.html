@@ -19,7 +19,8 @@ let pool = (state.storage === false ? false : _.find(state.storage, (pool) => { 
 		<div class="row g-0 d-flex align-items-baseline">
 			<div class="col">
 				<div class="progress" role="progressbar">
-					<div class="progress-bar bg-blue-300" style="width: <%=(pool.properties.capacity.value)%>%;"></div>
+					<div class="progress-bar bg-blue-300" style="width: <%=(pool.properties.usedbydatasets.value / pool.properties.size.value * 100)%>%;"></div>
+					<div class="progress-bar bg-indigo-300" style="width: <%=(pool.properties.usedbysnapshots.value / pool.properties.size.value * 100)%>%;"></div>
 				</div>
 			</div>
 			<div class="col-auto lh-1 text-body-tertiary text-end" style="width: 45px;">
