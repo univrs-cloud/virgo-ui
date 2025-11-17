@@ -15,15 +15,14 @@ const getApps = () => {
 	return composeApps(Docker.getConfigured(), Docker.getContainers(), Docker.getImageUpdates());
 };
 
-const composeApps = (configured, containers, imageUpdates) => {
+const composeApps = (configured, containers, appsResourceMetrics, imageUpdates) => {
 	if (_.isNull(configured) || _.isNull(containers)) {
 		return null;
 	}
-
-	let configuration = { ...configured.configuration };
+	
 	return _.map(
 		_.orderBy(
-			_.filter(configuration, { type: 'app' }),
+			_.filter(configured, { type: 'app' }),
 			[(entity) => { return entity.title.toLowerCase(); }],
 			['asc']
 		),
@@ -62,6 +61,7 @@ const composeApps = (configured, containers, imageUpdates) => {
 				entity.ports = _.orderBy(_.filter(container.ports, { ip: '0.0.0.0' }), ['privatePort'], ['asc']);
 				entity.url = Docker.composeUrlFromLabels(container.labels);
 			}
+			entity.resourceMetrics = _.find(appsResourceMetrics, { name: entity.name });
 			return entity;
 		});
 }
@@ -79,8 +79,7 @@ const performServiceAction = (config) => {
 };
 
 const handleSubscription = (properties) => {
-	let apps = composeApps(properties.configured, properties.containers, properties.imageUpdates);
-
+	let apps = composeApps(properties.configured, properties.containers, properties.appsResourceMetrics, properties.imageUpdates);
 	_.each(callbackCollection, (callback) => {
 		callback({ apps, jobs: properties.jobs });
 	});
@@ -89,7 +88,7 @@ const handleSubscription = (properties) => {
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 	
-	Docker.subscribeToProperties(['configured', 'containers', 'imageUpdates', 'jobs'], handleSubscription);
+	Docker.subscribeToProperties(['configured', 'containers', 'appsResourceMetrics', 'imageUpdates', 'jobs'], handleSubscription);
 };
 
 export {

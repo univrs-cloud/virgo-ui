@@ -2,6 +2,7 @@ import modulePartial from 'modules/apps/partials/index.html';
 import emptyPartial from 'modules/apps/partials/empty.html';
 import appPartial from 'modules/apps/partials/app.html';
 import * as appService from 'modules/apps/services/app';
+import prettyBytes from 'pretty-bytes';
 
 const moduleTemplate = _.template(modulePartial);
 const emptyTemplate = _.template(emptyPartial);
@@ -119,7 +120,7 @@ const render = (state) => {
 	} else {
 		_.each(state.apps, (app) => {
 			let jobs = _.filter(state.jobs, (job) => { return job.data?.config?.name === app.name; });
-			template.innerHTML += appTemplate({ app, jobs });
+			template.innerHTML += appTemplate({ app, jobs, prettyBytes });
 		});
 	}
 	
