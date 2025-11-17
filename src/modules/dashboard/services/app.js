@@ -14,9 +14,8 @@ const handleSubscription = (properties) => {
 	if (_.isNull(properties.configured) || _.isNull(properties.containers)) {
 		return;
 	}
-
-	let configuration = { ...properties.configured.configuration };
-	let apps = _.map(configuration, (entity) => {
+	
+	let apps = _.map(properties.configured, (entity) => {
 		if (entity.type === 'app') {
 			let container = _.find(properties.containers, (container) => { return _.includes(container.names, `/${entity.name}`) });
 			if (container) {

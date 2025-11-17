@@ -88,6 +88,38 @@
 							&nbsp;
 						<%}%>
 					</div>
+					<div class="mb-1">
+						<div class="badge bd-blue-100 rounded-pill">
+							<div class="d-flex align-items-center">
+								<i class="icon-light icon-microchip icon-fw me-2"></i>
+								<%if (!app.resourceMetrics) {%>
+									<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
+								<%} else {%>
+									<span class="fw-light"><%=app.resourceMetrics?.cpu ?? 0%>%</span>
+								<%}%>
+							</div>
+						</div>
+						<div class="badge bd-blue-100 rounded-pill">
+							<div class="d-flex align-items-center">
+								<i class="icon-light icon-memory icon-fw me-2"></i>
+								<%if (!app.resourceMetrics) {%>
+									<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
+								<%} else {%>
+									<span class="fw-light"><%=prettyBytes(app.resourceMetrics?.ram ?? 0)%></span>
+								<%}%>
+							</div>
+						</div>
+						<div class="badge bd-blue-100 rounded-pill">
+							<div class="d-flex align-items-center">
+								<i class="icon-light icon-hard-drive icon-fw me-2"></i>
+								<%if (!app.resourceMetrics) {%>
+									<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
+								<%} else {%>
+									<span class="fw-light"><%=prettyBytes(app.resourceMetrics?.storage ?? 0)%></span>
+								<%}%>
+							</div>
+						</div>
+					</div>
 					<div class="badge bg-dark-subtle text-dark-emphasis rounded-pill">
 						<div class="d-flex align-items-center">
 							<i class="icon-light icon-cube icon-fw me-2"></i>
@@ -96,7 +128,7 @@
 					</div>
 					<div class="badge bd-purple-100 rounded-pill">
 						<div class="d-flex align-items-center">
-							<span><%=app.category%></span>
+							<span class="fw-normal"><%=app.category%></span>
 						</div>
 					</div>
 					<div class="details mt-2">

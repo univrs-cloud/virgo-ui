@@ -28,7 +28,7 @@
 					<dt class="fw-lighter"><small>RAM</small></dt>
 					<dd><%=bytes(memory.total)%></dd>
 					<dt class="fw-lighter"><small>Network</small></dt>
-					<dd><%=prettyBytes((system?.networkInterface?.speed || 0) * 1000 * 1000, { bits: true })%>/s <small class="text-body-tertiary">(MAC: <%=system?.networkInterface?.mac%>)</small></dd>
+					<dd><%=prettyBytes((system?.networkInterface?.speed ?? 0) * 1000 * 1000, { bits: true })%>/s <small class="text-body-tertiary">(MAC: <%=system?.networkInterface?.mac%>)</small></dd>
 					<dt class="fw-lighter"><small>Drives</small></dt>
 					<dd class="m-0">
 						<%_.each(drives, (drive) => {%>

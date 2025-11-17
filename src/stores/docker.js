@@ -36,6 +36,10 @@ class Docker extends Store {
 			this.setState({ containers }, 'set_containers');
 		});
 
+		this.socket.on('app:resourceMetrics', (appsResourceMetrics) => {
+			this.setState({ appsResourceMetrics }, 'set_app_resource_metrics');
+		});
+
 		this.socket.on('app:updates', (imageUpdates) => {
 			this.setState({ imageUpdates }, 'set_container_updates');
 		});
