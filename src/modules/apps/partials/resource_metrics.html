@@ -1,0 +1,30 @@
+<div class="badge bd-blue-100 rounded-pill">
+	<div class="d-flex align-items-center">
+		<i class="icon-light icon-microchip icon-fw me-2"></i>
+		<%if (!resourceMetrics) {%>
+			<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
+		<%} else {%>
+			<span class="fw-light"><%=resourceMetrics?.cpu ?? 0%>%</span>
+		<%}%>
+	</div>
+</div>
+<div class="badge bd-blue-100 rounded-pill">
+	<div class="d-flex align-items-center">
+		<i class="icon-light icon-memory icon-fw me-2"></i>
+		<%if (!resourceMetrics) {%>
+			<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
+		<%} else {%>
+			<span class="fw-light"><%=prettyBytes(resourceMetrics?.ram ?? 0)%></span>
+		<%}%>
+	</div>
+</div>
+<div class="badge bd-blue-100 rounded-pill">
+	<div class="d-flex align-items-center">
+		<i class="icon-light icon-hard-drive icon-fw me-2"></i>
+		<%if (!resourceMetrics) {%>
+			<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
+		<%} else {%>
+			<span class="fw-light"><%=prettyBytes(resourceMetrics?.storage ?? 0)%></span>
+		<%}%>
+	</div>
+</div>
