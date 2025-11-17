@@ -111,6 +111,26 @@ header {
 		line-height: 1.15;
 	}
 }
+div:not(.navbar) .nav-pills {
+	--bs-nav-pills-link-active-color: var(--bs-white);
+	--bs-nav-pills-link-active-bg: var(--bs-indigo-500);
+	--bs-nav-link-color: var(--bs-white);
+	--bs-nav-link-hover-color: var(--bs-gray-100);
+	background: var(--bs-secondary-bg-subtle);
+	border-radius: var(--bs-border-radius);
+	padding: 0.25rem;
+	.nav-link {
+		padding-top: 0.2rem;
+		padding-bottom: 0.2rem;
+		&.active {
+			box-shadow: var(--bs-box-shadow);
+		}
+		&:not(.active) {
+			color: var(--bs-black);
+			background-color: none;
+		}
+	}
+}
 
 main,
 #upgrade {
@@ -184,6 +204,9 @@ main,
 			.nav {
 				width: 100%;
 				.nav-link {
+					&.active {
+						box-shadow: var(--bs-box-shadow-sm);
+					}
 					&:not(.active):hover {
 						background-color: #82a7ff;
 					}
