@@ -61,7 +61,7 @@
 			</div>
 			<div class="row g-0 mt-n2 mb-2 position-relative">
 				<div class="logs-container d-none">
-					<div class="service d-flex align-items-center justify-content-between bg-white p-2 ps-0 pt-3">
+					<div class="service d-flex align-items-center justify-content-between bg-white p-2 ps-0">
 						<div class="d-flex align-items-center">
 							<i class="icon-light icon-cube icon-fw me-1 text-gray-500"></i>
 							<span class="name"></span>
@@ -71,7 +71,7 @@
 					<ul class="list-unstyled overflow-y-scroll m-0"></ul>
 				</div>
 				<div class="terminal-container d-none">
-					<div class="service d-flex align-items-center justify-content-between bg-white p-2 ps-0 pt-3">
+					<div class="service d-flex align-items-center justify-content-between bg-white p-2 ps-0">
 						<div class="d-flex align-items-center">
 							<i class="icon-light icon-cube icon-fw me-1 text-gray-500"></i>
 							<span class="name"></span>
@@ -88,37 +88,8 @@
 							&nbsp;
 						<%}%>
 					</div>
-					<div class="mb-1">
-						<div class="badge bd-blue-100 rounded-pill">
-							<div class="d-flex align-items-center">
-								<i class="icon-light icon-microchip icon-fw me-2"></i>
-								<%if (!app.resourceMetrics) {%>
-									<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
-								<%} else {%>
-									<span class="fw-light"><%=app.resourceMetrics?.cpu ?? 0%>%</span>
-								<%}%>
-							</div>
-						</div>
-						<div class="badge bd-blue-100 rounded-pill">
-							<div class="d-flex align-items-center">
-								<i class="icon-light icon-memory icon-fw me-2"></i>
-								<%if (!app.resourceMetrics) {%>
-									<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
-								<%} else {%>
-									<span class="fw-light"><%=prettyBytes(app.resourceMetrics?.ram ?? 0)%></span>
-								<%}%>
-							</div>
-						</div>
-						<div class="badge bd-blue-100 rounded-pill">
-							<div class="d-flex align-items-center">
-								<i class="icon-light icon-hard-drive icon-fw me-2"></i>
-								<%if (!app.resourceMetrics) {%>
-									<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
-								<%} else {%>
-									<span class="fw-light"><%=prettyBytes(app.resourceMetrics?.storage ?? 0)%></span>
-								<%}%>
-							</div>
-						</div>
+					<div class="resource-metrics mb-1">
+						<%=resourceMetricsTemplate({ resourceMetrics: app.resourceMetrics, prettyBytes })%>
 					</div>
 					<div class="badge bg-dark-subtle text-dark-emphasis rounded-pill">
 						<div class="d-flex align-items-center">

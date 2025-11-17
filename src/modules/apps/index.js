@@ -1,12 +1,14 @@
 import modulePartial from 'modules/apps/partials/index.html';
 import emptyPartial from 'modules/apps/partials/empty.html';
 import appPartial from 'modules/apps/partials/app.html';
+import resourceMetricsPartial from 'modules/apps/partials/resource_metrics.html';
 import * as appService from 'modules/apps/services/app';
 import prettyBytes from 'pretty-bytes';
 
 const moduleTemplate = _.template(modulePartial);
 const emptyTemplate = _.template(emptyPartial);
 const appTemplate = _.template(appPartial);
+const resourceMetricsTemplate = _.template(resourceMetricsPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
 let module = document.querySelector('#apps');
 let loading = module.querySelector('.loading');
@@ -120,7 +122,7 @@ const render = (state) => {
 	} else {
 		_.each(state.apps, (app) => {
 			let jobs = _.filter(state.jobs, (job) => { return job.data?.config?.name === app.name; });
-			template.innerHTML += appTemplate({ app, jobs, prettyBytes });
+			template.innerHTML += appTemplate({ app, jobs, resourceMetricsTemplate, prettyBytes });
 		});
 	}
 	

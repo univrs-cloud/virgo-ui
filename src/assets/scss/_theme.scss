@@ -212,8 +212,9 @@ img {
 					.badge {
 						display: none;
 					}
+					.resource-metrics .badge,
 					.service .badge {
-						display: block;
+						display: inline-block;
 					}
 				}
 			}
@@ -241,13 +242,13 @@ img {
 		bottom: 0;
 		left: 0;
 		right: 0;
-		min-height: calc(100vh - 280px);
+		height: calc(100vh - 260px);
 		background-color: var(--bs-white);
 		padding-left: map-get($spacers, 5);
 	}
 	.logs-container {
 		ul {
-			height: calc(100vh - 280px);
+			height: calc(100vh - 270px);
 			background-color: var(--bs-black);
 		}
 		li {
