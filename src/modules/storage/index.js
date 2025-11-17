@@ -17,6 +17,10 @@ const render = (state) => {
 	
 	let template = document.createElement('template');
 	_.each(state.storage, (pool) => {
+		if (pool.name !== 'system') {
+			pool.properties.usedbydatasets.percent = (pool.properties.usedbydatasets.value / pool.properties.size.value * 100);
+			pool.properties.usedbysnapshots.percent = (pool.properties.usedbysnapshots.value / pool.properties.size.value * 100);
+		}
 		template.innerHTML += storageTemplate({ pool, drives: state.drives, bytes, moment });
 	});
 	
