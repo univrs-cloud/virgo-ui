@@ -4,7 +4,7 @@
 		<%if (!resourceMetrics) {%>
 			<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
 		<%} else {%>
-			<span class="fw-light"><%=resourceMetrics?.cpu ?? 0%>%</span>
+			<span class="fw-light"><%=resourceMetrics?.cpu || 0%>%</span>
 		<%}%>
 	</div>
 </div>
@@ -14,7 +14,7 @@
 		<%if (!resourceMetrics) {%>
 			<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
 		<%} else {%>
-			<span class="fw-light"><%=prettyBytes(resourceMetrics?.ram ?? 0)%></span>
+			<span class="fw-light"><%=prettyBytes(resourceMetrics?.ram || 0)%></span>
 		<%}%>
 	</div>
 </div>
@@ -24,7 +24,7 @@
 		<%if (!resourceMetrics) {%>
 			<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
 		<%} else {%>
-			<span class="fw-light"><%=prettyBytes(resourceMetrics?.storage ?? 0)%></span>
+			<span class="fw-light"><%=prettyBytes(resourceMetrics?.storage?.dataset || 0)%></span>
 		<%}%>
 	</div>
 </div>

@@ -10,6 +10,6 @@
 		</div>
 	</div>
 	<%if (!_.isEmpty(bookmark.url)) {%>
-		<a href="<%=bookmark.url%>" target="<%=(bookmark.target ?? bookmark.name)%>" class="stretched-link"></a>
+		<a href="<%=bookmark.url%>" target="<%=(bookmark?.target || bookmark.name)%>" class="stretched-link"></a>
 	<%}%>
 </div>

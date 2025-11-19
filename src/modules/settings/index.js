@@ -23,8 +23,8 @@ const render = (state) => {
 	morphdom(
 		row,
 		`<div>
-			${notificationsTemplate({ smtp: state.configuration?.smtp ?? null })}
-			${locationTemplate({ location: state.configuration?.location ?? null })}
+			${notificationsTemplate({ smtp: state.configuration?.smtp || null })}
+			${locationTemplate({ location: state.configuration?.location || null })}
 			${powerTemplate()}
 		</div>`,
 		{ childrenOnly: true }

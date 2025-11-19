@@ -19,7 +19,7 @@ const handleSubscription = (properties) => {
 		if (entity.type === 'app') {
 			let container = _.find(properties.containers, (container) => { return _.includes(container.names, `/${entity.name}`) });
 			if (container) {
-				entity.composeProject = container.labels.comDockerComposeProject ?? false;
+				entity.composeProject = container.labels.comDockerComposeProject || false;
 				if (entity.composeProject) {
 					entity.projectContainers = _.orderBy(
 						_.filter(properties.containers, (container) => {
