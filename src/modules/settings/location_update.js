@@ -128,8 +128,8 @@ const restore = (event) => {
 
 const render = (event) => {
 	let configuration = configurationService.getConfiguration();
-	form.querySelector('.latitude').value = configuration?.location?.latitude ?? '';
-	form.querySelector('.longitude').value = configuration?.location?.longitude ?? '';
+	form.querySelector('.latitude').value = configuration?.location?.latitude || '';
+	form.querySelector('.longitude').value = configuration?.location?.longitude || '';
 };
 
 if ('geolocation' in navigator) {

@@ -29,7 +29,7 @@ const composeApps = (configured, containers, appsResourceMetrics, imageUpdates) 
 		(entity) => {
 			let container = _.find(containers, (container) => { return _.includes(container.names, `/${entity.name}`) });
 			if (container) {
-				entity.composeProject = container.labels.comDockerComposeProject ?? false;
+				entity.composeProject = container?.labels?.comDockerComposeProject || false;
 				if (entity.composeProject) {
 					entity.projectContainers = _.orderBy(
 						_.filter(containers, (container) => {

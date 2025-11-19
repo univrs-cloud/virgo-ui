@@ -77,13 +77,13 @@ const restore = (event) => {
 
 const render = (event) => {
 	let configuration = configurationService.getConfiguration();
-	let encryption = configuration?.smtp?.encryption ?? '';
+	let encryption = configuration?.smtp?.encryption || '';
 	form.querySelector(`.encryption[value="${encryption}"]`).checked = true;
-	form.querySelector('.address').value = configuration?.smtp?.address ?? '';
-	form.querySelector('.port').value = configuration?.smtp?.port ?? '';
-	form.querySelector('.username').value = configuration?.smtp?.username ?? '';
-	form.querySelector('.password').value = configuration?.smtp?.password ?? '';
-	form.querySelector('.sender').value = configuration?.smtp?.sender ?? '';
+	form.querySelector('.address').value = configuration?.smtp?.address || '';
+	form.querySelector('.port').value = configuration?.smtp?.port || '';
+	form.querySelector('.username').value = configuration?.smtp?.username || '';
+	form.querySelector('.password').value = configuration?.smtp?.password || '';
+	form.querySelector('.sender').value = configuration?.smtp?.sender || '';
 	form.querySelector('.recipients').innerHTML = configuration?.smtp?.recipients?.join('\n') || '';
 };
 
