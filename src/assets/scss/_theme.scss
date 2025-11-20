@@ -70,6 +70,7 @@ img {
 }
 
 .card {
+	position: relative;
 	margin-bottom: 1rem;
 	.card-spacer {
 		min-width: 3rem;
@@ -98,6 +99,12 @@ img {
 		position: absolute;
 		top: 0.45rem;
 		right: -0.65rem;
+		&.badge {
+			top: 0.20rem;
+			right: -1.35rem;
+			font-weight: 200;
+			font-size: 0.65em;
+		}
 	}
 }
 
@@ -214,6 +221,7 @@ img {
 					.badge {
 						display: none;
 					}
+					.indicator,
 					.resource-metrics .badge,
 					.service .badge {
 						display: inline-block;
