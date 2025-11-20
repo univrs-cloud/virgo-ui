@@ -23,5 +23,7 @@
 	<%if (app.state === 'success') color = 'green'%>
 	<%if (app.state === 'warning') color = 'yellow'%>
 	<%if (_.includes(['danger', undefined], app.state)) color = 'red'%>
-	<span class="indicator translate-middle p-2 border border-light rounded-circle <%=`bg-${color}-300`%>"></span>
+	<span class="indicator badge translate-middle border border-light rounded-pill <%=`bd-${color}-100`%>">
+		<%=_.size(_.filter(app.projectContainers, { state: 'running' }))%> / <%=_.size(app.projectContainers)%>
+	</span>
 </div>
