@@ -1,6 +1,6 @@
 import * as powerService from 'modules/settings/services/power';
 
-let module = document.querySelector('#settings');
+const module = document.querySelector('#settings');
 
 const reboot = async (event) => {
 	if (event.target.closest('a')?.dataset.action !== 'reboot') {
@@ -8,7 +8,6 @@ const reboot = async (event) => {
 	}
 	
 	if (event.target.closest('a').classList.contains('disabled')) {
-		event.preventDefault();
 		return;
 	}
 
@@ -44,7 +43,7 @@ const render = (state) => {
 		return;
 	}
 
-	let reboot = state.reboot;
+	const reboot = state.reboot;
 	if (reboot) {
 		document.body.classList.add('reboot');
 		document.querySelector('#power .rebooting').classList.remove('d-none');
@@ -52,7 +51,7 @@ const render = (state) => {
 		return;
 	}
 
-	let shutdown = state.shutdown;
+	const shutdown = state.shutdown;
 	if (shutdown) {
 		document.querySelector('#power .powered-off').classList.remove('d-none');
 		document.body.classList.add('powered-off');

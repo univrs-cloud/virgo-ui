@@ -73,7 +73,7 @@
 						
 						<%if (pool?.type?.toLowerCase() === 'pool' && pool?.scanStats) {%>
 							<%if (pool.scanStats?.state.toLowerCase() !== 'finished') {%>
-								<%let progress = (pool.scanStats.toExamine === 0 ? 0 : (pool.scanStats.issued / pool.scanStats.toExamine) * 100)%>
+								<%const progress = (pool.scanStats.toExamine === 0 ? 0 : (pool.scanStats.issued / pool.scanStats.toExamine) * 100)%>
 								<dt class="fw-lighter">
 									<small>
 										<%if (pool.scanStats.scrubPause === 0) {%>

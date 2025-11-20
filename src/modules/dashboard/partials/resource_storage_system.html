@@ -1,6 +1,4 @@
-<%
-let pool = (state.storage === false ? false : _.find(state.storage, (pool) => { return pool.name === 'system'; }));
-%>
+<%const pool = (state.storage === false ? false : _.find(state.storage, (pool) => { return pool.name === 'system'; }))%>
 <li class="list-group-item storage-system py-3">
 	<h6 class="text-body-emphasis mb-0">
 		<i class="icon-regular icon-sd-card icon-fw me-1 text-gray-500"></i>

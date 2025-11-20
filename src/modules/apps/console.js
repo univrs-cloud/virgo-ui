@@ -4,7 +4,7 @@ import { CanvasAddon } from '@xterm/addon-canvas';
 import { FitAddon } from '@xterm/addon-fit';
 
 const socket = appService.getSocket();
-let module = document.querySelector('#apps');
+const module = document.querySelector('#apps');
 let terminalContainer = null;
 let terminal = null;
 let fitAddon = null;
@@ -17,7 +17,7 @@ const render = (event) => {
 	event.preventDefault();
 	restore();
 
-	let link = event.target;
+	const link = event.target;
 	let service;
 	_.each(appService.getApps(), (app) => {
 		service = _.find(app.projectContainers, { id: link.dataset.id });
@@ -25,7 +25,7 @@ const render = (event) => {
 			return false;
 		}
 	});
-	let app = link.closest('.app');
+	const app = link.closest('.app');
 	terminalContainer = app.querySelector('.terminal-container');
 	terminalContainer.querySelector('.service .name').innerHTML = service.name;
 	terminalContainer.classList.remove('d-none');

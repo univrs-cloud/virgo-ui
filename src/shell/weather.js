@@ -307,8 +307,8 @@ const processWeatherData = (weather) => {
 	const tempRange = maxTemp - minTemp;
 	const columns = [];
 	const timeLabels = [];
-	let sunriseColumn = Math.floor((sunriseHour - 2) / 2) + 1;
-	let sunsetColumn = Math.floor((sunsetHour - 10) / 2) + 4;
+	const sunriseColumn = Math.floor((sunriseHour - 2) / 2) + 1;
+	const sunsetColumn = Math.floor((sunsetHour - 10) / 2) + 4;
 	let currentColumn = 0;
 	for (let i = 0; i < 12; i++) {
 		const hour = (i + 1) * 2;
@@ -340,8 +340,8 @@ const render = (state) => {
 		return;
 	}
 
-	let timeOfDay = (state.weather.current_weather.time > state.weather.daily.sunrise[0] && state.weather.current_weather.time < state.weather.daily.sunset[0] ? 'day' : 'night');
-	let weather = weatherCondition(state.weather.current_weather.weathercode, timeOfDay);
+	const timeOfDay = (state.weather.current_weather.time > state.weather.daily.sunrise[0] && state.weather.current_weather.time < state.weather.daily.sunset[0] ? 'day' : 'night');
+	const weather = weatherCondition(state.weather.current_weather.weathercode, timeOfDay);
 	weather.temperature = `${state.weather.current_weather.temperature?.toFixed(0)} ${state.weather.current_weather_units.temperature}`;
 	morphdom(
 		container,

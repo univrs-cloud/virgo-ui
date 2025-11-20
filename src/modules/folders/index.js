@@ -8,10 +8,10 @@ const moduleTemplate = _.template(modulePartial);
 const emptyTemplate = _.template(emptyPartial);
 const folderTemplate = _.template(folderPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
-let module = document.querySelector('#folders');
-let loading = module.querySelector('.loading');
-let container = module.querySelector('.container-fluid');
-let row = container.querySelector('.row');
+const module = document.querySelector('#folders');
+const loading = module.querySelector('.loading');
+const container = module.querySelector('.container-fluid');
+const row = container.querySelector('.row');
 
 const copyToClipboard = (event) => {
 	if (event.target.closest('a')?.dataset.action !== 'copy-to-clipboard') {
@@ -19,11 +19,11 @@ const copyToClipboard = (event) => {
 	}
 
 	event.preventDefault();
-	let button = event.target.closest('a');
-	let text = button.nextElementSibling.innerHTML;
+	const button = event.target.closest('a');
+	const text = button.nextElementSibling.innerHTML;
 	if (copy(text)) {
-		let tooltip = bootstrap.Tooltip.getInstance(button);
-		let originalTitle = button.dataset.bsOriginalTitle;
+		const tooltip = bootstrap.Tooltip.getInstance(button);
+		const originalTitle = button.dataset.bsOriginalTitle;
 		tooltip.setContent({ '.tooltip-inner': 'Copied!' });
 		setTimeout(() => {
 			tooltip.hide();
@@ -37,14 +37,13 @@ const remove = async (event) => {
 		return;
 	}
 
-	if (event.target.closest('a').classList.contains('disabled')) {
-		event.preventDefault();
+	if (event.target.closest('a')?.classList.contains('disabled')) {
 		return;
 	}
 	
 	event.preventDefault();
-	let button = event.target.closest('a');
-	let folder = button.closest('.folder');
+	const button = event.target.closest('a');
+	const folder = button.closest('.folder');
 	if (!await confirm(`Are you sure you want to ${button.dataset.action} ${folder.dataset.title}?`)) {
 		return;
 	}
@@ -61,11 +60,11 @@ const render = (state) => {
 		return;
 	}
 	
-	let template = document.createElement('template');
+	const template = document.createElement('template');
 	if (_.isEmpty(state.folders)) {
 		template.innerHTML = emptyTemplate();
 	} else {
-		let networkInterface = state.networkInterface;
+		const networkInterface = state.networkInterface;
 		_.each(state.folders, (folder) => {
 			template.innerHTML += folderTemplate({ folder, networkInterface, bytes });
 		});

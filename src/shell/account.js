@@ -5,7 +5,7 @@ const accountTemplate = _.template(accountPartial);
 let authDomain = null;
 
 const logout = (event) => {
-	if (!event.target.classList.contains('sign-out') || !authDomain) {
+	if (!authDomain || !event.target.classList.contains('sign-out')) {
 		return;
 	}
 	
@@ -18,8 +18,8 @@ const render = (state) => {
 		return;
 	}
 	
-	let isUpgrading = !_.isNull(state.upgrade);
-	let container = _.find(state.containers, { name: 'authelia' });
+	const isUpgrading = !_.isNull(state.upgrade);
+	const container = _.find(state.containers, { name: 'authelia' });
 	authDomain = dockerService.composeUrlFromLabels(container?.labels);
 	morphdom(
 		document.querySelector('#account'),

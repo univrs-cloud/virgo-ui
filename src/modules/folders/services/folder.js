@@ -28,8 +28,8 @@ const performAction = (config) => {
 };
 
 const handleSubscription = (properties) => {
-	let folders = filter(properties.shares);
-	let networkInterface = properties.system.networkInterface;
+	const folders = filter(properties.shares);
+	const networkInterface = properties.system.networkInterface;
 
 	_.each(callbackCollection, (callback) => {
 		callback({ folders, networkInterface });

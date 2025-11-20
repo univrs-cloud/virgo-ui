@@ -1,6 +1,4 @@
-<%
-let pool = (state.storage === false ? false : _.find(state.storage, (pool) => { return pool.name === 'messier'; }));
-%>
+<%const pool = (state.storage === false ? false : _.find(state.storage, (pool) => { return pool.name === 'messier'; }))%>
 <li class="list-group-item storage-data py-3">
 	<h6 class="d-flex align-items-center text-body-emphasis mb-0">
 		<i class="icon-regular icon-database icon-fw me-1 text-gray-500"></i>
@@ -47,7 +45,7 @@ let pool = (state.storage === false ? false : _.find(state.storage, (pool) => { 
 			<%})%>
 		</div>
 		<%if (pool.scanStats && pool.scanStats?.state?.toLowerCase() !== 'finished') {%>
-			<%let progress = (pool.scanStats.toExamine === 0 ? 0 : (pool.scanStats.issued / pool.scanStats.toExamine) * 100)%>
+			<%const progress = (pool.scanStats.toExamine === 0 ? 0 : (pool.scanStats.issued / pool.scanStats.toExamine) * 100)%>
 			<div class="lh-1 text-body-tertiary mt-3">
 				<small>
 					<%if (pool.scanStats.scrubPause === 0) {%>

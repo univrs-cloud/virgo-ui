@@ -10,18 +10,18 @@ const timeMachineEmptyTemplate = _.template(timeMachineEmptyPartial);
 const foldersTemplate = _.template(foldersPartial);
 const folderTemplate = _.template(folderPartial);
 const timeMachineTemplate = _.template(timeMachinePartial);
-let container = document.querySelector('#shares');
+const container = document.querySelector('#shares');
 
 const render = (state) => {
 	if (_.isNull(state.shares)) {
 		return;
 	}
 
-	let template = document.createElement('template');
+	const template = document.createElement('template');
 	template.innerHTML = foldersTemplate();
 	
-	let folders = template.content.querySelector('.folders');
-	let foldersCollection = _.filter(state.shares, { isTimeMachine: false });
+	const folders = template.content.querySelector('.folders');
+	const foldersCollection = _.filter(state.shares, { isTimeMachine: false });
 	if (_.isEmpty(foldersCollection)) {
 		folders.insertAdjacentHTML('beforeend', foldersEmptyTemplate());
 	} else {
@@ -30,8 +30,8 @@ const render = (state) => {
 		});
 	}
 
-	let timeMachines = template.content.querySelector('.time-machines');
-	let timeMachineCollection = _.filter(state.shares, { isTimeMachine: true });
+	const timeMachines = template.content.querySelector('.time-machines');
+	const timeMachineCollection = _.filter(state.shares, { isTimeMachine: true });
 	if (_.isEmpty(timeMachineCollection)) {
 		timeMachines.insertAdjacentHTML('beforeend', timeMachineEmptyTemplate());
 	} else {

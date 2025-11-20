@@ -31,8 +31,7 @@ const deleteBookmark = (config) => {
 };
 
 const handleSubscription = (properties) => {
-	let bookmarks = composeBookmark(properties.configured);
-
+	const bookmarks = composeBookmark(properties.configured);
 	_.each(callbackCollection, (callback) => {
 		callback({ bookmarks, jobs: properties.jobs });
 	});

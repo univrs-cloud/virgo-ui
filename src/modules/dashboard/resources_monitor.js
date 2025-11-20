@@ -19,7 +19,7 @@ const networkTemplate = _.template(resourceNetworkPartial);
 const upsTemplate = _.template(resourceUpsPartial);
 const timeTemplate = _.template(resourceTimePartial);
 
-let container = document.querySelector('#resources-monitor');
+const container = document.querySelector('#resources-monitor');
 
 const render = (state) => {
 	morphdom(

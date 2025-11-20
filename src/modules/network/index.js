@@ -6,10 +6,9 @@ import { Netmask } from 'netmask';
 const moduleTemplate = _.template(modulePartial);
 const networkTemplate = _.template(networkPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
-
-let module = document.querySelector('#network');
-let loading = module.querySelector('.loading');
-let container = module.querySelector('.container-fluid');
+const module = document.querySelector('#network');
+const loading = module.querySelector('.loading');
+const container = module.querySelector('.container-fluid');
 
 const getBlock = (networkInterface) => {
 	let block = null;

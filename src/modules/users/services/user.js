@@ -43,8 +43,7 @@ const changePassword = (config) => {
 };
 
 const handleSubscription = (properties) => {
-	let users = filter(properties.users);
-
+	const users = filter(properties.users);
 	_.each(callbackCollection, (callback) => {
 		callback({ users });
 	});

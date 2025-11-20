@@ -1,7 +1,7 @@
 import * as appService from 'modules/apps/services/app';
 
 const socket = appService.getSocket();
-let module = document.querySelector('#apps');
+const module = document.querySelector('#apps');
 let logsContainer = null;
 let logs = null;
 let isScrollEventAttached = false;
@@ -15,7 +15,7 @@ const render = (event) => {
 	event.preventDefault();
 	restore();
 
-	let link = event.target;
+	const link = event.target;
 	let service;
 	_.each(appService.getApps(), (app) => {
 		service = _.find(app.projectContainers, { id: link.dataset.id });
@@ -23,7 +23,7 @@ const render = (event) => {
 			return false;
 		}
 	});
-	let app = link.closest('.app');
+	const app = link.closest('.app');
 	logsContainer = app.querySelector('.logs-container');
 	logsContainer.querySelector('.service .name').innerHTML = service.name;
 	logsContainer.classList.remove('d-none');

@@ -6,7 +6,7 @@ const morphdom = (fromNode, toNode, options) => {
 		...options,
 		onBeforeElUpdated: (fromEl, toEl) => {
 			if (onBeforeElUpdated) {
-				let result = onBeforeElUpdated(fromEl, toEl);
+				const result = onBeforeElUpdated(fromEl, toEl);
 				if (result === false) {
 					return false;
 				}

@@ -29,8 +29,8 @@ document.addEventListener('click', (event) => {
 	}
 
 	event.preventDefault();
-	let types = { text: 'password', password: 'text' };
-	let input = event.target.closest('.form-floating').querySelector('input');
+	const types = { text: 'password', password: 'text' };
+	const input = event.target.closest('.form-floating').querySelector('input');
 	input.type = types[input.type];
 	input.focus();
 });

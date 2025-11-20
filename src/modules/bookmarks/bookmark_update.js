@@ -67,8 +67,8 @@ const updateBookmark = (event) => {
 };
 
 const render = (event) => {
-	let name = event.relatedTarget.closest('.bookmark').dataset.name;
-	let bookmarks = bookmarkService.getBookmarks();
+	const name = event.relatedTarget.closest('.bookmark').dataset.name;
+	const bookmarks = bookmarkService.getBookmarks();
 	bookmark = _.find(bookmarks, { name: name });
 	form.querySelector('.title').value = bookmark.title;
 	form.querySelector('.url').value = bookmark.url;
@@ -79,9 +79,9 @@ const restore = (event) => {
 	bookmark = null;
 	form.reset();
 	_.each(form.querySelectorAll('button'), (button) => { button.disabled = false });
-	_.each(form.querySelectorAll('.form-floating'), (input) => {
-		input.querySelector('input')?.classList?.remove('is-invalid', 'is-valid');
-		input.querySelector('.invalid-feedback').innerHTML = '';
+	_.each(form.querySelectorAll('.form-floating'), (field) => {
+		field.querySelector('input')?.classList?.remove('is-invalid', 'is-valid');
+		field.querySelector('.invalid-feedback').innerHTML = '';
 	});
 };
 

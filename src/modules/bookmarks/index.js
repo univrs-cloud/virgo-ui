@@ -7,22 +7,22 @@ const moduleTemplate = _.template(modulePartial);
 const emptyTemplate = _.template(emptyPartial);
 const bookmarkTemplate = _.template(bookmarkPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
-let module = document.querySelector('#bookmarks');
-let loading = module.querySelector('.loading');
-let container = module.querySelector('.container-fluid');
-let row = container.querySelector('.row');
+const module = document.querySelector('#bookmarks');
+const loading = module.querySelector('.loading');
+const container = module.querySelector('.container-fluid');
+const row = container.querySelector('.row');
 
 const render = (state) => {
 	if (_.isNull(state.bookmarks)) {
 		return;
 	}
 	
-	let template = document.createElement('template');
+	const template = document.createElement('template');
 	if (_.isEmpty(state.bookmarks)) {
 		template.innerHTML = emptyTemplate();
 	} else {
 		_.each(state.bookmarks, (bookmark) => {
-			let jobs = _.filter(state.jobs, (job) => { return job.data?.config?.name === bookmark.name; });
+			const jobs = _.filter(state.jobs, (job) => { return job.data?.config?.name === bookmark.name; });
 			template.innerHTML += bookmarkTemplate({ bookmark, jobs });
 		});
 	}

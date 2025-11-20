@@ -6,17 +6,17 @@ import prettyBytes from 'pretty-bytes';
 const moduleTemplate = _.template(modulePartial);
 const aboutTemplate = _.template(aboutPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
-let module = document.querySelector('#about');
-let loading = module.querySelector('.loading');
-let container = module.querySelector('.container-fluid');
-let row = container.querySelector('.row');
+const module = document.querySelector('#about');
+const loading = module.querySelector('.loading');
+const container = module.querySelector('.container-fluid');
+const row = container.querySelector('.row');
 
 const render = (state) => {
 	if (_.isNull(state.system) || _.isNull(state.memory) || _.isNull(state.drives)) {
 		return;
 	}
 	
-	let template = aboutTemplate({
+	const template = aboutTemplate({
 		system: state.system,
 		memory: state.memory,
 		drives: state.drives,

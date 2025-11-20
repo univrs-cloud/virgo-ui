@@ -70,15 +70,15 @@ const updateSmtp = (event) => {
 const restore = (event) => {
 	form.reset();
 	_.each(form.querySelectorAll('button'), (button) => { button.disabled = false });
-	_.each(form.querySelectorAll('.form-floating'), (input) => {
-		input.querySelector('input')?.classList?.remove('is-invalid', 'is-valid');
-		input.querySelector('.invalid-feedback').innerHTML = '';
+	_.each(form.querySelectorAll('.form-floating'), (field) => {
+		field.querySelector('input')?.classList?.remove('is-invalid', 'is-valid');
+		field.querySelector('.invalid-feedback').innerHTML = '';
 	});
 };
 
 const render = (event) => {
-	let configuration = configurationService.getConfiguration();
-	let encryption = configuration?.smtp?.encryption || '';
+	const configuration = configurationService.getConfiguration();
+	const encryption = configuration?.smtp?.encryption || '';
 	form.querySelector(`.encryption[value="${encryption}"]`).checked = true;
 	form.querySelector('.address').value = configuration?.smtp?.address || '';
 	form.querySelector('.port').value = configuration?.smtp?.port || '';

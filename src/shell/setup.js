@@ -7,8 +7,8 @@ import * as systemService from 'shell/services/system';
 const headerTemplate = _.template(headerPartial);
 const navigationTemplate = _.template(navigationPartial);
 const mainTemplate = _.template(mainPartial);
-let header = document.querySelector('header');
-let container = document.querySelector('main');
+const header = document.querySelector('header');
+const container = document.querySelector('main');
 
 const renderSerialNumber = (state) => {
 	_.each(document.querySelectorAll('header .serial-number'), (element) => { element.innerHTML = `SN:${state.system.serial || '&mdash;'}`; });

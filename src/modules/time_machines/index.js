@@ -8,10 +8,10 @@ const moduleTemplate = _.template(modulePartial);
 const emptyTemplate = _.template(emptyPartial);
 const timeMachineTemplate = _.template(timeMachinePartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
-let module = document.querySelector('#time-machines');
-let loading = module.querySelector('.loading');
-let container = module.querySelector('.container-fluid');
-let row = container.querySelector('.row');
+const module = document.querySelector('#time-machines');
+const loading = module.querySelector('.loading');
+const container = module.querySelector('.container-fluid');
+const row = container.querySelector('.row');
 
 const copyToClipboard = (event) => {
 	if (event.target.closest('a')?.dataset.action !== 'copy-to-clipboard') {
@@ -19,11 +19,11 @@ const copyToClipboard = (event) => {
 	}
 
 	event.preventDefault();
-	let button = event.target.closest('a');
-	let text = button.nextElementSibling.innerHTML;
+	const button = event.target.closest('a');
+	const text = button.nextElementSibling.innerHTML;
 	if (copy(text)) {
-		let tooltip = bootstrap.Tooltip.getInstance(button);
-		let originalTitle = button.dataset.bsOriginalTitle;
+		const tooltip = bootstrap.Tooltip.getInstance(button);
+		const originalTitle = button.dataset.bsOriginalTitle;
 		tooltip.setContent({ '.tooltip-inner': 'Copied!' });
 		setTimeout(() => {
 			tooltip.hide();
@@ -34,8 +34,8 @@ const copyToClipboard = (event) => {
 
 const performAction = async (event) => {
 	event.preventDefault();
-	let button = event.currentTarget;
-	let timeMachine = button.closest('.time-machines');
+	const button = event.currentTarget;
+	const timeMachine = button.closest('.time-machines');
 	if (button.classList.contains('text-danger') && !await confirm(`Are you sure you want to ${button.dataset.action} ${timeMachine.dataset.title}?`)) {
 		return;
 	}
@@ -52,11 +52,11 @@ const render = (state) => {
 		return;
 	}
 	
-	let template = document.createElement('template');
+	const template = document.createElement('template');
 	if (_.isEmpty(state.timeMachines)) {
 		template.innerHTML = emptyTemplate();
 	} else {
-		let networkInterface = state.networkInterface;
+		const networkInterface = state.networkInterface;
 		_.each(state.timeMachines, (timeMachine) => {
 			template.innerHTML += timeMachineTemplate({ timeMachine, networkInterface, bytes });
 		});

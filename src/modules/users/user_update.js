@@ -72,8 +72,8 @@ const updateUser = (event) => {
 };
 
 const render = (event) => {
-	let uid = event.relatedTarget.closest('.user').dataset.uid;
-	let users = userService.getUsers();
+	const uid = event.relatedTarget.closest('.user').dataset.uid;
+	const users = userService.getUsers();
 	user = _.find(users, { uid: Number(uid) });
 	form.querySelector('.fullname').value = user.fullname;
 	form.querySelector('.email').value = user.email;
@@ -83,9 +83,9 @@ const restore = (event) => {
 	user = null;
 	form.reset();
 	_.each(form.querySelectorAll('button'), (button) => { button.disabled = false });
-	_.each(form.querySelectorAll('.form-floating'), (input) => {
-		input.querySelector('input')?.classList?.remove('is-invalid', 'is-valid');
-		input.querySelector('.invalid-feedback').innerHTML = '';
+	_.each(form.querySelectorAll('.form-floating'), (field) => {
+		field.querySelector('input')?.classList?.remove('is-invalid', 'is-valid');
+		field.querySelector('.invalid-feedback').innerHTML = '';
 	});
 };
 

@@ -5,27 +5,37 @@ import * as appCenterService from 'modules/apps/services/app_center';
 document.querySelector('body').insertAdjacentHTML('beforeend', appCenterModalPartial);
 
 const itemTemplate = _.template(itemPartial);
-let modal = document.querySelector('#app-center');
-let modalBody = modal.querySelector('.modal-body');
-let loading = modalBody.querySelector('.loading');
-let container = modalBody.querySelector('.tab-content');
-let rowExplore = container.querySelector('#app-center-explore .row');
-let rowInstalled = container.querySelector('#app-center-installed .row');
+const modal = document.querySelector('#app-center');
+const modalBody = modal.querySelector('.modal-body');
+const loading = modalBody.querySelector('.loading');
+const container = modalBody.querySelector('.tab-content');
+const rowExplore = container.querySelector('#app-center-explore .row');
+const rowInstalled = container.querySelector('#app-center-installed .row');
+
+const openInstallModal = (event) => {
+	if (!event.target.classList.contains('install')) {
+		return;
+	}
+
+	event.preventDefault();
+	const modal = bootstrap.Modal.getOrCreateInstance(event.target.getAttribute('href'));
+	modal.show(event.target);
+};
 
 const render = (state) => {
 	if (_.isNull(state.templates)) {
 		return;
 	}
 
-	let templateInstallable = document.createElement('template');
-	let installable = _.filter(state.templates, { isInstalled: false });
+	const templateInstallable = document.createElement('template');
+	const installable = _.filter(state.templates, { isInstalled: false });
 	templateInstallable.innerHTML = _.join(_.map(installable, (app) => {
-		let jobs = _.filter(state.jobs, (job) => { return job.name === 'app:install' && job.data.config.id === app.id && job.progress?.state === 'active'; });
+		const jobs = _.filter(state.jobs, (job) => { return job.name === 'app:install' && job.data.config.id === app.id && job.progress?.state === 'active'; });
 		return itemTemplate({ app, jobs });
 	}), '');
 	
-	let templateInstalled = document.createElement('template');
-	let installed = _.filter(state.templates, { isInstalled: true });
+	const templateInstalled = document.createElement('template');
+	const installed = _.filter(state.templates, { isInstalled: true });
 	templateInstalled.innerHTML = _.join(_.map(installed, (app) => {
 		return itemTemplate({ app, jobs: [] });
 	}), '');
@@ -48,6 +58,7 @@ const render = (state) => {
 	container.classList.remove('d-none');
 };
 
+modal.addEventListener('click', openInstallModal);
 modal.addEventListener('show.bs.modal', () => {
 	appCenterService.subscribe([render])
 });

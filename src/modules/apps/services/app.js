@@ -79,7 +79,7 @@ const performServiceAction = (config) => {
 };
 
 const handleSubscription = (properties) => {
-	let apps = composeApps(properties.configured, properties.containers, properties.appsResourceMetrics, properties.imageUpdates);
+	const apps = composeApps(properties.configured, properties.containers, properties.appsResourceMetrics, properties.imageUpdates);
 	_.each(callbackCollection, (callback) => {
 		callback({ apps, jobs: properties.jobs });
 	});
