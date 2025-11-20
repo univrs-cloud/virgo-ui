@@ -4,12 +4,12 @@ import validator from 'validator';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', bookmarkModalPartial);
 
-let form = document.querySelector('#bookmark-create');
+const form = document.querySelector('#bookmark-create');
 
 const validateTitle = (event) => {
-	let input = form.querySelector('.title');
-	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
-	let value = input.value;
+	const input = form.querySelector('.title');
+	const invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
+	const value = input.value;
 	if (validator.isEmpty(value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
@@ -21,9 +21,9 @@ const validateTitle = (event) => {
 };
 
 const validateUrl = (event) => {
-	let input = form.querySelector('.url');
-	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
-	let value = input.value;
+	const input = form.querySelector('.url');
+	const invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
+	const value = input.value;
 	if (validator.isEmpty(value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
@@ -50,8 +50,8 @@ const createBookmark = (event) => {
 		return;
 	}
 
-	let form = event.target;
-	let buttons = form.querySelectorAll('button');
+	const form = event.target;
+	const buttons = form.querySelectorAll('button');
 	_.each(buttons, (button) => { button.disabled = true; });
 
 	let config = {

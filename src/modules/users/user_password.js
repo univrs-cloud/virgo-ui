@@ -4,13 +4,13 @@ import validator from 'validator';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', passwordModalPartial);
 
-let form = document.querySelector('#user-password');
+const form = document.querySelector('#user-password');
 let user;
 
 const validatePassword = (event) => {
-	let input = form.querySelector('.password');
-	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
-	let value = input.value;
+	const input = form.querySelector('.password');
+	const invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
+	const value = input.value;
 	if (validator.isEmpty(value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
@@ -22,9 +22,9 @@ const validatePassword = (event) => {
 };
 
 const validatePasswordCheck = (event) => {
-	let input = form.querySelector('.password-check');
-	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
-	let value = input.value;
+	const input = form.querySelector('.password-check');
+	const invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
+	const value = input.value;
 	if (validator.isEmpty(value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
@@ -57,9 +57,10 @@ const changePassword = (event) => {
 		return;
 	}
 
-	let form = event.target;
-	let buttons = form.querySelectorAll('button');
+	const form = event.target;
+	const buttons = form.querySelectorAll('button');
 	_.each(buttons, (button) => { button.disabled = true; });
+
 	let config = {
 		username: user.username,
 		password: form.querySelector('.password').value

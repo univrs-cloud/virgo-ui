@@ -37,6 +37,10 @@ img {
 	border-radius: 0.1rem;
 }
 
+.tooltip {
+	z-index: 99999;
+}
+
 .modal {
 	--bs-modal-border-radius: var(--bs-border-radius-xl);
 	backdrop-filter: blur(6px) grayscale(0.8);

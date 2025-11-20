@@ -16,25 +16,25 @@ const inputRadioTemplate = _.template(inputRadioPartial);
 const selectTemplate = _.template(selectPartial);
 document.querySelector('body').insertAdjacentHTML('beforeend', appModalPartial);
 
-let form = document.querySelector('#app-install');
+const form = document.querySelector('#app-install');
 let app;
 
-const validateField = (field) => {
-	let invalidFeedback = field.closest('.form-floating').querySelector('.invalid-feedback');
-	let value = field.value;
+const validateInput = (input) => {
+	const invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
+	const value = input.value;
 	if (validator.isEmpty(value)) {
-		field.classList.remove('is-valid');
-		field.classList.add('is-invalid');
+		input.classList.remove('is-valid');
+		input.classList.add('is-invalid');
 		invalidFeedback.innerHTML = `Can't be empty`;
 		return;
 	}
-	field.classList.remove('is-invalid');
-	field.classList.add('is-valid');
+	input.classList.remove('is-invalid');
+	input.classList.add('is-valid');
 };
 
 const validateForm = () => {
-	_.each(form.querySelectorAll('input:not([type="radio"]):not([type="checkbox"]), textarea'), (field) => {
-		validateField(field);
+	_.each(form.querySelectorAll('input:not([type="radio"]):not([type="checkbox"]), textarea'), (input) => {
+		validateInput(input);
 	});
 };
 
@@ -49,8 +49,8 @@ const install = (event) => {
 		return;
 	}
 
-	let form = event.target;
-	let buttons = form.querySelectorAll('button');
+	const form = event.target;
+	const buttons = form.querySelectorAll('button');
 	_.each(buttons, (button) => { button.disabled = true; });
 
 	let config = {
@@ -71,6 +71,8 @@ const render = (event) => {
 	app = _.find(appCenterService.getTemplates(), { id: Number(id) });
 	form.querySelector('.modal-title').innerHTML = app.title;
 	form.querySelector('.description').innerHTML = app.description;
+	form.querySelector('.note').innerHTML = app.note || '';
+	form.querySelector('.note').classList[app.note ? 'remove' : 'add']('d-none');
 	let domain = appCenterService.getDomain();
 	_.each(app.env, (env) => {
 		if (env?.type === 'hidden') {
@@ -81,6 +83,9 @@ const render = (event) => {
 		if (env?.type === 'text') {
 			if (env.name.toLowerCase() === 'domain') {
 				env.default = domain;
+			}
+			if (env.name.toLowerCase() === 'nextcloud_trusted_domains') {
+				env.default = `${domain} auth.${domain} nextcloud.${domain} onlyoffice.${domain} talk.${domain}`;
 			}
 			form.querySelector('.inputs').innerHTML += inputTextTemplate({ env, prefix: env?.prefix, suffix: env?.suffix });
 			return;
@@ -106,12 +111,13 @@ const render = (event) => {
 			return;
 		}
 	});
-	_.each(form.querySelectorAll('input:not([type="radio"]):not([type="checkbox"]), textarea'), (field) => { field.addEventListener('input', (event) => { validateField(event.target); }) });
+	_.each(form.querySelectorAll('input:not([type="radio"]):not([type="checkbox"]), textarea'), (input) => { input.addEventListener('input', (event) => { validateInput(event.target); }) });
 };
 
 const restore = (event) => {
 	app = null;
-	_.each(form.querySelectorAll('.modal-title, .description, .inputs'), (node) => { node.innerHTML = ''; });
+	_.each(form.querySelectorAll('.modal-title, .description, .note, .inputs'), (node) => { node.innerHTML = ''; });
+	form.querySelector('.note').classList.add('d-none');
 	form.reset();
 	_.each(form.querySelectorAll('button'), (button) => { button.disabled = false });
 }

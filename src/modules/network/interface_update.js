@@ -5,12 +5,12 @@ import { Netmask } from 'netmask';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', interfaceModalPartial);
 
-let form = document.querySelector('#network-interface');
+const form = document.querySelector('#network-interface');
 
 const validateIpAddress = () => {
-	let input = form.querySelector('.ip-address');
-	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
-	let value = input.value;
+	const input = form.querySelector('.ip-address');
+	const invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
+	const value = input.value;
 	if (validator.isEmpty(value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
@@ -28,9 +28,9 @@ const validateIpAddress = () => {
 };
 
 const validateNetmask = () => {
-	let input = form.querySelector('.netmask');
-	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
-	let value = input.value;
+	const input = form.querySelector('.netmask');
+	const invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
+	const value = input.value;
 	if (validator.isEmpty(value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
@@ -42,9 +42,9 @@ const validateNetmask = () => {
 };
 
 const validateGateway = () => {
-	let input = form.querySelector('.gateway');
-	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
-	let value = input.value;
+	const input = form.querySelector('.gateway');
+	const invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
+	const value = input.value;
 	if (validator.isEmpty(value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
@@ -78,8 +78,8 @@ const updateInterface = (event) => {
 		return;
 	}
 
-	let form = event.target;
-	let buttons = form.querySelectorAll('button');
+	const form = event.target;
+	const buttons = form.querySelectorAll('button');
 	_.each(buttons, (button) => { button.disabled = true; });
 
 	const isDhcp = form.querySelector('.dhcp').checked;

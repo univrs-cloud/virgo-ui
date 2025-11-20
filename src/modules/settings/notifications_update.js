@@ -4,12 +4,12 @@ import validator from 'validator';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', notificationModalPartial);
 
-let form = document.querySelector('#smtp');
+const form = document.querySelector('#smtp');
 
 const validateAddress = (event) => {
-	let input = form.querySelector('.address');
-	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
-	let value = input.value;
+	const input = form.querySelector('.address');
+	const invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
+	const value = input.value;
 	if (validator.isEmpty(value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
@@ -21,9 +21,9 @@ const validateAddress = (event) => {
 };
 
 const validatePort = (event) => {
-	let input = form.querySelector('.port');
-	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
-	let value = input.value;
+	const input = form.querySelector('.port');
+	const invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
+	const value = input.value;
 	if (validator.isEmpty(value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
@@ -50,9 +50,10 @@ const updateSmtp = (event) => {
 		return;
 	}
 
-	let form = event.target;
-	let buttons = form.querySelectorAll('button');
+	const form = event.target;
+	const buttons = form.querySelectorAll('button');
 	_.each(buttons, (button) => { button.disabled = true; });
+	
 	let config = configurationService.getConfiguration()?.smtp || {};
 	config.encryption = form.querySelector('.encryption:checked').value;
 	config.address = form.querySelector('.address').value;
