@@ -245,15 +245,14 @@ main,
 				flex-basis: auto;
 			}
 			.navbar-nav {
-				flex-direction: row;
 				.nav-link {
+					padding-right: map-get($spacers, 2);
+					padding-left: map-get($spacers, 2);
 					&:hover {
 						color: var(--bs-white);
 						background-color: #82a7ff;
 						border-radius: $border-radius;
 					}
-					padding-right: 0.5rem;
-					padding-left: 0.5rem;
 				}
 			}
 			.dropup {
