@@ -1,6 +1,6 @@
 import * as userService from 'modules/users/services/user';
 
-let module = document.querySelector('#users');
+const module = document.querySelector('#users');
 
 const lockUser = async (event) => {
 	if (!event.target.closest('a')?.classList.contains('lock')) {
@@ -8,9 +8,9 @@ const lockUser = async (event) => {
 	}
 
 	event.preventDefault();
-	let button = event.target;
-	let card = button.closest('.user');
-	let user = _.find(userService.getUsers(), { uid: Number(card.dataset.uid) });
+	const button = event.target;
+	const card = button.closest('.user');
+	const user = _.find(userService.getUsers(), { uid: Number(card.dataset.uid) });
 	
 	if (!await confirm(`Are you sure you want to lock the user ${user.username}?`)) {
 		return;
@@ -28,9 +28,9 @@ const unlockUser = async (event) => {
 	}
 
 	event.preventDefault();
-	let button = event.target;
-	let card = button.closest('.user');
-	let user = _.find(userService.getUsers(), { uid: Number(card.dataset.uid) });
+	const button = event.target;
+	const card = button.closest('.user');
+	const user = _.find(userService.getUsers(), { uid: Number(card.dataset.uid) });
 	
 	if (!await confirm(`Are you sure you want to unlock the user ${user.username}?`)) {
 		return;

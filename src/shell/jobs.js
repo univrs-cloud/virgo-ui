@@ -20,8 +20,8 @@ const render = (state) => {
 			shownJobIds.add(job.id);
 		}
 
-		let hasToast = !_.isNull(document.querySelector(`#toast-${job.id}`));
-		let toast = toastTemplate({ job, hasToast, moment, prettyBytes });
+		const hasToast = !_.isNull(document.querySelector(`#toast-${job.id}`));
+		const toast = toastTemplate({ job, hasToast, moment, prettyBytes });
 		if (hasToast) {
 			if (!document.querySelector(`#toast-${job.id}`).classList.contains('active') || (document.querySelector(`#toast-${job.id}`).classList.contains('active') && job.progress.state === 'active')) {
 				morphdom(
@@ -31,15 +31,15 @@ const render = (state) => {
 				return;
 			}
 			if (document.querySelector(`#toast-${job.id}`).classList.contains('active') && job.progress.state !== 'active') {
-				let oldToast = bootstrap.Toast.getOrCreateInstance(document.querySelector(`#toast-${job.id}`));
+				const oldToast = bootstrap.Toast.getOrCreateInstance(document.querySelector(`#toast-${job.id}`));
 				oldToast.hide();
 				document.querySelector('.toast-container').insertAdjacentHTML('beforeend', toast);
-				let newToast = new bootstrap.Toast(document.querySelector('.toast-container .toast:last-of-type'));
+				const newToast = new bootstrap.Toast(document.querySelector('.toast-container .toast:last-of-type'));
 				newToast.show();
 			}
 		} else {
 			document.querySelector('.toast-container').insertAdjacentHTML('beforeend', toast);
-			let newToast = new bootstrap.Toast(document.querySelector('.toast-container .toast:last-of-type'));
+			const newToast = new bootstrap.Toast(document.querySelector('.toast-container .toast:last-of-type'));
 			newToast.show();
 		}
 	});

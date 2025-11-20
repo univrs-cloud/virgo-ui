@@ -7,20 +7,17 @@ const moduleTemplate = _.template(modulePartial);
 const emptyTemplate = _.template(emptyPartial);
 const updatesTemplate = _.template(updatesPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
-let module = document.querySelector('#software-update');
-let loading = module.querySelector('.loading');
-let container = module.querySelector('.container-fluid');
-let row = container.querySelector('.row');
+const module = document.querySelector('#software-update');
+const loading = module.querySelector('.loading');
+const container = module.querySelector('.container-fluid');
+const row = container.querySelector('.row');
 
 const checkUpdates = (event) => {
 	let target = event.target.closest('.check-updates');
 	if (_.isNull(target) || target.classList.contains('cursor-default')) {
-		if (target.classList.contains('cursor-default')) {
-			event.preventDefault();
-		}
 		return;
 	}
-
+	
 	event.preventDefault();
 	softwareService.checkUpdates();
 };
@@ -45,7 +42,7 @@ const render = (state) => {
 		return;
 	}
 
-	let template = document.createElement('template');
+	const template = document.createElement('template');
 	if (_.isEmpty(state.updates)) {
 		template.innerHTML = emptyTemplate({ checkUpdates: state.checkUpdates });
 	} else {

@@ -1,6 +1,6 @@
 import * as userService from 'modules/users/services/user';
 
-let module = document.querySelector('#users');
+const module = document.querySelector('#users');
 
 const deleteUser = async (event) => {
 	if (!event.target.closest('a')?.classList.contains('delete')) {
@@ -8,9 +8,9 @@ const deleteUser = async (event) => {
 	}
 
 	event.preventDefault();
-	let button = event.target;
-	let card = button.closest('.user');
-	let user = _.find(userService.getUsers(), { uid: Number(card.dataset.uid) });
+	const button = event.target;
+	const card = button.closest('.user');
+	const user = _.find(userService.getUsers(), { uid: Number(card.dataset.uid) });
 
 	if (!await confirm(`Are you sure you want to delete the user ${user.username}?`)) {
 		return;

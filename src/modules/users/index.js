@@ -7,17 +7,17 @@ const moduleTemplate = _.template(modulePartial);
 const emptyTemplate = _.template(emptyPartial);
 const userTemplate = _.template(userPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
-let module = document.querySelector('#users');
-let loading = module.querySelector('.loading');
-let container = module.querySelector('.container-fluid');
-let row = container.querySelector('.row');
+const module = document.querySelector('#users');
+const loading = module.querySelector('.loading');
+const container = module.querySelector('.container-fluid');
+const row = container.querySelector('.row');
 
 const render = (state) => {
 	if (_.isNull(state.users)) {
 		return;
 	}
 	
-	let template = document.createElement('template');
+	const template = document.createElement('template');
 	if (_.isEmpty(state.users)) {
 		template.innerHTML = emptyTemplate();
 	} else {

@@ -131,7 +131,7 @@
 												</div>
 											</div>
 											<%if (container.state === 'running') {%>
-												<%let publishedPorts = _.filter(container.ports, { ip: '0.0.0.0' });%>
+												<%const publishedPorts = _.filter(container.ports, { ip: '0.0.0.0' });%>
 												<div class="d-flex align-items-center">
 													<i class="icon-light icon-ethernet icon-fw me-1"></i>
 													<span>Ports <small>(<%=(!_.isEmpty(publishedPorts) ? `public &middot; private` : `no published ports`)%>)</small></span>

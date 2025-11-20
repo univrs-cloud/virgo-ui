@@ -1,7 +1,7 @@
 import mainPartial from 'shell/partials/main.html';
 
+const container = document.querySelector('main');
 const mainTemplate = _.template(mainPartial);
-let container = document.querySelector('main');
 
 morphdom(
 	container,

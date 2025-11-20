@@ -9,12 +9,12 @@ const appsEmptyTemplate = _.template(appsEmptyPartial);
 const categorySomething = _.template(categoryPartial);
 const appTemplate = _.template(appPartial);
 const bookmarkTemplate = _.template(bookmarkPartial);
-let container = document.querySelector('#apps-bookmars');
+const container = document.querySelector('#apps-bookmars');
 let dragDropInstance = null;
 let isDragging = false;
 
 const order = (event) => {
-	let target = event.target.closest('.order');
+	const target = event.target.closest('.order');
 	if (_.isNull(target)) {
 		return;
 	}
@@ -39,7 +39,7 @@ const disableDragDrop = (container) => {
 	_.each(container.querySelectorAll('.card'), (card) => {
 		card.classList.remove('drag-drop-item');
 	});
-	let icon = container.querySelector('.icon-solid');
+	const icon = container.querySelector('.icon-solid');
 	icon.classList.remove('icon-check', 'text-green-500');
 	icon.classList.add('icon-bars-staggered', 'text-gray-500');
 	isDragging = false;
@@ -51,7 +51,7 @@ const enableDragDrop = (container) => {
 	}
 
 	isDragging = true;
-	let icon = container.querySelector('.icon-solid');
+	const icon = container.querySelector('.icon-solid');
 	icon.classList.remove('icon-bars-staggered', 'text-gray-500');
 	icon.classList.add('icon-check', 'text-green-500');
 	_.each(container.querySelectorAll('.card'), (card) => {
@@ -88,14 +88,14 @@ const render = (state) => {
 		return;
 	}
 
-	let template = document.createElement('template');
+	const template = document.createElement('template');
 	if (_.isEmpty(state.apps)) {
 		template.innerHTML = appsEmptyTemplate();
 	} else {
 		_.each(state.apps, (apps, key) => {
-			let categoryTemplate = document.createElement('template');
+			const categoryTemplate = document.createElement('template');
 			categoryTemplate.innerHTML = categorySomething({ name: key });
-			let category = categoryTemplate.content.querySelector('.col');
+			const category = categoryTemplate.content.querySelector('.col');
 			apps = _.orderBy(apps, ['order'], ['asc']);
 			_.each(apps, (entity) => {
 				if (entity.type === 'app') {

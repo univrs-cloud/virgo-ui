@@ -9,8 +9,8 @@ import * as softwareService from 'shell/services/software';
 const headerTemplate = _.template(headerPartial);
 const navigationTemplate = _.template(navigationPartial);
 const upgradeStepsTemplate = _.template(upgradeStepsPartial);
-let header = document.querySelector('header');
-let container = document.querySelector('#upgrade');
+const header = document.querySelector('header');
+const container = document.querySelector('#upgrade');
 let isScrollEventAttached = false;
 let shouldScroll = true;
 
@@ -44,7 +44,7 @@ const render = (state) => {
 			container.querySelector('.steps'),
 			upgradeStepsTemplate({ upgrade })
 		);
-		let stepsList = container.querySelector('.steps ul');
+		const stepsList = container.querySelector('.steps ul');
 		if (!isScrollEventAttached) {
 			stepsList.addEventListener('scroll', (event) => {
 				shouldScroll = (Math.abs(stepsList.scrollHeight - stepsList.scrollTop - stepsList.clientHeight) < 1);

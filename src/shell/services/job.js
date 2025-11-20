@@ -4,7 +4,7 @@ let callbackCollection = [];
 let subscription = null;
 
 const handleSubscription = (properties) => {
-	let jobs = _.filter(properties.jobs, (job) => { return job.progress !== 0; });
+	const jobs = _.filter(properties.jobs, (job) => { return job.progress !== 0; });
 	_.each(callbackCollection, (callback) => {
 		callback({ jobs });
 	});

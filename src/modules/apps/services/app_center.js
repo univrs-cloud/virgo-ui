@@ -6,7 +6,7 @@ let callbackCollection = [];
 let subscription = null;
 
 const getDomain = () => {
-	let system = Host.getSystem();
+	const system = Host.getSystem();
 	return system.osInfo.fqdn;
 };
 

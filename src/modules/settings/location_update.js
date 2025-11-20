@@ -111,7 +111,7 @@ const getLocation = (event) => {
 					</div>
 				</div>`
 			);
-			let toast = new bootstrap.Toast(document.querySelector('.toast-container .toast:last-of-type'));
+			const toast = new bootstrap.Toast(document.querySelector('.toast-container .toast:last-of-type'));
 			toast.show();
 		}
 	);
@@ -120,14 +120,14 @@ const getLocation = (event) => {
 const restore = (event) => {
 	form.reset();
 	_.each(form.querySelectorAll('button'), (button) => { button.disabled = false });
-	_.each(form.querySelectorAll('.form-floating'), (input) => {
-		input.querySelector('input')?.classList?.remove('is-invalid', 'is-valid');
-		input.querySelector('.invalid-feedback').innerHTML = '';
+	_.each(form.querySelectorAll('.form-floating'), (field) => {
+		field.querySelector('input')?.classList?.remove('is-invalid', 'is-valid');
+		field.querySelector('.invalid-feedback').innerHTML = '';
 	});
 };
 
 const render = (event) => {
-	let configuration = configurationService.getConfiguration();
+	const configuration = configurationService.getConfiguration();
 	form.querySelector('.latitude').value = configuration?.location?.latitude || '';
 	form.querySelector('.longitude').value = configuration?.location?.longitude || '';
 };

@@ -8,7 +8,7 @@ const render = (state) => {
 		return;
 	}
 
-	let notifications = state.notifications;
+	const notifications = state.notifications;
 	morphdom(
 		document.querySelector('#notifications'),
 		notificationsTemplate({ notifications, moment })

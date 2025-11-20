@@ -9,11 +9,10 @@ const notificationsTemplate = _.template(notificationsPartial);
 const locationTemplate = _.template(locationPartial);
 const powerTemplate = _.template(powerPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
-
-let module = document.querySelector('#settings');
-let loading = module.querySelector('.loading');
-let container = module.querySelector('.container-fluid');
-let row = container.querySelector('.row');
+const module = document.querySelector('#settings');
+const loading = module.querySelector('.loading');
+const container = module.querySelector('.container-fluid');
+const row = container.querySelector('.row');
 
 const render = (state) => {
 	if (_.isNull(state.configuration)) {

@@ -58,7 +58,7 @@ const install = (event) => {
 		env: {}
 	};
 	_.each(app.env, (env) => {
-		let input = form.querySelector(`input[name="${env.name}"]:checked`) || form.querySelector(`input[name="${env.name}"]`);
+		const input = form.querySelector(`input[name="${env.name}"]:checked`) || form.querySelector(`input[name="${env.name}"]`);
 		config.env[env.name] = input.value;
 	});
 	
@@ -67,13 +67,13 @@ const install = (event) => {
 };
 
 const render = (event) => {
-	let id = event.relatedTarget.closest('.app').dataset.id;
+	const id = event.relatedTarget.closest('.app').dataset.id;
 	app = _.find(appCenterService.getTemplates(), { id: Number(id) });
 	form.querySelector('.modal-title').innerHTML = app.title;
 	form.querySelector('.description').innerHTML = app.description;
 	form.querySelector('.note').innerHTML = app.note || '';
 	form.querySelector('.note').classList[app.note ? 'remove' : 'add']('d-none');
-	let domain = appCenterService.getDomain();
+	const domain = appCenterService.getDomain();
 	_.each(app.env, (env) => {
 		if (env?.type === 'hidden') {
 			form.querySelector('.inputs').innerHTML += inputHiddenTemplate({ env });

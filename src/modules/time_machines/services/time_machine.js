@@ -28,9 +28,8 @@ const performAction = (config) => {
 };
 
 const handleSubscription = (properties) => {
-	let timeMachines = filter(properties.shares);
-	let networkInterface = properties.system.networkInterface;
-
+	const timeMachines = filter(properties.shares);
+	const networkInterface = properties.system.networkInterface;
 	_.each(callbackCollection, (callback) => {
 		callback({ timeMachines, networkInterface });
 	});

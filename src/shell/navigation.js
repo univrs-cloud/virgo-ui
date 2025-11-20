@@ -11,12 +11,12 @@ const showPage = (ctx) => {
 };
 
 const navigate = (event) => {
-	let navLink = event.target.closest('.nav-link');
+	const navLink = event.target.closest('.nav-link');
 	if (_.isNull(navLink)) {
 		return;
 	}
 
-	let offcanvas = navLink.closest('.offcanvas');
+	const offcanvas = navLink.closest('.offcanvas');
 	if (!_.isNull(offcanvas)) {
 		bootstrap.Offcanvas.getInstance(offcanvas)?.hide();
 	}

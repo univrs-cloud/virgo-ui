@@ -122,9 +122,9 @@ const render = (event) => {
 const restore = (event) => {
 	form.reset();
 	_.each(form.querySelectorAll('button'), (button) => { button.disabled = false });
-	_.each(form.querySelectorAll('.form-floating'), (input) => {
-		input.querySelector('input')?.classList?.remove('is-invalid', 'is-valid');
-		input.querySelector('.invalid-feedback').innerHTML = '';
+	_.each(form.querySelectorAll('.form-floating'), (field) => {
+		field.querySelector('input')?.classList?.remove('is-invalid', 'is-valid');
+		field.querySelector('.invalid-feedback').innerHTML = '';
 	});
 	form.querySelector('.dhcp').dispatchEvent(new Event('change'));
 };

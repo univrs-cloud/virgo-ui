@@ -10,10 +10,10 @@ const emptyTemplate = _.template(emptyPartial);
 const appTemplate = _.template(appPartial);
 const resourceMetricsTemplate = _.template(resourceMetricsPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
-let module = document.querySelector('#apps');
-let loading = module.querySelector('.loading');
-let container = module.querySelector('.container-fluid');
-let row = container.querySelector('.row');
+const module = document.querySelector('#apps');
+const loading = module.querySelector('.loading');
+const container = module.querySelector('.container-fluid');
+const row = container.querySelector('.row');
 
 const expand = (event) => {
 	if (!event.target.closest('span')?.classList.contains('expand')) {
@@ -21,8 +21,8 @@ const expand = (event) => {
 	}
 
 	event.preventDefault();
-	let button = event.target;
-	let item = button.closest('.item');
+	const button = event.target;
+	const item = button.closest('.item');
 	item.closest('.row').classList.add('expand');
 	item.classList.add('expand');
 };
@@ -33,8 +33,8 @@ const compress = (event) => {
 	}
 
 	event.preventDefault();
-	let button = event.target;
-	let item = button.closest('.item');
+	const button = event.target;
+	const item = button.closest('.item');
 	item.classList.remove('expand');
 	item.closest('.row').classList.remove('expand');
 };
@@ -49,9 +49,9 @@ const update = (event) => {
 	}
 
 	event.preventDefault();
-	let button = event.target;
-	let card = button.closest('.app');
-	let app = _.find(appService.getApps(), { name: card.dataset.name });
+	const button = event.target;
+	const card = button.closest('.app');
+	const app = _.find(appService.getApps(), { name: card.dataset.name });
 
 	let config = {
 		name: app.name
@@ -69,12 +69,12 @@ const performAppAction = async (event) => {
 	}
 
 	event.preventDefault();
-	let button = event.target;
-	let card = button.closest('.app');
-	let app = _.find(appService.getApps(), { name: card.dataset.name });
+	const button = event.target;
+	const card = button.closest('.app');
+	const app = _.find(appService.getApps(), { name: card.dataset.name });
 
-	let action = (button.dataset.action === 'down' ? 'remove' : button.dataset.action);
-	let actionMessage = (button.dataset.action === 'down' ? '\n\nData will not deleted.' : '');
+	const action = (button.dataset.action === 'down' ? 'remove' : button.dataset.action);
+	const actionMessage = (button.dataset.action === 'down' ? '\n\nData will not deleted.' : '');
 	if (button.classList.contains('text-danger') && !await confirm(`Are you sure you want to ${action} the app ${app.title}?${actionMessage}`)) {
 		return;
 	}
@@ -96,9 +96,9 @@ const performServiceAction = async (event) => {
 	}
 
 	event.preventDefault();
-	let button = event.target;
-	let card = button.closest('.service');
-	let service = _.find(_.flatMap(appService.getApps(), 'projectContainers'), { id: card.dataset.id });
+	const button = event.target;
+	const card = button.closest('.service');
+	const service = _.find(_.flatMap(appService.getApps(), 'projectContainers'), { id: card.dataset.id });
 
 	if (button.classList.contains('text-danger') && !await confirm(`Are you sure you want to ${button.dataset.action} the service ${service.name}?`)) {
 		return;
@@ -116,12 +116,12 @@ const render = (state) => {
 		return;
 	}
 	
-	let template = document.createElement('template');
+	const template = document.createElement('template');
 	if (_.isEmpty(state.apps)) {
 		template.innerHTML = emptyTemplate();
 	} else {
 		_.each(state.apps, (app) => {
-			let jobs = _.filter(state.jobs, (job) => { return job.data?.config?.name === app.name; });
+			const jobs = _.filter(state.jobs, (job) => { return job.data?.config?.name === app.name; });
 			template.innerHTML += appTemplate({ app, jobs, resourceMetricsTemplate, prettyBytes });
 		});
 	}
