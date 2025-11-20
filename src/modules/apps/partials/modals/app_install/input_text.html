@@ -1,13 +1,18 @@
-<div class="input-group">
+<div class="input-group mb-3">
 	<%if (prefix) {%>
-		<span class="input-group-text mb-3"><span class="mb-n3"><%=prefix%></span></span>
+		<span class="input-group-text"><span class="mb-n3"><%=prefix%></span></span>
 	<%}%>
-	<div class="form-floating mb-3">
-		<input type="text" name="<%=env.name%>" value="<%=env.default%>" class="form-control" placeholder="">
-		<label><%=env.label%></label>
+	<div class="form-floating">
+		<input type="text" name="<%=env.name%>" value="<%=env?.default || ''%>" class="form-control" placeholder="">
+		<label>
+			<%=env.label%>
+			<%if (env.description) {%>
+				<span class="help-inline ms-1" data-bs-toggle="tooltip" data-bs-original-title="<%=env.description%>"><i class="icon-solid icon-question-circle"></i></span>
+			<%}%>
+		</label>
 		<div class="invalid-feedback"></div>
 	</div>
 	<%if (suffix) {%>
-		<span class="input-group-text mb-3"><span class="mb-n3"><%=suffix%></span></span>
+		<span class="input-group-text"><span class="mb-n3"><%=suffix%></span></span>
 	<%}%>
 </div>

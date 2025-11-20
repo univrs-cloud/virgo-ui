@@ -5,7 +5,7 @@ import validator from 'validator';
 document.querySelector('body').insertAdjacentHTML('beforeend', locationModalPartial);
 
 const timeouts = {};
-let form = document.querySelector('#location');
+const form = document.querySelector('#location');
 
 const validateLatitude = (event) => {
 	if (event) {
@@ -17,9 +17,9 @@ const validateLatitude = (event) => {
 	checkValidity();
 
 	function checkValidity() {
-		let input = form.querySelector('.latitude');
-		let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
-		let value = input.value;
+		const input = form.querySelector('.latitude');
+		const invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
+		const value = input.value;
 		if (validator.isEmpty(value)) {
 			input.classList.remove('is-valid');
 			input.classList.add('is-invalid');
@@ -47,9 +47,9 @@ const validateLongitude = (event) => {
 	checkValidity();
 
 	function checkValidity() {
-		let input = form.querySelector('.longitude');
-		let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
-		let value = input.value;
+		const input = form.querySelector('.longitude');
+		const invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
+		const value = input.value;
 		if (validator.isEmpty(value)) {
 			input.classList.remove('is-valid');
 			input.classList.add('is-invalid');
@@ -83,8 +83,8 @@ const updateLocation = (event) => {
 		return;
 	}
 
-	let form = event.target;
-	let buttons = form.querySelectorAll('button');
+	const form = event.target;
+	const buttons = form.querySelectorAll('button');
 	_.each(buttons, (button) => { button.disabled = true; });
 	let config = {
 		latitude: form.querySelector('.latitude').value,

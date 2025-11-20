@@ -4,12 +4,12 @@ import validator from 'validator';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', profileModalPartial);
 
-let form = document.querySelector('#profile-edit');
+const form = document.querySelector('#profile-edit');
 
 const validateFullname = (event) => {
-	let input = form.querySelector('.fullname');
-	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
-	let value = input.value;
+	const input = form.querySelector('.fullname');
+	const invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
+	const value = input.value;
 	if (validator.isEmpty(value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
@@ -21,9 +21,9 @@ const validateFullname = (event) => {
 };
 
 const validateEmailAddress = (event) => {
-	let input = form.querySelector('.email');
-	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
-	let value = input.value;
+	const input = form.querySelector('.email');
+	const invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
+	const value = input.value;
 	if (validator.isEmpty(value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
@@ -56,9 +56,10 @@ const updateProfile = (event) => {
 		return;
 	}
 
-	let form = event.target;
-	let buttons = form.querySelectorAll('button');
+	const form = event.target;
+	const buttons = form.querySelectorAll('button');
 	_.each(buttons, (button) => { button.disabled = true; });
+
 	let config = {
 		username: account.user,
 		fullname: form.querySelector('.fullname').value,

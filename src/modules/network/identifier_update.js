@@ -4,12 +4,12 @@ import validator from 'validator';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', identifierModalPartial);
 
-let form = document.querySelector('#network-identifier');
+const form = document.querySelector('#network-identifier');
 
 const validateHostname = () => {
-	let input = form.querySelector('.hostname');
-	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
-	let value = input.value;
+	const input = form.querySelector('.hostname');
+	const invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
+	const value = input.value;
 	if (validator.isEmpty(value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
@@ -21,9 +21,9 @@ const validateHostname = () => {
 };
 
 const validateDomainName = () => {
-	let input = form.querySelector('.domain-name');
-	let invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
-	let value = input.value;
+	const input = form.querySelector('.domain-name');
+	const invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
+	const value = input.value;
 	if (validator.isEmpty(value)) {
 		input.classList.remove('is-valid');
 		input.classList.add('is-invalid');
@@ -50,8 +50,8 @@ const updateIdentifier = (event) => {
 		return;
 	}
 
-	let form = event.target;
-	let buttons = form.querySelectorAll('button');
+	const form = event.target;
+	const buttons = form.querySelectorAll('button');
 	_.each(buttons, (button) => { button.disabled = true; });
 
 	let config = {
