@@ -11,6 +11,7 @@ bootstrap.Modal.Default.backdrop = 'static';
 bootstrap.Modal.Default.keyboard = false;
 bootstrap.Modal.Default.focus = false;
 new bootstrap.Tooltip(document.querySelector('body'));
+
 window.addEventListener('beforeunload', (event) => {
 	bootstrapService.disconnectSocket();
 });

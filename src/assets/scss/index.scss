@@ -24,17 +24,12 @@
 // --------
 // Custom variables, functions and mixins
 // --------
-@use "variables" as *;
+@import "variables";
 
 // --------
 // Bootstrap 5.3.8
 // --------
 @import "bootstrap";
-
-// --------
-// xterm
-// --------
-@import "@xterm/xterm/css/xterm";
 
 // --------
 // Custom styles

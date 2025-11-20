@@ -27,7 +27,7 @@ textarea {
 		}
 	}
 	:disabled {
-		&~label {
+		~ label {
 			background-color: transparent !important;
 		}
 	}
