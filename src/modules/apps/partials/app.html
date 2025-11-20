@@ -1,5 +1,15 @@
 <div class="col col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 item">
 	<div class="app card rounded-4 border-0 h-100 mb-0" data-name="<%=app.name%>">
+		<div class="expand-compress">
+			<div class="dropdown">
+				<span class="dropdown-toggle caret-off btn btn-sm expand">
+					<i class="icon-light icon-expand-wide icon-fw"></i>
+				</span>
+				<span class="dropdown-toggle caret-off btn btn-sm compress">
+					<i class="icon-light icon-compress-wide icon-fw"></i>
+				</span>
+			</div>
+		</div>
 		<div class="card-body ps-0 py-1">
 			<div class="row g-0 align-items-center">
 				<div class="card-image card-spacer col-auto p-2">
@@ -24,7 +34,7 @@
 				<%}%>
 				<%if ((app.canBeRemoved || app.hasUpdates) && _.isEmpty(jobs)) {%>
 					<div class="col-auto">
-						<div class="dropdown">
+						<div class="dropdown me-n1">
 							<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm ms-2">
 								<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
 							</span>
@@ -48,16 +58,6 @@
 						</div>
 					</div>
 				<%}%>
-			</div>
-			<div class="position-absolute z-1 bottom-0 start-0 ms-2 mb-2">
-				<div class="dropdown">
-					<span class="dropdown-toggle caret-off btn btn-sm expand">
-						<i class="icon-light icon-expand-wide icon-fw"></i>
-					</span>
-					<span class="dropdown-toggle caret-off btn btn-sm compress">
-						<i class="icon-light icon-compress-wide icon-fw"></i>
-					</span>
-				</div>
 			</div>
 			<div class="row g-0 mt-n2 mb-2 position-relative">
 				<div class="logs-container d-none">

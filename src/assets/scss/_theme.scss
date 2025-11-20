@@ -4,9 +4,6 @@ img {
 
 .dropdown {
 	position: relative;
-	.btn:hover {
-		border: 1px solid var(--bs-gray-400);
-	}
 }
 .dropdown-toggle {
 	&::after {
@@ -94,13 +91,19 @@ img {
 			margin: 0.125rem 0;
 		}
 	}
+	.dropdown-toggle {
+		--bs-btn-active-border-color: transparent;
+		--bs-btn-hover-bg: var(--bs-gray-200);
+		--bs-btn-active-bg: var(--bs-gray-400);
+		--bs-btn-padding-x: 0.25rem;
+		--bs-btn-padding-y: 0.1rem;
+	}
 	.indicator {
 		z-index: 1;
 		position: absolute;
-		top: 0.45rem;
-		right: -0.65rem;
+		top: 0.15rem;
+		right: -0.75rem;
 		&.badge {
-			top: 0.20rem;
 			right: -1.35rem;
 			font-weight: 200;
 			font-size: 0.65em;
@@ -196,19 +199,20 @@ img {
 			&:hover {
 				background: var(--bs-light) !important;
 				box-shadow: var(--bs-box-shadow-sm);
-				.dropdown {
-					display: block;
-				}
 			}
-		}
-		.dropdown {
-			z-index: 2;
-			display: none;
 		}
 	}
 }
 #apps {
 	.container-fluid > .row {
+		.expand-compress {
+			z-index: 1;
+			position: absolute;
+			left: 0;
+			bottom: 0.10rem;
+			margin-left: map-get($spacers, 2);
+			margin-bottom: map-get($spacers, 2);
+		}
 		&.expand {
 			.item {
 				&:not(.expand) {
