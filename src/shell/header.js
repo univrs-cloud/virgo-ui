@@ -16,7 +16,7 @@ const render = (state) => {
 
 morphdom(
 	container,
-	headerTemplate({ navigationTemplate, isUpgrading: false })
+	headerTemplate({ navigationTemplate, isUpdating: false })
 );
 
 account.init();

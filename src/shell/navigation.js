@@ -54,7 +54,7 @@ const routes = [
 	{ path: '/storage', module: 'storage', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/network', module: 'network', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/settings', module: 'settings', middleware: [requireAuth, requiresAdmin] },
-	{ path: '/software-update', module: 'software-update', middleware: [requireAuth, requiresAdmin] },
+	{ path: '/system-update', module: 'system-update', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/about', module: 'about', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/users/profile', module: 'profile', middleware: [requireAuth] },
 	{ path: '*', module: 'not-found' },

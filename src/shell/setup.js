@@ -17,7 +17,7 @@ const renderSerialNumber = (state) => {
 
 morphdom(
 	header,
-	headerTemplate({ navigationTemplate, isUpgrading: false })
+	headerTemplate({ navigationTemplate, isUpdating: false })
 );
 
 morphdom(

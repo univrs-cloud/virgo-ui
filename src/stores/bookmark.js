@@ -14,7 +14,7 @@ class Bookmark extends Store {
 				return;
 			}
 			
-			if (this.getStateProperty('reboot') || this.getStateProperty('shutdown') || !_.isNull(this.getStateProperty('upgrade'))) {
+			if (this.getStateProperty('reboot') || this.getStateProperty('shutdown') || !_.isNull(this.getStateProperty('update'))) {
 				return;
 			}
 			

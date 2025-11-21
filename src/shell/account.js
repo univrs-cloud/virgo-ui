@@ -18,12 +18,12 @@ const render = (state) => {
 		return;
 	}
 	
-	const isUpgrading = !_.isNull(state.upgrade);
+	const isUpdating = !_.isNull(state.update);
 	const container = _.find(state.containers, { name: 'authelia' });
 	authDomain = dockerService.composeUrlFromLabels(container?.labels);
 	morphdom(
 		document.querySelector('#account'),
-		accountTemplate({ account, authDomain, isUpgrading })
+		accountTemplate({ account, authDomain, isUpdating })
 	);
 };
 
