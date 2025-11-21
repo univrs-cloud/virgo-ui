@@ -1,16 +1,16 @@
 import page from 'page';
 import headerPartial from 'shell/partials/header.html';
-import navigationPartial from 'shell/partials/navigation_upgrade.html';
-import upgradeStepsPartial from 'shell/partials/upgrade_steps.html';
+import navigationPartial from 'shell/partials/navigation_update.html';
+import updateStepsPartial from 'shell/partials/update_steps.html';
 import * as account from 'shell/account';
 import * as systemService from 'shell/services/system';
 import * as softwareService from 'shell/services/software';
 
 const headerTemplate = _.template(headerPartial);
 const navigationTemplate = _.template(navigationPartial);
-const upgradeStepsTemplate = _.template(upgradeStepsPartial);
+const updateStepsTemplate = _.template(updateStepsPartial);
 const header = document.querySelector('header');
-const container = document.querySelector('#upgrade');
+const container = document.querySelector('#update');
 let isScrollEventAttached = false;
 let shouldScroll = true;
 
@@ -21,7 +21,7 @@ const complete = (event) => {
 
 	event.preventDefault();
 	event.target.disabled = true;
-	softwareService.completeUpgrade();
+	softwareService.completeUpdate();
 };
 
 const renderSerialNumber = (state) => {
@@ -30,19 +30,19 @@ const renderSerialNumber = (state) => {
 };
 
 const render = (state) => {
-	let upgrade = state.upgrade;
-	if (_.isNull(upgrade)) {
+	let update = state.update;
+	if (_.isNull(update)) {
 		location.replace('/');
 		return;
 	}
 
 	document.querySelector('main').classList.add('d-none');
-	if (!_.isUndefined(upgrade.state) || !_.isEmpty(upgrade.state)) {
-		_.each(container.querySelectorAll(`.state:not(.${upgrade.state})`), (element) => { element.classList.add('d-none'); });
-		container.querySelector(`.state.${upgrade.state}`).classList.remove('d-none');
+	if (!_.isUndefined(update.state) || !_.isEmpty(update.state)) {
+		_.each(container.querySelectorAll(`.state:not(.${update.state})`), (element) => { element.classList.add('d-none'); });
+		container.querySelector(`.state.${update.state}`).classList.remove('d-none');
 		morphdom(
 			container.querySelector('.steps'),
-			upgradeStepsTemplate({ upgrade })
+			updateStepsTemplate({ update })
 		);
 		const stepsList = container.querySelector('.steps ul');
 		if (!isScrollEventAttached) {
@@ -60,7 +60,7 @@ const render = (state) => {
 
 morphdom(
 	header,
-	headerTemplate({ navigationTemplate, isUpgrading: true })
+	headerTemplate({ navigationTemplate, isUpdating: true })
 );
 
 account.init();
@@ -75,4 +75,4 @@ page('*', (ctx) => {
 page.start();
 
 systemService.subscribe([renderSerialNumber]);
-softwareService.subscribeToUpgrade([render]);
+softwareService.subscribeToUpdate([render]);

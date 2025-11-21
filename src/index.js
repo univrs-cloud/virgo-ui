@@ -47,7 +47,7 @@ window.isAdmin = isAuthenticated && _.includes(account.groups, 'admins');
 
 const render = async (state) => {
 	const isSetupRequired = bootstrapService.checkIfSetupIsRequired(state);
-	if (_.isNull(isSetupRequired) || state.upgrade === -1) {
+	if (_.isNull(isSetupRequired) || state.update === -1) {
 		return;
 	}
 	
@@ -55,8 +55,8 @@ const render = async (state) => {
 
 	if (isSetupRequired) {
 		await import('shell/setup');
-	} else if (isAuthenticated && isAdmin && !_.isNull(state.upgrade)) {
-		await import('shell/upgrade');
+	} else if (isAuthenticated && isAdmin && !_.isNull(state.update)) {
+		await import('shell/update');
 	} else {
 		try {
 			await Promise.allSettled([

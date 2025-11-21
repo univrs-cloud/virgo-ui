@@ -12,7 +12,7 @@ if (isAuthenticated && isAdmin) {
 	importPromises.push(import('modules/storage'));
 	importPromises.push(import('modules/network'));
 	importPromises.push(import('modules/settings'));
-	importPromises.push(import('modules/software_update'));
+	importPromises.push(import('modules/system_update'));
 	importPromises.push(import('modules/about'));
 }
 if (isAuthenticated) {

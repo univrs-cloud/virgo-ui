@@ -14,8 +14,8 @@ const checkUpdates = () => {
 	return Host.checkUpdates();
 };
 
-const upgrade = () => {
-	return Host.upgrade();
+const update = () => {
+	return Host.update();
 };
 
 const handleSubscription = (properties) => {
@@ -35,5 +35,5 @@ export {
 	getCheckUpdates,
 	getUpdates,
 	checkUpdates,
-	upgrade
+	update
 };

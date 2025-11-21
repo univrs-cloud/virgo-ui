@@ -30,7 +30,7 @@ const handleSubscription = (properties) => {
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 	
-	subscription = Host.subscribeToProperties(['upgrade', 'system', 'drives', 'storage', 'containers'], handleSubscription);
+	subscription = Host.subscribeToProperties(['update', 'system', 'drives', 'storage', 'containers'], handleSubscription);
 };
 
 const unsubscribe = () => {

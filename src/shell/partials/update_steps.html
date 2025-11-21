@@ -1,0 +1,27 @@
+<div class="steps text-secondary">
+	<div class="card position-relative rounded-4 border-0">
+		<div class="card-body">
+			<ul class="list-unstyled overflow-y-scroll">
+				<%_.each(update.steps, (step) => {%>
+					<%if (_.includes(step, '\r')) {%>
+						<%step = _.last(_.initial(_.split(step, '\r')))%>
+					<%}%>
+					<%if (!_.isEmpty(step)) {%>
+						<li><%=step%></li>
+					<%}%>
+				<%})%>
+				<%if (update.state === 'succeeded') {%>
+					<li class="text-success">Update succeeded</li>
+				<%}%>
+				<%if (update.state === 'failed') {%>
+					<li class="text-danger">Something went wrong, could not update.</li>
+				<%}%>
+			</ul>
+			<%if (update.isRebootRequired) {%>
+				<button type="button" class="reboot btn btn-danger d-flex ms-auto mt-4 <%=(!_.includes(['succeeded', 'failed'], update.state) ? 'invisible' : '')%>">Reboot</button>
+			<%} else {%>
+				<button type="button" class="complete btn btn-primary d-flex ms-auto mt-4 <%=(!_.includes(['succeeded', 'failed'], update.state) ? 'invisible' : '')%>">Continue</button>
+			<%}%>
+		</div>
+	</div>
+</div>

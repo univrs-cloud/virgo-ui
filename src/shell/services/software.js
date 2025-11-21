@@ -2,19 +2,19 @@ import Host from 'stores/host';
 
 let callbackCollection = {
 	updates: [],
-	upgrade: []
+	update: []
 };
 
 const checkUpdates = () => {
 	return Host.checkUpdates();
 };
 
-const upgrade = () => {
-	return Host.upgrade();
+const update = () => {
+	return Host.update();
 };
 
-const completeUpgrade = () => {
-	return Host.completeUpgrade();
+const completeUpdate = () => {
+	return Host.completeUpdate();
 };
 
 const getCheckUpdates = () => {
@@ -25,8 +25,8 @@ const getUpdates = () => {
 	return Host.getUpdates();
 };
 
-const getUpgrade = () => {
-	return Host.getUpgrade();
+const getUpdate = () => {
+	return Host.getUpdate();
 };
 
 const handleUpdatesSubscription = (properties) => {
@@ -35,8 +35,8 @@ const handleUpdatesSubscription = (properties) => {
 	});
 };
 
-const handleUpgradeSubscription = (properties) => {
-	_.each(callbackCollection.upgrade, (callback) => {
+const handleUpdateSubscription = (properties) => {
+	_.each(callbackCollection.update, (callback) => {
 		callback(properties);
 	});
 };
@@ -47,19 +47,19 @@ const subscribeToUpdates = (callbacks) => {
 	Host.subscribeToProperties(['checkUpdates', 'updates'], handleUpdatesSubscription);
 };
 
-const subscribeToUpgrade = (callbacks) => {
-	callbackCollection.upgrade = _.concat(callbackCollection.upgrade, callbacks);
+const subscribeToUpdate = (callbacks) => {
+	callbackCollection.update = _.concat(callbackCollection.update, callbacks);
 
-	Host.subscribeToProperties(['upgrade'], handleUpgradeSubscription);
+	Host.subscribeToProperties(['update'], handleUpdateSubscription);
 };
 
 export {
 	subscribeToUpdates,
-	subscribeToUpgrade,
+	subscribeToUpdate,
 	checkUpdates,
-	upgrade,
-	completeUpgrade,
+	update,
+	completeUpdate,
 	getCheckUpdates,
 	getUpdates,
-	getUpgrade
+	getUpdate
 };

@@ -1,4 +1,3 @@
-import Host from 'stores/host';
 import Docker from 'stores/docker';
 
 let callbackCollection = [];
@@ -20,7 +19,7 @@ const handleSubscription = (properties) => {
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 
-	Docker.subscribeToProperties(['containers', 'upgrade'], handleSubscription);
+	Docker.subscribeToProperties(['containers', 'update'], handleSubscription);
 };
 
 export {

@@ -9,7 +9,7 @@ class Host extends Store {
 			shutdown: null,
 			checkUpdates: false,
 			updates: null,
-			upgrade: -1,
+			update: -1,
 			cpuStats: null,
 			memory: null,
 			networkStats: null,
@@ -29,7 +29,7 @@ class Host extends Store {
 				return;
 			}
 
-			if (this.getStateProperty('reboot') || this.getStateProperty('shutdown') || !_.isNull(this.getStateProperty('upgrade'))) {
+			if (this.getStateProperty('reboot') || this.getStateProperty('shutdown') || !_.isNull(this.getStateProperty('update'))) {
 				return;
 			}
 
@@ -44,12 +44,12 @@ class Host extends Store {
 		});
 
 		this.socket.on('host:updates', (updates) => {
-			// updates = [{ package: 'package 1', version: { installed: '1.0.0', upgradableTo: '2.0.0' } }];
+			// updates = [{ package: 'package 1', version: { installed: '1.0.0', updatableTo: '2.0.0' } }];
 			this.setState({ updates }, 'get_updates');
 		});
 
-		this.socket.on('host:upgrade', (upgrade) => {
-			this.setState({ upgrade }, 'get_upgrade');
+		this.socket.on('host:update', (update) => {
+			this.setState({ update }, 'get_update');
 		});
 
 		this.socket.on('host:reboot', (reboot) => {
@@ -108,14 +108,14 @@ class Host extends Store {
 		this.socket.emit('host:updates:check');
 	}
 
-	upgrade() {
-		let upgrade = {};
-		this.setState({ upgrade }, 'start_upgrade');
-		this.socket.emit('host:upgrade');
+	update() {
+		let update = {};
+		this.setState({ update }, 'start_update');
+		this.socket.emit('host:update');
 	}
 
-	completeUpgrade() {
-		this.socket.emit('host:upgrade:complete');
+	completeUpdate() {
+		this.socket.emit('host:update:complete');
 	}
 
 	reboot() {
@@ -142,8 +142,8 @@ class Host extends Store {
 		return this.getStateProperty('updates');
 	}
 
-	getUpgrade() {
-		return this.getStateProperty('upgrade');
+	getUpdate() {
+		return this.getStateProperty('update');
 	}
 
 	getStorage() {
