@@ -18,9 +18,9 @@
 				<%}%>
 			</ul>
 			<%if (update.isRebootRequired) {%>
-				<button type="button" class="reboot btn btn-danger d-flex ms-auto mt-4 <%=(!_.includes(['succeeded', 'failed'], update.state) ? 'invisible' : '')%>">Reboot</button>
+				<button type="button" class="btn btn-danger d-flex ms-auto mt-4 <%=(!_.includes(['succeeded', 'failed'], update.state) ? 'invisible' : '')%>" data-action="reboot">Reboot</button>
 			<%} else {%>
-				<button type="button" class="complete btn btn-primary d-flex ms-auto mt-4 <%=(!_.includes(['succeeded', 'failed'], update.state) ? 'invisible' : '')%>">Continue</button>
+				<button type="button" class="btn btn-primary d-flex ms-auto mt-4 <%=(!_.includes(['succeeded', 'failed'], update.state) ? 'invisible' : '')%>" data-action="complete">Continue</button>
 			<%}%>
 		</div>
 	</div>

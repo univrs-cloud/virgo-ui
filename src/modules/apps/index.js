@@ -64,7 +64,7 @@ const performAppAction = async (event) => {
 		return;
 	}
 
-	if (!event.target.closest('a')?.classList.contains('dropdown-item') || event.target.closest('a').dataset.action === undefined) {
+	if (!event.target.closest('a')?.classList?.contains('dropdown-item') || event.target.closest('a').dataset.action === undefined) {
 		return;
 	}
 

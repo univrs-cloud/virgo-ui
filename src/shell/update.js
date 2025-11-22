@@ -5,6 +5,7 @@ import updateStepsPartial from 'shell/partials/update_steps.html';
 import * as account from 'shell/account';
 import * as systemService from 'shell/services/system';
 import * as softwareService from 'shell/services/software';
+import * as powerService from 'modules/settings/services/power';
 
 const headerTemplate = _.template(headerPartial);
 const navigationTemplate = _.template(navigationPartial);
@@ -15,13 +16,31 @@ let isScrollEventAttached = false;
 let shouldScroll = true;
 
 const complete = (event) => {
-	if (!event.target.classList.contains('complete')) {
+	if (event.target.dataset.action !== 'complete') {
 		return;
 	}
 
 	event.preventDefault();
 	event.target.disabled = true;
 	softwareService.completeUpdate();
+};
+
+const reboot = async (event) => {
+	if (event.target.dataset.action !== 'reboot') {
+		return;
+	}
+
+	if (event.target.disabled) {
+		return;
+	}
+
+	event.preventDefault();
+	if (!await alert('A reboot is necessary to make recent changes take effect. The system will now reboot.')) {
+		return;
+	}
+
+	event.target.disabled = true;
+	powerService.reboot();
 };
 
 const renderSerialNumber = (state) => {
@@ -66,6 +85,7 @@ morphdom(
 account.init();
 
 container.addEventListener('click', complete);
+container.addEventListener('click', reboot);
 
 page('*', (ctx) => {
 	if (ctx.path !== '/') {
