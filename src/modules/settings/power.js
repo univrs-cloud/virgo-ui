@@ -3,11 +3,11 @@ import * as powerService from 'modules/settings/services/power';
 const module = document.querySelector('#settings');
 
 const reboot = async (event) => {
-	if (event.target.closest('a')?.dataset.action !== 'reboot') {
+	if (event.target.dataset.action !== 'reboot') {
 		return;
 	}
 	
-	if (event.target.closest('a').classList.contains('disabled')) {
+	if (event.target.disabled) {
 		return;
 	}
 
@@ -16,16 +16,16 @@ const reboot = async (event) => {
 		return;
 	}
 
-	event.target.closest('a').classList.add('disabled');
+	event.target.disabled = true;
 	powerService.reboot();
 };
 
 const shutdown = async (event) => {
-	if (event.target.closest('a')?.dataset.action !== 'shut-down') {
+	if (event.target.dataset.action !== 'shut-down') {
 		return;
 	}
 
-	if (event.target.closest('a').classList.contains('disabled')) {
+	if (event.targetdisabled) {
 		return;
 	}
 
@@ -34,7 +34,7 @@ const shutdown = async (event) => {
 		return;
 	}
 	
-	event.target.closest('a').classList.add('disabled');
+	event.target.disabled = true;
 	powerService.shutDown();
 };
 

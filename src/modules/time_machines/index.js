@@ -14,7 +14,7 @@ const container = module.querySelector('.container-fluid');
 const row = container.querySelector('.row');
 
 const copyToClipboard = (event) => {
-	if (event.target.closest('a')?.dataset.action !== 'copy-to-clipboard') {
+	if (event.target.closest('a').dataset.action !== 'copy-to-clipboard') {
 		return;
 	}
 
