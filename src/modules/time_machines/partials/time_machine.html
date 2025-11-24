@@ -38,15 +38,15 @@
 							<%}%>
 						</dd>
 						<dt class="fw-lighter"><small>Capacity</small></dt>
-						<dd><%=prettyBytes(timeMachine.size, { space: false })%></dd>
+						<dd><%=prettyBytes(timeMachine.size, { binary: true })%></dd>
 						<div class="d-flex justify-content-between">
 							<div>
 								<dt class="fw-lighter"><small>Used</small></dt>
-								<dd class="m-0"><%=prettyBytes(timeMachine.alloc, { space: false })%></dd>
+								<dd class="m-0"><%=prettyBytes(timeMachine.alloc, { binary: true })%></dd>
 							</div>
 							<div class="text-end">
 								<dt class="fw-lighter"><small>Free</small></dt>
-								<dd class="m-0"><%=prettyBytes(timeMachine.free, { space: false })%></dd>
+								<dd class="m-0"><%=prettyBytes(timeMachine.free, { binary: true })%></dd>
 							</div>
 						</div>
 						<div class="progress mt-1" role="progressbar">

@@ -94,7 +94,7 @@ const render = (iface, yAxisMax = 1000 * 1_000_000 / 8) => {
 				},
 				y: {
 					formatter: (value) => {
-						return `${prettyBytes(value, { space: false })}/s`;
+						return `${prettyBytes(value, { binary: true })}/s`;
 					}
 				}
 			}
