@@ -19,11 +19,18 @@ const handleSubscription = (properties) => {
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 
-	Docker.subscribeToProperties(['containers', 'update'], handleSubscription);
+	return Docker.subscribeToProperties(['containers', 'update'], handleSubscription);
+};
+
+const unsubscribe = (subsciption) => {
+	if (subsciption) {
+		subsciption();
+	}
 };
 
 export {
 	subscribe,
+	unsubscribe,
 	getContainers,
 	composeUrlFromLabels
 };

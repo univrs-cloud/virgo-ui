@@ -88,11 +88,18 @@ const handleSubscription = (properties) => {
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 	
-	Docker.subscribeToProperties(['configured', 'containers', 'appsResourceMetrics', 'imageUpdates', 'jobs'], handleSubscription);
+	return Docker.subscribeToProperties(['configured', 'containers', 'appsResourceMetrics', 'imageUpdates', 'jobs'], handleSubscription);
+};
+
+const unsubscribe = (subsciption) => {
+	if (subsciption) {
+		subsciption();
+	}
 };
 
 export {
 	subscribe,
+	unsubscribe,
 	getSocket,
 	getJobs,
 	getApps,

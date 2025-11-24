@@ -1,7 +1,6 @@
 import Job from 'stores/job';
 
 let callbackCollection = [];
-let subscription = null;
 
 const handleSubscription = (properties) => {
 	const jobs = _.filter(properties.jobs, (job) => { return job.progress !== 0; });
@@ -13,9 +12,16 @@ const handleSubscription = (properties) => {
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 
-	subscription = Job.subscribeToProperties(['jobs'], handleSubscription);
+	return Job.subscribeToProperties(['jobs'], handleSubscription);
+};
+
+const unsubscribe = (subsciption) => {
+	if (subsciption) {
+		subsciption();
+	}
 };
 
 export {
-	subscribe
+	subscribe,
+	unsubscribe
 };

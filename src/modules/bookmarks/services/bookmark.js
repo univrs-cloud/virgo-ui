@@ -40,11 +40,18 @@ const handleSubscription = (properties) => {
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 	
-	Bookmark.subscribeToProperties(['configured', 'jobs'], handleSubscription);
+	return Bookmark.subscribeToProperties(['configured', 'jobs'], handleSubscription);
+};
+
+const unsubscribe = (subsciption) => {
+	if (subsciption) {
+		subsciption();
+	}
 };
 
 export {
 	subscribe,
+	unsubscribe,
 	getBookmarks,
 	createBookmark,
 	updateBookmark,

@@ -23,11 +23,18 @@ const handleSubscription = (properties) => {
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 
-	Host.subscribeToProperties(['system'], handleSubscription);
+	return Host.subscribeToProperties(['system'], handleSubscription);
+};
+
+const unsubscribe = (subsciption) => {
+	if (subsciption) {
+		subsciption();
+	}
 };
 
 export {
 	subscribe,
+	unsubscribe,
 	getSystem,
 	updateHostIdentifier,
 	updateInterface

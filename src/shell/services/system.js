@@ -1,10 +1,14 @@
 import Host from 'stores/host';
 
 let callbackCollection = [];
-let subscription = null;
 
 const getSystem = () => {
 	return Host.getSystem();
+};
+
+const getFQDN = () => {
+	const system = getSystem();
+	return system.osInfo.fqdn;
 };
 
 const handleSubscription = (properties) => {
@@ -16,18 +20,18 @@ const handleSubscription = (properties) => {
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 
-	subscription = Host.subscribeToProperties(['system'], handleSubscription);
+	return Host.subscribeToProperties(['system'], handleSubscription);
 };
 
-const unsubscribe = () => {
+const unsubscribe = (subscription) => {
 	if (subscription) {
 		subscription();
-		subscription = null;
 	}
 };
 
 export {
 	subscribe,
 	unsubscribe,
-	getSystem
+	getSystem,
+	getFQDN
 };

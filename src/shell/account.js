@@ -1,22 +1,28 @@
 import accountPartial from 'shell/partials/account.html';
+import * as systemService from 'shell/services/system';
 import * as dockerService from 'shell/services/docker';
 
-const accountTemplate = _.template(accountPartial);
+let subsciption;
 let authDomain = null;
+let fqdn = systemService.getFQDN();
+const accountTemplate = _.template(accountPartial);
 
-const logout = (event) => {
-	if (!authDomain || !event.target.classList.contains('sign-out')) {
+const signOut = (event) => {
+	if (!authDomain || !event.target.closest('a')?.classList.contains('sign-out')) {
 		return;
 	}
 	
 	event.preventDefault();
-	location = `${authDomain}/logout`;
+	location = `${authDomain}/logout?rd=https://${fqdn}`;
 };
 
 const render = (state) => {
 	if (_.isNull(state.containers)) {
 		return;
 	}
+
+	dockerService.unsubscribe(subsciption);
+	subsciption = null;
 	
 	const isUpdating = !_.isNull(state.update);
 	const container = _.find(state.containers, { name: 'authelia' });
@@ -28,9 +34,9 @@ const render = (state) => {
 };
 
 const init = () => {
-	document.body.addEventListener('click', logout);
+	document.body.addEventListener('click', signOut);
 
-	dockerService.subscribe([render]);
+	subsciption = dockerService.subscribe([render]);
 };
 
 export {

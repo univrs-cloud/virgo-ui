@@ -39,11 +39,18 @@ const handleSubscription = (properties) => {
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 	
-	Share.subscribeToProperties(['shares', 'system'], handleSubscription);
+	return Share.subscribeToProperties(['shares', 'system'], handleSubscription);
+};
+
+const unsubscribe = (subsciption) => {
+	if (subsciption) {
+		subsciption();
+	}
 };
 
 export {
 	subscribe,
+	unsubscribe,
 	getSystem,
 	getFolders,
 	performAction

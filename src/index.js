@@ -45,13 +45,16 @@ try {
 window.isAuthenticated = !_.isEmpty(account);
 window.isAdmin = isAuthenticated && _.includes(account.groups, 'admins');
 
+let subscription;
+
 const render = async (state) => {
 	const isSetupRequired = bootstrapService.checkIfSetupIsRequired(state);
 	if (_.isNull(isSetupRequired) || state.update === -1) {
 		return;
 	}
 	
-	bootstrapService.unsubscribe();
+	bootstrapService.unsubscribe(subscription);
+	subscription = null;
 
 	if (isSetupRequired) {
 		await import('shell/setup');
@@ -73,4 +76,4 @@ const render = async (state) => {
 	}
 };
 
-bootstrapService.subscribe([render]);
+subscription = bootstrapService.subscribe([render]);
