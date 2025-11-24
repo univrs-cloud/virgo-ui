@@ -8,7 +8,6 @@ import resourceUpsPartial from 'modules/dashboard/partials/resource_ups.html';
 import resourceTimePartial from 'modules/dashboard/partials/resource_time.html';
 import * as networkUsage from 'modules/dashboard/network_usage';
 import * as resourceMonitorService from 'modules/dashboard/services/resource_monitor';
-import prettyMilliseconds from 'pretty-ms';
 
 const resourcesMonitorTemplate = _.template(resourcesMonitorPartial);
 const cpuTemplate = _.template(resourceCpuPartial);
@@ -26,10 +25,10 @@ const render = (state) => {
 		container,
 		resourcesMonitorTemplate({
 			cpu: cpuTemplate({ state }),
-			memory: memoryTemplate({ state, bytes }),
-			storageSystem: storageSystemTemplate({ state, bytes }),
-			storageData: storageDataTemplate({ state, bytes }),
-			network: networkTemplate({ state, bytes }),
+			memory: memoryTemplate({ state, prettyBytes }),
+			storageSystem: storageSystemTemplate({ state, prettyBytes }),
+			storageData: storageDataTemplate({ state, prettyBytes }),
+			network: networkTemplate({ state, prettyBytes }),
 			ups: upsTemplate({ state }),
 			time: timeTemplate({ state, prettyMilliseconds })
 		}),

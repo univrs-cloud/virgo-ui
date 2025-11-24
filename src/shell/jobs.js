@@ -1,7 +1,5 @@
 import toastPartial from 'shell/partials/toast.html';
 import * as jobService from 'shell/services/job';
-import morphdom from 'morphdom';
-import prettyBytes from 'pretty-bytes';
 
 const toastTemplate = _.template(toastPartial);
 const shownJobIds = new Set();

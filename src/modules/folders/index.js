@@ -66,7 +66,7 @@ const render = (state) => {
 	} else {
 		const networkInterface = state.networkInterface;
 		_.each(state.folders, (folder) => {
-			template.innerHTML += folderTemplate({ folder, networkInterface, bytes });
+			template.innerHTML += folderTemplate({ folder, networkInterface, prettyBytes });
 		});
 	}
 	

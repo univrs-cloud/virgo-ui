@@ -1,7 +1,6 @@
 import modulePartial from 'modules/about/partials/index.html';
 import aboutPartial from 'modules/about/partials/about.html';
 import * as aboutService from 'modules/about/services/about';
-import prettyBytes from 'pretty-bytes';
 
 const moduleTemplate = _.template(modulePartial);
 const aboutTemplate = _.template(aboutPartial);
@@ -21,7 +20,6 @@ const render = (state) => {
 		memory: state.memory,
 		drives: state.drives,
 		VERSION: VERSION,
-		bytes,
 		prettyBytes
 	});
 	morphdom(

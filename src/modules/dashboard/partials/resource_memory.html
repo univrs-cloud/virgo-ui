@@ -19,8 +19,8 @@
 			</div>
 		</div>
 		<div class="lh-1 text-body-tertiary mt-1">
-			<small><strong class="fw-semibold"><%=bytes(state.memory.active)%></strong> used from <%=bytes(state.memory.total)%></small><br>
-			<small class="d-none">Free: <%=bytes(state.memory.available)%></small>
+			<small><strong class="fw-semibold"><%=prettyBytes(state.memory.active, { space: false })%></strong> used from <%=prettyBytes(state.memory.total, { space: false })%></small><br>
+			<small class="d-none">Free: <%=prettyBytes(state.memory.available, { space: false })%></small>
 		</div>
 	<%}%>
 </li>
