@@ -3,7 +3,6 @@ import emptyPartial from 'modules/apps/partials/empty.html';
 import appPartial from 'modules/apps/partials/app.html';
 import resourceMetricsPartial from 'modules/apps/partials/resource_metrics.html';
 import * as appService from 'modules/apps/services/app';
-import prettyBytes from 'pretty-bytes';
 
 const moduleTemplate = _.template(modulePartial);
 const emptyTemplate = _.template(emptyPartial);

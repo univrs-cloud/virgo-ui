@@ -26,7 +26,7 @@ if (job.progress.state === 'failed') {
 							<%=progress.text%>
 							<%=key%>
 						</span>
-						<span class="ms-auto"><%//=(isActive ? `(${prettyBytes(current)}/${prettyBytes(total)})` : '')%></span>
+						<span class="ms-auto"><%//=(isActive ? `(${prettyBytes(current, { space: false })}/${prettyBytes(total, { space: false })})` : '')%></span>
 					</div>
 					<div class="progress" role="progressbar">
 						<div class="progress-bar <%=(isActive ? 'bg-cyan-300 progress-bar-striped progress-bar-animated' : 'bg-green-200')%>" style="width: <%=progress.percent%>%;"></div>

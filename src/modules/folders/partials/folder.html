@@ -38,15 +38,15 @@
 							<%}%>
 						</dd>
 						<dt class="fw-lighter"><small>Capacity</small></dt>
-						<dd><%=bytes(folder.size)%></dd>
+						<dd><%=prettyBytes(folder.size, { space: false })%></dd>
 						<div class="d-flex justify-content-between">
 							<div>
 								<dt class="fw-lighter"><small>Used</small></dt>
-								<dd class="m-0"><%=bytes(folder.alloc)%></dd>
+								<dd class="m-0"><%=prettyBytes(folder.alloc, { space: false })%></dd>
 							</div>
 							<div class="text-end">
 								<dt class="fw-lighter"><small>Free</small></dt>
-								<dd class="m-0"><%=bytes(folder.free)%></dd>
+								<dd class="m-0"><%=prettyBytes(folder.free, { space: false })%></dd>
 							</div>
 						</div>
 						<div class="progress mt-1" role="progressbar">

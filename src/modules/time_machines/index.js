@@ -58,7 +58,7 @@ const render = (state) => {
 	} else {
 		const networkInterface = state.networkInterface;
 		_.each(state.timeMachines, (timeMachine) => {
-			template.innerHTML += timeMachineTemplate({ timeMachine, networkInterface, bytes });
+			template.innerHTML += timeMachineTemplate({ timeMachine, networkInterface, prettyBytes });
 		});
 	}
 	

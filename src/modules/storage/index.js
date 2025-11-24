@@ -21,7 +21,7 @@ const render = (state) => {
 			pool.properties.usedbydatasets.percent = (pool.properties.usedbydatasets.value / pool.properties.size.value * 100);
 			pool.properties.usedbysnapshots.percent = (pool.properties.usedbysnapshots.value / pool.properties.size.value * 100);
 		}
-		template.innerHTML += storageTemplate({ pool, drives: state.drives, bytes, moment });
+		template.innerHTML += storageTemplate({ pool, drives: state.drives, prettyBytes, moment });
 	});
 	
 	morphdom(
