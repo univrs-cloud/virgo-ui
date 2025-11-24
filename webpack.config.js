@@ -89,7 +89,6 @@ module.exports = (env, argv) => {
 				'_': ['lodash-es', 'default'],
 				'morphdom': [path.join(__dirname, 'src/libs/morphdom.js'), 'default'],
 				'moment': 'moment-timezone',
-				'bytes': 'bytes',
 				'prettyBytes': [path.join(__dirname, 'node_modules/pretty-bytes/index.js'), 'default'],
 				'prettyMilliseconds': [path.join(__dirname, 'node_modules/pretty-ms/index.js'), 'default']
 			}),

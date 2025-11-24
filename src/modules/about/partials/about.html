@@ -24,15 +24,15 @@
 					<dt class="fw-lighter"><small>Serial number</small></dt>
 					<dd><%=system?.serial%></dd>
 					<dt class="fw-lighter"><small>CPU</small></dt>
-					<dd><%=system?.cpu?.cores%>x <%=system?.cpu?.vendor%> <%=system?.cpu?.family%> @ <%=system?.cpu?.speedMax%>GHz</dd>
+					<dd><%=system?.cpu?.cores%>x <%=system?.cpu?.vendor%> <%=system?.cpu?.family%> @ <%=system?.cpu?.speedMax%> GHz</dd>
 					<dt class="fw-lighter"><small>RAM</small></dt>
-					<dd><%=prettyBytes(memory.total, { space: false })%></dd>
+					<dd><%=prettyBytes(memory.total, { binary: true })%></dd>
 					<dt class="fw-lighter"><small>Network</small></dt>
-					<dd><%=prettyBytes((system?.networkInterface?.speed || 0) * 1000 * 1000, { bits: true, space: false })%>/s <small class="text-body-tertiary">(MAC: <%=system?.networkInterface?.mac%>)</small></dd>
+					<dd><%=prettyBytes((system?.networkInterface?.speed || 0) * 1000 * 1000, { bits: true })%>/s <small class="text-body-tertiary">(MAC: <%=system?.networkInterface?.mac%>)</small></dd>
 					<dt class="fw-lighter"><small>Drives</small></dt>
 					<dd class="m-0">
 						<%_.each(drives, (drive) => {%>
-							<div><%=drive.model%> @ <%=prettyBytes(drive.capacity.bytes, { space: false })%></div>
+							<div><%=drive.model%> @ <%=prettyBytes(drive.capacity.bytes, { binary: true })%></div>
 							<small class="d-block text-body-tertiary mt-n1">SN: <%=drive.serialNumber%></small>
 						<%})%>
 					</dd>

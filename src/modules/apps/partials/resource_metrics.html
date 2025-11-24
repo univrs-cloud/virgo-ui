@@ -1,6 +1,6 @@
-<div class="badge bd-gray-200 rounded-pill">
+<div class="badge bd-gray-200 rounded-pill d-none">
 	<div class="d-flex align-items-center">
-		<i class="icon-light icon-microchip icon-fw me-2" data-bs-toggle="tooltip" data-bs-original-title="CPU"></i>
+		<i class="icon-light icon-microchip icon-fw me-1" data-bs-toggle="tooltip" data-bs-original-title="CPU"></i>
 		<%if (!resourceMetrics) {%>
 			<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
 		<%} else {%>
@@ -8,33 +8,33 @@
 		<%}%>
 	</div>
 </div>
-<div class="badge bd-gray-200 rounded-pill">
+<div class="badge bd-gray-200 rounded-pill d-none">
 	<div class="d-flex align-items-center">
-		<i class="icon-light icon-memory icon-fw me-2" data-bs-toggle="tooltip" data-bs-original-title="Memory"></i>
+		<i class="icon-light icon-memory icon-fw me-1" data-bs-toggle="tooltip" data-bs-original-title="Memory"></i>
 		<%if (!resourceMetrics) {%>
 			<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
 		<%} else {%>
-			<span class="fw-light"><%=prettyBytes(resourceMetrics?.ram || 0, { space: false })%></span>
+			<span class="fw-light"><%=prettyBytes(resourceMetrics?.ram || 0, { binary: true })%></span>
 		<%}%>
 	</div>
 </div>
 <div class="badge bd-gray-200 rounded-pill">
 	<div class="d-flex align-items-center">
-		<i class="icon-light icon-database icon-fw me-2" data-bs-toggle="tooltip" data-bs-original-title="Data"></i>
+		<i class="icon-light icon-database icon-fw me-1" data-bs-toggle="tooltip" data-bs-original-title="Data"></i>
 		<%if (!resourceMetrics) {%>
 			<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
 		<%} else {%>
-			<span class="fw-light"><%=prettyBytes(resourceMetrics?.storage?.dataset || 0, { space: false })%></span>
+			<span class="fw-light"><%=prettyBytes(resourceMetrics?.storage?.dataset || 0, { binary: true })%></span>
 		<%}%>
 	</div>
 </div>
 <div class="badge bd-gray-200 rounded-pill">
 	<div class="d-flex align-items-center">
-		<i class="icon-light icon-camera icon-fw me-2" data-bs-toggle="tooltip" data-bs-original-title="Snapshots"></i>
+		<i class="icon-light icon-camera icon-fw me-1" data-bs-toggle="tooltip" data-bs-original-title="Snapshots"></i>
 		<%if (!resourceMetrics) {%>
 			<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
 		<%} else {%>
-			<span class="fw-light"><%=prettyBytes(resourceMetrics?.storage?.snapshots || 0, { space: false })%></span>
+			<span class="fw-light"><%=prettyBytes(resourceMetrics?.storage?.snapshots || 0, { binary: true })%></span>
 		<%}%>
 	</div>
 </div>
