@@ -52,11 +52,18 @@ const handleSubscription = (properties) => {
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 	
-	User.subscribeToProperties(['users'], handleSubscription);
+	return User.subscribeToProperties(['users'], handleSubscription);
+};
+
+const unsubscribe = (subsciption) => {
+	if (subsciption) {
+		subsciption();
+	}
 };
 
 export {
 	subscribe,
+	unsubscribe,
 	getUsers,
 	createUser,
 	updateUser,

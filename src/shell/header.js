@@ -5,13 +5,15 @@ import * as updates from 'shell/updates';
 import * as notifications from 'shell/notifications';
 import * as systemService from 'shell/services/system';
 
+let subscription;
 const headerTemplate = _.template(headerPartial);
 const navigationTemplate = _.template(navigationPartial);
 const container = document.querySelector('header');
 
 const render = (state) => {
 	_.each(container.querySelectorAll('.serial-number'), (element) => { element.innerHTML = `SN:${state.system.serial || '&mdash;'}`; });
-	systemService.unsubscribe();
+	systemService.unsubscribe(subscription);
+	subscription = null;
 };
 
 morphdom(
@@ -23,6 +25,6 @@ account.init();
 updates.init();
 notifications.init();
 
-systemService.subscribe([render]);
+subscription = systemService.subscribe([render]);
 
 import('shell/weather');

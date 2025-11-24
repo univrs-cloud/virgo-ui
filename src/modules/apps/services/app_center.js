@@ -3,9 +3,8 @@ import Docker from 'stores/docker';
 import Job from 'stores/job';
 
 let callbackCollection = [];
-let subscription = null;
 
-const getDomain = () => {
+const getFQDN = () => {
 	const system = Host.getSystem();
 	return system.osInfo.fqdn;
 };
@@ -36,20 +35,19 @@ const handleSubscription = (properties) => {
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 
-	subscription = Docker.subscribeToProperties(['containers', 'templates', 'jobs'], handleSubscription);
+	return  Docker.subscribeToProperties(['containers', 'templates', 'jobs'], handleSubscription);
 };
 
-const unsubscribe = () => {
+const unsubscribe = (subscription) => {
 	if (subscription) {
 		subscription();
-		subscription = null;
 	}
 };
 
 export {
 	subscribe,
 	unsubscribe,
-	getDomain,
+	getFQDN,
 	getTemplates,
 	install
 };

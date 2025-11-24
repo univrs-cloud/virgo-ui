@@ -16,9 +16,16 @@ const handleSubscription = (properties) => {
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 
-	Share.subscribeToProperties(['shares'], handleSubscription);
+	return Share.subscribeToProperties(['shares'], handleSubscription);
+};
+
+const unsubscribe = (subsciption) => {
+	if (subsciption) {
+		subsciption();
+	}
 };
 
 export {
-	subscribe
+	subscribe,
+	unsubscribe
 };

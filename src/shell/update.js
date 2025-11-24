@@ -7,13 +7,14 @@ import * as systemService from 'shell/services/system';
 import * as softwareService from 'shell/services/software';
 import * as powerService from 'modules/settings/services/power';
 
+let subscription;
+let isScrollEventAttached = false;
+let shouldScroll = true;
 const headerTemplate = _.template(headerPartial);
 const navigationTemplate = _.template(navigationPartial);
 const updateStepsTemplate = _.template(updateStepsPartial);
 const header = document.querySelector('header');
 const container = document.querySelector('#update');
-let isScrollEventAttached = false;
-let shouldScroll = true;
 
 const complete = (event) => {
 	if (event.target.dataset.action !== 'complete') {
@@ -45,7 +46,8 @@ const reboot = async (event) => {
 
 const renderSerialNumber = (state) => {
 	_.each(document.querySelectorAll('header .serial-number'), (element) => { element.innerHTML = `SN:${state.system.serial || '&mdash;'}`; });
-	systemService.unsubscribe();
+	systemService.unsubscribe(subscription);
+	subscription = null;
 };
 
 const render = (state) => {
@@ -94,5 +96,5 @@ page('*', (ctx) => {
 });
 page.start();
 
-systemService.subscribe([renderSerialNumber]);
+subscription = systemService.subscribe([renderSerialNumber]);
 softwareService.subscribeToUpdate([render]);

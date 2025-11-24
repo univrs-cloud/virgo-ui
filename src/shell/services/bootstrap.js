@@ -2,7 +2,6 @@ import Host from 'stores/host';
 import Docker from 'stores/docker';
 
 let callbackCollection = [];
-let subscription = null;
 
 const checkIfSetupIsRequired = (state) => {
 	if (_.isNull(state.system) || _.isNull(state.drives) || _.isNull(state.storage) || _.isNull(state.containers)) {
@@ -30,13 +29,12 @@ const handleSubscription = (properties) => {
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 	
-	subscription = Host.subscribeToProperties(['update', 'system', 'drives', 'storage', 'containers'], handleSubscription);
+	return Host.subscribeToProperties(['update', 'system', 'drives', 'storage', 'containers'], handleSubscription);
 };
 
-const unsubscribe = () => {
+const unsubscribe = (subscription) => {
 	if (subscription) {
 		subscription();
-		subscription = null;
 	}
 };
 

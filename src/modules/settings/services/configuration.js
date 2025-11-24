@@ -23,11 +23,18 @@ const handleSubscription = (properties) => {
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 
-	Configuration.subscribeToProperties(['configuration'], handleSubscription);
+	return Configuration.subscribeToProperties(['configuration'], handleSubscription);
+};
+
+const unsubscribe = (subsciption) => {
+	if (subsciption) {
+		subsciption();
+	}
 };
 
 export {
 	subscribe,
+	unsubscribe,
 	getConfiguration,
 	updateSmtp,
 	updateLocation

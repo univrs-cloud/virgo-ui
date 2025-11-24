@@ -73,7 +73,7 @@ const render = (event) => {
 	form.querySelector('.description').innerHTML = app.description;
 	form.querySelector('.note').innerHTML = app.note || '';
 	form.querySelector('.note').classList[app.note ? 'remove' : 'add']('d-none');
-	const domain = appCenterService.getDomain();
+	const fqdn = appCenterService.getFQDN();
 	_.each(app.env, (env) => {
 		if (env?.type === 'hidden') {
 			form.querySelector('.inputs').innerHTML += inputHiddenTemplate({ env });
@@ -82,10 +82,10 @@ const render = (event) => {
 
 		if (env?.type === 'text') {
 			if (env.name.toLowerCase() === 'domain') {
-				env.default = domain;
+				env.default = fqdn;
 			}
 			if (env.name.toLowerCase() === 'nextcloud_trusted_domains') {
-				env.default = `${domain} auth.${domain} nextcloud.${domain} onlyoffice.${domain} talk.${domain}`;
+				env.default = `${fqdn} auth.${fqdn} nextcloud.${fqdn} onlyoffice.${fqdn} talk.${fqdn}`;
 			}
 			form.querySelector('.inputs').innerHTML += inputTextTemplate({ env, prefix: env?.prefix, suffix: env?.suffix });
 			return;
