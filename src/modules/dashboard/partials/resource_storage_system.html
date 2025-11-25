@@ -20,8 +20,8 @@
 			</div>
 		</div>
 		<div class="lh-1 text-body-tertiary mt-1">
-			<small><strong class="fw-semibold"><%=prettyBytes(pool.properties.allocated.value, { binary: true })%></strong> used from <%=prettyBytes(pool.properties.size.value, { binary: true })%></small><br>
-			<small class="d-none">Free: <%=prettyBytes(pool.properties.free.value, { binary: true })%></small>
+			<small><strong class="fw-semibold"><%=prettyBytes(pool.properties.allocated.value || 0, { binary: true })%></strong> used from <%=prettyBytes(pool.properties.size.value || 0, { binary: true })%></small><br>
+			<small class="d-none">Free: <%=prettyBytes(pool.properties.free.value || 0, { binary: true })%></small>
 		</div>
 	<%}%>
 </li>
