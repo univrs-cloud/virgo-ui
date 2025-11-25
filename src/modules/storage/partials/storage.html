@@ -26,15 +26,15 @@
 						<dt class="fw-lighter"><small>Health</small></dt>
 						<dd><span class="badge rounded-pill bd-<%=(pool.properties.health.value.toLowerCase() === 'online' ? 'green' : 'red')%>-100"><%=pool.properties.health.value%></span></dd>
 						<dt class="fw-lighter"><small>Capacity</small></dt>
-						<dd><%=prettyBytes(pool.properties.size.value, { binary: true })%></dd>
+						<dd><%=prettyBytes(pool.properties.size.value || 0, { binary: true })%></dd>
 						<div class="d-flex justify-content-between">
 							<div>
 								<dt class="fw-lighter"><small>Used</small></dt>
-								<dd class="m-0"><%=prettyBytes(pool.properties.allocated.value, { binary: true })%></dd>
+								<dd class="m-0"><%=prettyBytes(pool.properties.allocated.value || 0, { binary: true })%></dd>
 							</div>
 							<div class="text-end">
 								<dt class="fw-lighter"><small>Free</small></dt>
-								<dd class="m-0"><%=prettyBytes(pool.properties.free.value, { binary: true })%></dd>
+								<dd class="m-0"><%=prettyBytes(pool.properties.free.value || 0, { binary: true })%></dd>
 							</div>
 						</div>
 						<%if (pool.name === 'system') {%>
@@ -55,11 +55,11 @@
 							<div class="mt-n1 mb-2">
 								<div class="d-flex align-items-center">
 									<i class="icon icon-solid icon-circle-small icon-fw" style="color: var(--bs-blue-300);"></i>
-									<small>Data: <%=prettyBytes(pool.properties.usedbydatasets.value, { binary: true })%> &middot; <%=pool.properties.usedbydatasets.percent.toFixed(0)%>%</small>
+									<small>Data: <%=prettyBytes(pool.properties.usedbydatasets.value || 0, { binary: true })%> &middot; <%=pool.properties.usedbydatasets.percent.toFixed(0)%>%</small>
 								</div>
 								<div class="d-flex align-items-center">
 									<i class="icon icon-solid icon-circle-small icon-fw" style="color: var(--bs-indigo-300);"></i>
-									<small>Snapshots: <%=prettyBytes(pool.properties.usedbysnapshots.value, { binary: true })%> &middot; <%=pool.properties.usedbysnapshots.percent.toFixed(0)%>%</small>
+									<small>Snapshots: <%=prettyBytes(pool.properties.usedbysnapshots.value || 0, { binary: true })%> &middot; <%=pool.properties.usedbysnapshots.percent.toFixed(0)%>%</small>
 								</div>
 							</div>
 						<%}%>
@@ -98,7 +98,7 @@
 								</div>
 							<%} else {%>
 								<dt class="fw-lighter"><small>Data integrity</small></dt>
-								<dd class="m-0">Last data integrity check repaired <strong><%=prettyBytes(pool.scanStats.processed, { binary: true })%></strong> in <%=moment.duration(moment.unix(pool.scanStats.endTime).diff(moment.unix(pool.scanStats.startTime))).humanize()%> with <strong><%=pool.scanStats.errors%> errors</strong> on <%=moment.utc(pool.scanStats.endTime, 'X').toString()%></dd>
+								<dd class="m-0">Last data integrity check repaired <strong><%=prettyBytes(pool.scanStats.processed || 0, { binary: true })%></strong> in <%=moment.duration(moment.unix(pool.scanStats.endTime).diff(moment.unix(pool.scanStats.startTime))).humanize()%> with <strong><%=pool.scanStats.errors%> errors</strong> on <%=moment.utc(pool.scanStats.endTime, 'X').toString()%></dd>
 							<%}%>
 						<%}%>
 					</dl>

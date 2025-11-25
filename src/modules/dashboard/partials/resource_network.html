@@ -17,14 +17,14 @@
 							<i class="icon-solid icon-arrow-down icon-fw me-1 text-gray-600"></i>
 							<small>RX:</small>
 						</td>
-						<td><small><%=prettyBytes(state.networkStats.rx_sec, { binary: true })%>/s</small></td>
+						<td><small><%=prettyBytes(state.networkStats.rx_sec || 0, { binary: true })%>/s</small></td>
 					</tr>
 					<tr>
 						<td>
 							<i class="icon-solid icon-arrow-up icon-fw me-1 text-gray-400"></i>
 							<small>TX:</small>
 						</td>
-						<td><small><%=prettyBytes(state.networkStats.tx_sec, { binary: true })%>/s</small></td>
+						<td><small><%=prettyBytes(state.networkStats.tx_sec || 0, { binary: true })%>/s</small></td>
 					</tr>
 				</tbody>
 			</table>
