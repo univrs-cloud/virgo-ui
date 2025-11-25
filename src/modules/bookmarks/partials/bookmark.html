@@ -35,7 +35,7 @@
 				<div class="col flex-grow-1">
 					<div class="text-secondary mb-2">
 						<%if (!_.isEmpty(bookmark.url)) {%>
-							<a href="<%=bookmark.url%>" target="<%=(bookmark?.target || bookmark.name)%>"><small><%=bookmark.url%></small></a>
+							<a href="<%=bookmark.url%>" target="<%=(bookmark?.target || bookmark.name)%>" class="link-underline link-underline-opacity-0 link-underline-opacity-75-hover"><small><%=bookmark.url%></small></a>
 						<%} else {%>
 							&mdash;
 						<%}%>

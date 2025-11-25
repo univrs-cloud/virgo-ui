@@ -71,6 +71,7 @@ img {
 }
 
 .card {
+	--bs-card-border-color: var(--bs-gray-200);
 	position: relative;
 	margin-bottom: 1rem;
 	.card-spacer {
@@ -209,14 +210,6 @@ img {
 }
 #apps {
 	.container-fluid > .row {
-		.expand-compress {
-			z-index: 1;
-			position: absolute;
-			left: 0;
-			bottom: 0.10rem;
-			margin-left: map-get($spacers, 2);
-			margin-bottom: map-get($spacers, 2);
-		}
 		&.expand {
 			.item {
 				&:not(.expand) {

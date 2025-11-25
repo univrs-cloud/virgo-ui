@@ -1,15 +1,5 @@
 <div class="col col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 item">
 	<div class="app card rounded-4 border-0 h-100 mb-0" data-name="<%=app.name%>">
-		<div class="expand-compress">
-			<div class="dropdown">
-				<span class="dropdown-toggle caret-off btn btn-sm expand">
-					<i class="icon-light icon-expand-wide icon-fw"></i>
-				</span>
-				<span class="dropdown-toggle caret-off btn btn-sm compress">
-					<i class="icon-light icon-compress-wide icon-fw"></i>
-				</span>
-			</div>
-		</div>
 		<div class="card-body ps-0 py-1">
 			<div class="row g-0 align-items-center">
 				<div class="card-image card-spacer col-auto p-2">
@@ -59,7 +49,7 @@
 					</div>
 				<%}%>
 			</div>
-			<div class="row g-0 mt-n2 mb-2 position-relative">
+			<div class="row g-0 mt-n2 pb-2 position-relative">
 				<div class="logs-container d-none">
 					<div class="service d-flex align-items-center justify-content-between bg-white p-2 ps-0">
 						<div class="d-flex align-items-center">
@@ -81,15 +71,12 @@
 				</div>
 				<div class="card-spacer col-auto p-2"></div>
 				<div class="col flex-grow-1">
-					<div class="mb-2">
+					<div>
 						<%if (!_.isEmpty(app.url)) {%>
-							<a href="<%=app.url%>" target="<%=(app?.target || app.name)%>"><small><%=_.replace(app.url, /^https?:\/\//, '')%></small></a>
+							<a href="<%=app.url%>" target="<%=(app?.target || app.name)%>" class="link-underline link-underline-opacity-0 link-underline-opacity-75-hover"><small><%=_.replace(app.url, /^https?:\/\//, '')%></small></a>
 						<%} else {%>
 							&nbsp;
 						<%}%>
-					</div>
-					<div class="resource-metrics">
-						<%=resourceMetricsTemplate({ resourceMetrics: app.resourceMetrics, prettyBytes })%>
 					</div>
 					<div class="details mt-2">
 						<dl>
@@ -161,6 +148,23 @@
 				</div>
 			</div>
 		</div>
+
+		<div class="card-footer d-flex bg-gray-100 rounded-bottom-4 text-body-secondary px-2 py-1">
+			<div class="expand-compress">
+				<div class="dropdown">
+					<span class="dropdown-toggle caret-off btn btn-sm expand">
+						<i class="icon-light icon-expand-wide icon-fw"></i>
+					</span>
+					<span class="dropdown-toggle caret-off btn btn-sm compress">
+						<i class="icon-light icon-compress-wide icon-fw"></i>
+					</span>
+				</div>
+			</div>
+			<div class="resource-metrics ms-auto">
+				<%=resourceMetricsTemplate({ resourceMetrics: app.resourceMetrics, prettyBytes })%>
+			</div>
+		</div>
+
 		<%let color =''%>
 		<%if (app.state === 'success') color = 'green'%>
 		<%if (app.state === 'warning') color = 'yellow'%>
