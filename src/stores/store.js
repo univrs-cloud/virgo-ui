@@ -12,6 +12,7 @@ class Store extends ObservableStore {
 	constructor(settings) {
 		super(settings);
 		this.socket = io(`/${settings.namespace}`, {
+			path: '/api',
 			reconnection: true,
 			reconnectionAttempts: 30,
 			reconnectionDelay: 1000,
