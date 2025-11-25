@@ -83,7 +83,7 @@
 				<div class="col flex-grow-1">
 					<div class="mb-2">
 						<%if (!_.isEmpty(app.url)) {%>
-							<a href="<%=app.url%>" target="<%=(app?.target || app.name)%>"><small><%=app.url%></small></a>
+							<a href="<%=app.url%>" target="<%=(app?.target || app.name)%>"><small><%=_.replace(app.url, /^https?:\/\//, '')%></small></a>
 						<%} else {%>
 							&nbsp;
 						<%}%>
