@@ -48,17 +48,11 @@ module.exports = (env, argv) => {
 			},
 			proxy: [
 				{
-					context: ['/socket.io'],
+					context: ['/api'],
 					target: `https://${upstream}`,
 					secure: false,
 					changeOrigin: true,
 					ws: true
-				},
-				{
-					context: ['/api'],
-					target: `https://${upstream}`,
-					secure: false,
-					changeOrigin: true
 				},
 				{
 					context: ['/assets/img/apps'],
