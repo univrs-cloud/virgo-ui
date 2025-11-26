@@ -40,10 +40,6 @@ const updateLocation = (event) => {
 const restore = (event) => {
 	form.reset();
 	_.each(form.querySelectorAll('button'), (button) => { button.disabled = false });
-	_.each(form.querySelectorAll('.form-floating'), (field) => {
-		field.querySelector('input')?.classList?.remove('is-invalid', 'is-valid');
-		field.querySelector('.invalid-feedback').innerHTML = '';
-	});
 };
 
 const render = (event) => {

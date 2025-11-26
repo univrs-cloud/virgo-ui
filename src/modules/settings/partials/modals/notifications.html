@@ -1,48 +1,50 @@
-<form id="smtp" class="modal fade" tabindex="-1" novalidate>
-	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title">Notifications</h5>
-			</div>
-			<div class="modal-body">
-				<h6 class="mb-3">SMTP server</h6>
-				<div class="mb-2">
-					<label class="form-label me-2">Encryption</label>
-					<div class="form-check form-check-inline">
-						<label class="form-check-label">
-							<input type="radio" name="encryption" value="" class="form-check-input encryption">
-							None/StartTLS
-						</label>
-					</div>
-					<div class="form-check form-check-inline">
-						<label class="form-check-label">
-							<input type="radio" name="encryption" value="ssl" class="form-check-input encryption">
-							SSL
-						</label>
-					</div>
+<u-form>
+	<div id="smtp" class="modal fade">
+		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Notifications</h5>
 				</div>
-				<div class="row">
-					<div class="col-9">
-						<u-input name="address" label="SMTP server" class="address"></u-input>
+				<div class="modal-body">
+					<h6 class="mb-3">SMTP server</h6>
+					<div class="mb-2">
+						<label class="form-label me-2">Encryption</label>
+						<div class="form-check form-check-inline">
+							<label class="form-check-label">
+								<input type="radio" name="encryption" value="" class="form-check-input encryption">
+								None/StartTLS
+							</label>
+						</div>
+						<div class="form-check form-check-inline">
+							<label class="form-check-label">
+								<input type="radio" name="encryption" value="ssl" class="form-check-input encryption">
+								SSL
+							</label>
+						</div>
 					</div>
-					<div class="col-3">
-						<u-input name="port" label="Port" class="port"></u-input>
+					<div class="row">
+						<div class="col-9">
+							<u-input name="address" label="SMTP server" class="address"></u-input>
+						</div>
+						<div class="col-3">
+							<u-input name="port" label="Port" class="port"></u-input>
+						</div>
 					</div>
-				</div>
-				<u-input name="username" label="SMTP username" class="username"></u-input>
-				<u-input type="password" name="password" label="SMTP password" class="password" autocomplete="off"></u-input>
-				<u-input name="sender" label="Sender email address" class="sender"></u-input>
+					<u-input name="username" label="SMTP username" class="username"></u-input>
+					<u-input type="password" name="password" label="SMTP password" class="password" autocomplete="off"></u-input>
+					<u-input name="sender" label="Sender email address" class="sender"></u-input>
 
-				<hr class="border-secondary-subtle my-4">
-				
-				<h6 class="mb-3">Recipients</h6>
-				<u-textarea name="recipients" label="List of email addresses" class="recipients"></u-textarea>
-				<div class="form-text mt-n2">One email address per line.</div>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-outline-secondary d-flex ms-auto" data-bs-dismiss="modal">Cancel</button>
-				<button type="submit" class="btn btn-primary">Update</button>
+					<hr class="border-secondary-subtle my-4">
+					
+					<h6 class="mb-3">Recipients</h6>
+					<u-textarea name="recipients" label="List of email addresses" class="recipients"></u-textarea>
+					<div class="form-text mt-n2">One email address per line.</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-outline-secondary d-flex ms-auto" data-bs-dismiss="modal">Cancel</button>
+					<button type="submit" class="btn btn-primary">Update</button>
+				</div>
 			</div>
 		</div>
-	</div>
-</form>
+	</form>
+</u-form>

@@ -4,68 +4,24 @@ import validator from 'validator';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', notificationModalPartial);
 
-const form = document.querySelector('#smtp');
-
-const validateAddress = (event) => {
-	const input = form.querySelector('.address');
-	const value = input.value;
-	if (validator.isEmpty(value.toString())) {
-		input.error = `Can't be empty`;
-		return;
-	}
-	input.error = ``;
-};
-
-const validatePort = (event) => {
-	const input = form.querySelector('.port');
-	const value = input.value;
-	if (validator.isEmpty(value.toString())) {
-		input.error = `Can't be empty`;
-		return;
-	}
-	input.error = ``;
-};
-
-const validateForm = () => {
-	validateAddress();
-	validatePort();
-};
-
-const isFormValid = () => {
-	validateForm();
-	return _.isEmpty(form.querySelectorAll('.is-invalid'));
-};
+const modal = document.querySelector('#smtp');
+const form = modal.closest('u-form');
 
 const updateSmtp = (event) => {
-	event.preventDefault();
-	if (!isFormValid()) {
-		return;
-	}
-
 	const form = event.target;
 	const buttons = form.querySelectorAll('button');
 	_.each(buttons, (button) => { button.disabled = true; });
 	
-	let config = configurationService.getConfiguration()?.smtp || {};
-	config.encryption = form.querySelector('.encryption:checked').value;
-	config.address = form.querySelector('.address').value;
-	config.port = form.querySelector('.port').value;
-	config.username = form.querySelector('.username').value;
-	config.password = form.querySelector('.password').value;
-	config.sender = form.querySelector('.sender').value;
-	config.recipients = _.compact(_.split(_.trim(form.querySelector('.recipients').value), '\n'));
+	let config = form.getData();
+	config.recipients = _.compact(_.split(_.trim(config.recipients), '\n'));
 	
 	configurationService.updateSmtp(config);
-	bootstrap.Modal.getInstance(form.closest('.modal'))?.hide();
+	bootstrap.Modal.getInstance(modal)?.hide();
 };
 
 const restore = (event) => {
 	form.reset();
 	_.each(form.querySelectorAll('button'), (button) => { button.disabled = false });
-	_.each(form.querySelectorAll('.form-floating'), (field) => {
-		field.querySelector('input')?.classList?.remove('is-invalid', 'is-valid');
-		field.querySelector('.invalid-feedback').innerHTML = '';
-	});
 };
 
 const render = (event) => {
@@ -80,8 +36,22 @@ const render = (event) => {
 	form.querySelector('.recipients').value = configuration?.smtp?.recipients?.join('\n') || '';
 };
 
-form.querySelector('.address').addEventListener('input', validateAddress);
-form.querySelector('.port').addEventListener('input', validatePort);
-form.addEventListener('submit', updateSmtp);
+// form.querySelector('.address').addEventListener('input', validateAddress);
+// form.querySelector('.port').addEventListener('input', validatePort);
+form.validation = [
+	{
+		selector: '.address',
+		rules: {
+			isEmpty: `Can't be empty`
+		}
+	},
+	{
+		selector: '.port',
+		rules: {
+			isEmpty: `Can't be empty`
+		}
+	}
+];
+form.addEventListener('valid', updateSmtp);
 form.addEventListener('show.bs.modal', render);
 form.addEventListener('hidden.bs.modal', restore);
