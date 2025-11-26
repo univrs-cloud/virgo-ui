@@ -14,6 +14,7 @@ export class Input extends LitElement {
 			disabled: { type: Boolean, reflect: true },
 			readonly: { type: Boolean, reflect: true },
 			autocomplete: { type: String, reflect: true },
+			showPassword: { type: Boolean },
 			error: { type: String }
 		};
 	}
@@ -77,7 +78,7 @@ export class Input extends LitElement {
 		return html`
 			<div class="form-floating mb-3">
 				<input
-					.type=${inputType}
+					type=${inputType}
 					.value=${this.value}
 					.placeholder=${this.placeholder}
 					?disabled=${this.disabled}
@@ -105,9 +106,7 @@ export class Input extends LitElement {
 	_togglePassword(event) {
 		event.preventDefault();
 		this.showPassword = !this.showPassword;
-		const input = this.renderRoot.querySelector('input');
-		input.type = this.showPassword ? 'text' : 'password';
-		input.focus();
+		this.renderRoot.querySelector('input').focus();
 	}
 }
 
