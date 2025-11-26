@@ -1,7 +1,15 @@
 import Host from 'stores/host';
-import Docker from 'stores/docker';
+import Docker from 'stores/docker'; // need to init store
 
 let callbackCollection = [];
+
+const reconnectSocket = () => {
+	Host.socket.connect();
+};
+
+const disconnectSocket = () => {
+	Host.socket.disconnect();
+};
 
 const checkIfSetupIsRequired = (state) => {
 	if (_.isNull(state.system) || _.isNull(state.drives) || _.isNull(state.storage) || _.isNull(state.containers)) {
@@ -38,18 +46,18 @@ const unsubscribe = (subscription) => {
 	}
 };
 
-const reconnectSocket = () => {
-	Host.socket.connect();
-};
+window.addEventListener('beforeunload', (event) => {
+	disconnectSocket();
+});
 
-const disconnectSocket = () => {
-	Host.socket.disconnect();
-};
+document.addEventListener('visibilitychange', (event) => {
+	if (document.visibilityState === 'visible') {
+		reconnectSocket();
+	}
+});
 
 export {
 	subscribe,
 	unsubscribe,
-	reconnectSocket,
-	disconnectSocket,
 	checkIfSetupIsRequired
 };

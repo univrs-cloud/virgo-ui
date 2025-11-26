@@ -1,7 +1,6 @@
 <form id="network-interface" novalidate>
-	<input type="hidden" name="name" class="name">
+	<u-input type="hidden" name="name" class="name"></u-input>
 	<h5>Network interface</h5>
-
 	<div class="alert alert-light">
 		<dl class="m-0">
 			<dt class="fw-light text-body-tertiary"><small>Name</small></dt>
@@ -18,17 +17,9 @@
 			<label class="form-check-label">Automatic</label>
 		</div>
 	</div>
-	<div class="input-group mb-3">
-		<div class="form-floating">
-			<input type="text" name="ip-address" class="ip-address form-control" placeholder="###.###.###.###">
-			<label>IP address</label>
-			<div class="invalid-feedback"></div>
-		</div>
-		<div class="form-floating">
-			<input type="text" name="netmask" class="netmask form-control w-50" placeholder="##">
-			<label>Netmask</label>
-			<div class="invalid-feedback"></div>
-		</div>
+	<div class="input-group">
+		<u-input name="ip-address" label="IP address" class="ip-address" placeholder="###.###.###.###"></u-input>
+		<u-input name="netmask" label="Netmask" class="netmask" placeholder="##"></u-input>
 	</div>
 
 	<button type="submit" class="btn btn-primary">Next</button>

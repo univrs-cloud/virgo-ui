@@ -23,36 +23,15 @@
 				</div>
 				<div class="row">
 					<div class="col-9">
-						<div class="form-floating mb-3">
-							<input type="text" name="address" class="address form-control" placeholder="">
-							<label>SMTP server</label>
-							<div class="invalid-feedback"></div>
-						</div>
+						<u-input name="address" label="SMTP server" class="address"></u-input>
 					</div>
 					<div class="col-3">
-						<div class="form-floating mb-3">
-							<input type="text" name="port" class="port form-control" placeholder="">
-							<label>Port</label>
-							<div class="invalid-feedback"></div>
-						</div>
+						<u-input name="port" label="Port" class="port"></u-input>
 					</div>
 				</div>
-				<div class="form-floating mb-3">
-					<input type="text" name="username" class="username form-control" placeholder="">
-					<label>SMTP username</label>
-					<div class="invalid-feedback"></div>
-				</div>
-				<div class="form-floating mb-3">
-					<input type="password" name="password" class="password form-control password-input" placeholder="">
-					<label>SMTP password</label>
-					<button type="button" class="password-toggle"></button>
-					<div class="invalid-feedback"></div>
-				</div>
-				<div class="form-floating mb-3">
-					<input type="text" name="sender" class="sender form-control" placeholder="">
-					<label>Sender email address</label>
-					<div class="invalid-feedback"></div>
-				</div>
+				<u-input name="username" label="SMTP username" class="username"></u-input>
+				<u-input type="password" name="password" label="SMTP password" class="password" autocomplete="off"></u-input>
+				<u-input name="sender" label="Sender email address" class="sender"></u-input>
 
 				<hr class="border-secondary-subtle my-4">
 				

@@ -1,15 +1,6 @@
 <form id="network-identifier" novalidate>
 	<h5>Host</h5>
-
-	<div class="form-floating mb-3">
-		<input type="text" name="hostname" class="hostname form-control" placeholder="">
-		<label>Hostname</label>
-		<div class="invalid-feedback"></div>
-	</div>
-	<div class="form-floating mb-3">
-		<input type="text" name="domain-name" class="domain-name form-control" placeholder="">
-		<label>Domain name</label>
-		<div class="invalid-feedback"></div>
-	</div>
+	<u-input name="hostname" label="Hostname" class="hostname"></u-input>
+	<u-input name="domain-name" label="Domain name" class="domain-name"></u-input>
 	<button type="submit" class="btn btn-primary">Next</button>
 </form>

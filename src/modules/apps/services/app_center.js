@@ -1,6 +1,6 @@
 import Host from 'stores/host';
 import Docker from 'stores/docker';
-import Job from 'stores/job';
+import Job from 'stores/job'; // need to init store
 
 let callbackCollection = [];
 
