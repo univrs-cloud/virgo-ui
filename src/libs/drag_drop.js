@@ -17,7 +17,7 @@ class DragDropReorder {
 		this.dragOffset = { x: 0, y: 0 };
 		this.placeholder = null;
 		this.originalPosition = null;
-		this.boundry = (this.options.boundrySelector ? this.container.querySelector(this.options.boundrySelector)  : this.container);
+		this.boundry = (this.options.boundrySelector ? this.container.querySelector(this.options.boundrySelector) : this.container);
 		this.boundry.classList.add('dragging');
 		this.hasStartedDragging = false;
 		
