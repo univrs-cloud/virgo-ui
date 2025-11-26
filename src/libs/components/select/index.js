@@ -11,6 +11,7 @@ export class Select extends LitElement {
 			disabled: { type: Boolean, reflect: true },
 			tip: { type: String, reflect: true },
 			error: { type: String },
+			isInvalid: { type: Boolean, reflect: true },
 			options: { type: Array } // [{ value, text, disabled, default } or { label, disabled, options: [...] }]
 		};
 	}
@@ -23,8 +24,17 @@ export class Select extends LitElement {
 		this.label = '';
 		this.disabled = false;
 		this.tip = '';
-		this.error = '';
 		this.options = [];
+		this._error = '';
+	}
+
+	set error(value) {
+		this._error = value;
+		this.classList.toggle('is-invalid', Boolean(value));
+	}
+	
+	get error() {
+		return this._error;
 	}
 
 	createRenderRoot() {
@@ -43,22 +53,7 @@ export class Select extends LitElement {
 	}
 
 	updated(changedProps) {
-		const root = this.renderRoot;
-		const select = root.querySelector('select');
-		const feedback = root.querySelector('.invalid-feedback');
-		select.value = this.value;
-		select.disabled = this.disabled;
 		this.internals.setFormValue(this.value);
-	
-		if (feedback) {
-			if (this.error) {
-				select.classList.add('is-invalid');
-				feedback.textContent = this.error;
-			} else {
-				select.classList.remove('is-invalid');
-				feedback.textContent = '';
-			}
-		}
 	}
 
 	renderOptGroup(group) {
@@ -90,7 +85,7 @@ export class Select extends LitElement {
 				<select
 					.value=${this.value}
 					.disabled=${this.disabled}
-					class="form-select"
+					class="form-select ${this.error ? 'is-invalid' : ''}"
 					@change=${this._onChange}
 				>
 					${this.options.map((option) => { return option.options ? this.renderOptGroup(option) : this.renderOption(option); })}
@@ -99,7 +94,7 @@ export class Select extends LitElement {
 					${this.label}
 					${this.tip ? html`<span class="help-inline ms-1" data-bs-toggle="tooltip" data-bs-original-title=${this.tip}><i class="icon-solid icon-question-circle"></i></span>` : ''}
 				</label>
-				<div class="invalid-feedback"></div>
+				<div class="invalid-feedback">${this.error || ''}</div>
 			</div>
 		`;
 	}
