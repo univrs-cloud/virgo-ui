@@ -7,15 +7,11 @@
 			<div class="modal-body">
 				<u-input name="title" label="Title" class="title"></u-input>
 				<u-input name="url" label="URL" class="url" placeholder="https://"></u-input>
-				<div class="form-floating mb-3">
-					<select name="category" class="category form-select">
-						<option value="Productivity">Productivity</option>
-						<option value="Networking">Networking</option>
-						<option value="System">System</option>
-					</select>
-					<label>Category</label>
-					<div class="invalid-feedback"></div>
-				</div>
+				<u-select name="category" label="Category" class="category">
+					<option value="Productivity" selected>Productivity</option>
+					<option value="Networking">Networking</option>
+					<option value="System">System</option>
+				</u-select>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-outline-secondary d-flex ms-auto" data-bs-dismiss="modal">Cancel</button>

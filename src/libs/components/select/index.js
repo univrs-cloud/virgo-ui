@@ -4,9 +4,28 @@ import { sheet } from "../styles.js";
 export class Select extends LitElement {
 	static formAssociated = true;
 
+	static get properties() {
+		return {
+			value: { type: String },
+			label: { type: String, reflect: true },
+			disabled: { type: Boolean, reflect: true },
+			tip: { type: String, reflect: true },
+			error: { type: String },
+			options: { type: Array } // [{ value, text, disabled, default } or { label, disabled, options: [...] }]
+		};
+	}
+
 	constructor() {
 		super();
 		this.internals = this.attachInternals();
+
+		this.value = '';
+		this.label = '';
+		this.disabled = false;
+		this.tip = '';
+		this.error = '';
+		this.options = [];
+		this._mutationObserver = null;
 	}
 
 	createRenderRoot() {
@@ -15,8 +34,128 @@ export class Select extends LitElement {
 		return root;
 	}
 
+	disconnectedCallback() {
+		if (this._mutationObserver) {
+			this._mutationObserver.disconnect();
+		}
+		super.disconnectedCallback();
+	}
+
+	firstUpdated() {
+		const label = this.renderRoot.querySelector('label');
+		if (label) {
+			new bootstrap.Tooltip(label);
+		}
+
+		this._mutationObserver = new MutationObserver(() => {
+			this._updateOptionsFromLightDOM();
+		});
+		this._mutationObserver.observe(this, { childList: true, subtree: true, characterData: true });
+
+		this._updateOptionsFromLightDOM();
+		this.internals.setFormValue(this.value);
+	}
+
+	updated(changedProps) {
+		const root = this.renderRoot;
+		const select = root.querySelector('select');
+		const feedback = root.querySelector('.invalid-feedback');
+		select.value = this.value;
+		select.disabled = this.disabled;
+		this.internals.setFormValue(this.value);
+	
+		if (feedback) {
+			if (this.error) {
+				select.classList.add('is-invalid');
+				feedback.textContent = this.error;
+			} else {
+				select.classList.remove('is-invalid');
+				feedback.textContent = '';
+			}
+		}
+	}
+
+	renderOptGroup(group) {
+		return html`
+			<optgroup
+				.label=${group.label}
+				.disabled=${group.disabled || false}
+			>
+				${group.options.map((option) => { return this.renderOption(option); })}
+			</optgroup>
+		`;
+	}
+
+	renderOption(option) {
+		return html`
+			<option
+				.value=${option.value}
+				.selected=${option.default || option.value === this.value}
+				.disabled=${option.disabled || false}
+			>
+				${option.label}
+			</option>
+		`;
+	}
+
 	render() {
-		return html``;
+		return html`
+			<div class="form-floating mb-3">
+				<select
+					.value=${this.value}
+					.disabled=${this.disabled}
+					class="form-select"
+					@change=${this._onChange}
+				>
+					${this.options.map((option) => { return option.options ? this.renderOptGroup(option) : this.renderOption(option); })}
+				</select>
+				<label>
+					${this.label}
+					${this.tip ? html`<span class="help-inline ms-1" data-bs-toggle="tooltip" data-bs-original-title=${this.tip}><i class="icon-solid icon-question-circle"></i></span>` : ''}
+				</label>
+				<div class="invalid-feedback"></div>
+			</div>
+		`;
+	}
+
+	_onChange(event) {
+		this.value = event.target.value;
+		this.internals.setFormValue(this.value);
+		this.dispatchEvent(new CustomEvent('value-changed', { detail: this.value }));
+	}
+
+	_updateOptionsFromLightDOM() {
+		const lightOptions = Array.from(this.children);
+		this.options = lightOptions.map((element) => {
+			if (element.tagName.toLowerCase() === 'optgroup') {
+				return {
+					label: element.label,
+					disabled: element.disabled,
+					options: Array.from(element.children).map((opt) => ({
+						value: opt.value,
+						label: opt.textContent,
+						default: opt.selected,
+						disabled: opt.disabled
+					}))
+				};
+			} else if (element.tagName.toLowerCase() === 'option') {
+				return {
+					value: element.value,
+					label: element.textContent,
+					default: element.selected,
+					disabled: element.disabled,
+				};
+			}
+		});
+
+		if (!this.value) {
+			const defaultOption = this.options.find(o => !o.options && o.default) || (this.options.find(o => o.options)?.options.find(opt => opt.default));
+			if (defaultOption) {
+				this.value = defaultOption.value;
+			}
+		}
+
+		this.requestUpdate();
 	}
 }
 

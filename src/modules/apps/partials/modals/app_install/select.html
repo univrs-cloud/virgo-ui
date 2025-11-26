@@ -1,12 +1,3 @@
-<div class="form-floating mb-3">
-	<select name="<%=env.name%>" class="form-select">
-		<%=_.join(_.map(env.select, (option) => { return `<option value="${option.value}" ${option.default ? 'selected' : ''}>${option.text}</option>`; }), '')%>
-	</select>
-	<label>
-		<%=env.label%>
-		<%if (env.description) {%>
-			<span class="help-inline ms-1" data-bs-toggle="tooltip" data-bs-original-title="<%=env.description%>"><i class="icon-solid icon-question-circle"></i></span>
-		<%}%>
-	</label>
-	<div class="invalid-feedback"></div>
-</div>
+<u-select name="<%=env.name%>" label="<%=env.label%>" tip="<%=env.description%>">
+	<%=_.join(_.map(env.select, (option) => { return `<option value="${option.value}" ${option.default ? 'selected' : ''}>${option.text}</option>`; }), '')%>
+</u-select>

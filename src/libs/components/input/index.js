@@ -41,11 +41,11 @@ export class Input extends LitElement {
 	}
 
 	firstUpdated() {
-		this.internals.setFormValue(this.value);
 		const label = this.renderRoot.querySelector('label');
 		if (label) {
 			new bootstrap.Tooltip(label);
 		}
+		this.internals.setFormValue(this.value);
 	}
 
 	updated(changedProps) {
@@ -62,6 +62,7 @@ export class Input extends LitElement {
 		input.autocomplete = this.autocomplete;
 		input.readOnly = this.readonly;
 		input.disabled = this.disabled;
+		this.internals.setFormValue(this.value);
 
 		if (feedback) {
 			if (this.error) {
@@ -96,7 +97,7 @@ export class Input extends LitElement {
 					.autocomplete=${this.autocomplete}
 					class="form-control ${this.type === 'password' ? 'password-input' : ''}"
 					@input=${this._onInput}
-				/>
+				>
 				<label>
 					${this.label}
 					${this.tip ? html`<span class="help-inline ms-1" data-bs-toggle="tooltip" data-bs-original-title=${this.tip}><i class="icon-solid icon-question-circle"></i></span>` : ''}

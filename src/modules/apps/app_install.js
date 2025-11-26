@@ -54,7 +54,7 @@ const install = (event) => {
 		env: {}
 	};
 	_.each(app.env, (env) => {
-		const input = form.querySelector(`input[name="${env.name}"]:checked`) || form.querySelector(`u-input[name="${env.name}"]`) || form.querySelector(`select[name="${env.name}"]`) || form.querySelector(`u-select[name="${env.name}"]`) || form.querySelector(`textarea[name="${env.name}"]`) || form.querySelector(`u-textarea[name="${env.name}"]`);
+		const input = form.querySelector(`input[name="${env.name}"]:checked`) || form.querySelector(`u-input[name="${env.name}"]`) || form.querySelector(`u-select[name="${env.name}"]`) || form.querySelector(`textarea[name="${env.name}"]`) || form.querySelector(`u-textarea[name="${env.name}"]`);
 		config.env[env.name] = input.value;
 	});
 	

@@ -15,6 +15,14 @@ export class Textarea extends LitElement {
 		return root;
 	}
 
+	firstUpdated() {
+		this.internals.setFormValue(this.value);
+		const label = this.renderRoot.querySelector('label');
+		if (label) {
+			new bootstrap.Tooltip(label);
+		}
+	}
+
 	render() {
 		return html``;
 	}
