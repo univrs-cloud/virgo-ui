@@ -35,7 +35,7 @@ const handleSubscription = (properties) => {
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 
-	return  Docker.subscribeToProperties(['containers', 'templates', 'jobs'], handleSubscription);
+	return Docker.subscribeToProperties(['containers', 'templates', 'jobs'], handleSubscription);
 };
 
 const unsubscribe = (subscription) => {
