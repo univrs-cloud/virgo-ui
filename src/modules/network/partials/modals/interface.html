@@ -1,5 +1,5 @@
 <form id="network-interface" class="modal fade" tabindex="-1" novalidate>
-	<input type="hidden" name="name" class="name">
+	<u-input type="hidden" name="name" class="name"></u-input>
 	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -22,24 +22,12 @@
 						<label class="form-check-label">Automatic</label>
 					</div>
 				</div>
-				<div class="input-group mb-3">
-					<div class="form-floating">
-						<input type="text" name="ip-address" class="ip-address form-control" placeholder="###.###.###.###">
-						<label>IP address</label>
-						<div class="invalid-feedback"></div>
-					</div>
-					<div class="form-floating">
-						<input type="text" name="netmask" class="netmask form-control w-50" placeholder="##">
-						<label>Netmask</label>
-						<div class="invalid-feedback"></div>
-					</div>
+				<div class="input-group">
+					<u-input name="ip-address" label="IP address" class="ip-address" placeholder="###.###.###.###"></u-input>
+					<u-input name="netmask" label="Netmask" class="netmask" placeholder="##"></u-input>
 				</div>
 				<div class="col-6">
-					<div class="form-floating mb-3">
-						<input type="text" name="gateway" class="gateway form-control" placeholder="###.###.###.###">
-						<label>Default gateway</label>
-						<div class="invalid-feedback"></div>
-					</div>
+					<u-input name="gateway" label="Default gateway" class="gateway" placeholder="###.###.###.###"></u-input>
 				</div>
 			</div>
 			<div class="modal-footer">

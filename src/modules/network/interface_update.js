@@ -9,56 +9,40 @@ const form = document.querySelector('#network-interface');
 
 const validateIpAddress = () => {
 	const input = form.querySelector('.ip-address');
-	const invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	const value = input.value;
-	if (validator.isEmpty(value)) {
-		input.classList.remove('is-valid');
-		input.classList.add('is-invalid');
-		invalidFeedback.innerHTML = `Can't be empty`;
+	if (validator.isEmpty(value.toString())) {
+		input.error = `Can't be empty`;
 		return;
 	}
 	if (!validator.isIP(value, { version: 4 })) {
-		input.classList.remove('is-valid');
-		input.classList.add('is-invalid');
-		invalidFeedback.innerHTML = `Invalid IP address`;
+		input.error = `Invalid IP address`;
 		return;
 	}
-	input.classList.remove('is-invalid');
-	input.classList.add('is-valid');
+	input.error = ``;
 };
 
 const validateNetmask = () => {
 	const input = form.querySelector('.netmask');
-	const invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	const value = input.value;
-	if (validator.isEmpty(value)) {
-		input.classList.remove('is-valid');
-		input.classList.add('is-invalid');
-		invalidFeedback.innerHTML = `Can't be empty`;
+	if (validator.isEmpty(value.toString())) {
+		input.error = `Can't be empty`;
 		return;
 	}
-	input.classList.remove('is-invalid');
-	input.classList.add('is-valid');
+	input.error = ``;
 };
 
 const validateGateway = () => {
 	const input = form.querySelector('.gateway');
-	const invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	const value = input.value;
-	if (validator.isEmpty(value)) {
-		input.classList.remove('is-valid');
-		input.classList.add('is-invalid');
-		invalidFeedback.innerHTML = `Can't be empty`;
+	if (validator.isEmpty(value.toString())) {
+		input.error = `Can't be empty`;
 		return;
 	}
 	if (!validator.isIP(value, { version: 4 })) {
-		input.classList.remove('is-valid');
-		input.classList.add('is-invalid');
-		invalidFeedback.innerHTML = `Invalid IP address`;
+		input.error = `Invalid IP address`;
 		return;
 	}
-	input.classList.remove('is-invalid');
-	input.classList.add('is-valid');
+	input.error = ``;
 };
 
 const validateForm = () => {

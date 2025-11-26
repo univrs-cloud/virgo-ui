@@ -7,6 +7,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const cssnano = require('cssnano');
 const { version } = require('./package.json');
 
 module.exports = (env, argv) => {
@@ -133,6 +134,7 @@ module.exports = (env, argv) => {
 				},
 				{
 					test: /\.(sa|sc|c)ss$/,
+					resourceQuery: { not: [/inline/] },
 					use: [
 						MiniCssExtractPlugin.loader,
 						{
@@ -142,6 +144,30 @@ module.exports = (env, argv) => {
 							}
 						},
 						'postcss-loader',
+						'sass-loader'
+					]
+				},
+				{
+					test: /\.(sa|sc|c)ss$/,
+					resourceQuery: /inline/,
+					use: [
+						{
+							loader: 'css-loader',
+							options: {
+								url: false,
+								exportType: 'string'
+							}
+						},
+						{
+							loader: 'postcss-loader',
+							options: {
+								postcssOptions: {
+									plugins: [
+										cssnano	
+									]
+								}
+							}
+						},
 						'sass-loader'
 					]
 				},

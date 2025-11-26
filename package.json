@@ -16,7 +16,7 @@
 		"install_dir": "/var/www"
 	},
 	"engines": {
-		"node": ">=22.20.0",
+		"node": ">=22.21.1",
 		"npm": ">=10.9.3"
 	},
 	"cpu": [
@@ -33,6 +33,7 @@
 		"bootstrap": "^5.3.8",
 		"bytes": "^3.1.2",
 		"copy-to-clipboard": "^3.3.3",
+		"lit": "^3.3.1",
 		"lodash-es": "^4.17.21",
 		"lodash-inflection": "^1.5.0",
 		"moment": "^2.30.1",
@@ -52,6 +53,7 @@
 		"copy-webpack-plugin": "^13.0.1",
 		"css-loader": "^7.1.2",
 		"css-minimizer-webpack-plugin": "^7.0.2",
+		"cssnano": "^7.1.2",
 		"dotenv": "^17.2.3",
 		"html-webpack-plugin": "^5.6.5",
 		"mini-css-extract-plugin": "^2.9.4",

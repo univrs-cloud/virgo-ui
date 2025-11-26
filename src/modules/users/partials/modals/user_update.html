@@ -5,16 +5,8 @@
 				<h5 class="modal-title">Edit user</h5>
 			</div>
 			<div class="modal-body">
-				<div class="form-floating mb-3">
-					<input type="text" name="fullname" class="fullname form-control" placeholder="">
-					<label>Name</label>
-					<div class="invalid-feedback"></div>
-				</div>
-				<div class="form-floating mb-3">
-					<input type="email" name="email" class="email form-control" placeholder="">
-					<label>Email address</label>
-					<div class="invalid-feedback"></div>
-				</div>
+				<u-input name="fullname" label="Name" class="fullname"></u-input>
+				<u-input type="email" name="email" label="Email address" class="email"></u-input>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-outline-secondary d-flex ms-auto" data-bs-dismiss="modal">Cancel</button>

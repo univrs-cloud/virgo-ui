@@ -8,30 +8,22 @@ const form = document.querySelector('#bookmark-create');
 
 const validateTitle = (event) => {
 	const input = form.querySelector('.title');
-	const invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	const value = input.value;
-	if (validator.isEmpty(value)) {
-		input.classList.remove('is-valid');
-		input.classList.add('is-invalid');
-		invalidFeedback.innerHTML = `Can't be empty`;
+	if (validator.isEmpty(value.toString())) {
+		input.error = `Can't be empty`;
 		return;
 	}
-	input.classList.remove('is-invalid');
-	input.classList.add('is-valid');
+	input.error = ``;
 };
 
 const validateUrl = (event) => {
 	const input = form.querySelector('.url');
-	const invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	const value = input.value;
-	if (validator.isEmpty(value)) {
-		input.classList.remove('is-valid');
-		input.classList.add('is-invalid');
-		invalidFeedback.innerHTML = `Can't be empty`;
+	if (validator.isEmpty(value.toString())) {
+		input.error = `Can't be empty`;
 		return;
 	}
-	input.classList.remove('is-invalid');
-	input.classList.add('is-valid');
+	input.error = ``;
 };
 
 const validateForm = () => {

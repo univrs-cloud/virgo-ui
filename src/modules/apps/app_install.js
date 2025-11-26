@@ -20,16 +20,12 @@ const form = document.querySelector('#app-install');
 let app;
 
 const validateInput = (input) => {
-	const invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	const value = input.value;
-	if (validator.isEmpty(value)) {
-		input.classList.remove('is-valid');
-		input.classList.add('is-invalid');
-		invalidFeedback.innerHTML = `Can't be empty`;
+	if (validator.isEmpty(value.toString())) {
+		input.error = `Can't be empty`;
 		return;
 	}
-	input.classList.remove('is-invalid');
-	input.classList.add('is-valid');
+	input.error = ``;
 };
 
 const validateForm = () => {
@@ -58,7 +54,7 @@ const install = (event) => {
 		env: {}
 	};
 	_.each(app.env, (env) => {
-		const input = form.querySelector(`input[name="${env.name}"]:checked`) || form.querySelector(`input[name="${env.name}"]`);
+		const input = form.querySelector(`input[name="${env.name}"]:checked`) || form.querySelector(`u-input[name="${env.name}"]`) || form.querySelector(`select[name="${env.name}"]`) || form.querySelector(`u-select[name="${env.name}"]`) || form.querySelector(`textarea[name="${env.name}"]`) || form.querySelector(`u-textarea[name="${env.name}"]`);
 		config.env[env.name] = input.value;
 	});
 	
@@ -72,7 +68,7 @@ const render = (event) => {
 	form.querySelector('.modal-title').innerHTML = app.title;
 	form.querySelector('.description').innerHTML = app.description;
 	form.querySelector('.note').innerHTML = app.note || '';
-	form.querySelector('.note').classList[app.note ? 'remove' : 'add']('d-none');
+	form.querySelector('.note')?.classList[app.note ? 'remove' : 'add']('d-none');
 	const fqdn = appCenterService.getFQDN();
 	_.each(app.env, (env) => {
 		if (env?.type === 'hidden') {

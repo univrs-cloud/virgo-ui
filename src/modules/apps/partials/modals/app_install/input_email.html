@@ -1,10 +1,1 @@
-<div class="form-floating mb-3">
-	<input type="email" name="<%=env.name%>" value="<%=env.default%>" class="form-control" placeholder="">
-	<label>
-		<%=env.label%>
-		<%if (env.description) {%>
-			<span class="help-inline ms-1" data-bs-toggle="tooltip" data-bs-original-title="<%=env.description%>"><i class="icon-solid icon-question-circle"></i></span>
-		<%}%>
-	</label>
-	<div class="invalid-feedback"></div>
-</div>
+<u-input type="email" name="<%=env.name%>" value="<%=env?.default || ''%>" label="<%=env.label%>" tip="<%=env.description%>"></u-input>

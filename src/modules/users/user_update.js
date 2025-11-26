@@ -9,36 +9,26 @@ let user;
 
 const validateFullname = (event) => {
 	const input = form.querySelector('.fullname');
-	const invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	const value = input.value;
-	if (validator.isEmpty(value)) {
-		input.classList.remove('is-valid');
-		input.classList.add('is-invalid');
-		invalidFeedback.innerHTML = `Can't be empty`;
+	if (validator.isEmpty(value.toString())) {
+		input.error = `Can't be empty`;
 		return;
 	}
-	input.classList.remove('is-invalid');
-	input.classList.add('is-valid');
+	input.error = ``;
 };
 
 const validateEmailAddress = (event) => {
 	const input = form.querySelector('.email');
-	const invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 	const value = input.value;
-	if (validator.isEmpty(value)) {
-		input.classList.remove('is-valid');
-		input.classList.add('is-invalid');
-		invalidFeedback.innerHTML = `Can't be empty`;
+	if (validator.isEmpty(value.toString())) {
+		input.error = `Can't be empty`;
 		return;
 	}
 	if (!validator.isEmail(value)) {
-		input.classList.remove('is-valid');
-		input.classList.add('is-invalid');
-		invalidFeedback.innerHTML = `Invalid email address`;
+		input.error = `Invalid email address`;
 		return;
 	}
-	input.classList.remove('is-invalid');
-	input.classList.add('is-valid');
+	input.error = ``;
 };
 
 const validateForm = () => {

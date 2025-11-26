@@ -18,22 +18,16 @@ const validateLatitude = (event) => {
 
 	function checkValidity() {
 		const input = form.querySelector('.latitude');
-		const invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 		const value = input.value;
-		if (validator.isEmpty(value)) {
-			input.classList.remove('is-valid');
-			input.classList.add('is-invalid');
-			invalidFeedback.innerHTML = `Can't be empty`;
+		if (validator.isEmpty(value.toString())) {
+			input.error = `Can't be empty`;
 			return;
 		}
 		if (!validator.isLatLong(`${value},0.0`)) {
-			input.classList.remove('is-valid');
-			input.classList.add('is-invalid');
-			invalidFeedback.innerHTML = `Invalid latitude`;
+			input.error = `Invalid latitude`;
 			return;
 		}
-		input.classList.remove('is-invalid');
-		input.classList.add('is-valid');
+		input.error = ``;
 	}
 };
 
@@ -48,22 +42,16 @@ const validateLongitude = (event) => {
 
 	function checkValidity() {
 		const input = form.querySelector('.longitude');
-		const invalidFeedback = input.closest('.form-floating').querySelector('.invalid-feedback');
 		const value = input.value;
-		if (validator.isEmpty(value)) {
-			input.classList.remove('is-valid');
-			input.classList.add('is-invalid');
-			invalidFeedback.innerHTML = `Can't be empty`;
+		if (validator.isEmpty(value.toString())) {
+			input.error = `Can't be empty`;
 			return;
 		}
 		if (!validator.isLatLong(`0.0,${value}`)) {
-			input.classList.remove('is-valid');
-			input.classList.add('is-invalid');
-			invalidFeedback.innerHTML = `Invalid longitude`;
+			input.error = `Invalid longitude`;
 			return;
 		}
-		input.classList.remove('is-invalid');
-		input.classList.add('is-valid');
+		input.error = ``;
 	}
 };
 
