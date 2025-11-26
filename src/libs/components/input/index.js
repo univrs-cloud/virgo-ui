@@ -44,6 +44,13 @@ export class Input extends LitElement {
 		return this._error;
 	}
 
+	formResetCallback() {
+		this.value = this.getAttribute('value') ?? '';
+		this.error = '';
+		this.showPassword = false;
+		this.internals.setFormValue(this.value);
+	}
+
 	createRenderRoot() {
 		const root = super.createRenderRoot();
 		root.adoptedStyleSheets = [sheet];
