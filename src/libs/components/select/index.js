@@ -16,32 +16,44 @@ export class Select extends LitElement {
 		};
 	}
 
+	#value = '';
+	#error = '';
+
 	constructor() {
 		super();
 		this.internals = this.attachInternals();
 
-		this.value = '';
 		this.label = '';
 		this.disabled = false;
 		this.tip = '';
 		this.options = [];
-		this._error = '';
 	}
 
+	set value(value) {
+        const oldValue = this.#value;
+        this.#value = value;
+        this.requestUpdate('value', oldValue);
+        this.internals.setFormValue(value);
+        this.dispatchEvent(new CustomEvent('value-changed', { detail: value, bubbles: true, composed: true }));
+    }
+
+    get value() {
+        return this.#value;
+    }
+
 	set error(value) {
-		this._error = value;
+		this.#error = value;
 		this.classList.toggle('is-invalid', Boolean(value));
 	}
 	
 	get error() {
-		return this._error;
+		return this.#error;
 	}
 
 	formResetCallback() {
 		this.value = this.getAttribute('value') ?? '';
 		this.error = '';
 		this.showPassword = false;
-		this.internals.setFormValue(this.value);
 	}
 
 	createRenderRoot() {
@@ -56,11 +68,7 @@ export class Select extends LitElement {
 			new bootstrap.Tooltip(label);
 		}
 
-		this._updateOptionsFromLightDOM();
-	}
-
-	updated(changedProps) {
-		this.internals.setFormValue(this.value);
+		this.#updateOptionsFromLightDOM();
 	}
 
 	renderOptGroup(group) {
@@ -93,7 +101,7 @@ export class Select extends LitElement {
 					.value=${this.value}
 					.disabled=${this.disabled}
 					class="form-select ${this.error ? 'is-invalid' : ''}"
-					@change=${this._onChange}
+					@change=${this.#onChange}
 				>
 					${this.options.map((option) => { return option.options ? this.renderOptGroup(option) : this.renderOption(option); })}
 				</select>
@@ -106,13 +114,11 @@ export class Select extends LitElement {
 		`;
 	}
 
-	_onChange(event) {
+	#onChange(event) {
 		this.value = event.target.value;
-		this.internals.setFormValue(this.value);
-		this.dispatchEvent(new CustomEvent('value-changed', { detail: this.value }));
 	}
 
-	_updateOptionsFromLightDOM() {
+	#updateOptionsFromLightDOM() {
 		const lightOptions = Array.from(this.children);
 		this.options = lightOptions.map((element) => {
 			if (element.tagName.toLowerCase() === 'optgroup') {
@@ -141,7 +147,6 @@ export class Select extends LitElement {
 			const defaultOption = this.options.find(o => !o.options && o.default) || (this.options.find(o => o.options)?.options.find(opt => opt.default));
 			if (defaultOption) {
 				this.value = defaultOption.value;
-				this.internals.setFormValue(this.value);
 			}
 		}
 	}

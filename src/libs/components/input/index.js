@@ -19,36 +19,48 @@ export class Input extends LitElement {
 		};
 	}
 
+	#value = '';
+	#error = '';
+
 	constructor() {
 		super();
 		this.internals = this.attachInternals();
 
 		this.showPassword = false;
 		this.type = 'text';
-		this.value = '';
 		this.label = '';
 		this.placeholder = '';
 		this.tip = '';
 		this.disabled = false;
 		this.readonly = false;
 		this.autocomplete = '';
-		this._error = '';
 	}
 
+	set value(value) {
+        const oldValue = this.#value;
+        this.#value = value;
+        this.requestUpdate('value', oldValue);
+        this.internals.setFormValue(value);
+        this.dispatchEvent(new CustomEvent('value-changed', { detail: value, bubbles: true, composed: true }));
+    }
+
+    get value() {
+        return this.#value;
+    }
+
 	set error(value) {
-		this._error = value;
+		this.#error = value;
 		this.classList.toggle('is-invalid', Boolean(value));
 	}
 	
 	get error() {
-		return this._error;
+		return this.#error;
 	}
 
 	formResetCallback() {
 		this.value = this.getAttribute('value') ?? '';
 		this.error = '';
 		this.showPassword = false;
-		this.internals.setFormValue(this.value);
 	}
 
 	createRenderRoot() {
@@ -62,11 +74,6 @@ export class Input extends LitElement {
 		if (label) {
 			new bootstrap.Tooltip(label);
 		}
-		this.internals.setFormValue(this.value);
-	}
-
-	updated(changedProps) {
-		this.internals.setFormValue(this.value);
 	}
 
 	render() {
@@ -92,25 +99,23 @@ export class Input extends LitElement {
 					?readonly=${this.readonly}
 					.autocomplete=${this.autocomplete}
 					class="form-control ${this.type === 'password' ? 'password-input' : ''} ${this.error ? 'is-invalid' : ''}"
-					@input=${this._onInput}
+					@input=${this.#onInput}
 				>
 				<label>
 					${this.label}
 					${this.tip ? html`<span class="help-inline ms-1" data-bs-toggle="tooltip" data-bs-original-title=${this.tip}><i class="icon-solid icon-question-circle"></i></span>` : ''}
 				</label>
 				<div class="invalid-feedback">${this.error || ''}</div>
-				${this.type === 'password' ? html`<button type="button" class="password-toggle" @click=${this._togglePassword}></button>` : ''}
+				${this.type === 'password' ? html`<button type="button" class="password-toggle" @click=${this.#togglePassword}></button>` : ''}
 			</div>
 		`;
 	}
 
-	_onInput(event) {
+	#onInput(event) {
 		this.value = event.target.value || '';
-		this.internals.setFormValue(this.value);
-		this.dispatchEvent(new CustomEvent('value-changed', { detail: this.value }));
 	}
 
-	_togglePassword(event) {
+	#togglePassword(event) {
 		event.preventDefault();
 		this.showPassword = !this.showPassword;
 		this.renderRoot.querySelector('input').focus();
