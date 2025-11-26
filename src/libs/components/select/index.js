@@ -25,7 +25,6 @@ export class Select extends LitElement {
 		this.tip = '';
 		this.error = '';
 		this.options = [];
-		this._mutationObserver = null;
 	}
 
 	createRenderRoot() {
@@ -34,26 +33,13 @@ export class Select extends LitElement {
 		return root;
 	}
 
-	disconnectedCallback() {
-		if (this._mutationObserver) {
-			this._mutationObserver.disconnect();
-		}
-		super.disconnectedCallback();
-	}
-
 	firstUpdated() {
 		const label = this.renderRoot.querySelector('label');
 		if (label) {
 			new bootstrap.Tooltip(label);
 		}
 
-		this._mutationObserver = new MutationObserver(() => {
-			this._updateOptionsFromLightDOM();
-		});
-		this._mutationObserver.observe(this, { childList: true, subtree: true, characterData: true });
-
 		this._updateOptionsFromLightDOM();
-		this.internals.setFormValue(this.value);
 	}
 
 	updated(changedProps) {
@@ -147,15 +133,15 @@ export class Select extends LitElement {
 				};
 			}
 		});
+		this.textContent = '';
 
 		if (!this.value) {
 			const defaultOption = this.options.find(o => !o.options && o.default) || (this.options.find(o => o.options)?.options.find(opt => opt.default));
 			if (defaultOption) {
 				this.value = defaultOption.value;
+				this.internals.setFormValue(this.value);
 			}
 		}
-
-		this.requestUpdate();
 	}
 }
 

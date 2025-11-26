@@ -77,7 +77,7 @@ const render = (event) => {
 	form.querySelector('.username').value = configuration?.smtp?.username || '';
 	form.querySelector('.password').value = configuration?.smtp?.password || '';
 	form.querySelector('.sender').value = configuration?.smtp?.sender || '';
-	form.querySelector('.recipients').innerHTML = configuration?.smtp?.recipients?.join('\n') || '';
+	form.querySelector('.recipients').value = configuration?.smtp?.recipients?.join('\n') || '';
 };
 
 form.querySelector('.address').addEventListener('input', validateAddress);
