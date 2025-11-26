@@ -31,7 +31,16 @@ export class Input extends LitElement {
 		this.disabled = false;
 		this.readonly = false;
 		this.autocomplete = '';
-		this.error = '';
+		this._error = '';
+	}
+
+	set error(value) {
+		this._error = value;
+		this.classList.toggle('is-invalid', Boolean(value));
+	}
+	
+	get error() {
+		return this._error;
 	}
 
 	createRenderRoot() {
@@ -49,30 +58,7 @@ export class Input extends LitElement {
 	}
 
 	updated(changedProps) {
-		const root = this.renderRoot;
-		const input = root.querySelector('input');
-		const feedback = root.querySelector('.invalid-feedback');
-		if (this.type === 'password') {
-			input.type = this.showPassword ? 'text' : 'password';
-		} else {
-			input.type = this.type;
-		}
-		input.value = this.value;
-		input.placeholder = this.placeholder;
-		input.autocomplete = this.autocomplete;
-		input.readOnly = this.readonly;
-		input.disabled = this.disabled;
 		this.internals.setFormValue(this.value);
-
-		if (feedback) {
-			if (this.error) {
-				input.classList.add('is-invalid');
-				feedback.textContent = this.error;
-			} else {
-				input.classList.remove('is-invalid');
-				feedback.textContent = '';
-			}
-		}
 	}
 
 	render() {
@@ -86,23 +72,25 @@ export class Input extends LitElement {
 			`;
 		}
 
+		const inputType = this.type === 'password' ? (this.showPassword ? 'text' : 'password') : this.type;
+
 		return html`
 			<div class="form-floating mb-3">
 				<input
-					.type=${this.type}
+					.type=${inputType}
 					.value=${this.value}
 					.placeholder=${this.placeholder}
-					.disabled=${this.disabled}
-					.readonly=${this.readonly}
+					?disabled=${this.disabled}
+					?readonly=${this.readonly}
 					.autocomplete=${this.autocomplete}
-					class="form-control ${this.type === 'password' ? 'password-input' : ''}"
+					class="form-control ${this.type === 'password' ? 'password-input' : ''} ${this.error ? 'is-invalid' : ''}"
 					@input=${this._onInput}
 				>
 				<label>
 					${this.label}
 					${this.tip ? html`<span class="help-inline ms-1" data-bs-toggle="tooltip" data-bs-original-title=${this.tip}><i class="icon-solid icon-question-circle"></i></span>` : ''}
 				</label>
-				<div class="invalid-feedback"></div>
+				<div class="invalid-feedback">${this.error || ''}</div>
 				${this.type === 'password' ? html`<button type="button" class="password-toggle" @click=${this._togglePassword}></button>` : ''}
 			</div>
 		`;

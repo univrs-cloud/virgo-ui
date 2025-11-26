@@ -12,7 +12,8 @@ export class Textarea extends LitElement {
 			tip: { type: String, reflect: true },
 			disabled: { type: Boolean, reflect: true },
 			readonly: { type: Boolean, reflect: true },
-			error: { type: String }
+			error: { type: String },
+			isInvalid: { type: Boolean, reflect: true }
 		};
 	}
 
@@ -26,7 +27,16 @@ export class Textarea extends LitElement {
 		this.tip = '';
 		this.disabled = false;
 		this.readonly = false;
-		this.error = '';
+		this._error = '';
+	}
+
+	set error(value) {
+		this._error = value;
+		this.classList.toggle('is-invalid', Boolean(value));
+	}
+	
+	get error() {
+		return this._error;
 	}
 
 	createRenderRoot() {
@@ -45,23 +55,7 @@ export class Textarea extends LitElement {
 	}
 
 	updated(changedProps) {
-		const root = this.renderRoot;
-		const textarea = root.querySelector('textarea');
-		const feedback = root.querySelector('.invalid-feedback');
-		textarea.value = this.value;
-		textarea.placeholder = this.placeholder;
-		textarea.disabled = this.disabled;
-		textarea.readOnly = this.readonly;
-
-		if (feedback) {
-			if (this.error) {
-				textarea.classList.add('is-invalid');
-				feedback.textContent = this.error;
-			} else {
-				textarea.classList.remove('is-invalid');
-				feedback.textContent = '';
-			}
-		}
+		this.internals.setFormValue(this.value);
 	}
 
 	render() {
@@ -72,14 +66,14 @@ export class Textarea extends LitElement {
 					.placeholder=${this.placeholder}
 					.disabled=${this.disabled}
 					.readonly=${this.readonly}
-					class="form-control"
+					class="form-control ${this.error ? 'is-invalid' : ''}"
 					@input=${this._onInput}
 				></textarea>
 				<label>
 					${this.label}
 					${this.tip ? html`<span class="help-inline ms-1" data-bs-toggle="tooltip" data-bs-original-title=${this.tip}><i class="icon-solid icon-question-circle"></i></span>` : ''}
 				</label>
-				<div class="invalid-feedback"></div>
+				<div class="invalid-feedback">${this.error || ''}</div>
 			</div>
 		`;
 	}

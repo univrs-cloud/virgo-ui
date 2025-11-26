@@ -29,7 +29,7 @@ const validateInput = (input) => {
 };
 
 const validateForm = () => {
-	_.each(form.querySelectorAll('input:not([type="radio"]):not([type="checkbox"]), textarea'), (input) => {
+	_.each(form.querySelectorAll('u-input, u-select, u-textarea'), (input) => {
 		validateInput(input);
 	});
 };
