@@ -94,7 +94,7 @@ export class Input extends LitElement {
 					.disabled=${this.disabled}
 					.readonly=${this.readonly}
 					.autocomplete=${this.autocomplete}
-					class="form-control ${this.type === 'passwprd' ? 'password-input' : ''}"
+					class="form-control ${this.type === 'password' ? 'password-input' : ''}"
 					@input=${this._onInput}
 				/>
 				<label>
