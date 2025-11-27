@@ -5,77 +5,22 @@ import { Netmask } from 'netmask';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', interfaceModalPartial);
 
-const form = document.querySelector('#network-interface');
-
-const validateIpAddress = () => {
-	const input = form.querySelector('.ip-address');
-	const value = input.value;
-	if (validator.isEmpty(value.toString())) {
-		input.error = `Can't be empty`;
-		return;
-	}
-	if (!validator.isIP(value, { version: 4 })) {
-		input.error = `Invalid IP address`;
-		return;
-	}
-	input.error = ``;
-};
-
-const validateNetmask = () => {
-	const input = form.querySelector('.netmask');
-	const value = input.value;
-	if (validator.isEmpty(value.toString())) {
-		input.error = `Can't be empty`;
-		return;
-	}
-	input.error = ``;
-};
-
-const validateGateway = () => {
-	const input = form.querySelector('.gateway');
-	const value = input.value;
-	if (validator.isEmpty(value.toString())) {
-		input.error = `Can't be empty`;
-		return;
-	}
-	if (!validator.isIP(value, { version: 4 })) {
-		input.error = `Invalid IP address`;
-		return;
-	}
-	input.error = ``;
-};
-
-const validateForm = () => {
-	validateIpAddress();
-	validateNetmask();
-	validateGateway();
-};
-
-const isFormValid = () => {
-	validateForm();
-	return _.isEmpty(form.querySelectorAll('.is-invalid'));
-};
+const modal = document.querySelector('#network-interface');
+const form = modal.closest('u-form');
 
 const updateInterface = (event) => {
-	event.preventDefault();
-	if (!isFormValid()) {
-		return;
-	}
-
 	const form = event.target;
 	const buttons = form.querySelectorAll('button');
 	_.each(buttons, (button) => { button.disabled = true; });
 
+	let config = form.getData();
 	const isDhcp = form.querySelector('.dhcp').checked;
-	let config = {
-		name: form.querySelector('input.name').value,
-		method: (!isDhcp ? 'manual' : 'auto'),
-		ipAddress: (!isDhcp ? form.querySelector('.ip-address').value : null),
-		netmask: (!isDhcp ? form.querySelector('.netmask').value : null),
-		gateway: (!isDhcp ? form.querySelector('.gateway').value : null)
-	};
+	config.method = (!isDhcp ? 'manual' : 'auto');
+	config.ipAddress = (!isDhcp ? config.ipAddress : null);
+	config.netmask = (!isDhcp ? config.netmask : null);
+	config.gateway = (!isDhcp ? config.gateway : null);
 	networkService.updateInterface(config);
-	bootstrap.Modal.getInstance(form.closest('.modal'))?.hide();
+	bootstrap.Modal.getInstance(modal)?.hide();
 };
 
 const toggleDhcp = (event) => {
@@ -95,8 +40,8 @@ const getBlock = (networkInterface) => {
 const render = (event) => {
 	const system = networkService.getSystem();
 	const block = getBlock(system.networkInterface);
-	form.querySelector('.alert .name').innerHTML = system?.networkInterface?.ifaceName;
-	form.querySelector('input.name').value = system?.networkInterface?.ifaceName;
+	modal.querySelector('.alert .interface-name').innerHTML = system?.networkInterface?.ifaceName;
+	form.querySelector('.name').value = system?.networkInterface?.ifaceName;
 	form.querySelector('.dhcp').checked = system?.networkInterface?.dhcp;
 	form.querySelector('.ip-address').value = system?.networkInterface?.ip4;
 	form.querySelector('.netmask').value = block?.bitmask ?? 'error';
@@ -106,17 +51,32 @@ const render = (event) => {
 const restore = (event) => {
 	form.reset();
 	_.each(form.querySelectorAll('button'), (button) => { button.disabled = false });
-	_.each(form.querySelectorAll('.form-floating'), (field) => {
-		field.querySelector('input')?.classList?.remove('is-invalid', 'is-valid');
-		field.querySelector('.invalid-feedback').innerHTML = '';
-	});
 	form.querySelector('.dhcp').dispatchEvent(new Event('change'));
 };
 
-form.querySelector('.dhcp').addEventListener('change', toggleDhcp);
-form.querySelector('.ip-address').addEventListener('input', validateIpAddress);
-form.querySelector('.netmask').addEventListener('input', validateNetmask);
-form.querySelector('.gateway').addEventListener('input', validateGateway);
-form.addEventListener('submit', updateInterface);
+form.validation = [
+	{
+		selector: '.ip-address',
+		rules: {
+			isEmpty: `Can't be empty`,
+			isIP: `Invalid IP address`
+		}
+	},
+	{
+		selector: '.netmask',
+		rules: {
+			isEmpty: `Can't be empty`
+		}
+	},
+	{
+		selector: '.gateway',
+		rules: {
+			isEmpty: `Can't be empty`,
+			isIP: `Invalid IP address`
+		}
+	}
+];
+form.addEventListener('valid', updateInterface);
 form.addEventListener('show.bs.modal', render);
 form.addEventListener('hidden.bs.modal', restore);
+form.querySelector('.dhcp').addEventListener('change', toggleDhcp);

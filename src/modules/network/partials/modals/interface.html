@@ -1,39 +1,49 @@
-<form id="network-interface" class="modal fade" tabindex="-1" novalidate>
-	<u-input type="hidden" name="name" class="name"></u-input>
-	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title">Network interface</h5>
-			</div>
-			<div class="modal-body">
-				<div class="alert alert-light">
-					<dl class="m-0">
-						<dt class="fw-light text-body-tertiary"><small>Name</small></dt>
-						<dd class="name m-0"></dd>
-					</dl>
+<u-form>
+	<div id="network-interface" class="modal fade">
+		<u-input type="hidden" name="name" class="name"></u-input>
+		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Network interface</h5>
 				</div>
-				<small class="fw-light text-body-tertiary">Configuration method</small>
-				<div class="d-flex align-items-center mb-3">
-					<div class="form-check form-switch form-check-inline ps-0 mb-0 me-2">
-						<label class="form-check-label">Manual</label>
+				<div class="modal-body">
+					<div class="alert alert-light">
+						<dl class="m-0">
+							<dt class="fw-light text-body-tertiary"><small>Name</small></dt>
+							<dd class="interface-name m-0"></dd>
+						</dl>
 					</div>
-					<div class="form-check form-switch form-check-inline mb-0">
-						<input type="checkbox" name="dhcp" class="dhcp form-check-input" role="switch">
-						<label class="form-check-label">Automatic</label>
+					<small class="fw-light text-body-tertiary">Configuration method</small>
+					<div class="d-flex align-items-center mb-3">
+						<div class="form-check form-switch form-check-inline ps-0 mb-0 me-2">
+							<label class="form-check-label">Manual</label>
+						</div>
+						<div class="form-check form-switch form-check-inline mb-0">
+							<input type="checkbox" class="dhcp form-check-input" role="switch">
+							<label class="form-check-label">Automatic</label>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<div class="row">
+								<div class="col-6">
+									<u-input name="ipAddress" label="IP address" class="ip-address" placeholder="###.###.###.###"></u-input>
+								</div>
+								<div class="col-3">
+									<u-input name="netmask" label="Netmask" class="netmask" placeholder="##"></u-input>
+								</div>
+							</div>
+						</div>
+						<div class="col-6">
+							<u-input name="gateway" label="Default gateway" class="gateway" placeholder="###.###.###.###"></u-input>
+						</div>
 					</div>
 				</div>
-				<div class="input-group">
-					<u-input name="ipAddress" label="IP address" class="ip-address" placeholder="###.###.###.###"></u-input>
-					<u-input name="netmask" label="Netmask" class="netmask" placeholder="##"></u-input>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-outline-secondary d-flex ms-auto" data-bs-dismiss="modal">Cancel</button>
+					<button type="submit" class="btn btn-primary">Update</button>
 				</div>
-				<div class="col-6">
-					<u-input name="gateway" label="Default gateway" class="gateway" placeholder="###.###.###.###"></u-input>
-				</div>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-outline-secondary d-flex ms-auto" data-bs-dismiss="modal">Cancel</button>
-				<button type="submit" class="btn btn-primary">Update</button>
 			</div>
 		</div>
 	</div>
-</form>
+</u-form>
