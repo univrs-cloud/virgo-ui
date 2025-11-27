@@ -40,39 +40,23 @@ export class Form extends LitElement {
 	connectedCallback() {
 		super.connectedCallback();
 		
-		const form = document.createElement('form');
-		form.noValidate = true;
+		this.#form = document.createElement('form');
+		this.#form.noValidate = true;
 		while (this.firstChild) {
-			form.appendChild(this.firstChild);
+			this.#form.appendChild(this.firstChild);
 		}
-		this.appendChild(form);
-		this.#form = form;
-		form.addEventListener('submit', (event) => {
-			event.preventDefault();
-			if (this.#isFormValid()) {
-				this.dispatchEvent(new CustomEvent('valid', { detail: event, bubbles: true, composed: true }));
-			} else {
-				form.querySelector('.is-invalid').focus();
+		this.appendChild(this.#form);
+		this.#form.addEventListener('submit', this.#onSubmit.bind(this));
+		this.#form.addEventListener('reset', this.#onReset.bind(this));
+
+		this.#observer = new MutationObserver((mutationsList) => {
+			for (const mutation of mutationsList) {
+				if (mutation.type === 'childList') {
+					this.#setupLiveValidation();
+				}
 			}
 		});
-		form.addEventListener('reset', () => {
-			this.#enableButtons();
-			this.#clearValidationErrors();
-        });
-		
-		// Watch for new children added to u-form and move them into the form
-		this.#observer = new MutationObserver((mutations) => {
-			mutations.forEach((mutation) => {
-				mutation.addedNodes.forEach((node) => {
-					// Don't move the form itself
-					if (node !== this.#form && node.nodeType === Node.ELEMENT_NODE) {
-						this.#form.appendChild(node);
-					}
-				});
-			});
-		});
-		
-		this.#observer.observe(this, { childList: true });
+		this.#observer.observe(this.#form, { childList: true, subtree: true });
 	}
 
 	disconnectedCallback() {
@@ -82,7 +66,7 @@ export class Form extends LitElement {
 	}
 
 	render() {
-		return html`<slot></slot>`;
+		return html``;
 	}
 
 	submit() {
@@ -110,6 +94,15 @@ export class Form extends LitElement {
 		}
 		
 		return data;
+	}
+
+	#onSubmit(event) {
+		event.preventDefault();
+		if (this.#isFormValid()) {
+			this.dispatchEvent(new CustomEvent('valid', { detail: event, bubbles: true, composed: true }));
+		} else {
+			this.#form.querySelector('.is-invalid').focus();
+		}
 	}
 
 	#isFormValid() {
@@ -259,6 +252,11 @@ export class Form extends LitElement {
 				});
 			});
 		});
+	}
+
+	#onReset() {
+		this.#enableButtons();
+		this.#clearValidationErrors();
 	}
 
 	#enableButtons() {
