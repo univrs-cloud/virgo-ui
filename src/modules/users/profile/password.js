@@ -1,79 +1,56 @@
 import passwordModalPartial from 'modules/users/profile/partials/modals/password.html';
 import * as userService from 'modules/users/services/user';
-import validator from 'validator';
+import { isEmpty } from 'validator';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', passwordModalPartial);
 
-const form = document.querySelector('#profile-password');
-
-const validatePassword = (event) => {
-	const input = form.querySelector('.password');
-	const value = input.value;
-	if (validator.isEmpty(value.toString())) {
-		input.error = `Can't be empty`;
-		return;
-	}
-	input.error = ``;
-};
-
-const validatePasswordCheck = (event) => {
-	const input = form.querySelector('.password-check');
-	const value = input.value;
-	if (validator.isEmpty(value.toString())) {
-		input.error = `Can't be empty`;
-		return;
-	}
-	if (!validator.equals(value, form.querySelector('.password').value)) {
-		input.error = `Passwords do not match`;
-		return;
-	}
-	input.error = ``;
-};
-
-const validateForm = () => {
-	validatePassword();
-	validatePasswordCheck();
-};
-
-const isFormValid = () => {
-	validateForm();
-	return _.isEmpty(form.querySelectorAll('.is-invalid'));
-};
+const modal = document.querySelector('#profile-password');
+const form = modal.closest('u-form');
 
 const changePassword = (event) => {
-	event.preventDefault();
-	if (!isFormValid()) {
-		return;
-	}
-
 	const form = event.target;
 	const buttons = form.querySelectorAll('button');
 	_.each(buttons, (button) => { button.disabled = true; });
-	
-	let config = {
-		username: account.user,
-		password: form.querySelector('.password').value
-	};
-
+	let config = form.getData();
+	config.username = account.user;
 	userService.changePassword(config);
-	bootstrap.Modal.getInstance(form.closest('.modal'))?.hide();
+	bootstrap.Modal.getInstance(modal)?.hide();
 };
 
 const restore = (event) => {
 	form.reset();
 	_.each(form.querySelectorAll('button'), (button) => { button.disabled = false });
-	_.each(form.querySelectorAll('.form-floating'), (field) => {
-		field.querySelector('input')?.classList?.remove('is-invalid', 'is-valid');
-		field.querySelector('.invalid-feedback').innerHTML = '';
-	});
 };
 
 const render = (event) => {
 	form.querySelector('.title-username').innerHTML = account.user;
 };
 
-form.querySelector('.password').addEventListener('input', validatePassword);
-form.querySelector('.password-check').addEventListener('input', validatePasswordCheck);
-form.addEventListener('submit', changePassword);
+form.validation = [
+	{
+		selector: '.password',
+		rules: {
+			isEmpty: `Can't be empty`
+		}
+	},
+	{
+		selector: '.password-check',
+		rules: {
+			isEmpty: `Can't be empty`,
+			equals: `Passwords do not match`
+		}
+	}
+];
+form.addEventListener('valid', changePassword);
 form.addEventListener('show.bs.modal', render);
 form.addEventListener('hidden.bs.modal', restore);
+
+// const validatePasswordCheck = (event) => {
+// 	const input = form.querySelector('.password-check');
+// 	const value = input.value;
+// 	if (!validator.equals(value, form.querySelector('.password').value)) {
+// 		input.error = `Passwords do not match`;
+// 		return;
+// 	}
+// 	input.error = ``;
+// };
