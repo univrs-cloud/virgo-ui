@@ -114,12 +114,12 @@ export class Input extends LitElement {
 					<div class="form-floating">
 						<input
 							type=${inputType}
+							class="form-control ${this.type === 'password' ? 'password-input' : ''} ${this.error ? 'is-invalid' : ''}"
+							placeholder=${this.placeholder}
+							autocomplete=${this.autocomplete}
 							.value=${this.value}
-							.placeholder=${this.placeholder}
 							?disabled=${this.disabled}
 							?readonly=${this.readonly}
-							?autocomplete=${this.autocomplete}
-							class="form-control ${this.type === 'password' ? 'password-input' : ''} ${this.error ? 'is-invalid' : ''}"
 							@input=${this.#onInput}
 						>
 						<label>

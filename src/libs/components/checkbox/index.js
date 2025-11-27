@@ -72,7 +72,7 @@ export class Checkbox extends LitElement {
 					<input
 						type="checkbox"
 						class="form-check-input"
-						?checked=${this.checked}
+						.checked=${this.checked}
 						?disabled=${this.disabled}
 						@change=${this.#onChange}
 					>

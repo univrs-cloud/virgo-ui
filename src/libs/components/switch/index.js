@@ -60,7 +60,8 @@ export class Switch extends LitElement {
 						type="checkbox"
 						class="form-check-input"
 						role="switch"
-						?checked=${this.checked}
+						aria-checked=${this.checked}
+						.checked=${this.checked}
 						?disabled=${this.disabled}
 						@change=${this.#onChange}
 					>
@@ -74,7 +75,7 @@ export class Switch extends LitElement {
 		this.checked = event.target.checked;
 		this.value = this.checked ? this.onValue : this.offValue;
 		this.internals.setFormValue(this.value);
-		this.dispatchEvent(new CustomEvent('checked-changed', { detail: event, bubbles: true, composed: true }));
+		this.dispatchEvent(new CustomEvent('switch-changed', { detail: event, bubbles: true, composed: true }));
 	}
 }
 
