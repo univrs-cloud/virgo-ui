@@ -181,7 +181,7 @@ export class Form extends LitElement {
 
 		const errorMessage = typeof ruleConfig === 'string' ? ruleConfig : ruleConfig?.message;
 		
-		let options = {};
+		let options;
 		if (typeof ruleConfig === 'object' && ruleConfig !== null) {
 			options = { ...ruleConfig };
 			delete options.message;
@@ -193,8 +193,18 @@ export class Form extends LitElement {
 		
 		if (typeof this.validator[validatorFnName] === 'function') {
 			try {
+				let isValid;
 				// Call the validator function with value and options
-				const isValid = this.validator[validatorFnName](value.toString(), options);
+				if (!options || Object.keys(options).length === 0) {
+					isValid = this.validator[validatorFnName](value.toString());
+				} else {
+					const optionKeys = Object.keys(options);
+					if (optionKeys.length === 1 && typeof options[optionKeys[0]] === 'function') {
+						isValid = this.validator[validatorFnName](value.toString(), options[optionKeys[0]]());
+					} else {
+						isValid = this.validator[validatorFnName](value.toString(), options);
+					}
+				}
 				if (!isValid) {
 					return errorMessage;
 				}
