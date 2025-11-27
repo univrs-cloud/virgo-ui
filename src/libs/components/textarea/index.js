@@ -32,20 +32,22 @@ export class Textarea extends LitElement {
 	}
 
 	set value(value) {
-        const oldValue = this.#value;
-        this.#value = value;
-        this.requestUpdate('value', oldValue);
-        this.internals.setFormValue(value);
-        this.dispatchEvent(new CustomEvent('value-changed', { detail: value, bubbles: true, composed: true }));
-    }
+		const oldValue = this.#value;
+		this.#value = value;
+		this.requestUpdate('value', oldValue);
+		this.internals.setFormValue(value);
+		this.dispatchEvent(new CustomEvent('value-changed', { detail: value, bubbles: true, composed: true }));
+	}
 
-    get value() {
-        return this.#value;
-    }
+	get value() {
+		return this.#value;
+	}
 
 	set error(value) {
+		const oldValue = this.#error;
 		this.#error = value;
 		this.classList.toggle('is-invalid', Boolean(value));
+		this.requestUpdate('error', oldValue);
 	}
 	
 	get error() {
@@ -79,8 +81,8 @@ export class Textarea extends LitElement {
 				<textarea
 					.value=${this.value}
 					.placeholder=${this.placeholder}
-					.disabled=${this.disabled}
-					.readonly=${this.readonly}
+					?disabled=${this.disabled}
+					?readonly=${this.readonly}
 					class="form-control ${this.error ? 'is-invalid' : ''}"
 					@input=${this.#onInput}
 				></textarea>
@@ -91,6 +93,10 @@ export class Textarea extends LitElement {
 				<div class="invalid-feedback">${this.error || ''}</div>
 			</div>
 		`;
+	}
+
+	focus() {
+		this.renderRoot.querySelector('textarea').focus();
 	}
 
 	#onInput(event) {

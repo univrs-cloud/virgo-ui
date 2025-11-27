@@ -6,7 +6,7 @@ import 'libs/components';
 import * as bootstrapService from 'shell/services/bootstrap';
 
 document.addEventListener('shown.bs.modal', (event) => {
-	event.target.querySelector('input:not([type="hidden"])')?.focus(); // focus 1st input after modal is shown
+	event.target.querySelector('u-input:not([type="hidden"])')?.focus(); // focus 1st input after modal is shown
 });
 
 try {
