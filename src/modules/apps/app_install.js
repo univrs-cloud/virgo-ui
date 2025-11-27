@@ -29,8 +29,7 @@ const install = (event) => {
 		id: app.id,
 		env
 	};
-	console.log(config);
-	// appCenterService.install(config);
+	appCenterService.install(config);
 	bootstrap.Modal.getInstance(modal)?.hide();
 };
 
