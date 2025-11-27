@@ -7,7 +7,6 @@ const modal = document.querySelector('#bookmark-create');
 const form = modal.closest('u-form');
 
 const createBookmark = (event) => {
-	const form = event.target;
 	const buttons = form.querySelectorAll('button');
 	_.each(buttons, (button) => { button.disabled = true; });
 	let config = form.getData();
