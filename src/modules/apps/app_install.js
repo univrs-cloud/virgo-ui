@@ -6,7 +6,6 @@ import inputPasswordPartial from 'modules/apps/partials/modals/app_install/input
 import inputRadioPartial from 'modules/apps/partials/modals/app_install/input_radio.html';
 import selectPartial from 'modules/apps/partials/modals/app_install/select.html';
 import * as appCenterService from 'modules/apps/services/app_center';
-import validator from 'validator';
 
 const inputHiddenTemplate = _.template(inputHiddenPartial);
 const inputTextTemplate = _.template(inputTextPartial);
@@ -14,52 +13,25 @@ const inputEmailTemplate = _.template(inputEmailPartial);
 const inputPasswordTemplate = _.template(inputPasswordPartial);
 const inputRadioTemplate = _.template(inputRadioPartial);
 const selectTemplate = _.template(selectPartial);
+
 document.querySelector('body').insertAdjacentHTML('beforeend', appModalPartial);
 
-const form = document.querySelector('#app-install');
+const modal = document.querySelector('#app-install');
+const form = modal.closest('u-form');
 let app;
 
-const validateInput = (input) => {
-	const value = input.value;
-	if (validator.isEmpty(value.toString())) {
-		input.error = `Can't be empty`;
-		return;
-	}
-	input.error = ``;
-};
-
-const validateForm = () => {
-	_.each(form.querySelectorAll('u-input, u-select, u-textarea'), (input) => {
-		validateInput(input);
-	});
-};
-
-const isFormValid = () => {
-	validateForm();
-	return _.isEmpty(form.querySelectorAll('.is-invalid'));
-};
-
 const install = (event) => {
-	event.preventDefault();
-	if (!isFormValid()) {
-		return;
-	}
-
 	const form = event.target;
 	const buttons = form.querySelectorAll('button');
 	_.each(buttons, (button) => { button.disabled = true; });
-
+	let env = form.getData();
 	let config = {
 		id: app.id,
-		env: {}
+		env
 	};
-	_.each(app.env, (env) => {
-		const input = form.querySelector(`input[name="${env.name}"]:checked`) || form.querySelector(`u-input[name="${env.name}"]`) || form.querySelector(`u-select[name="${env.name}"]`) || form.querySelector(`textarea[name="${env.name}"]`) || form.querySelector(`u-textarea[name="${env.name}"]`);
-		config.env[env.name] = input.value;
-	});
-	
-	appCenterService.install(config);
-	bootstrap.Modal.getInstance(form.closest('.modal'))?.hide();
+	console.log(config);
+	// appCenterService.install(config);
+	bootstrap.Modal.getInstance(modal)?.hide();
 };
 
 const render = (event) => {
@@ -68,7 +40,7 @@ const render = (event) => {
 	form.querySelector('.modal-title').innerHTML = app.title;
 	form.querySelector('.description').innerHTML = app.description;
 	form.querySelector('.note').innerHTML = app.note || '';
-	form.querySelector('.note')?.classList[app.note ? 'remove' : 'add']('d-none');
+	form.querySelector('.note').classList[app.note ? 'remove' : 'add']('d-none');
 	const fqdn = appCenterService.getFQDN();
 	_.each(app.env, (env) => {
 		if (env?.type === 'hidden') {
@@ -107,17 +79,26 @@ const render = (event) => {
 			return;
 		}
 	});
-	_.each(form.querySelectorAll('input:not([type="radio"]):not([type="checkbox"]), textarea'), (input) => { input.addEventListener('input', (event) => { validateInput(event.target); }) });
+	form.validation = [
+		{
+			selector: 'u-input:not([type="hidden"]), u-select, u-textarea',
+			rules: {
+				isEmpty: `Can't be empty`
+			}
+		}
+	];
 };
 
 const restore = (event) => {
 	app = null;
 	_.each(form.querySelectorAll('.modal-title, .description, .note, .inputs'), (node) => { node.innerHTML = ''; });
 	form.querySelector('.note').classList.add('d-none');
+	form.validation = [];
 	form.reset();
 	_.each(form.querySelectorAll('button'), (button) => { button.disabled = false });
 }
 
-form.addEventListener('submit', install);
+form.validation = [];
+form.addEventListener('valid', install);
 form.addEventListener('show.bs.modal', render);
 form.addEventListener('hidden.bs.modal', restore);
