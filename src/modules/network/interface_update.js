@@ -1,6 +1,5 @@
 import interfaceModalPartial from 'modules/network/partials/modals/interface.html';
 import * as networkService from 'modules/network/services/network';
-import validator from 'validator';
 import { Netmask } from 'netmask';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', interfaceModalPartial);

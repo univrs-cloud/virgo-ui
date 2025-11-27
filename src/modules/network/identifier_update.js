@@ -1,6 +1,5 @@
 import identifierModalPartial from 'modules/network/partials/modals/identifier.html';
 import * as networkService from 'modules/network/services/network';
-import validator from 'validator';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', identifierModalPartial);
 

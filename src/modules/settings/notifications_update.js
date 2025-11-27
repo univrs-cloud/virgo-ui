@@ -1,6 +1,5 @@
 import notificationModalPartial from 'modules/settings/partials/modals/notifications.html';
 import * as configurationService from 'modules/settings/services/configuration';
-import validator from 'validator';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', notificationModalPartial);
 

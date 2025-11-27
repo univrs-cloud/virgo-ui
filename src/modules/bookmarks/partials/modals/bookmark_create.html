@@ -1,22 +1,24 @@
-<form id="bookmark-create" class="modal fade" tabindex="-1" novalidate>
-	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title">New bookmark</h5>
-			</div>
-			<div class="modal-body">
-				<u-input name="title" label="Title" class="title"></u-input>
-				<u-input name="url" label="URL" class="url" placeholder="https://"></u-input>
-				<u-select name="category" label="Category" class="category">
-					<option value="Productivity" selected>Productivity</option>
-					<option value="Networking">Networking</option>
-					<option value="System">System</option>
-				</u-select>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-outline-secondary d-flex ms-auto" data-bs-dismiss="modal">Cancel</button>
-				<button type="submit" class="btn btn-primary">Create</button>
+<u-form>
+	<div id="bookmark-create" class="modal fade">
+		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">New bookmark</h5>
+				</div>
+				<div class="modal-body">
+					<u-input name="title" label="Title" class="title"></u-input>
+					<u-input name="url" label="URL" class="url" placeholder="https://"></u-input>
+					<u-select name="category" label="Category" class="category">
+						<option value="Productivity" selected>Productivity</option>
+						<option value="Networking">Networking</option>
+						<option value="System">System</option>
+					</u-select>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-outline-secondary d-flex ms-auto" data-bs-dismiss="modal">Cancel</button>
+					<button type="submit" class="btn btn-primary">Create</button>
+				</div>
 			</div>
 		</div>
 	</div>
-</form>
+</u-form>
