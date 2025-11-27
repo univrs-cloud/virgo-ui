@@ -1,4 +1,5 @@
 import { LitElement, html } from 'lit';
+import { classMap } from 'lit/directives/class-map.js';
 import { sheet } from "../styles.js";
 
 export class Input extends LitElement {
@@ -106,7 +107,11 @@ export class Input extends LitElement {
 
 		const inputType = this.type === 'password' ? (this.showPassword ? 'text' : 'password') : this.type;
 		const hasInputGroup = this.#hasPrefix || this.#hasSuffix;
-		
+		const classes = {
+			'password-input': this.type === 'password',
+			'is-invalid': this.error
+		};
+
 		return html`
 			<div class="mb-3">
 				<div class="${hasInputGroup ? 'input-group' : ''} ${hasInputGroup && this.error ? 'has-validation' : ''}">
@@ -114,7 +119,7 @@ export class Input extends LitElement {
 					<div class="form-floating">
 						<input
 							type=${inputType}
-							class="form-control ${this.type === 'password' ? 'password-input' : ''} ${this.error ? 'is-invalid' : ''}"
+							class="form-control ${classMap(classes)}"
 							placeholder=${this.placeholder}
 							autocomplete=${this.autocomplete}
 							.value=${this.value}

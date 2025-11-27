@@ -1,4 +1,5 @@
 import { LitElement, html } from 'lit';
+import { classMap } from 'lit/directives/class-map.js';
 import { sheet } from "../styles.js";
 
 export class Select extends LitElement {
@@ -100,12 +101,16 @@ export class Select extends LitElement {
 	}
 
 	render() {
+		const classes = {
+			'is-invalid': this.error
+		};
+
 		return html`
 			<div class="form-floating mb-3">
 				<select
 					.value=${this.value}
 					?disabled=${this.disabled}
-					class="form-select ${this.error ? 'is-invalid' : ''}"
+					class="form-select ${classMap(classes)}"
 					@change=${this.#onChange}
 				>
 					${this.options.map((option) => { return option.options ? this.renderOptGroup(option) : this.renderOption(option); })}
