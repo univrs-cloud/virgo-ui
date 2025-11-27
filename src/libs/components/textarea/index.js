@@ -1,4 +1,5 @@
 import { LitElement, html } from 'lit';
+import { classMap } from 'lit/directives/class-map.js';
 import { sheet } from "../styles.js";
 
 export class Textarea extends LitElement {
@@ -82,10 +83,14 @@ export class Textarea extends LitElement {
 	}
 
 	render() {
+		const classes = {
+			'is-invalid': this.error
+		};
+
 		return html`
 			<div class="form-floating mb-3">
 				<textarea
-					class="form-control ${this.error ? 'is-invalid' : ''}"
+					class="form-control ${classMap(classes)}"
 					placeholder=${this.placeholder}
 					.value=${this.value}
 					?disabled=${this.disabled}
