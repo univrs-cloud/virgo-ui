@@ -3,6 +3,7 @@ import { sheet } from "../styles.js";
 
 export class Switch extends LitElement {
 	static formAssociated = true;
+	static styles = [sheet];
 
 	static get properties() {
 		return {
@@ -47,12 +48,6 @@ export class Switch extends LitElement {
 		const input = this.renderRoot.querySelector('input');
   		input.checked = this.checked;
 		input.dispatchEvent(new Event('change'));
-	}
-
-	createRenderRoot() {
-		const root = super.createRenderRoot();
-		root.adoptedStyleSheets = [sheet];
-		return root;
 	}
 
 	render() {
