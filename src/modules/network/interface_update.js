@@ -17,6 +17,7 @@ const updateInterface = (event) => {
 	config.ipAddress = (!isDhcp ? config.ipAddress : null);
 	config.netmask = (!isDhcp ? config.netmask : null);
 	config.gateway = (!isDhcp ? config.gateway : null);
+	networkService.updateInterface(config);
 	bootstrap.Modal.getInstance(modal)?.hide();
 };
 
@@ -43,6 +44,7 @@ const render = (event) => {
 	form.querySelector('.ip-address').value = system?.networkInterface?.ip4;
 	form.querySelector('.netmask').value = block?.bitmask ?? 'error';
 	form.querySelector('.gateway').value = system?.defaultGateway;
+	form.querySelector('.cinci').indeterminate = true;
 };
 
 const restore = (event) => {
