@@ -79,4 +79,4 @@ form.validation = [
 form.addEventListener('valid', updateInterface);
 form.addEventListener('show.bs.modal', render);
 form.addEventListener('hidden.bs.modal', restore);
-form.querySelector('.dhcp').addEventListener('checked-changed', toggleDhcp);
+form.querySelector('.dhcp').addEventListener('switch-changed', toggleDhcp);

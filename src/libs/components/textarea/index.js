@@ -85,11 +85,11 @@ export class Textarea extends LitElement {
 		return html`
 			<div class="form-floating mb-3">
 				<textarea
+					class="form-control ${this.error ? 'is-invalid' : ''}"
+					placeholder=${this.placeholder}
 					.value=${this.value}
-					.placeholder=${this.placeholder}
 					?disabled=${this.disabled}
 					?readonly=${this.readonly}
-					class="form-control ${this.error ? 'is-invalid' : ''}"
 					@input=${this.#onInput}
 				></textarea>
 				<label>
