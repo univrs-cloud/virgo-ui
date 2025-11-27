@@ -21,6 +21,8 @@ export class Input extends LitElement {
 
 	#value = '';
 	#error = '';
+	#hasPrefix = false;
+	#hasSuffix = false;
 
 	constructor() {
 		super();
@@ -76,6 +78,12 @@ export class Input extends LitElement {
 		if (label) {
 			new bootstrap.Tooltip(label);
 		}
+		
+		this.#hasPrefix = this.renderRoot.querySelector('slot[name="prefix"]')?.assignedNodes().length > 0 ?? false;
+		this.#hasSuffix = this.renderRoot.querySelector('slot[name="suffix"]')?.assignedNodes().length > 0 ?? false;
+		if (this.#hasPrefix || this.#hasSuffix) {
+			this.requestUpdate();
+		}
 	}
 
 	render() {
@@ -90,25 +98,32 @@ export class Input extends LitElement {
 		}
 
 		const inputType = this.type === 'password' ? (this.showPassword ? 'text' : 'password') : this.type;
-
+		const hasInputGroup = this.#hasPrefix || this.#hasSuffix;
+		
 		return html`
-			<div class="form-floating mb-3">
-				<input
-					type=${inputType}
-					.value=${this.value}
-					.placeholder=${this.placeholder}
-					?disabled=${this.disabled}
-					?readonly=${this.readonly}
-					?autocomplete=${this.autocomplete}
-					class="form-control ${this.type === 'password' ? 'password-input' : ''} ${this.error ? 'is-invalid' : ''}"
-					@input=${this.#onInput}
-				>
-				<label>
-					${this.label}
-					${this.tip ? html`<span class="help-inline ms-1" data-bs-toggle="tooltip" data-bs-original-title=${this.tip}><i class="icon-solid icon-question-circle"></i></span>` : ''}
-				</label>
-				<div class="invalid-feedback">${this.error || ''}</div>
-				${this.type === 'password' ? html`<button type="button" class="password-toggle" @click=${this.#togglePassword}></button>` : ''}
+			<div class="mb-3">
+				<div class="${hasInputGroup ? 'input-group' : ''} ${hasInputGroup && this.error ? 'has-validation' : ''}">
+					<slot name="prefix" class="input-group-text ${!this.#hasPrefix ? 'd-none' : ''}" @slotchange=${this.#onSlotChange}></slot>
+					<div class="form-floating">
+						<input
+							type=${inputType}
+							.value=${this.value}
+							.placeholder=${this.placeholder}
+							?disabled=${this.disabled}
+							?readonly=${this.readonly}
+							?autocomplete=${this.autocomplete}
+							class="form-control ${this.type === 'password' ? 'password-input' : ''} ${this.error ? 'is-invalid' : ''}"
+							@input=${this.#onInput}
+						>
+						<label>
+							${this.label}
+							${this.tip ? html`<span class="help-inline ms-1" data-bs-toggle="tooltip" data-bs-original-title=${this.tip}><i class="icon-solid icon-question-circle"></i></span>` : ''}
+						</label>
+						${this.type === 'password' ? html`<button type="button" class="password-toggle" @click=${this.#togglePassword}></button>` : ''}
+					</div>
+					<slot name="suffix" class="input-group-text ${!this.#hasSuffix ? 'd-none' : ''}" @slotchange=${this.#onSlotChange}></slot>
+				</div>
+				<div class="invalid-feedback ${this.error ? 'd-block' : ''}">${this.error || ''}</div>
 			</div>
 		`;
 	}
@@ -125,6 +140,17 @@ export class Input extends LitElement {
 		event.preventDefault();
 		this.showPassword = !this.showPassword;
 		this.focus();
+	}
+
+	#onSlotChange(event) {
+		const slot = event.target;
+		const hasContent = slot.assignedNodes().length > 0;
+		if (slot.name === 'prefix') {
+			this.#hasPrefix = hasContent;
+		} else if (slot.name === 'suffix') {
+			this.#hasSuffix = hasContent;
+		}
+		this.requestUpdate();
 	}
 }
 
