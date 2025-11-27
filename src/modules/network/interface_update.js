@@ -46,8 +46,6 @@ const render = (event) => {
 
 const restore = (event) => {
 	form.reset();
-	_.each(form.querySelectorAll('button'), (button) => { button.disabled = false });
-	form.querySelector('.dhcp').dispatchEvent(new Event('change'));
 };
 
 form.validation = [

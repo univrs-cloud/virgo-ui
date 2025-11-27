@@ -19,7 +19,6 @@ const changePassword = (event) => {
 const restore = (event) => {
 	user = null;
 	form.reset();
-	_.each(form.querySelectorAll('button'), (button) => { button.disabled = false });
 };
 
 const render = (event) => {

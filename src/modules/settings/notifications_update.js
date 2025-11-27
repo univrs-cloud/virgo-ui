@@ -17,7 +17,6 @@ const updateSmtp = (event) => {
 
 const restore = (event) => {
 	form.reset();
-	_.each(form.querySelectorAll('button'), (button) => { button.disabled = false });
 };
 
 const render = (event) => {
