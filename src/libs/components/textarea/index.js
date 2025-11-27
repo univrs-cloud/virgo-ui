@@ -3,6 +3,7 @@ import { sheet } from "../styles.js";
 
 export class Textarea extends LitElement {
 	static formAssociated = true;
+	static styles = [sheet];
 
 	static get properties() {
 		return {
@@ -69,12 +70,6 @@ export class Textarea extends LitElement {
 		this.disabled = this.#initialDisabled;
 		this.readonly = this.#initialReadonly;
 		this.error = '';
-	}
-
-	createRenderRoot() {
-		const root = super.createRenderRoot();
-		root.adoptedStyleSheets = [sheet];
-		return root;
 	}
 
 	firstUpdated() {

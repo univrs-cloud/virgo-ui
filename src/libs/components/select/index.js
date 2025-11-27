@@ -3,6 +3,7 @@ import { sheet } from "../styles.js";
 
 export class Select extends LitElement {
 	static formAssociated = true;
+	static styles = [sheet];
 
 	static get properties() {
 		return {
@@ -64,12 +65,6 @@ export class Select extends LitElement {
 		this.value = this.#initialValue;
 		this.disabled = this.#initialDisabled;
 		this.error = '';
-	}
-
-	createRenderRoot() {
-		const root = super.createRenderRoot();
-		root.adoptedStyleSheets = [sheet];
-		return root;
 	}
 
 	firstUpdated() {

@@ -3,6 +3,7 @@ import { sheet } from "../styles.js";
 
 export class Input extends LitElement {
 	static formAssociated = true;
+	static styles = [sheet];
 
 	static get properties() {
 		return {
@@ -78,12 +79,6 @@ export class Input extends LitElement {
 		this.readonly = this.#initialReadonly;
 		this.error = '';
 		this.showPassword = false;
-	}
-
-	createRenderRoot() {
-		const root = super.createRenderRoot();
-		root.adoptedStyleSheets = [sheet];
-		return root;
 	}
 
 	firstUpdated() {

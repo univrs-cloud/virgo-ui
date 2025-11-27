@@ -3,6 +3,7 @@ import { sheet } from "../styles.js";
 
 export class Checkbox extends LitElement {
 	static formAssociated = true;
+	static styles = [sheet];
 
 	static get properties() {
 		return {
@@ -49,12 +50,6 @@ export class Checkbox extends LitElement {
 		input.indeterminate = this.indeterminate;
 		input.checked = this.checked;
 		input.dispatchEvent(new Event('change'));
-	}
-
-	createRenderRoot() {
-		const root = super.createRenderRoot();
-		root.adoptedStyleSheets = [sheet];
-		return root;
 	}
 
 	updated(changedProps) {
