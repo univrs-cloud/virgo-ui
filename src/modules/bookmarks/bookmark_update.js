@@ -7,7 +7,6 @@ const modal = document.querySelector('#bookmark-update');
 const form = modal.closest('u-form');
 
 const updateBookmark = (event) => {
-	const form = event.target;
 	const buttons = form.querySelectorAll('button');
 	_.each(buttons, (button) => { button.disabled = true; });
 	let config = form.getData();

@@ -8,7 +8,6 @@ const modal = document.querySelector('#profile-password');
 const form = modal.closest('u-form');
 
 const changePassword = (event) => {
-	const form = event.target;
 	const buttons = form.querySelectorAll('button');
 	_.each(buttons, (button) => { button.disabled = true; });
 	let config = form.getData();

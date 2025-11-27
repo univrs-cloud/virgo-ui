@@ -7,10 +7,8 @@ const modal = document.querySelector('#network-identifier');
 const form = modal.closest('u-form');
 
 const updateIdentifier = (event) => {
-	const form = event.target;
 	const buttons = form.querySelectorAll('button');
 	_.each(buttons, (button) => { button.disabled = true; });
-
 	let config = form.getData();
 	networkService.updateHostIdentifier(config);
 	bootstrap.Modal.getInstance(modal)?.hide();

@@ -8,10 +8,8 @@ const modal = document.querySelector('#network-interface');
 const form = modal.closest('u-form');
 
 const updateInterface = (event) => {
-	const form = event.target;
 	const buttons = form.querySelectorAll('button');
 	_.each(buttons, (button) => { button.disabled = true; });
-
 	let config = form.getData();
 	const isDhcp = (config.method === 'auto');
 	config.ipAddress = (!isDhcp ? config.ipAddress : null);
