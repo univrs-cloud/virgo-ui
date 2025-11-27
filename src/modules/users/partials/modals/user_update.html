@@ -1,17 +1,19 @@
-<form id="user-update" class="modal fade" tabindex="-1" novalidate>
-	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title">Edit user</h5>
-			</div>
-			<div class="modal-body">
-				<u-input name="fullname" label="Name" class="fullname"></u-input>
-				<u-input type="email" name="email" label="Email address" class="email"></u-input>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-outline-secondary d-flex ms-auto" data-bs-dismiss="modal">Cancel</button>
-				<button type="submit" class="btn btn-primary">Update</button>
+<u-form>
+	<div id="user-update" class="modal fade">
+		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Edit user</h5>
+				</div>
+				<div class="modal-body">
+					<u-input name="fullname" label="Name" class="fullname"></u-input>
+					<u-input type="email" name="email" label="Email address" class="email"></u-input>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-outline-secondary d-flex ms-auto" data-bs-dismiss="modal">Cancel</button>
+					<button type="submit" class="btn btn-primary">Update</button>
+				</div>
 			</div>
 		</div>
 	</div>
-</form>
+</u-form>
