@@ -25,6 +25,7 @@ export class Form extends LitElement {
 
 	set validation(value) {
 		this.#validation = value;
+		this.#clearValidationListeners();
 		this.#setupLiveValidation();
 	}
 
@@ -123,21 +124,19 @@ export class Form extends LitElement {
 		}
 
 		this.validation.forEach((field) => {
-			this.#validateField(field.selector);
+			const inputs = this.#form.querySelectorAll(field.selector);
+			inputs.forEach((input) => {
+				this.#validateField(input, field.selector);;
+			})
 		});
 	}
 
-	#validateField(selector) {
+	#validateField(input, selector) {
 		const fieldConfig = this.validation.find((field) => { return field.selector === selector; });
 		if (!fieldConfig) {
 			return;
 		}
-
-		const input = this.#form.querySelector(selector);
-		if (!input) {
-			return;
-		}
-
+		
 		const value = input.value;
 		const rules = fieldConfig.rules;
 		let error = '';
@@ -225,51 +224,50 @@ export class Form extends LitElement {
 		}
 
 		this.#validation.forEach((field) => {
-			const input = this.#form.querySelector(field.selector);
-			if (!input) {
-				return;
-			}
-
-			if (this.#validationListeners.has(field.selector)) {
-				return;
-			}
-
-			const valueChangedListener = () => {
-				if (this.#isResetting) {
+			const inputs = this.#form.querySelectorAll(field.selector);
+			inputs.forEach((input, index) => {
+				const uniqueId = `${field.selector}-${index}`;
+				if (this.#validationListeners.has(uniqueId)) {
 					return;
 				}
 
-				clearTimeout(this.#validationTimeouts[field.selector]);
-				this.#validationTimeouts[field.selector] = setTimeout(() => {
-					this.#validateField(field.selector);
-				}, debounceMs);
-			};
+				const valueChangedListener = () => {
+					if (this.#isResetting) {
+						return;
+					}
 
-			const blurListener = () => {
-				if (this.#isResetting) {
-					return;
-				}
+					clearTimeout(this.#validationTimeouts[uniqueId]);
+					this.#validationTimeouts[uniqueId] = setTimeout(() => {
+						this.#validateField(input, field.selector);
+					}, debounceMs);
+				};
 
-				this.#validateField(field.selector);
-			};
+				const blurListener = () => {
+					if (this.#isResetting) {
+						return;
+					}
 
-			input.addEventListener('value-changed', valueChangedListener);
-			input.addEventListener('blur', blurListener);
+					this.#validateField(input, field.selector);
+				};
 
-			this.#validationListeners.set(field.selector, {
-				valueChanged: valueChangedListener,
-				blur: blurListener,
-				input
+				input.addEventListener('value-changed', valueChangedListener);
+				input.addEventListener('blur', blurListener);
+
+				this.#validationListeners.set(uniqueId, {
+					valueChanged: valueChangedListener,
+					blur: blurListener,
+					input
+				});
 			});
 		});
 	}
 
 	#clearValidationErrors() {
 		this.validation.forEach((field) => {
-			const input = this.#form.querySelector(field.selector);
-			if (input) {
+			const inputs = this.#form.querySelectorAll(field.selector);
+			inputs.forEach((input) => {
 				input.error = '';
-			}
+			});
 		});
 	}
 
