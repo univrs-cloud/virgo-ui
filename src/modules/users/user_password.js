@@ -40,20 +40,13 @@ form.validation = [
 		selector: '.password-check',
 		rules: {
 			isEmpty: `Can't be empty`,
-			equals: `Passwords do not match`
+			equals: {
+				message: `Passwords do not match`,
+				comparison: () => { return form.querySelector('.password').value; }
+			}
 		}
 	}
 ];
 form.addEventListener('valid', changePassword);
 form.addEventListener('show.bs.modal', render);
 form.addEventListener('hidden.bs.modal', restore);
-
-// const validatePasswordCheck = (event) => {
-// 	const input = form.querySelector('.password-check');
-// 	const value = input.value;
-// 	if (!validator.equals(value, form.querySelector('.password').value)) {
-// 		input.error = `Passwords do not match`;
-// 		return;
-// 	}
-// 	input.error = ``;
-// };
