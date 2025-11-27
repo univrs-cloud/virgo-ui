@@ -56,6 +56,7 @@ export class Form extends LitElement {
 			}
 		});
 		form.addEventListener('reset', () => {
+			this.#enableButtons();
 			this.#clearValidationErrors();
         });
 		
@@ -258,6 +259,10 @@ export class Form extends LitElement {
 				});
 			});
 		});
+	}
+
+	#enableButtons() {
+		this.#form.querySelectorAll('button').forEach((button) => { button.disabled = false });
 	}
 
 	#clearValidationErrors() {

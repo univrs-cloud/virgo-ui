@@ -93,7 +93,6 @@ const restore = (event) => {
 	form.querySelector('.note').classList.add('d-none');
 	form.validation = [];
 	form.reset();
-	_.each(form.querySelectorAll('button'), (button) => { button.disabled = false });
 }
 
 form.validation = [];
