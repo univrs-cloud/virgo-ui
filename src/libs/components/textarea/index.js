@@ -12,13 +12,15 @@ export class Textarea extends LitElement {
 			tip: { type: String, reflect: true },
 			disabled: { type: Boolean, reflect: true },
 			readonly: { type: Boolean, reflect: true },
-			error: { type: String },
-			isInvalid: { type: Boolean, reflect: true }
+			error: { type: String }
 		};
 	}
 
 	#value = '';
 	#error = '';
+	#initialValue = '';
+	#initialDisabled = false;
+	#initialReadonly = false;
 
 	constructor() {
 		super();
@@ -54,10 +56,19 @@ export class Textarea extends LitElement {
 		return this.#error;
 	}
 
+	connectedCallback() {
+		super.connectedCallback();
+		this.#initialValue = this.value;
+		this.#initialDisabled = this.hasAttribute('disabled');
+  		this.#initialReadonly = this.hasAttribute('readonly');
+		this.internals.setFormValue(this.value);
+	}
+
 	formResetCallback() {
-		this.value = this.getAttribute('value') ?? '';
+		this.value = this.#initialValue;
+		this.disabled = this.#initialDisabled;
+		this.readonly = this.#initialReadonly;
 		this.error = '';
-		this.showPassword = false;
 	}
 
 	createRenderRoot() {

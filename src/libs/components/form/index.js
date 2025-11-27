@@ -50,11 +50,7 @@ export class Form extends LitElement {
 		form.addEventListener('submit', (event) => {
 			event.preventDefault();
 			if (this.#isFormValid()) {
-				this.dispatchEvent(new CustomEvent('valid', {
-					detail: event,
-					bubbles: true,
-					composed: true
-				}));
+				this.dispatchEvent(new CustomEvent('valid', { detail: event, bubbles: true, composed: true }));
 			} else {
 				form.querySelector('.is-invalid').focus();
 			}

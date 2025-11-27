@@ -13,16 +13,7 @@
 							<dd class="interface-name m-0"></dd>
 						</dl>
 					</div>
-					<small class="fw-light text-body-tertiary">Configuration method</small>
-					<div class="d-flex align-items-center mb-3">
-						<div class="form-check form-switch form-check-inline ps-0 mb-0 me-2">
-							<label class="form-check-label">Manual</label>
-						</div>
-						<div class="form-check form-switch form-check-inline mb-0">
-							<input type="checkbox" class="dhcp form-check-input" role="switch">
-							<label class="form-check-label">Automatic</label>
-						</div>
-					</div>
+					<u-switch name="method" onValue="auto" offValue="manual" onLabel="Automatic" offLabel="Manual" label="Configuration method" class="dhcp"></u-switch>
 					<div class="row">
 						<div class="manual col-12">
 							<div class="row">

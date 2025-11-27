@@ -11,21 +11,22 @@ export class Select extends LitElement {
 			tip: { type: String, reflect: true },
 			disabled: { type: Boolean, reflect: true },
 			options: { type: Array }, // [{ value, text, disabled, default } or { label, disabled, options: [...] }]
-			error: { type: String },
-			isInvalid: { type: Boolean, reflect: true },
+			error: { type: String }
 		};
 	}
 
 	#value = '';
 	#error = '';
+	#initialValue = '';
+	#initialDisabled = false;
 
 	constructor() {
 		super();
 		this.internals = this.attachInternals();
 
 		this.label = '';
-		this.disabled = false;
 		this.tip = '';
+		this.disabled = false;
 		this.options = [];
 	}
 
@@ -52,10 +53,17 @@ export class Select extends LitElement {
 		return this.#error;
 	}
 
+	connectedCallback() {
+		super.connectedCallback();
+		this.#initialValue = this.value;
+		this.#initialDisabled = this.hasAttribute('disabled');
+		this.internals.setFormValue(this.value);
+	}
+
 	formResetCallback() {
-		this.value = this.getAttribute('value') ?? '';
+		this.value = this.#initialValue;
+		this.disabled = this.#initialDisabled;
 		this.error = '';
-		this.showPassword = false;
 	}
 
 	createRenderRoot() {

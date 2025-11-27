@@ -21,6 +21,9 @@ export class Input extends LitElement {
 
 	#value = '';
 	#error = '';
+	#initialValue = '';
+	#initialDisabled = false;
+	#initialReadonly = false;
 	#hasPrefix = false;
 	#hasSuffix = false;
 
@@ -33,9 +36,9 @@ export class Input extends LitElement {
 		this.label = '';
 		this.placeholder = '';
 		this.tip = '';
+		this.autocomplete = '';
 		this.disabled = false;
 		this.readonly = false;
-		this.autocomplete = '';
 	}
 
 	set value(value) {
@@ -61,8 +64,18 @@ export class Input extends LitElement {
 		return this.#error;
 	}
 
+	connectedCallback() {
+		super.connectedCallback();
+		this.#initialValue = this.value;
+		this.#initialDisabled = this.hasAttribute('disabled');
+  		this.#initialReadonly = this.hasAttribute('readonly');
+		this.internals.setFormValue(this.value);
+	}
+
 	formResetCallback() {
-		this.value = this.getAttribute('value') ?? '';
+		this.value = this.#initialValue;
+		this.disabled = this.#initialDisabled;
+		this.readonly = this.#initialReadonly;
 		this.error = '';
 		this.showPassword = false;
 	}
@@ -91,7 +104,6 @@ export class Input extends LitElement {
 			return html`
 				<input
 					type=${this.type}
-					.name=${this.name}
 					.value=${this.value}
 				/>
 			`;
