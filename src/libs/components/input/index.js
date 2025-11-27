@@ -82,7 +82,7 @@ export class Input extends LitElement {
 		if (this.type === 'hidden') {
 			return html`
 				<input
-					.type=${this.type}
+					type=${this.type}
 					.name=${this.name}
 					.value=${this.value}
 				/>
