@@ -25,7 +25,7 @@ const updateInterface = (event) => {
 const toggleDhcp = (event) => {
 	form.querySelector('.ip-address').disabled = event.target.checked;
 	form.querySelector('.netmask').disabled = event.target.checked;
-	_.each(form.querySelectorAll('.input-group'), (element) => { element.classList[event.target.checked ? 'add' : 'remove']('d-none'); });
+	_.each(form.querySelectorAll('.manual'), (element) => { element.classList[event.target.checked ? 'add' : 'remove']('d-none'); });
 };
 
 const getBlock = (networkInterface) => {
