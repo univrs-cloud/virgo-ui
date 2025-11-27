@@ -58,7 +58,10 @@ form.validation = [
 		selector: '.ip-address',
 		rules: {
 			isEmpty: `Can't be empty`,
-			isIP: `Invalid IP address`
+			isIP: {
+				message: `Invalid IP address`,
+				version: 4
+			}
 		}
 	},
 	{
@@ -71,7 +74,10 @@ form.validation = [
 		selector: '.gateway',
 		rules: {
 			isEmpty: `Can't be empty`,
-			isIP: `Invalid IP address`
+			isIP: {
+				message: `Invalid IP address`,
+				version: 4
+			}
 		}
 	}
 ];
