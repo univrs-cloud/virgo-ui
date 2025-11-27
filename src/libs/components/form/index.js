@@ -55,6 +55,8 @@ export class Form extends LitElement {
 					bubbles: true,
 					composed: true
 				}));
+			} else {
+				form.querySelector('.is-invalid').focus();
 			}
 		});
 		form.addEventListener('reset', () => {
