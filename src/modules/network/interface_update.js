@@ -13,12 +13,10 @@ const updateInterface = (event) => {
 	_.each(buttons, (button) => { button.disabled = true; });
 
 	let config = form.getData();
-	const isDhcp = form.querySelector('.dhcp').checked;
-	config.method = (!isDhcp ? 'manual' : 'auto');
+	const isDhcp = (config.method === 'auto');
 	config.ipAddress = (!isDhcp ? config.ipAddress : null);
 	config.netmask = (!isDhcp ? config.netmask : null);
 	config.gateway = (!isDhcp ? config.gateway : null);
-	networkService.updateInterface(config);
 	bootstrap.Modal.getInstance(modal)?.hide();
 };
 
@@ -84,4 +82,4 @@ form.validation = [
 form.addEventListener('valid', updateInterface);
 form.addEventListener('show.bs.modal', render);
 form.addEventListener('hidden.bs.modal', restore);
-form.querySelector('.dhcp').addEventListener('change', toggleDhcp);
+form.querySelector('.dhcp').addEventListener('checked-changed', toggleDhcp);
