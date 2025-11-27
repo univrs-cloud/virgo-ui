@@ -8,11 +8,11 @@ export class Select extends LitElement {
 		return {
 			value: { type: String },
 			label: { type: String, reflect: true },
-			disabled: { type: Boolean, reflect: true },
 			tip: { type: String, reflect: true },
+			disabled: { type: Boolean, reflect: true },
+			options: { type: Array }, // [{ value, text, disabled, default } or { label, disabled, options: [...] }]
 			error: { type: String },
 			isInvalid: { type: Boolean, reflect: true },
-			options: { type: Array } // [{ value, text, disabled, default } or { label, disabled, options: [...] }]
 		};
 	}
 
@@ -30,20 +30,22 @@ export class Select extends LitElement {
 	}
 
 	set value(value) {
-        const oldValue = this.#value;
-        this.#value = value;
-        this.requestUpdate('value', oldValue);
-        this.internals.setFormValue(value);
-        this.dispatchEvent(new CustomEvent('value-changed', { detail: value, bubbles: true, composed: true }));
-    }
+		const oldValue = this.#value;
+		this.#value = value;
+		this.requestUpdate('value', oldValue);
+		this.internals.setFormValue(value);
+		this.dispatchEvent(new CustomEvent('value-changed', { detail: value, bubbles: true, composed: true }));
+	}
 
-    get value() {
-        return this.#value;
-    }
+	get value() {
+		return this.#value;
+	}
 
 	set error(value) {
+		const oldValue = this.#error;
 		this.#error = value;
 		this.classList.toggle('is-invalid', Boolean(value));
+		this.requestUpdate('error', oldValue);
 	}
 	
 	get error() {
@@ -86,8 +88,8 @@ export class Select extends LitElement {
 		return html`
 			<option
 				.value=${option.value}
-				.selected=${option.default || option.value === this.value}
-				.disabled=${option.disabled || false}
+				?selected=${option.default || option.value === this.value}
+				?disabled=${option.disabled || false}
 			>
 				${option.label}
 			</option>
@@ -99,7 +101,7 @@ export class Select extends LitElement {
 			<div class="form-floating mb-3">
 				<select
 					.value=${this.value}
-					.disabled=${this.disabled}
+					?disabled=${this.disabled}
 					class="form-select ${this.error ? 'is-invalid' : ''}"
 					@change=${this.#onChange}
 				>
@@ -112,6 +114,10 @@ export class Select extends LitElement {
 				<div class="invalid-feedback">${this.error || ''}</div>
 			</div>
 		`;
+	}
+
+	focus() {
+		this.renderRoot.querySelector('select').focus();
 	}
 
 	#onChange(event) {

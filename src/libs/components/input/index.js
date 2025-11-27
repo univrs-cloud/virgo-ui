@@ -14,8 +14,8 @@ export class Input extends LitElement {
 			disabled: { type: Boolean, reflect: true },
 			readonly: { type: Boolean, reflect: true },
 			autocomplete: { type: String, reflect: true },
-			showPassword: { type: Boolean },
-			error: { type: String }
+			error: { type: String },
+			showPassword: { type: Boolean }
 		};
 	}
 
@@ -37,20 +37,22 @@ export class Input extends LitElement {
 	}
 
 	set value(value) {
-        const oldValue = this.#value;
-        this.#value = value;
-        this.requestUpdate('value', oldValue);
-        this.internals.setFormValue(value);
-        this.dispatchEvent(new CustomEvent('value-changed', { detail: value, bubbles: true, composed: true }));
-    }
+		const oldValue = this.#value;
+		this.#value = value;
+		this.requestUpdate('value', oldValue);
+		this.internals.setFormValue(value);
+		this.dispatchEvent(new CustomEvent('value-changed', { detail: value, bubbles: true, composed: true }));
+	}
 
-    get value() {
-        return this.#value;
-    }
+	get value() {
+		return this.#value;
+	}
 
 	set error(value) {
+		const oldValue = this.#error;
 		this.#error = value;
 		this.classList.toggle('is-invalid', Boolean(value));
+		this.requestUpdate('error', oldValue);
 	}
 	
 	get error() {
@@ -97,7 +99,7 @@ export class Input extends LitElement {
 					.placeholder=${this.placeholder}
 					?disabled=${this.disabled}
 					?readonly=${this.readonly}
-					.autocomplete=${this.autocomplete}
+					?autocomplete=${this.autocomplete}
 					class="form-control ${this.type === 'password' ? 'password-input' : ''} ${this.error ? 'is-invalid' : ''}"
 					@input=${this.#onInput}
 				>
@@ -111,6 +113,10 @@ export class Input extends LitElement {
 		`;
 	}
 
+	focus() {
+		this.renderRoot.querySelector('input').focus();
+	}
+
 	#onInput(event) {
 		this.value = event.target.value || '';
 	}
@@ -118,7 +124,7 @@ export class Input extends LitElement {
 	#togglePassword(event) {
 		event.preventDefault();
 		this.showPassword = !this.showPassword;
-		this.renderRoot.querySelector('input').focus();
+		this.focus();
 	}
 }
 
