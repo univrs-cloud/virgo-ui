@@ -32,11 +32,14 @@ const copyToClipboard = (event) => {
 	}
 };
 
-const performAction = async (event) => {
+const remove = async (event) => {
 	event.preventDefault();
 	const button = event.currentTarget;
 	const timeMachine = button.closest('.time-machines');
-	if (button.classList.contains('text-danger') && !await confirm(`Are you sure you want to ${button.dataset.action} ${timeMachine.dataset.title}?`)) {
+	if (
+		button.classList.contains('text-danger') &&
+		!await confirm(`Are you sure you want to delete ${timeMachine.dataset.title}?`, { buttons: [{ text: 'Delete', class: 'btn-danger' }] })
+	) {
 		return;
 	}
 
@@ -70,10 +73,6 @@ const render = (state) => {
 
 	loading.classList.add('d-none');
 	container.classList.remove('d-none');
-
-	_.each(module.querySelectorAll('.dropdown-menu a:not(.disabled)'), (button) => {
-		button.addEventListener('click', performAction);
-	});
 };
 
 module.addEventListener('click', copyToClipboard);

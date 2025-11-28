@@ -13,7 +13,7 @@
 
 	const createModal = (title, content, buttons, focusIndex = 0, escValue = null) => {
 		return new Promise((resolve) => {
-			const modalId = `dialog-${Math.random().toString(36).substr(2, 9)}`;
+			const modalId = `dialog-${Math.random().toString(36).slice(2)}`;
 			const modalHtml = `
 				<div id="${modalId}" class="modal fade" tabindex="-1">
 					<div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
@@ -25,9 +25,12 @@
 								<p>${content}</p>
 							</div>
 							<div class="modal-footer">
-								${buttons.map((button, index) => `
-									<button type="button" class="btn ${button.class}" data-value="${button.value}" data-index="${index}">${button.text}</button>
-								`).join('')}
+								${_.join(
+									_.map(_.reverse(buttons), (button, index, array) => {
+										const reversedIndex = (array.length - 1) - index;
+										return `<button type="button" class="btn ${button.class}" data-value="${button.value}" data-index="${reversedIndex}">${button.text}</button>`;
+									})
+								, '')}
 							</div>
 						</div>
 					</div>
@@ -44,7 +47,7 @@
 			// Handle button clicks
 			modalElement.querySelectorAll('.modal-footer .btn').forEach((button) => {
 				button.addEventListener('click', (event) => {
-					const value = event.target.getAttribute('data-value');
+					const value = event.target.dataset.value;
 					resolve(value);
 					bootstrapModal.hide();
 				});
@@ -69,18 +72,20 @@
 	};
 
 	window.confirm = async (text, options = {}) => {
-		const {
-			buttons = [
-				{ text: 'Cancel', class: 'btn-outline-secondary d-flex ms-auto', value: false },
-				{ text: 'OK', class: 'btn-primary', value: true }
-			],
-			focus = 1
-		} = options;
+		const defaultButtons = [
+			{ text: 'OK', class: 'btn-primary', value: true },
+			{ text: 'Cancel', class: 'btn-outline-secondary d-flex ms-auto', value: false }
+		];
+		const buttons = _.map(defaultButtons, (defaultBtn, index) => {
+			const override = options.buttons?.[index] ?? {};
+			return { ...defaultBtn, ...override };
+		});
+		const focus = options.focus ?? 0;
 		const result = await createModal('Confirmation', text, buttons, focus, false);
 		try {
-			return JSON.parse(result); // Convert value to boolean if possible
+			return JSON.parse(result);
 		} catch (error) {
-			return result; // Return as-is if not JSON-parseable
+			return result;
 		}
 	};
 })();
