@@ -11,7 +11,7 @@ const appTemplate = _.template(appPartial);
 const bookmarkTemplate = _.template(bookmarkPartial);
 const container = document.querySelector('#apps-bookmars');
 let dragDropInstance = null;
-let isDragging = false;
+let isDraggingEnabled = false;
 
 const order = (event) => {
 	const target = event.target.closest('.order');
@@ -20,12 +20,12 @@ const order = (event) => {
 	}
 
 	event.preventDefault();
-	if (isDragging) {
-		const shouldEnable = target.querySelector('.icon-solid').classList.contains('icon-bars-staggered');
+	if (isDraggingEnabled) {
+		const shouldEnableDragging = target.querySelector('.icon-solid').classList.contains('icon-bars-staggered');
 		_.each(container.querySelectorAll('.item'), (boundry) => {
 			disableDragDrop(boundry);
 		});
-		if (shouldEnable) {
+		if (shouldEnableDragging) {
 			enableDragDrop(target.closest('.item'));
 		}
 	} else {
@@ -34,15 +34,12 @@ const order = (event) => {
 };
 
 const disableDragDrop = (container) => {
-	dragDropInstance?.destroy();
+	dragDropInstance?.stop();
 	dragDropInstance = null;
-	_.each(container.querySelectorAll('.card'), (card) => {
-		card.classList.remove('drag-drop-item');
-	});
 	const icon = container.querySelector('.icon-solid');
 	icon.classList.remove('icon-check', 'text-green-500');
 	icon.classList.add('icon-bars-staggered', 'text-gray-500');
-	isDragging = false;
+	isDraggingEnabled = false;
 };
 
 const enableDragDrop = (container) => {	
@@ -50,16 +47,15 @@ const enableDragDrop = (container) => {
 		return;
 	}
 
-	isDragging = true;
+	isDraggingEnabled = true;
 	const icon = container.querySelector('.icon-solid');
 	icon.classList.remove('icon-bars-staggered', 'text-gray-500');
 	icon.classList.add('icon-check', 'text-green-500');
-	_.each(container.querySelectorAll('.card'), (card) => {
-		card.classList.add('drag-drop-item');
-	});
 	dragDropInstance = new DragDropReorder(container, {
+		itemSelector: '.card',
 		onReorder: handleReorder
 	});
+	dragDropInstance.start();
 };
 
 const handleReorder = (newOrder, draggedElement, boundry) => {
@@ -84,7 +80,7 @@ const render = (state) => {
 		return;
 	}
 	
-	if (isDragging) {
+	if (isDraggingEnabled) {
 		return;
 	}
 
