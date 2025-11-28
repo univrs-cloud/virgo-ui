@@ -71,10 +71,9 @@ const performAppAction = async (event) => {
 	const button = event.target;
 	const card = button.closest('.app');
 	const app = _.find(appService.getApps(), { name: card.dataset.name });
-
-	const action = (button.dataset.action === 'down' ? 'remove' : button.dataset.action);
-	const actionMessage = (button.dataset.action === 'down' ? '\n\nData will not deleted.' : '');
-	if (button.classList.contains('text-danger') && !await confirm(`Are you sure you want to ${action} the app ${app.title}?${actionMessage}`)) {
+	
+	const actionMessage = (button.dataset.action === 'remove' ? '<br><br>Data will <strong>NOT</strong> be deleted.' : '');
+	if (button.classList.contains('text-danger') && !await confirm(`Are you sure you want to ${button.dataset.action} the app ${app.title}?${actionMessage}`)) {
 		return;
 	}
 
