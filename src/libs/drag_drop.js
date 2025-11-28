@@ -2,48 +2,90 @@ class DragDropReorder {
 	constructor(container, options = {}) {
 		this.container = container;
 		this.options = {
-			boundrySelector: null, // CSS selector for containers
+			toggleSelector: '.order', // CSS selector for toggle element, this will start and stop
+			boundrySelector: '.item', // CSS selector for boundry
 			itemSelector: '.card', // CSS selector for draggable items
 			axis: 'y', // 'x', 'y', or 'both'
 			dragHandle: null, // CSS selector for drag handle, null means entire item is draggable
+			onStart: null,
+			onStop: null,
 			onReorder: null, // Callback when items are reordered
 			onDragStart: null, // Callback when drag starts
 			onDragEnd: null, // Callback when drag ends
 			...options
 		};
 		
+		this.started = false;
 		this.isDragging = false;
+		this.hasStartedDragging = false;
 		this.draggedElement = null;
 		this.dragOffset = { x: 0, y: 0 };
 		this.placeholder = null;
 		this.originalPosition = null;
 		this.itemSelector = '.drag-drop-item';
-		this.boundry = (this.options.boundrySelector ? this.container.querySelector(this.options.boundrySelector) : this.container);
-		this.boundry.classList.add('dragging');
-		this.hasStartedDragging = false;
-	}
-	
-	start() {
-		this.addDragStyles();
-		this.container.querySelectorAll(this.options.itemSelector).forEach((card) => {
-			card.classList.add('drag-drop-item');
-		});
-		this.container.addEventListener('mousedown', this.handleMouseDown.bind(this));
-		this.container.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: false });
-		this.container.addEventListener('dragstart', (event) => event.preventDefault());
+		
+		this.#enable();
 	}
 
-	stop() {
-		document.querySelector('#drag-drop-styles').remove();
-		this.container.querySelectorAll(this.options.itemSelector).forEach((card) => {
-			card.classList.remove('drag-drop-item');
+	#enable() {
+		this.container.addEventListener('click', (event) => {
+			const toggle = event.target.closest(this.options.toggleSelector);
+			if (toggle === null) {
+				return;
+			}
+
+			event.preventDefault();
+			let boundry = toggle.closest(this.options.boundrySelector);
+			if (!this.started) {
+				this.#start(boundry);
+				return;
+			}
+
+			const shouldEnableDragging = toggle.closest(this.options.toggleSelector).querySelector('.icon-solid').classList.contains('icon-bars-staggered');
+			this.#stop();
+			if (shouldEnableDragging) {
+				this.#start(boundry);
+			}
 		});
-		this.boundry.classList.remove('dragging');
-		this.container.removeEventListener('mousedown', this.handleMouseDown.bind(this));
-		this.container.removeEventListener('touchstart', this.handleTouchStart.bind(this));
 	}
 	
-	addDragStyles() {
+	#start(boundry) {
+		if (this.options.onStart) {
+			this.options.onStart();
+		}
+		this.started = true;
+		this.boundry = boundry;
+		this.boundry.classList.add('dragging');
+		this.boundry.querySelectorAll(this.options.itemSelector).forEach((card) => {
+			card.classList.add('drag-drop-item');
+		});
+		const icon = this.boundry.querySelector('.icon-solid');
+		icon.classList.remove('icon-bars-staggered', 'text-gray-500');
+		icon.classList.add('icon-check', 'text-green-500');
+		this.boundry.addEventListener('mousedown', this.#handleMouseDown.bind(this));
+		this.boundry.addEventListener('touchstart', this.#handleTouchStart.bind(this), { passive: false });
+		this.boundry.addEventListener('dragstart', (event) => event.preventDefault());
+		this.#addDragStyles();
+	}
+
+	#stop() {
+		if (this.options.onStop) {
+			this.options.onStop();
+		}
+		this.started = false;
+		document.querySelector('#drag-drop-styles').remove();
+		this.boundry.querySelectorAll(this.options.itemSelector).forEach((card) => {
+			card.classList.remove('drag-drop-item');
+		});
+		const icon = this.boundry.querySelector('.icon-solid');
+		icon.classList.remove('icon-check', 'text-green-500');
+		icon.classList.add('icon-bars-staggered', 'text-gray-500');
+		this.boundry.classList.remove('dragging');
+		this.boundry.removeEventListener('mousedown', this.#handleMouseDown.bind(this));
+		this.boundry.removeEventListener('touchstart', this.#handleTouchStart.bind(this));
+	}
+	
+	#addDragStyles() {
 		if (document.getElementById('drag-drop-styles')) {
 			return;
 		}
@@ -97,15 +139,15 @@ class DragDropReorder {
 		document.head.appendChild(style);
 	}
 	
-	handleMouseDown(event) {
-		this.startDrag(event, 'mouse');
+	#handleMouseDown(event) {
+		this.#startDrag(event, 'mouse');
 	}
 	
-	handleTouchStart(event) {
-		this.startDrag(event, 'touch');
+	#handleTouchStart(event) {
+		this.#startDrag(event, 'touch');
 	}
 	
-	startDrag(event, type) {
+	#startDrag(event, type) {
 		const item = event.target.closest(this.itemSelector);
 		if (!item) {
 			return;
@@ -138,15 +180,15 @@ class DragDropReorder {
 		const moveEvent = (type === 'mouse' ? 'mousemove' : 'touchmove');
 		const endEvent = (type === 'mouse' ? 'mouseup' : 'touchend');
 		
-		document.addEventListener(moveEvent, this.handleMove.bind(this));
-		document.addEventListener(endEvent, this.handleEnd.bind(this));
+		document.addEventListener(moveEvent, this.#handleMove.bind(this));
+		document.addEventListener(endEvent, this.#handleEnd.bind(this));
 		
 		if (this.options.onDragStart) {
 			this.options.onDragStart(item, this.boundry);
 		}
 	}
 	
-	handleMove(event) {
+	#handleMove(event) {
 		if (!this.isDragging || !this.draggedElement) {
 			return;
 		}
@@ -159,7 +201,7 @@ class DragDropReorder {
 		// Create placeholder only when actual movement starts
 		if (!this.hasStartedDragging) {
 			this.hasStartedDragging = true;
-			this.createPlaceholder();
+			this.#createPlaceholder();
 		}
 		
 		// Calculate new position based on axis constraint
@@ -201,10 +243,10 @@ class DragDropReorder {
 		this.draggedElement.style.pointerEvents = 'none';
 		
 		// Update placeholder position
-		this.updatePlaceholderPosition(clientX, clientY);
+		this.#updatePlaceholderPosition(clientX, clientY);
 	}
 	
-	handleEnd(event) {
+	#handleEnd(event) {
 		if (!this.isDragging || !this.draggedElement) {
 			return;
 		}
@@ -213,10 +255,10 @@ class DragDropReorder {
 		this.hasStartedDragging = false;
 		
 		// Remove event listeners
-		document.removeEventListener('mousemove', this.handleMove.bind(this));
-		document.removeEventListener('mouseup', this.handleEnd.bind(this));
-		document.removeEventListener('touchmove', this.handleMove.bind(this));
-		document.removeEventListener('touchend', this.handleEnd.bind(this));
+		document.removeEventListener('mousemove', this.#handleMove.bind(this));
+		document.removeEventListener('mouseup', this.#handleEnd.bind(this));
+		document.removeEventListener('touchmove', this.#handleMove.bind(this));
+		document.removeEventListener('touchend', this.#handleEnd.bind(this));
 		
 		if (this.placeholder) {
 			// Replace placeholder with the dragged element
@@ -240,7 +282,7 @@ class DragDropReorder {
 		
 		// Trigger reorder callback if position changed
 		if (this.options.onReorder) {
-			const newOrder = this.getNewOrder();
+			const newOrder = this.#getNewOrder();
 			if (newOrder) {
 				this.options.onReorder(newOrder, this.draggedElement, this.boundry);
 			}
@@ -253,7 +295,7 @@ class DragDropReorder {
 		this.draggedElement = null;
 	}
 	
-	createPlaceholder() {
+	#createPlaceholder() {
 		this.placeholder = this.draggedElement.cloneNode(true);
 		this.placeholder.classList.add('drag-drop-placeholder');
 		this.placeholder.style.opacity = '0.5';
@@ -267,7 +309,7 @@ class DragDropReorder {
 		this.draggedElement.parentNode.insertBefore(this.placeholder, this.draggedElement);
 	}
 	
-	updatePlaceholderPosition(clientX, clientY) {
+	#updatePlaceholderPosition(clientX, clientY) {
 		if (!this.placeholder) {
 			return;
 		}
@@ -299,7 +341,7 @@ class DragDropReorder {
 		}
 	}
 	
-	getNewOrder() {
+	#getNewOrder() {
 		if (!this.boundry) {
 			return null;
 		}
