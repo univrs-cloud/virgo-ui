@@ -7,10 +7,10 @@ export class Switch extends LitElement {
 
 	static get properties() {
 		return {
-			onValue: { type: String },
-			offValue: { type: String },
-			onLabel: { type: String },
-			offLabel: { type: String },
+			onValue: { type: String, attribute: 'on-value' },
+			offValue: { type: String, attribute: 'off-value' },
+			onLabel: { type: String, attribute: 'on-label' },
+			offLabel: { type: String, attribute: 'off-label' },
 			label: { type: String, reflect: true },
 			checked: { type: Boolean, reflect: true },
 			disabled: { type: Boolean, reflect: true }
