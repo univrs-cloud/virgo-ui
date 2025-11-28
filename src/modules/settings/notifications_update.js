@@ -31,8 +31,6 @@ const render = (event) => {
 	form.querySelector('.recipients').value = configuration?.smtp?.recipients?.join('\n') || '';
 };
 
-// form.querySelector('.address').addEventListener('input', validateAddress);
-// form.querySelector('.port').addEventListener('input', validatePort);
 form.validation = [
 	{
 		selector: '.address',
@@ -43,7 +41,8 @@ form.validation = [
 	{
 		selector: '.port',
 		rules: {
-			isEmpty: `Can't be empty`
+			isEmpty: `Can't be empty`,
+			isPort: `Between 0 and 65535`
 		}
 	}
 ];

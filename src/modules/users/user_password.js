@@ -31,7 +31,15 @@ form.validation = [
 	{
 		selector: '.password',
 		rules: {
-			isEmpty: `Can't be empty`
+			isEmpty: `Can't be empty`,
+			isStrongPassword: {
+				message: `At least 8 characters`,
+				minLength: 8,
+				minLowercase: 0,
+				minUppercase: 0,
+				minNumbers: 0,
+				minSymbols: 0
+			}
 		}
 	},
 	{
