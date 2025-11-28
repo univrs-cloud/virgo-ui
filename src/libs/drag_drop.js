@@ -3,7 +3,7 @@ class DragDropReorder {
 		this.container = container;
 		this.options = {
 			boundrySelector: null, // CSS selector for containers
-			itemSelector: '.drag-drop-item', // CSS selector for draggable items
+			itemSelector: '.card', // CSS selector for draggable items
 			axis: 'y', // 'x', 'y', or 'both'
 			dragHandle: null, // CSS selector for drag handle, null means entire item is draggable
 			onReorder: null, // Callback when items are reordered
@@ -17,18 +17,30 @@ class DragDropReorder {
 		this.dragOffset = { x: 0, y: 0 };
 		this.placeholder = null;
 		this.originalPosition = null;
+		this.itemSelector = '.drag-drop-item';
 		this.boundry = (this.options.boundrySelector ? this.container.querySelector(this.options.boundrySelector) : this.container);
 		this.boundry.classList.add('dragging');
 		this.hasStartedDragging = false;
-		
-		this.init();
 	}
 	
-	init() {
+	start() {
 		this.addDragStyles();
+		this.container.querySelectorAll(this.options.itemSelector).forEach((card) => {
+			card.classList.add('drag-drop-item');
+		});
 		this.container.addEventListener('mousedown', this.handleMouseDown.bind(this));
 		this.container.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: false });
 		this.container.addEventListener('dragstart', (event) => event.preventDefault());
+	}
+
+	stop() {
+		document.querySelector('#drag-drop-styles').remove();
+		this.container.querySelectorAll(this.options.itemSelector).forEach((card) => {
+			card.classList.remove('drag-drop-item');
+		});
+		this.boundry.classList.remove('dragging');
+		this.container.removeEventListener('mousedown', this.handleMouseDown.bind(this));
+		this.container.removeEventListener('touchstart', this.handleTouchStart.bind(this));
 	}
 	
 	addDragStyles() {
@@ -94,7 +106,7 @@ class DragDropReorder {
 	}
 	
 	startDrag(event, type) {
-		const item = event.target.closest(this.options.itemSelector);
+		const item = event.target.closest(this.itemSelector);
 		if (!item) {
 			return;
 		}
@@ -260,7 +272,7 @@ class DragDropReorder {
 			return;
 		}
 		
-		const items = this.boundry.querySelectorAll(this.options.itemSelector);
+		const items = this.boundry.querySelectorAll(this.itemSelector);
 		let insertIndex = -1;
 		
 		for (let i = 0; i < items.length; i++) {
@@ -292,14 +304,7 @@ class DragDropReorder {
 			return null;
 		}
 		
-		return Array.from(this.boundry.querySelectorAll(this.options.itemSelector));
-	}
-	
-	destroy() {
-		document.querySelector('#drag-drop-styles').remove();
-		this.boundry.classList.remove('dragging');
-		this.container.removeEventListener('mousedown', this.handleMouseDown.bind(this));
-		this.container.removeEventListener('touchstart', this.handleTouchStart.bind(this));
+		return Array.from(this.boundry.querySelectorAll(this.itemSelector));
 	}
 }
 
