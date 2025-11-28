@@ -10,53 +10,7 @@ const categorySomething = _.template(categoryPartial);
 const appTemplate = _.template(appPartial);
 const bookmarkTemplate = _.template(bookmarkPartial);
 const container = document.querySelector('#apps-bookmars');
-let dragDropInstance = null;
-let isDraggingEnabled = false;
-
-const order = (event) => {
-	const target = event.target.closest('.order');
-	if (_.isNull(target)) {
-		return;
-	}
-
-	event.preventDefault();
-	if (isDraggingEnabled) {
-		const shouldEnableDragging = target.querySelector('.icon-solid').classList.contains('icon-bars-staggered');
-		_.each(container.querySelectorAll('.item'), (boundry) => {
-			disableDragDrop(boundry);
-		});
-		if (shouldEnableDragging) {
-			enableDragDrop(target.closest('.item'));
-		}
-	} else {
-		enableDragDrop(target.closest('.item'));
-	}
-};
-
-const disableDragDrop = (container) => {
-	dragDropInstance?.stop();
-	dragDropInstance = null;
-	const icon = container.querySelector('.icon-solid');
-	icon.classList.remove('icon-check', 'text-green-500');
-	icon.classList.add('icon-bars-staggered', 'text-gray-500');
-	isDraggingEnabled = false;
-};
-
-const enableDragDrop = (container) => {	
-	if (dragDropInstance) {
-		return;
-	}
-
-	isDraggingEnabled = true;
-	const icon = container.querySelector('.icon-solid');
-	icon.classList.remove('icon-bars-staggered', 'text-gray-500');
-	icon.classList.add('icon-check', 'text-green-500');
-	dragDropInstance = new DragDropReorder(container, {
-		itemSelector: '.card',
-		onReorder: handleReorder
-	});
-	dragDropInstance.start();
-};
+let hasDraggingStarted = false;
 
 const handleReorder = (newOrder, draggedElement, boundry) => {
 	if (!newOrder || !draggedElement || !boundry) {
@@ -80,7 +34,7 @@ const render = (state) => {
 		return;
 	}
 	
-	if (isDraggingEnabled) {
+	if (hasDraggingStarted) {
 		return;
 	}
 
@@ -88,9 +42,9 @@ const render = (state) => {
 	if (_.isEmpty(state.apps)) {
 		template.innerHTML = appsEmptyTemplate();
 	} else {
-		_.each(state.apps, (apps, key) => {
+		_.each(state.apps, (apps, categoryName) => {
 			const categoryTemplate = document.createElement('template');
-			categoryTemplate.innerHTML = categorySomething({ name: key });
+			categoryTemplate.innerHTML = categorySomething({ name: categoryName });
 			const category = categoryTemplate.content.querySelector('.col');
 			apps = _.orderBy(apps, ['order'], ['asc']);
 			_.each(apps, (entity) => {
@@ -108,10 +62,24 @@ const render = (state) => {
 	morphdom(
 		container,
 		`<div>${template.innerHTML}</div>`,
-		{ childrenOnly: true }
+		{
+			childrenOnly: true,
+			onBeforeElUpdated: (fromEl, toEl) => {
+				if (fromEl.classList.contains('order')) {
+					return false;
+				}
+			}
+		}
 	);
 };
 
-container.addEventListener('click', order);
+new DragDropReorder(container, {
+	toggleSelector: '.order',
+	boundrySelector: '.item',
+	itemSelector: '.card',
+	onStart: () => { hasDraggingStarted = true; },
+	onStop: () => { hasDraggingStarted = false; },
+	onReorder: handleReorder
+});
 
 appService.subscribe([render]);
