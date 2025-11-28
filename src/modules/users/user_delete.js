@@ -3,7 +3,7 @@ import * as userService from 'modules/users/services/user';
 const module = document.querySelector('#users');
 
 const deleteUser = async (event) => {
-	if (!event.target.closest('a')?.classList.contains('delete')) {
+	if (event.target.closest('a')?.dataset.action !== 'delete') {
 		return;
 	}
 
@@ -12,7 +12,7 @@ const deleteUser = async (event) => {
 	const card = button.closest('.user');
 	const user = _.find(userService.getUsers(), { uid: Number(card.dataset.uid) });
 
-	if (!await confirm(`Are you sure you want to delete the user ${user.username}?`)) {
+	if (!await confirm(`Are you sure you want to delete the user ${user.username}?`, { buttons: [{ text: 'Delete', class: 'btn-danger' }] })) {
 		return;
 	}
 

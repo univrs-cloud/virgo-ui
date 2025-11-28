@@ -12,7 +12,7 @@ const reboot = async (event) => {
 	}
 
 	event.preventDefault();
-	if (!await confirm('Are you sure you want to reboot?')) {
+	if (!await confirm('Are you sure you want to reboot?', { buttons: [{ text: 'Reboot', class: 'btn-danger' }] })) {
 		return;
 	}
 
@@ -30,7 +30,7 @@ const shutdown = async (event) => {
 	}
 
 	event.preventDefault();
-	if (!await confirm('Are you sure you want to shut down?')) {
+	if (!await confirm('Are you sure you want to shut down?', { buttons: [{ text: 'Shutdown', class: 'btn-danger' }] })) {
 		return;
 	}
 	

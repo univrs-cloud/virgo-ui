@@ -43,7 +43,7 @@ const update = (event) => {
 		return;
 	}
 
-	if (!event.target.closest('a')?.classList.contains('update')) {
+	if (event.target.closest('a')?.dataset.action !== 'update') {
 		return;
 	}
 
@@ -63,7 +63,7 @@ const performAppAction = async (event) => {
 		return;
 	}
 
-	if (!event.target.closest('a')?.classList?.contains('dropdown-item') || event.target.closest('a').dataset.action === undefined) {
+	if (!event.target.closest('a')?.classList?.contains('dropdown-item') || event.target.closest('a')?.dataset.action === undefined) {
 		return;
 	}
 
@@ -73,7 +73,10 @@ const performAppAction = async (event) => {
 	const app = _.find(appService.getApps(), { name: card.dataset.name });
 	
 	const actionMessage = (button.dataset.action === 'remove' ? '<br><br>Data will <strong>NOT</strong> be deleted.' : '');
-	if (button.classList.contains('text-danger') && !await confirm(`Are you sure you want to ${button.dataset.action} the app ${app.title}?${actionMessage}`)) {
+	if (
+		button.classList.contains('text-danger') &&
+		!await confirm(`Are you sure you want to ${button.dataset.action} the app ${app.title}?${actionMessage}`, { buttons: [{ text: _.upperFirst(button.dataset.action), class: (button.classList.contains('text-danger') ? 'btn-danger' : 'btn-primary') }] })
+	) {
 		return;
 	}
 
@@ -98,7 +101,10 @@ const performServiceAction = async (event) => {
 	const card = button.closest('.service');
 	const service = _.find(_.flatMap(appService.getApps(), 'projectContainers'), { id: card.dataset.id });
 
-	if (button.classList.contains('text-danger') && !await confirm(`Are you sure you want to ${button.dataset.action} the service ${service.name}?`)) {
+	if (
+		button.classList.contains('text-danger') &&
+		!await confirm(`Are you sure you want to ${button.dataset.action} the service ${service.name}?`, { buttons: [{ text: _.upperFirst(button.dataset.action), class: (button.classList.contains('text-danger') ? 'btn-danger' : 'btn-primary') }] })
+	) {
 		return;
 	}
 

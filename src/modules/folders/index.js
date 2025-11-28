@@ -14,7 +14,7 @@ const container = module.querySelector('.container-fluid');
 const row = container.querySelector('.row');
 
 const copyToClipboard = (event) => {
-	if (event.target.closest('a').dataset.action !== 'copy-to-clipboard') {
+	if (event.target.closest('a')?.dataset.action !== 'copy-to-clipboard') {
 		return;
 	}
 
@@ -33,7 +33,7 @@ const copyToClipboard = (event) => {
 };
 
 const remove = async (event) => {
-	if (event.target.closest('a').dataset.action !== 'remove') {
+	if (event.target.closest('a')?.dataset.action !== 'delete') {
 		return;
 	}
 
@@ -44,7 +44,7 @@ const remove = async (event) => {
 	event.preventDefault();
 	const button = event.target.closest('a');
 	const folder = button.closest('.folder');
-	if (!await confirm(`Are you sure you want to ${button.dataset.action} ${folder.dataset.title}?`)) {
+	if (!await confirm(`Are you sure you want to delete ${folder.dataset.title}?`, { buttons: [{ text: 'Delete', class: 'btn-danger' }] })) {
 		return;
 	}
 

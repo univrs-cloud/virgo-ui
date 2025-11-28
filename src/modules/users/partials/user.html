@@ -26,13 +26,13 @@
 								<li><hr class="dropdown-divider"></li>
 								<li>
 									<%if (user.isDisabled) {%>
-										<a href="#" class="unlock dropdown-item">Unlock</a>
+										<a href="#" class="dropdown-item" data-action="unlock">Unlock</a>
 									<%} else {%>
-										<a href="#" class="lock dropdown-item text-danger">Lock</a>
+										<a href="#" class="dropdown-item text-danger" data-action="lock">Lock</a>
 									<%}%>
 								</li>
 								<li><hr class="dropdown-divider"></li>
-								<li><a href="#" class="delete dropdown-item text-danger">Delete</a></li>
+								<li><a href="#" class="dropdown-item text-danger" data-action="delete">Delete</a></li>
 							<%}%>
 						</ul>
 					</div>
