@@ -17,7 +17,7 @@ export class Input extends LitElement {
 			readonly: { type: Boolean, reflect: true },
 			autocomplete: { type: String, reflect: true },
 			error: { type: String },
-			showPassword: { type: Boolean }
+			showPassword: { type: Boolean, state: true, attribute: false }
 		};
 	}
 
