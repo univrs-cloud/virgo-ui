@@ -22,6 +22,11 @@
 @use "@xterm/xterm/css/xterm";
 
 // --------
+// tagify
+// --------
+@use "@yaireo/tagify/src/tagify.scss";
+
+// --------
 // Custom variables, functions and mixins
 // --------
 @import "variables";

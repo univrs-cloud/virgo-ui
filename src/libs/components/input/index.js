@@ -1,6 +1,7 @@
 import { LitElement, html } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
 import { sheet } from "../styles.js";
+import Tagify from '@yaireo/tagify';
 
 export class Input extends LitElement {
 	static formAssociated = true;
@@ -28,6 +29,7 @@ export class Input extends LitElement {
 	#initialReadonly = false;
 	#hasPrefix = false;
 	#hasSuffix = false;
+	#tagify = null;
 
 	constructor() {
 		super();
@@ -66,6 +68,13 @@ export class Input extends LitElement {
 		return this.#error;
 	}
 
+	set tags(value) {
+		if (this.#tagify) {
+			this.#tagify.removeAllTags();
+			this.#tagify.addTags(value);
+		}
+	}
+
 	connectedCallback() {
 		super.connectedCallback();
 		this.#initialValue = this.value;
@@ -80,6 +89,9 @@ export class Input extends LitElement {
 		this.readonly = this.#initialReadonly;
 		this.error = '';
 		this.showPassword = false;
+		if (this.#tagify) {
+			this.#tagify.removeAllTags();
+		}
 	}
 
 	firstUpdated() {
@@ -94,6 +106,21 @@ export class Input extends LitElement {
 				this.closest('form')?.dispatchEvent(new event.constructor('submit', event));
 			}
 		});
+
+		if (this.type === 'tags') {
+			this.#tagify = new Tagify(input, {
+				delimiters: ' |,|\n|\r',
+				editTags: 1
+			});
+			this.#tagify.on('change', (event) => {
+				try {
+					const value = JSON.parse(event.detail.value || '[]');
+					this.value = value.map((entry) => { return entry.value; });
+				} catch (error) {
+					this.value = [];
+				}
+			});
+		}
 		
 		this.#hasPrefix = this.renderRoot.querySelector('slot[name="prefix"]')?.assignedNodes().length > 0 ?? false;
 		this.#hasSuffix = this.renderRoot.querySelector('slot[name="suffix"]')?.assignedNodes().length > 0 ?? false;
