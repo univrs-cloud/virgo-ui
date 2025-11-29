@@ -62,7 +62,7 @@ export class Textarea extends LitElement {
 		super.connectedCallback();
 		this.#initialValue = this.value;
 		this.#initialDisabled = this.hasAttribute('disabled');
-  		this.#initialReadonly = this.hasAttribute('readonly');
+		this.#initialReadonly = this.hasAttribute('readonly');
 		this.internals.setFormValue(this.value);
 	}
 
