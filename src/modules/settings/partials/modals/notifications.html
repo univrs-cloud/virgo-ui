@@ -6,9 +6,9 @@
 					<h5 class="modal-title">Notifications</h5>
 				</div>
 				<div class="modal-body">
-					<h6 class="mb-3">SMTP server</h6>
+					<h6 class="mb-2">SMTP server</h6>
 					<div class="mb-2">
-						<label class="form-label me-2">Encryption</label>
+						<div><small class="fw-light text-body-tertiary">Encryption</small></div>
 						<div class="form-check form-check-inline">
 							<label class="form-check-label">
 								<input type="radio" name="encryption" value="" class="form-check-input encryption">
@@ -22,7 +22,7 @@
 							</label>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row g-2">
 						<div class="col-9">
 							<u-input name="address" label="SMTP server" class="address"></u-input>
 						</div>
@@ -36,9 +36,8 @@
 
 					<hr class="border-secondary-subtle my-4">
 					
-					<h6 class="mb-3">Recipients</h6>
-					<u-textarea name="recipients" label="List of email addresses" class="recipients"></u-textarea>
-					<div class="form-text mt-n2">One email address per line.</div>
+					<h6 class="mb-2">Recipients</h6>
+					<u-textarea name="recipients" label="List of email addresses" class="recipients" tip="One email address per line."></u-textarea>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-outline-secondary d-flex ms-auto" data-bs-dismiss="modal">Cancel</button>
