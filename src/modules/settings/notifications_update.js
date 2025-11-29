@@ -10,7 +10,7 @@ const updateSmtp = (event) => {
 	const buttons = form.querySelectorAll('button');
 	_.each(buttons, (button) => { button.disabled = true; });
 	let config = form.getData();
-	config.recipients = _.compact(_.split(_.trim(config.recipients), '\n'));
+	config.recipients = _.compact(_.split(_.trim(config.recipients), ','));
 	configurationService.updateSmtp(config);
 	bootstrap.Modal.getInstance(modal)?.hide();
 };
@@ -28,7 +28,7 @@ const render = (event) => {
 	form.querySelector('.username').value = configuration?.smtp?.username || '';
 	form.querySelector('.password').value = configuration?.smtp?.password || '';
 	form.querySelector('.sender').value = configuration?.smtp?.sender || '';
-	form.querySelector('.recipients').value = configuration?.smtp?.recipients?.join('\n') || '';
+	form.querySelector('.recipients').tags = configuration?.smtp?.recipients || [];
 };
 
 form.validation = [
