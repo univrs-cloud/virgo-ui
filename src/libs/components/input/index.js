@@ -113,7 +113,7 @@ export class Input extends LitElement {
 		};
 
 		return html`
-			<div class="mb-3">
+			<div class="mb-4">
 				<div class="${hasInputGroup ? 'input-group' : ''} ${hasInputGroup && this.error ? 'has-validation' : ''}">
 					<slot name="prefix" class="input-group-text ${!this.#hasPrefix ? 'd-none' : ''}" @slotchange=${this.#onSlotChange}></slot>
 					<div class="form-floating">
@@ -129,13 +129,13 @@ export class Input extends LitElement {
 						>
 						<label>
 							${this.label}
-							${this.tip ? html`<span class="help-inline ms-1" data-bs-toggle="tooltip" data-bs-original-title=${this.tip}><i class="icon-solid icon-question-circle"></i></span>` : ''}
+							${this.tip ? html`<span class="help-inline ms-1" data-bs-toggle="tooltip" data-bs-original-title="${this.tip}"><i class="icon-solid icon-question-circle"></i></span>` : ''}
 						</label>
 						${this.type === 'password' ? html`<button type="button" class="password-toggle" @click=${this.#togglePassword}></button>` : ''}
+						<div class="invalid-feedback lh-1 z-1 position-absolute top-100 start-0 end-0 ${this.error ? 'd-block' : ''}">${this.error || ''}</div>
 					</div>
 					<slot name="suffix" class="input-group-text ${!this.#hasSuffix ? 'd-none' : ''}" @slotchange=${this.#onSlotChange}></slot>
 				</div>
-				<div class="invalid-feedback ${this.error ? 'd-block' : ''}">${this.error || ''}</div>
 			</div>
 		`;
 	}
