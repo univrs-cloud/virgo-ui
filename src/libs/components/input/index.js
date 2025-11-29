@@ -70,7 +70,7 @@ export class Input extends LitElement {
 		super.connectedCallback();
 		this.#initialValue = this.value;
 		this.#initialDisabled = this.hasAttribute('disabled');
-  		this.#initialReadonly = this.hasAttribute('readonly');
+		this.#initialReadonly = this.hasAttribute('readonly');
 		this.internals.setFormValue(this.value);
 	}
 
@@ -87,6 +87,13 @@ export class Input extends LitElement {
 		if (label) {
 			new bootstrap.Tooltip(label);
 		}
+
+		const input = this.renderRoot.querySelector('input');
+		input.addEventListener('keypress', (event) => {
+			if (event.code.toLowerCase() === 'enter') {
+				this.closest('form')?.dispatchEvent(new event.constructor('submit', event));
+			}
+		});
 		
 		this.#hasPrefix = this.renderRoot.querySelector('slot[name="prefix"]')?.assignedNodes().length > 0 ?? false;
 		this.#hasSuffix = this.renderRoot.querySelector('slot[name="suffix"]')?.assignedNodes().length > 0 ?? false;

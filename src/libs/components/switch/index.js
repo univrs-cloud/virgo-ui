@@ -46,7 +46,7 @@ export class Switch extends LitElement {
 		this.disabled = this.#initialDisabled;
 		await this.updateComplete;
 		const input = this.renderRoot.querySelector('input');
-  		input.checked = this.checked;
+		input.checked = this.checked;
 		input.dispatchEvent(new Event('change'));
 	}
 
