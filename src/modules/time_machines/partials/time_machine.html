@@ -56,22 +56,26 @@
 							<small class="text-body-tertiary"><%=timeMachine.cap?.toFixed(0)%>%</small>
 							<small class="text-body-tertiary"><%=(100 - timeMachine.cap)?.toFixed(0)%>%</small>
 						</div>
-						<dt class="fw-lighter d-flex align-items-center">
-							<small>Open with</small>
-							<i class="icon-solid icon-circle-info ms-1 text-gray-500" data-bs-toggle="tooltip" data-bs-original-title="Click to copy the address. In Finder, press ⌘K and paste it to connect. This lets Time Machine use it for backups."></i>
-						</dt>
-						<dd class="mb-0">
-							<div class="d-flex align-items-center">
-								<a href="#" class="link-dark link-underline link-underline-opacity-0 me-2" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="Copy to clipboard">
-									<i class="icon-brands icon-apple icon-fw me-1"></i>
-									Finder + Time Machine
-								</a>
-								<span class="copy d-none">smb://<%=(timeMachine.isPrivate ? `${_.first(timeMachine.validUsers)}@` : '')%><%=networkInterface?.ip4%>/<%=timeMachine.name%></span>
-							</div>
-						</dd>
 					</dl>
 				</div>
 			</div>
+		</div>
+		<div class="card-footer d-flex bg-gray-100 rounded-bottom-4 text-body-secondary px-5 py-1">
+			<dl class="m-0">
+				<dt class="fw-lighter d-flex align-items-center">
+					<small>Open with</small>
+					<i class="icon-solid icon-circle-info ms-1 text-gray-500" data-bs-toggle="tooltip" data-bs-original-title="Click to copy the address. In Finder, press ⌘K and paste it to connect. This lets Time Machine use it for backups."></i>
+				</dt>
+				<dd class="mb-0">
+					<div class="d-flex align-items-center">
+						<a href="#" class="link-dark link-underline link-underline-opacity-0 me-2" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="Copy to clipboard">
+							<i class="icon-brands icon-apple icon-fw me-1"></i>
+							Finder + Time Machine
+						</a>
+						<span class="copy d-none">smb://<%=(timeMachine.isPrivate ? `${_.first(timeMachine.validUsers)}@` : '')%><%=networkInterface?.ip4%>/<%=timeMachine.name%></span>
+					</div>
+				</dd>
+			</dl>
 		</div>
 	</div>
 </div>
