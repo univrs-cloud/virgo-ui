@@ -44,6 +44,13 @@ form.validation = [
 			isEmpty: `Can't be empty`,
 			isPort: `Between 0 and 65535`
 		}
+	},
+	{
+		selector: '.sender',
+		rules: {
+			isEmpty: `Can't be empty`,
+			isEmail: `Invalid email address`
+		}
 	}
 ];
 form.addEventListener('valid', updateSmtp);
