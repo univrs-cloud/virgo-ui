@@ -3,11 +3,7 @@
 		<div class="card-body ps-0 py-1">
 			<div class="row g-0 align-items-center">
 				<div class="card-image card-spacer col-auto p-2">
-					<%if (folder.isPrivate) {%>
-						<i class="icon-light icon-lock" data-bs-toggle="tooltip" data-bs-original-title="Password protected"></i>
-					<%} else {%>
-						<i class="icon-light icon-lock-open" data-bs-toggle="tooltip" data-bs-original-title="Public"></i>
-					<%}%>
+					<i class="icon-light icon-folder-open" data-bs-toggle="tooltip" data-bs-original-title="<%=(folder.isPrivate ? 'Password protected' : 'Public')%>"></i>
 				</div>
 				<div class="col flex-grow-1 text-truncate">
 					<%=folder.comment%>
