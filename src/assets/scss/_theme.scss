@@ -205,6 +205,9 @@ img {
 				background: var(--bs-light) !important;
 				box-shadow: var(--bs-box-shadow-sm);
 			}
+			&:last-child {
+				margin-bottom: map-get($spacers, 3);
+			}
 		}
 	}
 }
