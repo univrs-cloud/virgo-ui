@@ -45,7 +45,7 @@ const render = (state) => {
 		_.each(state.apps, (apps, categoryName) => {
 			const categoryTemplate = document.createElement('template');
 			categoryTemplate.innerHTML = categorySomething({ name: categoryName });
-			const category = categoryTemplate.content.querySelector('.col');
+			const category = categoryTemplate.content.querySelector('.group');
 			apps = _.orderBy(apps, ['order'], ['asc']);
 			_.each(apps, (entity) => {
 				if (entity.type === 'app') {
@@ -55,7 +55,7 @@ const render = (state) => {
 					category.insertAdjacentHTML('beforeend', bookmarkTemplate({ bookmark: entity }));
 				}
 			});
-			template.innerHTML += category.outerHTML;
+			template.innerHTML += categoryTemplate.innerHTML;
 		});
 	}
 	
@@ -75,7 +75,7 @@ const render = (state) => {
 
 new DragDropReorder(container, {
 	toggleSelector: '.order',
-	boundrySelector: '.item',
+	boundrySelector: '.group',
 	itemSelector: '.card',
 	onStart: () => { hasDraggingStarted = true; },
 	onStop: () => { hasDraggingStarted = false; },

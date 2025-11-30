@@ -94,8 +94,8 @@ class DragDropReorder {
 		style.id = 'drag-drop-styles';
 		style.textContent = `
 			.dragging {
-				background: var(--bs-purple-100);
-				border-radius: var(--bs-border-radius-xl);
+				background: var(--bs-purple-100) !important;
+				border-radius: var(--bs-border-radius-xl) !important;
 			}
 			.drag-drop-placeholder {
 				transition: all 0.2s ease;

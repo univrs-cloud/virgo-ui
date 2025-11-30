@@ -198,18 +198,27 @@ img {
 	}
 }
 #dashboard {
-	.item {
+	.group {
+		border-radius: var(--bs-border-radius-xl);
+		padding: map-get($spacers, 2) map-get($spacers, 3) map-get($spacers, 1);
+		.order {
+			display: flex;
+			align-items: center;
+			text-decoration: none;
+			margin-left: auto;
+		}
 		.card {
 			transition: box-shadow 0.3s ease-in-out;
 			&:hover {
 				background: var(--bs-light) !important;
 				box-shadow: var(--bs-box-shadow-sm);
 			}
-			&:last-child {
-				margin-bottom: map-get($spacers, 3);
-			}
 		}
 	}
+}
+#resources-monitor {
+	padding-top: map-get($spacers, 2);
+	padding-bottom: map-get($spacers, 1);
 }
 #apps {
 	.container-fluid > .row {
