@@ -54,7 +54,7 @@ img {
 		z-index: 2000;
 		position: absolute;
 		right: 4px;
-		top: 62px;
+		top: 66px;
 		bottom: 0;
 		width: 8px;
 		background: rgba(0, 0, 0, 0.05);
@@ -90,7 +90,7 @@ img {
 .modal-body {
 	overflow: auto;
 	max-height: calc(100vh - 170px);
-	padding-top: 62px;
+	padding-top: 66px;
 	scrollbar-width: none;
 	&::-webkit-scrollbar {
 		display: none;
