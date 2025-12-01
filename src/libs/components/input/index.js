@@ -148,7 +148,7 @@ export class Input extends LitElement {
 
 		return html`
 			<div class="mb-4">
-				<div class="${hasInputGroup ? 'input-group' : ''} ${hasInputGroup && this.error ? 'has-validation' : ''}">
+				<div class="${hasInputGroup ? 'input-group' : ''} has-validation">
 					<slot name="prefix" class="input-group-text ${!this.#hasPrefix ? 'd-none' : ''}" @slotchange=${this.#onSlotChange}></slot>
 					<div class="form-floating">
 						<input
