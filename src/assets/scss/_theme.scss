@@ -46,22 +46,71 @@ img {
 	backdrop-filter: blur(6px) grayscale(0.8);
 }
 .modal-content {
+	position: relative;
 	background-clip: initial;
 	border: 0;
+	.scrollbar {
+		opacity: 0;
+		z-index: 2000;
+		position: absolute;
+		right: 4px;
+		top: 62px;
+		bottom: 70px;
+		width: 8px;
+		background: rgba(0, 0, 0, 0.05);
+		border-radius: 4px;
+		
+	}
+	.scrollbar-thumb {
+		z-index: 2000;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		background: rgba(0, 0, 0, 0.3);
+		border-radius: 4px;
+		cursor: pointer;
+		transition: background 0.2s;
+	}
+	.scrollbar-thumb:hover,
+	.scrollbar-thumb.dragging {
+		background: rgba(0, 0, 0, 0.5);
+	}
 }
 .modal-header {
-	border-top-left-radius: 0;
-	border-top-right-radius: 0;
+	z-index: 2000;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	background-color: rgba(255, 255, 255, 0.25);
+	backdrop-filter: blur(8px);
 	border-bottom: 0;
-	// padding-bottom: 0;
+	border-radius: var(--bs-modal-border-radius);
 }
 .modal-body {
 	overflow: auto;
 	max-height: calc(100vh - 170px);
+	padding-top: 62px;
+	padding-bottom: 70px;
+	scrollbar-width: none;
+	&::-webkit-scrollbar {
+		display: none;
+	}
+	&.has-scrollbar {
+		margin-right: 8px;
+	}
 }
 .modal-footer {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 2000;
+	background-color: rgba(255, 255, 255, 0.25);
+	backdrop-filter: blur(8px);
 	border-top: 0;
-	padding-top: 0;
+	border-radius: var(--bs-modal-border-radius);
 }
 
 .toast-container {

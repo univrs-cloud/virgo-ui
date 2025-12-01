@@ -5,10 +5,6 @@ import 'libs/dialog';
 import 'libs/components';
 import * as bootstrapService from 'shell/services/bootstrap';
 
-document.addEventListener('shown.bs.modal', (event) => {
-	event.target.querySelector('u-input:not([type="hidden"])')?.focus(); // focus 1st input after modal is shown
-});
-
 try {
 	let encodedAccount = (document.cookie.match('(^|;)\\s*' + 'account' + '\\s*=\\s*([^;]+)')?.pop());
 	let decodedAccountJson = atob(encodedAccount);
