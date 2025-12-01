@@ -55,11 +55,10 @@ img {
 		position: absolute;
 		right: 4px;
 		top: 62px;
-		bottom: 70px;
+		bottom: 0;
 		width: 8px;
 		background: rgba(0, 0, 0, 0.05);
 		border-radius: 4px;
-		
 	}
 	.scrollbar-thumb {
 		z-index: 2000;
@@ -92,13 +91,15 @@ img {
 	overflow: auto;
 	max-height: calc(100vh - 170px);
 	padding-top: 62px;
-	padding-bottom: 70px;
 	scrollbar-width: none;
 	&::-webkit-scrollbar {
 		display: none;
 	}
 	&.has-scrollbar {
 		margin-right: 8px;
+	}
+	&:has(+ .modal-footer) {
+		padding-bottom: 70px;
 	}
 }
 .modal-footer {
@@ -111,6 +112,9 @@ img {
 	backdrop-filter: blur(8px);
 	border-top: 0;
 	border-radius: var(--bs-modal-border-radius);
+	~ .scrollbar {
+		bottom: 70px;
+	}
 }
 
 .toast-container {
