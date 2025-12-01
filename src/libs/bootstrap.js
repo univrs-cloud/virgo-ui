@@ -8,6 +8,9 @@ bootstrap.Modal.Default.backdrop = 'static';
 bootstrap.Modal.Default.keyboard = false;
 bootstrap.Modal.Default.focus = false;
 bootstrap.Modal.addScrollbar = (modal) => {
+	const controller = new AbortController();
+    const signal = controller.signal;
+
 	modal.querySelector('.modal-content').insertAdjacentHTML('beforeend', `<div class="scrollbar"><div class="scrollbar-thumb"></div></div>`);
 
 	const modalBody = modal.querySelector('.modal-body');
@@ -37,20 +40,12 @@ bootstrap.Modal.addScrollbar = (modal) => {
 		scrollbarThumb.style.top = thumbTop + 'px';
 	}
 
-	const resizeHandler = () => {
-		updateScrollbar();
-	};
-    const scrollHandler = () => {
-		updateScrollbar();
-	};
     const wheelHandler = (event) => {
         event.preventDefault();
         modalBody.scrollTop += event.deltaY;
+        updateScrollbar();
     };
-    const scrollbarWheelHandler = (event) => {
-        event.preventDefault();
-        modalBody.scrollTop += event.deltaY;
-    };
+
     const scrollbarClickHandler = (event) => {
         if (event.target === scrollbarThumb) {
             return;
@@ -62,6 +57,7 @@ bootstrap.Modal.addScrollbar = (modal) => {
         const scrollPercentage = (clickY - thumbHeight / 2) / (scrollbarHeight - thumbHeight);
         modalBody.scrollTop = scrollPercentage * (modalBody.scrollHeight - modalBody.clientHeight);
     };
+
     const thumbMouseDownHandler = (event) => {
         isDragging = true;
         startY = event.clientY;
@@ -69,6 +65,7 @@ bootstrap.Modal.addScrollbar = (modal) => {
         scrollbarThumb.classList.add('dragging');
         event.preventDefault();
     };
+
     const documentMouseMoveHandler = (event) => {
         if (!isDragging) {
             return;
@@ -79,29 +76,24 @@ bootstrap.Modal.addScrollbar = (modal) => {
         const scrollRatio = (modalBody.scrollHeight - modalBody.clientHeight) / (scrollbarHeight - thumbHeight);
         modalBody.scrollTop = startScrollTop + (deltaY * scrollRatio);
     };
+
     const documentMouseUpHandler = () => {
         isDragging = false;
         scrollbarThumb.classList.remove('dragging');
     };
 
-	window.addEventListener('resize', resizeHandler);
-    modalBody.addEventListener('scroll', scrollHandler);
-    modalBody.addEventListener('wheel', wheelHandler, { passive: false });
-    scrollbar.addEventListener('wheel', scrollbarWheelHandler, { passive: false });
-    scrollbar.addEventListener('click', scrollbarClickHandler);
-    scrollbarThumb.addEventListener('mousedown', thumbMouseDownHandler);
-    document.addEventListener('mousemove', documentMouseMoveHandler);
-    document.addEventListener('mouseup', documentMouseUpHandler);
+	window.addEventListener('resize', updateScrollbar, { signal });
+    modalBody.addEventListener('scroll', updateScrollbar, { signal });
+    modalBody.addEventListener('wheel', wheelHandler, { signal, passive: false });
+    scrollbar.addEventListener('wheel', wheelHandler, { signal, passive: false });
+    scrollbar.addEventListener('click', scrollbarClickHandler, { signal });
+    scrollbarThumb.addEventListener('mousedown', thumbMouseDownHandler, { signal });
+    document.addEventListener('mousemove', documentMouseMoveHandler, { signal });
+    document.addEventListener('mouseup', documentMouseUpHandler, { signal });
 
 	modal._cleanupScrollbar = () => {
-        window.removeEventListener('resize', resizeHandler);
-        modalBody.removeEventListener('scroll', scrollHandler);
-        modalBody.removeEventListener('wheel', wheelHandler);
-        scrollbar.removeEventListener('wheel', scrollbarWheelHandler);
-        scrollbar.removeEventListener('click', scrollbarClickHandler);
-        scrollbarThumb.removeEventListener('mousedown', thumbMouseDownHandler);
-        document.removeEventListener('mousemove', documentMouseMoveHandler);
-        document.removeEventListener('mouseup', documentMouseUpHandler);
+        controller.abort();
+		modalBody.classList.remove('has-scrollbar');
 		modal.querySelector('.scrollbar')?.remove();
     };
 };
