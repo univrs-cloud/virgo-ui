@@ -10,6 +10,7 @@ bootstrap.Modal.Default.focus = false;
 
 const addScrollbar = (modal) => {
 	if (modal.querySelector('.scrollbar')) {
+		updateScrollbar();
 		return;
 	}
 
