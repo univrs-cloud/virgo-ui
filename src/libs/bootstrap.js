@@ -82,7 +82,8 @@ bootstrap.Modal.addScrollbar = (modal) => {
         scrollbarThumb.classList.remove('dragging');
     };
 
-	window.addEventListener('resize', updateScrollbar, { signal });
+	const resizeObserver = new ResizeObserver(updateScrollbar);
+	resizeObserver.observe(modalBody);
     modalBody.addEventListener('scroll', updateScrollbar, { signal });
     modalBody.addEventListener('wheel', wheelHandler, { signal, passive: false });
     scrollbar.addEventListener('wheel', wheelHandler, { signal, passive: false });
@@ -93,6 +94,7 @@ bootstrap.Modal.addScrollbar = (modal) => {
 
 	modal._cleanupScrollbar = () => {
         controller.abort();
+		resizeObserver.disconnect();
 		modalBody.classList.remove('has-scrollbar');
 		modal.querySelector('.scrollbar')?.remove();
     };
