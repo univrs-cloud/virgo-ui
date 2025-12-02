@@ -20,7 +20,7 @@ const render = (state) => {
 	const template = document.createElement('template');
 	template.innerHTML = foldersTemplate();
 	
-	const folders = template.content.querySelector('.folders');
+	const folders = template.content.querySelector('.folders .row');
 	const foldersCollection = _.filter(state.shares, { isTimeMachine: false });
 	if (_.isEmpty(foldersCollection)) {
 		folders.insertAdjacentHTML('beforeend', foldersEmptyTemplate());
@@ -30,7 +30,7 @@ const render = (state) => {
 		});
 	}
 
-	const timeMachines = template.content.querySelector('.time-machines');
+	const timeMachines = template.content.querySelector('.time-machines .row');
 	const timeMachineCollection = _.filter(state.shares, { isTimeMachine: true });
 	if (_.isEmpty(timeMachineCollection)) {
 		timeMachines.insertAdjacentHTML('beforeend', timeMachineEmptyTemplate());

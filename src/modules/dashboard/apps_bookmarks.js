@@ -3,23 +3,77 @@ import categoryPartial from 'modules/dashboard/partials/category.html';
 import appPartial from 'modules/dashboard/partials/app.html';
 import bookmarkPartial from 'modules/dashboard/partials/bookmark.html';
 import * as appService from 'modules/dashboard/services/app';
-import 'libs/drag_drop.js';
+import Sortable from 'sortablejs';
 
 const appsEmptyTemplate = _.template(appsEmptyPartial);
 const categorySomething = _.template(categoryPartial);
 const appTemplate = _.template(appPartial);
 const bookmarkTemplate = _.template(bookmarkPartial);
 const container = document.querySelector('#apps-bookmars');
+let sortable = null;
+let cards = [];
 let hasDraggingStarted = false;
 
-const handleReorder = (newOrder, draggedElement, boundry) => {
-	if (!newOrder || !draggedElement || !boundry) {
+const toggleOrder = (event) => {
+	const orderToggle = event.target.closest('.order');
+	if (_.isNull(orderToggle)) {
 		return;
 	}
-	
+
+	const group = orderToggle.closest('.group');
+	const icon = orderToggle.querySelector('.icon-solid');
+
+	if (!group.classList.contains('dragging')) {
+		sortable?.destroy();
+		sortable = null;
+		saveReorder(cards);
+		cards = [];
+		_.each(container.querySelectorAll('.group.dragging'), (group) => {
+			group.classList.remove('dragging');
+			const icon = group.querySelector('.order .icon-solid');
+			icon.classList.remove('icon-check', 'text-green-500');
+			icon.classList.add('icon-bars-staggered', 'text-gray-500');
+		});
+	}
+
+	if (sortable) {
+		sortable.destroy();
+		sortable = null;
+		saveReorder(cards);
+		cards = [];
+		hasDraggingStarted = false;
+		group.classList.remove('dragging');
+		icon.classList.remove('icon-check', 'text-green-500');
+		icon.classList.add('icon-bars-staggered', 'text-gray-500');
+		return;
+	}
+
+	hasDraggingStarted = true;
+	group.classList.add('dragging');
+	icon.classList.remove('icon-bars-staggered', 'text-gray-500');
+	icon.classList.add('icon-check', 'text-green-500');
+	sortable = new Sortable(group.querySelector(':scope > .row'), {
+		animation: 150,
+		draggable: '.col',
+		handle: '.card',
+		onStart: (event) => {
+			event.item.style.opacity = '0.5';
+		},
+		onEnd: (event) => {
+			event.item.style.opacity = '1';
+			cards = _.map(Array.from(event.to.children), (col) => { return col.querySelector('.card'); });
+		}
+	});
+};
+
+const saveReorder = (cards) => {
+	if (_.isEmpty(cards)) {
+		return;
+	}
+
 	let config = [];
-	_.each(newOrder, (card, order) => {
-		let item = {
+	_.each(cards, (card, order) => {
+		const item = {
 			id: card.dataset.id,
 			type: card.dataset.type,
 			order: order + 1
@@ -45,7 +99,7 @@ const render = (state) => {
 		_.each(state.apps, (apps, categoryName) => {
 			const categoryTemplate = document.createElement('template');
 			categoryTemplate.innerHTML = categorySomething({ name: categoryName });
-			const category = categoryTemplate.content.querySelector('.group');
+			const category = categoryTemplate.content.querySelector('.group .row');
 			apps = _.orderBy(apps, ['order'], ['asc']);
 			_.each(apps, (entity) => {
 				if (entity.type === 'app') {
@@ -73,13 +127,6 @@ const render = (state) => {
 	);
 };
 
-new DragDropReorder(container, {
-	toggleSelector: '.order',
-	boundrySelector: '.group',
-	itemSelector: '.card',
-	onStart: () => { hasDraggingStarted = true; },
-	onStop: () => { hasDraggingStarted = false; },
-	onReorder: handleReorder
-});
+container.addEventListener('click', toggleOrder);
 
 appService.subscribe([render]);

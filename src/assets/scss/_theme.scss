@@ -149,6 +149,11 @@ img {
 			margin: 0.125rem 0;
 		}
 	}
+	.card-footer {
+		border-left: var(--bs-card-border-width) solid var(--bs-card-border-color);
+		border-right: var(--bs-card-border-width) solid var(--bs-card-border-color);
+		border-radius: var(--bs-border-radius-xl);
+	}
 	.dropdown-toggle {
 		--bs-btn-active-border-color: transparent;
 		--bs-btn-hover-bg: var(--bs-gray-200);
@@ -253,7 +258,7 @@ img {
 #dashboard {
 	.group {
 		border-radius: var(--bs-border-radius-xl);
-		padding: map-get($spacers, 2) map-get($spacers, 3) map-get($spacers, 1);
+		padding: map-get($spacers, 2) 0 map-get($spacers, 1);
 		.order {
 			display: flex;
 			align-items: center;
@@ -267,6 +272,13 @@ img {
 				box-shadow: var(--bs-box-shadow-sm);
 			}
 		}
+	}
+	.dragging {
+		background: var(--bs-purple-100) !important;
+		border-radius: var(--bs-border-radius-xl) !important;
+		padding-left: map-get($spacers, 2);
+		padding-right: map-get($spacers, 2);
+		margin: 0 map-get($spacers, 2) * -1;
 	}
 }
 #resources-monitor {

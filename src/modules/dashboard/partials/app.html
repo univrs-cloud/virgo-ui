@@ -1,29 +1,31 @@
-<div class="card rounded-4 border-0" data-id="<%=app.id%>" data-type="app">
-	<div class="card-body ps-0 pe-2 py-1">
-		<div class="row g-0 align-items-center">
-			<div class="card-image card-spacer col-auto p-2">
-				<img src="<%=(_.includes(app.icon, '/') ? app.icon : `/assets/img/apps/${app.icon}`)%>">
-			</div>
-			<div class="col overflow-hidden">
-				<div class="d-flex align-items-center">
-					<div class="text-truncate"><%=app.title%></div>
-					<%if (app.hasUpdates) {%>
-						<div class="badge bd-green-100 rounded-pill ms-2">
-							<i class="icon-solid icon-download icon-fw"></i>
-						</div>
-					<%}%>
+<div class="col col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
+	<div class="card rounded-4 border-0" data-id="<%=app.id%>" data-type="app">
+		<div class="card-body ps-0 pe-2 py-1">
+			<div class="row g-0 align-items-center">
+				<div class="card-image card-spacer col-auto p-2">
+					<img src="<%=(_.includes(app.icon, '/') ? app.icon : `/assets/img/apps/${app.icon}`)%>">
+				</div>
+				<div class="col overflow-hidden">
+					<div class="d-flex align-items-center">
+						<div class="text-truncate"><%=app.title%></div>
+						<%if (app.hasUpdates) {%>
+							<div class="badge bd-green-100 rounded-pill ms-2">
+								<i class="icon-solid icon-download icon-fw"></i>
+							</div>
+						<%}%>
+					</div>
 				</div>
 			</div>
 		</div>
+		<%if (_.includes(['success', 'warning'], app.state) && !_.isEmpty(app.url)) {%>
+			<a href="<%=app.url%>" target="<%=(app?.target || app.name)%>" class="stretched-link"></a>
+		<%}%>
+		<%let color =''%>
+		<%if (app.state === 'success') color = 'green'%>
+		<%if (app.state === 'warning') color = 'yellow'%>
+		<%if (_.includes(['danger', undefined], app.state)) color = 'red'%>
+		<span class="indicator badge translate-middle border border-light rounded-pill <%=`bd-${color}-100`%>">
+			<%=_.size(_.filter(app.projectContainers, { state: 'running' }))%> / <%=_.size(app.projectContainers)%>
+		</span>
 	</div>
-	<%if (_.includes(['success', 'warning'], app.state) && !_.isEmpty(app.url)) {%>
-		<a href="<%=app.url%>" target="<%=(app?.target || app.name)%>" class="stretched-link"></a>
-	<%}%>
-	<%let color =''%>
-	<%if (app.state === 'success') color = 'green'%>
-	<%if (app.state === 'warning') color = 'yellow'%>
-	<%if (_.includes(['danger', undefined], app.state)) color = 'red'%>
-	<span class="indicator badge translate-middle border border-light rounded-pill <%=`bd-${color}-100`%>">
-		<%=_.size(_.filter(app.projectContainers, { state: 'running' }))%> / <%=_.size(app.projectContainers)%>
-	</span>
 </div>
