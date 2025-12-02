@@ -1,5 +1,5 @@
 <div class="col-12 text-secondary">
-	<div class="card position-relative rounded-4 border-0">
+	<div class="card rounded-4 border-0">
 		<div class="card-body">
 			<h5 class="card-title"><%=_.pluralize('update', _.size(updates), true)%> available:</h5>
 			<ul class="overflow-y-scroll">
@@ -11,7 +11,7 @@
 				<a href="#" class="check-updates btn btn-sm me-auto <%=(checkUpdates ? 'cursor-default' : '')%>">
 					<i class="icon-solid icon-arrows-rotate <%=(checkUpdates ? 'icon-spin' : '')%> me-1" style="color: var(--bs-green);"></i><%=(checkUpdates ? 'Checking for updates...' : 'Check for new updates')%>
 				</a>
-				<button type="button" class="install btn btn-primary ms-auto" <%=(checkUpdates ? 'disabled' : '')%>>Download and install</button>
+				<button type="button" class="install btn btn-primary ms-auto" <%=(checkUpdates ? 'disabled' : '')%>>Install</button>
 			</div>
 		</div>
 	</div>
