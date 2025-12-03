@@ -14,11 +14,13 @@
 	<%} else if (pool === false) {%>
 		<span class="text-red-300">Error fetching data</span>
 	<%} else {%>
+		<%const progressColorData = (pool.properties.capacity.value >= 80 ? (pool.properties.capacity.value >= 90 ? 'bg-red-300' : 'bg-orange-300') : 'bg-blue-300')%>
+		<%const progressColorSnapshots = (pool.properties.capacity.value >= 80 ? (pool.properties.capacity.value >= 90 ? 'bg-red-200' : 'bg-orange-200') : 'bg-indigo-100')%>
 		<div class="row g-0 d-flex align-items-baseline">
 			<div class="col">
 				<div class="progress" role="progressbar">
-					<div class="progress-bar bg-blue-300" data-bs-toggle="tooltip" data-bs-original-title="Data" style="width: <%=(pool.properties.usedbydatasets.value / pool.properties.size.value * 100)%>%;"></div>
-					<div class="progress-bar bg-indigo-300" data-bs-toggle="tooltip" data-bs-original-title="Snapshots" style="width: <%=(pool.properties.usedbysnapshots.value / pool.properties.size.value * 100)%>%;"></div>
+					<div class="progress-bar <%=progressColorData%>" data-bs-toggle="tooltip" data-bs-original-title="Data" style="width: <%=(pool.properties.usedbydatasets.value / pool.properties.size.value * 100)%>%;"></div>
+					<div class="progress-bar <%=progressColorSnapshots%>" data-bs-toggle="tooltip" data-bs-original-title="Snapshots" style="width: <%=(pool.properties.usedbysnapshots.value / pool.properties.size.value * 100)%>%;"></div>
 				</div>
 			</div>
 			<div class="col-auto lh-1 text-body-tertiary text-end" style="width: 45px;">

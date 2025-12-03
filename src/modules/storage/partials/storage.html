@@ -38,13 +38,16 @@
 							</div>
 						</div>
 						<%if (pool.name === 'system') {%>
+							<%const progressColorData = (pool.properties.capacity.value >= 80 ? (pool.properties.capacity.value >= 90 ? 'bg-red-300' : 'bg-orange-300') : 'bg-blue-300')%>
 							<div class="progress mt-1" role="progressbar">
-								<div class="progress-bar bg-blue-300" style="width: <%=(pool.properties.capacity.value)%>%;"></div>
+								<div class="progress-bar <%=progressColorData%>" style="width: <%=(pool.properties.capacity.value)%>%;"></div>
 							</div>
 						<%} else {%>
+							<%const progressColorData = (pool.properties.capacity.value >= 80 ? (pool.properties.capacity.value >= 90 ? 'bg-red-300' : 'bg-orange-300') : 'bg-blue-300')%>
+							<%const progressColorSnapshots = (pool.properties.capacity.value >= 80 ? (pool.properties.capacity.value >= 90 ? 'bg-red-200' : 'bg-orange-200') : 'bg-indigo-100')%>
 							<div class="progress" role="progressbar">
-								<div class="progress-bar bg-blue-300" style="width: <%=pool.properties.usedbydatasets.percent%>%;"></div>
-								<div class="progress-bar bg-indigo-300" style="width: <%=pool.properties.usedbysnapshots.percent%>%;"></div>
+								<div class="progress-bar <%=progressColorData%>" style="width: <%=pool.properties.usedbydatasets.percent%>%;"></div>
+								<div class="progress-bar <%=progressColorSnapshots%>" style="width: <%=pool.properties.usedbysnapshots.percent%>%;"></div>
 							</div>
 						<%}%>
 						<div class="d-flex justify-content-between lh-1 text-body-tertiary mt-1 mb-2">
