@@ -9,6 +9,7 @@ document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTe
 const module = document.querySelector('#network');
 const loading = module.querySelector('.loading');
 const container = module.querySelector('.container-fluid');
+const row = container.querySelector('.row');
 
 const getBlock = (networkInterface) => {
 	let block = null;
@@ -25,7 +26,7 @@ const render = (state) => {
 	
 	const block = getBlock(state.system.networkInterface);
 	morphdom(
-		container,
+		row,
 		`<div>${networkTemplate({ system: state.system, block })}</div>`,
 		{ childrenOnly: true }
 	);
