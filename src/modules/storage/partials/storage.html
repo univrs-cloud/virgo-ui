@@ -106,7 +106,7 @@
 						</div>
 					<%} else {%>
 						<dt class="fw-lighter"><small>Data integrity</small></dt>
-						<dd class="m-0">Last data integrity check repaired <strong><%=prettyBytes(pool.scanStats.processed || 0, { binary: true })%></strong> in <%=moment.duration(moment.unix(pool.scanStats.endTime).diff(moment.unix(pool.scanStats.startTime))).humanize()%> with <strong><%=pool.scanStats.errors%> errors</strong> on <%=moment.utc(pool.scanStats.endTime, 'X').toString()%></dd>
+						<dd>Last data integrity check repaired <strong><%=prettyBytes(pool.scanStats.processed || 0, { binary: true })%></strong> in <%=moment.duration(moment.unix(pool.scanStats.endTime).diff(moment.unix(pool.scanStats.startTime))).humanize()%> with <strong><%=pool.scanStats.errors%> errors</strong> on <%=moment.utc(pool.scanStats.endTime, 'X').toString()%></dd>
 					<%}%>
 				</dl>
 			</div>
