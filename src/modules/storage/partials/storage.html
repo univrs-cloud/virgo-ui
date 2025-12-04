@@ -78,7 +78,7 @@
 			</div>
 		</div>
 		<%if (pool?.type?.toLowerCase() === 'pool' && pool?.scanStats) {%>
-			<div class="card-footer d-flex bg-gray-100 rounded-bottom-4 text-body-secondary px-5 py-1">
+			<div class="card-footer d-flex bg-gray-100 rounded-4 text-body-secondary px-5 py-1">
 				<dl class="m-0">
 					<%if (pool.scanStats?.state.toLowerCase() !== 'finished') {%>
 						<%const progress = (pool.scanStats.toExamine === 0 ? 0 : (pool.scanStats.issued / pool.scanStats.toExamine) * 100)%>
