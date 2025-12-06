@@ -1,0 +1,33 @@
+.table {
+	thead {
+		th {
+			.icon {
+				display: none;
+			}
+			&.orderable {
+				position: relative;
+				cursor: pointer;
+				.icon {
+					--icon-font-size: 14;
+					--icon-size-scale-base: 16;
+					--icon-primary-opacity: 0.3;
+					--icon-secondary-opacity: 0.3;
+					display: inline-block;
+					font-size: calc(var(--icon-font-size) / var(--icon-size-scale-base) * 1em);
+  					line-height: calc(1 / var(--icon-font-size) * 1em);
+  					vertical-align: calc(((6 / var(--icon-font-size)) - (3 / 8)) * 1em);
+				}
+				&.asc {
+					.icon {
+						--icon-primary-opacity: 1;
+					}
+				}
+				&.desc {
+					.icon {
+						--icon-secondary-opacity: 1;
+					}
+				}
+			}
+		}
+	}
+}
