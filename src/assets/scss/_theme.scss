@@ -224,12 +224,17 @@ img {
 	}
 }
 #update {
-	ul {
+	.overflow-y-scroll {
 		height: calc(100vh - 238px);
 	}
 }
+#system-services {
+	.overflow-y-scroll {
+		height: calc(100vh - 176px);
+	}
+}
 #system-update {
-	ul {
+	.overflow-y-scroll {
 		height: calc(100vh - 262px);
 	}
 }

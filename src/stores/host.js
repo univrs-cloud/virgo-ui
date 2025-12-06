@@ -65,6 +65,10 @@ class Host extends Store {
 			this.setState({ 'configuringNetworkInterface': false }, 'set_configuring');
 		});
 
+		this.socket.on('host:system:services', (services) => {
+			this.setState({ services }, 'get_services');
+		});
+
 		this.socket.on('host:cpu:stats', (cpuStats) => {
 			this.setState({ cpuStats }, 'get_cpu_stats');
 		});
@@ -152,6 +156,10 @@ class Host extends Store {
 
 	getDrives() {
 		return this.getStateProperty('drives');
+	}
+
+	getServices() {
+		return this.getStateProperty('services');
 	}
 }
 
