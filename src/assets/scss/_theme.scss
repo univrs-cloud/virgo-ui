@@ -232,6 +232,14 @@ img {
 	.overflow-y-scroll {
 		height: calc(100vh - 176px);
 	}
+	.table {
+		tbody {
+			td {
+				padding-top: $table-cell-padding-y-sm;
+				padding-bottom: $table-cell-padding-y-sm;
+			}
+		}
+	}
 }
 #system-update {
 	.overflow-y-scroll {

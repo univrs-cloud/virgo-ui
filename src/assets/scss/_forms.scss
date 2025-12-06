@@ -78,42 +78,6 @@ textarea {
 				}
 			}
 		}
-		// .tagify {
-		// 	width: 100%;
-		// 	min-height: $form-floating-height;
-		// 	border-radius: var(--bs-border-radius-lg);
-		// 	padding-top: $form-floating-input-padding-t;
-		// 	padding-bottom: $form-floating-input-padding-b;
-		// 	padding-left: $form-floating-padding-x;
-		// 	padding-right: $form-floating-padding-x;
-		// 	&::before {
-		// 		content: 'Sender List of email addresses';
-		// 		position: absolute;
-		// 		color: var(--bs-tertiary-color);
-		// 		margin-left: -1.15rem;
-		// 		transform: $form-floating-label-transform;
-		// 	}
-		// 	&.tagify--focus {
-		// 		border-color: $input-focus-border-color;
-		// 		box-shadow: $input-focus-box-shadow;
-		// 	}
-		// 	&.tagify--empty {
-		// 		.tagify__input {
-		// 			padding-top: 0;
-		// 			padding-bottom: 0;
-		// 			padding-left: 0;
-		// 			margin-top: 0;
-		// 			margin-bottom: 0;
-		// 			margin-left: 0;
-		// 		}
-		// 	}
-		// 	.tagify__tag {
-		// 		margin-inline: 0;
-		// 		&:hover div::before {
-		// 			--tag-bg-inset: 0;
-		// 		}
-		// 	}
-		// }
 	}
 	.form-select {
 		--bs-form-select-bg-img: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22#6c757d%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22m7 15 5 5 5-5%22%3E%3C/path%3E%3Cpath d=%22m7 9 5-5 5 5%22%3E%3C/path%3E%3C/svg%3E");
