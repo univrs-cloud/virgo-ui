@@ -15,11 +15,11 @@ let tableOrder = {
 };
 
 const order = (event) => {
-	if (!event.target.classList.contains('orderable')) {
+	if (_.isNull(event.target.closest('.orderable'))) {
 		return;
 	}
 	
-	const cell = event.target;
+	const cell = event.target.closest('.orderable');
 	tableOrder.field = cell.dataset.field;
 	tableOrder.direction = (cell.classList.contains('asc') ? 'desc' : 'asc');
 	_.each(table.querySelectorAll('thead th'), (cell) => { cell.classList.remove('asc', 'desc'); });
