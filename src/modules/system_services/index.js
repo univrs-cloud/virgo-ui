@@ -9,10 +9,14 @@ const module = document.querySelector('#system-services');
 const loading = module.querySelector('.loading');
 const syncButton = module.querySelector('button[data-action="sync"]');
 const searchInput = module.querySelector('.search');
+const filterStateSelect = module.querySelector('.filter-state');
+const filterUnitFileStateSelect = module.querySelector('.filter-unit-file-state');
 const container = module.querySelector('.container-fluid');
 const table = container.querySelector('.table');
 let searchTimer;
 let searchValue = '';
+let filterStateValue = '';
+let filterUnitFileStateValue = '';
 let tableOrder = {
 	field: 'unit',
 	direction: 'asc'
@@ -32,6 +36,18 @@ const search = (event) => {
 		const services = serviceService.getServices();
 		render({ services });
 	}, 300);
+};
+
+const filterState = (event) => {
+	filterStateValue = event.target.value;
+	const services = serviceService.getServices();
+	render({ services });
+};
+
+const filterUnitFileState = (event) => {
+	filterUnitFileStateValue = event.target.value;
+	const services = serviceService.getServices();
+	render({ services });
 };
 
 const order = (event) => {
@@ -58,7 +74,10 @@ const render = (state) => {
 	const searchTerms = searchValue.toLowerCase().split(/\s+/);
 	services = _.filter(services, (service) => {
 		const text = `${service.unit || ''} ${service.description || ''}`.toLowerCase();
-		return _.every(searchTerms, (term) => text.includes(term));
+		const matchesSearch = _.every(searchTerms, (term) => text.includes(term));
+		const matchesState = filterStateValue === '' || service.state === filterStateValue;
+		const matchesUnitFileState = filterUnitFileStateValue === '' || service.unitFileState === filterUnitFileStateValue;
+		return matchesSearch && matchesState && matchesUnitFileState;
 	});
 	services = _.orderBy(services, [(service) => { return String(service[tableOrder.field] ?? '').toLowerCase(); }], [tableOrder.direction]);
 	_.each(services, (service) => {
@@ -79,6 +98,8 @@ const render = (state) => {
 
 syncButton.addEventListener('click', sync);
 searchInput.addEventListener('input', search);
+filterStateSelect.addEventListener('value-changed', filterState);
+filterUnitFileStateSelect.addEventListener('value-changed', filterUnitFileState);
 table.querySelector('thead').addEventListener('click', order);
 
 serviceService.subscribe([render]);
