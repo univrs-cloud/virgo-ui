@@ -10,7 +10,6 @@ const handleSubscription = (properties) => {
 
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
-
 	return Weather.subscribeToProperties(['weather'], handleSubscription);
 };
 

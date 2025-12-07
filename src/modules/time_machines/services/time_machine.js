@@ -37,7 +37,6 @@ const handleSubscription = (properties) => {
 
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
-	
 	return Share.subscribeToProperties(['shares', 'system'], handleSubscription);
 };
 

@@ -11,7 +11,6 @@ const handleSubscription = (properties) => {
 
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
-
 	return Job.subscribeToProperties(['jobs'], handleSubscription);
 };
 

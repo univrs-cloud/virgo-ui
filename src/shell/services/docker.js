@@ -18,7 +18,6 @@ const handleSubscription = (properties) => {
 
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
-
 	return Docker.subscribeToProperties(['containers', 'update'], handleSubscription);
 };
 

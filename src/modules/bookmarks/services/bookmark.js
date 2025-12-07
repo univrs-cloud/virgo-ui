@@ -39,7 +39,6 @@ const handleSubscription = (properties) => {
 
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
-	
 	return Bookmark.subscribeToProperties(['configured', 'jobs'], handleSubscription);
 };
 
