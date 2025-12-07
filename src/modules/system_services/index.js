@@ -7,11 +7,19 @@ const serviceTemplate = _.template(servicePartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
 const module = document.querySelector('#system-services');
 const loading = module.querySelector('.loading');
+const syncButton = module.querySelector('button[data-action="sync"]');
 const container = module.querySelector('.container-fluid');
 const table = container.querySelector('.table');
 let tableOrder = {
 	field: 'unit',
 	direction: 'asc'
+};
+
+const sync = (event) => {
+	event.preventDefault();
+	syncButton.disabled = true;
+	syncButton.querySelector('.icon-arrows-rotate').classList.add('icon-spin');
+	serviceService.syncServices();
 };
 
 const order = (event) => {
@@ -46,9 +54,12 @@ const render = (state) => {
 	);
 
 	loading.classList.add('d-none');
+	syncButton.disabled = false;
+	syncButton.querySelector('.icon-arrows-rotate').classList.remove('icon-spin');
 	container.classList.remove('d-none');
 };
 
+syncButton.addEventListener('click', sync);
 table.querySelector('thead').addEventListener('click', order);
 
 serviceService.subscribe([render]);
