@@ -1,4 +1,4 @@
-<tr>
+<tr class="<%=(service.state === 'failed' ? 'table-danger' : '')%>">
 	<td>
 		<%=_.replace(service.unit, '.service', '')%><br>
 		<small class="text-body-secondary"><%=service.description%></small>
