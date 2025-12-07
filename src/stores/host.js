@@ -130,6 +130,10 @@ class Host extends Store {
 		this.socket.emit('host:shutdown');
 	}
 
+	syncServices() {
+		this.socket.emit('host:system:services:fetch');
+	}
+
 	getSystem() {
 		return this.getStateProperty('system');
 	}
