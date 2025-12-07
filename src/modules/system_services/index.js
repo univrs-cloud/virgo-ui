@@ -8,8 +8,11 @@ document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTe
 const module = document.querySelector('#system-services');
 const loading = module.querySelector('.loading');
 const syncButton = module.querySelector('button[data-action="sync"]');
+const searchInput = module.querySelector('.search');
 const container = module.querySelector('.container-fluid');
 const table = container.querySelector('.table');
+let searchTimer;
+let searchValue = '';
 let tableOrder = {
 	field: 'unit',
 	direction: 'asc'
@@ -20,6 +23,15 @@ const sync = (event) => {
 	syncButton.disabled = true;
 	syncButton.querySelector('.icon-arrows-rotate').classList.add('icon-spin');
 	serviceService.syncServices();
+};
+
+const search = (event) => {
+	clearTimeout(searchTimer);
+	searchTimer = setTimeout(() => {
+		searchValue = event.target.value;
+		const services = serviceService.getServices();
+		render({ services });
+	}, 300);
 };
 
 const order = (event) => {
@@ -42,8 +54,14 @@ const render = (state) => {
 	}
 
 	const template = document.createElement('template');
-	state.services = _.orderBy(state.services, [(service) => { return String(service[tableOrder.field] ?? '').toLowerCase(); }], [tableOrder.direction]);
-	_.each(state.services, (service) => {
+	let services = state.services;
+	const searchTerms = searchValue.toLowerCase().split(/\s+/);
+	services = _.filter(services, (service) => {
+		const text = `${service.unit || ''} ${service.description || ''}`.toLowerCase();
+		return _.every(searchTerms, (term) => text.includes(term));
+	});
+	services = _.orderBy(services, [(service) => { return String(service[tableOrder.field] ?? '').toLowerCase(); }], [tableOrder.direction]);
+	_.each(services, (service) => {
 		template.innerHTML += serviceTemplate({ service });
 	});
 
@@ -60,6 +78,7 @@ const render = (state) => {
 };
 
 syncButton.addEventListener('click', sync);
+searchInput.addEventListener('input', search);
 table.querySelector('thead').addEventListener('click', order);
 
 serviceService.subscribe([render]);
