@@ -12,7 +12,7 @@ const getJobs = () => {
 };
 
 const getApps = () => {
-	return composeApps(Docker.getConfigured(), Docker.getContainers(), Docker.getImageUpdates());
+	return composeApps(Docker.getConfigured(), Docker.getContainers(), Docker.getAppsResourceMetrics(), Docker.getImageUpdates());
 };
 
 const composeApps = (configured, containers, appsResourceMetrics, imageUpdates) => {

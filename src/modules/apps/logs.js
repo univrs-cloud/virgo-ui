@@ -31,7 +31,7 @@ const render = (event) => {
 };
 
 const closeLogs = (event) => {
-	if (!event.target.closest('a')?.classList.contains('close-logs') && !event.target.closest('span')?.classList.contains('compress')) {
+	if (!event.target.closest('a')?.classList.contains('close-logs') && !event.target.closest('button')?.classList.contains('compress')) {
 		return;
 	}
 

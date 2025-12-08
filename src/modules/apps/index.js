@@ -1,41 +1,68 @@
 import modulePartial from 'modules/apps/partials/index.html';
-import emptyPartial from 'modules/apps/partials/empty.html';
 import appPartial from 'modules/apps/partials/app.html';
-import resourceMetricsPartial from 'modules/apps/partials/resource_metrics.html';
+import appDetailsPartial from 'modules/apps/partials/app_details.html';
 import * as appService from 'modules/apps/services/app';
 
 const moduleTemplate = _.template(modulePartial);
-const emptyTemplate = _.template(emptyPartial);
 const appTemplate = _.template(appPartial);
-const resourceMetricsTemplate = _.template(resourceMetricsPartial);
+const appDetailsTemplate = _.template(appDetailsPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
 const module = document.querySelector('#apps');
 const loading = module.querySelector('.loading');
+const searchInput = module.querySelector('.search');
 const container = module.querySelector('.container-fluid');
-const row = container.querySelector('.row');
+const table = container.querySelector('.table');
+let searchTimer;
+let searchValue = '';
+let tableOrder = {
+	field: 'title',
+	direction: 'asc'
+};
+
+const search = (event) => {
+	clearTimeout(searchTimer);
+	searchTimer = setTimeout(() => {
+		searchValue = event.target.value;
+		const apps = appService.getApps();
+		render({ apps });
+	}, 300);
+};
+
+const order = (event) => {
+	if (_.isNull(event.target.closest('.orderable'))) {
+		return;
+	}
+	
+	const cell = event.target.closest('.orderable');
+	tableOrder.field = cell.dataset.field;
+	tableOrder.direction = (cell.classList.contains('asc') ? 'desc' : 'asc');
+	_.each(table.querySelectorAll('thead th'), (cell) => { cell.classList.remove('asc', 'desc'); });
+	cell.classList.add(tableOrder.direction);
+	const apps = appService.getApps();
+	render({ apps });
+};
 
 const expand = (event) => {
-	if (!event.target.closest('span')?.classList.contains('expand')) {
+	if (!event.target.closest('button')?.classList.contains('expand')) {
 		return;
 	}
 
 	event.preventDefault();
-	const button = event.target;
-	const item = button.closest('.item');
-	item.closest('.row').classList.add('expand');
-	item.classList.add('expand');
+	const row = event.target.closest('.app');
+	const name = row.dataset.name;
+	const app = _.find(appService.getApps(), { name });
+	renderAppDetails(app);
+	container.querySelector('.details').classList.add('d-block');
 };
 
 const compress = (event) => {
-	if (!event.target.closest('span')?.classList.contains('compress')) {
+	if (!event.target.closest('button')?.classList.contains('compress')) {
 		return;
 	}
 
 	event.preventDefault();
-	const button = event.target;
-	const item = button.closest('.item');
-	item.classList.remove('expand');
-	item.closest('.row').classList.remove('expand');
+	container.querySelector('.details').classList.remove('d-block');
+	container.querySelector('.details').innerHTML = '';
 };
 
 const update = (event) => {
@@ -119,41 +146,58 @@ const performServiceAction = async (event) => {
 	appService.performServiceAction(config);
 };
 
+const renderAppDetails = (app) => {
+	morphdom(
+		container.querySelector('.details'),
+		`<div>${appDetailsTemplate({ app })}</div>`,
+		{
+			childrenOnly: true,
+			onBeforeElUpdated: (fromEl, toEl) => {
+				if (fromEl.classList.contains('logs-container') || fromEl.classList.contains('terminal-container')) {
+					return false;
+				}
+			}
+		}
+	);
+};
+
 const render = (state) => {
 	if (_.isNull(state.apps)) {
 		return;
 	}
 	
 	const template = document.createElement('template');
-	if (_.isEmpty(state.apps)) {
-		template.innerHTML = emptyTemplate();
-	} else {
-		_.each(state.apps, (app) => {
-			const jobs = _.filter(state.jobs, (job) => { return job.data?.config?.name === app.name; });
-			template.innerHTML += appTemplate({ app, jobs, resourceMetricsTemplate, prettyBytes });
-		});
-	}
+	let apps = state.apps;
+	const searchTerms = searchValue.toLowerCase().split(/\s+/);
+	apps = _.filter(apps, (app) => {
+		const text = `${app.title || ''}`.toLowerCase();
+		const matchesSearch = _.every(searchTerms, (term) => text.includes(term));
+		return matchesSearch;
+	});
+	apps = _.orderBy(apps,
+		[
+			(app) => {
+				const value = _.get(app, tableOrder.field);
+				return typeof value === 'number' ? value : String(value ?? '').toLowerCase();
+			}
+		],
+		[tableOrder.direction]
+	);
+	_.each(apps, (app) => {
+		const jobs = _.filter(state.jobs, (job) => { return job.data?.config?.name === app.name; });
+		template.innerHTML += appTemplate({ app, jobs, prettyBytes });
+	});
 	
 	morphdom(
-		row,
-		`<div>${template.innerHTML}</div>`,
-		{
-			childrenOnly: true,
-			onBeforeElUpdated: (fromEl, toEl) => {
-				if (fromEl.classList.contains('expand')) {
-					morphdom(fromEl, toEl, {
-						childrenOnly: true,
-						onBeforeElUpdated: (fromEl, toEl) => {
-							if (fromEl.classList.contains('logs-container') || fromEl.classList.contains('terminal-container')) {
-								return false;
-							}
-						}
-					});
-					return false;
-				}
-			}
-		}
+		table.querySelector('tbody'),
+		`<tbody>${template.innerHTML}</tbody>`,
+		{ childrenOnly: true }
 	);
+
+	if (container.querySelector('.details .app')) {
+		const app = _.find(apps, { name: container.querySelector('.details .app').dataset.name });
+		renderAppDetails(app);
+	}
 	
 	loading.classList.add('d-none');
 	container.classList.remove('d-none');
@@ -164,6 +208,8 @@ module.addEventListener('click', compress);
 module.addEventListener('click', update);
 module.addEventListener('click', performAppAction);
 module.addEventListener('click', performServiceAction);
+searchInput.addEventListener('input', search);
+table.querySelector('thead').addEventListener('click', order);
 
 appService.subscribe([render]);
 

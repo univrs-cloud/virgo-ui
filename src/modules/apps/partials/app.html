@@ -1,178 +1,81 @@
-<div class="col col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 item">
-	<div class="app card rounded-4 border-0 h-100 mb-0" data-name="<%=app.name%>">
-		<div class="card-body ps-0 py-1">
-			<div class="row g-0 align-items-center">
-				<div class="card-image card-spacer col-auto p-2">
-					<img src="<%=(_.includes(app.icon, '/') ? app.icon : `/assets/img/apps/${app.icon}`)%>">
-				</div>
-				<div class="col overflow-hidden">
-					<div class="d-flex align-items-center">
-						<div class="text-truncate"><%=app.title%></div>
-						<%if (app.hasUpdates) {%>
-							<div class="badge bd-green-100 rounded-pill ms-2" data-bs-toggle="tooltip" data-bs-original-title="Updates available">
-								<i class="icon-solid icon-download icon-fw"></i>
-							</div>
-						<%}%>
-					</div>
-				</div>
-				<%if (!_.isEmpty(jobs)) {%>
-					<div class="col-auto">
-						<span class="btn btn-sm pe-none ms-2">
-							<i class="icon-solid icon-gear icon-fw icon-spin"></i>
-						</span>
-					</div>
-				<%}%>
-				<%if ((app.canBeRemoved || app.hasUpdates) && _.isEmpty(jobs)) {%>
-					<div class="col-auto">
-						<div class="dropdown me-n1">
-							<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm ms-2">
-								<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
-							</span>
-							<ul class="dropdown-menu">
-								<%if (app.hasUpdates) {%>
-									<li><a href="#" class="dropdown-item" data-action="update">Update</a></li>
-								<%}%>
-								<%if (app.canBeRemoved && app.hasUpdates) {%>
-									<li><hr class="dropdown-divider"></li>
-								<%}%>
-								<%if (app.canBeRemoved) {%>
-									<li><a href="#" class="dropdown-item <%=(app.state === 'success' ? 'disabled' : '')%>" data-action="start">Start</a></li>
-									<li><hr class="dropdown-divider"></li>
-									<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="stop">Stop</a></li>
-									<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="kill">Kill</a></li>
-									<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="restart">Restart</a></li>
-									<li><hr class="dropdown-divider"></li>
-									<li><a href="#" class="dropdown-item text-danger" data-action="recreate">Recreate</a></li>
-									<li><hr class="dropdown-divider"></li>
-									<li><a href="#" class="dropdown-item <%=(app.canBeRemoved ? 'text-danger' : 'disabled')%>" data-action="remove">Remove</a></li>
-								<%}%>
-							</ul>
-						</div>
-					</div>
-				<%}%>
-			</div>
-			<div class="row g-0 mt-n2 pb-2 position-relative">
-				<div class="logs-container d-none">
-					<div class="service d-flex align-items-center justify-content-between bg-white p-2 ps-0">
-						<div class="d-flex align-items-center">
-							<i class="icon-light icon-cube icon-fw me-1 text-gray-500"></i>
-							<span class="name"></span>
-						</div>
-						<a href="#" class="close-logs btn btn-link p-0 ms-2">Close</a>
-					</div>
-					<ul class="list-unstyled overflow-y-scroll m-0"></ul>
-				</div>
-				<div class="terminal-container d-none">
-					<div class="service d-flex align-items-center justify-content-between bg-white p-2 ps-0">
-						<div class="d-flex align-items-center">
-							<i class="icon-light icon-cube icon-fw me-1 text-gray-500"></i>
-							<span class="name"></span>
-						</div>
-						<a href="#" class="close-terminal btn btn-link p-0 ms-2">Close</a>
-					</div>
-				</div>
-				<div class="card-spacer col-auto p-2"></div>
-				<div class="col flex-grow-1">
-					<div>
-						<%if (!_.isEmpty(app.url)) {%>
-							<a href="<%=app.url%>" target="<%=(app?.target || app.name)%>" class="link-underline link-underline-opacity-0 link-underline-opacity-75-hover"><small><%=_.replace(app.url, /^https?:\/\//, '')%></small></a>
-						<%} else {%>
-							&nbsp;
-						<%}%>
-					</div>
-					<div class="details mt-2">
-						<dl>
-							<dt class="fw-lighter"><small>Services</small></dt>
-							<%if (_.isEmpty(app.projectContainers)) {%>
-								No services found for this app.
-							<%}%>
-							<div class="row">
-								<%_.each(app.projectContainers, (container, index) => {%>
-									<dd class="service col-auto <%=(index + 1 == _.size(app.projectContainers) ? 'mb-0' : '')%>" data-id="<%=container.id%>">
-										<div class="d-flex align-items-center">
-											<i class="icon-light icon-cube icon-fw me-1 text-gray-500"></i>
-											<div class="text-truncate"><%=container.name%></div>
-											<%if (container.hasUpdates) {%>
-												<div class="badge bd-green-100 rounded-pill ms-2" data-bs-toggle="tooltip" data-bs-original-title="Updates available">
-													<i class="icon-solid icon-download icon-fw"></i>
-												</div>
-											<%}%>
-										</div>
-										<div style="margin-left: 1.2rem;">
-											<div class="d-flex align-items-center">
-												<%if (container.state === 'running') {%>
-													<i class="icon-solid icon-play icon-fw me-1 text-green-300"></i>
-												<%} else {%>
-													<i class="icon-solid icon-stop icon-fw me-1 text-red-300"></i>
-												<%}%>
-												<span class="me-2"><%=_.upperFirst(container.state)%></span>
-												<div class="dropdown">
-													<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm">
-														<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
-													</span>
-													<ul class="dropdown-menu">
-														<li><a href="#" class="dropdown-item <%=(app.state === 'success' ? 'disabled' : '')%>" data-action="start">Start</a></li>
-														<li><hr class="dropdown-divider"></li>
-														<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="stop">Stop</a></li>
-														<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="kill">Kill</a></li>
-														<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="restart">Restart</a></li>
-													</ul>
-												</div>
-											</div>
-											<%if (container.state === 'running') {%>
-												<%const publishedPorts = _.filter(container.ports, { ip: '0.0.0.0' });%>
-												<div class="d-flex align-items-center">
-													<i class="icon-light icon-ethernet icon-fw me-1"></i>
-													<span>Ports <small>(<%=(!_.isEmpty(publishedPorts) ? `public &middot; private` : `no published ports`)%>)</small></span>
-												</div>
-												<ul class="list-unstyled ps-4 m-0">
-													<%_.each(_.orderBy(publishedPorts, ['privatePort'], ['asc']), (port, index) => {%>
-														<li><%=`${port.publicPort} &rlarr; ${port.privatePort}`%></li>
-													<%})%>
-												</ul>
-											<%}%>
-											<div class="d-flex align-items-center">
-												<i class="icon-light icon-memo icon-fw me-1"></i>
-												<a href="#" class="logs btn btn-link p-0" data-id="<%=container.id%>">Logs</a>
-											</div>
-											<%if (container.state === 'running') {%>
-												<div class="d-flex align-items-center">
-													<i class="icon-light icon-rectangle-terminal icon-fw me-1"></i>
-													<a href="#" class="console btn btn-link p-0" data-id="<%=container.id%>">Console</a>
-												</div>
-											<%}%>
-										</div>
-									</dd>
-								<%})%>
-							</div>
-						</dl>
-					</div>
-				</div>
-			</div>
+<tr class="app" data-name="<%=app.name%>">
+	<td class="p-0" style="width: 1%;">
+		<div class="card-image p-2">
+			<img src="<%=(_.includes(app.icon, '/') ? app.icon : `/assets/img/apps/${app.icon}`)%>">
 		</div>
-
-		<div class="card-footer d-flex bg-gray-100 rounded-4 text-body-secondary px-2 py-1">
-			<div class="expand-compress">
-				<div class="dropdown">
-					<span class="dropdown-toggle caret-off btn btn-sm expand">
-						<i class="icon-light icon-expand-wide icon-fw"></i>
-					</span>
-					<span class="dropdown-toggle caret-off btn btn-sm compress">
-						<i class="icon-light icon-compress-wide icon-fw"></i>
-					</span>
+	</td>
+	<td>
+		<div class="d-flex align-items-center">
+			<div class="text-truncate"><%=app.title%></div>
+			<%if (app.hasUpdates) {%>
+				<div class="badge bd-green-100 rounded-pill ms-2" data-bs-toggle="tooltip" data-bs-original-title="Updates available">
+					<i class="icon-solid icon-download icon-fw"></i>
 				</div>
-			</div>
-			<div class="resource-metrics ms-auto">
-				<%=resourceMetricsTemplate({ resourceMetrics: app.resourceMetrics, prettyBytes })%>
-			</div>
+			<%}%>
 		</div>
-
+		<div>
+			<%if (!_.isEmpty(app.url)) {%>
+				<a href="<%=app.url%>" target="<%=(app?.target || app.name)%>" class="link-underline link-underline-opacity-0 link-underline-opacity-75-hover"><small><%=_.replace(app.url, /^https?:\/\//, '')%></small></a>
+			<%} else {%>
+				&nbsp;
+			<%}%>
+		</div>
+	</td>
+	<td class="text-end">
+		<%if (!app.resourceMetrics) {%>
+			<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
+		<%} else {%>
+			<small class="fw-light"><%=prettyBytes(app.resourceMetrics?.storage?.dataset || 0, { binary: true })%></small>
+		<%}%>
+	</td>
+	<td class="text-end">
+		<%if (!app.resourceMetrics) {%>
+			<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
+		<%} else {%>
+			<small class="fw-light"><%=prettyBytes(app.resourceMetrics?.storage?.snapshots || 0, { binary: true })%></small>
+		<%}%>
+	</td>
+	<td class="text-center">
 		<%let color =''%>
 		<%if (app.state === 'success') color = 'green'%>
 		<%if (app.state === 'warning') color = 'yellow'%>
 		<%if (_.includes(['danger', undefined], app.state)) color = 'red'%>
-		<span class="indicator badge translate-middle border border-light rounded-pill <%=`bd-${color}-100`%>">
+		<span class="badge border border-light rounded-pill <%=`bd-${color}-100`%> fw-light">
 			<%=_.size(_.filter(app.projectContainers, { state: 'running' }))%> / <%=_.size(app.projectContainers)%>
 		</span>
-	</div>
-</div>
+	</td>
+	<td class="text-center">
+		<%if (!_.isEmpty(jobs)) {%>
+			<i class="icon-solid icon-gear icon-fw icon-spin"></i>
+		<%}%>
+		<%if ((app.canBeRemoved || app.hasUpdates) && _.isEmpty(jobs)) {%>
+			<div class="dropdown">
+				<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm">
+					<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
+				</span>
+				<ul class="dropdown-menu">
+					<%if (app.hasUpdates) {%>
+						<li><a href="#" class="dropdown-item" data-action="update">Update</a></li>
+					<%}%>
+					<%if (app.canBeRemoved && app.hasUpdates) {%>
+						<li><hr class="dropdown-divider"></li>
+					<%}%>
+					<%if (app.canBeRemoved) {%>
+						<li><a href="#" class="dropdown-item <%=(app.state === 'success' ? 'disabled' : '')%>" data-action="start">Start</a></li>
+						<li><hr class="dropdown-divider"></li>
+						<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="stop">Stop</a></li>
+						<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="kill">Kill</a></li>
+						<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="restart">Restart</a></li>
+						<li><hr class="dropdown-divider"></li>
+						<li><a href="#" class="dropdown-item text-danger" data-action="recreate">Recreate</a></li>
+						<li><hr class="dropdown-divider"></li>
+						<li><a href="#" class="dropdown-item <%=(app.canBeRemoved ? 'text-danger' : 'disabled')%>" data-action="remove">Remove</a></li>
+					<%}%>
+				</ul>
+			</div>
+		<%}%>
+	</td>
+	<td class="text-center p-0">
+		<button class="expand btn px-2"><i class="icon-solid icon-eye icon-fw"></i></button>
+	</td>
+</tr>
