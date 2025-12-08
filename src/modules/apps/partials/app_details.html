@@ -74,7 +74,7 @@
 												<%const publishedPorts = _.filter(container.ports, { ip: '0.0.0.0' });%>
 												<%=(_.isEmpty(publishedPorts) ? '<span class="text-body-secondary">&mdash;</span>' : '')%>
 												<%_.each(_.orderBy(publishedPorts, ['privatePort'], ['asc']), (port, index) => {%>
-													<span class="badge bd-gray-200 rounded-pill fw-light" data-bs-toggle="tooltip" data-bs-original-title="public &middot; private"><%=`${port.publicPort} &rlarr; ${port.privatePort}`%></span>
+													<div class="badge bd-gray-200 rounded-pill fw-light" data-bs-toggle="tooltip" data-bs-original-title="public &middot; private"><%=`${port.publicPort} &rlarr; ${port.privatePort}`%></div>
 												<%})%>
 											<%}%>
 										</td>
@@ -93,7 +93,7 @@
 											<%}%>
 										</td>
 										<td class="text-center text-nowrap">
-											<span class="badge <%=(container.state === 'running' ? 'bd-green-100' : 'bd-red-100')%> rounded-pill fw-light"><%=container.state%></span>
+											<div class="badge <%=(container.state === 'running' ? 'bd-green-100' : 'bd-red-100')%> rounded-pill fw-light"><%=container.state%></div>
 										</td>
 										<td class="text-center">
 											<div class="dropdown">

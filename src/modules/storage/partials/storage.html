@@ -24,7 +24,9 @@
 				<div class="col flex-grow-1 text-secondary">
 					<dl class="m-0"></dl>
 						<dt class="fw-lighter"><small>Health</small></dt>
-						<dd><span class="badge rounded-pill bd-<%=(pool.properties.health.value.toLowerCase() === 'online' ? 'green' : 'red')%>-100"><%=pool.properties.health.value%></span></dd>
+						<dd>
+							<div class="badge rounded-pill bd-<%=(pool.properties.health.value.toLowerCase() === 'online' ? 'green' : 'red')%>-100"><%=pool.properties.health.value%></div>
+						</dd>
 						<dt class="fw-lighter"><small>Capacity</small></dt>
 						<dd><%=prettyBytes(pool.properties.size.value || 0, { binary: true })%></dd>
 						<div class="d-flex justify-content-between">

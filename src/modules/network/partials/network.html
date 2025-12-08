@@ -23,7 +23,7 @@
 				<dt class="fw-lighter"><small>Address</small></dt>
 				<dd class="d-flex align-items-center">
 					<%=system?.networkInterface?.ip4%>/<%=block?.bitmask ?? 'error'%>
-					<span class="badge rounded-pill bd-gray-200 ms-1"><%=(system?.networkInterface?.dhcp ? 'Automatic' : 'Manual')%></span>
+					<div class="badge rounded-pill bd-gray-200 ms-1"><%=(system?.networkInterface?.dhcp ? 'Automatic' : 'Manual')%></div>
 				</dd>
 				<dt class="fw-lighter"><small>Default gateway</small></dt>
 				<dd><%=system?.defaultGateway%></dd>
