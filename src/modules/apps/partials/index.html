@@ -19,19 +19,20 @@
 							<u-input type="search" label="Search" class="search"></u-input>
 						</div>
 					</div>
-					<div class="overflow-y-scroll mt-n3">
+					<div class="overflow-y-scroll mt-n3 mx-n3 mx-md-0">
 						<table class="table table-hover align-middle m-0">
 							<thead class="sticky-top top-0">
 								<tr>
-									<th colspan="2" class="orderable asc text-nowrap" data-field="title">
+									<th class="d-none d-md-table-cell" style="width: 1%;"></th>
+									<th class="orderable asc text-nowrap" data-field="title">
 										App
 										<i class="icon icon-duotone icon-solid icon-arrow-up-arrow-down icon-fw ms-1"></i>
 									</th>
-									<th class="orderable text-end text-nowrap" data-field="resourceMetrics.storage.dataset" style="width: 110px;">
+									<th class="orderable text-end text-nowrap d-none d-md-table-cell" data-field="resourceMetrics.storage.dataset" style="width: 110px;">
 										<i class="icon-solid icon-database icon-fw me-1" data-bs-toggle="tooltip" data-bs-original-title="Data"></i>
 										<i class="icon icon-duotone icon-solid icon-arrow-up-arrow-down icon-fw ms-1"></i>
 									</th>
-									<th class="orderable text-end text-nowrap" data-field="resourceMetrics.storage.snapshots" style="width: 110px;">
+									<th class="orderable text-end text-nowrap d-none d-md-table-cell" data-field="resourceMetrics.storage.snapshots" style="width: 110px;">
 										<i class="icon-solid icon-camera icon-fw me-1" data-bs-toggle="tooltip" data-bs-original-title="Snapshots"></i>
 										<i class="icon icon-duotone icon-solid icon-arrow-up-arrow-down icon-fw ms-1"></i>
 									</th>
