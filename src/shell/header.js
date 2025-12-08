@@ -4,6 +4,7 @@ import * as account from 'shell/account';
 import * as notifications from 'shell/notifications';
 import * as systemService from 'shell/services/system';
 import * as softwareService from 'shell/services/software';
+import page from 'page';
 
 let subscription;
 const headerTemplate = _.template(headerPartial);
@@ -21,24 +22,32 @@ const renderSerialNumber = (state) => {
 };
 
 const renderSystemUpdatesBadge = (state) => {
+	if (!state.updates) {
+		return;
+	}
+
+	const newNav = `<div>${navigationTemplate({ active: page.current, updates: state.updates })}</div>`;
 	_.each(container.querySelectorAll('.navbar .nav, .offcanvas .navbar-nav'), (nav) => {
 		morphdom(
 			nav,
-			`<div>${navigationTemplate({ updates: state.updates })}</div>`,
+			newNav,
 			{ childrenOnly: true }
 		);
 	});
 };
 
+page.start();
+
 morphdom(
 	container,
-	headerTemplate({ navigationTemplate, isUpdating: false })
+	headerTemplate({ isUpdating: false })
 );
+renderSystemUpdatesBadge({ updates: [] });
 
 account.init();
 notifications.init();
 
-subscription = systemService.subscribe([renderSerialNumber]);
 softwareService.subscribeToUpdates([renderSystemUpdatesBadge]);
+subscription = systemService.subscribe([renderSerialNumber]);
 
 import('shell/weather');

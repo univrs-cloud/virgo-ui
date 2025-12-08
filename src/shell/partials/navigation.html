@@ -1,54 +1,54 @@
-<a href="/dashboard" class="nav-item nav-link">
+<a href="/dashboard" class="nav-item nav-link <%=(active === '/dashboard' && 'active')%>">
 	<i class="icon-duotone icon-solid icon-objects-column icon-fw me-2"></i>
 	Dashboard
 </a>
 <%if (isAuthenticated && isAdmin) {%>
 	<div class="nav-title ps-sm-2 mt-2 mt-sm-3"><small>Resources</small></div>
-	<a href="/apps" class="nav-item nav-link">
+	<a href="/apps" class="nav-item nav-link <%=(active === '/apps' && 'active')%>">
 		<i class="icon-duotone icon-solid icon-grid-round-2-plus icon-fw me-2" style="transform: rotate(180deg);"></i>
 		Apps
 	</a>
-	<a href="/bookmarks" class="nav-item nav-link">
+	<a href="/bookmarks" class="nav-item nav-link <%=(active === '/bookmarks' && 'active')%>">
 		<i class="icon-duotone icon-solid icon-bookmark icon-fw me-2"></i>
 		Bookmarks
 	</a>
-	<a href="/folders" class="nav-item nav-link">
+	<a href="/folders" class="nav-item nav-link <%=(active === '/folders' && 'active')%>">
 		<i class="icon-duotone icon-solid icon-folder-closed icon-fw me-2"></i>
 		Folders
 	</a>
-	<a href="/time-machines" class="nav-item nav-link">
+	<a href="/time-machines" class="nav-item nav-link <%=(active === '/time-machines' && 'active')%>">
 		<i class="icon-duotone icon-solid icon-clock-rotate-left icon-fw me-2" style="--icon-primary-opacity: 0.4; --icon-secondary-opacity: 1;"></i>
 		Time machines
 	</a>
 	<div class="nav-title ps-sm-2 mt-2 mt-sm-3"><small>System</small></div>
-	<a href="/users" class="nav-item nav-link">
+	<a href="/users" class="nav-item nav-link <%=(active === '/users' && 'active')%>">
 		<i class="icon-duotone icon-solid icon-user icon-fw me-2"></i>
 		Users
 	</a>
-	<a href="/storage" class="nav-item nav-link">
+	<a href="/storage" class="nav-item nav-link <%=(active === '/storage' && 'active')%>">
 		<i class="icon-duotone icon-solid icon-hard-drive icon-fw me-2"></i>
 		Storage
 	</a>
-	<a href="/network" class="nav-item nav-link">
+	<a href="/network" class="nav-item nav-link <%=(active === '/network' && 'active')%>">
 		<i class="icon-duotone icon-solid icon-network-wired icon-fw me-2"></i>
 		Network
 	</a>
-	<a href="/settings" class="nav-item nav-link">
+	<a href="/settings" class="nav-item nav-link <%=(active === '/settings' && 'active')%>">
 		<i class="icon-duotone icon-solid icon-sliders-up icon-fw me-2"></i>
 		Settings
 	</a>
-	<a href="/system-services" class="nav-item nav-link">
+	<a href="/system-services" class="nav-item nav-link <%=(active === '/system-services' && 'active')%>">
 		<i class="icon-duotone icon-solid icon-cube icon-fw me-2"></i>
 		Services
 	</a>
-	<a href="/system-update" class="nav-item nav-link d-flex align-items-center">
+	<a href="/system-update" class="nav-item nav-link d-flex align-items-center <%=(active === '/system-update' && 'active')%>">
 		<span>
 			<i class="icon-duotone icon-solid icon-download icon-fw me-2"></i>
 			System update
 		</span>
 		<div class="badge bd-white ms-md-auto ms-3"><%=(typeof updates !== 'undefined' && !_.isEmpty(updates) ? _.size(updates) : '')%></div>
 	</a>
-	<a href="/about" class="nav-item nav-link">
+	<a href="/about" class="nav-item nav-link <%=(active === '/about' && 'active')%>">
 		<i class="icon-duotone icon-solid icon-fingerprint icon-fw me-2"></i>
 		About
 	</a>

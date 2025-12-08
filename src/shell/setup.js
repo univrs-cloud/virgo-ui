@@ -12,15 +12,30 @@ const header = document.querySelector('header');
 const container = document.querySelector('main');
 
 const renderSerialNumber = (state) => {
+	if (_.isNull(state.system)) {
+		return;
+	}
+
 	_.each(document.querySelectorAll('header .serial-number'), (element) => { element.innerHTML = `SN:${state.system.serial || '&mdash;'}`; });
 	systemService.unsubscribe(subscription);
 	subscription = null;
 };
 
+const renderNavigation = () => {
+	_.each(header.querySelectorAll('.navbar .nav, .offcanvas .navbar-nav'), (nav) => {
+		morphdom(
+			nav,
+			`<div>${navigationTemplate()}</div>`,
+			{ childrenOnly: true }
+		);
+	});
+};
+
 morphdom(
 	header,
-	headerTemplate({ navigationTemplate, isUpdating: false })
+	headerTemplate({ isUpdating: false })
 );
+renderNavigation();
 
 morphdom(
 	container,
