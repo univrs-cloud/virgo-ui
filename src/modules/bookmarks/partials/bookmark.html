@@ -26,24 +26,18 @@
 	</td>
 	<td class="text-center">
 		<%if (!_.isEmpty(jobs)) {%>
-			<div class="col-auto">
-				<span class="btn btn-sm pe-none ms-2">
-					<i class="icon-solid icon-gear icon-fw icon-spin"></i>
-				</span>
-			</div>
+			<i class="icon-solid icon-gear icon-fw icon-spin"></i>
 		<%}%>
 		<%if (_.isEmpty(jobs)) {%>
-			<div class="col-auto">
-				<div class="dropdown me-n1">
-					<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm">
-						<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
-					</span>
-					<ul class="dropdown-menu">
-						<li><a href="#bookmark-update" class="dropdown-item" data-bs-toggle="modal">Edit</a></li>
-						<li><hr class="dropdown-divider"></li>
-						<li><a href="#" class="dropdown-item text-danger" data-action="delete">Remove</a></li>
-					</ul>
-				</div>
+			<div class="dropdown">
+				<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm">
+					<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
+				</span>
+				<ul class="dropdown-menu">
+					<li><a href="#bookmark-update" class="dropdown-item" data-bs-toggle="modal">Edit</a></li>
+					<li><hr class="dropdown-divider"></li>
+					<li><a href="#" class="dropdown-item text-danger" data-action="delete">Remove</a></li>
+				</ul>
 			</div>
 		<%}%>
 	</td>
