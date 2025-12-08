@@ -9,3 +9,15 @@ $utilities: map-merge(
 		)
 	)
 );
+
+$utilities: map-merge(
+	$utilities,
+	(
+		"pointer-events": (
+			property: pointer-events,
+			class: pe,
+			responsive: true,
+			values: none auto
+		)
+	)
+);

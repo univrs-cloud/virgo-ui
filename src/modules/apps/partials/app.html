@@ -1,11 +1,11 @@
 <tr class="app cursor-pointer" data-name="<%=app.name%>">
-	<td class="p-0" style="width: 1%;">
+	<td class="d-none d-md-table-cell p-0">
 		<div class="card-image p-2">
 			<img src="<%=(_.includes(app.icon, '/') ? app.icon : `/assets/img/apps/${app.icon}`)%>">
 		</div>
 	</td>
 	<td>
-		<div class="d-flex align-items-center">
+		<div class="d-flex align-items-center" style="max-width: 242px;">
 			<div class="text-truncate"><%=app.title%></div>
 			<%if (app.hasUpdates) {%>
 				<div class="badge bd-green-100 rounded-pill ms-2" data-bs-toggle="tooltip" data-bs-original-title="Updates available">
@@ -15,20 +15,20 @@
 		</div>
 		<div>
 			<%if (!_.isEmpty(app.url)) {%>
-				<a href="<%=app.url%>" target="<%=(app?.target || app.name)%>" class="link-underline link-underline-opacity-0 link-underline-opacity-75-hover"><small><%=_.replace(app.url, /^https?:\/\//, '')%></small></a>
+				<a href="<%=app.url%>" target="<%=(app?.target || app.name)%>" class="link-underline link-underline-opacity-0 link-underline-opacity-75-hover pe-none pe-md-auto"><small><%=_.replace(app.url, /^https?:\/\//, '')%></small></a>
 			<%} else {%>
 				&nbsp;
 			<%}%>
 		</div>
 	</td>
-	<td class="text-end text-nowrap">
+	<td class="text-end text-nowrap d-none d-md-table-cell">
 		<%if (!app.resourceMetrics) {%>
 			<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
 		<%} else {%>
 			<small class="fw-light"><%=prettyBytes(app.resourceMetrics?.storage?.dataset || 0, { binary: true })%></small>
 		<%}%>
 	</td>
-	<td class="text-end text-nowrap">
+	<td class="text-end text-nowrap d-none d-md-table-cell">
 		<%if (!app.resourceMetrics) {%>
 			<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
 		<%} else {%>

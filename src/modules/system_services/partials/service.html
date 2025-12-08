@@ -1,9 +1,9 @@
 <tr class="<%=(service.state === 'failed' ? 'table-danger' : '')%>">
 	<td>
-		<%=_.replace(service.unit, '.service', '')%><br>
+		<%=service.unit%><br>
 		<small class="text-body-secondary"><%=service.description%></small>
 	</td>
-	<td><%=service.unitFileState%></td>
+	<td class="d-none d-md-table-cell"><%=service.unitFileState%></td>
 	<td>
 		<div class="badge <%=(service.state === 'running' ? 'bd-green-100' : (service.state === 'oneshot' ? 'bd-gray-200' : 'bd-red-100'))%> fw-light rounded-pill">
 			<%=service.state%>
