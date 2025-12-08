@@ -57,6 +57,10 @@ class Docker extends Store {
 		return this.getStateProperty('containers');
 	}
 
+	getAppsResourceMetrics() {
+		return this.getStateProperty('appsResourceMetrics');
+	}
+
 	getImageUpdates() {
 		return this.getStateProperty('imageUpdates');
 	}

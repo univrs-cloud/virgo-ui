@@ -228,6 +228,7 @@ img {
 		height: calc(100vh - 238px);
 	}
 }
+#apps,
 #system-services {
 	.overflow-y-scroll {
 		height: calc(100vh - 242px);
@@ -298,40 +299,22 @@ img {
 	padding-bottom: map-get($spacers, 1);
 }
 #apps {
-	.container-fluid > .row {
-		&.expand {
-			.item {
-				&:not(.expand) {
-					display: none;
-				}
-				&.expand {
-					width: 100%;
-					min-height: calc(100vh - 144px);
-					.expand,
-					.badge {
-						display: none;
-					}
-					.indicator,
-					.resource-metrics .badge,
-					.service .badge {
-						display: inline-block;
-					}
-				}
-			}
+	.card-image {
+		width: 50px;
+	}
+	.details {
+		z-index: 1030;
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		display: none;
+		.container-fluid {
+			padding-bottom: 1px;
 		}
-		&:not(.expand) {
-			.logs-container,
-			.terminal-container {
-				display: none;
-			}
-			.item {
-				.compress {
-					display: none;
-				}
-			}
-			.details {
-				display: none;
-			}
+		.card-body {
+			min-height: calc(100vh - 145px);
 		}
 	}
 	.logs-container,
@@ -344,7 +327,6 @@ img {
 		right: 0;
 		height: calc(100vh - 260px);
 		background-color: var(--bs-white);
-		padding-left: map-get($spacers, 5);
 	}
 	.logs-container {
 		ul {

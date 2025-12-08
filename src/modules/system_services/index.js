@@ -79,7 +79,15 @@ const render = (state) => {
 		const matchesUnitFileState = filterUnitFileStateValue === '' || service.unitFileState === filterUnitFileStateValue;
 		return matchesSearch && matchesState && matchesUnitFileState;
 	});
-	services = _.orderBy(services, [(service) => { return String(service[tableOrder.field] ?? '').toLowerCase(); }], [tableOrder.direction]);
+	services = _.orderBy(services,
+		[
+			(service) => {
+				const value = _.get(service, tableOrder.field);
+				return typeof value === 'number' ? value : String(value ?? '').toLowerCase();
+			}
+		],
+		[tableOrder.direction]
+	);
 	_.each(services, (service) => {
 		template.innerHTML += serviceTemplate({ service });
 	});

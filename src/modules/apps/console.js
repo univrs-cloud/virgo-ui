@@ -33,7 +33,7 @@ const render = (event) => {
 };
 
 const closeTerminal = (event) => {
-	if (!event.target.closest('a')?.classList.contains('close-terminal') && !event.target.closest('span')?.classList.contains('compress')) {
+	if (!event.target.closest('a')?.classList.contains('close-terminal') && !event.target.closest('button')?.classList.contains('compress')) {
 		return;
 	}
 
