@@ -50,6 +50,16 @@ const renderSerialNumber = (state) => {
 	subscription = null;
 };
 
+const renderNavigation = () => {
+	_.each(header.querySelectorAll('.navbar .nav, .offcanvas .navbar-nav'), (nav) => {
+		morphdom(
+			nav,
+			`<div>${navigationTemplate()}</div>`,
+			{ childrenOnly: true }
+		);
+	});
+};
+
 const render = (state) => {
 	let update = state.update;
 	if (_.isNull(update)) {
@@ -81,8 +91,9 @@ const render = (state) => {
 
 morphdom(
 	header,
-	headerTemplate({ navigationTemplate, isUpdating: true })
+	headerTemplate({ isUpdating: true })
 );
+renderNavigation();
 
 account.init();
 
