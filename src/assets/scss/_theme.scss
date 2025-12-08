@@ -242,6 +242,13 @@ img {
 		}
 	}
 }
+#apps {
+	.details {
+		.overflow-y-scroll {
+			height: calc(100vh - 215px);
+		}
+	}
+}
 #system-update {
 	.overflow-y-scroll {
 		height: calc(100vh - 262px);
@@ -319,7 +326,7 @@ img {
 	}
 	.logs-container,
 	.terminal-container {
-		z-index: 1;
+		z-index: 1031;
 		position: absolute;
 		top: 0;
 		bottom: 0;
