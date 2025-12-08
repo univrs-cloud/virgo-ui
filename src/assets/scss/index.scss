@@ -2,8 +2,8 @@
 // webfonts
 // --------
 @use "webfonts/variables" with (
-  $css-prefix: "icon",
-  $icon-property: "--icon"
+	$css-prefix: "icon",
+	$icon-property: "--icon"
 );
 @use "webfonts/fontawesome";
 @use "webfonts/brands";

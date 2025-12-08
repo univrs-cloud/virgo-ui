@@ -2,6 +2,9 @@
 	<div class="card rounded-4 border-0">
 		<div class="card-body">
 			<div class="row g-0 align-items-center mt-n2">
+				<div class="col-auto me-2">
+					<button class="compress btn p-0"><i class="icon-light icon-arrow-left icon-fw"></i></button>
+				</div>
 				<div class="card-image col-auto p-2 ms-n2">
 					<img src="<%=(_.includes(app.icon, '/') ? app.icon : `/assets/img/apps/${app.icon}`)%>">
 				</div>
@@ -15,12 +18,9 @@
 						<%}%>
 					</div>
 				</div>
-				<div class="col-auto ms-auto">
-					<button class="compress btn p-0"><i class="icon-light icon-xmark icon-fw"></i></button>
-				</div>
 			</div>
 
-			<div class="position-relative">
+			<div class="position-relative ms-4 ps-1">
 				<div class="logs-container d-none">
 					<div class="service d-flex align-items-center justify-content-between bg-white p-2 pt-0 ps-0">
 						<div class="d-flex align-items-center">
@@ -41,73 +41,81 @@
 						<a href="#" class="close-terminal btn btn-link p-0 ms-2">Close console</a>
 					</div>
 				</div>
-			</div>
 
-			<dl>
-				<dt class="fw-lighter"><small>Services</small></dt>
 				<%if (_.isEmpty(app.projectContainers)) {%>
 					No services found for this app.
+				<%} else {%>
+					<div class="overflow-y-scroll">
+						<table class="table table-hover align-middle m-0">
+							<thead>
+								<th>Service</th>
+								<th>Ports</th>
+								<th style="width: 1px;"></th>
+								<th style="width: 1px;"></th>
+								<th class="text-center" style="width: 100px;">State</th>
+								<th style="width: 50px;"></th>
+							</thead>
+							<tbody>
+								<%_.each(app.projectContainers, (container, index) => {%>
+									<tr>
+										<td class="text-nowrap">
+											<div class="d-flex align-items-center">
+												<i class="icon-light icon-cube icon-fw me-2"></i>
+												<%=container.name%>
+												<%if (container.hasUpdates) {%>
+													<div class="badge bd-green-100 rounded-pill ms-2" data-bs-toggle="tooltip" data-bs-original-title="Updates available">
+														<i class="icon-solid icon-download icon-fw"></i>
+													</div>
+												<%}%>
+											</div>
+										</td>
+										<td>
+											<%if (container.state === 'running') {%>
+												<%const publishedPorts = _.filter(container.ports, { ip: '0.0.0.0' });%>
+												<%=(_.isEmpty(publishedPorts) ? '<span class="text-body-secondary">&mdash;</span>' : '')%>
+												<%_.each(_.orderBy(publishedPorts, ['privatePort'], ['asc']), (port, index) => {%>
+													<span class="badge bd-gray-200 rounded-pill fw-light" data-bs-toggle="tooltip" data-bs-original-title="public &middot; private"><%=`${port.publicPort} &rlarr; ${port.privatePort}`%></span>
+												<%})%>
+											<%}%>
+										</td>
+										<td class="text-nowrap">
+											<a href="#" class="logs btn btn-light btn-sm" data-id="<%=container.id%>">
+												<i class="icon-light icon-memo icon-fw me-1"></i>
+												Logs
+											</a>
+										</td>
+										<td class="text-nowrap">
+											<%if (container.state === 'running') {%>
+												<a href="#" class="console btn btn-light btn-sm" data-id="<%=container.id%>">
+													<i class="icon-light icon-rectangle-terminal icon-fw me-1"></i>
+													Console
+												</a>
+											<%}%>
+										</td>
+										<td class="text-center text-nowrap">
+											<span class="badge <%=(container.state === 'running' ? 'bd-green-100' : 'bd-red-100')%> rounded-pill fw-light"><%=container.state%></span>
+										</td>
+										<td class="text-center">
+											<div class="dropdown">
+												<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm">
+													<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
+												</span>
+												<ul class="dropdown-menu">
+													<li><a href="#" class="dropdown-item <%=(app.state === 'success' ? 'disabled' : '')%>" data-action="start">Start</a></li>
+													<li><hr class="dropdown-divider"></li>
+													<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="stop">Stop</a></li>
+													<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="kill">Kill</a></li>
+													<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="restart">Restart</a></li>
+												</ul>
+											</div>
+										</td>
+									</tr>
+								<%})%>
+							</tbody>
+						</table>
+					</div>
 				<%}%>
-				<div class="row">
-					<%_.each(app.projectContainers, (container, index) => {%>
-						<dd class="service col-auto <%=(index + 1 == _.size(app.projectContainers) ? 'mb-0' : '')%>" data-id="<%=container.id%>">
-							<div class="d-flex align-items-center">
-								<i class="icon-light icon-cube icon-fw me-1 text-gray-500"></i>
-								<div class="text-truncate"><%=container.name%></div>
-								<%if (container.hasUpdates) {%>
-									<div class="badge bd-green-100 rounded-pill ms-2" data-bs-toggle="tooltip" data-bs-original-title="Updates available">
-										<i class="icon-solid icon-download icon-fw"></i>
-									</div>
-								<%}%>
-							</div>
-							<div style="margin-left: 1.2rem;">
-								<div class="d-flex align-items-center">
-									<%if (container.state === 'running') {%>
-										<i class="icon-solid icon-play icon-fw me-1 text-green-300"></i>
-									<%} else {%>
-										<i class="icon-solid icon-stop icon-fw me-1 text-red-300"></i>
-									<%}%>
-									<span class="me-2"><%=_.upperFirst(container.state)%></span>
-									<div class="dropdown">
-										<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm">
-											<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
-										</span>
-										<ul class="dropdown-menu">
-											<li><a href="#" class="dropdown-item <%=(app.state === 'success' ? 'disabled' : '')%>" data-action="start">Start</a></li>
-											<li><hr class="dropdown-divider"></li>
-											<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="stop">Stop</a></li>
-											<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="kill">Kill</a></li>
-											<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="restart">Restart</a></li>
-										</ul>
-									</div>
-								</div>
-								<%if (container.state === 'running') {%>
-									<%const publishedPorts = _.filter(container.ports, { ip: '0.0.0.0' });%>
-									<div class="d-flex align-items-center">
-										<i class="icon-light icon-ethernet icon-fw me-1"></i>
-										<span>Ports <small>(<%=(!_.isEmpty(publishedPorts) ? `public &middot; private` : `no published ports`)%>)</small></span>
-									</div>
-									<ul class="list-unstyled ps-4 m-0">
-										<%_.each(_.orderBy(publishedPorts, ['privatePort'], ['asc']), (port, index) => {%>
-											<li><%=`${port.publicPort} &rlarr; ${port.privatePort}`%></li>
-										<%})%>
-									</ul>
-								<%}%>
-								<div class="d-flex align-items-center">
-									<i class="icon-light icon-memo icon-fw me-1"></i>
-									<a href="#" class="logs btn btn-link p-0" data-id="<%=container.id%>">Logs</a>
-								</div>
-								<%if (container.state === 'running') {%>
-									<div class="d-flex align-items-center">
-										<i class="icon-light icon-rectangle-terminal icon-fw me-1"></i>
-										<a href="#" class="console btn btn-link p-0" data-id="<%=container.id%>">Console</a>
-									</div>
-								<%}%>
-							</div>
-						</dd>
-					<%})%>
-				</div>
-			</dl>
+			</div>
 		</div>
 	</div>
 </div>

@@ -1,4 +1,4 @@
-<tr class="app" data-name="<%=app.name%>">
+<tr class="app cursor-pointer" data-name="<%=app.name%>">
 	<td class="p-0" style="width: 1%;">
 		<div class="card-image p-2">
 			<img src="<%=(_.includes(app.icon, '/') ? app.icon : `/assets/img/apps/${app.icon}`)%>">
@@ -74,8 +74,5 @@
 				</ul>
 			</div>
 		<%}%>
-	</td>
-	<td class="text-center p-0">
-		<button class="expand btn px-2"><i class="icon-solid icon-eye icon-fw"></i></button>
 	</td>
 </tr>

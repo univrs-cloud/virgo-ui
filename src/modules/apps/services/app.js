@@ -52,11 +52,11 @@ const composeApps = (configured, containers, appsResourceMetrics, imageUpdates) 
 				});
 				let activeCount = _.size(_.filter(entity.projectContainers, (container) => { return _.includes(['running', 'restarting'], container.state); }));
 				if (activeCount === _.size(entity.projectContainers)) {
-					entity.state = 'success';  // All containers are running or restarting
+					entity.state = 'success'; // All containers are running or restarting
 				} else if (activeCount === 0) {
-					entity.state = 'danger';   // No containers are running or restarting
+					entity.state = 'danger'; // No containers are running or restarting
 				} else {
-					entity.state = 'warning';  // Some containers are running/restarting, others are not
+					entity.state = 'warning'; // Some containers are running/restarting, others are not
 				}
 				entity.ports = _.orderBy(_.filter(container.ports, { ip: '0.0.0.0' }), ['privatePort'], ['asc']);
 				entity.url = Docker.composeUrlFromLabels(container.labels);
