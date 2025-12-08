@@ -1,52 +1,50 @@
-<div class="col col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 item">
-	<div class="bookmark card rounded-4 border-0 h-100 mb-0" data-name="<%=bookmark.name%>">
-		<div class="card-body ps-0 py-1">
-			<div class="row g-0 align-items-center">
-				<div class="card-image card-spacer col-auto p-2">
-					<img src="<%=(_.includes(bookmark.icon, '/') ? bookmark.icon : `/assets/img/apps/${bookmark.icon}`)%>">
-				</div>
-				<div class="col flex-grow-1 text-truncate">
-					<%=bookmark.title%>
-				</div>
-				<%if (!_.isEmpty(jobs)) {%>
-					<div class="col-auto">
-						<span class="btn btn-sm pe-none ms-2">
-							<i class="icon-solid icon-gear icon-fw icon-spin"></i>
-						</span>
-					</div>
-				<%}%>
-				<%if (_.isEmpty(jobs)) {%>
-					<div class="col-auto">
-						<div class="dropdown me-n1">
-							<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm">
-								<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
-							</span>
-							<ul class="dropdown-menu">
-								<li><a href="#bookmark-update" class="dropdown-item" data-bs-toggle="modal">Edit</a></li>
-								<li><hr class="dropdown-divider"></li>
-								<li><a href="#" class="dropdown-item text-danger" data-action="delete">Remove</a></li>
-							</ul>
-						</div>
-					</div>
-				<%}%>
-			</div>
-			<div class="row g-0 mt-n2 mb-2">
-				<div class="card-spacer col-auto p-2"></div>
-				<div class="col flex-grow-1">
-					<div class="text-secondary mb-2">
-						<%if (!_.isEmpty(bookmark.url)) {%>
-							<a href="<%=bookmark.url%>" target="<%=(bookmark?.target || bookmark.name)%>" class="link-underline link-underline-opacity-0 link-underline-opacity-75-hover"><small><%=bookmark.url%></small></a>
-						<%} else {%>
-							&mdash;
-						<%}%>
-					</div>
-					<div class="badge bd-purple-100 rounded-pill">
-						<div class="d-flex align-items-center">
-							<span class="fw-normal"><%=bookmark.category%></span>
-						</div>
-					</div>
-				</div>
-			</div>
+<tr class="bookmark" data-name="<%=bookmark.name%>">
+	<td class="d-none d-md-table-cell p-0">
+		<div class="card-image p-2">
+			<img src="<%=(_.includes(bookmark.icon, '/') ? bookmark.icon : `/assets/img/apps/${bookmark.icon}`)%>">
 		</div>
-	</div>
-</div>
+	</td>
+	<td>
+		<div class="d-flex align-items-center" style="max-width: 237px;">
+			<div class="text-truncate"><%=bookmark.title%></div>
+			<%if (app.hasUpdates) {%>
+				<div class="badge bd-green-100 rounded-pill ms-2" data-bs-toggle="tooltip" data-bs-original-title="Updates available">
+					<i class="icon-solid icon-download icon-fw"></i>
+				</div>
+			<%}%>
+		</div>
+		<div>
+			<%if (!_.isEmpty(bookmark.url)) {%>
+				<a href="<%=bookmark.url%>" target="<%=(bookmark?.target || bookmark.name)%>" class="link-underline link-underline-opacity-0 link-underline-opacity-75-hover"><small><%=bookmark.url%></small></a>
+			<%} else {%>
+				&mdash;
+			<%}%>
+		</div>
+	</td>
+	<td class="d-none d-md-table-cell">
+		<div class="badge bd-purple-100 rounded-pill fw-light"><%=bookmark.category%></div>
+	</td>
+	<td class="text-center">
+		<%if (!_.isEmpty(jobs)) {%>
+			<div class="col-auto">
+				<span class="btn btn-sm pe-none ms-2">
+					<i class="icon-solid icon-gear icon-fw icon-spin"></i>
+				</span>
+			</div>
+		<%}%>
+		<%if (_.isEmpty(jobs)) {%>
+			<div class="col-auto">
+				<div class="dropdown me-n1">
+					<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm">
+						<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
+					</span>
+					<ul class="dropdown-menu">
+						<li><a href="#bookmark-update" class="dropdown-item" data-bs-toggle="modal">Edit</a></li>
+						<li><hr class="dropdown-divider"></li>
+						<li><a href="#" class="dropdown-item text-danger" data-action="delete">Remove</a></li>
+					</ul>
+				</div>
+			</div>
+		<%}%>
+	</td>
+</tr>

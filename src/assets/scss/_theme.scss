@@ -229,6 +229,7 @@ img {
 	}
 }
 #apps,
+#bookmarks,
 #system-services {
 	.overflow-y-scroll {
 		height: calc(100vh - 242px);
@@ -305,10 +306,13 @@ img {
 	padding-top: map-get($spacers, 2);
 	padding-bottom: map-get($spacers, 1);
 }
-#apps {
+#apps,
+#bookmarks {
 	.card-image {
 		width: 50px;
 	}
+}
+#apps {
 	.details {
 		z-index: 1030;
 		position: absolute;

@@ -6,14 +6,12 @@
 		<i class="icon-regular icon-car-battery icon-fw me-1 text-gray-500"></i>
 		UPS
 		<%if (state.ups !== null && state.ups !== false) {%>
-			<small class="ms-1">
-				<%if (state.ups?.powerSource === 'grid') {%>
-					<span class="badge rounded-pill bd-green-100">GRID</span>
-				<%}%>
-				<%if (state.ups?.powerSource === 'battery') {%>
-					<span class="badge rounded-pill bd-orange-100">BATTERY</span>
-				<%}%>
-			</small>
+			<%if (state.ups?.powerSource === 'grid') {%>
+				<div class="badge rounded-pill bd-green-100 ms-1">GRID</div>
+			<%}%>
+			<%if (state.ups?.powerSource === 'battery') {%>
+				<div class="badge rounded-pill bd-orange-100 ms-1">BATTERY</div>
+			<%}%>
 		<%}%>
 	</h6>
 	<%if (state.ups === null) {%>

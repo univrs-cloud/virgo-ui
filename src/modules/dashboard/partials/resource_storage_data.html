@@ -4,9 +4,7 @@
 		<i class="icon-regular icon-database icon-fw me-1 text-gray-500"></i>
 		Data
 		<%if (state.storage !== null && pool !== false) {%>
-			<small class="ms-1">
-				<span class="badge rounded-pill bd-<%=(pool.properties.health.value.toLowerCase() === 'online' ? 'green' : 'red')%>-100"><%=pool.properties.health.value%></span>
-			</small>
+			<div class="badge rounded-pill bd-<%=(pool.properties.health.value.toLowerCase() === 'online' ? 'green' : 'red')%>-100 ms-1"><%=pool.properties.health.value%></div>
 		<%}%>
 	</h6>
 	<%if (state.storage === null) {%>
