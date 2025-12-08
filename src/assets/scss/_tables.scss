@@ -1,5 +1,7 @@
 .table {
 	thead {
+		background-color: var(--bs-white);
+		box-shadow: 0 1px 0 0 var(--bs-border-color);
 		th {
 			.icon {
 				display: none;
