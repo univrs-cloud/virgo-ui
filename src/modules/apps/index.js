@@ -43,7 +43,7 @@ const order = (event) => {
 };
 
 const expand = (event) => {
-	if (!event.target.closest('button')?.classList.contains('expand')) {
+	if (event.target.closest('a, .dropdown')) {
 		return;
 	}
 
@@ -203,13 +203,13 @@ const render = (state) => {
 	container.classList.remove('d-none');
 };
 
-module.addEventListener('click', expand);
 module.addEventListener('click', compress);
 module.addEventListener('click', update);
 module.addEventListener('click', performAppAction);
 module.addEventListener('click', performServiceAction);
 searchInput.addEventListener('input', search);
 table.querySelector('thead').addEventListener('click', order);
+table.querySelector('tbody').addEventListener('click', expand);
 
 appService.subscribe([render]);
 
