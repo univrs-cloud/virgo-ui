@@ -1,4 +1,5 @@
 import { LitElement, html } from 'lit';
+import { classMap } from 'lit/directives/class-map.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { sheet } from "../styles.js";
 
@@ -48,7 +49,7 @@ export class Toast extends LitElement {
 		this.#initBootstrapToast();
 	}
 
-	updateOptions(options) {
+	updateOptions(options = {}) {
 		const durationChanged = options.duration !== undefined && options.duration !== this.duration;
 		
 		// Update properties
@@ -63,22 +64,21 @@ export class Toast extends LitElement {
 		// Only restart auto-hide if duration changed
 		if (durationChanged) {
 			this.#clearAutoHide();
-			
 			if (hasDuration) {
-			// Reset progress without transition
-			this.#noTransition = true;
-			this.progress = 100;
-			this.#remainingTime = this.duration;
-			
-			// Start auto-hide after render
-			this.requestUpdate();
-			this.updateComplete.then(() => {
-				this.#noTransition = false;
-				this.#startAutoHide();
-			});
+				// Reset progress without transition
+				this.#noTransition = true;
+				this.progress = 100;
+				this.#remainingTime = this.duration;
+				
+				// Start auto-hide after render
+				this.requestUpdate();
+				this.updateComplete.then(() => {
+					this.#noTransition = false;
+					this.#startAutoHide();
+				});
 			} else {
-			// Duration is now 0, just update
-			this.requestUpdate();
+				// Duration is now 0, just update
+				this.requestUpdate();
 			}
 		} else {
 			// No duration change, just update the display
@@ -94,10 +94,12 @@ export class Toast extends LitElement {
 
 	render() {
 		const colorClass = this.#getColorClass();
+		const toastClass = `bd-${colorClass}-500`;
+		const progressClass = `bg-${colorClass}-100`;
 		const showProgress = this.duration > 0;
 		
 		return html`
-			<div class="toast bd-${colorClass}-500 border-0 position-relative overflow-hidden">
+			<div class="toast ${classMap({ [toastClass]: true })} border-0 position-relative overflow-hidden">
 				<div class="d-flex">
 					<div class="toast-body w-100">
 						<strong>${unsafeHTML(this.title)}</strong>
@@ -105,7 +107,7 @@ export class Toast extends LitElement {
 					</div>
 					${this.dismissible ? html`<button type="button" class="btn-close btn-close-white me-2 m-auto" @click=${() => { this.hide(); }}></button>` : ''}
 				</div>
-				${showProgress ? html` <div class="position-absolute bottom-0 end-0 bg-${colorClass}-100" style="height: 3px; width: ${this.progress}%; ${this.#noTransition ? '' : 'transition: width 0.1s linear;'} border-radius: 0 0 var(--bs-toast-border-radius) var(--bs-toast-border-radius);"></div>` : ''}
+				${showProgress ? html` <div class="position-absolute bottom-0 end-0 ${classMap({ [progressClass]: true })}" style="height: 3px; width: ${this.progress}%; ${this.#noTransition ? '' : 'transition: width 0.1s linear;'} border-radius: 0 0 var(--bs-toast-border-radius) var(--bs-toast-border-radius);"></div>` : ''}
 			</div>
 		`;
 	}
@@ -115,7 +117,7 @@ export class Toast extends LitElement {
 		if (!toastEl) {
 			// Element not ready, try again (max 5 retries)
 			if (retryCount < 5) {
-			setTimeout(() => this.#initBootstrapToast(retryCount + 1), 10);
+				setTimeout(() => this.#initBootstrapToast(retryCount + 1), 10);
 			}
 			return;
 		}
@@ -175,7 +177,7 @@ export class Toast extends LitElement {
 		// Set hide timeout
 		this.#hideTimeout = setTimeout(() => {
 			if (this.#bsToast) {
-			this.#bsToast.hide();
+				this.#bsToast.hide();
 			}
 		}, this.duration);
 		}
@@ -189,7 +191,10 @@ export class Toast extends LitElement {
 		}
 		
 	#pauseAutoHide() {
-		if (this.#isPaused || !this.#hideTimeout) return;
+		if (this.#isPaused || !this.#hideTimeout) {
+			return;
+		}
+
 		this.#isPaused = true;
 		
 		// Calculate remaining time
@@ -203,7 +208,10 @@ export class Toast extends LitElement {
 	}
 		
 	#resumeAutoHide() {
-		if (!this.#isPaused || this.#remainingTime <= 0) return;
+		if (!this.#isPaused || this.#remainingTime <= 0) {
+			return;
+		}
+
 		this.#isPaused = false;
 		this.#startTime = Date.now();
 		
@@ -230,7 +238,7 @@ export class Toast extends LitElement {
 			this.progress = Math.max(0, (remaining / this.duration) * 100);
 			
 			if (this.progress <= 0) {
-			this.#stopProgress();
+				this.#stopProgress();
 			}
 		}, 16); // ~60fps for smoother animation
 	}
@@ -255,7 +263,7 @@ export class Toast extends LitElement {
 		// Re-enable transition after DOM updates
 		requestAnimationFrame(() => {
 			requestAnimationFrame(() => {
-			this.#noTransition = false;
+				this.#noTransition = false;
 			});
 		});
 	}

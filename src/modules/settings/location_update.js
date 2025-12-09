@@ -5,6 +5,7 @@ document.querySelector('body').insertAdjacentHTML('beforeend', locationModalPart
 
 const modal = document.querySelector('#location');
 const form = modal.closest('u-form');
+let notification = null;
 
 const getLocation = (event) => {
 	event.preventDefault();
@@ -12,9 +13,15 @@ const getLocation = (event) => {
 		(position) => {
 			form.querySelector('.latitude').value = position.coords.latitude;
 			form.querySelector('.longitude').value = position.coords.longitude;
+			if (!_.isNull(notification)) {
+				notification.update({ title: 'Location retrieved.', type: 'success', duration: 5000 });
+				notification = null;
+			}
 		},
 		() => {
-			notifier.add({ title: 'Unable to retrieve your location.<br>Reset permissions and try again.', type: 'error', duration: 0 });
+			if (_.isNull(notification)) {
+				notification = notifier.add({ title: 'Unable to retrieve your location.<br>Reset permissions and try again.', type: 'error', duration: 0 });
+			}
 		}
 	);
 };
@@ -28,6 +35,7 @@ const updateLocation = (event) => {
 };
 
 const restore = (event) => {
+	notification = null;
 	form.reset();
 };
 
