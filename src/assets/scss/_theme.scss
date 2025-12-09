@@ -19,6 +19,7 @@ img {
 	--bs-dropdown-header-padding-x: 0.5rem;
 	--bs-dropdown-item-padding-x: 0.5rem;
 	--bs-dropdown-border-width: 0;
+	z-index: 1029;
 	backdrop-filter: blur(18px) grayscale(0.8) saturate(180%);
 	margin-top: 0;
 }
@@ -314,7 +315,7 @@ img {
 }
 #apps {
 	.details {
-		z-index: 1030;
+		z-index: 1028;
 		position: absolute;
 		top: 0;
 		bottom: 0;

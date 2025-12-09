@@ -1,10 +1,12 @@
 import modulePartial from 'modules/apps/partials/index.html';
 import appPartial from 'modules/apps/partials/app.html';
+import appActionsPartial from 'modules/apps/partials/app_actions.html';
 import appDetailsPartial from 'modules/apps/partials/app_details.html';
 import * as appService from 'modules/apps/services/app';
 
 const moduleTemplate = _.template(modulePartial);
 const appTemplate = _.template(appPartial);
+const appActionsTemplate = _.template(appActionsPartial);
 const appDetailsTemplate = _.template(appDetailsPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
 const module = document.querySelector('#apps');
@@ -147,9 +149,10 @@ const performServiceAction = async (event) => {
 };
 
 const renderAppDetails = (app) => {
+	const jobs = _.filter(appService.getJobs(), (job) => { return job.data?.config?.name === app.name; });
 	morphdom(
 		container.querySelector('.details'),
-		`<div>${appDetailsTemplate({ app })}</div>`,
+		`<div>${appDetailsTemplate({ app, jobs, appActionsTemplate })}</div>`,
 		{
 			childrenOnly: true,
 			onBeforeElUpdated: (fromEl, toEl) => {
@@ -185,7 +188,7 @@ const render = (state) => {
 	);
 	_.each(apps, (app) => {
 		const jobs = _.filter(state.jobs, (job) => { return job.data?.config?.name === app.name; });
-		template.innerHTML += appTemplate({ app, jobs, prettyBytes });
+		template.innerHTML += appTemplate({ app, jobs, appActionsTemplate, prettyBytes });
 	});
 	
 	morphdom(
