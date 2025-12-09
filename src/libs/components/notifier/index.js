@@ -33,14 +33,15 @@ export class Notifier extends LitElement {
 		
 		this.toasts = [...this.toasts, toast];
 		
-		return {
+		const ref = {
 			id,
-			update: (opts) => {
-				this.updateToast(id, opts);
+			update: (options = {}) => {
+				this.updateToast(id, options);
 				return ref;
 			},
 			remove: () => this.removeToast(id),
 		};
+		return ref;
 	}
 
 	updateToast(id, options) {
