@@ -8,7 +8,7 @@
 				<div class="card-image col-auto p-2 ms-n2">
 					<img src="<%=(_.includes(app.icon, '/') ? app.icon : `/assets/img/apps/${app.icon}`)%>">
 				</div>
-				<div class="col">
+				<div class="col-auto">
 					<div class="d-flex align-items-center">
 						<div class="text-truncate"><%=app.title%></div>
 						<%if (app.hasUpdates) {%>
@@ -17,6 +17,9 @@
 							</div>
 						<%}%>
 					</div>
+				</div>
+				<div class="col-auto ms-2">
+					<%=appActionsTemplate({ app, jobs })%>
 				</div>
 			</div>
 
@@ -57,7 +60,7 @@
 							</thead>
 							<tbody>
 								<%_.each(app.projectContainers, (container, index) => {%>
-									<tr>
+									<tr class="service" data-id="<%=container.id%>">
 										<td class="text-nowrap">
 											<div class="d-flex align-items-center">
 												<i class="icon-light icon-cube icon-fw me-2"></i>

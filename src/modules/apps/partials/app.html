@@ -45,34 +45,6 @@
 		</div>
 	</td>
 	<td class="text-center">
-		<%if (!_.isEmpty(jobs)) {%>
-			<i class="icon-solid icon-gear icon-fw icon-spin"></i>
-		<%}%>
-		<%if ((app.canBeRemoved || app.hasUpdates) && _.isEmpty(jobs)) {%>
-			<div class="dropdown">
-				<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm">
-					<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
-				</span>
-				<ul class="dropdown-menu">
-					<%if (app.hasUpdates) {%>
-						<li><a href="#" class="dropdown-item" data-action="update">Update</a></li>
-					<%}%>
-					<%if (app.canBeRemoved && app.hasUpdates) {%>
-						<li><hr class="dropdown-divider"></li>
-					<%}%>
-					<%if (app.canBeRemoved) {%>
-						<li><a href="#" class="dropdown-item <%=(app.state === 'success' ? 'disabled' : '')%>" data-action="start">Start</a></li>
-						<li><hr class="dropdown-divider"></li>
-						<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="stop">Stop</a></li>
-						<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="kill">Kill</a></li>
-						<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="restart">Restart</a></li>
-						<li><hr class="dropdown-divider"></li>
-						<li><a href="#" class="dropdown-item text-danger" data-action="recreate">Recreate</a></li>
-						<li><hr class="dropdown-divider"></li>
-						<li><a href="#" class="dropdown-item <%=(app.canBeRemoved ? 'text-danger' : 'disabled')%>" data-action="remove">Remove</a></li>
-					<%}%>
-				</ul>
-			</div>
-		<%}%>
+		<%=appActionsTemplate({ app, jobs })%>
 	</td>
 </tr>
