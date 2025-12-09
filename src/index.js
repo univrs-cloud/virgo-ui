@@ -14,6 +14,7 @@ try {
 }
 window.isAuthenticated = !_.isEmpty(account);
 window.isAdmin = isAuthenticated && _.includes(account.groups, 'admins');
+window.notifier = document.querySelector('u-notifier');
 
 let subscription;
 

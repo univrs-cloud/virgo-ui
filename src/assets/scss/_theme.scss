@@ -2,6 +2,10 @@ img {
 	max-width: 100%;
 }
 
+u-toast {
+	display: block;
+}
+
 .dropdown {
 	position: relative;
 }
@@ -115,12 +119,6 @@ img {
 	border-radius: var(--bs-modal-border-radius);
 	~ .scrollbar {
 		bottom: 70px;
-	}
-}
-
-.toast-container {
-	> :not(:last-child) {
-		margin-bottom: map-get($spacers, 2);
 	}
 }
 

@@ -14,16 +14,7 @@ const getLocation = (event) => {
 			form.querySelector('.longitude').value = position.coords.longitude;
 		},
 		() => {
-			document.querySelector('.toast-container').insertAdjacentHTML('beforeend',
-				`<div class="toast bd-red-500 border-0" data-bs-autohide="false">
-					<div class="d-flex">
-						<div class="toast-body">Unable to retrieve your location.<br>Reset permissions and try again.</div>
-						<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-					</div>
-				</div>`
-			);
-			const toast = new bootstrap.Toast(document.querySelector('.toast-container .toast:last-of-type'));
-			toast.show();
+			notifier.add({ title: 'Unable to retrieve your location.<br>Reset permissions and try again.', type: 'error', duration: 0 });
 		}
 	);
 };

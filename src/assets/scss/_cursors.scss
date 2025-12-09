@@ -1,7 +1,7 @@
 $utilities: map-merge(
 	$utilities,
 	(
-		"cursor": (
+		'cursor': (
 			property: cursor,
 			class: cursor,
 			responsive: true,
@@ -13,7 +13,7 @@ $utilities: map-merge(
 $utilities: map-merge(
 	$utilities,
 	(
-		"pointer-events": (
+		'pointer-events': (
 			property: pointer-events,
 			class: pe,
 			responsive: true,
