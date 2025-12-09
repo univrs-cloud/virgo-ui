@@ -1,0 +1,19 @@
+<%_.each(job.progress?.progress, (progress, key) => {%>
+	<%const layers = _.values(progress.layers || {})%>
+	<%progress.percent = _.meanBy(layers, (l) => { return l?.percentWeighted || l?.percent || 0; }) || 0%>
+	<%const isActive = _.includes(['pulling', 'downloading'], progress?.text?.toLowerCase())%>
+	<%if (!isActive) {%>
+		<%progress.percent = 100%>
+	<%}%>
+	<div class="my-1">
+		<div class="d-flex">
+			<span>
+				<%=progress.text%>
+				<%=key%>
+			</span>
+		</div>
+		<div class="progress" role="progressbar">
+			<div class="progress-bar <%=(isActive ? 'bg-cyan-300 progress-bar-striped progress-bar-animated' : 'bg-green-200')%>" style="width: <%=progress.percent%>%;"></div>
+		</div>
+	</div>
+<%})%>
