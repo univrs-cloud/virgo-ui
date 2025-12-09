@@ -12,17 +12,11 @@ export class Toast extends LitElement {
 		title: { type: String },
 		message: { type: String },
 		dismissible: { type: Boolean },
-		duration: { type: Number },
-		progress: { state: true },
+		duration: { type: Number }
 	};
 
 	#bsToast = null;
-	#progressInterval = null;
 	#hideTimeout = null;
-	#noTransition = false;
-	#isPaused = false;
-	#remainingTime = 0;
-	#startTime = 0;
 	#abortController = null;
 
 	constructor() {
@@ -32,7 +26,6 @@ export class Toast extends LitElement {
 		this.message = '';
 		this.dismissible = true;
 		this.duration = 5000;
-		this.progress = 100;
 	}
 
 	disconnectedCallback() {
@@ -40,9 +33,7 @@ export class Toast extends LitElement {
 		this.#clearAutoHide();
 		// Abort all event listeners
 		this.#abortController?.abort();
-		if (this.#bsToast) {
-			this.#bsToast.dispose();
-		}
+		this.#bsToast?.dispose();
 	}
 
 	firstUpdated() {
@@ -59,44 +50,23 @@ export class Toast extends LitElement {
 		if (options.dismissible !== undefined) this.dismissible = options.dismissible;
 		if (options.duration !== undefined) this.duration = options.duration;
 		
-		const hasDuration = this.duration > 0;
-		
 		// Only restart auto-hide if duration changed
 		if (durationChanged) {
 			this.#clearAutoHide();
-			if (hasDuration) {
-				// Reset progress without transition
-				this.#noTransition = true;
-				this.progress = 100;
-				this.#remainingTime = this.duration;
-				
-				// Start auto-hide after render
-				this.requestUpdate();
-				this.updateComplete.then(() => {
-					this.#noTransition = false;
-					this.#startAutoHide();
-				});
-			} else {
-				// Duration is now 0, just update
-				this.requestUpdate();
+			if (this.duration > 0) {
+				this.#startAutoHide();
 			}
-		} else {
-			// No duration change, just update the display
-			this.requestUpdate();
 		}
+		this.requestUpdate();
 	}
 
 	hide() {
-		if (this.#bsToast) {
-			this.#bsToast.hide();
-		}
+		this.#bsToast?.hide();
 	}
 
 	render() {
 		const colorClass = this.#getColorClass();
 		const toastClass = `bd-${colorClass}-500`;
-		const progressClass = `bg-${colorClass}-100`;
-		const showProgress = this.duration > 0;
 		
 		return html`
 			<div class="toast ${classMap({ [toastClass]: true })} border-0 position-relative overflow-hidden">
@@ -107,7 +77,6 @@ export class Toast extends LitElement {
 					</div>
 					${this.dismissible ? html`<button type="button" class="btn-close btn-close-white me-2 m-auto" @click=${() => { this.hide(); }}></button>` : ''}
 				</div>
-				${showProgress ? html` <div class="position-absolute bottom-0 end-0 ${classMap({ [progressClass]: true })}" style="height: 3px; width: ${this.progress}%; ${this.#noTransition ? '' : 'transition: width 0.1s linear;'} border-radius: 0 0 var(--bs-toast-border-radius) var(--bs-toast-border-radius);"></div>` : ''}
 			</div>
 		`;
 	}
@@ -137,9 +106,7 @@ export class Toast extends LitElement {
 		}
 		
 		// Create Bootstrap Toast WITHOUT autohide - we'll handle it manually
-		this.#bsToast = new bootstrap.Toast(toastEl, {
-			autohide: false,
-		});
+		this.#bsToast = new bootstrap.Toast(toastEl, { autohide: false });
 		
 		// Attach event listeners with abort signal
 		toastEl.addEventListener('hidden.bs.toast', this.#onHidden, { signal });
@@ -149,7 +116,7 @@ export class Toast extends LitElement {
 		// Show the toast
 		this.#bsToast.show();
 		
-		// Start our own timer and progress if has duration
+		// Start our own timer if has duration
 		if (this.duration > 0) {
 			this.#startAutoHide();
 		}
@@ -167,110 +134,17 @@ export class Toast extends LitElement {
 
 	#startAutoHide() {
 		this.#clearAutoHide();
-		this.#isPaused = false;
-		this.#remainingTime = this.duration;
-		this.#startTime = Date.now();
-		
-		// Start progress animation
-		this.#startProgress();
-		
 		// Set hide timeout
 		this.#hideTimeout = setTimeout(() => {
-			if (this.#bsToast) {
-				this.#bsToast.hide();
-			}
+			this.#bsToast?.hide();
 		}, this.duration);
-		}
+	}
 		
 	#clearAutoHide() {
 		if (this.#hideTimeout) {
 			clearTimeout(this.#hideTimeout);
 			this.#hideTimeout = null;
 		}
-		this.#stopProgress();
-		}
-		
-	#pauseAutoHide() {
-		if (this.#isPaused || !this.#hideTimeout) {
-			return;
-		}
-
-		this.#isPaused = true;
-		
-		// Calculate remaining time
-		const elapsed = Date.now() - this.#startTime;
-		this.#remainingTime = Math.max(0, this.duration - elapsed);
-		
-		// Clear the timeout
-		clearTimeout(this.#hideTimeout);
-		this.#hideTimeout = null;
-		this.#stopProgress();
-	}
-		
-	#resumeAutoHide() {
-		if (!this.#isPaused || this.#remainingTime <= 0) {
-			return;
-		}
-
-		this.#isPaused = false;
-		this.#startTime = Date.now();
-		
-		// Restart progress from current position
-		this.#startProgress();
-		
-		// Set new timeout with remaining time
-		this.#hideTimeout = setTimeout(() => {
-			if (this.#bsToast) {
-			this.#bsToast.hide();
-			}
-		}, this.#remainingTime);
-	}
-
-	#startProgress() {
-		this.#stopProgress();
-		const duration = this.#remainingTime || this.duration;
-		const startTime = Date.now();
-		const endTime = startTime + duration;
-		
-		this.#progressInterval = setInterval(() => {
-			const now = Date.now();
-			const remaining = endTime - now;
-			this.progress = Math.max(0, (remaining / this.duration) * 100);
-			
-			if (this.progress <= 0) {
-				this.#stopProgress();
-			}
-		}, 16); // ~60fps for smoother animation
-	}
-		
-	#stopProgress() {
-		if (this.#progressInterval) {
-			clearInterval(this.#progressInterval);
-			this.#progressInterval = null;
-		}
-	}
-		
-	#resetProgressInstant() {
-		this.#stopProgress();
-		// Disable transition temporarily for instant reset
-		this.#noTransition = true;
-		this.progress = 100;
-		this.#remainingTime = this.duration;
-		
-		// Force synchronous update
-		this.requestUpdate();
-		
-		// Re-enable transition after DOM updates
-		requestAnimationFrame(() => {
-			requestAnimationFrame(() => {
-				this.#noTransition = false;
-			});
-		});
-	}
-
-	#resetAndStartAutoHide() {
-		this.#clearAutoHide();
-		this.#startAutoHide();
 	}
 
 	// Arrow functions for event handlers (auto-bound)
@@ -283,16 +157,11 @@ export class Toast extends LitElement {
 	};
 		
 	#onMouseEnter = () => {
-		if (this.duration > 0) {
-			this.#resetProgressInstant();
-			this.#pauseAutoHide();
-		}
+		this.#clearAutoHide();
 	};
 		
 	#onMouseLeave = () => {
-		if (this.duration > 0) {
-			this.#resetAndStartAutoHide();
-		}
+		this.#startAutoHide();
 	};
 }
 
