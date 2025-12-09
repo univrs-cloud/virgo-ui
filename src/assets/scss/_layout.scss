@@ -1,3 +1,7 @@
+:root {
+	--bs-toast-spacing: #{map-get($spacers, 2)};
+}
+
 ::selection {
 	color: #ffffff;
 	text-shadow: none;
