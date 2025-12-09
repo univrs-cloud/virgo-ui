@@ -14,7 +14,7 @@ const getLocation = (event) => {
 			form.querySelector('.latitude').value = position.coords.latitude;
 			form.querySelector('.longitude').value = position.coords.longitude;
 			if (!_.isNull(notification)) {
-				notification.update({ title: 'Location retrieved.', type: 'success', duration: 5000 });
+				notification.update({ title: 'Location retrieved.', type: 'info', duration: 5000 });
 				notification = null;
 			}
 		},
