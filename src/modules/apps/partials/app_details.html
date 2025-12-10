@@ -53,6 +53,12 @@
 							<thead class="sticky-top">
 								<th>Service</th>
 								<th>Ports</th>
+								<th class="text-end" style="width: 110px;">
+									<i class="icon-solid icon-microchip icon-fw" data-bs-toggle="tooltip" data-bs-original-title="CPU"></i>
+								</th>
+								<th class="text-end" style="width: 110px;">
+									<i class="icon-solid icon-memory icon-fw" data-bs-toggle="tooltip" data-bs-original-title="RAM"></i>
+								</th>
 								<th style="width: 1px;"></th>
 								<th style="width: 1px;"></th>
 								<th class="text-center" style="width: 100px;">State</th>
@@ -60,6 +66,7 @@
 							</thead>
 							<tbody>
 								<%_.each(app.projectContainers, (container, index) => {%>
+									<%const resourceMetrics = _.find((app.resourceMetrics?.containers || []), { id: container.id })%>
 									<tr class="service" data-id="<%=container.id%>">
 										<td class="text-nowrap">
 											<div class="d-flex align-items-center">
@@ -79,6 +86,20 @@
 												<%_.each(_.orderBy(publishedPorts, ['privatePort'], ['asc']), (port, index) => {%>
 													<div class="badge bd-gray-200 rounded-pill fw-light" data-bs-toggle="tooltip" data-bs-original-title="public &middot; private"><%=`${port.publicPort} &rlarr; ${port.privatePort}`%></div>
 												<%})%>
+											<%}%>
+										</td>
+										<td class="text-end text-nowrap">
+											<%if (!resourceMetrics) {%>
+												<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
+											<%} else {%>
+												<small class="fw-light"><%=resourceMetrics?.cpu?.percent.toFixed(2)%>%</small>
+											<%}%>
+										</td>
+										<td class="text-end text-nowrap">
+											<%if (!resourceMetrics) {%>
+												<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
+											<%} else {%>
+												<small class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(resourceMetrics?.memory?.usage || 0, { binary: true })%>"><%=resourceMetrics?.memory?.percent.toFixed(2)%>%</small>
 											<%}%>
 										</td>
 										<td class="text-nowrap">
