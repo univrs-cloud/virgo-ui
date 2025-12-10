@@ -12,8 +12,8 @@
 				.icon {
 					--icon-font-size: 14;
 					--icon-size-scale-base: 16;
-					--icon-primary-opacity: 0.3;
-					--icon-secondary-opacity: 0.3;
+					--icon-primary-opacity: 0.2;
+					--icon-secondary-opacity: 0.2;
 					display: inline-block;
 					font-size: calc(var(--icon-font-size) / var(--icon-size-scale-base) * 1em);
 					line-height: calc(1 / var(--icon-font-size) * 1em);
@@ -21,11 +21,13 @@
 				}
 				&.asc {
 					.icon {
+						--icon-primary-color: var(--bs-primary);
 						--icon-primary-opacity: 1;
 					}
 				}
 				&.desc {
 					.icon {
+						--icon-secondary-color: var(--bs-primary);
 						--icon-secondary-opacity: 1;
 					}
 				}
