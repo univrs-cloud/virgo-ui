@@ -335,13 +335,21 @@ u-toast {
 		bottom: 0;
 		left: 0;
 		right: 0;
-		height: calc(100vh - 260px);
 		background-color: var(--bs-white);
+	}
+	.terminal-container {
+		.terminal {
+			height: calc(100vh - 249px);
+		}
 	}
 	.logs-container {
 		ul {
-			height: calc(100vh - 270px);
+			list-style: none;
+			overflow-y: scroll;
+			height: calc(100vh - 249px);
 			background-color: var(--bs-black);
+			padding: 0;
+			margin: 0;
 		}
 		li {
 			font-family: var(--bs-font-monospace);
