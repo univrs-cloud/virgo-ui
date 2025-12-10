@@ -8,21 +8,20 @@
 	<%} else if (state.memory === false) {%>
 		<span class="text-red-300">Error fetching data</span>
 	<%} else {%>
-		<%const progressColorActive = (state.memory.capacity.percent >= 80 ? (state.memory.capacity.percent >= 90 ? 'bg-red-300' : 'bg-orange-300') : 'bg-blue-300')%>
-		<%const progressColorCache = (state.memory.capacity.percent >= 80 ? (state.memory.capacity.percent >= 90 ? 'bg-red-200' : 'bg-orange-200') : 'bg-indigo-100')%>
+		<%const usedPercent = ((state.memory.total - state.memory.available) / state.memory.total) * 100%>
+		<%const progressColorActive = (usedPercent >= 80 ? (usedPercent >= 90 ? 'bg-red-300' : 'bg-orange-300') : 'bg-blue-300')%>
 		<div class="row g-0 d-flex align-items-baseline">
 			<div class="col">
 				<div class="progress" role="progressbar">
-					<div class="progress-bar <%=progressColorActive%>" data-bs-toggle="tooltip" data-bs-original-title="Active" style="width: <%=state.memory.unreclaimable.percent%>%;"></div>
-					<div class="progress-bar progress-bar-striped <%=progressColorCache%>" data-bs-toggle="tooltip" data-bs-original-title="Reclaimable" style="width: <%=state.memory.reclaimable.percent%>%;"></div>
+					<div class="progress-bar <%=progressColorActive%>" data-bs-toggle="tooltip" data-bs-original-title="Active" style="width: <%=usedPercent%>%;"></div>
 				</div>
 			</div>
 			<div class="col-auto lh-1 text-body-tertiary text-end" style="width: 45px;">
-				<small class="fw-light"><%=state.memory.capacity.percent?.toFixed(0)%>%</small>
+				<small class="fw-light"><%=usedPercent?.toFixed(0)%>%</small>
 			</div>
 		</div>
 		<div class="lh-1 text-body-tertiary mt-1">
-			<small><strong class="fw-semibold"><%=prettyBytes(state.memory.total - state.memory.free || 0, { binary: true })%></strong> used from <%=prettyBytes(state.memory.total || 0, { binary: true })%></small>
+			<small><strong class="fw-semibold"><%=prettyBytes(state.memory.total - state.memory.available || 0, { binary: true })%></strong> used from <%=prettyBytes(state.memory.total || 0, { binary: true })%></small>
 		</div>
 	<%}%>
 </li>
