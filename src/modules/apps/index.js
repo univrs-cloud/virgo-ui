@@ -152,7 +152,7 @@ const renderAppDetails = (app) => {
 	const jobs = _.filter(appService.getJobs(), (job) => { return job.data?.config?.name === app.name; });
 	morphdom(
 		container.querySelector('.details'),
-		`<div>${appDetailsTemplate({ app, jobs, appActionsTemplate })}</div>`,
+		`<div>${appDetailsTemplate({ app, jobs, appActionsTemplate, prettyBytes })}</div>`,
 		{
 			childrenOnly: true,
 			onBeforeElUpdated: (fromEl, toEl) => {
