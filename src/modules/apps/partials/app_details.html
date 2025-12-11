@@ -100,6 +100,9 @@
 												<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
 											<%} else {%>
 												<small class="fw-light"><%=resourceMetrics?.cpu?.percent.toFixed(2)%>%</small>
+												<div class="progress shadow-none" role="progressbar" style="height: 6px;">
+													<div class="progress-bar bg-blue-300" style="width: <%=resourceMetrics?.cpu?.percent%>%;"></div>
+												</div>
 											<%}%>
 										</td>
 										<td class="text-end text-nowrap">
@@ -107,6 +110,9 @@
 												<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
 											<%} else {%>
 												<small class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(resourceMetrics?.memory?.usage || 0, { binary: true })%>"><%=resourceMetrics?.memory?.percent.toFixed(2)%>%</small>
+												<div class="progress shadow-none" role="progressbar" style="height: 6px;">
+													<div class="progress-bar bg-blue-300" style="width: <%=resourceMetrics?.memory?.percent%>%;"></div>
+												</div>
 											<%}%>
 										</td>
 										<td class="text-nowrap">
