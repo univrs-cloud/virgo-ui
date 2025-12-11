@@ -5,7 +5,7 @@
 		</div>
 	</td>
 	<td>
-		<div class="d-flex align-items-center" style="max-width: 237px;">
+		<div class="d-flex align-items-center mb-n1" style="max-width: 237px;">
 			<div class="text-truncate"><%=app.title%></div>
 			<%if (app.hasUpdates) {%>
 				<div class="badge bd-green-100 rounded-pill ms-2" data-bs-toggle="tooltip" data-bs-original-title="Updates available">
@@ -15,7 +15,9 @@
 		</div>
 		<div>
 			<%if (!_.isEmpty(app.url)) {%>
-				<a href="<%=app.url%>" target="<%=(app?.target || app.name)%>" class="link-underline link-underline-opacity-0 link-underline-opacity-75-hover pe-none pe-md-auto"><small><%=_.replace(app.url, /^https?:\/\//, '')%></small></a>
+				<a href="<%=app.url%>" target="<%=(app?.target || app.name)%>" class="d-inline-flex align-items-center link-underline link-underline-opacity-0 link-underline-opacity-75-hover pe-none pe-md-auto">
+					<small><%=_.replace(app.url, /^https?:\/\//, '')%></small><i class="icon-solid icon-arrow-up-right-from-square icon-fw icon-2xs ms-1"></i>
+				</a>
 			<%} else {%>
 				&nbsp;
 			<%}%>
@@ -58,7 +60,10 @@
 			<%=_.size(_.filter(app.projectContainers, { state: 'running' }))%> / <%=_.size(app.projectContainers)%>
 		</div>
 	</td>
-	<td class="text-center">
+	<td class="text-center px-0">
 		<%=appActionsTemplate({ app, jobs })%>
+	</td>
+	<td class="text-center">
+		<i class="icon-solid icon-angle-right icon-fw text-body-tertiary"></i>
 	</td>
 </tr>

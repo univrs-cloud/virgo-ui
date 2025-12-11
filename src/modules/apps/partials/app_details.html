@@ -8,8 +8,8 @@
 				<div class="card-image col-auto p-2 ms-n2">
 					<img src="<%=(_.includes(app.icon, '/') ? app.icon : `/assets/img/apps/${app.icon}`)%>">
 				</div>
-				<div class="col-auto">
-					<div class="d-flex align-items-center">
+				<div class="col-auto ps-2">
+					<div class="d-flex align-items-center mb-n1">
 						<div class="text-truncate"><%=app.title%></div>
 						<%if (app.hasUpdates) {%>
 							<div class="badge bd-green-100 rounded-pill ms-2" data-bs-toggle="tooltip" data-bs-original-title="Updates available">
@@ -17,8 +17,15 @@
 							</div>
 						<%}%>
 					</div>
+					<%if (!_.isEmpty(app.url)) {%>
+						<a href="<%=app.url%>" target="<%=(app?.target || app.name)%>" class="d-inline-flex align-items-center link-underline link-underline-opacity-0 link-underline-opacity-75-hover pe-none pe-md-auto">
+							<small><%=_.replace(app.url, /^https?:\/\//, '')%></small><i class="icon-solid icon-arrow-up-right-from-square icon-fw icon-2xs ms-1"></i>
+						</a>
+					<%} else {%>
+						&nbsp;
+					<%}%>
 				</div>
-				<div class="col-auto ms-2">
+				<div class="col-auto ms-auto">
 					<%=appActionsTemplate({ app, jobs })%>
 				</div>
 			</div>
@@ -125,11 +132,11 @@
 													<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
 												</span>
 												<ul class="dropdown-menu">
-													<li><a href="#" class="dropdown-item <%=(app.state === 'success' ? 'disabled' : '')%>" data-action="start">Start</a></li>
+													<li><a href="#" class="dropdown-item <%=(app.state === 'success' ? 'disabled' : '')%>" data-action="start"><i class="icon-regular icon-play icon-fw me-1"></i>Start</a></li>
 													<li><hr class="dropdown-divider"></li>
-													<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="stop">Stop</a></li>
-													<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="kill">Kill</a></li>
-													<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="restart">Restart</a></li>
+													<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="stop"><i class="icon-regular icon-stop icon-fw me-1"></i>Stop</a></li>
+													<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="restart"><i class="icon-regular icon-arrow-rotate-left icon-fw me-1"></i>Restart</a></li>
+													<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="kill"><i class="icon-regular icon-skull icon-fw me-1"></i>Kill</a></li>
 												</ul>
 											</div>
 										</td>
