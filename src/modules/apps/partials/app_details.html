@@ -59,7 +59,7 @@
 						<div class="card mb-2">
 							<div class="card-body py-1">
 								<small class="text-body-tertiary pb-1"><i class="icon-solid icon-microchip icon-fw me-1"></i>CPU</small>
-								<h5><%=app.resourceMetrics?.cpu?.percent.toFixed(2)%>%</h5>
+								<h5><%=app.resourceMetrics?.cpu?.percent?.toFixed(2)%>%</h5>
 							</div>
 						</div>
 					</div>
@@ -67,7 +67,7 @@
 						<div class="card mb-2">
 							<div class="card-body py-1">
 								<small class="text-body-tertiary pb-1"><i class="icon-solid icon-memory icon-fw me-1"></i>RAM</small>
-								<h5><%=app.resourceMetrics?.memory?.percent.toFixed(2)%>%</h5>
+								<h5><%=app.resourceMetrics?.memory?.percent?.toFixed(2)%>%</h5>
 							</div>
 						</div>
 					</div>
@@ -94,16 +94,16 @@
 						<thead class="sticky-top">
 							<th>Service</th>
 							<th>Ports</th>
-							<th class="text-end" style="width: 110px;">
+							<th class="text-end" style="width: 100px; min-width: 100px;">
 								<i class="icon-solid icon-microchip icon-fw" data-bs-toggle="tooltip" data-bs-original-title="CPU"></i>
 							</th>
-							<th class="text-end" style="width: 110px;">
+							<th class="text-end" style="width: 100px; min-width: 100px;">
 								<i class="icon-solid icon-memory icon-fw" data-bs-toggle="tooltip" data-bs-original-title="RAM"></i>
 							</th>
 							<th style="width: 1px;"></th>
 							<th style="width: 1px;"></th>
-							<th class="text-center" style="width: 85px;">State</th>
-							<th style="width: 40px;"></th>
+							<th class="text-center" style="width: 85px; min-width: 85px;">State</th>
+							<th style="width: 40px; min-width: 40px;"></th>
 						</thead>
 						<tbody>
 							<%_.each(app.projectContainers, (container, index) => {%>
