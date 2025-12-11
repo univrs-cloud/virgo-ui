@@ -245,7 +245,16 @@ u-toast {
 #apps {
 	.details {
 		.overflow-y-scroll {
-			height: calc(100vh - 305px);
+			height: calc(100vh - 386px);
+		}
+	}
+}
+@media (min-width: 576px) {
+	#apps {
+		.details {
+			.overflow-y-scroll {
+				height: calc(100vh - 305px);
+			}
 		}
 	}
 }
