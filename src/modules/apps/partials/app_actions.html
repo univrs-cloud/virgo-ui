@@ -8,21 +8,21 @@
 		</span>
 		<ul class="dropdown-menu">
 			<%if (app.hasUpdates) {%>
-				<li><a href="#" class="dropdown-item" data-action="update">Update</a></li>
+				<li><a href="#" class="dropdown-item" data-action="update"><i class="icon-regular icon-download icon-fw me-1"></i>Update</a></li>
 			<%}%>
 			<%if (app.canBeRemoved && app.hasUpdates) {%>
 				<li><hr class="dropdown-divider"></li>
 			<%}%>
 			<%if (app.canBeRemoved) {%>
-				<li><a href="#" class="dropdown-item <%=(app.state === 'success' ? 'disabled' : '')%>" data-action="start">Start</a></li>
+				<li><a href="#" class="dropdown-item <%=(app.state === 'success' ? 'disabled' : '')%>" data-action="start"><i class="icon-regular icon-play icon-fw me-1"></i>Start</a></li>
 				<li><hr class="dropdown-divider"></li>
-				<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="stop">Stop</a></li>
-				<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="kill">Kill</a></li>
-				<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="restart">Restart</a></li>
+				<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="stop"><i class="icon-regular icon-stop icon-fw me-1"></i>Stop</a></li>
+				<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="restart"><i class="icon-regular icon-arrow-rotate-left icon-fw me-1"></i>Restart</a></li>
+				<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="kill"><i class="icon-regular icon-skull icon-fw me-1"></i>Kill</a></li>
 				<li><hr class="dropdown-divider"></li>
-				<li><a href="#" class="dropdown-item text-danger" data-action="recreate">Recreate</a></li>
+				<li><a href="#" class="dropdown-item text-danger" data-action="recreate"><i class="icon-regular icon-arrows-rotate icon-fw me-1"></i>Recreate</a></li>
 				<li><hr class="dropdown-divider"></li>
-				<li><a href="#" class="dropdown-item <%=(app.canBeRemoved ? 'text-danger' : 'disabled')%>" data-action="remove">Remove</a></li>
+				<li><a href="#" class="dropdown-item <%=(app.canBeRemoved ? 'text-danger' : 'disabled')%>" data-action="remove"><i class="icon-regular icon-times icon-fw me-1"></i>Remove</a></li>
 			<%}%>
 		</ul>
 	</div>
