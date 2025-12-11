@@ -245,7 +245,7 @@ u-toast {
 #apps {
 	.details {
 		.overflow-y-scroll {
-			height: calc(100vh - 215px);
+			height: calc(100vh - 305px);
 		}
 	}
 }
@@ -323,9 +323,9 @@ u-toast {
 		.container-fluid {
 			padding-bottom: 1px;
 		}
-		.card-body {
-			min-height: calc(100vh - 145px);
-		}
+		// .card-body {
+		// 	min-height: calc(100vh - 145px);
+		// }
 	}
 	.logs-container,
 	.terminal-container {
