@@ -10,9 +10,9 @@
 				<div class="card-image col-auto p-2">
 					<img src="<%=(_.includes(app.icon, '/') ? app.icon : `/assets/img/apps/${app.icon}`)%>">
 				</div>
-				<div class="col-auto ps-1">
-					<div class="d-flex align-items-center mb-n1">
-						<div class="text-truncate"><%=app.title%></div>
+				<div class="col ps-1" style="min-width: 0;">
+					<div class="d-flex align-items-center mb-n1" style="min-width: 0;">
+						<div class="text-truncate" style="min-width: 0;"><%=app.title%></div>
 						<%if (app.hasUpdates) {%>
 							<div class="badge bd-green-100 rounded-pill ms-2" data-bs-toggle="tooltip" data-bs-original-title="Updates available">
 								<i class="icon-solid icon-download icon-fw"></i>
@@ -20,14 +20,14 @@
 						<%}%>
 					</div>
 					<%if (!_.isEmpty(app.url)) {%>
-						<a href="<%=app.url%>" target="<%=(app?.target || app.name)%>" class="d-inline-flex align-items-center link-underline link-underline-opacity-0 link-underline-opacity-75-hover pe-none pe-md-auto">
-							<small><%=_.replace(app.url, /^https?:\/\//, '')%></small><i class="icon-solid icon-arrow-up-right-from-square icon-fw icon-2xs ms-1"></i>
+						<a href="<%=app.url%>" target="<%=(app?.target || app.name)%>" class="d-inline-flex align-items-center link-underline link-underline-opacity-0 link-underline-opacity-75-hover pe-none pe-md-auto" style="max-width: 100%;">
+							<small class="text-truncate" style="min-width: 0;"><%=_.replace(app.url, /^https?:\/\//, '')%></small><i class="icon-solid icon-arrow-up-right-from-square icon-fw icon-2xs ms-1"></i>
 						</a>
 					<%} else {%>
 						&nbsp;
 					<%}%>
 				</div>
-				<div class="col-auto ms-auto">
+				<div class="col-auto ps-3 ms-auto">
 					<%=appActionsTemplate({ app, jobs })%>
 				</div>
 			</div>
