@@ -3,12 +3,14 @@
 		<div class="card-body">
 			<div class="row g-0 align-items-center mt-n2">
 				<div class="col-auto me-2">
-					<button class="compress btn p-0"><i class="icon-light icon-arrow-left icon-fw"></i></button>
+					<button class="compress btn btn-light btn-sm">
+						<i class="icon-light icon-arrow-left icon-fw"></i>
+					</button>
 				</div>
-				<div class="card-image col-auto p-2 ms-n2">
+				<div class="card-image col-auto p-2">
 					<img src="<%=(_.includes(app.icon, '/') ? app.icon : `/assets/img/apps/${app.icon}`)%>">
 				</div>
-				<div class="col-auto ps-2">
+				<div class="col-auto ps-1">
 					<div class="d-flex align-items-center mb-n1">
 						<div class="text-truncate"><%=app.title%></div>
 						<%if (app.hasUpdates) {%>
@@ -30,7 +32,7 @@
 				</div>
 			</div>
 
-			<div class="position-relative ms-4 ps-1">
+			<div class="position-relative">
 				<div class="logs-container d-none">
 					<div class="service d-flex align-items-center justify-content-between bg-white p-2 pt-0 ps-0">
 						<div class="d-flex align-items-center">
@@ -52,106 +54,137 @@
 					</div>
 				</div>
 
-				<%if (_.isEmpty(app.projectContainers)) {%>
-					No services found for this app.
-				<%} else {%>
-					<div class="services overflow-y-scroll">
-						<table class="table table-hover align-middle m-0">
-							<thead class="sticky-top">
-								<th>Service</th>
-								<th>Ports</th>
-								<th class="text-end" style="width: 110px;">
-									<i class="icon-solid icon-microchip icon-fw" data-bs-toggle="tooltip" data-bs-original-title="CPU"></i>
-								</th>
-								<th class="text-end" style="width: 110px;">
-									<i class="icon-solid icon-memory icon-fw" data-bs-toggle="tooltip" data-bs-original-title="RAM"></i>
-								</th>
-								<th style="width: 1px;"></th>
-								<th style="width: 1px;"></th>
-								<th class="text-center" style="width: 100px;">State</th>
-								<th style="width: 50px;"></th>
-							</thead>
-							<tbody>
-								<%_.each(app.projectContainers, (container, index) => {%>
-									<%const resourceMetrics = _.find((app.resourceMetrics?.containers || []), { id: container.id })%>
-									<tr class="service" data-id="<%=container.id%>">
-										<td class="text-nowrap">
-											<div class="d-flex align-items-center">
-												<i class="icon-light icon-cube icon-fw me-2"></i>
-												<%=container.name%>
-												<%if (container.hasUpdates) {%>
-													<div class="badge bd-green-100 rounded-pill ms-2" data-bs-toggle="tooltip" data-bs-original-title="Updates available">
-														<i class="icon-solid icon-download icon-fw"></i>
-													</div>
-												<%}%>
-											</div>
-										</td>
-										<td>
-											<%if (container.state === 'running') {%>
-												<%const publishedPorts = _.filter(container.ports, { ip: '0.0.0.0' });%>
-												<%=(_.isEmpty(publishedPorts) ? '<span class="text-body-secondary">&mdash;</span>' : '')%>
-												<%_.each(_.orderBy(publishedPorts, ['privatePort'], ['asc']), (port, index) => {%>
-													<div class="badge bd-gray-200 rounded-pill fw-light" data-bs-toggle="tooltip" data-bs-original-title="public &middot; private"><%=`${port.publicPort} &rlarr; ${port.privatePort}`%></div>
-												<%})%>
-											<%}%>
-										</td>
-										<td class="text-end text-nowrap">
-											<%if (!resourceMetrics) {%>
-												<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
-											<%} else {%>
-												<small class="fw-light"><%=resourceMetrics?.cpu?.percent.toFixed(2)%>%</small>
-												<div class="progress shadow-none" role="progressbar" style="height: 6px;">
-													<div class="progress-bar bg-blue-300" style="width: <%=resourceMetrics?.cpu?.percent%>%;"></div>
-												</div>
-											<%}%>
-										</td>
-										<td class="text-end text-nowrap">
-											<%if (!resourceMetrics) {%>
-												<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
-											<%} else {%>
-												<small class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(resourceMetrics?.memory?.usage || 0, { binary: true })%>"><%=resourceMetrics?.memory?.percent.toFixed(2)%>%</small>
-												<div class="progress shadow-none" role="progressbar" style="height: 6px;">
-													<div class="progress-bar bg-blue-300" style="width: <%=resourceMetrics?.memory?.percent%>%;"></div>
-												</div>
-											<%}%>
-										</td>
-										<td class="text-nowrap">
-											<a href="#" class="logs btn btn-light btn-sm" data-id="<%=container.id%>">
-												<i class="icon-light icon-memo icon-fw me-1"></i>
-												Logs
-											</a>
-										</td>
-										<td class="text-nowrap">
-											<%if (container.state === 'running') {%>
-												<a href="#" class="console btn btn-light btn-sm" data-id="<%=container.id%>">
-													<i class="icon-light icon-rectangle-terminal icon-fw me-1"></i>
-													Console
-												</a>
-											<%}%>
-										</td>
-										<td class="text-center text-nowrap">
-											<div class="badge <%=(container.state === 'running' ? 'bd-green-100' : 'bd-red-100')%> rounded-pill fw-light"><%=container.state%></div>
-										</td>
-										<td class="text-center">
-											<div class="dropdown">
-												<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm">
-													<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
-												</span>
-												<ul class="dropdown-menu">
-													<li><a href="#" class="dropdown-item <%=(app.state === 'success' ? 'disabled' : '')%>" data-action="start"><i class="icon-regular icon-play icon-fw me-1"></i>Start</a></li>
-													<li><hr class="dropdown-divider"></li>
-													<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="stop"><i class="icon-regular icon-stop icon-fw me-1"></i>Stop</a></li>
-													<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="restart"><i class="icon-regular icon-arrow-rotate-left icon-fw me-1"></i>Restart</a></li>
-													<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="kill"><i class="icon-regular icon-skull icon-fw me-1"></i>Kill</a></li>
-												</ul>
-											</div>
-										</td>
-									</tr>
-								<%})%>
-							</tbody>
-						</table>
+				<div class="row g-2 mt-2">
+					<div class="col col-6 col-md-3">
+						<div class="card mb-2">
+							<div class="card-body py-1">
+								<small class="text-body-tertiary pb-1"><i class="icon-solid icon-microchip icon-fw me-1"></i>CPU</small>
+								<h5><%=app.resourceMetrics?.cpu?.percent.toFixed(2)%>%</h5>
+							</div>
+						</div>
 					</div>
-				<%}%>
+					<div class="col col-6 col-md-3">
+						<div class="card mb-2">
+							<div class="card-body py-1">
+								<small class="text-body-tertiary pb-1"><i class="icon-solid icon-memory icon-fw me-1"></i>RAM</small>
+								<h5><%=app.resourceMetrics?.memory?.percent.toFixed(2)%>%</h5>
+							</div>
+						</div>
+					</div>
+					<div class="col col-6 col-md-3">
+						<div class="card mb-2">
+							<div class="card-body py-1">
+								<small class="text-body-tertiary pb-1"><i class="icon-solid icon-database icon-fw me-1"></i>Data</small>
+								<h5><%=prettyBytes(app.resourceMetrics?.storage?.dataset || 0, { binary: true })%></h5>
+							</div>
+						</div>
+					</div>
+					<div class="col col-6 col-md-3">
+						<div class="card mb-2">
+							<div class="card-body py-1">
+								<small class="text-body-tertiary pb-1"><i class="icon-solid icon-camera icon-fw me-1"></i>Snapshots</small>
+								<h5><%=prettyBytes(app.resourceMetrics?.storage?.snapshots || 0, { binary: true })%></h5>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="services overflow-y-scroll">
+					<table class="table table-hover align-middle m-0">
+						<thead class="sticky-top">
+							<th>Service</th>
+							<th>Ports</th>
+							<th class="text-end" style="width: 110px;">
+								<i class="icon-solid icon-microchip icon-fw" data-bs-toggle="tooltip" data-bs-original-title="CPU"></i>
+							</th>
+							<th class="text-end" style="width: 110px;">
+								<i class="icon-solid icon-memory icon-fw" data-bs-toggle="tooltip" data-bs-original-title="RAM"></i>
+							</th>
+							<th style="width: 1px;"></th>
+							<th style="width: 1px;"></th>
+							<th class="text-center" style="width: 85px;">State</th>
+							<th style="width: 40px;"></th>
+						</thead>
+						<tbody>
+							<%_.each(app.projectContainers, (container, index) => {%>
+								<%const resourceMetrics = _.find((app.resourceMetrics?.containers || []), { id: container.id })%>
+								<tr class="service" data-id="<%=container.id%>">
+									<td class="text-nowrap">
+										<div class="d-flex align-items-center">
+											<i class="icon-light icon-cube icon-fw me-2"></i>
+											<%=container.name%>
+											<%if (container.hasUpdates) {%>
+												<div class="badge bd-green-100 rounded-pill ms-2" data-bs-toggle="tooltip" data-bs-original-title="Updates available">
+													<i class="icon-solid icon-download icon-fw"></i>
+												</div>
+											<%}%>
+										</div>
+									</td>
+									<td>
+										<%if (container.state === 'running') {%>
+											<%const publishedPorts = _.filter(container.ports, { ip: '0.0.0.0' });%>
+											<%=(_.isEmpty(publishedPorts) ? '<span class="text-body-secondary">&mdash;</span>' : '')%>
+											<%_.each(_.orderBy(publishedPorts, ['privatePort'], ['asc']), (port, index) => {%>
+												<div class="badge bd-gray-200 rounded-pill fw-light" data-bs-toggle="tooltip" data-bs-original-title="public &middot; private"><%=`${port.publicPort} &rlarr; ${port.privatePort}`%></div>
+											<%})%>
+										<%}%>
+									</td>
+									<td class="text-end text-nowrap">
+										<%if (!resourceMetrics) {%>
+											<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
+										<%} else {%>
+											<small class="fw-light"><%=resourceMetrics?.cpu?.percent.toFixed(2)%>%</small>
+											<div class="progress shadow-none" role="progressbar" style="height: 6px;">
+												<div class="progress-bar bg-blue-300" style="width: <%=resourceMetrics?.cpu?.percent%>%;"></div>
+											</div>
+										<%}%>
+									</td>
+									<td class="text-end text-nowrap">
+										<%if (!resourceMetrics) {%>
+											<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
+										<%} else {%>
+											<small class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(resourceMetrics?.memory?.usage || 0, { binary: true })%>"><%=resourceMetrics?.memory?.percent.toFixed(2)%>%</small>
+											<div class="progress shadow-none" role="progressbar" style="height: 6px;">
+												<div class="progress-bar bg-blue-300" style="width: <%=resourceMetrics?.memory?.percent%>%;"></div>
+											</div>
+										<%}%>
+									</td>
+									<td class="text-nowrap">
+										<a href="#" class="logs btn btn-light btn-sm" data-id="<%=container.id%>">
+											<i class="icon-light icon-memo icon-fw me-1"></i>
+											Logs
+										</a>
+									</td>
+									<td class="text-nowrap">
+										<%if (container.state === 'running') {%>
+											<a href="#" class="console btn btn-light btn-sm" data-id="<%=container.id%>">
+												<i class="icon-light icon-rectangle-terminal icon-fw me-1"></i>
+												Console
+											</a>
+										<%}%>
+									</td>
+									<td class="text-center text-nowrap">
+										<div class="badge <%=(container.state === 'running' ? 'bd-green-100' : 'bd-red-100')%> rounded-pill fw-light"><%=container.state%></div>
+									</td>
+									<td class="text-center px-0">
+										<div class="dropdown">
+											<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm">
+												<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
+											</span>
+											<ul class="dropdown-menu">
+												<li><a href="#" class="dropdown-item <%=(app.state === 'success' ? 'disabled' : '')%>" data-action="start"><i class="icon-regular icon-play icon-fw me-1"></i>Start</a></li>
+												<li><hr class="dropdown-divider"></li>
+												<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="stop"><i class="icon-regular icon-stop icon-fw me-1"></i>Stop</a></li>
+												<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="restart"><i class="icon-regular icon-arrow-rotate-left icon-fw me-1"></i>Restart</a></li>
+												<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="kill"><i class="icon-regular icon-skull icon-fw me-1"></i>Kill</a></li>
+											</ul>
+										</div>
+									</td>
+								</tr>
+							<%})%>
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 	</div>

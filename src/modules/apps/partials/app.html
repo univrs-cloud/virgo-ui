@@ -5,7 +5,7 @@
 		</div>
 	</td>
 	<td>
-		<div class="d-flex align-items-center mb-n1" style="max-width: 237px;">
+		<div class="d-flex align-items-center mb-n1" style="max-width: 210px;">
 			<div class="text-truncate"><%=app.title%></div>
 			<%if (app.hasUpdates) {%>
 				<div class="badge bd-green-100 rounded-pill ms-2" data-bs-toggle="tooltip" data-bs-original-title="Updates available">
@@ -15,8 +15,8 @@
 		</div>
 		<div>
 			<%if (!_.isEmpty(app.url)) {%>
-				<a href="<%=app.url%>" target="<%=(app?.target || app.name)%>" class="d-inline-flex align-items-center link-underline link-underline-opacity-0 link-underline-opacity-75-hover pe-none pe-md-auto">
-					<small><%=_.replace(app.url, /^https?:\/\//, '')%></small><i class="icon-solid icon-arrow-up-right-from-square icon-fw icon-2xs ms-1"></i>
+				<a href="<%=app.url%>" target="<%=(app?.target || app.name)%>" class="d-inline-flex align-items-center link-underline link-underline-opacity-0 link-underline-opacity-75-hover pe-none pe-md-auto" style="max-width: 210px;">
+					<small class="text-truncate"><%=_.replace(app.url, /^https?:\/\//, '')%></small><i class="icon-solid icon-arrow-up-right-from-square icon-fw icon-2xs ms-1"></i>
 				</a>
 			<%} else {%>
 				&nbsp;
