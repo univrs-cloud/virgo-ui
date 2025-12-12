@@ -4,8 +4,8 @@
 			<img src="<%=(_.includes(bookmark.icon, '/') ? bookmark.icon : `/assets/img/apps/${bookmark.icon}`)%>">
 		</div>
 	</td>
-	<td>
-		<div class="d-flex align-items-center" style="max-width: 237px;">
+	<td style="min-width: 226px; max-width: 0;">
+		<div class="d-flex align-items-center mb-n1">
 			<div class="text-truncate"><%=bookmark.title%></div>
 			<%if (app.hasUpdates) {%>
 				<div class="badge bd-green-100 rounded-pill ms-2" data-bs-toggle="tooltip" data-bs-original-title="Updates available">
@@ -13,18 +13,18 @@
 				</div>
 			<%}%>
 		</div>
-		<div>
-			<%if (!_.isEmpty(bookmark.url)) {%>
-				<a href="<%=bookmark.url%>" target="<%=(bookmark?.target || bookmark.name)%>" class="link-underline link-underline-opacity-0 link-underline-opacity-75-hover"><small><%=bookmark.url%></small></a>
-			<%} else {%>
-				&mdash;
-			<%}%>
-		</div>
+		<%if (!_.isEmpty(bookmark.url)) {%>
+			<a href="<%=bookmark.url%>" target="<%=(bookmark?.target || bookmark.name)%>" class="d-inline-flex align-items-center link-underline link-underline-opacity-0 link-underline-opacity-75-hover" style="max-width: 100%;">
+				<small class="text-truncate" style="min-width: 0;"><%=bookmark.url%></small><i class="icon-solid icon-arrow-up-right-from-square icon-fw icon-2xs ms-1 d-none d-sm-block"></i>
+			</a>
+		<%} else {%>
+			&mdash;
+		<%}%>
 	</td>
 	<td class="d-none d-md-table-cell">
 		<div class="badge bd-purple-100 rounded-pill fw-light"><%=bookmark.category%></div>
 	</td>
-	<td class="text-center">
+	<td class="text-center px-0">
 		<%if (!_.isEmpty(jobs)) {%>
 			<i class="icon-solid icon-gear icon-fw icon-spin"></i>
 		<%}%>
