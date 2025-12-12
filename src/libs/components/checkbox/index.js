@@ -1,4 +1,5 @@
 import { LitElement, html } from 'lit';
+import { classMap } from 'lit/directives/class-map.js';
 import { sheet } from "../styles.js";
 
 export class Checkbox extends LitElement {
@@ -22,7 +23,6 @@ export class Checkbox extends LitElement {
 	constructor() {
 		super();
 		this.internals = this.attachInternals();
-
 		this.onValue = true;
 		this.offValue = false;
 		this.label = '';
@@ -67,7 +67,7 @@ export class Checkbox extends LitElement {
 
 	render() {
 		return html`
-			<div class="form-check ${this.inline ? 'form-check-inline' : ''} ${this.reverse ? 'form-check-reverse' : ''}">
+			<div class="form-check ${classMap({ 'form-check-inline': this.inline, 'form-check-reverse': this.reverse })}">
 				<label class="form-check-label">
 					<input
 						type="checkbox"
