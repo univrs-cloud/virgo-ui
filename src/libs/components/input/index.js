@@ -25,10 +25,12 @@ export class Input extends LitElement {
 	#value = '';
 	#error = '';
 	#initialValue = '';
+	#initialTip = '';
 	#initialDisabled = false;
 	#initialReadonly = false;
 	#hasPrefix = false;
 	#hasSuffix = false;
+	#tooltip = null;
 	#tagify = null;
 
 	constructor() {
@@ -77,13 +79,21 @@ export class Input extends LitElement {
 	connectedCallback() {
 		super.connectedCallback();
 		this.#initialValue = this.value;
+		this.#initialTip = this.tip;
 		this.#initialDisabled = this.hasAttribute('disabled');
 		this.#initialReadonly = this.hasAttribute('readonly');
 		this.internals.setFormValue(this.value);
 	}
 
+	disconnectedCallback() {
+		super.disconnectedCallback();
+		this.#tooltip?.dispose();
+		this.#tooltip = null;
+	}
+
 	formResetCallback() {
 		this.value = this.#initialValue;
+		this.tip = this.#initialTip;
 		this.disabled = this.#initialDisabled;
 		this.readonly = this.#initialReadonly;
 		this.error = '';
@@ -96,7 +106,7 @@ export class Input extends LitElement {
 	firstUpdated() {
 		const label = this.renderRoot.querySelector('label');
 		if (label) {
-			new bootstrap.Tooltip(label);
+			this.#tooltip = new bootstrap.Tooltip(label);
 		}
 
 		const input = this.renderRoot.querySelector('input');
