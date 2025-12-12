@@ -34,7 +34,6 @@ export class Input extends LitElement {
 	constructor() {
 		super();
 		this.internals = this.attachInternals();
-
 		this.showPassword = false;
 		this.type = 'text';
 		this.label = '';
@@ -141,19 +140,15 @@ export class Input extends LitElement {
 
 		const inputType = this.type === 'password' ? (this.showPassword ? 'text' : 'password') : this.type;
 		const hasInputGroup = this.#hasPrefix || this.#hasSuffix;
-		const classes = {
-			'password-input': this.type === 'password',
-			'is-invalid': this.error
-		};
 
 		return html`
 			<div class="mb-4">
-				<div class="${hasInputGroup ? 'input-group' : ''} has-validation">
-					<slot name="prefix" class="input-group-text ${!this.#hasPrefix ? 'd-none' : ''}" @slotchange=${this.#onSlotChange}></slot>
+				<div class="${classMap({ 'input-group': hasInputGroup })} has-validation">
+					<slot name="prefix" class="input-group-text ${classMap({ 'd-none': !this.#hasPrefix  })}" @slotchange=${this.#onSlotChange}></slot>
 					<div class="form-floating">
 						<input
 							type=${inputType}
-							class="form-control ${classMap(classes)}"
+							class="form-control ${classMap({ 'password-input': this.type === 'password', 'is-invalid': this.error })}"
 							placeholder=${this.placeholder}
 							autocomplete=${this.autocomplete}
 							.value=${this.value}
@@ -166,9 +161,9 @@ export class Input extends LitElement {
 							${this.tip ? html`<span class="help-inline ms-1" data-bs-toggle="tooltip" data-bs-original-title="${this.tip}"><i class="icon-solid icon-question-circle"></i></span>` : ''}
 						</label>
 						${this.type === 'password' ? html`<button type="button" class="password-toggle" @click=${this.#togglePassword}></button>` : ''}
-						<div class="invalid-feedback lh-1 z-1 position-absolute top-100 start-0 end-0 ${this.error ? 'd-block' : ''}">${this.error || ''}</div>
+						<div class="invalid-feedback lh-1 z-1 position-absolute top-100 start-0 end-0 ${classMap({ 'd-block': this.error })}">${this.error || ''}</div>
 					</div>
-					<slot name="suffix" class="input-group-text ${!this.#hasSuffix ? 'd-none' : ''}" @slotchange=${this.#onSlotChange}></slot>
+					<slot name="suffix" class="input-group-text ${classMap({ 'd-none':!this.#hasSuffix  })}" @slotchange=${this.#onSlotChange}></slot>
 				</div>
 			</div>
 		`;

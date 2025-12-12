@@ -65,11 +65,8 @@ export class Toast extends LitElement {
 	}
 
 	render() {
-		const colorClass = this.#getColorClass();
-		const toastClass = `bd-${colorClass}-500`;
-		
 		return html`
-			<div class="toast ${classMap({ [toastClass]: true })} border-0 position-relative overflow-hidden">
+			<div class="toast ${classMap({ [`bd-${this.#getColorClass()}-500`]: true })} border-0 position-relative overflow-hidden">
 				<div class="d-flex">
 					<div class="toast-body w-100">
 						<strong>${unsafeHTML(this.title)}</strong>

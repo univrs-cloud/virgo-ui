@@ -25,7 +25,6 @@ export class Select extends LitElement {
 	constructor() {
 		super();
 		this.internals = this.attachInternals();
-
 		this.label = '';
 		this.tip = '';
 		this.disabled = false;
@@ -101,17 +100,13 @@ export class Select extends LitElement {
 	}
 
 	render() {
-		const classes = {
-			'is-invalid': this.error
-		};
-
 		return html`
 			<div class="mb-4">
 				<div class="form-floating">
 					<select
 						.value=${this.value}
 						?disabled=${this.disabled}
-						class="form-select ${classMap(classes)}"
+						class="form-select ${classMap({ 'is-invalid': this.error })}"
 						@change=${this.#onChange}
 					>
 						${this.options.map((option) => { return option.options ? this.renderOptGroup(option) : this.renderOption(option); })}
@@ -120,7 +115,7 @@ export class Select extends LitElement {
 						${this.label}
 						${this.tip ? html`<span class="help-inline ms-1" data-bs-toggle="tooltip" data-bs-original-title="${this.tip}"><i class="icon-solid icon-question-circle"></i></span>` : ''}
 					</label>
-					<div class="invalid-feedback lh-1 z-1 position-absolute top-100 start-0 end-0 ${this.error ? 'd-block' : ''}">${this.error || ''}</div>
+					<div class="invalid-feedback lh-1 z-1 position-absolute top-100 start-0 end-0 ${classMap({ 'd-block': this.error })}">${this.error || ''}</div>
 				</div>
 			</div>
 		`;
