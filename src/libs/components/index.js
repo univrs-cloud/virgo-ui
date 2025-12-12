@@ -1,6 +1,7 @@
 export { Toast } from './notifier/toast';
 export { Notifier } from './notifier';
 export { Form } from './form';
+export { Button } from './button';
 export { Input } from './input';
 export { Select } from './select';
 export { Textarea } from './textarea';
