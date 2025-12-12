@@ -27,7 +27,7 @@
 		<%})%>
 	</td>
 	<td class="text-center text-nowrap">
-		<%=(_.includes(user.shell, 'nologin') ? '<i class="icon-solid icon-circle-xmark text-red-300"></i>' : '<i class="icon-solid icon-circle-check text-green-300"></i>')%>
+		<%=(_.includes(user.shell, 'nologin') ? '<i class="icon-solid icon-xmark text-gray-500"></i>' : '<i class="icon-solid icon-check text-gray-500"></i>')%>
 	</td>
 	<td class="text-nowrap">
 		<%if (user.isDisabled) {%>
