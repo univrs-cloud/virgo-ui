@@ -69,7 +69,8 @@ const render = (state) => {
 		[tableOrder.direction]
 	);
 	_.each(users, (user) => {
-		template.innerHTML += userTemplate({ user });
+		const isSameAsLoggedIn = (user.username === account?.user);
+		template.innerHTML += userTemplate({ user, isSameAsLoggedIn });
 	});
 	
 	morphdom(
