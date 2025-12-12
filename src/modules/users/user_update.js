@@ -22,10 +22,15 @@ const render = (event) => {
 	user = _.find(userService.getUsers(), { uid: Number(uid) });
 	form.querySelector('.fullname').value = user.fullname;
 	form.querySelector('.email').value = user.email;
+	form.querySelector('.is-admin').checked = _.includes(user.groups, 'admins');
+	if (user.username !== 'voyager') {
+		form.querySelector('.is-admin').classList.remove('d-none');
+	}
 };
 
 const restore = (event) => {
 	user = null;
+	form.querySelector('.is-admin').classList.add('d-none');
 	form.reset();
 };
 
