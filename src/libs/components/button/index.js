@@ -16,8 +16,9 @@ export class Button extends LitElement {
 		};
 	}
 
+	#initialTip = '';
 	#initialDisabled = false;
-	#tooltip;
+	#tooltip = null;
 
 	constructor() {
 		super();
@@ -31,28 +32,41 @@ export class Button extends LitElement {
 
 	connectedCallback() {
 		super.connectedCallback();
+		this.#initialTip = this.tip;
 		this.#initialDisabled = this.hasAttribute('disabled');
 	}
 
+	disconnectedCallback() {
+		super.disconnectedCallback();
+		this.#tooltip?.dispose();
+		this.#tooltip = null;
+	}
+
 	formResetCallback() {
+		this.tip = this.#initialTip;
 		this.disabled = this.#initialDisabled;
 	}
 
 	firstUpdated() {
-		this.#tooltip = new bootstrap.Tooltip(this.renderRoot.querySelector('span'));
+		const span = this.renderRoot.querySelector('span');
+		if (span) {
+			this.#tooltip = new bootstrap.Tooltip(span, {
+				trigger: 'manual'
+			});
+		}
 	}
 
 	render() {
 		const classes = {
 			[`btn${this.outline ? '-outline' : ''}-${this.variant}`]: true,
-			[`btn-${this.size}`]: this.size ? true : false
+			[`btn-${this.size}`]: !!this.size
 		};
 		return html`
 			<span
-				data-bs-toggle="tooltip"
-				data-bs-original-title="${this.tip ? this.tip : ''}"
-				@mouseenter=${() => { this.#tooltip.show(); }}
-				@mouseleave=${() => { this.#tooltip.hide(); }}
+				class="d-inline-block disabled"
+				data-bs-original-title="${this.tip}"
+				@mouseenter=${() => { this.#tooltip?.show(); }}
+				@mouseleave=${() => { this.#tooltip?.hide(); }}
 			>
 				<button
 					type="button"
