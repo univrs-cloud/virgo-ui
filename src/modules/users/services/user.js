@@ -7,11 +7,16 @@ const filter = (users) => {
 		return null;
 	}
 	
-	return _.orderBy(
-		users,
-		[(entity) => { return entity.fullname.toLowerCase(); }],
-		['asc']
-	);
+	return _.map(users, (user) => {
+		user.groups = _.sortBy(_.map(user.groups, (group) => {
+			if (typeof group === 'string') {
+				return group;
+			}
+
+			return group.groupname;
+		}));
+		return user;
+	});
 }
 
 const getUsers = () => {
