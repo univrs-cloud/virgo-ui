@@ -13,7 +13,8 @@ export class Form extends LitElement {
 
 	#validation = [];
 	#validationTimeouts = {};
-	#validationListeners = new Map();
+	#validationControllers = new Map();
+	#formController = null;
 	#isResetting = false;
 	#form = null;
 	#observer = null;
@@ -46,8 +47,10 @@ export class Form extends LitElement {
 			this.#form.appendChild(this.firstChild);
 		}
 		this.appendChild(this.#form);
-		this.#form.addEventListener('submit', this.#onSubmit.bind(this));
-		this.#form.addEventListener('reset', this.#onReset.bind(this));
+		this.#formController = new AbortController();
+		const signal = this.#formController.signal;
+		this.#form.addEventListener('submit', this.#onSubmit.bind(this), { signal });
+		this.#form.addEventListener('reset', this.#onReset.bind(this), { signal });
 
 		this.#observer = new MutationObserver((mutationsList) => {
 			for (const mutation of mutationsList) {
@@ -62,6 +65,7 @@ export class Form extends LitElement {
 	disconnectedCallback() {
 		super.disconnectedCallback();
 		this.#observer?.disconnect();
+		this.#formController?.abort();
 		this.#clearValidationListeners();
 	}
 
@@ -219,7 +223,7 @@ export class Form extends LitElement {
 			const inputs = this.#form.querySelectorAll(field.selector);
 			inputs.forEach((input, index) => {
 				const uniqueId = `${field.selector}-${index}`;
-				if (this.#validationListeners.has(uniqueId)) {
+				if (this.#validationControllers.has(uniqueId)) {
 					return;
 				}
 
@@ -242,14 +246,13 @@ export class Form extends LitElement {
 					this.#validateField(input, field.selector);
 				};
 
-				input.addEventListener('value-changed', valueChangedListener);
-				input.addEventListener('blur', blurListener);
+				const controller = new AbortController();
+				const signal = controller.signal;
 
-				this.#validationListeners.set(uniqueId, {
-					valueChanged: valueChangedListener,
-					blur: blurListener,
-					input
-				});
+				input.addEventListener('value-changed', valueChangedListener, { signal });
+				input.addEventListener('blur', blurListener, { signal });
+
+				this.#validationControllers.set(uniqueId, controller);
 			});
 		});
 	}
@@ -273,11 +276,10 @@ export class Form extends LitElement {
 	}
 
 	#clearValidationListeners() {
-		this.#validationListeners.forEach(({ valueChanged, blur, input }) => {
-			input.removeEventListener('value-changed', valueChanged);
-			input.removeEventListener('blur', blur);
+		this.#validationControllers.forEach((controller) => {
+			controller.abort();
 		});
-		this.#validationListeners.clear();
+		this.#validationControllers.clear();
 	}
 }
 
