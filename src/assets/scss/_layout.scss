@@ -76,13 +76,14 @@ header {
 		color: $gray-300;
 	}
 	.nav-link {
+		font-weight: 400;
 		color: var(--bs-white);
 		text-decoration-color: RGBA(var(--bs-white), var(--bs-link-underline-opacity,1));
 		&:not(.active):hover {
 			color: var(--bs-white);
 		}
 		&.active {
-			font-weight: 500;
+			font-weight: 400;
 		}
 		&.active,
 		&:hover {
@@ -195,11 +196,11 @@ main,
 		nav {
 			position: fixed;
 			top: 0;
-			width: 15.625rem;
+			width: 15rem;
 			height: 100vh;
 			.navbar {
 				height: 100%;
-				padding: 4.5rem 1rem 1rem 1rem;
+				padding: 4.5rem 0.75rem 1rem 0.75rem;
 			}
 			.nav {
 				width: 100%;
@@ -231,7 +232,7 @@ main,
 				right: 0;
 			}
 			.navbar-glass {
-				width: calc(100% - 15.625rem + 1rem) !important;
+				width: calc(100% - 15rem + 1rem) !important;
 				box-shadow: none;
 			}
 			.navbar-glass-shadow {
@@ -265,6 +266,6 @@ main,
 	}
 	main,
 	#update {
-		margin-left: 15.625rem;
+		margin-left: 15rem;
 	}
 }
