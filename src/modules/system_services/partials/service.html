@@ -5,8 +5,8 @@
 	</td>
 	<td class="d-none d-md-table-cell"><%=service.unitFileState%></td>
 	<td class="text-nowrap">
-		<div class="badge <%=(service.state === 'running' ? 'bd-green-100' : (service.state === 'oneshot' ? 'bd-gray-200' : 'bd-red-100'))%> fw-light rounded-pill">
+		<u-badge color="<%=(service.state === 'running' ? 'green' : (service.state === 'oneshot' ? 'gray' : 'red'))%>" tint="<%=(service.state === 'running' ? 100 : (service.state === 'oneshot' ? 200 : 100))%>" pill>
 			<%=service.state%>
-		</span>
+		</u-badge>
 	</td>	
 </tr>

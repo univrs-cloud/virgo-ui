@@ -7,10 +7,10 @@
 		UPS
 		<%if (state.ups !== null && state.ups !== false) {%>
 			<%if (state.ups?.powerSource === 'grid') {%>
-				<div class="badge rounded-pill bd-green-100 ms-1">GRID</div>
+				<u-badge color="green" class="ms-1" pill>GRID</u-badge>
 			<%}%>
 			<%if (state.ups?.powerSource === 'battery') {%>
-				<div class="badge rounded-pill bd-orange-100 ms-1">BATTERY</div>
+				<u-badge color="orange" class="ms-1" pill>BATTERY</u-badge>
 			<%}%>
 		<%}%>
 	</h6>

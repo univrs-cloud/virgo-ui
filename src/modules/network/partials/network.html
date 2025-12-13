@@ -12,6 +12,7 @@
 		</div>
 	</div>
 </div>
+
 <div class="col col-12">
 	<div class="card rounded-4 border-0 mb-0">
 		<div class="card-body">
@@ -23,7 +24,7 @@
 				<dt class="fw-lighter"><small>Address</small></dt>
 				<dd class="d-flex align-items-center">
 					<%=system?.networkInterface?.ip4%>/<%=block?.bitmask ?? 'error'%>
-					<div class="badge rounded-pill bd-gray-200 ms-1"><%=(system?.networkInterface?.dhcp ? 'Automatic' : 'Manual')%></div>
+					<u-badge color="gray" tint="200" class="ms-1" pill><%=(system?.networkInterface?.dhcp ? 'Automatic' : 'Manual')%></u-badge>
 				</dd>
 				<dt class="fw-lighter"><small>Default gateway</small></dt>
 				<dd><%=system?.defaultGateway%></dd>
@@ -35,4 +36,3 @@
 		</div>
 	</div>
 </div>
-

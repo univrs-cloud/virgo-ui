@@ -4,7 +4,7 @@
 		<i class="icon-regular icon-database icon-fw me-1 text-gray-500"></i>
 		Data
 		<%if (state.storage !== null && pool !== false) {%>
-			<div class="badge rounded-pill bd-<%=(pool.properties.health.value.toLowerCase() === 'online' ? 'green' : 'red')%>-100 ms-1"><%=pool.properties.health.value%></div>
+			<u-badge color="<%=(pool.properties.health.value.toLowerCase() === 'online' ? 'green' : 'red')%>" class="ms-1" pill><%=pool.properties.health.value%></u-badge>
 		<%}%>
 	</h6>
 	<%if (state.storage === null) {%>
@@ -38,10 +38,10 @@
 				<%if (drive.temperature >= drive.temperatureCriticalThreshold) {%>
 					<%color = 'red'%>
 				<%}%>
-				<small class="badge rounded-pill bd-<%=color%>-200 fw-light me-1" data-bs-toggle="tooltip" data-bs-original-title="<%=_.last(drive.name.split('/'))%>">
+				<u-badge color="<%=color%>" tint="200" class="me-1" tip="<%=_.last(drive.name.split('/'))%>" pill>
 					<i class="icon-regular icon-hard-drive icon-fw me-1 text-gray-700"></i>
 					<%=drive.temperature%> °C
-				</small>
+				</u-badge>
 			<%})%>
 		</div>
 		<%if (pool.scanStats && pool.scanStats?.state?.toLowerCase() !== 'finished') {%>

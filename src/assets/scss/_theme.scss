@@ -163,13 +163,13 @@ u-toast {
 		z-index: 1;
 		position: absolute;
 		top: 0.15rem;
-		right: -0.75rem;
-		&.badge {
-			right: -1.35rem;
-			font-weight: 200;
-			font-size: 0.65em;
-		}
+		right: -1.35rem;
+		transform: translate(-50%,-50%);
 	}
+}
+:host(.indicator) .badge {
+	font-weight: 200 !important;
+	font-size: 0.65em !important;
 }
 
 .progress {

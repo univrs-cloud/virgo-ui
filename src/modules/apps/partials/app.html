@@ -8,9 +8,9 @@
 		<div class="d-flex align-items-center mb-n1">
 			<div class="text-truncate"><%=app.title%></div>
 			<%if (app.hasUpdates) {%>
-				<div class="badge bd-green-100 rounded-pill ms-2" data-bs-toggle="tooltip" data-bs-original-title="Updates available">
+				<u-badge color="green" class="ms-2" tip="Updates available" pill>
 					<i class="icon-solid icon-download icon-fw"></i>
-				</div>
+				</u-badge>
 			<%}%>
 		</div>
 		<%if (!_.isEmpty(app.url)) {%>
@@ -60,9 +60,9 @@
 		<%if (app.state === 'success') color = 'green'%>
 		<%if (app.state === 'warning') color = 'yellow'%>
 		<%if (_.includes(['danger', undefined], app.state)) color = 'red'%>
-		<div class="badge border border-light rounded-pill <%=`bd-${color}-100`%> fw-light">
+		<u-badge color="<%=color%>" pill>
 			<small><%=_.size(_.filter(app.projectContainers, { state: 'running' }))%> / <%=_.size(app.projectContainers)%></small>
-		</div>
+		</u-badge>
 	</td>
 	<td class="text-center px-0">
 		<%=appActionsTemplate({ app, jobs })%>
