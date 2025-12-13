@@ -47,7 +47,7 @@
 			System update
 		</span>
 		<%if (typeof updates !== 'undefined' && !_.isEmpty(updates)) {%>
-			<u-badge color="white" class="ms-md-auto ms-3"><%=_.size(updates)%></u-badge>
+			<u-badge color="white" class="ms-md-auto ms-auto" pill><small><%=_.size(updates)%></small></u-badge>
 		<%}%>
 	</a>
 	<a href="/about" class="nav-item nav-link <%=(active === '/about' && 'active')%>">
