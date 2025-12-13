@@ -14,9 +14,9 @@
 					<div class="d-flex align-items-center mb-n1" style="min-width: 0;">
 						<div class="text-truncate" style="min-width: 0;"><%=app.title%></div>
 						<%if (app.hasUpdates) {%>
-							<div class="badge bd-green-100 rounded-pill ms-2" data-bs-toggle="tooltip" data-bs-original-title="Updates available">
+							<u-badge color="green" class="ms-2" tip="Updates available" pill>
 								<i class="icon-solid icon-download icon-fw"></i>
-							</div>
+							</u-badge>
 						<%}%>
 					</div>
 					<%if (!_.isEmpty(app.url)) {%>
@@ -114,9 +114,9 @@
 											<i class="icon-light icon-cube icon-fw me-2"></i>
 											<%=container.name%>
 											<%if (container.hasUpdates) {%>
-												<div class="badge bd-green-100 rounded-pill ms-2" data-bs-toggle="tooltip" data-bs-original-title="Updates available">
+												<u-badge color="green" class="ms-2" tip="Updates available" pill>
 													<i class="icon-solid icon-download icon-fw"></i>
-												</div>
+												</u-badge>
 											<%}%>
 										</div>
 									</td>
@@ -125,7 +125,7 @@
 											<%const publishedPorts = _.filter(container.ports, { ip: '0.0.0.0' });%>
 											<%=(_.isEmpty(publishedPorts) ? '<span class="text-body-secondary">&mdash;</span>' : '')%>
 											<%_.each(_.orderBy(publishedPorts, ['privatePort'], ['asc']), (port, index) => {%>
-												<div class="badge bd-gray-200 rounded-pill fw-light" data-bs-toggle="tooltip" data-bs-original-title="public &middot; private"><%=`${port.publicPort} &rlarr; ${port.privatePort}`%></div>
+												<u-badge color="gray" tint="200" tip="public &middot; private" pill><%=`${port.publicPort} &rlarr; ${port.privatePort}`%></u-badge>
 											<%})%>
 										<%}%>
 									</td>
@@ -164,7 +164,7 @@
 										<%}%>
 									</td>
 									<td class="text-center text-nowrap">
-										<div class="badge <%=(container.state === 'running' ? 'bd-green-100' : 'bd-red-100')%> rounded-pill fw-light"><%=container.state%></div>
+										<u-badge color="<%=(container.state === 'running' ? 'green' : 'red')%>" pill><%=container.state%></u-badge>
 									</td>
 									<td class="text-center px-0">
 										<div class="dropdown">

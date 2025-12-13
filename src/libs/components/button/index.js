@@ -8,7 +8,9 @@ export class Button extends LitElement {
 
 	static get properties() {
 		return {
-			variant: { type: String, reflect: true },
+			variant: { type: String, reflect: true, converter: {
+                fromAttribute: (value) => { return value ?? 'primary'; }
+            }},
 			size: { type: String, reflect: true },
 			outline: { type: Boolean, reflect: true },
 			tip: { type: String, reflect: true },
@@ -50,9 +52,7 @@ export class Button extends LitElement {
 	firstUpdated() {
 		const span = this.renderRoot.querySelector('span');
 		if (span) {
-			this.#tooltip = new bootstrap.Tooltip(span, {
-				trigger: 'manual'
-			});
+			this.#tooltip = new bootstrap.Tooltip(span);
 		}
 	}
 

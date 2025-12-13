@@ -12,7 +12,7 @@
 		<div class="d-flex align-items-center mb-n1">
 			<div class="text-truncate"><%=user.username%></div>
 			<%if (isSameAsLoggedIn) {%>
-				<div class="badge bd-blue-100 rounded-pill fw-light ms-2"><small>YOU</small></div>
+				<u-badge class="ms-2" pill><small>YOU</small></u-badge>
 			<%}%>
 		</div>
 		<div class="d-flex">
@@ -26,7 +26,7 @@
 	</td>
 	<td class="d-none d-md-table-cell">
 		<%_.each(user.groups, (group) => {%>
-			<div class="badge bd-purple-100 rounded-pill fw-light"><%=group%></div>
+			<u-badge color="purple" pill><%=group%></u-badge>
 		<%})%>
 	</td>
 	<td class="text-center text-nowrap">
@@ -34,9 +34,9 @@
 	</td>
 	<td class="text-nowrap">
 		<%if (user.isDisabled) {%>
-			<div class="badge border border-light rounded-pill bd-red-100 fw-light">locked</div>
+			<u-badge color="red" pill>locked</u-badge>
 		<%} else {%>
-			<div class="badge border border-light rounded-pill bd-green-100 fw-light">unlocked</div>
+			<u-badge color="green" pill>unlocked</u-badge>
 		<%}%>
 	</td>
 	<td class="text-center px-0">

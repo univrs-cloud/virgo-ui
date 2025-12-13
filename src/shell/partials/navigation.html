@@ -46,7 +46,9 @@
 			<i class="icon-duotone icon-solid icon-download icon-fw me-2"></i>
 			System update
 		</span>
-		<div class="badge bd-white ms-md-auto ms-3"><%=(typeof updates !== 'undefined' && !_.isEmpty(updates) ? _.size(updates) : '')%></div>
+		<%if (typeof updates !== 'undefined' && !_.isEmpty(updates)) {%>
+			<u-badge color="white" class="ms-md-auto ms-3"><%=_.size(updates)%></u-badge>
+		<%}%>
 	</a>
 	<a href="/about" class="nav-item nav-link <%=(active === '/about' && 'active')%>">
 		<i class="icon-duotone icon-solid icon-fingerprint icon-fw me-2"></i>

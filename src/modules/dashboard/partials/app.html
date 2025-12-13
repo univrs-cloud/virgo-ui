@@ -9,9 +9,9 @@
 					<div class="d-flex align-items-center">
 						<div class="text-truncate"><%=app.title%></div>
 						<%if (app.hasUpdates) {%>
-							<div class="badge bd-green-100 rounded-pill ms-2">
+							<u-badge color="green" class="ms-2" pill>
 								<i class="icon-solid icon-download icon-fw"></i>
-							</div>
+							</u-badge>
 						<%}%>
 					</div>
 				</div>
@@ -24,8 +24,8 @@
 		<%if (app.state === 'success') color = 'green'%>
 		<%if (app.state === 'warning') color = 'yellow'%>
 		<%if (_.includes(['danger', undefined], app.state)) color = 'red'%>
-		<span class="indicator badge translate-middle border border-light rounded-pill <%=`bd-${color}-100`%>">
+		<u-badge color="<%=color%>" class="indicator" pill border>
 			<%=_.size(_.filter(app.projectContainers, { state: 'running' }))%> / <%=_.size(app.projectContainers)%>
-		</span>
+		</u-badge>
 	</div>
 </div>
