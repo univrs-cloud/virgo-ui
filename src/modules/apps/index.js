@@ -105,7 +105,7 @@ const performAppAction = async (event) => {
 	const card = button.closest('.app');
 	const app = _.find(appService.getApps(), { name: card.dataset.name });
 	
-	const actionMessage = (button.dataset.action === 'remove' ? '<br><br>Data will <strong>NOT</strong> be deleted.' : '');
+	const actionMessage = (button.dataset.action === 'uninstall' ? '<br><br>Data will <strong>NOT</strong> be deleted.' : '');
 	if (
 		button.classList.contains('text-danger') &&
 		!await confirm(`Are you sure you want to ${button.dataset.action} the app ${app.title}?${actionMessage}`, { buttons: [{ text: _.upperFirst(button.dataset.action), class: (button.classList.contains('text-danger') ? 'btn-danger' : 'btn-primary') }] })
