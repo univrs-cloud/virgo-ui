@@ -64,7 +64,20 @@ const render = (iface, yAxisMax = 1000 * 1_000_000 / 8) => {
 				text: 'Loading...'
 			},
 			series: series,
-			colors: ['var(--bs-gray-600)', 'var(--bs-gray-400)'],
+			colors: ['var(--bs-blue-500)', 'var(--bs-purple-500)'],
+			fill: {
+				type: 'gradient',
+				gradient: {
+					shade: 'light',
+					type: 'vertical',
+					shadeIntensity: 0.5,
+					gradientToColors: ['var(--bs-blue-500)', 'var(--bs-purple-500)'],
+					inverseColors: false,
+					opacityFrom: 0.6,
+					opacityTo: 0.1,
+					stops: [0, 100]
+				}
+			},			
 			chart: {
 				sparkline: {
 					enabled: true,
