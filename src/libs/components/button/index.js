@@ -14,10 +14,12 @@ export class Button extends LitElement {
 			size: { type: String, reflect: true },
 			outline: { type: Boolean, reflect: true },
 			tip: { type: String, reflect: true },
-			disabled: { type: Boolean, reflect: true }
+			disabled: { type: Boolean, reflect: true },
+			loadingText: { type: String, reflect: true, attribute: 'loading-text' }
 		};
 	}
 
+	#initialSlotContent = [];
 	#initialTip = '';
 	#initialDisabled = false;
 	#tooltip = null;
@@ -34,6 +36,7 @@ export class Button extends LitElement {
 
 	connectedCallback() {
 		super.connectedCallback();
+		this.#initialSlotContent = Array.from(this.childNodes).map(node => node.cloneNode(true));
 		this.#initialTip = this.tip;
 		this.#initialDisabled = this.hasAttribute('disabled');
 	}
@@ -45,6 +48,7 @@ export class Button extends LitElement {
 	}
 
 	formResetCallback() {
+		this.reset();
 		this.tip = this.#initialTip;
 		this.disabled = this.#initialDisabled;
 	}
@@ -56,6 +60,19 @@ export class Button extends LitElement {
 		}
 	}
 
+	loading() {
+		this.disabled = true;
+		this.innerHTML = this.loadingText || 'Loading...';
+	}
+
+	reset() {
+		this.innerHTML = '';
+        this.#initialSlotContent.forEach(node => {
+            this.appendChild(node.cloneNode(true));
+        });
+		this.disabled = false;
+	}
+
 	render() {
 		const classes = {
 			[`btn${this.outline ? '-outline' : ''}-${this.variant}`]: true,
@@ -63,7 +80,7 @@ export class Button extends LitElement {
 		};
 		return html`
 			<span
-				class="d-inline-block disabled"
+				class="d-inline-block"
 				data-bs-original-title="${this.tip}"
 				@mouseenter=${() => { this.#tooltip?.show(); }}
 				@mouseleave=${() => { this.#tooltip?.hide(); }}
