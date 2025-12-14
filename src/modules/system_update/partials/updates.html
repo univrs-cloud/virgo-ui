@@ -2,7 +2,7 @@
 	<div class="card rounded-4 border-0">
 		<div class="card-body">
 			<h5 class="card-title"><%=_.pluralize('update', _.size(updates), true)%> available:</h5>
-			<ul class="overflow-y-scroll">
+			<ul>
 				<%_.each(updates, (update) => {%>
 					<li><%=update.package%> <small class="text-secondary">(<%=update.version.installed%> &rarr; <%=update.version.updatableTo%>)</small></li>
 				<%})%>

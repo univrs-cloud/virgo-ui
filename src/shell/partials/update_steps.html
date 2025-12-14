@@ -1,7 +1,7 @@
 <div class="steps text-secondary">
 	<div class="card rounded-4 border-0">
 		<div class="card-body">
-			<ul class="list-unstyled overflow-y-scroll">
+			<ul>
 				<%_.each(update.steps, (step) => {%>
 					<%if (_.includes(step, '\r')) {%>
 						<%step = _.last(_.initial(_.split(step, '\r')))%>

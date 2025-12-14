@@ -230,8 +230,12 @@ u-toast {
 	}
 }
 #update {
-	.overflow-y-scroll {
+	ul {
+		list-style: none;
+		overflow-y: scroll;
 		height: calc(100vh - 238px);
+		padding: 0 map-get($spacers, 3) 0 0;
+		margin: 0 map-get($spacers, 3) * -1 0 0;
 	}
 }
 #apps,
@@ -267,8 +271,12 @@ u-toast {
 	}
 }
 #system-update {
-	.overflow-y-scroll {
+	ul {
+		list-style: none;
+		overflow-y: scroll;
 		height: calc(100vh - 262px);
+		padding: 0 map-get($spacers, 3) 0 0;
+		margin: 0 map-get($spacers, 3) * -1 0 0;
 	}
 }
 .updates {
