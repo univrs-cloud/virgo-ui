@@ -20,11 +20,11 @@
 						<%}%>
 					</div>
 					<%if (!_.isEmpty(app.url)) {%>
-						<a href="<%=app.url%>" target="<%=(app?.target || app.name)%>" class="d-inline-flex align-items-center link-underline link-underline-opacity-0 link-underline-opacity-75-hover pe-none pe-md-auto" style="max-width: 100%;">
-							<small class="text-truncate" style="min-width: 0;"><%=_.replace(app.url, /^https?:\/\//, '')%></small><i class="icon-solid icon-arrow-up-right-from-square icon-fw icon-2xs ms-1 d-none d-sm-block"></i>
+						<a href="<%=app.url%>" target="<%=(app?.target || app.name)%>" class="d-inline-flex align-items-center link-underline link-underline-opacity-0 link-underline-opacity-75-hover" style="max-width: 100%;">
+							<small class="text-truncate" style="min-width: 0;"><%=_.replace(app.url, /^https?:\/\//, '')%></small><i class="icon-solid icon-arrow-up-right-from-square icon-fw icon-2xs ms-1"></i>
 						</a>
 					<%} else {%>
-						&nbsp;
+						&mdash;
 					<%}%>
 				</div>
 				<div class="col-auto ps-3 ms-auto">
@@ -100,8 +100,6 @@
 							<th class="text-end" style="width: 100px; min-width: 100px;">
 								<i class="icon-solid icon-memory icon-fw" data-bs-toggle="tooltip" data-bs-original-title="RAM"></i>
 							</th>
-							<th style="width: 1px;"></th>
-							<th style="width: 1px;"></th>
 							<th class="text-center" style="width: 85px; min-width: 85px;">State</th>
 							<th style="width: 40px; min-width: 40px;"></th>
 						</thead>
@@ -109,14 +107,26 @@
 							<%_.each(app.projectContainers, (container, index) => {%>
 								<%const resourceMetrics = _.find((app.resourceMetrics?.containers || []), { id: container.id })%>
 								<tr class="service" data-id="<%=container.id%>">
-									<td class="text-nowrap">
+									<td style="min-width: 226px; max-width: 0;">
 										<div class="d-flex align-items-center">
-											<i class="icon-light icon-cube icon-fw me-2"></i>
-											<%=container.name%>
+											<i class="icon-light icon-cube icon-fw text-body-tertiary me-2"></i>
+											<div class="text-truncate"style="min-width: 0;"><%=container.name%></div>
 											<%if (container.hasUpdates) {%>
 												<u-badge color="green" class="ms-2" tip="Updates available" pill>
 													<i class="icon-solid icon-download icon-fw"></i>
 												</u-badge>
+											<%}%>
+										</div>
+										<div class="ps-2 ms-3">
+											<a href="#" class="logs btn btn-outline-secondary btn-sm px-1 py-0" data-id="<%=container.id%>">
+												<i class="icon-light icon-memo icon-fw me-1"></i>
+												Logs
+											</a>
+											<%if (container.state === 'running') {%>
+												<a href="#" class="console btn btn-outline-secondary btn-sm px-1 py-0" data-id="<%=container.id%>">
+													<i class="icon-light icon-rectangle-terminal icon-fw me-1"></i>
+													Console
+												</a>
 											<%}%>
 										</div>
 									</td>
@@ -147,20 +157,6 @@
 											<div class="progress shadow-none" role="progressbar" style="height: 6px;">
 												<div class="progress-bar bg-blue-300" style="width: <%=resourceMetrics?.memory?.percent%>%;"></div>
 											</div>
-										<%}%>
-									</td>
-									<td class="text-nowrap">
-										<a href="#" class="logs btn btn-light btn-sm" data-id="<%=container.id%>">
-											<i class="icon-light icon-memo icon-fw me-1"></i>
-											Logs
-										</a>
-									</td>
-									<td class="text-nowrap">
-										<%if (container.state === 'running') {%>
-											<a href="#" class="console btn btn-light btn-sm" data-id="<%=container.id%>">
-												<i class="icon-light icon-rectangle-terminal icon-fw me-1"></i>
-												Console
-											</a>
 										<%}%>
 									</td>
 									<td class="text-center text-nowrap">
