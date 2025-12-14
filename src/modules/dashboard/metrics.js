@@ -36,7 +36,7 @@ const render = (state) => {
 	loading.classList.add('d-none');
 	
 	const metrics = state.metrics;
-	if (!metrics.enabled) {
+	if (!metrics.isEnabled) {
 		container.innerHTML = disabledPartial;
 		container.classList.remove('d-none');
 		return;
