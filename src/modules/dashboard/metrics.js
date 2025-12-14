@@ -4,6 +4,7 @@ import graphsPartial from 'modules/dashboard/partials/modals/metrics/graphs.html
 import * as metricsService from 'modules/dashboard/services/metrics';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', metricsModalPartial);
+const graphsTemplate = _.template(graphsPartial);
 const modal = document.querySelector('#metrics');
 const modalBody = modal.querySelector('.modal-body');
 const loading = modalBody.querySelector('.loading');
@@ -42,7 +43,7 @@ const render = (state) => {
 		return;
 	}
 
-	container.innerHTML = graphsPartial;
+	container.innerHTML = graphsTemplate({});
 	container.classList.remove('d-none');
 };
 
