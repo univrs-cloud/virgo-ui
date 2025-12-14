@@ -17,7 +17,6 @@ const storageDataTemplate = _.template(resourceStorageDataPartial);
 const networkTemplate = _.template(resourceNetworkPartial);
 const upsTemplate = _.template(resourceUpsPartial);
 const timeTemplate = _.template(resourceTimePartial);
-
 const container = document.querySelector('#resources-monitor');
 
 const render = (state) => {
