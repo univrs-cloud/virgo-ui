@@ -1,3 +1,8 @@
+document.body.style.setProperty(
+	'--scrollbar-width',
+	`${window.innerWidth - document.documentElement.clientWidth}px`
+);
+
 bootstrap.Tooltip.Default.container = 'body';
 bootstrap.Tooltip.Default.html = true;
 bootstrap.Tooltip.Default.sanitize = false;

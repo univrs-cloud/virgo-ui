@@ -15,14 +15,16 @@ html {
 
 body {
 	--bs-bg: rgba(237, 242, 249, 0.96);
-	overflow-y: scroll !important;
+	overflow-y: scroll;
 	width: 100%;
 	height: 100%;
 	font-weight: 300;
 	background-color: var(--bs-bg);
 	margin-bottom: 72px;
 	&[style*="overflow: hidden;"] {
-		padding-right: 0 !important;
+		.navbar {
+			padding-right: var(--scrollbar-width) !important;
+		}
 	}
 	&.reboot,
 	&.powered-off {

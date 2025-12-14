@@ -50,6 +50,13 @@ u-toast {
 	--bs-modal-border-radius: var(--bs-border-radius-xl);
 	backdrop-filter: blur(6px) grayscale(0.8);
 }
+.modal-dialog {
+	&.modal-fullscreen {
+		.modal-body {
+			max-height: none;
+		}
+	}
+}
 .modal-content {
 	position: relative;
 	background-clip: initial;
