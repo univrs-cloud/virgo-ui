@@ -1,53 +1,69 @@
-<div class="row">
-	<div class="col-4"></div>
-	<div class="col-8">
-		<div class="row">
-			<div class="col-3 text-center">CPU
-				<div class="row">
-					<div class="col-6 text-body-secondary"><small>Usage</small></div>
-					<div class="col-6 text-body-secondary"><small>Load</small></div>
+<div class="metrics">
+	<div class="metrics-heading row">
+		<div class="col-3"></div>
+		<div class="col-9">
+			<div class="metrics-graphs metrics-heading-graphs">
+				<div class="metrics-label metrics-label-graph have-saturation">
+					<span>CPU</span>
+					<div class="metrics-sublabels">
+						<small class="text-body-secondary">Usage</small>
+						<small class="text-body-secondary">Load</small>
+					</div>
 				</div>
-			</div>
-			<div class="col-3 text-center">RAM
-				<div class="row">
-					<div class="col-6"><small>Usage</small></div>
-					<div class="col-6"><small>Swap</small></div>
+				<div class="metrics-label metrics-label-graph have-saturation">
+					<span>RAM</span>
+					<div class="metrics-sublabels">
+						<small class="text-body-secondary">Usage</small>
+						<small class="text-body-secondary">Swap</small>
+					</div>
 				</div>
-			</div>
-			<div class="col-3 text-end">Disk I/O
-				<div><small>Usage</small></div>
-			</div>
-			<div class="col-3 text-end">Network
-				<div><small>Usage</small></div>
+				<div class="metrics-label metrics-label-graph">
+					<span>Disk I/O</span>
+					<div class="metrics-sublabels">
+						<small class="text-body-secondary">Usage</small>
+					</div>
+				</div>
+				<div class="metrics-label metrics-label-graph">
+					<span>Network</span>
+					<div class="metrics-sublabels">
+						<small class="text-body-secondary">Usage</small>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
-<div class="day">
-	<h6>December 14, 2025</h6>
-	<div class="hour row">
-		<div class="col-1 font-monospace">10:00 PM</div>
-		<div class="col-3">no events</div>
-		<div class="col-8">
-			<%for (let i = 0; i < 60; i++) {%>
-				<div class="minute row">
-					<div class="metrics-data metrics-data-cpu col-3">
-						<div class="polygon-use compressed" style="--utilization: 0.00085;"></div>
-						<div class="polygon-sat compressed" style="--saturation: 0.03999999910593033;"></div>
-					</div>
-					<div class="metrics-data metrics-data-memory col-3">
-						<div class="polygon-use compressed" style="--utilization: 0.11188158860629904;"></div>
-						<div class="polygon-sat compressed" style="--saturation: 0;"></div>
-					</div>
-					<div class="metrics-data-disks col-3">
-						<div class="polygon-use compressed" style="--utilization: 0.0011;"></div>
-					</div>
-					<div class="metrics-data metrics-data-network col-3">
-						<div class="polygon-use compressed" style="--utilization: 0.0038113333333333337;"></div>
-					</div>
+
+	<div class="metrics-day">
+		<h6>December 14, 2025</h6>
+		<%for (let h = 12; h > 0; h--) {%>
+			<div class="metrics-hour metrics-hour-compressed row">
+				<div class="metrics-events col-3">
+					<span class="font-monospace"><%=h%>:00</span>
 				</div>
-			<%}%>
-		</div>
+				<div class="metrics-minutes col-9">
+					<%for (let m = 59; m > 0; m--) {%>
+						<div class="metrics-minute">
+							<div class="metrics-graphs">
+								<div class="metrics-data metrics-data-cpu valid-data have-saturation">
+									<div class="polygon-use compressed" style="--utilization: 0.03999999910593033;"></div>
+									<div class="polygon-sat compressed" style="--saturation: 0.03999999910593033;"></div>
+								</div>
+								<div class="metrics-data metrics-data-memory valid-data have-saturation">
+									<div class="polygon-use compressed" style="--utilization: 0.11188158860629904;"></div>
+									<div class="polygon-sat compressed" style="--saturation: 0.11188158860629904;"></div>
+								</div>
+								<div class="metrics-data metrics-data-disks valid-data">
+									<div class="polygon-use compressed" style="--utilization: 0.1011;"></div>
+								</div>
+								<div class="metrics-data metrics-data-network valid-data">
+									<div class="polygon-use compressed" style="--utilization: 0.1038113333333333337;"></div>
+								</div>
+							</div>
+						</div>
+					<%}%>
+				</div>
+			</div>
+		<%}%>
 	</div>
 </div>
 

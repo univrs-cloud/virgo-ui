@@ -43,7 +43,11 @@ const render = (state) => {
 		return;
 	}
 
-	container.innerHTML = graphsTemplate({});
+	morphdom(
+		container,
+		`<div>${graphsTemplate({})}</div>`,
+		{ childrenOnly: true }
+	)
 	container.classList.remove('d-none');
 };
 

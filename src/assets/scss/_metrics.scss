@@ -1,0 +1,167 @@
+$graphs: cpu, memory, disks, network;
+
+.metrics {
+	--graph-cnt: 4;
+	--cpu-color: var(--bs-purple-200);
+	--cpu-color-extreme: var(--bs-purple-300);
+	--memory-color: var(--bs-green-200);
+	--memory-color-extreme: var(--bs-green-300);
+	--disks-color: var(--bs-orange-200);
+	--disks-color-extreme: var(--bs-orange-300);
+	--network-color: var(--bs-gray-300);
+	--network-color-extreme: var(--bs-gray-500);
+	--column-size: 10vw;
+	--data-min-height: 5px;
+
+	.metrics-heading {
+		z-index: 1;
+		position: sticky;
+		top: -4px;
+		background-color: var(--bs-white);
+	}
+
+	&-hour-compressed {
+		--data-min-height: 1px;
+		display: flex;
+	}
+	&-hour:not(.metrics-hour-compressed) .metrics-minute {
+		display: flex;
+	}
+	&-hour:not(.metrics-hour-compressed) .metrics-minute,
+	&-hour.metrics-hour-compressed .metrics-minute:last-of-type {
+		.valid-data.have-saturation::after,
+		.valid-data::before {
+			// Fake a border via clip-path, to set it on top, instead of after
+			background: rgb(120 120 120 / 30%);
+			pointer-events: none;
+			clip-path: inset(calc(100% - 1px) 0 0);
+		}
+	}
+
+	&-graphs {
+		margin-inline-start: auto;
+		display: grid;
+		grid-template-columns: repeat(var(--graph-cnt), minmax(var(--column-size), 1fr));
+		.metrics-data {
+			min-block-size: var(--data-min-height);
+		}
+	}
+
+	&-label-graph {
+		text-align: end;
+		.metrics-sublabels {
+			justify-content: flex-end;
+		}
+	}
+	&-label-graph.have-saturation {
+		text-align: center;
+		.metrics-sublabels {
+			justify-content: space-evenly;
+		}
+	}
+	&-sublabels {
+		display: flex;
+		small {
+			font-size: 0.75rem;
+		}
+	}
+
+	&-minutes {
+		align-self: end;
+	}
+
+	&-data {
+		--gradient-fragment: var(--color) 80%, var(--color-extreme) 90%;
+		--gradient: linear-gradient(to right, var(--gradient-fragment));
+		--gradient-flip: linear-gradient(to left, var(--gradient-fragment));
+		display: grid;
+		contain: strict;
+		margin-block: 0;
+		position: relative;
+		grid-template-areas: 'utilization';
+		grid-template-rows: 1fr;
+		// vertical dotted line through graph center, for areas without data
+		&::after {
+			content: '';
+			z-index: -1;
+			inset-block-start: 0;
+			inset-block-end: 0;
+			position: absolute;
+		}
+		&.empty-data {
+			&::after {
+				position: initial;
+				border-inline-end: 1px dotted rgb(0 0 0 / 30%);
+			}
+			&.have-saturation::after {
+				position: absolute;
+				border-inline-start: 1px dotted rgb(0 0 0 / 30%);
+				border-inline-end: none;
+				inset-inline-start: 50%;
+			}
+		}
+		&.have-saturation {
+			grid-template-areas: 'utilization saturation';
+		}
+		&.valid-data {
+			// vertical ruler line for areas with data, and horizontal tick mark for utilization half
+			&::before {
+				content: '';
+				position: absolute;
+				z-index: 1;
+				inline-size: 100%;
+				inset-block: 0;
+				border-inline-end: 1px solid rgb(0 0 0 / 30%);
+			}
+			&.have-saturation {
+				&::before {
+					inline-size: 50%;
+				}
+				// horizontal tick mark for saturation half, for resources that have it
+				&::after {
+					content: '';
+					position: absolute;
+					z-index: 1;
+					inline-size: 50%;
+					inset-inline-start: 50%;
+				}
+			}
+		}
+	
+		.polygon {
+			// WebKit has an issue with normal positioning (height exceeds bounds), but absolute works fine
+			position: absolute;
+			inset-block-start: 0;
+			inset-inline-start: 0;
+			clip-path: polygon(var(--points));
+			background: var(--gradient);
+			block-size: 100%;
+			inline-size: 100%;
+			&.polygon-use {
+				grid-area: utilization;
+				transform: scale(-1, -1);
+			}
+			&.polygon-sat {
+				grid-area: saturation;
+				opacity: 0.7;
+				transform: scale(1, -1);
+			}
+		}
+		.compressed.polygon-use {
+			background: var(--gradient-flip);
+			clip-path: inset(0 0 0 calc(100% - var(--utilization) * 100%));
+		}
+		.compressed.polygon-sat {
+			background: var(--gradient);
+			clip-path: inset(0 calc(100% - var(--saturation) * 100%) 0 0);
+			opacity: 0.7;
+		}
+
+		@each $graph in $graphs {
+			&-#{$graph} {
+				--color: var(--#{$graph}-color);
+				--color-extreme: var(--#{$graph}-color-extreme);
+			}
+		}
+	}
+}

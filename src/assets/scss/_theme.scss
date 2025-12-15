@@ -101,8 +101,8 @@ u-toast {
 }
 .modal-body {
 	overflow: auto;
-	max-height: calc(100vh - 170px);
-	padding-top: 66px;
+	// max-height: calc(100vh - 170px);
+	padding-top: 66px; // take into consideration input focus glow
 	scrollbar-width: none;
 	&::-webkit-scrollbar {
 		display: none;
@@ -389,6 +389,11 @@ u-toast {
 	}
 }
 #app-center {
+	.modal-body {
+		height: 100vh;
+	}
+}
+#metrics {
 	.modal-body {
 		height: 100vh;
 	}
