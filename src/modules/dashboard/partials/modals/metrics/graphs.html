@@ -34,8 +34,6 @@
 	</div>
 
 	<%
-	const now = moment();
-	const twelveHoursAgo = moment().subtract(12, 'hours');
 	const getMetric = (grid, momentTime, localM) => {
 		const testMoment = momentTime.clone().minute(localM).second(0).millisecond(0);
 		const utcH = testMoment.utc().hour();
@@ -45,12 +43,13 @@
 	const isValid = (value) => {
 		return value !== null && value !== undefined;
 	}
-	let lastDateStr = null;
-	let currentTime = now.clone().startOf('hour');
+	const now = moment();
+	const twelveHoursAgo = moment().subtract(12, 'hours');
 	const endTime = twelveHoursAgo.clone().startOf('hour');
+	let currentTime = now.clone().startOf('hour');
+	let lastDateStr = null;
 	%>
 	<%while (currentTime.isSameOrAfter(endTime)) {%>
-		<%const hour = currentTime.format('H')%>
 		<%const dateStr = currentTime.format('MMMM D, YYYY')%>
 		
 		<%if (dateStr !== lastDateStr) {%>
@@ -64,7 +63,7 @@
 		
 		<div class="metrics-hour metrics-hour-compressed row">
 			<div class="metrics-events col-3">
-				<span class="font-monospace"><%=currentTime.format('H:mm')%></span>
+				<small class="font-monospace"><%=currentTime.format('HH:mm')%></small>
 			</div>
 			<div class="metrics-minutes col-9">
 				<%for (let m = 59; m >= 0; m--) {%>
