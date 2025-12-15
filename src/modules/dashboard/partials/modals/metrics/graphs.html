@@ -33,37 +33,85 @@
 		</div>
 	</div>
 
-	<div class="metrics-day">
-		<h6>December 14, 2025</h6>
-		<%for (let h = 12; h > 0; h--) {%>
-			<div class="metrics-hour metrics-hour-compressed row">
-				<div class="metrics-events col-3">
-					<span class="font-monospace"><%=h%>:00</span>
+	<%
+	const now = moment();
+	const twelveHoursAgo = moment().subtract(12, 'hours');
+	const getMetric = (grid, momentTime, localM) => {
+		const testMoment = momentTime.clone().minute(localM).second(0).millisecond(0);
+		const utcH = testMoment.utc().hour();
+		const utcM = testMoment.utc().minute();
+		return grid?.[utcH]?.[utcM] ?? null;
+	};
+	const isValid = (value) => {
+		return value !== null && value !== undefined;
+	}
+	let lastDateStr = null;
+	let currentTime = now.clone().startOf('hour');
+	const endTime = twelveHoursAgo.clone().startOf('hour');
+	%>
+	<%while (currentTime.isSameOrAfter(endTime)) {%>
+		<%const hour = currentTime.format('H')%>
+		<%const dateStr = currentTime.format('MMMM D, YYYY')%>
+		
+		<%if (dateStr !== lastDateStr) {%>
+			<%if (lastDateStr !== null) {%>
 				</div>
-				<div class="metrics-minutes col-9">
-					<%for (let m = 59; m > 0; m--) {%>
-						<div class="metrics-minute">
-							<div class="metrics-graphs">
-								<div class="metrics-data metrics-data-cpu valid-data have-saturation">
-									<div class="polygon-use compressed" style="--utilization: 0.03999999910593033;"></div>
-									<div class="polygon-sat compressed" style="--saturation: 0.03999999910593033;"></div>
-								</div>
-								<div class="metrics-data metrics-data-memory valid-data have-saturation">
-									<div class="polygon-use compressed" style="--utilization: 0.11188158860629904;"></div>
-									<div class="polygon-sat compressed" style="--saturation: 0.11188158860629904;"></div>
-								</div>
-								<div class="metrics-data metrics-data-disks valid-data">
-									<div class="polygon-use compressed" style="--utilization: 0.1011;"></div>
-								</div>
-								<div class="metrics-data metrics-data-network valid-data">
-									<div class="polygon-use compressed" style="--utilization: 0.1038113333333333337;"></div>
-								</div>
+			<%}%>
+			<div class="metrics-day">
+				<h6><%=dateStr%></h6>
+				<%lastDateStr = dateStr%>
+		<%}%>
+		
+		<div class="metrics-hour metrics-hour-compressed row">
+			<div class="metrics-events col-3">
+				<span class="font-monospace"><%=currentTime.format('H:mm')%></span>
+			</div>
+			<div class="metrics-minutes col-9">
+				<%for (let m = 59; m >= 0; m--) {%>
+					<%
+					const cpuUtil = getMetric(grid.cpuUtil, currentTime, m);
+					const cpuSat = getMetric(grid.cpuSat, currentTime, m);
+					const memUtil = getMetric(grid.memUtil, currentTime, m);
+					const memSat = getMetric(grid.memSat, currentTime, m);
+					const diskUtil = getMetric(grid.diskUtil, currentTime, m);
+					const netUtil = getMetric(grid.netUtil, currentTime, m);
+					
+					// Skip if all metrics are null
+					if (!isValid(cpuUtil) && !isValid(cpuSat) && !isValid(memUtil) && !isValid(memSat) && !isValid(diskUtil) && !isValid(netUtil)) {
+						continue;
+					}
+					%>
+					<div class="metrics-minute" data-minute="<%=m%>">
+						<div class="metrics-graphs">
+							<div class="metrics-data metrics-data-cpu <%=isValid(cpuUtil) ? 'valid-data' : ''%> have-saturation">
+								<%if (isValid(cpuUtil)) {%>
+									<div class="polygon-use compressed" style="--utilization: <%=cpuUtil%>;"></div>
+									<div class="polygon-sat compressed" style="--saturation: <%=cpuSat || 0%>;"></div>
+								<%}%>
+							</div>
+							<div class="metrics-data metrics-data-memory <%=isValid(memUtil) ? 'valid-data' : ''%> have-saturation">
+								<%if (isValid(memUtil)) {%>
+									<div class="polygon-use compressed" style="--utilization: <%=memUtil%>;"></div>
+									<div class="polygon-sat compressed" style="--saturation: <%=memSat || 0%>;"></div>
+								<%}%>
+							</div>
+							<div class="metrics-data metrics-data-disks <%=isValid(diskUtil) ? 'valid-data' : ''%>">
+								<%if (isValid(diskUtil)) {%>
+									<div class="polygon-use compressed" style="--utilization: <%=diskUtil%>;"></div>
+								<%}%>
+							</div>
+							<div class="metrics-data metrics-data-network <%=isValid(netUtil) ? 'valid-data' : ''%>">
+								<%if (isValid(netUtil)) {%>
+									<div class="polygon-use compressed" style="--utilization: <%=netUtil%>;"></div>
+								<%}%>
 							</div>
 						</div>
-					<%}%>
-				</div>
+					</div>
+				<%}%>
 			</div>
-		<%}%>
+		</div>
+		<%currentTime.subtract(1, 'hour')%>
+	<%}%>
 	</div>
 </div>
 

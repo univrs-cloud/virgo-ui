@@ -45,7 +45,7 @@ const render = (state) => {
 
 	morphdom(
 		container,
-		`<div>${graphsTemplate({})}</div>`,
+		`<div>${graphsTemplate({ grid: metrics.grid, moment })}</div>`,
 		{ childrenOnly: true }
 	)
 	container.classList.remove('d-none');
