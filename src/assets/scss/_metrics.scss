@@ -13,10 +13,11 @@ $graphs: cpu, memory, disks, network;
 	--column-size: 10vw;
 	--data-min-height: 5px;
 
-	.metrics-heading {
+	&-heading {
 		z-index: 1;
 		position: sticky;
 		top: -4px;
+		display: flex;
 		background-color: var(--bs-white);
 	}
 
