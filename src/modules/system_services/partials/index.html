@@ -16,30 +16,12 @@
 		<div class="container-fluid position-relative d-none">
 			<div class="card rounded-4 border-0">
 				<div class="card-body">
-					<div class="row g-2">
-						<div class="col col-4">
+					<div class="row g-2 align-items-center">
+						<div class="col col-6 col-md-4">
 							<u-input type="search" label="Search" class="search"></u-input>
 						</div>
-						<div class="col col-4 col-md-4 col-lg-2">
-							<u-select label="State" class="filter-state">
-								<option value="" selected>all</option>
-								<option value="running">running</option>
-								<option value="stopped">stopped</option>
-								<option value="oneshot">oneshot</option>
-								<option value="failed">failed</option>
-							</u-select>
-						</div>
-						<div class="col col-4 col-md-4 col-lg-2">
-							<u-select label="Automatic startup" class="filter-unit-file-state">
-								<option value="" selected>all</option>
-								<option value="enabled">enabled</option>
-								<option value="disabled">disabled</option>
-								<option value="static">static</option>
-								<option value="enabled-runtime">enabled-runtime</option>
-								<option value="indirect">indirect</option>
-								<option value="generated">generated</option>
-								<option value="unknown">unknown</option>
-							</u-select>
+						<div class="col col-4">
+							<%=filterPartial%>
 						</div>
 					</div>
 					<div class="overflow-y-scroll mt-n3 mx-n3 pe-md-3 mx-md-0 me-md-n3">

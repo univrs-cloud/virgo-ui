@@ -1,0 +1,76 @@
+<div class="dropdown mb-4">
+	<u-button variant="tertiary" class="dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside" outline>Filter</u-button>
+	<ul class="dropdown-menu">
+		<li><h6 class="dropdown-header">State</h6></li>
+		<li class="text-nowrap px-2">
+			<div class="form-check">
+				<label class="form-check-label">
+					<input type="radio" name="filter-state" value="" class="filter-state form-check-input" checked>all
+				</label>
+			</div>
+			<div class="form-check">
+				<label class="form-check-label">
+					<input type="radio" name="filter-state" value="running" class="filter-state form-check-input">running
+				</label>
+			</div>
+			<div class="form-check">
+				<label class="form-check-label">
+					<input type="radio" name="filter-state" value="stopped" class="filter-state form-check-input">stopped
+				</label>
+			</div>
+			<div class="form-check">
+				<label class="form-check-label">
+					<input type="radio" name="filter-state" value="oneshot" class="filter-state form-check-input">oneshot
+				</label>
+			</div>
+			<div class="form-check">
+				<label class="form-check-label">
+					<input type="radio" name="filter-state" value="failed" class="filter-state form-check-input">failed
+				</label>
+			</div>
+		</li>
+		<li><h6 class="dropdown-header">Automatic startup</h6></li>
+		<li class="text-nowrap px-2">
+			<div class="form-check">
+				<label class="form-check-label">
+					<input type="radio" name="filter-unit-file-state" value="" class="filter-unit-file-state form-check-input" checked>all
+				</label>
+			</div>
+			<div class="form-check">
+				<label class="form-check-label">
+					<input type="radio" name="filter-unit-file-state" value="enabled" class="filter-unit-file-state form-check-input">enabled
+				</label>
+			</div>
+			<div class="form-check">
+				<label class="form-check-label">
+					<input type="radio" name="filter-unit-file-state" value="disabled" class="filter-unit-file-state form-check-input">disabled
+				</label>
+			</div>
+			<div class="form-check">
+				<label class="form-check-label">
+					<input type="radio" name="filter-unit-file-state" value="static" class="filter-unit-file-state form-check-input">static
+				</label>
+			</div>
+			<div class="form-check">
+				<label class="form-check-label">
+					<input type="radio" name="filter-unit-file-state" value="static" class="filter-unit-file-state form-check-input">enabled-runtime
+				</label>
+			</div>
+			<div class="form-check">
+				<label class="form-check-label">
+					<input type="radio" name="filter-unit-file-state" value="indirect" class="filter-unit-file-state form-check-input">indirect
+				</label>
+			</div>
+			<div class="form-check">
+				<label class="form-check-label">
+					<input type="radio" name="filter-unit-file-state" value="generated" class="filter-unit-file-state form-check-input">generated
+				</label>
+			</div>
+			<div class="form-check">
+				<label class="form-check-label">
+					<input type="radio" name="filter-unit-file-state" value="unknown" class="filter-unit-file-state form-check-input">unknown
+				</label>
+			</div>
+		</li>
+	</ul>
+</div>
