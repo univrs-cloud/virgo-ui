@@ -14,7 +14,7 @@ const row = container.querySelector('.row');
 
 const checkUpdates = (event) => {
 	let target = event.target.closest('.check-updates');
-	if (_.isNull(target) || target.classList.contains('cursor-default')) {
+	if (_.isNull(target)) {
 		return;
 	}
 	

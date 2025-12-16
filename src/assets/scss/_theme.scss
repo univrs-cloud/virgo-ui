@@ -229,15 +229,6 @@ u-toast {
 		}
 	}
 }
-#update {
-	ul {
-		list-style: none;
-		overflow-y: scroll;
-		height: calc(100vh - 238px);
-		padding: 0 map-get($spacers, 3) 0 0;
-		margin: 0 map-get($spacers, 3) * -1 0 0;
-	}
-}
 #apps,
 #bookmarks,
 #users,
@@ -274,21 +265,18 @@ u-toast {
 	ul {
 		list-style: none;
 		overflow-y: scroll;
-		height: calc(100vh - 262px);
+		height: calc(100vh - 270px);
 		padding: 0 map-get($spacers, 3) 0 0;
 		margin: 0 map-get($spacers, 3) * -1 0 0;
 	}
 }
-.updates {
-	.badge {
-		.fa {
-			.fa-primary {
-				fill: #212f52;
-			}
-			.fa-secondary {
-				fill: #32477c;
-			}
-		}
+#update {
+	ul {
+		list-style: none;
+		overflow-y: scroll;
+		height: calc(100vh - 238px);
+		padding: 0 map-get($spacers, 3) 0 0;
+		margin: 0 map-get($spacers, 3) * -1 0 0;
 	}
 }
 #resource-usage {
