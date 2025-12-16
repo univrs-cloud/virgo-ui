@@ -19,7 +19,7 @@ const openInstallModal = (event) => {
 	}
 
 	event.preventDefault();
-	const modal = bootstrap.Modal.getOrCreateInstance(event.target.getAttribute('href'));
+	const modal = bootstrap.Modal.getOrCreateInstance(event.target.dataset.bsTarget);
 	modal.show(event.target);
 };
 

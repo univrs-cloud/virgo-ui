@@ -1,32 +1,33 @@
 <div class="col col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
-	<div class="app card rounded-4 border-0" data-id="<%=app.id%>" data-name="<%=app.name%>">
-		<div class="card-body ps-0 pt-0">
+	<div class="app card text-bg-light" data-id="<%=app.id%>" data-name="<%=app.name%>">
+		<div class="card-title">
 			<div class="row g-0 align-items-center">
 				<div class="card-image card-spacer col-auto p-2">
 					<img src="<%=app.logo%>">
 				</div>
-				<div class="col">
+				<div class="col pe-2">
 					<h6 class="card-title fw-medium mb-0"><%=app.title%></h6>
 				</div>
 			</div>
+		</div>
+		<div class="card-body ps-0 pt-0">
 			<div class="row g-0">
 				<div class="card-spacer col-auto p-2"></div>
 				<div class="col">
-					<%_.each(app.categories, (category) => {%>
-						<u-badge color="purple" class="mt-n1 mb-1" pill><%=category%></u-badge>
-					<%})%>
 					<p class="card-text line-clamp three-line"><%=app.description%></p>
-					<div class="d-flex align-items-center justify-content-end">
+					<div class="d-flex align-items-center justify-content-between">
+						<%_.each(app.categories, (category) => {%>
+							<u-badge color="purple" pill><%=category%></u-badge>
+						<%})%>
 						<%if (!_.isEmpty(jobs)) {%>
-							<button class="btn btn-sm btn-primary" disabled><div class="spinner-border spinner-border-sm me-2"></div>Installing...</button>
+							<u-button variant="primary" size="sm" disabled><div class="spinner-border spinner-border-sm me-2"></div>Installing...</u-button>
 						<%}%>
 						<%if (!app.isInstalled && _.isEmpty(jobs)) {%>
-							<a href="#app-install" class="install btn btn-sm btn-primary">Install</a>
+							<u-button variant="primary" size="sm" class="install" data-bs-target="#app-install">Install</u-button>
 						<%}%>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	<hr class="border-secondary-subtle mt-0">
 </div>
