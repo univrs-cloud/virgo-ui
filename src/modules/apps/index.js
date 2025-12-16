@@ -150,10 +150,9 @@ const performServiceAction = async (event) => {
 
 const renderAppDetails = (app) => {
 	const jobs = _.filter(appService.getJobs(), (job) => { return job.data?.config?.name === app.name; });
-	const isScrollVisible = _.isEmpty(container.querySelectorAll('.details .terminal-container:not(.d-none), .details .logs-container:not(.d-none)'));
 	morphdom(
 		container.querySelector('.details'),
-		`<div>${appDetailsTemplate({ app, jobs, appActionsTemplate, isScrollVisible, prettyBytes })}</div>`,
+		`<div>${appDetailsTemplate({ app, jobs, appActionsTemplate, prettyBytes })}</div>`,
 		{
 			childrenOnly: true,
 			onBeforeElUpdated: (fromEl, toEl) => {
