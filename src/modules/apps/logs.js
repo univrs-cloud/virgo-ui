@@ -27,6 +27,7 @@ const render = (event) => {
 	logsContainer = app.querySelector('.logs-container');
 	logsContainer.querySelector('.service .name').innerHTML = service.name;
 	logsContainer.classList.remove('d-none');
+	app.querySelector('.services')?.classList.replace('overflow-y-scroll', 'overflow-hidden');
 	socket.emit('logs:connect', link.dataset.id);
 };
 
@@ -41,6 +42,7 @@ const closeLogs = (event) => {
 
 const restore = () => {
 	if (logs) {
+		logsContainer.closest('.app')?.querySelector('.services')?.classList.replace('overflow-hidden', 'overflow-y-scroll');
 		logsContainer.classList.add('d-none');
 		socket.emit('logs:disconnect');
 		logs.removeEventListener('scroll', shouldScrollEvent);

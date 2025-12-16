@@ -29,6 +29,7 @@ const render = (event) => {
 	terminalContainer = app.querySelector('.terminal-container');
 	terminalContainer.querySelector('.service .name').innerHTML = service.name;
 	terminalContainer.classList.remove('d-none');
+	app.querySelector('.services')?.classList.replace('overflow-y-scroll', 'overflow-hidden');
 	socket.emit('terminal:connect', link.dataset.id);
 };
 
@@ -49,6 +50,7 @@ const resize = (event) => {
 
 const restore = () => {
 	if (terminal) {
+		terminalContainer.closest('.app')?.querySelector('.services')?.classList.replace('overflow-hidden', 'overflow-y-scroll');
 		terminalContainer.classList.add('d-none');
 		socket.emit('terminal:disconnect');
 		terminal.dispose();
