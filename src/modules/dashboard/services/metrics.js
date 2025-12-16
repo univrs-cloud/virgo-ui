@@ -2,6 +2,10 @@ import Metrics from 'stores/metrics';
 
 let callbackCollection = [];
 
+const fetch = () => {
+	Metrics.fetch();
+};
+
 const enable = () => {
 	Metrics.enable();
 };
@@ -19,7 +23,7 @@ const handleSubscription = (properties) => {
 
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
-	Metrics.fetch();
+	this.fetch();
 	return Metrics.subscribeToProperties(['metrics'], handleSubscription);
 };
 
@@ -32,6 +36,7 @@ const unsubscribe = (subsciption) => {
 export {
 	subscribe,
 	unsubscribe,
+	fetch,
 	enable,
 	disable
 };
