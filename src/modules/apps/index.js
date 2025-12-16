@@ -150,9 +150,10 @@ const performServiceAction = async (event) => {
 
 const renderAppDetails = (app) => {
 	const jobs = _.filter(appService.getJobs(), (job) => { return job.data?.config?.name === app.name; });
+	const isScrollVisible = _.isEmpty(container.querySelectorAll('.details .terminal-container:not(.d-none), .details .logs-container:not(.d-none)'));
 	morphdom(
 		container.querySelector('.details'),
-		`<div>${appDetailsTemplate({ app, jobs, appActionsTemplate, prettyBytes })}</div>`,
+		`<div>${appDetailsTemplate({ app, jobs, appActionsTemplate, isScrollVisible, prettyBytes })}</div>`,
 		{
 			childrenOnly: true,
 			onBeforeElUpdated: (fromEl, toEl) => {
@@ -197,8 +198,10 @@ const render = (state) => {
 		{ childrenOnly: true }
 	);
 
-	if (container.querySelector('.details .app')) {
-		const app = _.find(apps, { name: container.querySelector('.details .app').dataset.name });
+	const appContainer = container.querySelector('.details .app');
+	if (appContainer) {
+		const name = appContainer.dataset.name;
+		const app = _.find(apps, { name });
 		renderAppDetails(app);
 	}
 	

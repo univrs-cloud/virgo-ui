@@ -247,15 +247,18 @@ u-toast {
 }
 #apps {
 	.details {
-		.overflow-y-scroll {
+		.services {
 			height: calc(100vh - 386px);
+			&.overflow-hidden {
+				margin-right: calc(var(--scrollbar-width) + map-get($spacers, 3) * -1) !important;
+			}
 		}
 	}
 }
 @media (min-width: 576px) {
 	#apps {
 		.details {
-			.overflow-y-scroll {
+			.services {
 				height: calc(100vh - 305px);
 			}
 		}
