@@ -23,7 +23,7 @@ const handleSubscription = (properties) => {
 
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
-	this.fetch();
+	Metrics.fetch();
 	return Metrics.subscribeToProperties(['metrics'], handleSubscription);
 };
 
