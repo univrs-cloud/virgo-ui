@@ -87,7 +87,7 @@ export class Button extends LitElement {
 			>
 				<button
 					type="button"
-					class="btn ${classMap(classes)} d-inline-flex flex-column align-items-center"
+					class="btn ${classMap(classes)} d-inline-flex align-items-center"
 					?disabled=${this.disabled}
 				>
 					<slot></slot>

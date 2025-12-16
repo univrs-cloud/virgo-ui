@@ -7,7 +7,7 @@
 					<li><%=update.package%> <small class="text-secondary">(<%=update.version.installed%> &rarr; <%=update.version.updatableTo%>)</small></li>
 				<%})%>
 			</ul>
-			<div class="d-flex align-items-center">
+			<div class="d-flex align-items-center mt-4">
 				<a href="#" class="check-updates btn btn-sm me-auto <%=(checkUpdates ? 'cursor-default' : '')%>">
 					<i class="icon-solid icon-arrows-rotate <%=(checkUpdates ? 'icon-spin' : '')%> me-1" style="color: var(--bs-green);"></i><%=(checkUpdates ? 'Checking for updates...' : 'Check for new updates')%>
 				</a>
