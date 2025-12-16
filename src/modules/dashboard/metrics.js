@@ -10,6 +10,7 @@ const modalBody = modal.querySelector('.modal-body');
 const loading = modalBody.querySelector('.loading');
 const container = modalBody.querySelector('.container-fluid');
 let subsciption;
+let poller;
 
 const enable = (event) => {
 	if (!event.target.classList.contains('enable')) {
@@ -53,13 +54,17 @@ const render = (state) => {
 
 const showModal = (event) => {
 	subsciption = metricsService.subscribe([render]);
+	poller = setInterval(() => {
+		metricsService.fetch();
+	}, 60000);
 };
 
 const restoreModal = (event) => {
+	clearInterval(poller);
+	metricsService.unsubscribe(subsciption);
 	container.innerHTML = '';
 	container.classList.add('d-none');
 	loading.classList.remove('d-none');
-	metricsService.unsubscribe(subsciption);
 };
 
 modal.addEventListener('show.bs.modal', showModal);
