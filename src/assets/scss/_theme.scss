@@ -330,6 +330,12 @@ u-toast {
 	}
 }
 #apps {
+	&:has(.details .app) > .row > .container-fluid > .card {
+		background-color: var(--bs-dark-bg-subtle);
+		margin-top: map-get($spacers, 2) * -1;
+		margin-left: map-get($spacers, 4);
+		margin-right: map-get($spacers, 4);
+	}
 	.details {
 		z-index: 1028;
 		position: absolute;
