@@ -247,11 +247,13 @@ u-toast {
 }
 #apps {
 	.details {
+		.app:has(.logs-container:not(.d-none)) .services,
+		.app:has(.terminal-container:not(.d-none)) .services {
+			overflow-y: hidden !important;
+			margin-right: calc(var(--scrollbar-width) + map-get($spacers, 3) * -1) !important;
+		}
 		.services {
 			height: calc(100vh - 386px);
-			&.overflow-hidden {
-				margin-right: calc(var(--scrollbar-width) + map-get($spacers, 3) * -1) !important;
-			}
 		}
 	}
 }
