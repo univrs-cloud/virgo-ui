@@ -34,15 +34,27 @@
 	</div>
 
 	<%
-	const getMetric = (grid, momentTime, localM) => {
-		const testMoment = momentTime.clone().minute(localM).second(0).millisecond(0);
-		const utcH = testMoment.utc().hour();
-		const utcM = testMoment.utc().minute();
-		return grid?.[utcH]?.[utcM] ?? null;
+	// Convert [timestamp, value] arrays to Maps for O(1) lookup
+	const toMap = (arr) => {
+		if (!arr || !Array.isArray(arr)) return new Map();
+		return new Map(arr);
 	};
+	
+	const cpuUtilMap = toMap(grid.cpuUtil);
+	const cpuSatMap = toMap(grid.cpuSat);
+	const memUtilMap = toMap(grid.memUtil);
+	const memSatMap = toMap(grid.memSat);
+	const diskUtilMap = toMap(grid.diskUtil);
+	const netUtilMap = toMap(grid.netUtil);
+	
+	const getMetric = (map, timestamp) => {
+		return map.get(timestamp) ?? null;
+	};
+	
 	const isValid = (value) => {
 		return value !== null && value !== undefined;
 	}
+	
 	const now = moment();
 	const twelveHoursAgo = moment().subtract(12, 'hours');
 	const endTime = twelveHoursAgo.clone().startOf('hour');
@@ -68,12 +80,15 @@
 			<div class="metrics-minutes col-9">
 				<%for (let m = 59; m >= 0; m--) {%>
 					<%
-					const cpuUtil = getMetric(grid.cpuUtil, currentTime, m);
-					const cpuSat = getMetric(grid.cpuSat, currentTime, m);
-					const memUtil = getMetric(grid.memUtil, currentTime, m);
-					const memSat = getMetric(grid.memSat, currentTime, m);
-					const diskUtil = getMetric(grid.diskUtil, currentTime, m);
-					const netUtil = getMetric(grid.netUtil, currentTime, m);
+					// Calculate timestamp for this minute (floored to minute boundary)
+					const minuteTimestamp = currentTime.clone().minute(m).second(0).millisecond(0).valueOf();
+					
+					const cpuUtil = getMetric(cpuUtilMap, minuteTimestamp);
+					const cpuSat = getMetric(cpuSatMap, minuteTimestamp);
+					const memUtil = getMetric(memUtilMap, minuteTimestamp);
+					const memSat = getMetric(memSatMap, minuteTimestamp);
+					const diskUtil = getMetric(diskUtilMap, minuteTimestamp);
+					const netUtil = getMetric(netUtilMap, minuteTimestamp);
 					
 					// Skip if all metrics are null
 					if (!isValid(cpuUtil) && !isValid(cpuSat) && !isValid(memUtil) && !isValid(memSat) && !isValid(diskUtil) && !isValid(netUtil)) {
