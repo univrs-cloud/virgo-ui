@@ -1,16 +1,17 @@
 import modulePartial from 'modules/system_services/partials/index.html';
 import servicePartial from 'modules/system_services/partials/service.html';
+import filterPartial from 'modules/system_services/partials/filter.html';
 import * as serviceService from 'modules/system_services/services/service';
 
 const moduleTemplate = _.template(modulePartial);
 const serviceTemplate = _.template(servicePartial);
-document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
+document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate({ filterPartial }));
 const module = document.querySelector('#system-services');
 const loading = module.querySelector('.loading');
 const syncButton = module.querySelector('button[data-action="sync"]');
 const searchInput = module.querySelector('.search');
-const filterStateSelect = module.querySelector('.filter-state');
-const filterUnitFileStateSelect = module.querySelector('.filter-unit-file-state');
+const filterStateSelect = module.querySelectorAll('.filter-state');
+const filterUnitFileStateSelect = module.querySelectorAll('.filter-unit-file-state');
 const container = module.querySelector('.container-fluid');
 const table = container.querySelector('.table');
 let searchTimer;
@@ -106,8 +107,8 @@ const render = (state) => {
 
 syncButton.addEventListener('click', sync);
 searchInput.addEventListener('input', search);
-filterStateSelect.addEventListener('value-changed', filterState);
-filterUnitFileStateSelect.addEventListener('value-changed', filterUnitFileState);
+_.each(filterStateSelect, (radio) => { radio.addEventListener('change', filterState); });
+_.each(filterUnitFileStateSelect, (radio) => { radio.addEventListener('change', filterUnitFileState); });
 table.querySelector('thead').addEventListener('click', order);
 
 serviceService.subscribe([render]);
