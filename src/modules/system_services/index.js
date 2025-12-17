@@ -90,7 +90,7 @@ const render = (state) => {
 		[tableOrder.direction]
 	);
 	_.each(services, (service) => {
-		template.innerHTML += serviceTemplate({ service });
+		template.innerHTML += serviceTemplate({ service, prettyBytes });
 	});
 
 	morphdom(
