@@ -34,122 +34,66 @@
 	</div>
 
 	<%
-	// Convert [timestamp, value] arrays to Maps for O(1) lookup
-	const toMap = (arr) => {
-		if (!arr || !Array.isArray(arr)) return new Map();
-		return new Map(arr);
-	};
-	
-	const cpuUtilMap = toMap(grid.cpuUtil);
-	const cpuSatMap = toMap(grid.cpuSat);
-	const memUtilMap = toMap(grid.memUtil);
-	const memSatMap = toMap(grid.memSat);
-	const diskUtilMap = toMap(grid.diskUtil);
-	const netUtilMap = toMap(grid.netUtil);
-	
-	const getMetric = (map, timestamp) => {
-		return map.get(timestamp) ?? null;
-	};
-	
-	const isValid = (value) => {
-		return value !== null && value !== undefined;
-	};
-	
+	const data = {};
+	const hours = [];
+	for (let i = 0; i < (grid.cpuUtil?.length || 0); i++) {
+		const ts = grid.cpuUtil[i][0];
+		const t = moment(ts);
+		const hourKey = t.clone().startOf('hour').valueOf();
+		const m = t.minute();
+		if (!data[hourKey]) {
+			data[hourKey] = {};
+			hours.push(hourKey);
+		}
+		data[hourKey][m] = {
+			cpuUtil: grid.cpuUtil[i][1],
+			cpuSat: grid.cpuSat?.[i]?.[1] || 0,
+			memUtil: grid.memUtil?.[i]?.[1] || 0,
+			memSat: grid.memSat?.[i]?.[1] || 0,
+			diskUtil: grid.diskUtil?.[i]?.[1] || 0,
+			netUtil: grid.netUtil?.[i]?.[1] || 0
+		};
+	}
+	hours.reverse();
 	const now = moment();
 	const currentHourKey = now.clone().startOf('hour').valueOf();
 	const currentMinute = now.minute();
-	
-	// Collect all unique timestamps from all metrics
-	const allTimestamps = new Set([
-		...cpuUtilMap.keys(),
-		...cpuSatMap.keys(),
-		...memUtilMap.keys(),
-		...memSatMap.keys(),
-		...diskUtilMap.keys(),
-		...netUtilMap.keys()
-	]);
-	
-	// Group timestamps by hour (floor to hour boundary)
-	const hourGroups = new Map();
-	for (const ts of allTimestamps) {
-		const hourKey = moment(ts).startOf('hour').valueOf();
-		if (!hourGroups.has(hourKey)) {
-			hourGroups.set(hourKey, []);
-		}
-		hourGroups.get(hourKey).push(ts);
-	}
-	
-	// Sort hours descending (most recent first)
-	const sortedHours = [...hourGroups.keys()].sort((a, b) => b - a);
-	
 	let lastDateStr = null;
 	%>
-	<%for (const hourKey of sortedHours) {%>
-		<%
-		const currentTime = moment(hourKey);
-		const dateStr = currentTime.format('MMMM D, YYYY');
-		const minuteTimestamps = hourGroups.get(hourKey).sort((a, b) => b - a);
-		%>
-		
+	<%for (const hourKey of hours) {%>
+		<%const t = moment(hourKey)%>
+		<%const dateStr = t.format('MMMM D, YYYY')%>
 		<%if (dateStr !== lastDateStr) {%>
 			<%if (lastDateStr !== null) {%>
 				</div>
 			<%}%>
 			<div class="metrics-day">
 				<h6><%=dateStr%></h6>
-				<%lastDateStr = dateStr%>
+			<%lastDateStr = dateStr%>
 		<%}%>
-		
-		<%
-		// Build a map of minute -> timestamp for this hour
-		const minuteToTimestamp = new Map();
-		for (const ts of minuteTimestamps) {
-			const m = moment(ts).minute();
-			minuteToTimestamp.set(m, ts);
-		}
-		%>
 		<div class="metrics-hour metrics-hour-compressed row">
 			<div class="metrics-events col-3">
-				<small class="font-monospace"><%=currentTime.format('HH:mm')%></small>
+				<small class="font-monospace"><%=t.format('HH:mm')%></small>
 			</div>
 			<div class="metrics-minutes col-9">
-				<%
-				// Don't render future minutes for the current hour
-				const maxMinute = (hourKey === currentHourKey) ? currentMinute : 59;
-				%>
+				<%const maxMinute = (hourKey === currentHourKey) ? currentMinute : 59%>
 				<%for (let m = maxMinute; m >= 0; m--) {%>
-					<%
-					const minuteTimestamp = minuteToTimestamp.get(m);
-					const cpuUtil = minuteTimestamp ? getMetric(cpuUtilMap, minuteTimestamp) : null;
-					const cpuSat = minuteTimestamp ? getMetric(cpuSatMap, minuteTimestamp) : null;
-					const memUtil = minuteTimestamp ? getMetric(memUtilMap, minuteTimestamp) : null;
-					const memSat = minuteTimestamp ? getMetric(memSatMap, minuteTimestamp) : null;
-					const diskUtil = minuteTimestamp ? getMetric(diskUtilMap, minuteTimestamp) : null;
-					const netUtil = minuteTimestamp ? getMetric(netUtilMap, minuteTimestamp) : null;
-					%>
+					<%const d = data[hourKey][m] || {}%>
 					<div class="metrics-minute" data-minute="<%=m%>">
 						<div class="metrics-graphs">
-							<div class="metrics-data metrics-data-cpu <%=isValid(cpuUtil) ? 'valid-data' : ''%> have-saturation">
-								<%if (isValid(cpuUtil)) {%>
-									<div class="polygon-use compressed" style="--utilization: <%=cpuUtil%>;"></div>
-									<div class="polygon-sat compressed" style="--saturation: <%=cpuSat || 0%>;"></div>
-								<%}%>
+							<div class="metrics-data metrics-data-cpu valid-data have-saturation">
+								<div class="polygon-use compressed" style="--utilization: <%=d.cpuUtil || 0%>;"></div>
+								<div class="polygon-sat compressed" style="--saturation: <%=d.cpuSat || 0%>;"></div>
 							</div>
-							<div class="metrics-data metrics-data-memory <%=isValid(memUtil) ? 'valid-data' : ''%> have-saturation">
-								<%if (isValid(memUtil)) {%>
-									<div class="polygon-use compressed" style="--utilization: <%=memUtil%>;"></div>
-									<div class="polygon-sat compressed" style="--saturation: <%=memSat || 0%>;"></div>
-								<%}%>
+							<div class="metrics-data metrics-data-memory valid-data have-saturation">
+								<div class="polygon-use compressed" style="--utilization: <%=d.memUtil || 0%>;"></div>
+								<div class="polygon-sat compressed" style="--saturation: <%=d.memSat || 0%>;"></div>
 							</div>
-							<div class="metrics-data metrics-data-disks <%=isValid(diskUtil) ? 'valid-data' : ''%>">
-								<%if (isValid(diskUtil)) {%>
-									<div class="polygon-use compressed" style="--utilization: <%=diskUtil%>;"></div>
-								<%}%>
+							<div class="metrics-data metrics-data-disks valid-data">
+								<div class="polygon-use compressed" style="--utilization: <%=d.diskUtil || 0%>;"></div>
 							</div>
-							<div class="metrics-data metrics-data-network <%=isValid(netUtil) ? 'valid-data' : ''%>">
-								<%if (isValid(netUtil)) {%>
-									<div class="polygon-use compressed" style="--utilization: <%=netUtil%>;"></div>
-								<%}%>
+							<div class="metrics-data metrics-data-network valid-data">
+								<div class="polygon-use compressed" style="--utilization: <%=d.netUtil || 0%>;"></div>
 							</div>
 						</div>
 					</div>
