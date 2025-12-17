@@ -53,16 +53,39 @@
 	
 	const isValid = (value) => {
 		return value !== null && value !== undefined;
+	};
+	
+	// Collect all unique timestamps from all metrics
+	const allTimestamps = new Set([
+		...cpuUtilMap.keys(),
+		...cpuSatMap.keys(),
+		...memUtilMap.keys(),
+		...memSatMap.keys(),
+		...diskUtilMap.keys(),
+		...netUtilMap.keys()
+	]);
+	
+	// Group timestamps by hour (floor to hour boundary)
+	const hourGroups = new Map();
+	for (const ts of allTimestamps) {
+		const hourKey = moment(ts).startOf('hour').valueOf();
+		if (!hourGroups.has(hourKey)) {
+			hourGroups.set(hourKey, []);
+		}
+		hourGroups.get(hourKey).push(ts);
 	}
 	
-	const now = moment();
-	const twelveHoursAgo = moment().subtract(12, 'hours');
-	const endTime = twelveHoursAgo.clone().startOf('hour');
-	let currentTime = now.clone().startOf('hour');
+	// Sort hours descending (most recent first)
+	const sortedHours = [...hourGroups.keys()].sort((a, b) => b - a);
+	
 	let lastDateStr = null;
 	%>
-	<%while (currentTime.isSameOrAfter(endTime)) {%>
-		<%const dateStr = currentTime.format('MMMM D, YYYY')%>
+	<%for (const hourKey of sortedHours) {%>
+		<%
+		const currentTime = moment(hourKey);
+		const dateStr = currentTime.format('MMMM D, YYYY');
+		const minuteTimestamps = hourGroups.get(hourKey).sort((a, b) => b - a);
+		%>
 		
 		<%if (dateStr !== lastDateStr) {%>
 			<%if (lastDateStr !== null) {%>
@@ -78,22 +101,15 @@
 				<small class="font-monospace"><%=currentTime.format('HH:mm')%></small>
 			</div>
 			<div class="metrics-minutes col-9">
-				<%for (let m = 59; m >= 0; m--) {%>
+				<%for (const minuteTimestamp of minuteTimestamps) {%>
 					<%
-					// Calculate timestamp for this minute (floored to minute boundary)
-					const minuteTimestamp = currentTime.clone().minute(m).second(0).millisecond(0).valueOf();
-					
+					const m = moment(minuteTimestamp).minute();
 					const cpuUtil = getMetric(cpuUtilMap, minuteTimestamp);
 					const cpuSat = getMetric(cpuSatMap, minuteTimestamp);
 					const memUtil = getMetric(memUtilMap, minuteTimestamp);
 					const memSat = getMetric(memSatMap, minuteTimestamp);
 					const diskUtil = getMetric(diskUtilMap, minuteTimestamp);
 					const netUtil = getMetric(netUtilMap, minuteTimestamp);
-					
-					// Skip if all metrics are null
-					if (!isValid(cpuUtil) && !isValid(cpuSat) && !isValid(memUtil) && !isValid(memSat) && !isValid(diskUtil) && !isValid(netUtil)) {
-						continue;
-					}
 					%>
 					<div class="metrics-minute" data-minute="<%=m%>">
 						<div class="metrics-graphs">
@@ -124,9 +140,10 @@
 				<%}%>
 			</div>
 		</div>
-		<%currentTime.subtract(1, 'hour')%>
 	<%}%>
-	</div>
+	<%if (lastDateStr !== null) {%>
+		</div>
+	<%}%>
 </div>
 
 <div class="d-flex flex-column justify-content-center align-items-center h-100 d-none">
