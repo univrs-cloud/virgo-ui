@@ -70,7 +70,7 @@ socket.on('terminal:connected', () => {
 		});
 		terminal.loadAddon(new CanvasAddon());
 		terminal.loadAddon(fitAddon);
-		terminal.open(terminalContainer);
+		terminal.open(terminalContainer.querySelector('.wrapper'));
 		terminal.focus();
 		terminal.onData((data) => {
 			socket.emit('terminal:input', data);

@@ -347,9 +347,6 @@ u-toast {
 		.container-fluid {
 			padding-bottom: 1px;
 		}
-		// .card-body {
-		// 	min-height: calc(100vh - 145px);
-		// }
 	}
 	.logs-container,
 	.terminal-container {
@@ -362,15 +359,15 @@ u-toast {
 		background-color: var(--bs-white);
 	}
 	.terminal-container {
-		.terminal {
-			height: calc(100vh - 249px);
+		.wrapper {
+			height: calc(100% - 34px);
 		}
 	}
 	.logs-container {
 		ul {
 			list-style: none;
 			overflow-y: scroll;
-			height: calc(100vh - 249px);
+			height: calc(100vh - 257px);
 			background-color: var(--bs-black);
 			padding: 0;
 			margin: 0;
