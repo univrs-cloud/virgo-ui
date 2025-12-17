@@ -168,11 +168,11 @@
 												<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
 											</span>
 											<ul class="dropdown-menu">
-												<li><a href="#" class="dropdown-item <%=(app.state === 'success' ? 'disabled' : '')%>" data-action="start"><i class="icon-regular icon-play icon-fw me-1"></i>Start</a></li>
+												<li><a href="#" class="dropdown-item <%=(_.includes(['created', 'exited'], container.state) ? '' : 'disabled')%>" data-action="start"><i class="icon-regular icon-play icon-fw me-1"></i>Start</a></li>
 												<li><hr class="dropdown-divider"></li>
-												<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="stop"><i class="icon-regular icon-stop icon-fw me-1"></i>Stop</a></li>
-												<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="restart"><i class="icon-regular icon-arrow-rotate-left icon-fw me-1"></i>Restart</a></li>
-												<li><a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger' : 'disabled')%>" data-action="kill"><i class="icon-regular icon-skull icon-fw me-1"></i>Kill</a></li>
+												<li><a href="#" class="dropdown-item <%=(_.includes(['running', 'paused', 'restarting'], container.state) ? 'text-danger' : 'disabled')%>" data-action="stop"><i class="icon-regular icon-stop icon-fw me-1"></i>Stop</a></li>
+												<li><a href="#" class="dropdown-item <%=(_.includes(['running', 'paused'], container.state) ? 'text-danger' : 'disabled')%>" data-action="restart"><i class="icon-regular icon-arrow-rotate-left icon-fw me-1"></i>Restart</a></li>
+												<li><a href="#" class="dropdown-item <%=(_.includes(['running', 'paused', 'restarting'], container.state) ? 'text-danger' : 'disabled')%>" data-action="kill"><i class="icon-regular icon-skull icon-fw me-1"></i>Kill</a></li>
 											</ul>
 										</div>
 									</td>
