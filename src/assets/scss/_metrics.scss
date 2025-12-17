@@ -67,6 +67,11 @@ $graphs: cpu, memory, disks, network;
 		}
 	}
 
+	&-events {
+		display: flex;
+		align-items: center;
+	}
+
 	&-minutes {
 		align-self: end;
 	}
@@ -78,6 +83,7 @@ $graphs: cpu, memory, disks, network;
 		display: grid;
 		contain: strict;
 		margin-block: 0;
+		margin-inline: 0.5rem;
 		position: relative;
 		grid-template-areas: 'utilization';
 		grid-template-rows: 1fr;
