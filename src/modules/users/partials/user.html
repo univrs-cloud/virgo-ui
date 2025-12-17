@@ -8,7 +8,7 @@
 			<%}%>
 		</div>
 	</td>
-	<td style="min-width: 223px; max-width: 0;">
+	<td style="min-width: 210px; max-width: 0;">
 		<div class="d-flex align-items-center mb-n1">
 			<div class="text-truncate"><%=user.username%></div>
 			<%if (isSameAsLoggedIn) {%>
@@ -19,7 +19,7 @@
 			<div class="text-truncate"><%=user.email || '&mdash;'%></div>
 		</div>
 	</td>
-	<td class=" d-none d-md-table-cell" style="min-width: 226px; max-width: 0;">
+	<td class="d-none d-md-table-cell" style="min-width: 226px; max-width: 0;">
 		<div class="d-flex">
 			<div class="text-truncate"><%=user.fullname || user.username%></div>
 		</div>
@@ -29,7 +29,7 @@
 			<u-badge color="purple" pill><%=group%></u-badge>
 		<%})%>
 	</td>
-	<td class="text-center text-nowrap">
+	<td class="text-center text-nowrap d-none d-md-table-cell">
 		<%=(_.includes(user.shell, 'nologin') ? '<i class="icon-solid icon-xmark text-gray-500"></i>' : '<i class="icon-solid icon-check text-gray-500"></i>')%>
 	</td>
 	<td class="text-nowrap">
