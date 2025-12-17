@@ -3,6 +3,12 @@
 		<%=service.unit%><br>
 		<small class="text-body-secondary"><%=service.description%></small>
 	</td>
+	<td class="text-end text-nowrap d-none d-md-table-cell">
+		<small class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(service.memory?.usage || 0, { binary: true })%>"><%=service.memory?.percent.toFixed(2)%>%</small>
+		<div class="progress shadow-none" role="progressbar" style="height: 6px;">
+			<div class="progress-bar bg-blue-300" style="width: <%=service.memory?.percent%>%;"></div>
+		</div>
+	</td>
 	<td class="d-none d-md-table-cell"><%=service.unitFileState%></td>
 	<td class="text-nowrap">
 		<u-badge color="<%=(service.state === 'running' ? 'green' : (service.state === 'oneshot' ? 'gray' : 'red'))%>" tint="<%=(service.state === 'running' ? 100 : (service.state === 'oneshot' ? 200 : 100))%>" pill>
