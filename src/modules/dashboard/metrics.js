@@ -11,9 +11,10 @@ const loading = modalBody.querySelector('.loading');
 const container = modalBody.querySelector('.container-fluid');
 let subsciption;
 let poller;
+let toggledRows = []
 
 const enable = (event) => {
-	if (!event.target.classList.contains('enable')) {
+	if (event.target.closest('u-button')?.dataset.action !== 'enable') {
 		return;
 	}
 
@@ -22,12 +23,29 @@ const enable = (event) => {
 };
 
 const disable = (event) => {
-	if (!event.target.classList.contains('disable')) {
+	if (event.target.closest('u-button')?.dataset.action !== 'disable') {
 		return;
 	}
 
 	event.target.loading();
 	metricsService.disable();
+};
+
+const toggleCompression = (event) => {
+	if (!event.target.closest('a')?.classList.contains('metrics-events')) {
+		return;
+	}
+
+	const toggler = event.target.closest('a');
+	const row = { date: toggler.dataset.date , time: toggler.dataset.time };
+	const index = _.findIndex(toggledRows, row);
+	if (index === -1) {
+		toggledRows.push(row);
+	} else {
+		toggledRows.splice(index, 1);
+	}
+	const metrics = metricsService.getMetrics();
+	render({ metrics });
 };
 
 const render = (state) => {
@@ -46,7 +64,7 @@ const render = (state) => {
 
 	morphdom(
 		container,
-		`<div>${graphsTemplate({ grid: metrics.grid, moment, prettyBytes })}</div>`,
+		`<div>${graphsTemplate({ grid: metrics.grid, toggledRows, moment, prettyBytes })}</div>`,
 		{ childrenOnly: true }
 	)
 	container.classList.remove('d-none');
@@ -69,5 +87,6 @@ const restoreModal = (event) => {
 
 modal.addEventListener('show.bs.modal', showModal);
 modal.addEventListener('hidden.bs.modal', restoreModal);
+modal.addEventListener('click', toggleCompression);
 modal.addEventListener('click', enable);
 modal.addEventListener('click', disable);

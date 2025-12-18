@@ -21,12 +21,11 @@ $graphs: cpu, memory, disks, network;
 		background-color: var(--bs-white);
 	}
 
-	&-hour-compressed {
-		--data-min-height: 1px;
+	&-hour {
 		display: flex;
-	}
-	&-hour:not(.metrics-hour-compressed) .metrics-minute {
-		display: flex;
+		&-compressed {
+			--data-min-height: 1px;
+		}
 	}
 	&-hour:not(.metrics-hour-compressed) .metrics-minute,
 	&-hour.metrics-hour-compressed .metrics-minute:last-of-type {
@@ -78,8 +77,10 @@ $graphs: cpu, memory, disks, network;
 
 	&-minute {
 		position: relative;
-		&:hover .metrics-tooltip {
-			display: block;
+		&:hover {
+			.metrics-tooltip {
+				display: block;
+			}
 		}
 	}
 
