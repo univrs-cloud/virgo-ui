@@ -70,6 +70,7 @@
 	<%for (const hourKey of hours) {%>
 		<%const t = moment(hourKey)%>
 		<%const dateStr = t.format('MMMM D, YYYY')%>
+		<%const isCompressed = _.isUndefined(_.find(toggledRows, { date: t.format('YYYY-MM-DD'), time: t.format('HH:mm') }))%>
 		<%if (dateStr !== lastDateStr) {%>
 			<%if (lastDateStr !== null) {%>
 				</div>
@@ -78,10 +79,11 @@
 				<h6><%=dateStr%></h6>
 			<%lastDateStr = dateStr%>
 		<%}%>
-		<div class="metrics-hour metrics-hour-compressed row">
-			<div class="metrics-events col-3">
+		<div class="metrics-hour <%=(isCompressed ? 'metrics-hour-compressed' : '')%> row">
+			<a href="#" class="metrics-events col-3 text-dark text-decoration-none" data-date="<%=t.format('YYYY-MM-DD')%>" data-time="<%=t.format('HH:mm')%>">
+				<i class="icon-solid <%=(isCompressed ? 'icon-angle-right' : 'icon-angle-down')%> icon-fw"></i>
 				<small class="font-monospace"><%=t.format('HH:mm')%></small>
-			</div>
+			</a>
 			<div class="metrics-minutes col-9">
 				<%const maxMinute = (hourKey === currentHourKey) ? currentMinute : 59%>
 				<%for (let m = maxMinute; m >= 0; m--) {%>
@@ -126,5 +128,5 @@
 
 <div class="d-flex flex-column justify-content-center align-items-center h-100 d-none">
 	<p class="text-center">Metrics collection is currently enabled.<br>If disabled, you won't be able to monitor system health or track performance metrics.</p>
-	<u-button variant="danger" class="disable" loading-text="Disabling...">Disable metrics</u-button>
+	<u-button variant="danger" data-action="disable" loading-text="Disabling...">Disable metrics</u-button>
 </div>

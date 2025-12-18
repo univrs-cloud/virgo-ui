@@ -16,6 +16,10 @@ class Metrics extends Store {
 		});
 	}
 	
+	getMetrics() {
+		return this.getStateProperty('metrics');
+	}
+
 	fetch() {
 		this.socket.emit('metrics:fetch');
 	}

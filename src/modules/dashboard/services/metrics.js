@@ -6,6 +6,10 @@ const fetch = () => {
 	Metrics.fetch();
 };
 
+const getMetrics = () => {
+	return Metrics.getMetrics();
+};
+
 const enable = () => {
 	Metrics.enable();
 };
@@ -37,6 +41,7 @@ export {
 	subscribe,
 	unsubscribe,
 	fetch,
+	getMetrics,
 	enable,
 	disable
 };
