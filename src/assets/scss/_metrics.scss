@@ -76,6 +76,13 @@ $graphs: cpu, memory, disks, network;
 		align-self: end;
 	}
 
+	&-minute {
+		position: relative;
+		&:hover .metrics-tooltip {
+			display: block;
+		}
+	}
+
 	&-data {
 		--gradient-fragment: var(--color) 80%, var(--color-extreme) 90%;
 		--gradient: linear-gradient(to right, var(--gradient-fragment));
@@ -169,6 +176,32 @@ $graphs: cpu, memory, disks, network;
 				--color: var(--#{$graph}-color);
 				--color-extreme: var(--#{$graph}-color-extreme);
 			}
+		}
+	}
+
+	&-tooltip {
+		z-index: 1;
+		position: absolute;
+		top: 100%;
+		left: 50%;
+		display: none;
+		pointer-events: none;
+		transform: translateX(-50%);
+		background-color: var(--bs-body-bg);
+		border: 1px solid var(--bs-border-color);
+		border-radius: var(--bs-border-radius);
+		padding: 0.5rem 0.75rem;
+		box-shadow: var(--bs-box-shadow);
+		white-space: nowrap;
+		font-size: 0.8125rem;
+		margin-top: 1rem;
+		&-time {
+			font-weight: 600;
+			margin-bottom: 0.25rem;
+		}
+		&-row {
+			line-height: 1.4;
+			color: var(--bs-body-color);
 		}
 	}
 }

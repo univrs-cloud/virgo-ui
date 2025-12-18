@@ -46,12 +46,19 @@
 			hours.push(hourKey);
 		}
 		data[hourKey][m] = {
+			ts: ts,
 			cpuUtil: grid.cpuUtil[i][1]?.normalized || 0,
+			cpuRaw: grid.cpuUtil[i][1]?.raw || {},
 			cpuSat: grid.cpuSat?.[i]?.[1]?.normalized || 0,
+			cpuSatRaw: grid.cpuSat?.[i]?.[1]?.raw || 0,
 			memUtil: grid.memUtil?.[i]?.[1]?.normalized || 0,
+			memRaw: grid.memUtil?.[i]?.[1]?.raw || {},
 			memSat: grid.memSat?.[i]?.[1]?.normalized || 0,
+			memSatRaw: grid.memSat?.[i]?.[1]?.raw || 0,
 			diskUtil: grid.diskUtil?.[i]?.[1]?.normalized || 0,
-			netUtil: grid.netUtil?.[i]?.[1]?.normalized || 0
+			diskRaw: grid.diskUtil?.[i]?.[1]?.raw || 0,
+			netUtil: grid.netUtil?.[i]?.[1]?.normalized || 0,
+			netRaw: grid.netUtil?.[i]?.[1]?.raw || 0
 		};
 	}
 	hours.reverse();
@@ -96,6 +103,17 @@
 								<div class="polygon-use compressed" style="--utilization: <%=d.netUtil || 0%>;"></div>
 							</div>
 						</div>
+						<%if (d.ts) {%>
+							<div class="metrics-tooltip">
+								<div class="metrics-tooltip-time"><%=moment(d.ts).format('HH:mm')%></div>
+								<div class="metrics-tooltip-row">CPU usage: nice: <%=Math.round((d.cpuRaw.nice || 0) * 100)%>%, user: <%=Math.round((d.cpuRaw.user || 0) * 100)%>%, sys: <%=Math.round((d.cpuRaw.sys || 0) * 100)%>%</div>
+								<div class="metrics-tooltip-row">Load: <%=typeof d.cpuSatRaw === 'number' ? d.cpuSatRaw.toFixed(2) : 0%></div>
+								<div class="metrics-tooltip-row">Memory usage: <%=d.memRaw.used ? prettyBytes(d.memRaw.used, { binary: true }) : 'N/A'%> / <%=d.memRaw.total ? prettyBytes(d.memRaw.total, { binary: true }) : 'N/A'%></div>
+								<div class="metrics-tooltip-row">Swap out: <%=d.memSatRaw || 0%> pages</div>
+								<div class="metrics-tooltip-row">Disk I/O: <%=d.diskRaw ? prettyBytes(d.diskRaw, { binary: true }) + '/s' : 'N/A'%></div>
+								<div class="metrics-tooltip-row">Network I/O: <%=d.netRaw ? prettyBytes(d.netRaw, { binary: true }) + '/s' : 'N/A'%></div>
+							</div>
+						<%}%>
 					</div>
 				<%}%>
 			</div>
