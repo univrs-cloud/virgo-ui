@@ -1,6 +1,5 @@
 import * as appService from 'modules/apps/services/app';
 import { Terminal } from '@xterm/xterm';
-import { CanvasAddon } from '@xterm/addon-canvas';
 import { FitAddon } from '@xterm/addon-fit';
 
 const socket = appService.getSocket();
@@ -68,7 +67,6 @@ socket.on('terminal:connected', () => {
 			cursorStyle: 'bar',
 			allowTransparency: true
 		});
-		terminal.loadAddon(new CanvasAddon());
 		terminal.loadAddon(fitAddon);
 		terminal.open(terminalContainer.querySelector('.wrapper'));
 		terminal.focus();
