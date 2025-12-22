@@ -330,9 +330,21 @@ u-toast {
 	}
 }
 #apps,
-#bookmarks {
-	.card-image {
-		width: 50px;
+#bookmarks,
+#users,
+#storage {
+	.row-image {
+		display: flex;
+		justify-content: center;
+		width: 2rem;
+		img {
+			width: 2rem;
+			min-height: 30px;
+			max-height: 30px;
+		}
+		.icon-light {
+			font-size: 1.24em;
+		}
 	}
 }
 #storage {
