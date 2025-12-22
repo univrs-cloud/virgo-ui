@@ -7,8 +7,8 @@ const userTemplate = _.template(userPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
 const module = document.querySelector('#users');
 const loading = module.querySelector('.loading');
-const searchInput = module.querySelector('.search');
 const container = module.querySelector('.container-fluid');
+const searchInput = module.querySelector('.search');
 const table = container.querySelector('.table');
 let searchTimer;
 let searchValue = '';
@@ -39,12 +39,6 @@ const order = (event) => {
 	const users = userService.getUsers();
 	render({ users });
 };
-
-// return _.orderBy(
-// 	users,
-// 	[(entity) => { return entity.fullname.toLowerCase(); }],
-// 	['asc']
-// );
 
 const render = (state) => {
 	if (_.isNull(state.users)) {
