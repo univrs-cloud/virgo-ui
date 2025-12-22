@@ -36,6 +36,7 @@ const toggleCompression = (event) => {
 		return;
 	}
 
+	event.preventDefault();
 	const toggler = event.target.closest('a');
 	const row = { date: toggler.dataset.date , time: toggler.dataset.time };
 	const index = _.findIndex(toggledRows, row);
