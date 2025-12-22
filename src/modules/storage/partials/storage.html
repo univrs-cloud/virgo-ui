@@ -1,85 +1,89 @@
-<div class="col col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 item">
-	<div class="pool card rounded-4 border-0 h-100 mb-0">
-		<div class="card-body ps-0 py-1">
-			<div class="row g-0 align-items-center">
-				<div class="card-image card-spacer col-auto p-2">
-					<%if (pool.name === 'system') {%>
-						<i class="icon-light icon-sd-card"></i>
-					<%} else {%>
-						<i class="icon-light icon-database"></i>
-					<%}%>
-				</div>
-				<div class="col flex-grow-1 text-truncate">
-					<%if (pool.name === 'system') {%>
-						VirgoOS
-					<% } else if (pool.name === 'messier') {%>
-						Data
-					<%} else {%>
-						<%=pool.name%>
-					<%}%>
-				</div>
-			</div>
-			<div class="row g-0 mt-n2 mb-2">
-				<div class="card-spacer col-auto p-2"></div>
-				<div class="col flex-grow-1 text-secondary">
-					<dl class="m-0"></dl>
-						<dt class="fw-lighter"><small>Health</small></dt>
-						<dd>
-							<u-badge color="<%=(pool.properties.health.value.toLowerCase() === 'online' ? 'green' : 'red')%>" pill><%=pool.properties.health.value%></u-badge>
-						</dd>
-						<dt class="fw-lighter"><small>Capacity</small></dt>
-						<dd><%=prettyBytes(pool.properties.size.value || 0, { binary: true })%></dd>
-						<div class="d-flex justify-content-between">
-							<div>
-								<dt class="fw-lighter"><small>Used</small></dt>
-								<dd class="m-0"><%=prettyBytes(pool.properties.allocated.value || 0, { binary: true })%></dd>
-							</div>
-							<div class="text-end">
-								<dt class="fw-lighter"><small>Free</small></dt>
-								<dd class="m-0"><%=prettyBytes(pool.properties.free.value || 0, { binary: true })%></dd>
-							</div>
-						</div>
-						<%if (pool.name === 'system') {%>
-							<%const progressColorData = (pool.properties.capacity.value >= 80 ? (pool.properties.capacity.value >= 90 ? 'bg-red-300' : 'bg-orange-300') : 'bg-blue-300')%>
-							<div class="progress mt-1" role="progressbar">
-								<div class="progress-bar <%=progressColorData%>" style="width: <%=(pool.properties.capacity.value)%>%;"></div>
-							</div>
-						<%} else {%>
-							<%const progressColorData = (pool.properties.capacity.value >= 80 ? (pool.properties.capacity.value >= 90 ? 'bg-red-300' : 'bg-orange-300') : 'bg-blue-300')%>
-							<%const progressColorSnapshots = (pool.properties.capacity.value >= 80 ? (pool.properties.capacity.value >= 90 ? 'bg-red-200' : 'bg-orange-200') : 'bg-indigo-100')%>
-							<div class="progress" role="progressbar">
-								<div class="progress-bar <%=progressColorData%>" style="width: <%=pool.properties.usedbydatasets.percent%>%;"></div>
-								<div class="progress-bar <%=progressColorSnapshots%>" style="width: <%=pool.properties.usedbysnapshots.percent%>%;"></div>
-							</div>
-						<%}%>
-						<div class="d-flex justify-content-between lh-1 text-body-tertiary mt-1 mb-2">
-							<small class="text-body-tertiary"><%=pool.properties.capacity.value?.toFixed(0)%>%</small>
-							<small class="text-body-tertiary"><%=(100 - pool.properties.capacity.value)?.toFixed(0)%>%</small>
-						</div>
-						<%if (pool.name !== 'system') {%>
-							<div class="mt-n1 mb-2">
-								<div class="d-flex align-items-center">
-									<i class="icon icon-solid icon-circle-small icon-fw" style="color: var(--bs-blue-300);"></i>
-									<small>Data: <%=prettyBytes(pool.properties.usedbydatasets.value || 0, { binary: true })%> &middot; <%=pool.properties.usedbydatasets.percent.toFixed(0)%>%</small>
-								</div>
-								<div class="d-flex align-items-center">
-									<i class="icon icon-solid icon-circle-small icon-fw" style="color: var(--bs-indigo-100);"></i>
-									<small>Snapshots: <%=prettyBytes(pool.properties.usedbysnapshots.value || 0, { binary: true })%> &middot; <%=pool.properties.usedbysnapshots.percent.toFixed(0)%>%</small>
-								</div>
-							</div>
-						<%}%>
-						<dt class="fw-lighter d-none"><small>Drives</small></dt>
-						<%_.each(drives, (drive) => {%>
-							<dd class="d-flex align-items-center m-0 d-none">
-								<i class="icon-regular icon-hard-drive icon-fw me-1 text-gray-500"></i>
-								<span><%=_.last(drive.name.split('/'))%> &middot; <%=drive.temperature%> °C</span>
-							</dd>
-						<%})%>
-					</dl>
-				</div>
-			</div>
+<tr class="pool" data-id="<%=pool.poolGuid%>">
+	<td class="d-none d-md-table-cell p-0">
+		<div class="card-image px-2">
+			<%if (pool.name === 'system') {%>
+				<i class="icon-light icon-sd-card"></i>
+			<%} else {%>
+				<i class="icon-light icon-database"></i>
+			<%}%>
 		</div>
-		<%if (pool?.type?.toLowerCase() === 'pool' && pool?.scanStats) {%>
+	</td>
+	<td style="min-width: 210px; max-width: 0;">
+		<div class="d-flex align-items-center mb-n1">
+			<div class="text-truncate">
+				<%if (pool.name === 'system') {%>
+					VirgoOS
+				<%} else {%>
+					<%=pool.name%>
+				<%}%>
+			</div>
+			<%const rootVdev = pool.vdevs?.[pool.name]%>
+			<%const childVdevs = (rootVdev?.vdevs ? Object.values(rootVdev.vdevs) : [])%>
+			<%const poolConfig = (childVdevs.length > 0 ? childVdevs[0].vdevType : null)%>
+			<%if (poolConfig && poolConfig !== 'disk') {%>
+				<u-badge class="ms-2" pill><small><%=poolConfig%></small></u-badge>
+			<%}%>
+		</div>
+		<div class="d-flex">
+			<div class="text-truncate"><small class="text-body-tertiary"><%=(pool.name === 'system' ? 'system' : 'data')%></small></div>
+		</div>
+	</td>
+	<td class="text-end text-nowrap d-none d-md-table-cell">
+		<small class="fw-light"><%=prettyBytes(pool.properties.size.value || 0, { binary: true })%></small>
+	</td>
+	<td class="text-end text-nowrap d-none d-md-table-cell">
+		<%const progressColorData = (pool.properties.capacity.value >= 80 ? (pool.properties.capacity.value >= 90 ? 'bg-red-300' : 'bg-orange-300') : 'bg-blue-300')%>
+		<small class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(pool.properties.allocated.value || 0, { binary: true })%>"><%=pool.properties.capacity.value.toFixed(2)%>%</small>
+		<div class="progress shadow-none" role="progressbar" style="height: 6px;">
+			<div class="progress-bar <%=progressColorData%>" style="width: <%=pool.properties.capacity.value%>%;"></div>
+		</div>
+	</td>
+	<td class="<%=(pool.type?.toLowerCase() === 'pool' && pool.scanStats?.state.toLowerCase() === 'scanning' ? 'text-end' : 'text-center')%> text-nowrap d-none d-md-table-cell">
+		<%if (pool.type?.toLowerCase() === 'pool' && pool.scanStats) {%>
+			<%if (pool.scanStats?.state.toLowerCase() === 'finished') {%>
+				<%const duration = moment.duration(moment.unix(pool.scanStats.endTime).diff(moment.unix(pool.scanStats.startTime))).humanize()%>
+				<%const tip = `Completed ${moment.unix(pool.scanStats.endTime).fromNow()}.<br>Took ${duration} to scan <strong>${prettyBytes(pool.scanStats.toExamine || 0, { binary: true })}</strong>.<br>Repaired <strong>${prettyBytes(pool.scanStats.processed || 0, { binary: true })}</strong>, ${pool.scanStats.errors || 0} errors.`%>
+				<%if (pool.scanStats.errors > 0) {%>
+					<i class="icon-solid icon-triangle-exclamation icon-fw text-red-300" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
+				<%} else {%>
+					<i class="icon-solid icon-circle-check icon-fw text-green-300" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
+				<%}%>
+			<%}%>
+			<%if (pool.scanStats?.state.toLowerCase() === 'scanning') {%>
+				<%const isPaused = (pool.scanStats.scrubPause > 0)%>
+				<%const total = prettyBytes(pool.scanStats.toExamine || 0, { binary: true })%>
+				<%const scanned = `${prettyBytes(pool.scanStats.examined || 0, { binary: true })} / ${total}`%>
+				<%const issued = `${prettyBytes(pool.scanStats.issued || 0, { binary: true })} / ${total}`%>
+				<%const tip = (isPaused ? `<strong>Paused</strong> since ${moment.unix(pool.scanStats.scrubPause).fromNow()}.<br>` : ``) + `Started ${moment.unix(pool.scanStats.startTime).fromNow()}.<br>Scanned ${scanned}.<br>Issued ${issued}.<br>Repaired <strong>${prettyBytes(pool.scanStats.processed || 0, { binary: true })}</strong>, ${pool.scanStats.errors || 0} errors.`%>
+				<%const progress = (pool.scanStats.toExamine === 0 ? 0 : (pool.scanStats.issued / pool.scanStats.toExamine) * 100)%>
+				<small class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"><%=progress.toFixed(2)%>%</small>
+				<div class="progress shadow-none" role="progressbar" style="height: 6px;">
+					<div class="progress-bar bg-cyan-300 <%=(!isPaused ? 'progress-bar-striped progress-bar-animated' : '')%>" style="width: <%=(progress)%>%;"></div>
+				</div>
+			<%}%>
+		<%} else {%>
+			&mdash;
+		<%}%>
+	</td>
+	<td>
+		<u-badge color="<%=(pool.properties.health.value.toLowerCase() === 'online' ? 'green' : 'red')%>" pill><small><%=pool.properties.health.value%></small></u-badge>
+	</td>
+	<td>
+		<div class="dropdown">
+			<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm">
+				<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
+			</span>
+			<ul class="dropdown-menu">
+				<li><button type="button" class="dropdown-item disabled">No actions</button></li>
+			</ul>
+		</div>
+	</td>
+</tr>
+
+<!--
+<div class="col col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 item d-none">
+	<div class="pool card rounded-4 border-0 h-100 mb-0">
+		<%if (pool.type?.toLowerCase() === 'pool' && pool.scanStats) {%>
 			<div class="card-footer d-flex bg-gray-100 rounded-4 text-body-secondary px-5 py-1">
 				<dl class="m-0">
 					<%if (pool.scanStats?.state.toLowerCase() !== 'finished') {%>
@@ -106,12 +110,10 @@
 								<small class="fw-light"><%=progress?.toFixed(0)%>%</small>
 							</div>
 						</div>
-					<%} else {%>
-						<dt class="fw-lighter"><small>Data integrity</small></dt>
-						<dd>Last data integrity check repaired <strong><%=prettyBytes(pool.scanStats.processed || 0, { binary: true })%></strong> in <%=moment.duration(moment.unix(pool.scanStats.endTime).diff(moment.unix(pool.scanStats.startTime))).humanize()%> with <strong><%=pool.scanStats.errors%> errors</strong> on <%=moment.utc(pool.scanStats.endTime, 'X').toString()%></dd>
 					<%}%>
 				</dl>
 			</div>
 		<%}%>
 	</div>
 </div>
+-->

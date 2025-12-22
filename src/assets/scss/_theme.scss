@@ -43,7 +43,7 @@ u-toast {
 }
 
 .tooltip {
-	z-index: 99999;
+	--bs-tooltip-zindex: 99999;
 }
 
 .modal {
@@ -229,9 +229,72 @@ u-toast {
 		}
 	}
 }
+#system-update {
+	ul {
+		list-style: none;
+		overflow-y: scroll;
+		height: calc(100vh - 270px);
+		padding: 0 map-get($spacers, 3) 0 0;
+		margin: 0 map-get($spacers, 3) * -1 0 0;
+	}
+}
+#update {
+	ul {
+		list-style: none;
+		overflow-y: scroll;
+		height: calc(100vh - 238px);
+		padding: 0 map-get($spacers, 3) 0 0;
+		margin: 0 map-get($spacers, 3) * -1 0 0;
+	}
+}
+#resource-usage {
+	.badge{
+		--bs-badge-padding-y: 0.55em;
+		--bs-badge-padding-y: 0.25em;
+	}
+	small.fw-light {
+		font-size: 0.775em;
+	}
+}
+#metrics {
+	.modal-body {
+		height: 100vh;
+	}
+}
+#dashboard {
+	.group {
+		border-radius: var(--bs-border-radius-xl);
+		padding: map-get($spacers, 2) 0 map-get($spacers, 1);
+		.order {
+			display: flex;
+			align-items: center;
+			text-decoration: none;
+			margin-left: auto;
+		}
+		.card {
+			transition: box-shadow 0.3s ease-in-out;
+			&:hover {
+				background: var(--bs-light) !important;
+				box-shadow: var(--bs-box-shadow-sm);
+			}
+		}
+	}
+	.dragging {
+		background: var(--bs-purple-100) !important;
+		border-radius: var(--bs-border-radius-xl) !important;
+		padding-left: map-get($spacers, 2);
+		padding-right: map-get($spacers, 2);
+		margin: 0 map-get($spacers, 2) * -1;
+	}
+}
+#resources-monitor {
+	padding-top: map-get($spacers, 2);
+	padding-bottom: map-get($spacers, 1);
+}
 #apps,
 #bookmarks,
 #users,
+#storage,
 #system-services {
 	.overflow-y-scroll {
 		height: calc(100vh - 242px);
@@ -266,68 +329,19 @@ u-toast {
 		}
 	}
 }
-#system-update {
-	ul {
-		list-style: none;
-		overflow-y: scroll;
-		height: calc(100vh - 270px);
-		padding: 0 map-get($spacers, 3) 0 0;
-		margin: 0 map-get($spacers, 3) * -1 0 0;
-	}
-}
-#update {
-	ul {
-		list-style: none;
-		overflow-y: scroll;
-		height: calc(100vh - 238px);
-		padding: 0 map-get($spacers, 3) 0 0;
-		margin: 0 map-get($spacers, 3) * -1 0 0;
-	}
-}
-#resource-usage {
-	.badge{
-		--bs-badge-padding-y: 0.55em;
-		--bs-badge-padding-y: 0.25em;
-	}
-	small.fw-light {
-		font-size: 0.775em;
-	}
-}
-#dashboard {
-	.group {
-		border-radius: var(--bs-border-radius-xl);
-		padding: map-get($spacers, 2) 0 map-get($spacers, 1);
-		.order {
-			display: flex;
-			align-items: center;
-			text-decoration: none;
-			margin-left: auto;
-		}
-		.card {
-			transition: box-shadow 0.3s ease-in-out;
-			&:hover {
-				background: var(--bs-light) !important;
-				box-shadow: var(--bs-box-shadow-sm);
-			}
-		}
-	}
-	.dragging {
-		background: var(--bs-purple-100) !important;
-		border-radius: var(--bs-border-radius-xl) !important;
-		padding-left: map-get($spacers, 2);
-		padding-right: map-get($spacers, 2);
-		margin: 0 map-get($spacers, 2) * -1;
-	}
-}
-#resources-monitor {
-	padding-top: map-get($spacers, 2);
-	padding-bottom: map-get($spacers, 1);
-}
 #apps,
 #bookmarks {
 	.card-image {
 		width: 50px;
 	}
+}
+#storage {
+	.overflow-y-scroll {
+		height: calc(100vh - 242px);
+	}
+}
+.storage-scan-progress.tooltip {
+	--bs-tooltip-max-width: 400px;
 }
 #apps {
 	&:has(.details .app) > .row > .container-fluid > .card {
@@ -385,11 +399,6 @@ u-toast {
 	}
 }
 #app-center {
-	.modal-body {
-		height: 100vh;
-	}
-}
-#metrics {
 	.modal-body {
 		height: 100vh;
 	}

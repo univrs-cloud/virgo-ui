@@ -1,6 +1,6 @@
 <tr class="user" data-uid="<%=user.uid%>">
 	<td class="d-none d-md-table-cell p-0">
-		<div class="card-image p-2">
+		<div class="card-image px-2">
 			<%if (user.isOwner) {%>
 				<i class="icon-light icon-user-crown"></i>
 			<%} else {%>
@@ -16,7 +16,7 @@
 			<%}%>
 		</div>
 		<div class="d-flex">
-			<div class="text-truncate"><%=user.email || '&mdash;'%></div>
+			<div class="text-truncate"><small class="text-body-tertiary"><%=user.email || '&mdash;'%></small></div>
 		</div>
 	</td>
 	<td class="d-none d-md-table-cell" style="min-width: 226px; max-width: 0;">

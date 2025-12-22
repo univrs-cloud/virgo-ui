@@ -9,10 +9,10 @@ document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTe
 const module = document.querySelector('#system-services');
 const loading = module.querySelector('.loading');
 const syncButton = module.querySelector('button[data-action="sync"]');
+const container = module.querySelector('.container-fluid');
 const searchInput = module.querySelector('.search');
 const filterStateSelect = module.querySelectorAll('.filter-state');
 const filterUnitFileStateSelect = module.querySelectorAll('.filter-unit-file-state');
-const container = module.querySelector('.container-fluid');
 const table = container.querySelector('.table');
 let searchTimer;
 let searchValue = '';
