@@ -164,18 +164,26 @@
 										<u-badge color="<%=(container.state === 'running' ? 'green' : 'red')%>" pill><%=container.state%></u-badge>
 									</td>
 									<td class="text-center px-0">
-										<div class="dropdown">
-											<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm">
-												<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
-											</span>
-											<ul class="dropdown-menu">
-												<li><a href="#" class="dropdown-item <%=(_.includes(['created', 'exited'], container.state) ? '' : 'disabled')%>" data-action="start"><i class="icon-regular icon-play icon-fw me-1"></i>Start</a></li>
-												<li><hr class="dropdown-divider"></li>
-												<li><a href="#" class="dropdown-item <%=(_.includes(['running', 'paused', 'restarting'], container.state) ? 'text-danger' : 'disabled')%>" data-action="stop"><i class="icon-regular icon-stop icon-fw me-1"></i>Stop</a></li>
-												<li><a href="#" class="dropdown-item <%=(_.includes(['running', 'paused'], container.state) ? 'text-danger' : 'disabled')%>" data-action="restart"><i class="icon-regular icon-arrow-rotate-left icon-fw me-1"></i>Restart</a></li>
-												<li><a href="#" class="dropdown-item <%=(_.includes(['running', 'paused', 'restarting'], container.state) ? 'text-danger' : 'disabled')%>" data-action="kill"><i class="icon-regular icon-skull icon-fw me-1"></i>Kill</a></li>
-											</ul>
-										</div>
+										<%if (!_.isEmpty(jobs)) {%>
+											<i class="icon-solid icon-gear icon-fw icon-spin"></i>
+										<%} else {%>
+											<div class="dropdown">
+												<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm">
+													<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
+												</span>
+												<ul class="dropdown-menu">
+													<%if (app.canBeRemoved || _.includes(['created', 'exited'], container.state)) {%>
+														<li><a href="#" class="dropdown-item <%=(_.includes(['created', 'exited'], container.state) ? '' : 'disabled')%>" data-action="start"><i class="icon-regular icon-play icon-fw me-1"></i>Start</a></li>
+														<li><hr class="dropdown-divider"></li>
+													<%}%>
+													<li><a href="#" class="dropdown-item <%=(_.includes(['running', 'paused'], container.state) ? '' : 'disabled')%>" data-action="restart"><i class="icon-regular icon-arrow-rotate-left icon-fw me-1"></i>Restart</a></li>
+													<%if (app.canBeRemoved) {%>
+														<li><a href="#" class="dropdown-item <%=(_.includes(['running', 'paused', 'restarting'], container.state) ? 'text-danger' : 'disabled')%>" data-action="stop"><i class="icon-regular icon-stop icon-fw me-1"></i>Stop</a></li>
+														<li><a href="#" class="dropdown-item <%=(_.includes(['running', 'paused', 'restarting'], container.state) ? 'text-danger' : 'disabled')%>" data-action="kill"><i class="icon-regular icon-skull icon-fw me-1"></i>Kill</a></li>
+													<%}%>
+												</ul>
+											</div>
+										<%}%>
 									</td>
 								</tr>
 							<%})%>
