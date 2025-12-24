@@ -1,13 +1,13 @@
-import modulePartial from 'modules/system_update/partials/index.html';
-import emptyPartial from 'modules/system_update/partials/empty.html';
-import updatesPartial from 'modules/system_update/partials/updates.html';
-import * as softwareService from 'modules/system_update/services/software';
+import modulePartial from 'modules/system_updates/partials/index.html';
+import emptyPartial from 'modules/system_updates/partials/empty.html';
+import updatesPartial from 'modules/system_updates/partials/updates.html';
+import * as softwareService from 'modules/system_updates/services/software';
 
 const moduleTemplate = _.template(modulePartial);
 const emptyTemplate = _.template(emptyPartial);
 const updatesTemplate = _.template(updatesPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
-const module = document.querySelector('#system-update');
+const module = document.querySelector('#system-updates');
 const loading = module.querySelector('.loading');
 const container = module.querySelector('.container-fluid');
 const row = container.querySelector('.row');

@@ -21,6 +21,10 @@
 		Time machines
 	</a>
 	<div class="nav-title ps-sm-2 mt-2 mt-sm-3"><small>System</small></div>
+	<a href="/system-services" class="nav-item nav-link <%=(active === '/system-services' && 'active')%>">
+		<i class="icon-duotone icon-solid icon-cube icon-fw me-2"></i>
+		Services
+	</a>
 	<a href="/users" class="nav-item nav-link <%=(active === '/users' && 'active')%>">
 		<i class="icon-duotone icon-solid icon-user icon-fw me-2"></i>
 		Users
@@ -33,22 +37,18 @@
 		<i class="icon-duotone icon-solid icon-network-wired icon-fw me-2"></i>
 		Network
 	</a>
-	<a href="/system-services" class="nav-item nav-link <%=(active === '/system-services' && 'active')%>">
-		<i class="icon-duotone icon-solid icon-cube icon-fw me-2"></i>
-		Services
-	</a>
-	<a href="/settings" class="nav-item nav-link <%=(active === '/settings' && 'active')%>">
-		<i class="icon-duotone icon-solid icon-sliders-up icon-fw me-2"></i>
-		Settings
-	</a>
-	<a href="/system-update" class="nav-item nav-link d-flex align-items-center <%=(active === '/system-update' && 'active')%>">
+	<a href="/system-updates" class="nav-item nav-link d-flex align-items-center <%=(active === '/system-updates' && 'active')%>">
 		<span>
 			<i class="icon-duotone icon-solid icon-download icon-fw me-2"></i>
-			System update
+			Updates
 		</span>
 		<%if (typeof updates !== 'undefined' && !_.isEmpty(updates)) {%>
 			<u-badge color="white" class="ms-md-auto ms-auto" pill><small><%=_.size(updates)%></small></u-badge>
 		<%}%>
+	</a>
+	<a href="/settings" class="nav-item nav-link <%=(active === '/settings' && 'active')%>">
+		<i class="icon-duotone icon-solid icon-sliders-up icon-fw me-2"></i>
+		Settings
 	</a>
 	<a href="/about" class="nav-item nav-link <%=(active === '/about' && 'active')%>">
 		<i class="icon-duotone icon-solid icon-fingerprint icon-fw me-2"></i>
