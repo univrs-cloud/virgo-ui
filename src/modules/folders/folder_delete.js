@@ -9,16 +9,15 @@ const deleteFolder = async (event) => {
 	
 	event.preventDefault();
 	const button = event.target.closest('a');
-	const folder = button.closest('.folder');
-	if (!await confirm(`Are you sure you want to delete the folder ${folder.dataset.id}?`, { buttons: [{ text: 'Delete', class: 'btn-danger' }] })) {
+	const row = button.closest('.folder');
+	if (!await confirm(`Are you sure you want to delete the folder ${row.dataset.id}?`, { buttons: [{ text: 'Delete', class: 'btn-danger' }] })) {
 		return;
 	}
 
 	// let config = {
-	// 	id: folder.dataset.id,
-	// 	action: button.dataset.action
+	// 	id: row.dataset.id
 	// };
-	// folderService.performAction(config);	
+	// folderService.deleteFolder(config);	
 };
 
 module.addEventListener('click', deleteFolder);

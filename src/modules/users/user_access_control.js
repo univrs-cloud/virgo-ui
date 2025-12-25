@@ -9,8 +9,8 @@ const lockUser = async (event) => {
 
 	event.preventDefault();
 	const button = event.target;
-	const card = button.closest('.user');
-	const user = _.find(userService.getUsers(), { uid: Number(card.dataset.uid) });
+	const row = button.closest('.user');
+	const user = _.find(userService.getUsers(), { uid: Number(row.dataset.uid) });
 	
 	if (!await confirm(`Are you sure you want to lock the user ${user.username}?`, { buttons: [{ text: 'Lock', class: 'btn-danger' }] })) {
 		return;
@@ -29,8 +29,8 @@ const unlockUser = async (event) => {
 
 	event.preventDefault();
 	const button = event.target;
-	const card = button.closest('.user');
-	const user = _.find(userService.getUsers(), { uid: Number(card.dataset.uid) });
+	const row = button.closest('.user');
+	const user = _.find(userService.getUsers(), { uid: Number(row.dataset.uid) });
 	
 	if (!await confirm(`Are you sure you want to unlock the user ${user.username}?`, { buttons: [{ text: 'Unlock' }] })) {
 		return;

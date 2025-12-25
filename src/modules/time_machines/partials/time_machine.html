@@ -1,77 +1,52 @@
-<div class="col col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 item">
-	<div class="time-machine card rounded-4 border-0 h-100 mb-0">
-		<div class="card-body ps-0 py-1">
-			<div class="row g-0 align-items-center">
-				<div class="card-image card-spacer col-auto p-2">
-					<i class="icon-light icon-clock-rotate-left" data-bs-toggle="tooltip" data-bs-original-title="<%=(timeMachine.isPrivate ? 'Password protected' : 'Public')%>"></i>
-				</div>
-				<div class="col flex-grow-1 text-truncate">
-					<%=timeMachine.comment%>
-				</div>
-				<div class="col-auto">
-					<div class="dropdown me-n1">
-						<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm">
-							<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
-						</span>
-						<ul class="dropdown-menu">
-							<li><a href="#" class="dropdown-item"><i class="icon-regular icon-pen icon-fw me-1"></i>Edit</a></li>
-							<li><hr class="dropdown-divider"></li>
-							<li><a href="#" class="dropdown-item text-danger" data-action="delete"><i class="icon-regular icon-times icon-fw me-1"></i>Delete</a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-			<div class="row g-0 mt-n2 mb-2">
-				<div class="card-spacer col-auto p-2"></div>
-				<div class="col flex-grow-1 text-secondary">
-					<dl class="m-0">
-						<dt class="fw-lighter"><small>Access</small></dt>
-						<dd>
-							<%if (timeMachine.validUsers) {%>
-								<%=_.join(timeMachine.validUsers, ', ')%>
-							<%} else {%>
-								Guest
-							<%}%>
-						</dd>
-						<dt class="fw-lighter"><small>Capacity</small></dt>
-						<dd><%=prettyBytes(timeMachine.size || 0, { binary: true })%></dd>
-						<div class="d-flex justify-content-between">
-							<div>
-								<dt class="fw-lighter"><small>Used</small></dt>
-								<dd class="m-0"><%=prettyBytes(timeMachine.alloc || 0, { binary: true })%></dd>
-							</div>
-							<div class="text-end">
-								<dt class="fw-lighter"><small>Free</small></dt>
-								<dd class="m-0"><%=prettyBytes(timeMachine.free || 0, { binary: true })%></dd>
-							</div>
-						</div>
-						<div class="progress mt-1" role="progressbar">
-							<div class="progress-bar bg-blue-300" style="width: <%=(timeMachine.cap)%>%;"></div>
-						</div>
-						<div class="d-flex justify-content-between lh-1 text-body-tertiary mt-1 mb-2">
-							<small class="text-body-tertiary"><%=timeMachine.cap?.toFixed(0)%>%</small>
-							<small class="text-body-tertiary"><%=(100 - timeMachine.cap)?.toFixed(0)%>%</small>
-						</div>
-					</dl>
-				</div>
-			</div>
+<tr class="time-machine" data-id="<%=timeMachine.name%>">
+	<td class="d-none d-md-table-cell" style="width: 1px;">
+		<div class="row-image">
+			<i class="icon-light icon-clock-rotate-left" data-bs-toggle="tooltip" data-bs-original-title="<%=(timeMachine.isPrivate ? 'Password protected' : 'Public')%>"></i>
 		</div>
-		<div class="card-footer d-flex bg-gray-100 rounded-4 text-body-secondary px-5 py-1">
-			<dl class="m-0">
-				<dt class="fw-lighter d-flex align-items-center">
-					<small>Open with</small>
-					<i class="icon-solid icon-circle-info ms-1 text-gray-500" data-bs-toggle="tooltip" data-bs-original-title="Click to copy the address. In Finder, press ⌘K and paste it to connect. This lets Time Machine use it for backups."></i>
-				</dt>
-				<dd>
-					<div class="d-flex align-items-center">
-						<a href="#" class="link-dark link-underline link-underline-opacity-0 me-2" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="Copy to clipboard">
-							<i class="icon-brands icon-apple icon-fw me-1"></i>
-							Finder + Time Machine
-						</a>
-						<span class="copy d-none">smb://<%=(timeMachine.isPrivate ? `${_.first(timeMachine.validUsers)}@` : '')%><%=networkInterface?.ip4%>/<%=timeMachine.name%></span>
-					</div>
-				</dd>
-			</dl>
+	</td>
+	<td style="min-width: 210px; max-width: 0;">
+		<div class="d-flex align-items-center mb-n1">
+			<div class="text-truncate"><%=timeMachine.comment%></div>
 		</div>
-	</div>
-</div>
+		<div class="d-flex">
+			<div class="text-truncate"><small class="text-body-tertiary"><%=timeMachine.path%></small></div>
+		</div>
+	</td>
+	<td class="text-center">
+		<a href="#" class="link-dark link-underline link-underline-opacity-0" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-original-title="Click to copy the time machine address. In Finder, press ⌘K and paste it to connect. This lets Time Machine use it for backups.">
+			<i class="icon-brands icon-apple icon-fw"></i>
+		</a>
+		<span class="copy d-none">smb://<%=(timeMachine.isPrivate ? `${_.first(timeMachine.validUsers)}@` : '')%><%=networkInterface?.ip4%>/<%=timeMachine.name%></span>
+	</td>
+	<td class="d-none d-md-table-cell">
+		<%if (timeMachine.validUsers) {%>
+			<%_.each(timeMachine.validUsers, (user) => {%>
+				<u-badge color="purple" pill><%=user%></u-badge>
+			<%})%>
+		<%} else {%>
+			<u-badge color="purple" pill>Guest</u-badge>
+		<%}%>
+	</td>
+	<td class="text-end text-nowrap d-none d-md-table-cell">
+		<small class="fw-light"><%=prettyBytes(timeMachine.size || 0, { binary: true })%></small>
+	</td>
+	<td class="text-end text-nowrap d-none d-md-table-cell">
+		<%const progressColorData = (timeMachine.cap >= 80 ? (timeMachine.cap >= 90 ? 'bg-red-300' : 'bg-orange-300') : 'bg-blue-300')%>
+		<small class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(timeMachine.alloc || 0, { binary: true })%>"><%=timeMachine.cap.toFixed(2)%>%</small>
+		<div class="progress shadow-none" role="progressbar" style="height: 6px;">
+			<div class="progress-bar <%=progressColorData%>" style="width: <%=timeMachine.cap%>%;"></div>
+		</div>
+	</td>
+	<td class="text-center px-0">
+		<div class="dropdown">
+			<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm">
+				<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
+			</span>
+			<ul class="dropdown-menu">
+				<li><a href="#" class="dropdown-item"><i class="icon-regular icon-pen icon-fw me-1"></i>Edit</a></li>
+				<li><hr class="dropdown-divider"></li>
+				<li><a href="#" class="dropdown-item text-danger" data-action="delete"><i class="icon-regular icon-times icon-fw me-1"></i>Delete</a></li>
+			</ul>
+		</div>
+	</td>
+</tr>

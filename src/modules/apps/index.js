@@ -78,8 +78,8 @@ const update = (event) => {
 
 	event.preventDefault();
 	const button = event.target;
-	const card = button.closest('.app');
-	const app = _.find(appService.getApps(), { name: card.dataset.name });
+	const row = button.closest('.app');
+	const app = _.find(appService.getApps(), { name: row.dataset.name });
 
 	let config = {
 		name: app.name
@@ -102,8 +102,8 @@ const performAppAction = async (event) => {
 
 	event.preventDefault();
 	const button = event.target;
-	const card = button.closest('.app');
-	const app = _.find(appService.getApps(), { name: card.dataset.name });
+	const row = button.closest('.app');
+	const app = _.find(appService.getApps(), { name: row.dataset.name });
 	
 	const actionMessage = (button.dataset.action === 'uninstall' ? '<br><br>Data will <strong>NOT</strong> be deleted.' : '');
 	if (
@@ -131,8 +131,8 @@ const performServiceAction = async (event) => {
 
 	event.preventDefault();
 	const button = event.target;
-	const card = button.closest('.service');
-	const service = _.find(_.flatMap(appService.getApps(), 'projectContainers'), { id: card.dataset.id });
+	const row = button.closest('.service');
+	const service = _.find(_.flatMap(appService.getApps(), 'projectContainers'), { id: row.dataset.id });
 
 	if (
 		button.classList.contains('text-danger') &&
