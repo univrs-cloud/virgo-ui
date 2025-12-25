@@ -68,7 +68,7 @@
 	<td>
 		<u-badge color="<%=(pool.properties.health.value.toLowerCase() === 'online' ? 'green' : 'red')%>" pill><small><%=pool.properties.health.value%></small></u-badge>
 	</td>
-	<td>
+	<td class="text-center px-0">
 		<div class="dropdown">
 			<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm">
 				<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
@@ -79,41 +79,3 @@
 		</div>
 	</td>
 </tr>
-
-<!--
-<div class="col col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 item d-none">
-	<div class="pool card rounded-4 border-0 h-100 mb-0">
-		<%if (pool.type?.toLowerCase() === 'pool' && pool.scanStats) {%>
-			<div class="card-footer d-flex bg-gray-100 rounded-4 text-body-secondary px-5 py-1">
-				<dl class="m-0">
-					<%if (pool.scanStats?.state.toLowerCase() !== 'finished') {%>
-						<%const progress = (pool.scanStats.toExamine === 0 ? 0 : (pool.scanStats.issued / pool.scanStats.toExamine) * 100)%>
-						<dt class="fw-lighter">
-							<small>
-								<%if (pool.scanStats.scrubPause === 0) {%>
-									Running data integrity check...
-								<%} else if (pool.scanStats.scrubPause !== 0) {%>
-									Data integrity check paused
-								<%}%>
-							</small>
-						</dt>
-						<%if (pool.scanStats.status === 'paused') {%>
-							<dd class="d-flex align-items-center m-0"><%=_.upperFirst(pool.scan)%></dd>
-						<%}%>
-						<div class="row g-0 d-flex align-items-baseline">
-							<div class="col">
-								<div class="progress" role="progressbar">
-									<div class="progress-bar bg-cyan-300 <%=(pool.scanStats.scrubPause === 0 ? 'progress-bar-striped progress-bar-animated' : '')%>" style="width: <%=(progress)%>%;"></div>
-								</div>
-							</div>
-							<div class="col-auto lh-1 text-body-tertiary text-end" style="width: 45px;">
-								<small class="fw-light"><%=progress?.toFixed(0)%>%</small>
-							</div>
-						</div>
-					<%}%>
-				</dl>
-			</div>
-		<%}%>
-	</div>
-</div>
--->
