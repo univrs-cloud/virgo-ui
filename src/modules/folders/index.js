@@ -1,17 +1,45 @@
 import modulePartial from 'modules/folders/partials/index.html';
-import emptyPartial from 'modules/folders/partials/empty.html';
 import folderPartial from 'modules/folders/partials/folder.html';
 import * as folderService from 'modules/folders/services/folder';
 import copy from 'copy-to-clipboard';
 
 const moduleTemplate = _.template(modulePartial);
-const emptyTemplate = _.template(emptyPartial);
 const folderTemplate = _.template(folderPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
 const module = document.querySelector('#folders');
 const loading = module.querySelector('.loading');
 const container = module.querySelector('.container-fluid');
-const row = container.querySelector('.row');
+const searchInput = module.querySelector('.search');
+const table = container.querySelector('.table');
+let searchTimer;
+let searchValue = '';
+let tableOrder = {
+	field: 'name',
+	direction: 'asc'
+};
+
+const search = (event) => {
+	clearTimeout(searchTimer);
+	searchTimer = setTimeout(() => {
+		searchValue = event.target.value;
+		const folders = folderService.getFolders();
+		render({ folders });
+	}, 300);
+};
+
+const order = (event) => {
+	if (_.isNull(event.target.closest('.orderable'))) {
+		return;
+	}
+	
+	const cell = event.target.closest('.orderable');
+	tableOrder.field = cell.dataset.field;
+	tableOrder.direction = (cell.classList.contains('asc') ? 'desc' : 'asc');
+	_.each(table.querySelectorAll('thead th'), (cell) => { cell.classList.remove('asc', 'desc'); });
+	cell.classList.add(tableOrder.direction);
+	const folders = folderService.getFolders();
+	render({ folders });
+};
 
 const copyToClipboard = (event) => {
 	if (event.target.closest('a')?.dataset.action !== 'copy-to-clipboard') {
@@ -32,47 +60,36 @@ const copyToClipboard = (event) => {
 	}
 };
 
-const remove = async (event) => {
-	if (event.target.closest('a')?.dataset.action !== 'delete') {
-		return;
-	}
-
-	if (event.target.closest('a')?.classList.contains('disabled')) {
-		return;
-	}
-	
-	event.preventDefault();
-	const button = event.target.closest('a');
-	const folder = button.closest('.folder');
-	if (!await confirm(`Are you sure you want to delete ${folder.dataset.title}?`, { buttons: [{ text: 'Delete', class: 'btn-danger' }] })) {
-		return;
-	}
-
-	// let config = {
-	// 	id: folder.dataset.id,
-	// 	action: button.dataset.action
-	// };
-	// folderService.performAction(config);	
-};
-
 const render = (state) => {
 	if (_.isNull(state.folders)) {
 		return;
 	}
 	
 	const template = document.createElement('template');
-	if (_.isEmpty(state.folders)) {
-		template.innerHTML = emptyTemplate();
-	} else {
-		const networkInterface = state.networkInterface;
-		_.each(state.folders, (folder) => {
-			template.innerHTML += folderTemplate({ folder, networkInterface, prettyBytes });
-		});
-	}
+	const networkInterface = state.networkInterface;
+	let folders = state.folders;
+	const searchTerms = searchValue.toLowerCase().split(/\s+/);
+	folders = _.filter(folders, (folder) => {
+		const text = `${folder.name || ''} ${folder.path || ''}`.toLowerCase();
+		const matchesSearch = _.every(searchTerms, (term) => text.includes(term));
+		return matchesSearch;
+	});
+	folders = _.orderBy(folders,
+		[
+			(folder) => {
+				const value = _.get(folder, tableOrder.field);
+				return typeof value === 'number' ? value : String(value ?? '').toLowerCase();
+			}
+		],
+		[tableOrder.direction]
+	);
+	_.each(folders, (folder) => {
+		template.innerHTML += folderTemplate({ folder, networkInterface, prettyBytes });
+	});
 	
 	morphdom(
-		row,
-		`<div>${template.innerHTML}</div>`,
+		table.querySelector('tbody'),
+		`<tbody>${template.innerHTML}</tbody>`,
 		{ childrenOnly: true }
 	);
 
@@ -80,7 +97,11 @@ const render = (state) => {
 	container.classList.remove('d-none');
 };
 
-module.addEventListener('click', copyToClipboard);
-module.addEventListener('click', remove);
+searchInput.addEventListener('input', search);
+table.querySelector('thead').addEventListener('click', order);
+table.addEventListener('click', copyToClipboard);
 
 folderService.subscribe([render]);
+
+import('modules/folders/folder_create');
+import('modules/folders/folder_delete');
