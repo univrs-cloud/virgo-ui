@@ -175,7 +175,6 @@ u-toast {
 	}
 }
 :host(.indicator) .badge {
-	font-weight: 200 !important;
 	font-size: 0.65em !important;
 }
 
@@ -378,7 +377,7 @@ u-toast {
 	}
 	.logs-container,
 	.terminal-container {
-		z-index: 1031;
+		z-index: 1025;
 		position: absolute;
 		top: 0;
 		bottom: 0;
