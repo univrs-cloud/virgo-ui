@@ -192,8 +192,7 @@ module.exports = (env, argv) => {
 				'node_modules'
 			],
 			alias: {
-				morphdom: require.resolve('morphdom/dist/morphdom-esm.js'),
-				apexcharts: require.resolve('apexcharts/dist/apexcharts.esm.js')
+				morphdom: require.resolve('morphdom/dist/morphdom-esm.js')
 			}
 		},
 		optimization: {
