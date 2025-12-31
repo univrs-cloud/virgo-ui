@@ -57,8 +57,18 @@ const order = (event) => {
 	}
 	
 	const cell = event.target.closest('.orderable');
-	tableOrder.field = cell.dataset.field;
-	tableOrder.direction = (cell.classList.contains('asc') ? 'desc' : 'asc');
+	const field = cell.dataset.field;
+	tableOrder.field = field;
+	
+	// Determine direction: if already sorted, toggle; otherwise use default from data attribute
+	if (cell.matches('.asc, .desc')) {
+		// Already sorted, toggle direction
+		tableOrder.direction = (cell.classList.contains('asc') ? 'desc' : 'asc');
+	} else {
+		// First time sorting this column, use default direction from data attribute (or 'asc' if not specified)
+		tableOrder.direction = cell.dataset.defaultOrder || 'asc';
+	}
+	
 	_.each(table.querySelectorAll('thead th'), (cell) => { cell.classList.remove('asc', 'desc'); });
 	cell.classList.add(tableOrder.direction);
 	const services = serviceService.getServices();
