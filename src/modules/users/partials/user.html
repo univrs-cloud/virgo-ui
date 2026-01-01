@@ -58,11 +58,11 @@
 							<%if (user.isDisabled) {%>
 								<a href="#" class="dropdown-item" data-action="unlock"><i class="icon-regular icon-lock-open icon-fw me-1"></i>Unlock</a>
 							<%} else {%>
-								<a href="#" class="dropdown-item text-danger" data-action="lock"><i class="icon-regular icon-lock icon-fw me-1"></i>Lock</a>
+								<a href="#" class="dropdown-item text-danger confirm" data-action="lock"><i class="icon-regular icon-lock icon-fw me-1"></i>Lock</a>
 							<%}%>
 						</li>
 						<li><hr class="dropdown-divider"></li>
-						<li><a href="#" class="dropdown-item text-danger" data-action="delete"><i class="icon-regular icon-times icon-fw me-1"></i>Delete</a></li>
+						<li><a href="#" class="dropdown-item text-danger confirm" data-action="delete"><i class="icon-regular icon-times icon-fw me-1"></i>Delete</a></li>
 					<%}%>
 				</ul>
 			</div>
