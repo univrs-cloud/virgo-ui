@@ -117,8 +117,8 @@ const performAppAction = async (event) => {
 	
 	const actionMessage = (button.dataset.action === 'uninstall' ? '<br><br>Data will <strong>NOT</strong> be deleted.' : '');
 	if (
-		button.classList.contains('text-danger') &&
-		!await confirm(`Are you sure you want to ${button.dataset.action} the app ${app.title}?${actionMessage}`, { buttons: [{ text: _.upperFirst(button.dataset.action), class: (button.classList.contains('text-danger') ? 'btn-danger' : 'btn-primary') }] })
+		button.classList.contains('confirm') &&
+		!await confirm(`Are you sure you want to ${button.dataset.action} the app ${app.title}?${actionMessage}`, { buttons: [{ text: _.upperFirst(button.dataset.action), class: (button.classList.contains('confirm') ? 'btn-danger' : 'btn-primary') }] })
 	) {
 		return;
 	}
@@ -145,8 +145,8 @@ const performServiceAction = async (event) => {
 	const service = _.find(_.flatMap(appService.getApps(), 'projectContainers'), { id: row.dataset.id });
 
 	if (
-		button.classList.contains('text-danger') &&
-		!await confirm(`Are you sure you want to ${button.dataset.action} the service ${service.name}?`, { buttons: [{ text: _.upperFirst(button.dataset.action), class: (button.classList.contains('text-danger') ? 'btn-danger' : 'btn-primary') }] })
+		button.classList.contains('confirm') &&
+		!await confirm(`Are you sure you want to ${button.dataset.action} the service ${service.name}?`, { buttons: [{ text: _.upperFirst(button.dataset.action), class: (button.classList.contains('confirm') ? 'btn-danger' : 'btn-primary') }] })
 	) {
 		return;
 	}
