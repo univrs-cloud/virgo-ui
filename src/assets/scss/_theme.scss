@@ -184,12 +184,12 @@ u-toast {
 }
 
 .no-content {
-	height: calc(100vh - 144px);
+	height: calc(100dvh - 144px);
 }
 
 #not-found {
 	.no-content {
-		height: calc(100vh - 104px);
+		height: calc(100dvh - 104px);
 	}
 }
 #weather {
@@ -232,7 +232,7 @@ u-toast {
 	ul {
 		list-style: none;
 		overflow-y: scroll;
-		height: calc(100vh - 270px);
+		height: calc(100dvh - 270px);
 		padding: 0 map-get($spacers, 3) 0 0;
 		margin: 0 map-get($spacers, 3) * -1 0 0;
 	}
@@ -241,7 +241,7 @@ u-toast {
 	ul {
 		list-style: none;
 		overflow-y: scroll;
-		height: calc(100vh - 238px);
+		height: calc(100dvh - 238px);
 		padding: 0 map-get($spacers, 3) 0 0;
 		margin: 0 map-get($spacers, 3) * -1 0 0;
 	}
@@ -253,11 +253,6 @@ u-toast {
 	}
 	small.fw-light {
 		font-size: 0.775em;
-	}
-}
-#metrics {
-	.modal-body {
-		height: 100vh;
 	}
 }
 #dashboard {
@@ -298,7 +293,7 @@ u-toast {
 #storage,
 #system-services {
 	.overflow-y-scroll {
-		height: calc(100vh - 242px);
+		height: calc(100dvh - 242px);
 	}
 	.table {
 		tbody {
@@ -317,7 +312,7 @@ u-toast {
 			margin-right: calc(var(--scrollbar-width) + map-get($spacers, 3) * -1) !important;
 		}
 		.services {
-			height: calc(100vh - 386px);
+			height: calc(100dvh - 386px);
 		}
 	}
 }
@@ -325,7 +320,7 @@ u-toast {
 	#apps {
 		.details {
 			.services {
-				height: calc(100vh - 305px);
+				height: calc(100dvh - 305px);
 			}
 		}
 	}
@@ -350,7 +345,7 @@ u-toast {
 }
 #storage {
 	.overflow-y-scroll {
-		height: calc(100vh - 242px);
+		height: calc(100dvh - 242px);
 	}
 }
 .storage-scan-progress.tooltip {
@@ -394,7 +389,7 @@ u-toast {
 		ul {
 			list-style: none;
 			overflow-y: scroll;
-			height: calc(100vh - 257px);
+			height: calc(100dvh - 257px);
 			background-color: var(--bs-black);
 			padding: 0;
 			margin: 0;
@@ -411,9 +406,10 @@ u-toast {
 		}
 	}
 }
+#metrics,
 #app-center {
 	.modal-body {
-		height: 100vh;
+		height: 100dvh;
 	}
 }
 
