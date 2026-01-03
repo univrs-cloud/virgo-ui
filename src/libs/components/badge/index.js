@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
-import { sheet } from "../styles.js";
+import { sheet } from '../styles.js';
 
 export class Badge extends LitElement {
 	static styles = [sheet, css`:host { display: inline-block; }`];
@@ -19,7 +19,6 @@ export class Badge extends LitElement {
 		};
 	}
 
-	#initialTip = '';
 	#tooltip = null;
 
 	constructor() {
@@ -29,11 +28,6 @@ export class Badge extends LitElement {
 		this.pill = false;
 		this.border = false;
 		this.tip = '';
-	}
-
-	connectedCallback() {
-		super.connectedCallback();
-		this.#initialTip = this.tip;
 	}
 
 	disconnectedCallback() {

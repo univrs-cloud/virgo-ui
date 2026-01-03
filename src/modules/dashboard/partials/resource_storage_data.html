@@ -16,10 +16,10 @@
 		<%const progressColorSnapshots = (pool.properties.capacity.value >= 80 ? (pool.properties.capacity.value >= 90 ? 'bg-red-200' : 'bg-orange-200') : 'bg-indigo-100')%>
 		<div class="row g-0 d-flex align-items-baseline">
 			<div class="col">
-				<div class="progress" role="progressbar">
-					<div class="progress-bar <%=progressColorData%>" data-bs-toggle="tooltip" data-bs-original-title="Data" style="width: <%=(pool.properties.usedbydatasets.value / pool.properties.size.value * 100)%>%;"></div>
-					<div class="progress-bar <%=progressColorSnapshots%>" data-bs-toggle="tooltip" data-bs-original-title="Snapshots" style="width: <%=(pool.properties.usedbysnapshots.value / pool.properties.size.value * 100)%>%;"></div>
-				</div>
+				<u-progress>
+					<u-progress-bar width="<%=(pool.properties.usedbydatasets.value / pool.properties.size.value * 100)%>" tip="Data"></u-progress-bar>
+					<u-progress-bar color="indigo" tint="100" width="<%=(pool.properties.usedbysnapshots.value / pool.properties.size.value * 100)%>" tip="Snapshots"></u-progress-bar>
+				</u-progress>
 			</div>
 			<div class="col-auto lh-1 text-body-tertiary text-end" style="width: 45px;">
 				<small class="fw-light"><%=pool.properties.capacity.value?.toFixed(0)%>%</small>
@@ -45,21 +45,22 @@
 			<%})%>
 		</div>
 		<%if (pool.scanStats && pool.scanStats?.state?.toLowerCase() !== 'finished') {%>
+			<%const isPaused = (pool.scanStats.scrubPause > 0)%>
 			<%const progress = (pool.scanStats.toExamine === 0 ? 0 : (pool.scanStats.issued / pool.scanStats.toExamine) * 100)%>
 			<div class="lh-1 text-body-tertiary mt-3">
 				<small>
-					<%if (pool.scanStats.scrubPause === 0) {%>
-						Running data integrity check...
-					<%} else if (pool.scanStats.scrubPause !== 0) {%>
+					<%if (isPaused) {%>
 						Data integrity check paused
+					<%} else {%>
+						Running data integrity check...
 					<%}%>
 				</small>
 			</div>
 			<div class="row g-0 d-flex align-items-baseline">
 				<div class="col">
-					<div class="progress" role="progressbar">
-						<div class="progress-bar bg-cyan-300 <%=(pool.scanStats.scrubPause === 0 ? 'progress-bar-striped progress-bar-animated' : '')%>" style="width: <%=progress%>%;"></div>
-					</div>
+					<u-progress shadow="false">
+						<u-progress-bar color="cyan" tint="300" width="<%=progress%>" striped="<%=(!isPaused)%>" animated="<%=(!isPaused)%>"></u-progress-bar>
+					</u-progress>
 				</div>
 				<div class="col-auto lh-1 text-body-tertiary text-end" style="width: 45px;">
 					<small class="fw-light"><%=progress.toFixed(0)%>%</small>

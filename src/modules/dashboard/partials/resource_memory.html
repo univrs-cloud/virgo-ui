@@ -9,12 +9,11 @@
 		<span class="text-red-300">Error fetching data</span>
 	<%} else {%>
 		<%const usedPercent = ((state.memory.total - state.memory.available) / state.memory.total) * 100%>
-		<%const progressColorActive = (usedPercent >= 80 ? (usedPercent >= 90 ? 'bg-red-300' : 'bg-orange-300') : 'bg-blue-300')%>
 		<div class="row g-0 d-flex align-items-baseline">
 			<div class="col">
-				<div class="progress" role="progressbar">
-					<div class="progress-bar <%=progressColorActive%>" data-bs-toggle="tooltip" data-bs-original-title="Active" style="width: <%=usedPercent%>%;"></div>
-				</div>
+				<u-progress>
+					<u-progress-bar width="<%=usedPercent%>"></u-progress-bar>
+				</u-progress>
 			</div>
 			<div class="col-auto lh-1 text-body-tertiary text-end" style="width: 45px;">
 				<small class="fw-light"><%=usedPercent?.toFixed(0)%>%</small>

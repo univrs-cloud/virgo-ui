@@ -9,12 +9,11 @@
 	<%} else if (pool === false) {%>
 		<span class="text-red-300">Error fetching data</span>
 	<%} else {%>
-		<%const progressColorData = (pool.properties.capacity.value >= 80 ? (pool.properties.capacity.value >= 90 ? 'bg-red-300' : 'bg-orange-300') : 'bg-blue-300')%>
 		<div class="row g-0 d-flex align-items-baseline">
 			<div class="col">
-				<div class="progress" role="progressbar">
-					<div class="progress-bar <%=progressColorData%>" style="width: <%=(pool.properties.capacity.value)%>%;"></div>
-				</div>
+				<u-progress>
+					<u-progress-bar width="<%=pool.properties.capacity.value%>"></u-progress-bar>
+				</u-progress>
 			</div>
 			<div class="col-auto lh-1 text-body-tertiary text-end" style="width: 45px;">
 				<small class="fw-light"><%=pool.properties.capacity.value?.toFixed(0)%>%</small>

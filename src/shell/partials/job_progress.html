@@ -12,8 +12,8 @@
 				<%=key%>
 			</span>
 		</div>
-		<div class="progress" role="progressbar">
-			<div class="progress-bar <%=(isActive ? 'bg-cyan-300 progress-bar-striped progress-bar-animated' : 'bg-green-200')%>" style="width: <%=progress.percent%>%;"></div>
-		</div>
+		<u-progress>
+			<u-progress-bar color="<%=(isActive ? 'cyan' : 'green')%>" tint="<%=(isActive ? '300' : '200')%>" width="<%=progress.percent%>" striped="<%=isActive%>" animated="<%=isActive%>" warning-threshold="101" danger-threshold="101"></u-progress-bar>
+		</u-progress>
 	</div>
 <%})%>

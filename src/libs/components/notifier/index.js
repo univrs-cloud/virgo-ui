@@ -1,6 +1,6 @@
 import { LitElement, html } from 'lit';
 import { repeat } from 'lit/directives/repeat.js';
-import { sheet } from "../styles.js";
+import { sheet } from '../styles.js';
 
 export class Notifier extends LitElement {
 	static styles = [sheet];

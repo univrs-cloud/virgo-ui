@@ -1,7 +1,7 @@
 import { LitElement, html } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
-import { sheet } from "../styles.js";
+import { sheet } from '../styles.js';
 
 export class Toast extends LitElement {
 	static styles = [sheet];

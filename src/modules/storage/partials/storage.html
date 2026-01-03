@@ -32,11 +32,15 @@
 		<small class="fw-light"><%=prettyBytes(pool.properties.size.value || 0, { binary: true })%></small>
 	</td>
 	<td class="text-end text-nowrap d-none d-md-table-cell">
-		<%const progressColorData = (pool.properties.capacity.value >= 80 ? (pool.properties.capacity.value >= 90 ? 'bg-red-300' : 'bg-orange-300') : 'bg-blue-300')%>
-		<small class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(pool.properties.allocated.value || 0, { binary: true })%>"><%=pool.properties.capacity.value.toFixed(2)%>%</small>
-		<div class="progress shadow-none" role="progressbar" style="height: 6px;">
-			<div class="progress-bar <%=progressColorData%>" style="width: <%=pool.properties.capacity.value%>%;"></div>
-		</div>
+		<small class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(pool.properties.allocated.value || 0, { binary: true })%>"><%=pool.properties.capacity.value?.toFixed(2)%>%</small>
+		<u-progress shadow="false">
+			<%if (pool.name === 'system') {%>
+				<u-progress-bar width="<%=pool.properties.capacity.value%>"></u-progress-bar>
+			<%} else {%>
+				<u-progress-bar width="<%=(pool.properties.usedbydatasets.value / pool.properties.size.value * 100)%>" tip="Data"></u-progress-bar>
+				<u-progress-bar color="indigo" tint="100" width="<%=(pool.properties.usedbysnapshots.value / pool.properties.size.value * 100)%>" tip="Snapshots"></u-progress-bar>
+			<%}%>
+		</u-progress>
 	</td>
 	<td class="<%=(pool.type?.toLowerCase() === 'pool' && pool.scanStats?.state.toLowerCase() === 'scanning' ? 'text-end' : 'text-center')%> text-nowrap d-none d-md-table-cell">
 		<%if (pool.type?.toLowerCase() === 'pool' && pool.scanStats) {%>
@@ -57,9 +61,9 @@
 				<%const tip = (isPaused ? `<strong>Paused</strong> since ${moment.unix(pool.scanStats.scrubPause).fromNow()}.<br>` : ``) + `Started ${moment.unix(pool.scanStats.startTime).fromNow()}.<br>Scanned ${scanned}.<br>Issued ${issued}.<br>Repaired <strong>${prettyBytes(pool.scanStats.processed || 0, { binary: true })}</strong>, ${pool.scanStats.errors || 0} errors.`%>
 				<%const progress = (pool.scanStats.toExamine === 0 ? 0 : (pool.scanStats.issued / pool.scanStats.toExamine) * 100)%>
 				<small class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"><%=progress.toFixed(2)%>%</small>
-				<div class="progress shadow-none" role="progressbar" style="height: 6px;">
-					<div class="progress-bar bg-cyan-300 <%=(!isPaused ? 'progress-bar-striped progress-bar-animated' : '')%>" style="width: <%=(progress)%>%;"></div>
-				</div>
+				<u-progress shadow="false">
+					<u-progress-bar color="cyan" tint="300" width="<%=progress%>" striped="<%=(!isPaused)%>" animated="<%=(!isPaused)%>"></u-progress-bar>
+				</u-progress>
 			<%}%>
 		<%} else {%>
 			&mdash;
