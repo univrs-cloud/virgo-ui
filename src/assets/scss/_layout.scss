@@ -49,7 +49,7 @@ header {
 			--bs-nav-link-padding-x: 0.5rem;
 			display: block;
 			overflow: auto;
-			height: calc(100vh - 165px);
+			height: calc(100dvh - 165px);
 		}
 		.navbar-glass {
 			min-height: 4.5rem;
@@ -199,7 +199,7 @@ main,
 			position: fixed;
 			top: 0;
 			width: 15rem;
-			height: 100vh;
+			height: 100dvh;
 			.navbar {
 				height: 100%;
 				padding: 4.5rem 0.75rem 1rem 0.75rem;
