@@ -47,11 +47,10 @@
 		<small class="fw-light"><%=prettyBytes(folder.size || 0, { binary: true })%></small>
 	</td>
 	<td class="text-end text-nowrap d-none d-md-table-cell">
-		<%const progressColorData = (folder.cap >= 80 ? (folder.cap >= 90 ? 'bg-red-300' : 'bg-orange-300') : 'bg-blue-300')%>
 		<small class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(folder.alloc || 0, { binary: true })%>"><%=folder.cap.toFixed(2)%>%</small>
-		<div class="progress shadow-none" role="progressbar" style="height: 6px;">
-			<div class="progress-bar <%=progressColorData%>" style="width: <%=folder.cap%>%;"></div>
-		</div>
+		<u-progress shadow="false">
+			<u-progress-bar width="<%=folder.cap%>"></u-progress-bar>
+		</u-progress>
 	</td>
 	<td class="text-center px-0">
 		<div class="dropdown">

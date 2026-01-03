@@ -21,9 +21,9 @@
 	<%} else {%>
 		<div class="row g-0 d-flex align-items-baseline">
 			<div class="col">
-				<div class="progress" role="progressbar">
-					<div class="progress-bar <%=(state.ups?.powerSource === 'grid' ? 'bg-green-300' : (state.ups?.powerSource === 'battery' ? 'progress-bar-striped progress-bar-animated bg-orange-300' : ''))%>" style="width: <%=state.ups?.batteryCharge%>%;"></div>
-				</div>
+				<u-progress>
+					<u-progress-bar color="<%=(state.ups?.powerSource === 'grid' ? 'green' : 'orange')%>" width="<%=state.ups?.batteryCharge%>" striped="<%=(state.ups?.powerSource === 'battery')%>" animated="<%=(state.ups?.powerSource === 'battery')%>" warning-threshold="101" danger-threshold="101"></u-progress-bar>
+				</u-progress>
 			</div>
 			<div class="col-auto lh-1 text-body-tertiary text-end" style="width: 45px;">
 				<small class="fw-light"><%=state.ups?.batteryCharge%>%</small>

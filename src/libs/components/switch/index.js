@@ -1,5 +1,5 @@
 import { LitElement, html } from 'lit';
-import { sheet } from "../styles.js";
+import { sheet } from '../styles.js';
 
 export class Switch extends LitElement {
 	static formAssociated = true;

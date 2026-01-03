@@ -1,6 +1,6 @@
 import { LitElement, html } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
-import { sheet } from "../styles.js";
+import { sheet } from '../styles.js';
 
 export class Checkbox extends LitElement {
 	static formAssociated = true;

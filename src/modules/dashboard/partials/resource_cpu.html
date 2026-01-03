@@ -10,9 +10,9 @@
 	<%} else {%>
 		<div class="row g-0 d-flex align-items-baseline">
 			<div class="col">
-				<div class="progress" role="progressbar">
-					<div class="progress-bar bg-blue-300" style="width: <%=state.cpuStats.currentLoad?.toFixed(0)%>%;"></div>
-				</div>
+				<u-progress>
+					<u-progress-bar width="<%=state.cpuStats.currentLoad%>"></u-progress-bar>
+				</u-progress>
 			</div>
 			<div class="col-auto lh-1 text-body-tertiary text-end" style="width: 45px;">
 				<small class="fw-light"><%=state.cpuStats.currentLoad?.toFixed(0)%>%</small>
