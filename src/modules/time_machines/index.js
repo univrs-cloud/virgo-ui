@@ -76,7 +76,7 @@ const render = (state) => {
 	}
 	
 	const template = document.createElement('template');
-	const networkInterface = state.networkInterface;
+	const accessOn = _.find(state.networkInterface?.addrInfo, { family: 'inet' })?.local;
 	let timeMachines = state.timeMachines;
 	const searchTerms = searchValue.toLowerCase().split(/\s+/);
 	timeMachines = _.filter(timeMachines, (timeMachines) => {
@@ -94,7 +94,7 @@ const render = (state) => {
 		[tableOrder.direction]
 	);
 	_.each(timeMachines, (timeMachine) => {
-		template.innerHTML += timeMachineTemplate({ timeMachine, networkInterface, prettyBytes });
+		template.innerHTML += timeMachineTemplate({ timeMachine, accessOn, prettyBytes });
 	});
 	
 	morphdom(

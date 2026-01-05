@@ -15,9 +15,9 @@ const checkIfSetupIsRequired = (state) => {
 	if (_.isNull(state.system) || _.isNull(state.drives) || _.isNull(state.storage) || _.isNull(state.containers)) {
 		return null;
 	}
-	
+	const networkInterface = _.find(state.system.networkInterfaces, { default: true });
 	if (
-		!state.system.networkInterface.dhcp &&
+		!networkInterface?.dhcp &&
 		!_.isEmpty(state.drives) &&
 		_.size(_.filter(state.storage, (storage) => { return storage?.type?.toLowerCase() === 'pool'; })) > 0 &&
 		_.size(_.filter(state.containers, (container) => { return _.includes(['authelia', 'traefik'], container?.name.toLowerCase()); })) === 2

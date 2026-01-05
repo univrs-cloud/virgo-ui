@@ -1,6 +1,5 @@
 import interfaceModalPartial from 'modules/network/partials/modals/interface.html';
 import * as networkService from 'modules/network/services/network';
-import { Netmask } from 'netmask';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', interfaceModalPartial);
 
@@ -25,22 +24,14 @@ const toggleDhcp = (event) => {
 	_.each(form.querySelectorAll('.manual'), (element) => { element.classList[event.target.checked ? 'add' : 'remove']('d-none'); });
 };
 
-const getBlock = (networkInterface) => {
-	let block = null;
-	try {
-		block = new Netmask(`${networkInterface?.ip4}/${networkInterface?.ip4subnet}`);
-	} catch (error) {}
-	return block;
-};
-
 const render = (event) => {
 	const system = networkService.getSystem();
-	const block = getBlock(system.networkInterface);
-	modal.querySelector('.alert .interface-name').innerHTML = system?.networkInterface?.ifaceName;
-	form.querySelector('.name').value = system?.networkInterface?.ifaceName;
-	form.querySelector('.dhcp').checked = system?.networkInterface?.dhcp;
-	form.querySelector('.ip-address').value = system?.networkInterface?.ip4;
-	form.querySelector('.netmask').value = block?.bitmask ?? 'error';
+	const networkInterface = _.find(system?.networkInterfaces, { default: true });
+	modal.querySelector('.alert .interface-name').innerHTML = networkInterface?.ifname;
+	form.querySelector('.name').value = networkInterface?.ifname;
+	form.querySelector('.dhcp').checked = networkInterface?.dhcp;
+	form.querySelector('.ip-address').value = _.find(networkInterface?.addrInfo, { family: 'inet' })?.local;
+	form.querySelector('.netmask').value = _.find(networkInterface?.addrInfo, { family: 'inet' })?.prefixlen;
 	form.querySelector('.gateway').value = system?.defaultGateway;
 };
 

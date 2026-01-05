@@ -16,7 +16,7 @@
 		<a href="#" class="link-dark link-underline link-underline-opacity-0" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-original-title="Click to copy the time machine address. In Finder, press ⌘K and paste it to connect. This lets Time Machine use it for backups.">
 			<i class="icon-brands icon-apple icon-fw"></i>
 		</a>
-		<span class="copy d-none">smb://<%=(timeMachine.isPrivate ? `${_.first(timeMachine.validUsers)}@` : '')%><%=networkInterface?.ip4%>/<%=timeMachine.name%></span>
+		<span class="copy d-none">smb://<%=(timeMachine.isPrivate ? `${_.first(timeMachine.validUsers)}@` : '')%><%=accessOn%>/<%=timeMachine.name%></span>
 	</td>
 	<td class="d-none d-md-table-cell">
 		<%if (timeMachine.validUsers) {%>
