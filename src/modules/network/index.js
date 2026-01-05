@@ -1,7 +1,6 @@
 import modulePartial from 'modules/network/partials/index.html';
 import networkPartial from 'modules/network/partials/network.html';
 import * as networkService from 'modules/network/services/network';
-import { Netmask } from 'netmask';
 
 const moduleTemplate = _.template(modulePartial);
 const networkTemplate = _.template(networkPartial);
@@ -11,23 +10,15 @@ const loading = module.querySelector('.loading');
 const container = module.querySelector('.container-fluid');
 const row = container.querySelector('.row');
 
-const getBlock = (networkInterface) => {
-	let block = null;
-	try {
-		block = new Netmask(`${networkInterface?.ip4}/${networkInterface?.ip4subnet}`);
-	} catch (error) {}
-	return block;
-};
-
 const render = (state) => {
 	if (_.isNull(state.system)) {
 		return;
 	}
 	
-	const block = getBlock(state.system.networkInterface);
+	const networkInterface = _.find(state.system.networkInterfaces, { default: true });
 	morphdom(
 		row,
-		`<div>${networkTemplate({ system: state.system, block })}</div>`,
+		`<div>${networkTemplate({ system: state.system, networkInterface })}</div>`,
 		{ childrenOnly: true }
 	);
 

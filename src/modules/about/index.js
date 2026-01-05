@@ -17,6 +17,7 @@ const render = (state) => {
 	
 	const template = aboutTemplate({
 		system: state.system,
+		networkInterface: _.find(state.system.networkInterfaces, { default: true }),
 		memory: state.memory,
 		drives: state.drives,
 		VERSION: VERSION,

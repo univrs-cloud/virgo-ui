@@ -76,7 +76,7 @@ const render = (state) => {
 	}
 	
 	const template = document.createElement('template');
-	const networkInterface = state.networkInterface;
+	const accessOn = _.find(state.networkInterface?.addrInfo, { family: 'inet' })?.local;
 	let folders = state.folders;
 	const searchTerms = searchValue.toLowerCase().split(/\s+/);
 	folders = _.filter(folders, (folder) => {
@@ -94,7 +94,7 @@ const render = (state) => {
 		[tableOrder.direction]
 	);
 	_.each(folders, (folder) => {
-		template.innerHTML += folderTemplate({ folder, networkInterface, prettyBytes });
+		template.innerHTML += folderTemplate({ folder, accessOn, prettyBytes });
 	});
 	
 	morphdom(

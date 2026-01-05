@@ -20,18 +20,18 @@
 			<h5 class="card-title d-flex align-items-center">Interface</h5>
 			<dl class="m-0">
 				<dt class="fw-lighter"><small>Name</small></dt>
-				<dd><%=system?.networkInterface?.ifaceName%></dd>
+				<dd><%=networkInterface?.ifname%></dd>
 				<dt class="fw-lighter"><small>Address</small></dt>
 				<dd class="d-flex align-items-center">
-					<%=system?.networkInterface?.ip4%>/<%=block?.bitmask ?? 'error'%>
-					<u-badge color="gray" tint="200" class="ms-1" pill><%=(system?.networkInterface?.dhcp ? 'Automatic' : 'Manual')%></u-badge>
+					<%=_.find(networkInterface?.addrInfo, { family: 'inet' })?.local%>/<%=_.find(networkInterface?.addrInfo, { family: 'inet' })?.prefixlen%>
+					<u-badge color="gray" tint="200" class="ms-1" pill><%=(networkInterface?.dhcp ? 'Automatic' : 'Manual')%></u-badge>
 				</dd>
 				<dt class="fw-lighter"><small>Default gateway</small></dt>
 				<dd><%=system?.defaultGateway%></dd>
 				<dt class="fw-lighter"><small>MTU</small></dt>
-				<dd><%=system?.networkInterface?.mtu%></dd>
+				<dd><%=networkInterface?.mtu%></dd>
 				<dt class="fw-lighter"><small>MAC</small></dt>
-				<dd class="m-0"><%=system?.networkInterface?.mac%></dd>
+				<dd class="m-0"><%=networkInterface?.address%></dd>
 			</dl>
 		</div>
 	</div>

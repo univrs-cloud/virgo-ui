@@ -41,7 +41,8 @@ const render = (state) => {
 			}
 		}
 	);
-	networkUsage.render(state.networkStats, (state.system?.networkInterface?.speed * 1_000_000 / 8));
+	const networkInterface = _.find(state.system.networkInterfaces, { default: true });
+	networkUsage.render(state.networkStats, (networkInterface?.speed * 1_000_000 / 8));
 };
 
 resourceMonitorService.subscribe([render]);

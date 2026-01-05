@@ -18,19 +18,19 @@
 				<a href="#" class="link-dark link-underline link-underline-opacity-0" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-original-title="Click to copy the folder address. Access the folder using a computer on your local network.">
 					<i class="icon-brands icon-windows icon-fw"></i>
 				</a>
-				<span class="copy d-none">\\<%=networkInterface?.ip4%>/<%=folder.name%></span>
+				<span class="copy d-none">\\<%=accessOn%>/<%=folder.name%></span>
 			</div>
 			<div class="d-flex align-items-center mx-2">
 				<a href="#" class="link-dark link-underline link-underline-opacity-0" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-original-title="Click to copy the folder address. Access the folder using a computer on your local network.">
 					<i class="icon-brands icon-apple icon-fw"></i>
 				</a>
-				<span class="copy d-none">smb://<%=networkInterface?.ip4%>/<%=folder.name%></span>
+				<span class="copy d-none">smb://<%=accessOn%>/<%=folder.name%></span>
 			</div>
 			<div class="d-flex align-items-center">
 				<a href="#" class="link-dark link-underline link-underline-opacity-0" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-original-title="Click to copy the folder address. Access the folder using a computer on your local network.">
 					<i class="icon-brands icon-linux icon-fw"></i>
 				</a>
-				<span class="copy d-none">smb://<%=networkInterface?.ip4%>/<%=folder.name%></span>
+				<span class="copy d-none">smb://<%=accessOn%>/<%=folder.name%></span>
 			</div>
 		</div>
 	</td>
