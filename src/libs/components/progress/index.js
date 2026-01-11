@@ -85,7 +85,7 @@ export class ProgressBar extends LitElement {
 	render() {
 		const hasTint = !['white', 'black'].includes(this.color);
 		const classes = {
-			[`bg-${this.color}${hasTint ? `-${this.tint}` : ''}`]: this.width < this.warningThreshold,
+			[`bd-${this.color}${hasTint ? `-${this.tint}` : ''}`]: this.width < this.warningThreshold,
 			[`bg-orange-${this.tint}`]: this.width >= this.warningThreshold && this.width < this.dangerThreshold,
 			[`bg-red-${this.tint}`]: this.width >= this.dangerThreshold,
 			'progress-bar-striped': this.striped,
