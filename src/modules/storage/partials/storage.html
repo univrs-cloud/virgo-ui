@@ -62,7 +62,7 @@
 				<%const progress = (pool.scanStats.toExamine === 0 ? 0 : (pool.scanStats.issued / pool.scanStats.toExamine) * 100)%>
 				<small class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"><%=progress.toFixed(2)%>%</small>
 				<u-progress shadow="false">
-					<u-progress-bar color="cyan" tint="300" width="<%=progress%>" striped="<%=(!isPaused)%>" animated="<%=(!isPaused)%>"></u-progress-bar>
+					<u-progress-bar color="cyan" tint="300" width="<%=progress%>" striped="<%=(!isPaused)%>" animated="<%=(!isPaused)%>" warning-threshold="999" danger-threshold="999"></u-progress-bar>
 				</u-progress>
 			<%}%>
 		<%} else {%>
