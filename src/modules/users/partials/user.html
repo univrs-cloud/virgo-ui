@@ -1,16 +1,10 @@
 <tr class="user" data-uid="<%=user.uid%>">
-	<td class="d-none d-md-table-cell" style="width: 1px;">
-		<div class="row-image">
-			<%if (user.isOwner) {%>
-				<i class="icon-light icon-user-crown"></i>
-			<%} else {%>
-				<i class="icon-light icon-user"></i>
-			<%}%>
-		</div>
-	</td>
 	<td style="min-width: 210px; max-width: 0;">
 		<div class="d-flex align-items-center mb-n1">
 			<div class="text-truncate"><%=user.username%></div>
+			<%if (user.isOwner) {%>
+				<u-badge color="indigo" tint="400" class="ms-2" tip="Owner" pill><i class="icon-solid icon-crown"></i></u-badge>
+			<%}%>
 			<%if (isSameAsLoggedIn) {%>
 				<u-badge class="ms-2" pill><small>YOU</small></u-badge>
 			<%}%>
