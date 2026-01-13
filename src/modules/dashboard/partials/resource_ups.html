@@ -19,15 +19,11 @@
 	<%} else if (state.ups === false) {%>
 		<span class="text-red-300">Error fetching data</span>
 	<%} else {%>
-		<div class="row g-0 d-flex align-items-baseline">
-			<div class="col">
-				<u-progress>
-					<u-progress-bar color="<%=(state.ups?.powerSource === 'grid' ? 'green' : 'orange')%>" width="<%=state.ups?.capacity%>" striped="<%=(state.ups?.powerSource === 'battery' || state.ups?.isCharging)%>" animated="<%=(state.ups?.powerSource === 'battery' || state.ups?.isCharging)%>" warning-threshold="999" danger-threshold="999"></u-progress-bar>
-				</u-progress>
-			</div>
-			<div class="col-auto lh-1 text-body-tertiary text-end" style="width: 45px;">
-				<small class="fw-light"><%=state.ups?.capacity?.toFixed(0)%>%</small>
-			</div>
+		<div class="text-end mt-n3 mb-1">
+			<small class="fw-light text-body-tertiary"><%=state.ups?.capacity?.toFixed(0)%>%</small>
+			<u-progress>
+				<u-progress-bar color="<%=(state.ups?.powerSource === 'grid' ? 'green' : 'orange')%>" width="<%=state.ups?.capacity%>" striped="<%=(state.ups?.powerSource === 'battery' || state.ups?.isCharging)%>" animated="<%=(state.ups?.powerSource === 'battery' || state.ups?.isCharging)%>" warning-threshold="999" danger-threshold="999"></u-progress-bar>
+			</u-progress>
 		</div>
 	<%}%>
 </li>
