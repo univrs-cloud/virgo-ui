@@ -20,7 +20,10 @@ const checkIfSetupIsRequired = (state) => {
 		!networkInterface?.dhcp &&
 		!_.isEmpty(state.drives) &&
 		_.size(_.filter(state.storage, (storage) => { return storage?.type?.toLowerCase() === 'pool'; })) > 0 &&
-		_.size(_.filter(state.containers, (container) => { return _.includes(['authelia', 'traefik'], container?.name.toLowerCase()); })) === 2
+		_.size(_.filter(state.containers, (container) => {
+			// Match by exact container name (backward compatibility) or pattern {project_name}-{service_name}-{number}
+			return _.includes(['authelia', 'traefik'], container.name) || _.some(container.names, (name) => { return name.startsWith('/authelia-authelia-') || name.startsWith('/traefik-traefik-'); });
+		})) === 2
 	) {
 		return false;
 	}
