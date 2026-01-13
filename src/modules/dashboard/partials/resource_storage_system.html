@@ -9,15 +9,11 @@
 	<%} else if (pool === false) {%>
 		<span class="text-red-300">Error fetching data</span>
 	<%} else {%>
-		<div class="row g-0 d-flex align-items-baseline">
-			<div class="col">
-				<u-progress>
-					<u-progress-bar width="<%=pool.properties.capacity.value%>"></u-progress-bar>
-				</u-progress>
-			</div>
-			<div class="col-auto lh-1 text-body-tertiary text-end" style="width: 45px;">
-				<small class="fw-light"><%=pool.properties.capacity.value?.toFixed(0)%>%</small>
-			</div>
+		<div class="text-end mt-n3 mb-1">
+			<small class="fw-light text-body-tertiary"><%=pool.properties.capacity.value?.toFixed(0)%>%</small>
+			<u-progress>
+				<u-progress-bar width="<%=pool.properties.capacity.value%>"></u-progress-bar>
+			</u-progress>
 		</div>
 		<div class="lh-1 text-body-tertiary mt-1">
 			<small><strong class="fw-semibold"><%=prettyBytes(pool.properties.allocated.value || 0, { binary: true })%></strong> used from <%=prettyBytes(pool.properties.size.value || 0, { binary: true })%></small><br>
