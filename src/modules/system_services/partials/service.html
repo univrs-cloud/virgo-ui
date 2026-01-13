@@ -1,4 +1,4 @@
-<tr class="<%=(service.state === 'failed' ? 'table-danger' : '')%>">
+<tr class="service cursor-pointer <%=(service.state === 'failed' ? 'table-danger' : '')%>" data-unit="<%=service.unit%>">
 	<td>
 		<%=service.unit%><br>
 		<small class="text-body-secondary"><%=service.description%></small>
@@ -14,5 +14,8 @@
 		<u-badge color="<%=(service.state === 'running' ? 'green' : (service.state === 'oneshot' ? 'gray' : 'red'))%>" tint="<%=(service.state === 'running' ? 100 : (service.state === 'oneshot' ? 200 : 100))%>" pill>
 			<%=service.state%>
 		</u-badge>
-	</td>	
+	</td>
+	<td class="text-center">
+		<i class="icon-solid icon-angle-right icon-fw text-body-tertiary"></i>
+	</td>
 </tr>
