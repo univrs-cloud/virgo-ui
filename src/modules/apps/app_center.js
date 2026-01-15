@@ -31,7 +31,7 @@ const render = (state) => {
 	const templateInstallable = document.createElement('template');
 	const installable = _.filter(state.templates, { isInstalled: false });
 	templateInstallable.innerHTML = _.join(_.map(installable, (app) => {
-		const jobs = _.filter(state.jobs, (job) => { return job.name === 'app:install' && job.data.config.id === app.id && job.progress?.state === 'active'; });
+		const jobs = _.filter(state.jobs, (job) => { return job.name === 'app:install' && job.data.config.name === app.name && job.progress?.state === 'active'; });
 		return itemTemplate({ app, jobs });
 	}), '');
 	

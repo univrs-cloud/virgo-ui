@@ -25,7 +25,7 @@ const install = (event) => {
 	_.each(buttons, (button) => { button.disabled = true; });
 	let env = form.getData();
 	let config = {
-		id: app.id,
+		name: app.name,
 		env
 	};
 	appCenterService.install(config);
@@ -33,8 +33,8 @@ const install = (event) => {
 };
 
 const render = (event) => {
-	const id = event.relatedTarget.closest('.app').dataset.id;
-	app = _.find(appCenterService.getTemplates(), { id: Number(id) });
+	const name = event.relatedTarget.closest('.app').dataset.name;
+	app = _.find(appCenterService.getTemplates(), { name });
 	form.querySelector('.modal-title').innerHTML = app.title;
 	form.querySelector('.description').innerHTML = app.description;
 	form.querySelector('.note').innerHTML = app.note || '';
