@@ -13,10 +13,12 @@
 				</u-badge>
 			<%}%>
 		</div>
-		<%if (!_.isEmpty(app.url)) {%>
-			<a href="<%=app.url%>" target="<%=(app?.target || app.name)%>" class="d-inline-flex align-items-center link-underline link-underline-opacity-0 link-underline-opacity-75-hover pe-none pe-md-auto" style="max-width: 100%;">
-				<small class="text-truncate" style="min-width: 0;"><%=_.replace(app.url, /^https?:\/\//, '')%></small><i class="icon-solid icon-arrow-up-right-from-square icon-fw icon-2xs ms-1 d-none d-sm-block"></i>
-			</a>
+		<%if (!_.isEmpty(app.urls)) {%>
+			<%_.each(app.urls, (url) => {%>
+				<a href="<%=app.url%>" target="<%=(app?.target || app.name)%>" class="d-inline-flex align-items-center link-underline link-underline-opacity-0 link-underline-opacity-75-hover pe-none pe-md-auto" style="max-width: 100%;">
+					<small class="text-truncate" style="min-width: 0;"><%=_.replace(url, /^https?:\/\//, '')%></small><i class="icon-solid icon-arrow-up-right-from-square icon-fw icon-2xs ms-1 d-none d-sm-block"></i>
+				</a>
+			<%})%>
 		<%} else {%>
 			&mdash;
 		<%}%>
