@@ -89,28 +89,49 @@ class Docker extends Store {
 		this.socket.emit('app:order', config);
 	}
 
-	composeUrlFromLabels(labels) {
-		const hostKey = _.findKey(labels, (value) => {
-			return _.isString(value) && _.startsWith(value, 'Host');
-		});
-		if (!hostKey) {
-			return '';
+	composeUrlFromLabels(projectContainers) {
+		if (!projectContainers || projectContainers.length === 0) {
+			return [];
 		}
-	
-		const hasTls = _.some(labels, (value, key) => {
-			return key === _.replace(hostKey, 'Rule', 'Entrypoints') && value === 'https';
-		});
-		const hostValue = labels[hostKey];
-		const host = _.get(hostValue.match(/Host\(`([^`]+)`\)/), 1);
-		if (_.isUndefined(host)) {
-			return '';
+
+		const urls = [];
+		// Iterate through all containers to find Traefik labels
+		for (const container of projectContainers) {
+			const labels = container.labels;
+			
+			if (!labels) {
+				continue;
+			}
+
+			// Find all Traefik router rule labels (ends with "Rule" and contains Host(`...`))
+			_.each(labels, (value, key) => {
+				if (!_.isString(key) || !_.endsWith(key, 'Rule')) {
+					return;
+				}
+
+				if (!_.isString(value) || !value.includes('Host(`')) {
+					return;
+				}
+
+				// Extract the host from the rule value
+				const host = _.get(value.match(/Host\(`([^`]+)`\)/), 1);
+				if (_.isUndefined(host)) {
+					return;
+				}
+
+				// Find the corresponding Entrypoints label to determine protocol
+				const entrypointsKey = _.replace(key, 'Rule', 'Entrypoints');
+				const hasTls = labels[entrypointsKey] === 'https';
+
+				const protocol = _.cond([
+					[() => hasTls, _.constant('https')],
+					[_.stubTrue, _.constant('http')]
+				])();
+				urls.push(`${protocol}://${host}`);
+			});
 		}
-		
-		const protocol = _.cond([
-			[() => hasTls, _.constant('https')],
-			[_.stubTrue, _.constant('http')]
-		])();
-		return `${protocol}://${host}`;
+
+		return urls;
 	}
 }
 

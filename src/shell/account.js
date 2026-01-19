@@ -25,8 +25,11 @@ const render = (state) => {
 	subsciption = null;
 	
 	const isUpdating = !_.isNull(state.update);
-	const container = _.find(state.containers, { name: 'authelia' });
-	authDomain = dockerService.composeUrlFromLabels(container?.labels);
+	const projectContainers = _.filter(state.containers, (container) => {
+		return container.labels && container.labels['comDockerComposeProject'] === 'authelia';
+	});
+	const urls = dockerService.composeUrlFromLabels(projectContainers);
+	authDomain = urls.length > 0 ? urls[0] : null;
 	morphdom(
 		document.querySelector('#account'),
 		accountTemplate({ account, authDomain, isUpdating })

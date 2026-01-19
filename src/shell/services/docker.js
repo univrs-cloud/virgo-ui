@@ -6,8 +6,8 @@ const getContainers = () => {
 	return Docker.getContainers();
 };
 
-const composeUrlFromLabels = (labels) => {
-	return Docker.composeUrlFromLabels(labels);
+const composeUrlFromLabels = (projectContainers) => {
+	return Docker.composeUrlFromLabels(projectContainers);
 };
 
 const handleSubscription = (properties) => {

@@ -17,8 +17,8 @@
 				</div>
 			</div>
 		</div>
-		<%if (_.includes(['success', 'warning'], app.state) && !_.isEmpty(app.url)) {%>
-			<a href="<%=app.url%>" target="<%=(app?.target || app.name)%>" class="stretched-link"></a>
+		<%if (_.includes(['success', 'warning'], app.state) && !_.isEmpty(app.urls)) {%>
+			<a href="<%=app.urls[0]%>" target="<%=(app?.target || app.name)%>" class="stretched-link"></a>
 		<%}%>
 		<%let color =''%>
 		<%if (app.state === 'success') color = 'green'%>
