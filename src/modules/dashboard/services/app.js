@@ -17,14 +17,7 @@ const handleSubscription = (properties) => {
 	
 	let apps = _.map(properties.configured, (entity) => {
 		if (entity.type === 'app') {
-			let container = _.find(properties.containers, (container) => {
-				if (!container.name) {
-					return false;
-				}
-				// Match by exact container name (backward compatibility) or pattern {project_name}-{service_name}-{number}
-				const patternRegex = new RegExp(`^/${entity.name}-${entity.name}-\\d+$`);
-				return container.name === entity.name || _.some(container.names, (name) => { return patternRegex.test(name); });
-			});
+			const container = properties.containers[0];
 			if (container) {
 				entity.composeProject = container.labels.comDockerComposeProject || false;
 				if (entity.composeProject) {

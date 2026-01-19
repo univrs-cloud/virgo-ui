@@ -27,15 +27,7 @@ const composeApps = (configured, containers, appsResourceMetrics, imageUpdates) 
 			['asc']
 		),
 		(entity) => {
-			let container = _.find(containers, (container) => {
-				if (!container.name) {
-					return false;
-				}
-
-				// Match by exact container name (backward compatibility) or pattern {project_name}-{service_name}-{number}
-				const patternRegex = new RegExp(`^/${entity.name}-${entity.name}-\\d+$`);
-				return container.name === entity.name || _.some(container.names, (name) => { return patternRegex.test(name); });
-			});
+			const container = containers[0];
 			if (container) {
 				entity.composeProject = container?.labels?.comDockerComposeProject || false;
 				if (entity.composeProject) {
