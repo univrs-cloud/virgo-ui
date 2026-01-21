@@ -25,7 +25,7 @@ const render = (event) => {
 	});
 	const app = link.closest('.app');
 	logsContainer = app.querySelector('.logs-container');
-	logsContainer.querySelector('.service .name').innerHTML = service.labels?.comDockerComposeService || service.name;
+	logsContainer.querySelector('.service .name').innerHTML = service.labels?.comDockerComposeService;
 	logsContainer.classList.remove('d-none');
 	socket.emit('logs:connect', link.dataset.id);
 };
