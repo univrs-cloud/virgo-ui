@@ -19,21 +19,11 @@ const checkIfSetupIsRequired = (state) => {
 	
 	// Check if we have both authelia and traefik containers (by direct name or pattern)
 	const hasAuthelia = _.some(state.containers, (container) => {
-		if (!container.name) {
-			return false;
-		}
-		// Match by exact container name (backward compatibility) or pattern {project_name}-{service_name}-{number}
-		return container.name.toLowerCase() === 'authelia' || 
-			_.some(container.names, (name) => { return name.startsWith('/authelia-authelia-'); });
+		return container.labels?.comDockerComposeService === 'authelia';
 	});
 	
 	const hasTraefik = _.some(state.containers, (container) => {
-		if (!container.name) {
-			return false;
-		}
-		// Match by exact container name (backward compatibility) or pattern {project_name}-{service_name}-{number}
-		return container.name.toLowerCase() === 'traefik' || 
-			_.some(container.names, (name) => { return name.startsWith('/traefik-traefik-'); });
+		return container.labels?.comDockerComposeService === 'traefik';
 	});
 	
 	if (
