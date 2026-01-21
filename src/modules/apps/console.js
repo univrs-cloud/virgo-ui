@@ -26,7 +26,7 @@ const render = (event) => {
 	});
 	const app = link.closest('.app');
 	terminalContainer = app.querySelector('.terminal-container');
-	terminalContainer.querySelector('.service .name').innerHTML = service.labels?.comDockerComposeService || service.name;
+	terminalContainer.querySelector('.service .name').innerHTML = service.labels?.comDockerComposeService;
 	terminalContainer.classList.remove('d-none');
 	socket.emit('terminal:connect', link.dataset.id);
 };

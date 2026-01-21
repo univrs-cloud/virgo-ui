@@ -146,7 +146,7 @@ const performServiceAction = async (event) => {
 
 	if (
 		button.classList.contains('confirm') &&
-		!await confirm(`Are you sure you want to ${button.dataset.action} the service ${service.name}?`, { buttons: [{ text: _.upperFirst(button.dataset.action), class: (button.classList.contains('confirm') ? 'btn-danger' : 'btn-primary') }] })
+		!await confirm(`Are you sure you want to ${button.dataset.action} the service ${service.labels?.comDockerComposeService}?`, { buttons: [{ text: _.upperFirst(button.dataset.action), class: (button.classList.contains('confirm') ? 'btn-danger' : 'btn-primary') }] })
 	) {
 		return;
 	}

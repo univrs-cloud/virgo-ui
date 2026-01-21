@@ -25,11 +25,7 @@ const handleSubscription = (properties) => {
 	);
 	templates = _.map(templates, (template) => {
 		template.isInstalled = (_.find(properties.containers, (container) => {
-			if (!container.names) {
-				return false;
-			}
-			// Match by exact container name (backward compatibility) or pattern {project_name}-{service_name}-{number}
-			return _.includes(container.names, `/${template.name}`) || _.some(container.names, (name) => { return name.startsWith(`/${template.name}-`); });
+			return template.name === container.labels?.comDockerComposeProject;
 		}) !== undefined);
 		return template;
 	});
