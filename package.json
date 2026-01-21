@@ -16,8 +16,8 @@
 		"install_dir": "/var/www"
 	},
 	"engines": {
-		"node": ">=22.21.1",
-		"npm": ">=10.9.3"
+		"node": ">=24.13.0",
+		"npm": ">=11.6.2"
 	},
 	"cpu": [
 		"arm64"
@@ -33,7 +33,7 @@
 		"bytes": "^3.1.2",
 		"copy-to-clipboard": "^3.3.3",
 		"lit": "^3.3.2",
-		"lodash-es": "^4.17.22",
+		"lodash-es": "^4.17.23",
 		"lodash-inflection": "^1.5.0",
 		"moment": "^2.30.1",
 		"moment-timezone": "^0.6.0",
