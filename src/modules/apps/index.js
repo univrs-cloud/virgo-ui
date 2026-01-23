@@ -1,3 +1,4 @@
+import page from 'page';
 import modulePartial from 'modules/apps/partials/index.html';
 import appPartial from 'modules/apps/partials/app.html';
 import appActionsPartial from 'modules/apps/partials/app_actions.html';
@@ -12,6 +13,7 @@ document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTe
 const module = document.querySelector('#apps');
 const loading = module.querySelector('.loading');
 const container = module.querySelector('.container-fluid');
+const details = container.querySelector('.details');
 const searchInput = module.querySelector('.search');
 const table = container.querySelector('.table');
 let searchTimer;
@@ -20,6 +22,7 @@ let tableOrder = {
 	field: 'title',
 	direction: 'asc'
 };
+let apps = [];
 
 const search = (event) => {
 	clearTimeout(searchTimer);
@@ -62,9 +65,7 @@ const expand = (event) => {
 	event.preventDefault();
 	const row = event.target.closest('.app');
 	const name = row.dataset.name;
-	const app = _.find(appService.getApps(), { name });
-	renderAppDetails(app);
-	container.querySelector('.details').classList.add('d-block');
+	page(`/apps/${encodeURIComponent(name)}`);
 };
 
 const compress = (event) => {
@@ -73,8 +74,7 @@ const compress = (event) => {
 	}
 
 	event.preventDefault();
-	container.querySelector('.details').classList.remove('d-block');
-	container.querySelector('.details').innerHTML = '';
+	page('/apps');
 };
 
 const update = (event) => {
@@ -158,10 +158,19 @@ const performServiceAction = async (event) => {
 	appService.performServiceAction(config);
 };
 
-const renderAppDetails = (app) => {
+const renderAppDetails = (name) => {
+	if (!name) {
+		return;
+	}
+
+	const app = _.find(apps, { name });
+	if (!app) {
+		return;
+	}
+
 	const jobs = _.filter(appService.getJobs(), (job) => { return job.data?.config?.name === app.name; });
 	morphdom(
-		container.querySelector('.details'),
+		details,
 		`<div>${appDetailsTemplate({ app, jobs, appActionsTemplate, prettyBytes, moment })}</div>`,
 		{
 			childrenOnly: true,
@@ -174,13 +183,18 @@ const renderAppDetails = (app) => {
 	);
 };
 
+const hideAppDetails = () => {
+	details.classList.remove('d-block');
+	details.innerHTML = '';
+};
+
 const render = (state) => {
 	if (_.isNull(state.apps)) {
 		return;
 	}
 	
 	const template = document.createElement('template');
-	let apps = state.apps;
+	apps = state.apps;
 	const searchTerms = searchValue.toLowerCase().split(/\s+/);
 	apps = _.filter(apps, (app) => {
 		const text = `${app.title || ''}`.toLowerCase();
@@ -209,15 +223,25 @@ const render = (state) => {
 
 	const appContainer = container.querySelector('.details .app');
 	if (appContainer) {
-		const name = appContainer.dataset.name;
-		const app = _.find(apps, { name });
-		renderAppDetails(app);
+		renderAppDetails(appContainer.dataset.name);
 	}
 	
 	loading.classList.add('d-none');
 	container.classList.remove('d-none');
 };
 
+const handleRoute = (ctx) => {
+	const name = ctx?.params?.appName
+	if (_.isEmpty(name)) {
+		hideAppDetails();
+		return;
+	}
+
+	renderAppDetails(name);
+	details.classList.add('d-block');
+};
+
+module.onRoute = handleRoute;
 module.addEventListener('click', compress);
 module.addEventListener('click', update);
 module.addEventListener('click', performAppAction);
