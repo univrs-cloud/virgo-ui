@@ -38,9 +38,7 @@
 			<a href="/users/profile"><i class="icon-solid icon-angle-right text-body-tertiary" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="This is you! Edit your profile or change your password in your <strong><u>Profile</u></strong> page."></i></a>
 		<%} else {%>
 			<div class="dropdown">
-				<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm">
-					<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
-				</span>
+				<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
 				<ul class="dropdown-menu">
 					<li><a href="#user-update" class="dropdown-item" data-bs-toggle="modal"><i class="icon-regular icon-pen icon-fw me-1"></i>Edit</a></li>
 					<%if (!user.isOwner && user.username !== account.user) {%>

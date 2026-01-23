@@ -23,15 +23,29 @@
 		<small class="fw-light"><%=prettyBytes(pool.properties.size.value || 0, { binary: true })%></small>
 	</td>
 	<td class="text-end text-nowrap d-none d-md-table-cell">
-		<small class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(pool.properties.allocated.value || 0, { binary: true })%>"><%=pool.properties.capacity.value?.toFixed(2)%>%</small>
+		<%if (pool.name === 'system') {%>
+			<small class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(pool.properties.allocated.value || 0, { binary: true })%>"><%=pool.properties.capacity.value?.toFixed(2)%>%</small>
+		<%} else {%>
+			<small class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(pool.properties.usedbydatasets.value || 0, { binary: true })%>"><%=(pool.properties.usedbydatasets.value / pool.properties.size.value * 100)?.toFixed(2)%>%</small>
+		<%}%>
 		<u-progress shadow="false">
 			<%if (pool.name === 'system') {%>
 				<u-progress-bar width="<%=pool.properties.capacity.value%>"></u-progress-bar>
 			<%} else {%>
-				<u-progress-bar width="<%=(pool.properties.usedbydatasets.value / pool.properties.size.value * 100)%>" tip="Data"></u-progress-bar>
-				<u-progress-bar color="indigo" tint="100" width="<%=(pool.properties.usedbysnapshots.value / pool.properties.size.value * 100)%>" tip="Snapshots"></u-progress-bar>
+				<u-progress-bar width="<%=(pool.properties.usedbydatasets.value / pool.properties.size.value * 100)%>"></u-progress-bar>
 			<%}%>
 		</u-progress>
+	</td>
+	<td class="text-end text-nowrap d-none d-md-table-cell">
+		<%if (pool.name === 'system') {%>
+			&mdash;
+		<%} else {%>
+			<small class="fw-light d-none"><%=_.size(pool.snapshots)%></small>
+			<small class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(pool.properties.usedbysnapshots.value || 0, { binary: true })%>"><%=(pool.properties.usedbysnapshots.value / pool.properties.size.value * 100)?.toFixed(2)%>%</small>
+			<u-progress shadow="false">
+				<u-progress-bar color="indigo" tint="100" width="<%=(pool.properties.usedbysnapshots.value / pool.properties.size.value * 100)%>"></u-progress-bar>
+			</u-progress>
+		<%}%>
 	</td>
 	<td class="<%=(pool.type?.toLowerCase() === 'pool' && pool.scanStats?.state.toLowerCase() === 'scanning' ? 'text-end' : 'text-center')%> text-nowrap d-none d-md-table-cell">
 		<%if (pool.type?.toLowerCase() === 'pool' && pool.scanStats) {%>
@@ -65,9 +79,7 @@
 	</td>
 	<td class="text-center px-0">
 		<div class="dropdown">
-			<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm">
-				<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
-			</span>
+			<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
 			<ul class="dropdown-menu">
 				<li><button type="button" class="dropdown-item disabled">No actions</button></li>
 			</ul>
