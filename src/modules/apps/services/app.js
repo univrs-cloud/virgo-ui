@@ -1,3 +1,4 @@
+import Host from 'stores/host';
 import Docker from 'stores/docker';
 import Job from 'stores/job';
 
@@ -12,10 +13,10 @@ const getJobs = () => {
 };
 
 const getApps = () => {
-	return composeApps(Docker.getConfigured(), Docker.getContainers(), Docker.getAppsResourceMetrics(), Docker.getImageUpdates());
+	return composeApps(Docker.getConfigured(), Docker.getContainers(), Docker.getAppsResourceMetrics(), Docker.getImageUpdates(), Host.getSnapshots());
 };
 
-const composeApps = (configured, containers, appsResourceMetrics, imageUpdates) => {
+const composeApps = (configured, containers, appsResourceMetrics, imageUpdates, snapshots) => {
 	if (_.isNull(configured) || _.isNull(containers)) {
 		return null;
 	}
@@ -53,6 +54,21 @@ const composeApps = (configured, containers, appsResourceMetrics, imageUpdates) 
 			}
 			entity.urls = Docker.composeUrlFromLabels(entity.projectContainers);
 			entity.resourceMetrics = _.find(appsResourceMetrics, { name: entity.name });
+
+			// Snapshots belonging to this app's dataset
+			entity.snapshots = _.filter(_.values(snapshots), (snapshot) => {
+				return snapshot.dataset === `messier/apps/${entity.name}`;
+			});
+
+			// Count snapshots by autosnap interval (frequently, hourly, daily, monthly, yearly)
+			const allowedIntervals = ['frequently', 'hourly', 'daily', 'monthly', 'yearly'];
+			const countsByInterval = _.countBy(entity.snapshots, (snapshot) => {
+				const name = snapshot.snapshotName || '';
+				const interval = _.last(name.split('_'));
+				return _.includes(allowedIntervals, interval) ? interval : 'other';
+			});
+			entity.snapshotCounts = _.pick(countsByInterval, allowedIntervals);
+
 			return entity;
 		});
 }
@@ -70,7 +86,7 @@ const performServiceAction = (config) => {
 };
 
 const handleSubscription = (properties) => {
-	const apps = composeApps(properties.configured, properties.containers, properties.appsResourceMetrics, properties.imageUpdates);
+	const apps = composeApps(properties.configured, properties.containers, properties.appsResourceMetrics, properties.imageUpdates, properties.snapshots);
 	_.each(callbackCollection, (callback) => {
 		callback({ apps, jobs: properties.jobs });
 	});
@@ -78,7 +94,7 @@ const handleSubscription = (properties) => {
 
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
-	return Docker.subscribeToProperties(['configured', 'containers', 'appsResourceMetrics', 'imageUpdates', 'jobs'], handleSubscription);
+	return Docker.subscribeToProperties(['configured', 'containers', 'appsResourceMetrics', 'imageUpdates', 'snapshots', 'jobs'], handleSubscription);
 };
 
 const unsubscribe = (subsciption) => {

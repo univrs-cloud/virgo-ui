@@ -81,12 +81,16 @@ class Host extends Store {
 			this.setState({ networkStats }, 'get_network_stats');
 		});
 
+		this.socket.on('host:drives', (drives) => {
+			this.setState({ drives }, 'get_drives');
+		});
+
 		this.socket.on('host:storage', (storage) => {
 			this.setState({ storage }, 'get_storage');
 		});
 
-		this.socket.on('host:drives', (drives) => {
-			this.setState({ drives }, 'get_drives');
+		this.socket.on('host:storage:snapshots', (snapshots) => {
+			this.setState({ snapshots }, 'get_snapshots');
 		});
 
 		this.socket.on('host:ups', (ups) => {
@@ -154,12 +158,16 @@ class Host extends Store {
 		return this.getStateProperty('update');
 	}
 
+	getDrives() {
+		return this.getStateProperty('drives');
+	}
+
 	getStorage() {
 		return this.getStateProperty('storage');
 	}
 
-	getDrives() {
-		return this.getStateProperty('drives');
+	getSnapshots() {
+		return this.getStateProperty('snapshots');
 	}
 
 	getServices() {

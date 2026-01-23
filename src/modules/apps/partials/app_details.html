@@ -85,7 +85,7 @@
 					<div class="col col-6 col-md-3">
 						<div class="card mb-2">
 							<div class="card-body py-1">
-								<small class="text-body-tertiary pb-1"><i class="icon-solid icon-camera icon-fw me-1"></i>Snapshots</small>
+								<small class="text-body-tertiary pb-1"><i class="icon-solid icon-camera icon-fw me-1"></i>Snapshots (<%=_.size(app.snapshots)%>)</small>
 								<h5><%=prettyBytes(app.resourceMetrics?.storage?.snapshots || 0, { binary: true })%></h5>
 							</div>
 						</div>
@@ -93,7 +93,7 @@
 				</div>
 
 				<div class="services overflow-y-scroll pe-3 me-n3">
-					<table class="table table-hover align-middle m-0">
+					<table class="table table-hover align-middle m-0 mb-2">
 						<thead class="sticky-top">
 							<th>Service</th>
 							<th>Ports</th>
@@ -170,9 +170,7 @@
 											<i class="icon-solid icon-gear icon-fw icon-spin"></i>
 										<%} else {%>
 											<div class="dropdown">
-												<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm">
-													<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
-												</span>
+												<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
 												<ul class="dropdown-menu">
 													<%if (app.canBeRemoved || _.includes(['created', 'exited'], container.state)) {%>
 														<li><a href="#" class="dropdown-item <%=(_.includes(['created', 'exited'], container.state) ? '' : 'disabled')%>" data-action="start"><i class="icon-regular icon-play icon-fw me-1"></i>Start</a></li>
@@ -186,6 +184,44 @@
 												</ul>
 											</div>
 										<%}%>
+									</td>
+								</tr>
+							<%})%>
+						</tbody>
+					</table>
+
+					<table class="table table-hover align-middle m-0">
+						<thead class="sticky-top">
+							<th>Snapshot</th>
+							<th class="text-end" style="width: 100px; min-width: 100px;">Size</th>
+							<th style="width: 80px; min-width: 80px;">Interval</th>
+							<th style="width: 40px; min-width: 40px;"></th>
+						</thead>
+						<tbody>
+							<%
+								const snapshots = _.orderBy(app.snapshots, (snapshot) => {
+									const segments = snapshot.snapshotName.split('_');
+									const m = moment(datePart = segments.slice(1, -1).join(' '), 'YYYY-MM-DD HH:mm:ss', true);
+									return m.isValid() ? m.toDate() : new Date(0);
+								}, ['desc']);
+							%>
+							<%_.each(snapshots, (snapshot) => {%>
+								<%
+									const segments = snapshot.snapshotName.split('_');
+									const createdMoment = moment(segments.slice(1, -1).join(' '), 'YYYY-MM-DD HH:mm:ss', true);
+									const createdAt = createdMoment.isValid() ? createdMoment.format('YYYY-MM-DD HH:mm') : snapshotName;
+								%>
+								<tr>
+									<td class="font-monospace"><small class="text-body-secondary"><%=createdAt%></small></td>
+									<td class="text-end"><small class="fw-light"><%=prettyBytes(snapshot.properties?.used?.value || 0, { binary: true })%></small></td>
+									<td><small class="fw-light"><%=_.startCase(_.last(segments))%></small></td>
+									<td>
+										<div class="dropdown">
+											<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
+											<ul class="dropdown-menu">
+												<li><button type="button" class="dropdown-item disabled">No actions</button></li>
+											</ul>
+										</div>
 									</td>
 								</tr>
 							<%})%>

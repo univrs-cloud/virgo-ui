@@ -23,12 +23,14 @@ const search = (event) => {
 };
 
 const render = (state) => {
-	if (_.isNull(state.storage)) {
+	if (_.isNull(state.drives) || _.isNull(state.storage) || _.isNull(state.snapshots)) {
 		return;
 	}
 	
 	const template = document.createElement('template');
+	let drives = state.drives;
 	let pools = state.storage;
+	let snapshots = state.snapshots;
 	const searchTerms = searchValue.toLowerCase().split(/\s+/);
 	pools = _.filter(pools, (pool) => {
 		const text = `${pool.name || ''}`.toLowerCase();
@@ -39,8 +41,11 @@ const render = (state) => {
 		if (pool.name !== 'system') {
 			pool.properties.usedbydatasets.percent = (pool.properties.usedbydatasets.value / pool.properties.size.value * 100);
 			pool.properties.usedbysnapshots.percent = (pool.properties.usedbysnapshots.value / pool.properties.size.value * 100);
+			pool.snapshots = _.pickBy(snapshots, (snapshot) => {
+				return snapshot.pool === pool.name;
+			});
 		}
-		template.innerHTML += storageTemplate({ pool, drives: state.drives, prettyBytes, moment });
+		template.innerHTML += storageTemplate({ drives, pool, prettyBytes, moment });
 	});
 	
 	morphdom(

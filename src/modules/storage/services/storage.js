@@ -2,12 +2,16 @@ import Host from 'stores/host';
 
 let callbackCollection = [];
 
+const getDrives = () => {
+	return Host.getDrives();
+};
+
 const getStorage = () => {
 	return Host.getStorage();
 };
 
-const getDrives = () => {
-	return Host.getDrives();
+const getSnapshots = () => {
+	return Host.getSnapshots();
 };
 
 const handleSubscription = (properties) => {
@@ -18,7 +22,7 @@ const handleSubscription = (properties) => {
 
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
-	return Host.subscribeToProperties(['drives', 'storage'], handleSubscription);
+	return Host.subscribeToProperties(['drives', 'storage', 'snapshots'], handleSubscription);
 };
 
 const unsubscribe = (subsciption) => {
@@ -30,6 +34,7 @@ const unsubscribe = (subsciption) => {
 export {
 	subscribe,
 	unsubscribe,
+	getDrives,
 	getStorage,
-	getDrives
+	getSnapshots
 };
