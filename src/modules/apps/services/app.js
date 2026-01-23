@@ -54,21 +54,9 @@ const composeApps = (configured, containers, appsResourceMetrics, imageUpdates, 
 			}
 			entity.urls = Docker.composeUrlFromLabels(entity.projectContainers);
 			entity.resourceMetrics = _.find(appsResourceMetrics, { name: entity.name });
-
-			// Snapshots belonging to this app's dataset
 			entity.snapshots = _.filter(_.values(snapshots), (snapshot) => {
 				return snapshot.dataset === `messier/apps/${entity.name}`;
 			});
-
-			// Count snapshots by autosnap interval (frequently, hourly, daily, monthly, yearly)
-			const allowedIntervals = ['frequently', 'hourly', 'daily', 'monthly', 'yearly'];
-			const countsByInterval = _.countBy(entity.snapshots, (snapshot) => {
-				const name = snapshot.snapshotName || '';
-				const interval = _.last(name.split('_'));
-				return _.includes(allowedIntervals, interval) ? interval : 'other';
-			});
-			entity.snapshotCounts = _.pick(countsByInterval, allowedIntervals);
-
 			return entity;
 		});
 }

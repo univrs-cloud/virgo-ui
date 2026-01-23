@@ -209,7 +209,7 @@
 								<%
 									const segments = snapshot.snapshotName.split('_');
 									const createdMoment = moment(segments.slice(1, -1).join(' '), 'YYYY-MM-DD HH:mm:ss', true);
-									const createdAt = createdMoment.isValid() ? createdMoment.format('YYYY-MM-DD HH:mm') : snapshotName;
+									const createdAt = createdMoment.isValid() ? createdMoment.format('YYYY-MM-DD HH:mm') : snapshot.snapshotName;
 								%>
 								<tr>
 									<td class="font-monospace"><small class="text-body-secondary"><%=createdAt%></small></td>
