@@ -194,36 +194,57 @@
 						<thead class="sticky-top">
 							<th>Snapshot</th>
 							<th class="text-end" style="width: 100px; min-width: 100px;">Size</th>
-							<th style="width: 80px; min-width: 80px;">Interval</th>
 							<th style="width: 40px; min-width: 40px;"></th>
 						</thead>
 						<tbody>
 							<%
-								const snapshots = _.orderBy(app.snapshots, (snapshot) => {
+								// Group snapshots by type
+								const groupedSnapshots = _.groupBy(app.snapshots, (snapshot) => {
 									const segments = snapshot.snapshotName.split('_');
-									const m = moment(datePart = segments.slice(1, -1).join(' '), 'YYYY-MM-DD HH:mm:ss', true);
-									return m.isValid() ? m.toDate() : new Date(0);
-								}, ['desc']);
+									return _.toLower(_.last(segments));
+								});
+								
+								// Define custom order for snapshot types
+								const typeOrder = ['frequently', 'hourly', 'daily', 'monthly', 'yearly'];
+								
+								// Sort groups by custom order
+								const sortedGroups = _.sortBy(_.keys(groupedSnapshots), (type) => {
+									const index = _.indexOf(typeOrder, type);
+									return index === -1 ? 999 : index;
+								});
 							%>
-							<%_.each(snapshots, (snapshot) => {%>
+							<%_.each(sortedGroups, (type) => {%>
 								<%
-									const segments = snapshot.snapshotName.split('_');
-									const createdMoment = moment(segments.slice(1, -1).join(' '), 'YYYY-MM-DD HH:mm:ss', true);
-									const createdAt = createdMoment.isValid() ? createdMoment.format('YYYY-MM-DD HH:mm') : snapshot.snapshotName;
+									const typeSnapshots = _.orderBy(groupedSnapshots[type], (snapshot) => {
+										const segments = snapshot.snapshotName.split('_');
+										const m = moment(datePart = segments.slice(1, -1).join(' '), 'YYYY-MM-DD HH:mm:ss', true);
+										return m.isValid() ? m.toDate() : new Date(0);
+									}, ['desc']);
 								%>
-								<tr>
-									<td class="font-monospace"><small class="text-body-secondary"><%=createdAt%></small></td>
-									<td class="text-end"><small class="fw-light"><%=prettyBytes(snapshot.properties?.used?.value || 0, { binary: true })%></small></td>
-									<td><small class="fw-light"><%=_.startCase(_.last(segments))%></small></td>
-									<td>
-										<div class="dropdown">
-											<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
-											<ul class="dropdown-menu">
-												<li><button type="button" class="dropdown-item disabled">No actions</button></li>
-											</ul>
-										</div>
+								<tr class="sticky-top z-0" style="top: 2.6rem;">
+									<td colspan="3" class="bg-light fw-semibold">
+										<%=_.startCase(type)%> (<%=typeSnapshots.length%>)
 									</td>
 								</tr>
+								<%_.each(typeSnapshots, (snapshot) => {%>
+									<%
+										const segments = snapshot.snapshotName.split('_');
+										const createdMoment = moment(segments.slice(1, -1).join(' '), 'YYYY-MM-DD HH:mm:ss', true);
+										const createdAt = createdMoment.isValid() ? createdMoment.format('YYYY-MM-DD HH:mm') : snapshot.snapshotName;
+									%>
+									<tr>
+										<td class="font-monospace"><small class="text-body-secondary"><%=createdAt%></small></td>
+										<td class="text-end"><small class="fw-light"><%=prettyBytes(snapshot.properties?.used?.value || 0, { binary: true })%></small></td>
+										<td>
+											<div class="dropdown">
+												<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
+												<ul class="dropdown-menu">
+													<li><button type="button" class="dropdown-item disabled">No actions</button></li>
+												</ul>
+											</div>
+										</td>
+									</tr>
+								<%})%>
 							<%})%>
 						</tbody>
 					</table>
