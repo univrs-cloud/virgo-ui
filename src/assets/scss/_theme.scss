@@ -44,6 +44,10 @@ u-toast {
 
 .tooltip {
 	--bs-tooltip-zindex: 99999;
+	&.storage-scan-progress,
+	&.metrics-tooltip {
+		--bs-tooltip-max-width: 400px;
+	}
 }
 
 .modal {
@@ -345,9 +349,6 @@ u-toast {
 	.overflow-y-scroll {
 		height: calc(100dvh - 242px);
 	}
-}
-.storage-scan-progress.tooltip {
-	--bs-tooltip-max-width: 400px;
 }
 #apps {
 	&:has(.details .app) > .row > .container-fluid > .card {

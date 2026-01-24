@@ -11,7 +11,7 @@ const loading = modalBody.querySelector('.loading');
 const container = modalBody.querySelector('.container-fluid');
 let subsciption;
 let poller;
-let toggledRows = []
+let toggledRows = [];
 
 const enable = (event) => {
 	if (event.target.closest('u-button')?.dataset.action !== 'enable') {
@@ -67,7 +67,7 @@ const render = (state) => {
 		container,
 		`<div>${graphsTemplate({ grid: metrics.grid, toggledRows, moment, prettyBytes })}</div>`,
 		{ childrenOnly: true }
-	)
+	);
 	container.classList.remove('d-none');
 };
 
