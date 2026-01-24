@@ -138,7 +138,7 @@
 								<div class="metrics-tooltip-row">CPU usage: nice: <%=Math.round((d.cpuRaw.nice || 0) * 100)%>%, user: <%=Math.round((d.cpuRaw.user || 0) * 100)%>%, sys: <%=Math.round((d.cpuRaw.sys || 0) * 100)%>%</div>
 								<div class="metrics-tooltip-row">Load: <%=typeof d.cpuSatRaw === 'number' ? d.cpuSatRaw.toFixed(2) : 0%></div>
 								<div class="metrics-tooltip-row">Memory usage: <%=d.memRaw.used ? prettyBytes(d.memRaw.used, { binary: true }) : 'N/A'%> / <%=d.memRaw.total ? prettyBytes(d.memRaw.total, { binary: true }) : 'N/A'%></div>
-								<div class="metrics-tooltip-row">Swap out: <%=d.memSatRaw || 0%> pages</div>
+								<div class="metrics-tooltip-row">Swap out: <%=typeof d.memSatRaw === 'number' ? d.memSatRaw.toFixed(1) : 0%> pages/s</div>
 								<div class="metrics-tooltip-row">Disk I/O: <%=d.diskRaw ? prettyBytes(d.diskRaw, { binary: true }) + '/s' : 'N/A'%></div>
 								<div class="metrics-tooltip-row">Network I/O: <%=d.netRaw ? prettyBytes(d.netRaw, { binary: true }) + '/s' : 'N/A'%></div>
 							</div>
