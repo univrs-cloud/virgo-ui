@@ -10,7 +10,7 @@ $graphs: cpu, memory, disks, network;
 	--disks-color-extreme: var(--bs-orange-300);
 	--network-color: var(--bs-gray-300);
 	--network-color-extreme: var(--bs-gray-500);
-	--column-size: 10vw;
+	--column-size: 0;
 	--data-min-height: 5px;
 
 	&-heading {
@@ -49,6 +49,7 @@ $graphs: cpu, memory, disks, network;
 
 	&-label-graph {
 		text-align: end;
+		margin-inline: 0.5rem;
 		.metrics-sublabels {
 			justify-content: flex-end;
 		}
