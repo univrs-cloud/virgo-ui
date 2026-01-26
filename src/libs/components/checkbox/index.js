@@ -9,6 +9,7 @@ export class Checkbox extends LitElement {
 	static get properties() {
 		return {
 			label: { type: String, reflect: true },
+			tip: { type: String, reflect: true },
 			inline: { type: Boolean, reflect: true },
 			reverse: { type: Boolean, reflect: true },
 			indeterminate: { type: Boolean },
@@ -19,6 +20,7 @@ export class Checkbox extends LitElement {
 
 	#initialChecked = false;
 	#initialDisabled = false;
+	#tooltip = null;
 
 	constructor() {
 		super();
@@ -26,6 +28,7 @@ export class Checkbox extends LitElement {
 		this.onValue = true;
 		this.offValue = false;
 		this.label = '';
+		this.tip = '';
 		this.inline = false;
 		this.reverse = false;
 		this.indeterminate = false;
@@ -39,6 +42,19 @@ export class Checkbox extends LitElement {
 		this.#initialDisabled = this.hasAttribute('disabled');
 		this.value = this.checked ? this.onValue : this.offValue;
 		this.internals.setFormValue(this.value);
+	}
+
+	disconnectedCallback() {
+		super.disconnectedCallback();
+		this.#tooltip?.dispose();
+		this.#tooltip = null;
+	}
+
+	firstUpdated() {
+		const label = this.renderRoot.querySelector('label');
+		if (label && this.tip) {
+			this.#tooltip = new bootstrap.Tooltip(label);
+		}
 	}
 
 	async formResetCallback() {
@@ -77,6 +93,7 @@ export class Checkbox extends LitElement {
 						@change=${this.#onChange}
 					>
 					${this.label}
+					${this.tip ? html`<span class="help-inline ms-1" data-bs-toggle="tooltip" data-bs-original-title="${this.tip}"><i class="icon-solid icon-question-circle"></i></span>` : ''}
 				</label>
 			</div>
 		`;

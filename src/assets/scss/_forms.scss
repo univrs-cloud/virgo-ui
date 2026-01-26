@@ -41,6 +41,10 @@ textarea {
 	border-bottom-left-radius: 0;
 }
 
+.form-check .help-inline {
+	color: var(--bs-tertiary-color);
+}
+
 .form-floating {
 	&:not(.form-control:disabled)::before {
 		display: none;
