@@ -109,7 +109,6 @@ const updateBookmark = (event) => {
 	delete config.backendUrl;
 	delete config.requireAuth;
 	
-	console.log('updateBookmark', config);
 	bookmarkService.updateBookmark(config);
 	bootstrap.Modal.getInstance(modal)?.hide();
 };
