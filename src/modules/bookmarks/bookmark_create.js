@@ -89,7 +89,7 @@ const createBookmark = (event) => {
 	const buttons = form.querySelectorAll('button');
 	_.each(buttons, (button) => { button.disabled = true; });
 	let config = form.getData();
-	const useProxy = config.useProxy === true || config.useProxy === 'true';
+	const useProxy = (config.useProxy === 'true');
 	
 	if (useProxy) {
 		const fqdn = getFQDN();
