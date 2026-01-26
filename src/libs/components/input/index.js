@@ -83,6 +83,9 @@ export class Input extends LitElement {
 		this.#initialDisabled = this.hasAttribute('disabled');
 		this.#initialReadonly = this.hasAttribute('readonly');
 		this.internals.setFormValue(this.value);
+		// Check for slotted content in light DOM before first render
+		this.#hasPrefix = this.querySelector('[slot="prefix"]') !== null;
+		this.#hasSuffix = this.querySelector('[slot="suffix"]') !== null;
 	}
 
 	disconnectedCallback() {
@@ -130,12 +133,6 @@ export class Input extends LitElement {
 				}
 			});
 		}
-		
-		this.#hasPrefix = this.renderRoot.querySelector('slot[name="prefix"]')?.assignedNodes().length > 0 ?? false;
-		this.#hasSuffix = this.renderRoot.querySelector('slot[name="suffix"]')?.assignedNodes().length > 0 ?? false;
-		if (this.#hasPrefix || this.#hasSuffix) {
-			this.requestUpdate();
-		}
 	}
 
 	render() {
@@ -154,7 +151,7 @@ export class Input extends LitElement {
 		return html`
 			<div class="mb-4">
 				<div class="${classMap({ 'input-group': hasInputGroup })} has-validation">
-					<slot name="prefix" class="input-group-text ${classMap({ 'd-none': !this.#hasPrefix  })}" @slotchange=${this.#onSlotChange}></slot>
+					${this.#hasPrefix ? html`<span class="input-group-text"><slot name="prefix" @slotchange=${this.#onSlotChange}></slot></span>` : ''}
 					<div class="form-floating">
 						<input
 							type=${inputType}
@@ -173,7 +170,7 @@ export class Input extends LitElement {
 						${this.type === 'password' ? html`<button type="button" class="password-toggle" @click=${this.#togglePassword}></button>` : ''}
 						<div class="invalid-feedback lh-1 z-1 position-absolute top-100 start-0 end-0 ${classMap({ 'd-block': this.error })}">${this.error || ''}</div>
 					</div>
-					<slot name="suffix" class="input-group-text ${classMap({ 'd-none':!this.#hasSuffix  })}" @slotchange=${this.#onSlotChange}></slot>
+					${this.#hasSuffix ? html`<span class="input-group-text"><slot name="suffix" @slotchange=${this.#onSlotChange}></slot></span>` : ''}
 				</div>
 			</div>
 		`;
