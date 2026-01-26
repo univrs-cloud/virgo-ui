@@ -1,10 +1,8 @@
 import modulePartial from 'modules/bookmarks/partials/index.html';
-import emptyPartial from 'modules/bookmarks/partials/empty.html';
 import bookmarkPartial from 'modules/bookmarks/partials/bookmark.html';
 import * as bookmarkService from 'modules/bookmarks/services/bookmark';
 
 const moduleTemplate = _.template(modulePartial);
-const emptyTemplate = _.template(emptyPartial);
 const bookmarkTemplate = _.template(bookmarkPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
 const module = document.querySelector('#bookmarks');
