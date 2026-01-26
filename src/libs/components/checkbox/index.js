@@ -69,15 +69,17 @@ export class Checkbox extends LitElement {
 	}
 
 	updated(changedProps) {
-		if (changedProps.has('indeterminate')) {
+		if (changedProps.has('checked') || changedProps.has('indeterminate')) {
 			if (this.indeterminate && this.checked) {
 				this.checked = false;
 			}
 			this.value = this.checked ? this.onValue : this.offValue;
 			this.internals.setFormValue(this.value);
 			const input = this.renderRoot.querySelector('input');
-			input.checked = this.checked;
-			input.indeterminate = this.indeterminate;
+			if (input) {
+				input.checked = this.checked;
+				input.indeterminate = this.indeterminate;
+			}
 		}
 	}
 

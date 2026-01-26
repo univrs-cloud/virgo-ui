@@ -89,14 +89,15 @@ const createBookmark = (event) => {
 	const buttons = form.querySelectorAll('button');
 	_.each(buttons, (button) => { button.disabled = true; });
 	let config = form.getData();
+	const useProxy = config.useProxy === true || config.useProxy === 'true';
 	
-	if (config.useProxy) {
+	if (useProxy) {
 		const fqdn = getFQDN();
 		config.url = `https://${config.subdomain}.${fqdn}`;
 		config.traefik = {
 			subdomain: config.subdomain,
 			backendUrl: config.backendUrl,
-			isAuthRequired: config.requireAuth || false
+			isAuthRequired: config.requireAuth === true || config.requireAuth === 'true'
 		};
 	} else {
 		config.traefik = null;
@@ -107,6 +108,7 @@ const createBookmark = (event) => {
 	delete config.backendUrl;
 	delete config.requireAuth;
 	
+	console.log('createBookmark', config);
 	bookmarkService.createBookmark(config);
 	bootstrap.Modal.getInstance(modal)?.hide();
 };
