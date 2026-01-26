@@ -108,7 +108,6 @@ const createBookmark = (event) => {
 	delete config.backendUrl;
 	delete config.requireAuth;
 	
-	console.log('createBookmark', config);
 	bookmarkService.createBookmark(config);
 	bootstrap.Modal.getInstance(modal)?.hide();
 };
