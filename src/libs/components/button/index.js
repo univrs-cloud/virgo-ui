@@ -15,7 +15,8 @@ export class Button extends LitElement {
 			outline: { type: Boolean, reflect: true },
 			tip: { type: String, reflect: true },
 			disabled: { type: Boolean, reflect: true },
-			loadingText: { type: String, reflect: true, attribute: 'loading-text' }
+			loadingText: { type: String, reflect: true, attribute: 'loading-text' },
+			type: { type: String, reflect: true, converter: { fromAttribute: (value) => value ?? 'button' } }
 		};
 	}
 
@@ -86,14 +87,21 @@ export class Button extends LitElement {
 				@mouseleave=${() => { this.#tooltip?.hide(); }}
 			>
 				<button
-					type="button"
+					type="${this.type || 'button'}"
 					class="btn ${classMap(classes)} d-inline-flex align-items-center"
 					?disabled=${this.disabled}
+					@click=${this.#handleClick}
 				>
 					<slot></slot>
 				</button>
 			</span>
 		`;
+	}
+
+	#handleClick(event) {
+		if (this.type === 'submit' && !this.disabled) {
+			this.closest('form')?.dispatchEvent(new event.constructor('submit', event));
+		}
 	}
 }
 

@@ -23,8 +23,19 @@ const getTimeMachines = () => {
 	return filter(Share.getShares());
 };
 
-const performAction = (config) => {
-	Share.performAction(config);
+const createTimeMachine = (config) => {
+	config.type = 'timeMachine';
+	Share.createShare(config);
+};
+
+const updateTimeMachine = (config) => {
+	config.type = 'timeMachine';
+	Share.updateShare(config);
+};
+
+const deleteTimeMachine = (config) => {
+	config.type = 'timeMachine';
+	Share.deleteShare(config);
 };
 
 const handleSubscription = (properties) => {
@@ -51,5 +62,7 @@ export {
 	unsubscribe,
 	getSystem,
 	getTimeMachines,
-	performAction
+	createTimeMachine,
+	updateTimeMachine,
+	deleteTimeMachine
 };

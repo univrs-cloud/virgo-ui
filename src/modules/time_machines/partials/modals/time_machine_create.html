@@ -1,0 +1,22 @@
+<u-form>
+	<div id="time-machine-create" class="modal fade">
+		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">New time machine</h5>
+				</div>
+				<div class="modal-body">
+					<u-input name="comment" label="Name" class="comment"></u-input>
+					<u-select name="validUsers" label="Authorized user" class="valid-users"></u-select>
+					<u-input name="refquota" label="Capacity" class="refquota">
+						<span slot="suffix" class="mb-n3">GiB</span>
+					</u-input>
+				</div>
+				<div class="modal-footer">
+					<u-button variant="secondary" outline class="d-flex ms-auto" data-bs-dismiss="modal">Cancel</u-button>
+					<u-button type="submit" variant="primary">Create</u-button>
+				</div>
+			</div>
+		</div>
+	</div>
+</u-form>
