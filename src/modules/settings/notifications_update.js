@@ -7,8 +7,7 @@ const modal = document.querySelector('#smtp');
 const form = modal.closest('u-form');
 
 const updateSmtp = (event) => {
-	const buttons = form.querySelectorAll('button');
-	_.each(buttons, (button) => { button.disabled = true; });
+	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
 	let config = form.getData();
 	config.recipients = _.compact(_.split(_.trim(config.recipients), ','));
 	configurationService.updateSmtp(config);
