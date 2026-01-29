@@ -30,6 +30,9 @@ u-toast {
 .dropdown-item {
 	--bs-dropdown-link-hover-bg: rgba(0, 0, 0, 0.1);
 	border-radius: var(--bs-dropdown-border-radius);
+	&.text-danger:hover {
+		background-color: color-mix(in oklab, lab(48.4493% 77.4328 61.5452)10%, transparent);
+	}
 }
 .dropup {
 	.dropdown-menu {
