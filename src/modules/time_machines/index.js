@@ -52,7 +52,7 @@ const order = (event) => {
 };
 
 const copyToClipboard = (event) => {
-	if (event.target.closest('a').dataset.action !== 'copy-to-clipboard') {
+	if (event.target.closest('a')?.dataset.action !== 'copy-to-clipboard') {
 		return;
 	}
 
