@@ -105,7 +105,7 @@ const performAppAction = async (event) => {
 	if (
 		!event.target.closest('a')?.classList?.contains('dropdown-item') ||
 		event.target.closest('a')?.dataset.action === undefined ||
-		event.target.closest('a').dataset.action === 'update'
+		event.target.closest('a')?.dataset.action === 'update'
 	) {
 		return;
 	}
