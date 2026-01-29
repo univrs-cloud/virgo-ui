@@ -14,10 +14,10 @@ const deleteTimeMachine = async (event) => {
 		return;
 	}
 
-	// let config = {
-	// 	id: row.dataset.id
-	// };
-	// timeMachineService.deleteTimeMachine(config);	
+	let config = {
+		id: row.dataset.id
+	};
+	timeMachineService.deleteTimeMachine(config);	
 };
 
 module.addEventListener('click', deleteTimeMachine);
