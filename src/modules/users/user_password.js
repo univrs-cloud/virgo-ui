@@ -8,8 +8,7 @@ const form = modal.closest('u-form');
 let user;
 
 const changePassword = (event) => {
-	const buttons = form.querySelectorAll('button');
-	_.each(buttons, (button) => { button.disabled = true; });
+	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
 	let config = form.getData();
 	config.username = user.username;
 	userService.changePassword(config);

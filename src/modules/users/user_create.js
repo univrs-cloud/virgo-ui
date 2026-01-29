@@ -7,8 +7,7 @@ const modal = document.querySelector('#user-create');
 const form = modal.closest('u-form');
 
 const createUser = (event) => {
-	const buttons = form.querySelectorAll('button');
-	_.each(buttons, (button) => { button.disabled = true; });
+	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
 	let config = form.getData();
 	userService.createUser(config);
 	bootstrap.Modal.getInstance(modal)?.hide();

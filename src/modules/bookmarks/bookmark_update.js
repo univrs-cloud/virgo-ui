@@ -87,8 +87,7 @@ const updateValidation = (useProxy) => {
 };
 
 const updateBookmark = (event) => {
-	const buttons = form.querySelectorAll('button');
-	_.each(buttons, (button) => { button.disabled = true; });
+	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
 	let config = form.getData();
 	const useProxy = (config.useProxy === 'true');
 	
