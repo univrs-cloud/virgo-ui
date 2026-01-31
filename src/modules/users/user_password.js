@@ -4,7 +4,7 @@ import * as userService from 'modules/users/services/user';
 document.querySelector('body').insertAdjacentHTML('beforeend', passwordModalPartial);
 
 const modal = document.querySelector('#user-password');
-const form = modal.closest('u-form');
+const form = modal.querySelector('u-form');
 let user;
 
 const changePassword = (event) => {
@@ -53,5 +53,5 @@ form.validation = [
 	}
 ];
 form.addEventListener('valid', changePassword);
-form.addEventListener('show.bs.modal', render);
-form.addEventListener('hidden.bs.modal', restore);
+modal.addEventListener('show.bs.modal', render);
+modal.addEventListener('hidden.bs.modal', restore);

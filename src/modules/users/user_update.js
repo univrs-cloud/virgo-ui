@@ -5,7 +5,7 @@ import validator from 'validator';
 document.querySelector('body').insertAdjacentHTML('beforeend', userModalPartial);
 
 const modal = document.querySelector('#user-update');
-const form = modal.closest('u-form');
+const form = modal.querySelector('u-form');
 let user;
 
 const updateUser = (event) => {
@@ -49,5 +49,5 @@ form.validation = [
 	}
 ];
 form.addEventListener('valid', updateUser);
-form.addEventListener('show.bs.modal', render);
-form.addEventListener('hidden.bs.modal', restore);
+modal.addEventListener('show.bs.modal', render);
+modal.addEventListener('hidden.bs.modal', restore);

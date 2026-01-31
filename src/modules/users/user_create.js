@@ -4,7 +4,7 @@ import * as userService from 'modules/users/services/user';
 document.querySelector('body').insertAdjacentHTML('beforeend', userModalPartial);
 
 const modal = document.querySelector('#user-create');
-const form = modal.closest('u-form');
+const form = modal.querySelector('u-form');
 
 const createUser = (event) => {
 	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });

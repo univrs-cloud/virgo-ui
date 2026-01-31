@@ -4,7 +4,7 @@ import * as userService from 'modules/users/services/user';
 document.querySelector('body').insertAdjacentHTML('beforeend', profileModalPartial);
 
 const modal = document.querySelector('#profile-edit');
-const form = modal.closest('u-form');
+const form = modal.querySelector('u-form');
 
 const updateProfile = (event) => {
 	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
@@ -41,5 +41,5 @@ form.validation = [
 	}
 ];
 form.addEventListener('valid', updateProfile);
-form.addEventListener('show.bs.modal', render);
-form.addEventListener('hidden.bs.modal', restore);
+modal.addEventListener('show.bs.modal', render);
+modal.addEventListener('hidden.bs.modal', restore);

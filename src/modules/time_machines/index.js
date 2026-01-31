@@ -114,4 +114,5 @@ table.addEventListener('click', copyToClipboard);
 timeMachineService.subscribe([render]);
 
 import('modules/time_machines/time_machine_create');
+import('modules/time_machines/time_machine_update');
 import('modules/time_machines/time_machine_delete');

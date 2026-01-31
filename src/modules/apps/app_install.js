@@ -17,7 +17,7 @@ const selectTemplate = _.template(selectPartial);
 document.querySelector('body').insertAdjacentHTML('beforeend', appModalPartial);
 
 const modal = document.querySelector('#app-install');
-const form = modal.closest('u-form');
+const form = modal.querySelector('u-form');
 let app;
 
 const install = (event) => {
@@ -96,5 +96,5 @@ const restore = (event) => {
 
 form.validation = [];
 form.addEventListener('valid', install);
-form.addEventListener('show.bs.modal', render);
-form.addEventListener('hidden.bs.modal', restore);
+modal.addEventListener('show.bs.modal', render);
+modal.addEventListener('hidden.bs.modal', restore);

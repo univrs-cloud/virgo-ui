@@ -5,7 +5,7 @@ import * as systemService from 'shell/services/system';
 document.querySelector('body').insertAdjacentHTML('beforeend', bookmarkModalPartial);
 
 const modal = document.querySelector('#bookmark-create');
-const form = modal.closest('u-form');
+const form = modal.querySelector('u-form');
 const useProxyCheckbox = form.querySelector('.use-proxy');
 const urlContainer = form.querySelector('.url-container');
 const proxyContainer = form.querySelector('.proxy-container');
