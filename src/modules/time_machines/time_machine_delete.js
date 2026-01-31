@@ -15,7 +15,7 @@ const deleteTimeMachine = async (event) => {
 	}
 
 	let config = {
-		id: row.dataset.id
+		name: row.dataset.id
 	};
 	timeMachineService.deleteTimeMachine(config);	
 };
