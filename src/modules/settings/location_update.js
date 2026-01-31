@@ -4,7 +4,7 @@ import * as configurationService from 'modules/settings/services/configuration';
 document.querySelector('body').insertAdjacentHTML('beforeend', locationModalPartial);
 
 const modal = document.querySelector('#location');
-const form = modal.closest('u-form');
+const form = modal.querySelector('u-form');
 let notification = null;
 
 const getLocation = (event) => {
@@ -75,6 +75,6 @@ form.validation = [
 	}
 ];
 form.addEventListener('valid', updateLocation);
-form.addEventListener('show.bs.modal', render);
-form.addEventListener('hidden.bs.modal', restore);
 form.querySelector('.get-geo-location').addEventListener('click', getLocation);
+modal.addEventListener('show.bs.modal', render);
+modal.addEventListener('hidden.bs.modal', restore);

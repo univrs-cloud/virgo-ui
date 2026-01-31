@@ -4,7 +4,7 @@ import * as networkService from 'modules/network/services/network';
 document.querySelector('body').insertAdjacentHTML('beforeend', interfaceModalPartial);
 
 const modal = document.querySelector('#network-interface');
-const form = modal.closest('u-form');
+const form = modal.querySelector('u-form');
 
 const updateInterface = (event) => {
 	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
@@ -67,6 +67,6 @@ form.validation = [
 	}
 ];
 form.addEventListener('valid', updateInterface);
-form.addEventListener('show.bs.modal', render);
-form.addEventListener('hidden.bs.modal', restore);
 form.querySelector('.dhcp').addEventListener('switch-changed', toggleDhcp);
+modal.addEventListener('show.bs.modal', render);
+modal.addEventListener('hidden.bs.modal', restore);

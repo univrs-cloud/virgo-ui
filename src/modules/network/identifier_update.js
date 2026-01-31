@@ -4,7 +4,7 @@ import * as networkService from 'modules/network/services/network';
 document.querySelector('body').insertAdjacentHTML('beforeend', identifierModalPartial);
 
 const modal = document.querySelector('#network-identifier');
-const form = modal.closest('u-form');
+const form = modal.querySelector('u-form');
 
 const updateIdentifier = (event) => {
 	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
@@ -38,5 +38,5 @@ form.validation = [
 	}
 ];
 form.addEventListener('valid', updateIdentifier);
-form.addEventListener('show.bs.modal', render);
-form.addEventListener('hidden.bs.modal', restore);
+modal.addEventListener('show.bs.modal', render);
+modal.addEventListener('hidden.bs.modal', restore);

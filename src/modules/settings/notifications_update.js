@@ -4,7 +4,7 @@ import * as configurationService from 'modules/settings/services/configuration';
 document.querySelector('body').insertAdjacentHTML('beforeend', notificationModalPartial);
 
 const modal = document.querySelector('#smtp');
-const form = modal.closest('u-form');
+const form = modal.querySelector('u-form');
 
 const updateSmtp = (event) => {
 	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
@@ -53,5 +53,5 @@ form.validation = [
 	}
 ];
 form.addEventListener('valid', updateSmtp);
-form.addEventListener('show.bs.modal', render);
-form.addEventListener('hidden.bs.modal', restore);
+modal.addEventListener('show.bs.modal', render);
+modal.addEventListener('hidden.bs.modal', restore);

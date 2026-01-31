@@ -5,9 +5,9 @@ import * as userService from 'modules/time_machines/services/user';
 document.querySelector('body').insertAdjacentHTML('beforeend', timeMachineModalPartial);
 
 const modal = document.querySelector('#time-machine-create');
-const form = modal.closest('u-form');
+const form = modal.querySelector('u-form');
 
-const populateValidUsers = () => {
+const render = () => {
 	const users = userService.getUsers();
 	const options = [
 		{ value: '', label: 'Select user', default: true }
@@ -63,5 +63,5 @@ form.validation = [
 ];
 
 form.addEventListener('valid', createTimeMachine);
-modal.addEventListener('show.bs.modal', populateValidUsers);
+modal.addEventListener('show.bs.modal', render);
 modal.addEventListener('hidden.bs.modal', restore);

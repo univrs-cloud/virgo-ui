@@ -1,19 +1,22 @@
-<div id="profile-password" class="modal fade">
+<div id="time-machine-update" class="modal fade">
 	<u-form>
+		<u-input type="hidden" name="name" class="name"></u-input>
 		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Change password</h5>
+					<h5 class="modal-title">Edit time machine</h5>
 				</div>
 				<div class="modal-body">
 					<div class="alert alert-light">
 						<dl class="m-0">
-							<dt class="fw-light text-body-tertiary"><small>Username</small></dt>
-							<dd class="title-username m-0"></dd>
+							<dt class="fw-light text-body-tertiary"><small>Name</small></dt>
+							<dd class="comment m-0"></dd>
 						</dl>
 					</div>
-					<u-input type="password" name="password" label="New password" class="password" autocomplete="off"></u-input>
-					<u-input type="password" name="passwordCheck" label="Confirm password" class="password-check" autocomplete="off"></u-input>
+					<u-select name="validUsers" label="Authorized user" class="valid-users"></u-select>
+					<u-input name="refquota" label="Capacity" class="refquota">
+						<span slot="suffix" class="mb-n3">GiB</span>
+					</u-input>
 				</div>
 				<div class="modal-footer">
 					<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="modal" outline>Cancel</u-button>

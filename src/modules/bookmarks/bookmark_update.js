@@ -5,7 +5,7 @@ import * as systemService from 'shell/services/system';
 document.querySelector('body').insertAdjacentHTML('beforeend', bookmarkModalPartial);
 
 const modal = document.querySelector('#bookmark-update');
-const form = modal.closest('u-form');
+const form = modal.querySelector('u-form');
 const useProxyCheckbox = form.querySelector('.use-proxy');
 const urlContainer = form.querySelector('.url-container');
 const proxyContainer = form.querySelector('.proxy-container');
@@ -143,5 +143,5 @@ useProxyCheckbox.addEventListener('checked-changed', (event) => {
 
 updateValidation(false);
 form.addEventListener('valid', updateBookmark);
-form.addEventListener('show.bs.modal', render);
-form.addEventListener('hidden.bs.modal', restore);
+modal.addEventListener('show.bs.modal', render);
+modal.addEventListener('hidden.bs.modal', restore);
