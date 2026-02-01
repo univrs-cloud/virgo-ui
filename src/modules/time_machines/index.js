@@ -94,7 +94,7 @@ const render = (state) => {
 		[tableOrder.direction]
 	);
 	_.each(timeMachines, (timeMachine) => {
-		template.innerHTML += timeMachineTemplate({ timeMachine, accessOn, prettyBytes });
+		template.innerHTML += timeMachineTemplate({ timeMachine, accessOn, prettyBytes, moment });
 	});
 	
 	morphdom(
