@@ -62,8 +62,8 @@ export class ProgressBar extends LitElement {
 		this.color = 'blue';
 		this.tint = 300;
 		this.width = 0;
-		this.warningThreshold = 100;
-		this.dangerThreshold = 100;
+		this.warningThreshold = 80;
+		this.dangerThreshold = 90;
 		this.striped = false;
 		this.animated = false;
 		this.tip = '';

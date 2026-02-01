@@ -1,3 +1,14 @@
+<%
+	const snapshots = _.flatMap(timeMachine.timeMachine || [], (machine) => machine.snapshots || []);
+	const moments = _.map(snapshots, (snapshot) => moment(snapshot.createdAt));
+	const oldestStr = (moments.length ? moment.min(moments).format('YYYY-MM-DD HH:mm') : '—');
+	const newestStr = (moments.length ? moment.max(moments).format('YYYY-MM-DD HH:mm') : '—');
+	const snapshotTooltip = (moments.length ? `Latest: ${newestStr}<br>Oldest: ${oldestStr}` : '');
+	const runningMachine = _.find(timeMachine.timeMachine || [], (m) => m.status?.running);
+	const progress = runningMachine?.status?.progress;
+	const progressPercent = (progress ? progress.percent * 100 : 0);
+	const progressTooltip = progress ? `Remaining: ~${moment.duration(progress.timeRemaining, 'seconds').humanize()}<br>Transferred: ${prettyBytes(progress.bytes, { binary: true })} / ${prettyBytes(progress.totalBytes, { binary: true })}` : '';
+%>
 <tr class="time-machine" data-id="<%=timeMachine.name%>">
 	<td style="min-width: 210px; max-width: 0;">
 		<div class="d-flex align-items-center mb-n1">
@@ -20,6 +31,16 @@
 			<%})%>
 		<%} else {%>
 			<u-badge color="purple" pill>Guest</u-badge>
+		<%}%>
+	</td>
+	<td class="text-end text-nowrap d-none d-md-table-cell">
+		<%if (progress) {%>
+			<small class="fw-light text-nowrap" data-bs-toggle="tooltip" data-bs-original-title="<%=progressTooltip%>"><%=progressPercent.toFixed(0)%>%</small>
+			<u-progress shadow="false">
+				<u-progress-bar width="<%=progressPercent%>" warning-threshold="999" danger-threshold="999" striped animated></u-progress-bar>
+			</u-progress>
+		<%} else {%>
+			<small class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%=snapshotTooltip%>"><%=_.sumBy(timeMachine.timeMachine, (m) => { return _.size(m.snapshots || []); })%></small>
 		<%}%>
 	</td>
 	<td class="text-end text-nowrap d-none d-md-table-cell">
