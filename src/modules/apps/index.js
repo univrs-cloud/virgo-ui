@@ -253,6 +253,6 @@ table.querySelector('tbody').addEventListener('click', expand);
 appService.subscribe([render]);
 
 import('modules/apps/logs');
-import('modules/apps/console');
+import('modules/apps/terminal');
 import('modules/apps/app_center');
 import('modules/apps/app_install');
