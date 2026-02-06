@@ -383,7 +383,7 @@ u-toast {
 	}
 	.terminal-container {
 		.wrapper {
-			height: calc(100% - 36px);
+			height: calc(100% - 40px);
 			padding: map-get($spacers, 2) map-get($spacers, 1) map-get($spacers, 2) map-get($spacers, 3);
 		}
 	}
