@@ -380,21 +380,21 @@ u-toast {
 		bottom: 0;
 		left: 0;
 		right: 0;
-		background-color: var(--bs-white);
 	}
 	.terminal-container {
 		.wrapper {
-			height: calc(100% - 34px);
+			height: calc(100% - 36px);
+			padding: map-get($spacers, 2) map-get($spacers, 1) map-get($spacers, 2) map-get($spacers, 3);
 		}
 	}
 	.logs-container {
 		ul {
 			list-style: none;
 			overflow-y: scroll;
-			height: calc(100dvh - 257px);
+			height: calc(100dvh - 264px - map-get($spacers, 2));
 			background-color: var(--bs-black);
-			padding: 0;
-			margin: 0;
+			padding: 0 map-get($spacers, 3) 0 0;
+			margin: map-get($spacers, 2) map-get($spacers, 1) map-get($spacers, 2) map-get($spacers, 3);
 		}
 		li {
 			font-family: var(--bs-font-monospace);
