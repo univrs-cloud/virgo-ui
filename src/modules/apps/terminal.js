@@ -9,7 +9,7 @@ let terminal = null;
 let fitAddon = null;
 
 const render = (event) => {
-	if (!event.target.closest('a')?.classList.contains('console')) {
+	if (!event.target.closest('a')?.classList.contains('terminal')) {
 		return;
 	}
 
@@ -61,6 +61,7 @@ socket.on('terminal:connected', () => {
 	if (!terminal) {
 		fitAddon = new FitAddon();
 		terminal = new Terminal({
+			fontSize: 12,
 			screenKeys: true,
 			useStyle: true,
 			cursorBlink: true,
