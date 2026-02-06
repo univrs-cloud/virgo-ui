@@ -398,12 +398,28 @@ u-toast {
 		}
 		li {
 			font-family: var(--bs-font-monospace);
-			font-size: 0.813rem;
-			line-height: 1.063rem;
+			font-size: 12px;
+			line-height: 18px;
 			color: var(--bs-white);
+			display: flex;
+			gap: 0.5em;
+			align-items: flex-start;
 			&:hover {
 				color: var(--bs-black);
 				background-color: var(--bs-gray-100);
+			}
+			.log-container-name {
+				font-weight: 500;
+				flex-shrink: 0;
+				white-space: nowrap;
+			}
+			.log-content {
+				flex: 1;
+				min-width: 0;
+				white-space: pre-wrap;
+				word-wrap: break-word;
+				overflow-wrap: break-word;
+				color: inherit;
 			}
 		}
 	}
