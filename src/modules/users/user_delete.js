@@ -12,7 +12,7 @@ const deleteUser = async (event) => {
 	const row = button.closest('.user');
 	const user = _.find(userService.getUsers(), { uid: Number(row.dataset.uid) });
 
-	if (!await confirm(`Are you sure you want to delete the user ${user.username}?`, { buttons: [{ text: 'Delete', class: 'btn-danger' }] })) {
+	if (!await confirm(`Are you sure you want to delete the user ${user.username}?`, { buttons: [{ text: 'Yes, delete', class: 'btn-danger' }] })) {
 		return;
 	}
 

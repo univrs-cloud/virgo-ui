@@ -80,7 +80,7 @@
 			const override = options.buttons?.[index] ?? {};
 			return { ...defaultBtn, ...override };
 		});
-		const focus = options.focus ?? 0;
+		const focus = options.focus ?? 1;
 		const result = await createModal('Confirmation', text, buttons, focus, false);
 		try {
 			return JSON.parse(result);
