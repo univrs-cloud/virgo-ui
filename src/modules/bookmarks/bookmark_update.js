@@ -11,9 +11,10 @@ const useProxyCheckbox = form.querySelector('.use-proxy');
 const urlContainer = form.querySelector('.url-container');
 const proxyContainer = form.querySelector('.proxy-container');
 const domainSuffix = form.querySelector('.domain-suffix');
-
 const iconBox = modal.querySelector('.bookmark-icon-box');
 const iconPopoverContent = modal.querySelector('.bookmark-icon-popover-content');
+let iconPopoverOutsideClick = null;
+
 new bootstrap.Popover(iconBox, {
 	placement: 'left',
 	title: '',
@@ -24,35 +25,7 @@ new bootstrap.Popover(iconBox, {
 	offset: [32, 0],
 	trigger: 'manual'
 });
-iconBox.addEventListener('click', (event) => {
-	event.preventDefault();
-	const popover = bootstrap.Popover.getInstance(iconBox);
-	popover?.toggle();
-});
-let iconPopoverOutsideClick = null;
-iconBox.addEventListener('shown.bs.popover', () => {
-	const popover = bootstrap.Popover.getInstance(iconBox);
-	const tip = popover?.tip;
-	tip?.querySelector('.icon-search')?.focus();
-	iconPopoverOutsideClick = (e) => {
-		if (tip && !tip.contains(e.target) && !iconBox.contains(e.target)) {
-			popover?.hide();
-			document.removeEventListener('click', iconPopoverOutsideClick);
-			iconPopoverOutsideClick = null;
-		}
-	};
-	setTimeout(() => { document.addEventListener('click', iconPopoverOutsideClick); }, 0);
-});
-iconBox.addEventListener('hide.bs.popover', (event) => {
-	const popover = bootstrap.Popover.getInstance(iconBox);
-	if (popover?.tip?.contains(document.activeElement)) {
-		event.preventDefault();
-	}
-	if (iconPopoverOutsideClick) {
-		document.removeEventListener('click', iconPopoverOutsideClick);
-		iconPopoverOutsideClick = null;
-	}
-});
+
 iconPicker.initIconSearch(iconBox, iconPopoverContent, {
 	getIconImgEl: () => form.querySelector('.bookmark-icon-img'),
 	getIconInputEl: () => form.querySelector('.icon'),
@@ -77,9 +50,6 @@ const toggleProxyMode = (useProxy) => {
 	}
 	updateValidation(useProxy);
 };
-
-// Initialize domain suffix early so u-input renders correctly
-initDomainSuffix();
 
 const isSubdomainUnique = (subdomain) => {
 	const currentName = form.querySelector('.name').value;
@@ -138,6 +108,13 @@ const updateBookmark = (event) => {
 	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
 	let config = form.getData();
 	delete config.iconSearch;
+	const iconInput = form.querySelector('.icon').value;
+	if (!iconInput) {
+		const bookmark = _.find(bookmarkService.getBookmarks(), { name: config.name });
+		if (bookmark) {
+			config.icon = bookmark.icon;
+		}
+	}
 	const useProxy = (config.useProxy === 'true');
 	
 	if (useProxy) {
@@ -167,10 +144,8 @@ const render = (event) => {
 	form.querySelector('.name').value = bookmark.name;
 	form.querySelector('.title').value = bookmark.title;
 	form.querySelector('.category').value = bookmark.category;
-	const iconSrc = iconPicker.getIconSrc(bookmark.icon);
-	form.querySelector('.bookmark-icon-img').src = iconSrc;
-	form.querySelector('.icon').value = bookmark.icon ? iconSrc : '';
-	
+	form.querySelector('.bookmark-icon-img').src = !bookmark.icon ? '/assets/img/virgo.png' : `/assets/img/bookmarks/${bookmark.icon}`;
+	form.querySelector('.icon').value = '';
 	if (bookmark.traefik) {
 		useProxyCheckbox.checked = true;
 		form.querySelector('.subdomain').value = bookmark.traefik.subdomain;
@@ -186,16 +161,45 @@ const render = (event) => {
 
 const restore = (event) => {
 	form.reset();
-	form.querySelector('.bookmark-icon-img').src = iconPicker.getIconSrc('');
+	form.querySelector('.bookmark-icon-img').src = iconPicker.DEFAULT_ICON;
 	form.querySelector('.icon').value = '';
 	toggleProxyMode(false);
 };
 
+initDomainSuffix();
+updateValidation(false);
+
+iconBox.addEventListener('click', (event) => {
+	event.preventDefault();
+	const popover = bootstrap.Popover.getInstance(iconBox);
+	popover?.toggle();
+});
+iconBox.addEventListener('shown.bs.popover', () => {
+	const popover = bootstrap.Popover.getInstance(iconBox);
+	const tip = popover?.tip;
+	tip?.querySelector('.icon-search')?.focus();
+	iconPopoverOutsideClick = (event) => {
+		if (tip && !tip.contains(event.target) && !iconBox.contains(event.target)) {
+			popover?.hide();
+			document.removeEventListener('click', iconPopoverOutsideClick);
+			iconPopoverOutsideClick = null;
+		}
+	};
+	setTimeout(() => { document.addEventListener('click', iconPopoverOutsideClick); }, 0);
+});
+iconBox.addEventListener('hide.bs.popover', (event) => {
+	const popover = bootstrap.Popover.getInstance(iconBox);
+	if (popover?.tip?.contains(document.activeElement)) {
+		event.preventDefault();
+	}
+	if (iconPopoverOutsideClick) {
+		document.removeEventListener('click', iconPopoverOutsideClick);
+		iconPopoverOutsideClick = null;
+	}
+});
 useProxyCheckbox.addEventListener('checked-changed', (event) => {
 	toggleProxyMode(event.target.checked);
 });
-
-updateValidation(false);
 form.addEventListener('valid', updateBookmark);
 modal.addEventListener('show.bs.modal', render);
 modal.addEventListener('hidden.bs.modal', restore);
