@@ -31,14 +31,20 @@ const buildIconList = (raw) => {
 		}
 		const aliases = _.isArray(entry.aliases) ? entry.aliases.join(' ') : '';
 		const categories = _.isArray(entry.categories) ? entry.categories.join(' ') : '';
+		const searchText = [id, aliases, categories].filter(Boolean).join(' ');
 		const colors = _.get(entry, 'colors');
-		const assetId = _.isObject(colors) && _.isString(colors.light) ? colors.light : id;
-		list.push({
-			id,
-			base: entry.base,
-			assetId,
-			searchText: [id, aliases, categories].filter(Boolean).join(' ')
-		});
+		const hasLight = _.isObject(colors) && _.isString(colors.light);
+		const hasDark = _.isObject(colors) && _.isString(colors.dark);
+		if (hasLight && hasDark) {
+			list.push({ id, base: entry.base, assetId: colors.light, searchText });
+			list.push({ id, base: entry.base, assetId: colors.dark, searchText });
+		} else if (hasLight) {
+			list.push({ id, base: entry.base, assetId: colors.light, searchText });
+		} else if (hasDark) {
+			list.push({ id, base: entry.base, assetId: colors.dark, searchText });
+		} else {
+			list.push({ id, base: entry.base, assetId: id, searchText });
+		}
 	});
 	return list;
 };

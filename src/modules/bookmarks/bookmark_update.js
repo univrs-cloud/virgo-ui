@@ -21,7 +21,7 @@ new bootstrap.Popover(iconBox, {
 	html: true,
 	container: iconBox,
 	sanitize: false,
-	offset: [28, 0],
+	offset: [32, 0],
 	trigger: 'manual'
 });
 iconBox.addEventListener('click', (event) => {
