@@ -60,6 +60,12 @@ module.exports = (env, argv) => {
 					target: `https://${upstream}`,
 					secure: false,
 					changeOrigin: true
+				},
+				{
+					context: ['/assets/img/bookmarks'],
+					target: `https://${upstream}`,
+					secure: false,
+					changeOrigin: true
 				}
 			]
 		},

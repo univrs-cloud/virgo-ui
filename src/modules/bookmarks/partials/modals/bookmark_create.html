@@ -6,7 +6,23 @@
 					<h5 class="modal-title">New bookmark</h5>
 				</div>
 				<div class="modal-body">
-					<u-input name="title" label="Title" class="title"></u-input>
+					<div class="row g-3">
+						<div class="col">
+							<u-input name="title" label="Title" class="title"></u-input>
+						</div>
+						<div class="col-auto">
+							<div class="bookmark-icon-field mb-4">
+								<input type="hidden" name="icon" class="icon">
+								<div class="bookmark-icon-box d-flex align-items-center justify-content-center" tabindex="0" role="button" data-bs-toggle="popover">
+									<img class="bookmark-icon-img" src="/assets/img/virgo.png" alt="" width="32" height="32">
+								</div>
+								<div class="bookmark-icon-popover-content d-none">
+									<u-input type="search" name="iconSearch" label="Search" class="icon-search" autocomplete="off"></u-input>
+									<div class="bookmark-icon-results" aria-live="polite"></div>
+								</div>
+							</div>
+						</div>
+					</div>
 					<u-select name="category" label="Category" class="category">
 						<option value="Productivity" selected>Productivity</option>
 						<option value="Networking">Networking</option>

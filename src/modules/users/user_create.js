@@ -63,4 +63,4 @@ form.validation = [
 	}
 ];
 form.addEventListener('valid', createUser);
-form.addEventListener('hidden.bs.modal', restore);
+modal.addEventListener('hidden.bs.modal', restore);
