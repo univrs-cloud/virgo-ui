@@ -2,7 +2,7 @@ import Fuse from 'fuse.js';
 
 const METADATA_URL = 'https://raw.githubusercontent.com/homarr-labs/dashboard-icons/refs/heads/main/metadata.json';
 const ICON_BASE = 'https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@main';
-const DEFAULT_ICON = '/assets/img/virgo.png';
+export const DEFAULT_ICON = '/assets/img/virgo.png';
 
 const getIconUrl = (id, base) => `${ICON_BASE}/${base}/${id}.${base}`;
 const MAX_RESULTS = 48;
@@ -75,22 +75,6 @@ const searchIcons = (query) => {
 	return _.slice(ordered, 0, MAX_RESULTS);
 };
 
-export const getIconSrc = (icon) => {
-	if (!icon) {
-		return DEFAULT_ICON;
-	}
-	if (_.includes(icon, '/')) {
-		return icon;
-	}
-	const dot = icon.lastIndexOf('.');
-	const id = dot > 0 ? icon.slice(0, dot) : icon;
-	const ext = (dot > 0 ? icon.slice(dot + 1) : 'svg').toLowerCase();
-	if (ext !== 'svg' && ext !== 'png') {
-		return getIconUrl(id, 'svg');
-	}
-	return getIconUrl(id, ext);
-};
-
 const renderResults = (results, resultsEl, onSelect) => {
 	const fragment = document.createDocumentFragment();
 	_.each(results, (item) => {
@@ -107,8 +91,8 @@ const renderResults = (results, resultsEl, onSelect) => {
 		img.width = 32;
 		img.height = 32;
 		button.appendChild(img);
-		button.addEventListener('click', (e) => {
-			e.stopPropagation();
+		button.addEventListener('click', (event) => {
+			event.stopPropagation();
 			const value = `${item.assetId}.${item.base}`;
 			onSelect(value, getIconUrl(item.assetId, item.base));
 		});
@@ -152,21 +136,15 @@ export const initIconSearch = (iconBox, iconPopoverContent, { getIconImgEl, getI
 			}
 			renderResults(searchIcons(query), resultsEl, onSelectCb);
 		};
-		searchEl.addEventListener('input', runSearch);
-		searchEl.addEventListener('change', runSearch);
-		// u-input may expose value on the component; try both
-		const inputInside = tip.querySelector('.icon-search input');
-		if (inputInside) {
-			inputInside.addEventListener('input', runSearch);
-		}
-		resultsEl.addEventListener('wheel', (e) => {
+		searchEl.addEventListener('value-changed', runSearch);
+		resultsEl.addEventListener('wheel', (event) => {
 			const { scrollTop, scrollHeight, clientHeight } = resultsEl;
 			const canScrollUp = scrollTop > 0;
 			const canScrollDown = scrollTop < scrollHeight - clientHeight;
-			if ((e.deltaY < 0 && canScrollUp) || (e.deltaY > 0 && canScrollDown)) {
-				e.preventDefault();
-				e.stopPropagation();
-				resultsEl.scrollTop += e.deltaY;
+			if ((event.deltaY < 0 && canScrollUp) || (event.deltaY > 0 && canScrollDown)) {
+				event.preventDefault();
+				event.stopPropagation();
+				resultsEl.scrollTop += event.deltaY;
 			}
 		}, { passive: false });
 	});
