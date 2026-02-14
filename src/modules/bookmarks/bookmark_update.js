@@ -144,8 +144,7 @@ const render = (event) => {
 	form.querySelector('.name').value = bookmark.name;
 	form.querySelector('.title').value = bookmark.title;
 	form.querySelector('.category').value = bookmark.category;
-	form.querySelector('.bookmark-icon-img').src = !bookmark.icon ? '/assets/img/virgo.png' : `/assets/img/bookmarks/${bookmark.icon}`;
-	form.querySelector('.icon').value = '';
+	form.querySelector('.bookmark-icon-img').src = `/assets/img/bookmarks/${bookmark.icon}`;
 	if (bookmark.traefik) {
 		useProxyCheckbox.checked = true;
 		form.querySelector('.subdomain').value = bookmark.traefik.subdomain;
