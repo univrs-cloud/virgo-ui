@@ -111,7 +111,7 @@ module.exports = (env, argv) => {
 				crossorigin: 'use-credentials',
 				icons: [
 					{
-						src: path.resolve(__dirname, './src/assets/img/virgo.png'),
+						src: path.resolve(__dirname, './src/assets/img/virgo.svg'),
 						destination: 'assets/icons/',
 						sizes: [36, 48, 72, 96, 144, 192, 512]
 					}
