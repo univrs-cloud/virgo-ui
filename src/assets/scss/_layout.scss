@@ -20,7 +20,7 @@ body {
 	height: 100%;
 	font-weight: 300;
 	background-color: var(--bs-bg);
-	margin-bottom: 72px;
+	margin-bottom: 56px;
 	&[style*="overflow: hidden;"] {
 		.navbar {
 			padding-right: var(--scrollbar-width) !important;
@@ -52,7 +52,7 @@ header {
 			height: calc(100dvh - 165px);
 		}
 		.navbar-glass {
-			min-height: 4.5rem;
+			min-height: 3.5rem;
 			background-color: rgba(237, 242, 249, 0.25);
 			backdrop-filter: blur(8px);
 		}
@@ -107,11 +107,12 @@ header {
 		}
 	}
 	.offcanvas {
-		--bs-offcanvas-height: 757px;
-		--bs-offcanvas-padding-y: 1.375rem;
+		--bs-offcanvas-height: 726px;
+		--bs-offcanvas-padding-y: 0.875rem;
 		background-color: rgba(237, 242, 249, 0.96);
 	}
 	.offcanvas-header {
+		--bs-offcanvas-padding-x: 0.575rem;
 		box-shadow: 0 -0.5rem 0.5rem -0.5rem rgba(0, 0, 0, 0.2);
 	}
 	.offcanvas-title {
@@ -191,7 +192,7 @@ main,
 
 @media (min-width: 576px) {
 	body {
-		margin-top: 4.5rem;
+		margin-top: 3.5rem;
 		margin-bottom: 0;
 	}
 	header {
@@ -202,7 +203,7 @@ main,
 			height: 100dvh;
 			.navbar {
 				height: 100%;
-				padding: 4.5rem 0.75rem 1rem 0.75rem;
+				padding: 3.5rem 0.75rem 1rem 0.75rem;
 			}
 			.nav {
 				width: 100%;
