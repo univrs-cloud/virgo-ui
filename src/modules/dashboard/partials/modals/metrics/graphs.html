@@ -17,16 +17,18 @@
 						<small class="text-body-secondary">Swap</small>
 					</div>
 				</div>
-				<div class="metrics-label metrics-label-graph">
+				<div class="metrics-label metrics-label-graph have-saturation">
 					<span>Disk I/O</span>
 					<div class="metrics-sublabels">
-						<small class="text-body-secondary">Usage</small>
+						<small class="text-body-secondary">Read</small>
+						<small class="text-body-secondary">Write</small>
 					</div>
 				</div>
-				<div class="metrics-label metrics-label-graph">
+				<div class="metrics-label metrics-label-graph have-saturation">
 					<span>Network</span>
 					<div class="metrics-sublabels">
-						<small class="text-body-secondary">Usage</small>
+						<small class="text-body-secondary">Rx</small>
+						<small class="text-body-secondary">Tx</small>
 					</div>
 				</div>
 			</div>
@@ -71,6 +73,22 @@
 		const diskUtil = diskUtilMap.get(ts);
 		const netUtil = netUtilMap.get(ts);
 
+		// Disk raw is now { total, read, write } (bytes/s)
+		const diskRaw = diskUtil?.raw || {};
+		const diskTotal = diskRaw.total || 0;
+		const diskNorm = diskUtil?.normalized || 0;
+		// Derive per-direction normalized values proportionally from the total
+		const diskReadNorm = diskTotal > 0 ? diskNorm * ((diskRaw.read || 0) / diskTotal) : 0;
+		const diskWriteNorm = diskTotal > 0 ? diskNorm * ((diskRaw.write || 0) / diskTotal) : 0;
+
+		// Network raw is now { total, rx, tx } (bytes/s)
+		const netRaw = netUtil?.raw || {};
+		const netTotal = netRaw.total || 0;
+		const netNorm = netUtil?.normalized || 0;
+		// Derive per-direction normalized values proportionally from the total
+		const netRxNorm = netTotal > 0 ? netNorm * ((netRaw.rx || 0) / netTotal) : 0;
+		const netTxNorm = netTotal > 0 ? netNorm * ((netRaw.tx || 0) / netTotal) : 0;
+
 		data[hourKey][m] = {
 			ts: ts,
 			cpuUtil: cpuUtil?.normalized || 0,
@@ -81,10 +99,14 @@
 			memRaw: memUtil?.raw || {},
 			memSat: memSat?.normalized || 0,
 			memSatRaw: memSat?.raw || 0,
-			diskUtil: diskUtil?.normalized || 0,
-			diskRaw: diskUtil?.raw || 0,
-			netUtil: netUtil?.normalized || 0,
-			netRaw: netUtil?.raw || 0
+			diskUtil: diskNorm,
+			diskRaw: diskRaw,
+			diskReadNorm: diskReadNorm,
+			diskWriteNorm: diskWriteNorm,
+			netUtil: netNorm,
+			netRaw: netRaw,
+			netRxNorm: netRxNorm,
+			netTxNorm: netTxNorm
 		};
 	}
 
@@ -125,8 +147,10 @@
 							<div class=&quot;text-nowrap&quot;>Load: ${typeof d.cpuSatRaw === 'number' ? d.cpuSatRaw.toFixed(2) : 0}</div>
 							<div class=&quot;text-nowrap mt-2&quot;>Memory: ${d.memRaw.used ? prettyBytes(d.memRaw.used, { binary: true }) : 'N/A'} / ${d.memRaw.total ? prettyBytes(d.memRaw.total, { binary: true }) : 'N/A'}</div>
 							<div class=&quot;text-nowrap&quot;>Swap out: ${typeof d.memSatRaw === 'number' ? d.memSatRaw.toFixed(1) : 0} pages/s</div>
-							<div class=&quot;text-nowrap mt-2&quot;>Disk I/O: ${d.diskRaw ? prettyBytes(d.diskRaw, { binary: true }) + '/s' : 'N/A'}</div>
-							<div class=&quot;text-nowrap mt-2&quot;>Network I/O: ${d.netRaw ? prettyBytes(d.netRaw, { binary: true }) + '/s' : 'N/A'}</div>
+							<div class=&quot;text-nowrap mt-2&quot;>Disk I/O: ${d.diskRaw.total ? prettyBytes(d.diskRaw.total, { binary: true }) + '/s' : 'N/A'}</div>
+							<div class=&quot;text-nowrap&quot;>Read: ${d.diskRaw.read ? prettyBytes(d.diskRaw.read, { binary: true }) + '/s' : 'N/A'} · Write: ${d.diskRaw.write ? prettyBytes(d.diskRaw.write, { binary: true }) + '/s' : 'N/A'}</div>
+							<div class=&quot;text-nowrap mt-2&quot;>Network: ${d.netRaw.total ? prettyBytes(d.netRaw.total, { binary: true }) + '/s' : 'N/A'}</div>
+							<div class=&quot;text-nowrap&quot;>Rx: ${d.netRaw.rx ? prettyBytes(d.netRaw.rx, { binary: true }) + '/s' : 'N/A'} · Tx: ${d.netRaw.tx ? prettyBytes(d.netRaw.tx, { binary: true }) + '/s' : 'N/A'}</div>
 						</div>
 					`.replace(/\s+/g, ' ').trim() : '';
 					%>
@@ -140,11 +164,13 @@
 								<div class="polygon-use compressed" style="--utilization: <%=d.memUtil || 0%>;"></div>
 								<div class="polygon-sat compressed" style="--saturation: <%=d.memSat || 0%>;"></div>
 							</div>
-							<div class="metrics-data metrics-data-disks valid-data">
-								<div class="polygon-use compressed" style="--utilization: <%=d.diskUtil || 0%>;"></div>
+							<div class="metrics-data metrics-data-disks valid-data have-saturation">
+								<div class="polygon-use compressed" style="--utilization: <%=d.diskReadNorm || 0%>;"></div>
+								<div class="polygon-sat compressed" style="--saturation: <%=d.diskWriteNorm || 0%>;"></div>
 							</div>
-							<div class="metrics-data metrics-data-network valid-data">
-								<div class="polygon-use compressed" style="--utilization: <%=d.netUtil || 0%>;"></div>
+							<div class="metrics-data metrics-data-network valid-data have-saturation">
+								<div class="polygon-use compressed" style="--utilization: <%=d.netRxNorm || 0%>;"></div>
+								<div class="polygon-sat compressed" style="--saturation: <%=d.netTxNorm || 0%>;"></div>
 							</div>
 						</div>
 					</div>
