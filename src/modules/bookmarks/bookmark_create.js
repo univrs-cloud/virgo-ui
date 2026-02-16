@@ -108,7 +108,6 @@ const updateValidation = (useProxy) => {
 const createBookmark = (event) => {
 	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
 	let config = form.getData();
-	delete config.iconSearch;
 	const useProxy = (config.useProxy === 'true');
 	
 	if (useProxy) {
