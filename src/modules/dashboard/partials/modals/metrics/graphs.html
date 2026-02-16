@@ -147,8 +147,8 @@
 							<div class=&quot;text-nowrap&quot;>Load: ${typeof d.cpuSatRaw === 'number' ? d.cpuSatRaw.toFixed(2) : 0}</div>
 							<div class=&quot;text-nowrap mt-2&quot;>Memory: ${d.memRaw.used ? prettyBytes(d.memRaw.used, { binary: true }) : 'N/A'} / ${d.memRaw.total ? prettyBytes(d.memRaw.total, { binary: true }) : 'N/A'}</div>
 							<div class=&quot;text-nowrap&quot;>Swap out: ${typeof d.memSatRaw === 'number' ? d.memSatRaw.toFixed(1) : 0} pages/s</div>
-							<div class=&quot;text-nowrap mt-2&quot;>Disk I/O: ${d.diskRaw.total ? prettyBytes(d.diskRaw.total, { binary: true }) + '/s' : 'N/A'}</div>
-							<div class=&quot;text-nowrap&quot;>Read: ${d.diskRaw.read ? prettyBytes(d.diskRaw.read, { binary: true }) + '/s' : 'N/A'} · Write: ${d.diskRaw.write ? prettyBytes(d.diskRaw.write, { binary: true }) + '/s' : 'N/A'}</div>
+							<div class=&quot;text-nowrap mt-2&quot;>Disk I/O: ${d.diskRaw.total ? prettyBytes(d.diskRaw.total, { binary: true }) : 'N/A'}</div>
+							<div class=&quot;text-nowrap&quot;>Read: ${d.diskRaw.read ? prettyBytes(d.diskRaw.read, { binary: true }) : 'N/A'} · Write: ${d.diskRaw.write ? prettyBytes(d.diskRaw.write, { binary: true }) : 'N/A'}</div>
 							<div class=&quot;text-nowrap mt-2&quot;>Network: ${d.netRaw.total ? prettyBytes(d.netRaw.total, { binary: true }) + '/s' : 'N/A'}</div>
 							<div class=&quot;text-nowrap&quot;>Rx: ${d.netRaw.rx ? prettyBytes(d.netRaw.rx, { binary: true }) + '/s' : 'N/A'} · Tx: ${d.netRaw.tx ? prettyBytes(d.netRaw.tx, { binary: true }) + '/s' : 'N/A'}</div>
 						</div>
