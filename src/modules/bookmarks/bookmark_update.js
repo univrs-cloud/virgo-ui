@@ -107,14 +107,6 @@ const updateValidation = (useProxy) => {
 const updateBookmark = (event) => {
 	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
 	let config = form.getData();
-	delete config.iconSearch;
-	const iconInput = form.querySelector('.icon').value;
-	if (!iconInput) {
-		const bookmark = _.find(bookmarkService.getBookmarks(), { name: config.name });
-		if (bookmark) {
-			config.icon = bookmark.icon;
-		}
-	}
 	const useProxy = (config.useProxy === 'true');
 	
 	if (useProxy) {
