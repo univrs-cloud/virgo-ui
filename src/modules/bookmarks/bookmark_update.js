@@ -28,7 +28,7 @@ new bootstrap.Popover(iconBox, {
 
 iconPicker.initIconSearch(iconBox, iconPopoverContent, {
 	getIconImgEl: () => form.querySelector('.bookmark-icon-img'),
-	getIconInputEl: () => form.querySelector('.icon'),
+	getIconInputEl: () => form.querySelector('.bookmark-icon'),
 	onSelect: () => { bootstrap.Popover.getInstance(iconBox)?.hide(); }
 });
 
@@ -153,7 +153,7 @@ const render = (event) => {
 const restore = (event) => {
 	form.reset();
 	form.querySelector('.bookmark-icon-img').src = iconPicker.DEFAULT_ICON;
-	form.querySelector('.icon').value = '';
+	form.querySelector('.bookmark-icon').value = '';
 	toggleProxyMode(false);
 };
 
