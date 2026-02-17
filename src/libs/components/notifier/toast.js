@@ -158,7 +158,9 @@ export class Toast extends LitElement {
 	};
 		
 	#onMouseLeave = () => {
-		this.#startAutoHide();
+		if (this.duration > 0) {
+			this.#startAutoHide();
+		}
 	};
 }
 
