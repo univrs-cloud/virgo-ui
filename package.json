@@ -52,7 +52,7 @@
 		"autoprefixer": "^10.4.24",
 		"clean-webpack-plugin": "^4.0.0",
 		"copy-webpack-plugin": "^13.0.1",
-		"css-loader": "^7.1.3",
+		"css-loader": "^7.1.4",
 		"css-minimizer-webpack-plugin": "^7.0.4",
 		"cssnano": "^7.1.2",
 		"dotenv": "^17.3.1",
