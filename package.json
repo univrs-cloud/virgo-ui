@@ -63,10 +63,10 @@
 		"postcss-cli": "^11.0.1",
 		"postcss-loader": "^8.2.1",
 		"raw-loader": "^4.0.2",
-		"sass": "^1.97.3",
+		"sass": "^1.98.0",
 		"sass-loader": "^16.0.7",
 		"webpack": "^5.105.4",
-		"webpack-cli": "^6.0.1",
+		"webpack-cli": "^7.0.0",
 		"webpack-dev-server": "^5.2.3",
 		"webpack-pwa-manifest": "^4.3.0"
 	}
