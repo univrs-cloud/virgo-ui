@@ -1,6 +1,7 @@
 import Host from 'stores/host';
 
 let callbackCollection = [];
+let storeSubscription = null;
 
 const getCheckUpdates = () => {
 	return Host.getCheckUpdates();
@@ -26,7 +27,17 @@ const handleSubscription = (properties) => {
 
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
-	return Host.subscribeToProperties(['checkUpdates', 'updates'], handleSubscription);
+	if (!storeSubscription) {
+		storeSubscription = Host.subscribeToProperties(['checkUpdates', 'updates'], handleSubscription);
+	}
+
+	return () => {
+		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));
+		if (_.isEmpty(callbackCollection) && storeSubscription) {
+			storeSubscription();
+			storeSubscription = null;
+		}
+	};
 };
 
 const unsubscribe = (subsciption) => {

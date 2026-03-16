@@ -1,6 +1,7 @@
 import Weather from 'stores/weather';
 
 let callbackCollection = [];
+let storeSubscription = null;
 
 const handleSubscription = (properties) => {
 	_.each(callbackCollection, (callback) => {
@@ -10,7 +11,17 @@ const handleSubscription = (properties) => {
 
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
-	return Weather.subscribeToProperties(['weather'], handleSubscription);
+	if (!storeSubscription) {
+		storeSubscription = Weather.subscribeToProperties(['weather'], handleSubscription);
+	}
+
+	return () => {
+		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));
+		if (_.isEmpty(callbackCollection) && storeSubscription) {
+			storeSubscription();
+			storeSubscription = null;
+		}
+	};
 };
 
 const unsubscribe = (subsciption) => {

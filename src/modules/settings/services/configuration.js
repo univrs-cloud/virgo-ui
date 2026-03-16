@@ -1,6 +1,7 @@
 import Configuration from 'stores/configuration';
 
 let callbackCollection = [];
+let storeSubscription = null;
 
 const getConfiguration = () => {
 	return Configuration.getConfiguration();
@@ -22,7 +23,17 @@ const handleSubscription = (properties) => {
 
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
-	return Configuration.subscribeToProperties(['configuration'], handleSubscription);
+	if (!storeSubscription) {
+		storeSubscription = Configuration.subscribeToProperties(['configuration'], handleSubscription);
+	}
+
+	return () => {
+		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));
+		if (_.isEmpty(callbackCollection) && storeSubscription) {
+			storeSubscription();
+			storeSubscription = null;
+		}
+	};
 };
 
 const unsubscribe = (subsciption) => {

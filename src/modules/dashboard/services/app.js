@@ -1,6 +1,7 @@
 import Docker from 'stores/docker';
 
 let callbackCollection = [];
+let storeSubscription = null;
 
 const performAction = (config) => {
 	Docker.performAction(config);
@@ -51,7 +52,17 @@ const handleSubscription = (properties) => {
 
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
-	return Docker.subscribeToProperties(['configured', 'containers', 'imageUpdates'], handleSubscription);
+	if (!storeSubscription) {
+		storeSubscription =  Docker.subscribeToProperties(['configured', 'containers', 'imageUpdates'], handleSubscription);
+	}
+
+	return () => {
+		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));
+		if (_.isEmpty(callbackCollection) && storeSubscription) {
+			storeSubscription();
+			storeSubscription = null;
+		}
+	};
 };
 
 const unsubscribe = (subsciption) => {

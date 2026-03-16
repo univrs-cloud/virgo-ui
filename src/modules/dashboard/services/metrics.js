@@ -1,6 +1,7 @@
 import Metrics from 'stores/metrics';
 
 let callbackCollection = [];
+let storeSubscription = null;
 
 const fetch = () => {
 	Metrics.fetch();
@@ -28,7 +29,17 @@ const handleSubscription = (properties) => {
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 	Metrics.fetch();
-	return Metrics.subscribeToProperties(['metrics'], handleSubscription);
+	if (!storeSubscription) {
+		storeSubscription = Metrics.subscribeToProperties(['metrics'], handleSubscription);
+	}
+
+	return () => {
+		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));
+		if (_.isEmpty(callbackCollection) && storeSubscription) {
+			storeSubscription();
+			storeSubscription = null;
+		}
+	};
 };
 
 const unsubscribe = (subsciption) => {
