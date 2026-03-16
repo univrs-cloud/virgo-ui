@@ -1,6 +1,7 @@
 import User from 'stores/user';
 
 let callbackCollection = [];
+let storeSubscription = null;
 
 const filter = (users) => {
 	if (_.isNull(users)) {
@@ -56,7 +57,17 @@ const handleSubscription = (properties) => {
 
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
-	return User.subscribeToProperties(['users'], handleSubscription);
+	if (!storeSubscription) {
+		storeSubscription = User.subscribeToProperties(['users'], handleSubscription);
+	}
+
+	return () => {
+		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));
+		if (_.isEmpty(callbackCollection) && storeSubscription) {
+			storeSubscription();
+			storeSubscription = null;
+		}
+	};
 };
 
 const unsubscribe = (subsciption) => {

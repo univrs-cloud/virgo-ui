@@ -3,6 +3,7 @@ import Docker from 'stores/docker';
 import Job from 'stores/job';
 
 let callbackCollection = [];
+let storeSubscription = null;
 
 const getSocket = () => {
 	return Docker.socket;
@@ -82,7 +83,17 @@ const handleSubscription = (properties) => {
 
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
-	return Docker.subscribeToProperties(['configured', 'containers', 'appsResourceMetrics', 'imageUpdates', 'snapshots', 'jobs'], handleSubscription);
+	if (!storeSubscription) {
+		storeSubscription = Docker.subscribeToProperties(['configured', 'containers', 'appsResourceMetrics', 'imageUpdates', 'snapshots', 'jobs'], handleSubscription);
+	}
+
+	return () => {
+		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));
+		if (_.isEmpty(callbackCollection) && storeSubscription) {
+			storeSubscription();
+			storeSubscription = null;
+		}
+	};
 };
 
 const unsubscribe = (subsciption) => {

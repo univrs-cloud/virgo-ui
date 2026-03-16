@@ -1,6 +1,7 @@
 import Host from 'stores/host';
 
 let callbackCollection = [];
+let storeSubscription = null;
 
 const syncServices = () => {
 	Host.syncServices();
@@ -18,7 +19,17 @@ const handleSubscription = (properties) => {
 
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
-	return Host.subscribeToProperties(['services'], handleSubscription);
+	if (!storeSubscription) {
+		storeSubscription = Host.subscribeToProperties(['services'], handleSubscription);
+	}
+
+	return () => {
+		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));
+		if (_.isEmpty(callbackCollection) && storeSubscription) {
+			storeSubscription();
+			storeSubscription = null;
+		}
+	};
 };
 
 const unsubscribe = (subsciption) => {

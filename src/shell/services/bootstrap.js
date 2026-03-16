@@ -2,6 +2,7 @@ import Host from 'stores/host';
 import Docker from 'stores/docker'; // need to init store
 
 let callbackCollection = [];
+let storeSubscription = null;
 
 const reconnectSocket = () => {
 	Host.socket.connect();
@@ -46,7 +47,17 @@ const handleSubscription = (properties) => {
 
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
-	return Host.subscribeToProperties(['update', 'system', 'drives', 'storage', 'containers'], handleSubscription);
+	if (!storeSubscription) {
+		storeSubscription = Host.subscribeToProperties(['update', 'system', 'drives', 'storage', 'containers'], handleSubscription);
+	}
+
+	return () => {
+		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));
+		if (_.isEmpty(callbackCollection) && storeSubscription) {
+			storeSubscription();
+			storeSubscription = null;
+		}
+	};
 };
 
 const unsubscribe = (subscription) => {

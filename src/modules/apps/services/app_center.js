@@ -3,6 +3,7 @@ import Docker from 'stores/docker';
 import Job from 'stores/job'; // need to init store
 
 let callbackCollection = [];
+let storeSubscription = null;
 
 const getFQDN = () => {
 	const system = Host.getSystem();
@@ -36,7 +37,17 @@ const handleSubscription = (properties) => {
 
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
-	return Docker.subscribeToProperties(['containers', 'templates', 'jobs'], handleSubscription);
+	if (!storeSubscription) {
+		storeSubscription = Docker.subscribeToProperties(['containers', 'templates', 'jobs'], handleSubscription);
+	}
+
+	return () => {
+		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));
+		if (_.isEmpty(callbackCollection) && storeSubscription) {
+			storeSubscription();
+			storeSubscription = null;
+		}
+	};
 };
 
 const unsubscribe = (subscription) => {

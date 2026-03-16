@@ -2,6 +2,7 @@ import Host from 'stores/host';
 import Share from 'stores/share';
 
 let callbackCollection = [];
+let storeSubscription = null;
 
 const filter = (shares) => {
 	if (_.isNull(shares)) {
@@ -48,7 +49,17 @@ const handleSubscription = (properties) => {
 
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
-	return Share.subscribeToProperties(['shares', 'system'], handleSubscription);
+	if (!storeSubscription) {
+		storeSubscription = Share.subscribeToProperties(['shares', 'system'], handleSubscription);
+	}
+
+	return () => {
+		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));
+		if (_.isEmpty(callbackCollection) && storeSubscription) {
+			storeSubscription();
+			storeSubscription = null;
+		}
+	};
 };
 
 const unsubscribe = (subsciption) => {
