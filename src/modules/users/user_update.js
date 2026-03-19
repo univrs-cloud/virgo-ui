@@ -44,7 +44,22 @@ form.validation = [
 		selector: '.email',
 		rules: {
 			isEmpty: `Can't be empty`,
-			isEmail: `Invalid email address`
+			isEmail: `Invalid email address`,
+			custom: {
+				validate: (value) => {
+					const users = userService.getUsers() || [];
+					const normalizedEmail = value?.toString().trim().toLowerCase();
+					const uid = user?.uid;
+					return !_.some(users, (user) => {
+						const isSameUser = (uid !== undefined && user.uid === uid);
+						if (isSameUser) {
+							return false;
+						}
+						return user.email && user.email.toString().trim().toLowerCase() === normalizedEmail;
+					});
+				},
+				message: `Must be unique`
+			}
 		}
 	}
 ];

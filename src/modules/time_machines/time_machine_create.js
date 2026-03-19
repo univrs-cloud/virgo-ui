@@ -44,7 +44,17 @@ form.validation = [
 	{
 		selector: '.comment',
 		rules: {
-			isEmpty: `Can't be empty`
+			isEmpty: `Can't be empty`,
+			custom: {
+				validate: (value) => {
+					const timeMachines = timeMachineService.getTimeMachines() || [];
+					const normalizedValue = value?.toString().trim().toLowerCase();
+					return !_.some(timeMachines, (timeMachine) => {
+						return timeMachine.comment && timeMachine.comment.toString().trim().toLowerCase() === normalizedValue;
+					});
+				},
+				message: `Must be unique`
+			}
 		}
 	},
 	{
