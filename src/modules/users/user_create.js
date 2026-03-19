@@ -28,13 +28,33 @@ form.validation = [
 		selector: '.email',
 		rules: {
 			isEmpty: `Can't be empty`,
-			isEmail: `Invalid email address`
+			isEmail: `Invalid email address`,
+			custom: {
+				validate: (value) => {
+					const users = userService.getUsers() || [];
+					const normalizedEmail = value?.toString().trim().toLowerCase();
+					return !_.some(users, (user) => {
+						return user.email && user.email.toString().trim().toLowerCase() === normalizedEmail;
+					});
+				},
+				message: `Must be unique`
+			}
 		}
 	},
 	{
 		selector: '.username',
 		rules: {
-			isEmpty: `Can't be empty`
+			isEmpty: `Can't be empty`,
+			custom: {
+				validate: (value) => {
+					const users = userService.getUsers() || [];
+					const normalizedUsername = value?.toString().trim().toLowerCase();
+					return !_.some(users, (user) => {
+						return user.username && user.username.toString().trim().toLowerCase() === normalizedUsername;
+					});
+				},
+				message: `Must be unique`
+			}
 		}
 	},
 	{
