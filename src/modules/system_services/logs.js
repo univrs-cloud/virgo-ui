@@ -1,10 +1,8 @@
-import * as appService from 'modules/apps/services/app';
+import * as serviceService from 'modules/system_services/services/service';
 
-const socket = appService.getSocket();
-const module = document.querySelector('#apps');
-let containerId = null;
-let serviceName = '';
-let containerName = '';
+const socket = serviceService.getSocket();
+const module = document.querySelector('#system-services');
+let unit = null;
 let logsContainer = null;
 let logs = null;
 let isScrollEventAttached = false;
@@ -18,22 +16,13 @@ const render = (event) => {
 	event.preventDefault();
 	restore();
 
-	const link = event.target;
-	containerId = link.dataset.id;
-	let service;
-	_.each(appService.getApps(), (app) => {
-		service = _.find(app.projectContainers, { id: containerId });
-		if (service) {
-			return false;
-		}
-	});
-	containerName = _.replace(service?.names[0], /^\//, '');
-	serviceName = service?.labels?.comDockerComposeService || service?.name || 'unknown';
-	const app = link.closest('.item');
-	logsContainer = app.querySelector('.logs-container');
-	logsContainer.querySelector('.service .name').innerHTML = serviceName;
+	const link = event.target.closest('a');
+	unit = link.dataset.unit;
+	const item = link.closest('.item');
+	logsContainer = item.querySelector('.logs-container');
+	logsContainer.querySelector('.service .name').innerHTML = unit;
 	logsContainer.classList.remove('d-none');
-	socket.emit('logs:connect', containerId);
+	socket.emit('host:service:logs:connect', unit);
 };
 
 const closeLogs = (event) => {
@@ -51,46 +40,27 @@ const restore = () => {
 	}
 
 	logsContainer.classList.add('d-none');
-	socket.emit('logs:disconnect');
+	socket.emit('host:service:logs:disconnect');
 	if (logs) {
 		logs.removeEventListener('scroll', shouldScrollEvent);
 	}
 	logs = null;
-	containerId = null;
-	serviceName = '';
-	containerName = '';
+	unit = null;
 	logsContainer = null;
 	isScrollEventAttached = false;
 };
 
-const reconnect = (event) => {
-	if (!event.target.closest('a')?.classList.contains('reconnect-logs')) {
-		return;
-	}
-	
-	event.preventDefault();
-	if (containerId && logsContainer) {
-		socket.emit('logs:connect', containerId);
-	}
+const shouldScrollEvent = () => {
+	shouldScroll = (Math.abs(logs.scrollHeight - logs.scrollTop - logs.clientHeight) < 1);
 };
 
-const shouldScrollEvent = (event) => {
-	shouldScroll = (Math.abs(logs.scrollHeight - logs.scrollTop - logs.clientHeight) < 1);
-}
-
-const formatLogLine = (containerName, data) => {
+const formatLogLine = (data) => {
 	const dataStr = String(data || '').trim();
-	// Color code log levels and status codes
 	let formatted = escapeHtml(dataStr);
 	formatted = colorizeLogLevels(formatted);
 	formatted = colorizeStatusCodes(formatted);
-	// Prepend container name if available
-	if (containerName) {
-		return `<span class="log-container-name text-blue-400">[${escapeHtml(containerName)}]</span><span class="log-content">${formatted}</span>`;
-	}
-	
 	return `<span class="log-content">${formatted}</span>`;
-}
+};
 
 const colorizeLogLevels = (text) => {
 	return text.replace(
@@ -100,7 +70,7 @@ const colorizeLogLevels = (text) => {
 			return `<span class="${colorClass}">level=${level}</span>`;
 		}
 	);
-}
+};
 
 const colorizeStatusCodes = (text) => {
 	return text.replace(
@@ -111,15 +81,15 @@ const colorizeStatusCodes = (text) => {
 			return `<span class="${colorClass}">status_code=${code}</span>`;
 		}
 	);
-}
+};
 
 const escapeHtml = (text) => {
 	const div = document.createElement('div');
 	div.textContent = text;
 	return div.innerHTML;
-}
+};
 
-socket.on('logs:connected', () => {
+socket.on('host:service:logs:connected', () => {
 	if (!logs) {
 		logs = logsContainer.querySelector('ul');
 		logs.innerHTML = '';
@@ -128,7 +98,6 @@ socket.on('logs:connected', () => {
 			isScrollEventAttached = true;
 		}
 	}
-	// Update Live indicator
 	if (logsContainer) {
 		const liveIndicator = logsContainer.querySelector('.service small');
 		if (liveIndicator) {
@@ -138,34 +107,34 @@ socket.on('logs:connected', () => {
 		}
 	}
 });
-socket.on('logs:output', (data) => {
+
+socket.on('host:service:logs:output', (data) => {
 	if (logs) {
-		const formattedLog = formatLogLine(containerName, String(data || ''));
 		const li = document.createElement('li');
-		li.innerHTML = formattedLog;
+		li.innerHTML = formatLogLine(String(data || ''));
 		logs.appendChild(li);
 		if (!_.isNull(logs) && shouldScroll) {
 			logs.scrollTop = logs.scrollHeight;
 		}
 	}
 });
-socket.on('logs:error', (error) => {
+
+socket.on('host:service:logs:error', (error) => {
 	if (logs) {
 		logs.innerHTML = `<li><span class="log-content text-red-500">${escapeHtml(error.message)}</span></li>`;
 	}
 });
+
 socket.on('disconnect', () => {
-	// Update Live indicator to Disconnected (don't clear logs)
 	if (logsContainer) {
 		const liveIndicator = logsContainer.querySelector('.service small');
 		if (liveIndicator) {
 			liveIndicator.classList.remove('text-green-500');
 			liveIndicator.classList.add('text-gray-500');
-			liveIndicator.innerHTML = '<i class="icon-solid icon-tower-broadcast icon-fw me-1"></i>Disconnected <a href="#" class="reconnect-logs link-underline link-underline-opacity-0 link-underline-opacity-75-hover ms-1">Connect</a>';
+			liveIndicator.innerHTML = '<i class="icon-solid icon-tower-broadcast icon-fw me-1"></i>Disconnected';
 		}
 	}
 });
 
 module.addEventListener('click', render);
-module.addEventListener('click', reconnect);
 module.addEventListener('click', closeLogs);

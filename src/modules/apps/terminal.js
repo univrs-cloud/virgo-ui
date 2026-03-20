@@ -25,7 +25,7 @@ const render = (event) => {
 			return false;
 		}
 	});
-	const app = link.closest('.app');
+	const app = link.closest('.item');
 	terminalContainer = app.querySelector('.terminal-container');
 	containerId = link.dataset.id;
 	terminalContainer.querySelector('.service .name').innerHTML = service.labels?.comDockerComposeService;
@@ -49,15 +49,19 @@ const resize = (event) => {
 };
 
 const restore = () => {
-	if (terminal) {
-		terminalContainer.classList.add('d-none');
-		socket.emit('terminal:disconnect');
-		terminal.dispose();
-		terminal = null;
-		fitAddon = null;
-		terminalContainer = null;
-		containerId = null;
+	if (!terminalContainer) {
+		return;
 	}
+
+	terminalContainer.classList.add('d-none');
+	socket.emit('terminal:disconnect');
+	if (terminal) {
+		terminal.dispose();
+	}
+	terminal = null;
+	fitAddon = null;
+	terminalContainer = null;
+	containerId = null;
 };
 
 const reconnect = (event) => {
