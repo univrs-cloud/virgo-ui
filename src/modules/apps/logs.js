@@ -33,7 +33,7 @@ const render = (event) => {
 	logsContainer = app.querySelector('.logs-container');
 	logsContainer.querySelector('.service .name').innerHTML = serviceName;
 	logsContainer.classList.remove('d-none');
-	socket.emit('logs:connect', containerId);
+	socket.emit('docker:container:logs:connect', containerId);
 };
 
 const closeLogs = (event) => {
@@ -51,7 +51,7 @@ const restore = () => {
 	}
 
 	logsContainer.classList.add('d-none');
-	socket.emit('logs:disconnect');
+	socket.emit('docker:container:logs:disconnect');
 	if (logs) {
 		logs.removeEventListener('scroll', shouldScrollEvent);
 	}
@@ -70,7 +70,7 @@ const reconnect = (event) => {
 	
 	event.preventDefault();
 	if (containerId && logsContainer) {
-		socket.emit('logs:connect', containerId);
+		socket.emit('docker:container:logs:connect', containerId);
 	}
 };
 
@@ -119,7 +119,7 @@ const escapeHtml = (text) => {
 	return div.innerHTML;
 }
 
-socket.on('logs:connected', () => {
+socket.on('docker:container:logs:connected', () => {
 	if (!logs) {
 		logs = logsContainer.querySelector('ul');
 		logs.innerHTML = '';
@@ -138,7 +138,7 @@ socket.on('logs:connected', () => {
 		}
 	}
 });
-socket.on('logs:output', (data) => {
+socket.on('docker:container:logs:output', (data) => {
 	if (logs) {
 		const formattedLog = formatLogLine(containerName, String(data || ''));
 		const li = document.createElement('li');
@@ -149,7 +149,7 @@ socket.on('logs:output', (data) => {
 		}
 	}
 });
-socket.on('logs:error', (error) => {
+socket.on('docker:container:logs:error', (error) => {
 	if (logs) {
 		logs.innerHTML = `<li><span class="log-content text-red-500">${escapeHtml(error.message)}</span></li>`;
 	}
@@ -169,3 +169,4 @@ socket.on('disconnect', () => {
 module.addEventListener('click', render);
 module.addEventListener('click', reconnect);
 module.addEventListener('click', closeLogs);
+module.addEventListener('details:hide', restore);
