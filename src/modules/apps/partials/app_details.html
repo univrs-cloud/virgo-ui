@@ -49,7 +49,7 @@
 					</div>
 					<ul></ul>
 				</div>
-	
+
 				<div class="terminal-container bd-black rounded-3 shadow-sm d-none">
 					<div class="service d-flex align-items-center justify-content-between border-bottom border-dark px-2 py-1">
 						<div class="d-flex align-items-center">
@@ -148,73 +148,73 @@
 												<small class="text-body-tertiary text-truncate d-block"><i class="icon-light icon-layer-group icon-fw me-1"></i><%=container.image%></small>
 											</div>
 
-								<div class="col-12">
-											<div class="d-flex flex-wrap align-items-center gap-1 mt-1">
-												<%if (container.hostConfig?.networkMode !== 'host') {%>
-													<%if (container.state === 'running') {%>
-														<%const publishedPorts = _.uniqBy(_.filter(container.ports, (p) => p.publicPort), (p) => `${p.publicPort}:${p.privatePort}:${p.type}`);%>
-														<%_.each(_.orderBy(publishedPorts, ['privatePort'], ['asc']), (port, index) => {%>
-															<u-badge color="gray" tint="200" tip="<%=`${port.publicPort} &rlarr; ${port.privatePort} (${port.type})`%>" pill>:<%=port.publicPort%></u-badge>
+											<div class="col-12">
+												<div class="d-flex flex-wrap align-items-center gap-1 mt-1">
+													<%if (container.hostConfig?.networkMode !== 'host') {%>
+														<%if (container.state === 'running') {%>
+															<%const publishedPorts = _.uniqBy(_.filter(container.ports, (p) => p.publicPort), (p) => `${p.publicPort}:${p.privatePort}:${p.type}`);%>
+															<%_.each(_.orderBy(publishedPorts, ['privatePort'], ['asc']), (port, index) => {%>
+																<u-badge color="gray" tint="200" tip="<%=`${port.publicPort} &rlarr; ${port.privatePort} (${port.type})`%>" pill>:<%=port.publicPort%></u-badge>
+															<%})%>
+														<%}%>
+														<%_.each(container.networkSettings?.networks, (network, networkName) => {%>
+															<%if (network.ipAddress) {%>
+																<%const isExternal = !!network.gateway;%>
+																<u-badge color="<%=(isExternal ? 'purple' : 'gray')%>" tint="100" tip="<%=networkName%>: <%=network.ipAddress%> &middot; <%=(isExternal ? 'external' : 'internal')%>" pill>
+																	<i class="icon-light icon-network-wired icon-fw me-1"></i><%=network.ipAddress%>
+																</u-badge>
+															<%}%>
 														<%})%>
+													<%} else {%>
+														<%const hostIp = container.networkSettings?.networks?.host?.ipAddress;%>
+														<%const hostTip = (!hostIp || hostIp === '127.0.0.1' || hostIp.startsWith('127.') || hostIp === '::1') ? 'host: no IP' : `host: ${hostIp}`;%>
+														<u-badge color="purple" tint="100" tip="<%=hostTip%>" pill>
+															<i class="icon-light icon-network-wired icon-fw me-1"></i>1
+														</u-badge>
 													<%}%>
-													<%_.each(container.networkSettings?.networks, (network, networkName) => {%>
-														<%if (network.ipAddress) {%>
-															<%const isExternal = !!network.gateway;%>
-															<u-badge color="<%=(isExternal ? 'purple' : 'gray')%>" tint="100" tip="<%=networkName%>: <%=network.ipAddress%> &middot; <%=(isExternal ? 'external' : 'internal')%>" pill>
-																<i class="icon-light icon-network-wired icon-fw me-1"></i><%=network.ipAddress%>
-															</u-badge>
-														<%}%>
-													<%})%>
-												<%} else {%>
-													<%const hostIp = container.networkSettings?.networks?.host?.ipAddress;%>
-													<%const hostTip = (!hostIp || hostIp === '127.0.0.1' || hostIp.startsWith('127.') || hostIp === '::1') ? 'host: no IP' : `host: ${hostIp}`;%>
-													<u-badge color="purple" tint="100" tip="<%=hostTip%>" pill>
-														<i class="icon-light icon-network-wired icon-fw me-1"></i>1
-													</u-badge>
-												<%}%>
-												<%if (!_.isEmpty(container.mounts)) {%>
-													<u-badge color="orange" tint="100" tip="<%=_.size(container.mounts)%> volume<%=(_.size(container.mounts) !== 1 ? 's' : '')%> mounted" pill>
-														<i class="icon-light icon-hard-drive icon-fw me-1"></i><%=_.size(container.mounts)%>
-													</u-badge>
-												<%}%>
-											</div>
-										</div>
-
-										<div class="col-12">
-											<div class="row g-2">
-												<div class="col-6 col-md-3 col-lg-2">
-													<div class="d-flex align-items-center justify-content-between">
-														<small class="text-body-tertiary">CPU</small>
-														<%if (!resourceMetrics) {%>
-															<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
-														<%} else {%>
-															<small class="fw-light"><%=resourceMetrics?.cpu?.percent.toFixed(2)%>%</small>
-														<%}%>
-													</div>
-													<%if (resourceMetrics) {%>
-														<u-progress shadow="false" class="d-block">
-															<u-progress-bar width="<%=resourceMetrics?.cpu?.percent%>"></u-progress-bar>
-														</u-progress>
-													<%}%>
-												</div>
-
-												<div class="col-6 col-md-3 col-lg-2">
-													<div class="d-flex align-items-center justify-content-between">
-														<small class="text-body-tertiary">RAM</small>
-														<%if (!resourceMetrics) {%>
-															<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
-														<%} else {%>
-															<small class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(resourceMetrics?.memory?.usage || 0, { binary: true })%>"><%=resourceMetrics?.memory?.percent.toFixed(2)%>%</small>
-														<%}%>
-													</div>
-													<%if (resourceMetrics) {%>
-														<u-progress shadow="false" class="d-block">
-															<u-progress-bar width="<%=resourceMetrics?.memory?.percent%>"></u-progress-bar>
-														</u-progress>
+													<%if (!_.isEmpty(container.mounts)) {%>
+														<u-badge color="orange" tint="100" tip="<%=_.size(container.mounts)%> volume<%=(_.size(container.mounts) !== 1 ? 's' : '')%> mounted" pill>
+															<i class="icon-light icon-hard-drive icon-fw me-1"></i><%=_.size(container.mounts)%>
+														</u-badge>
 													<%}%>
 												</div>
 											</div>
-										</div>
+
+											<div class="col-12">
+												<div class="row g-2">
+													<div class="col-6 col-md-3 col-lg-2">
+														<div class="d-flex align-items-center justify-content-between">
+															<small class="text-body-tertiary">CPU</small>
+															<%if (!resourceMetrics) {%>
+																<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
+															<%} else {%>
+																<small class="fw-light"><%=resourceMetrics?.cpu?.percent.toFixed(2)%>%</small>
+															<%}%>
+														</div>
+														<%if (resourceMetrics) {%>
+															<u-progress shadow="false" class="d-block">
+																<u-progress-bar width="<%=resourceMetrics?.cpu?.percent%>"></u-progress-bar>
+															</u-progress>
+														<%}%>
+													</div>
+
+													<div class="col-6 col-md-3 col-lg-2">
+														<div class="d-flex align-items-center justify-content-between">
+															<small class="text-body-tertiary">RAM</small>
+															<%if (!resourceMetrics) {%>
+																<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
+															<%} else {%>
+																<small class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(resourceMetrics?.memory?.usage || 0, { binary: true })%>"><%=resourceMetrics?.memory?.percent.toFixed(2)%>%</small>
+															<%}%>
+														</div>
+														<%if (resourceMetrics) {%>
+															<u-progress shadow="false" class="d-block">
+																<u-progress-bar width="<%=resourceMetrics?.memory?.percent%>"></u-progress-bar>
+															</u-progress>
+														<%}%>
+													</div>
+												</div>
+											</div>
 
 											<div class="col-12">
 												<hr class="my-1 border-0 border-top opacity-50">
@@ -241,64 +241,73 @@
 						<%})%>
 					</div>
 
-					<table class="table table-hover align-middle m-0">
-						<thead class="sticky-top">
-							<th>Snapshot</th>
-							<th class="text-end" style="width: 100px; min-width: 100px;">Size</th>
-							<th style="width: 40px; min-width: 40px;"></th>
-						</thead>
-						<tbody>
-							<%
-								// Group snapshots by type
-								const groupedSnapshots = _.groupBy(app.snapshots, (snapshot) => {
-									const segments = snapshot.snapshotName.split('_');
-									return _.toLower(_.last(segments));
-								});
-								
-								// Define custom order for snapshot types
-								const typeOrder = ['frequently', 'hourly', 'daily', 'monthly', 'yearly'];
-								
-								// Sort groups by custom order
-								const sortedGroups = _.sortBy(_.keys(groupedSnapshots), (type) => {
-									const index = _.indexOf(typeOrder, type);
-									return index === -1 ? 999 : index;
-								});
-							%>
-							<%_.each(sortedGroups, (type) => {%>
+					<div class="card mb-2 mt-2">
+						<div class="card-body py-1">
+							<div class="d-flex align-items-center">
+								<i class="icon-light icon-camera icon-fw text-body-tertiary me-2"></i>
+								<span>Snapshots</span>
+								<small class="text-body-tertiary ms-2">(<%=_.size(app.snapshots)%>)</small>
+							</div>
+						</div>
+						<table class="table table-hover align-middle m-0">
+							<thead class="sticky-top">
+								<th>Snapshot</th>
+								<th class="text-end" style="width: 100px; min-width: 100px;">Size</th>
+								<th style="width: 40px; min-width: 40px;"></th>
+							</thead>
+							<tbody>
 								<%
-									const typeSnapshots = _.orderBy(groupedSnapshots[type], (snapshot) => {
+									// Group snapshots by type
+									const groupedSnapshots = _.groupBy(app.snapshots, (snapshot) => {
 										const segments = snapshot.snapshotName.split('_');
-										const m = moment(datePart = segments.slice(1, -1).join(' '), 'YYYY-MM-DD HH:mm:ss', true);
-										return m.isValid() ? m.toDate() : new Date(0);
-									}, ['desc']);
+										return _.toLower(_.last(segments));
+									});
+
+									// Define custom order for snapshot types
+									const typeOrder = ['frequently', 'hourly', 'daily', 'monthly', 'yearly'];
+
+									// Sort groups by custom order
+									const sortedGroups = _.sortBy(_.keys(groupedSnapshots), (type) => {
+										const index = _.indexOf(typeOrder, type);
+										return index === -1 ? 999 : index;
+									});
 								%>
-								<tr class="sticky-top z-0" style="top: 2.6rem;">
-									<td colspan="3" class="bg-light fw-semibold">
-										<%=_.startCase(type)%> (<%=typeSnapshots.length%>)
-									</td>
-								</tr>
-								<%_.each(typeSnapshots, (snapshot) => {%>
+								<%_.each(sortedGroups, (type) => {%>
 									<%
-										const segments = snapshot.snapshotName.split('_');
-										const createdMoment = moment(segments.slice(1, -1).join(' '), 'YYYY-MM-DD HH:mm:ss', true);
-										const createdAt = createdMoment.isValid() ? createdMoment.format('YYYY-MM-DD HH:mm') : snapshot.snapshotName;
+										const typeSnapshots = _.orderBy(groupedSnapshots[type], (snapshot) => {
+											const segments = snapshot.snapshotName.split('_');
+											const m = moment(datePart = segments.slice(1, -1).join(' '), 'YYYY-MM-DD HH:mm:ss', true);
+											return m.isValid() ? m.toDate() : new Date(0);
+										}, ['desc']);
 									%>
-									<tr>
-										<td class="font-monospace"><small class="text-body-secondary"><%=createdAt%></small></td>
-										<td class="text-end"><small class="fw-light"><%=prettyBytes(snapshot.properties?.used?.value || 0, { binary: true })%></small></td>
-										<td>
-											<div class="dropdown">
-												<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
-												<ul class="dropdown-menu">
-													<li><button type="button" class="dropdown-item disabled">No actions</button></li>
-												</ul>
-											</div>
+									<tr class="sticky-top z-0" style="top: 2.6rem;">
+										<td colspan="3" class="bg-light fw-semibold">
+											<%=_.startCase(type)%> (<%=typeSnapshots.length%>)
 										</td>
 									</tr>
+									<%_.each(typeSnapshots, (snapshot) => {%>
+										<%
+											const segments = snapshot.snapshotName.split('_');
+											const createdMoment = moment(segments.slice(1, -1).join(' '), 'YYYY-MM-DD HH:mm:ss', true);
+											const createdAt = createdMoment.isValid() ? createdMoment.format('YYYY-MM-DD HH:mm') : snapshot.snapshotName;
+										%>
+										<tr>
+											<td class="font-monospace"><small class="text-body-secondary"><%=createdAt%></small></td>
+											<td class="text-end"><small class="fw-light"><%=prettyBytes(snapshot.properties?.used?.value || 0, { binary: true })%></small></td>
+											<td>
+												<div class="dropdown">
+													<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
+													<ul class="dropdown-menu">
+														<li><button type="button" class="dropdown-item disabled">No actions</button></li>
+													</ul>
+												</div>
+											</td>
+										</tr>
+									<%})%>
 								<%})%>
-							<%})%>
-						</tbody>
-					</table>
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
 		</div>
