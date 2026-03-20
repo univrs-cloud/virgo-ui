@@ -113,11 +113,19 @@ const renderServiceDetails = (unit) => {
 	morphdom(
 		details,
 		`<div>${serviceDetailsTemplate({ service, prettyBytes })}</div>`,
-		{ childrenOnly: true }
+		{
+			childrenOnly: true,
+			onBeforeElUpdated: (fromEl, toEl) => {
+				if (fromEl.classList.contains('logs-container')) {
+					return false;
+				}
+			}
+		}
 	);
 };
 
 const hideServiceDetails = () => {
+	module.dispatchEvent(new CustomEvent('details:hide'));
 	details.classList.remove('d-block');
 	details.innerHTML = '';
 };

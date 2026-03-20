@@ -184,6 +184,7 @@ const renderAppDetails = (name) => {
 };
 
 const hideAppDetails = () => {
+	module.dispatchEvent(new CustomEvent('details:hide'));
 	details.classList.remove('d-block');
 	details.innerHTML = '';
 };

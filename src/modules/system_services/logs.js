@@ -138,3 +138,4 @@ socket.on('disconnect', () => {
 
 module.addEventListener('click', render);
 module.addEventListener('click', closeLogs);
+module.addEventListener('details:hide', restore);

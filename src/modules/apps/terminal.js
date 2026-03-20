@@ -30,7 +30,7 @@ const render = (event) => {
 	containerId = link.dataset.id;
 	terminalContainer.querySelector('.service .name').innerHTML = service.labels?.comDockerComposeService;
 	terminalContainer.classList.remove('d-none');
-	socket.emit('terminal:connect', containerId);
+	socket.emit('docker:container:terminal:connect', containerId);
 };
 
 const closeTerminal = (event) => {
@@ -54,7 +54,7 @@ const restore = () => {
 	}
 
 	terminalContainer.classList.add('d-none');
-	socket.emit('terminal:disconnect');
+	socket.emit('docker:container:terminal:disconnect');
 	if (terminal) {
 		terminal.dispose();
 	}
@@ -71,11 +71,11 @@ const reconnect = (event) => {
 	
 	event.preventDefault();
 	if (containerId && terminalContainer) {
-		socket.emit('terminal:connect', containerId);
+		socket.emit('docker:container:terminal:connect', containerId);
 	}
 };
 
-socket.on('terminal:connected', () => {
+socket.on('docker:container:terminal:connected', () => {
 	if (!terminal) {
 		fitAddon = new FitAddon();
 		terminal = new Terminal({
@@ -90,10 +90,10 @@ socket.on('terminal:connected', () => {
 		terminal.open(terminalContainer.querySelector('.wrapper'));
 		terminal.focus();
 		terminal.onData((data) => {
-			socket.emit('terminal:input', data);
+			socket.emit('docker:container:terminal:input', data);
 		});
 		terminal.onResize((size) => {
-			socket.emit('terminal:resize', { cols: size.cols, rows: size.rows });
+			socket.emit('docker:container:terminal:resize', { cols: size.cols, rows: size.rows });
 		});
 		resize();
 	} else {
@@ -109,12 +109,12 @@ socket.on('terminal:connected', () => {
 		}
 	}
 });
-socket.on('terminal:output', (data) => {
+socket.on('docker:container:terminal:output', (data) => {
 	if (terminal) {
 		terminal.write(data);
 	}
 });
-socket.on('terminal:rrror', (error) => {
+socket.on('docker:container:terminal:error', (error) => {
 	if (terminal) {
 		terminal.dispose();
 		terminal = null;
@@ -135,4 +135,5 @@ socket.on('disconnect', () => {
 module.addEventListener('click', render);
 module.addEventListener('click', closeTerminal);
 module.addEventListener('click', reconnect);
+module.addEventListener('details:hide', restore);
 window.addEventListener('resize', resize);
