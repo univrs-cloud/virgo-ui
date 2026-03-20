@@ -1,15 +1,19 @@
+import page from 'page';
 import modulePartial from 'modules/system_services/partials/index.html';
 import servicePartial from 'modules/system_services/partials/service.html';
-import filterPartial from 'modules/system_services/partials/filter.html';
+import serviceDetailsPartial from 'modules/system_services/partials/service_details.html';
+import filterPartial from 'modules/system_services/partials/service_filter.html';
 import * as serviceService from 'modules/system_services/services/service';
 
 const moduleTemplate = _.template(modulePartial);
 const serviceTemplate = _.template(servicePartial);
+const serviceDetailsTemplate = _.template(serviceDetailsPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate({ filterPartial }));
 const module = document.querySelector('#system-services');
 const loading = module.querySelector('.loading');
 const syncButton = module.querySelector('button[data-action="sync"]');
 const container = module.querySelector('.container-fluid');
+const details = container.querySelector('.details');
 const searchInput = module.querySelector('.search');
 const filterStateSelect = module.querySelectorAll('.filter-state');
 const filterUnitFileStateSelect = module.querySelectorAll('.filter-unit-file-state');
@@ -22,6 +26,7 @@ let tableOrder = {
 	field: 'unit',
 	direction: 'asc'
 };
+let services = [];
 
 const sync = (event) => {
 	event.preventDefault();
@@ -75,13 +80,55 @@ const order = (event) => {
 	render({ services });
 };
 
+const expand = (event) => {
+	if (event.target.closest('a, .dropdown')) {
+		return;
+	}
+
+	event.preventDefault();
+	const row = event.target.closest('.service');
+	const unit = row.dataset.unit;
+	page(`/system-services/${encodeURIComponent(unit)}`);
+};
+
+const compress = (event) => {
+	if (!event.target.closest('button')?.classList.contains('compress')) {
+		return;
+	}
+
+	event.preventDefault();
+	page('/system-services');
+};
+
+const renderServiceDetails = (unit) => {
+	if (!unit) {
+		return;
+	}
+
+	const service = _.find(services, { unit });
+	if (!service) {
+		return;
+	}
+
+	morphdom(
+		details,
+		`<div>${serviceDetailsTemplate({ service, prettyBytes })}</div>`,
+		{ childrenOnly: true }
+	);
+};
+
+const hideServiceDetails = () => {
+	details.classList.remove('d-block');
+	details.innerHTML = '';
+};
+
 const render = (state) => {
 	if (_.isNull(state.services)) {
 		return;
 	}
 
 	const template = document.createElement('template');
-	let services = state.services;
+	services = state.services;
 	const searchTerms = searchValue.toLowerCase().split(/\s+/);
 	services = _.filter(services, (service) => {
 		const text = `${service.unit || ''} ${service.description || ''}`.toLowerCase();
@@ -109,16 +156,37 @@ const render = (state) => {
 		{ childrenOnly: true }
 	);
 
+	const serviceContainer = container.querySelector('.details .item');
+	if (serviceContainer) {
+		renderServiceDetails(serviceContainer.dataset.name);
+	}
+
 	loading.classList.add('d-none');
 	syncButton.disabled = false;
 	syncButton.querySelector('.icon-arrows-rotate').classList.remove('icon-spin');
 	container.classList.remove('d-none');
 };
 
+const handleRoute = (ctx) => {
+	const unit = ctx?.params?.serviceUnit;
+	if (_.isEmpty(unit)) {
+		hideServiceDetails();
+		return;
+	}
+
+	renderServiceDetails(unit);
+	details.classList.add('d-block');
+};
+
+module.onRoute = handleRoute;
+module.addEventListener('click', compress);
 syncButton.addEventListener('click', sync);
 searchInput.addEventListener('input', search);
 _.each(filterStateSelect, (radio) => { radio.addEventListener('change', filterState); });
 _.each(filterUnitFileStateSelect, (radio) => { radio.addEventListener('change', filterUnitFileState); });
 table.querySelector('thead').addEventListener('click', order);
+table.querySelector('tbody').addEventListener('click', expand);
 
 serviceService.subscribe([render]);
+
+import('modules/system_services/logs');

@@ -32,7 +32,7 @@ module.exports = (env, argv) => {
 			port: 443,
 			allowedHosts: 'all',
 			compress: true,
-			historyApiFallback: true,
+			historyApiFallback: { disableDotRule: true },
 			open: true,
 			hot: false,
 			devMiddleware: {

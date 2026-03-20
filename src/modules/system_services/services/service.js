@@ -3,6 +3,10 @@ import Host from 'stores/host';
 let callbackCollection = [];
 let storeSubscription = null;
 
+const getSocket = () => {
+	return Host.socket;
+};
+
 const syncServices = () => {
 	Host.syncServices();
 };
@@ -42,5 +46,6 @@ export {
 	subscribe,
 	unsubscribe,
 	syncServices,
-	getServices
+	getServices,
+	getSocket
 };

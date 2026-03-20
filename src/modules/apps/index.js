@@ -221,7 +221,7 @@ const render = (state) => {
 		{ childrenOnly: true }
 	);
 
-	const appContainer = container.querySelector('.details .app');
+	const appContainer = container.querySelector('.details .item');
 	if (appContainer) {
 		renderAppDetails(appContainer.dataset.name);
 	}

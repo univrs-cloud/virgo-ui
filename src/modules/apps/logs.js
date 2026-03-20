@@ -29,7 +29,7 @@ const render = (event) => {
 	});
 	containerName = _.replace(service?.names[0], /^\//, '');
 	serviceName = service?.labels?.comDockerComposeService || service?.name || 'unknown';
-	const app = link.closest('.app');
+	const app = link.closest('.item');
 	logsContainer = app.querySelector('.logs-container');
 	logsContainer.querySelector('.service .name').innerHTML = serviceName;
 	logsContainer.classList.remove('d-none');
@@ -46,17 +46,21 @@ const closeLogs = (event) => {
 };
 
 const restore = () => {
-	if (logs) {
-		logsContainer.classList.add('d-none');
-		socket.emit('logs:disconnect');
-		logs.removeEventListener('scroll', shouldScrollEvent);
-		logs = null;
-		containerId = null;
-		serviceName = '';
-		containerName = '';
-		logsContainer = null;
-		isScrollEventAttached = false;
+	if (!logsContainer) {
+		return;
 	}
+
+	logsContainer.classList.add('d-none');
+	socket.emit('logs:disconnect');
+	if (logs) {
+		logs.removeEventListener('scroll', shouldScrollEvent);
+	}
+	logs = null;
+	containerId = null;
+	serviceName = '';
+	containerName = '';
+	logsContainer = null;
+	isScrollEventAttached = false;
 };
 
 const reconnect = (event) => {
