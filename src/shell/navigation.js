@@ -1,11 +1,15 @@
 import page from 'page';
 
+const header = document.querySelector('header');
+const offcanvas = document.querySelector('.offcanvas');
+const offcanvasInstance = bootstrap.Offcanvas.getOrCreateInstance(offcanvas);
+
 const showPage = (ctx) => {
 	const module = ctx.module || 'dashboard';
 
-	_.each(container.querySelectorAll('.nav-link.active'), (element) => { element.classList.remove('active'); });
-	_.each(container.querySelectorAll(`.nav-link[href="/${module}"]`), (element) => { element.classList.add('active'); });
-
+	_.each(document.querySelectorAll(':is(header, .offcanvas) .nav-link.active'), (element) => { element.classList.remove('active'); });
+	_.each(document.querySelectorAll(`:is(header, .offcanvas) .nav-link[href="/${module}"]`), (element) => { element.classList.add('active'); });
+	
 	_.each(document.querySelectorAll('.modules > div'), (element) => { element.classList.add('d-none') });
 	
 	const moduleElement = document.querySelector(`#${module}`);
@@ -19,9 +23,8 @@ const navigate = (event) => {
 		return;
 	}
 
-	const offcanvas = navLink.closest('.offcanvas');
-	if (!_.isNull(offcanvas)) {
-		bootstrap.Offcanvas.getInstance(offcanvas)?.hide();
+	if (!_.isNull(navLink.closest('.offcanvas'))) {
+		offcanvasInstance?.hide();
 	}
 };
 
@@ -43,8 +46,8 @@ const requiresAdmin = (ctx, next) => {
 	next();
 };
 
-const container = document.querySelector('header');
-container.addEventListener('click', navigate);
+header.addEventListener('click', navigate);
+offcanvas.addEventListener('click', navigate);
 
 const routes = [
 	{ path: '/', module: 'dashboard' },

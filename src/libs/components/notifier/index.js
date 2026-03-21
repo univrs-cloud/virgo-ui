@@ -73,7 +73,7 @@ export class Notifier extends LitElement {
 
 	render() {
 		return html`
-			<div class="toast-container position-fixed bottom-0 end-0 p-3 pb-5 pb-md-3 mb-5 mb-md-0">
+			<div class="toast-container position-fixed bottom-0 end-0 p-3 pb-4 pb-md-3 mb-5 mb-md-0">
 				${repeat(
 					this.toasts,
 					toast => toast.id,
