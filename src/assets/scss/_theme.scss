@@ -485,6 +485,31 @@ u-toast {
 	}
 }
 
+.snapshots {
+	.group-toggle {
+		&[aria-expanded="true"] .icon-solid {
+			transform: rotate(180deg);
+		}
+		td {
+			border-top: var(--bs-border-width) solid var(--bs-border-color);
+		}
+	}
+	.collapsing {
+		transition: none !important;
+		height: auto !important;
+	}
+	// Round bottom corners of last group-toggle when its section is collapsed
+	tbody:nth-last-child(2):not(:has(+ .show)):not(:has(+ .collapsing)) .group-toggle {
+		td:first-child { border-bottom-left-radius: var(--bs-card-border-radius); }
+		td:last-child { border-bottom-right-radius: var(--bs-card-border-radius); }
+	}
+	// Round bottom corners of last data row when its section is expanded
+	tbody:last-child.show tr:last-child {
+		td:first-child { border-bottom-left-radius: var(--bs-card-border-radius); }
+		td:last-child { border-bottom-right-radius: var(--bs-card-border-radius); }
+	}
+}
+
 [class*="z-depth-"] {
 	transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
 	will-change: box-shadow;
