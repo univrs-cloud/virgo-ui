@@ -9,7 +9,7 @@ const deleteBookmark = async (event) => {
 
 	event.preventDefault();
 	const button = event.target;
-	const row = button.closest('.bookmark');
+	const row = button.closest('.item');
 	const bookmark = _.find(bookmarkService.getBookmarks(), { name: row.dataset.name });
 
 	if (!await confirm(`Are you sure you want to remove the bookmark ${bookmark.title}?`, { buttons: [{ text: 'Yes, remove', class: 'btn-danger' }] })) {

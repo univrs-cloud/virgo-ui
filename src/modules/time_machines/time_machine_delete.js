@@ -9,7 +9,7 @@ const deleteTimeMachine = async (event) => {
 	
 	event.preventDefault();
 	const button = event.target.closest('a');
-	const row = button.closest('.time-machine');
+	const row = button.closest('.item');
 	if (!await confirm(`Are you sure you want to delete the time machine ${row.dataset.id}?<br><br>This action cannot be undone and will permanently delete all associated data.`, { buttons: [{ text: 'Yes, delete', class: 'btn-danger' }] })) {
 		return;
 	}

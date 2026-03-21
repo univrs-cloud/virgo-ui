@@ -41,7 +41,7 @@ const updateTimeMachine = (event) => {
 };
 
 const render = (event) => {
-	const row = event.relatedTarget?.closest('.time-machine');
+	const row = event.relatedTarget?.closest('.item');
 	if (!row) {
 		return;
 	}

@@ -21,7 +21,7 @@ const restore = (event) => {
 };
 
 const render = (event) => {
-	const uid = event.relatedTarget.closest('.user').dataset.uid;
+	const uid = event.relatedTarget.closest('.item').dataset.uid;
 	user = _.find(userService.getUsers(), { uid: Number(uid) });
 	form.querySelector('.title-username').innerHTML = user.username;
 };

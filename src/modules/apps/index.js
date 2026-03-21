@@ -63,7 +63,7 @@ const expand = (event) => {
 	}
 
 	event.preventDefault();
-	const row = event.target.closest('.app');
+	const row = event.target.closest('.item');
 	const name = row.dataset.name;
 	page(`/apps/${encodeURIComponent(name)}`);
 };
@@ -88,7 +88,7 @@ const update = (event) => {
 
 	event.preventDefault();
 	const button = event.target;
-	const row = button.closest('.app');
+	const row = button.closest('.item');
 	const app = _.find(appService.getApps(), { name: row.dataset.name });
 
 	let config = {
@@ -112,7 +112,7 @@ const performAppAction = async (event) => {
 
 	event.preventDefault();
 	const button = event.target;
-	const row = button.closest('.app');
+	const row = button.closest('.item');
 	const app = _.find(appService.getApps(), { name: row.dataset.name });
 	
 	const actionMessage = (button.dataset.action === 'uninstall' ? '<br><br>Data will <strong>NOT</strong> be deleted.' : '');
