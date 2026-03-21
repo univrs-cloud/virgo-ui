@@ -32,7 +32,7 @@ const install = (event) => {
 };
 
 const render = (event) => {
-	const name = event.relatedTarget.closest('.app').dataset.name;
+	const name = event.relatedTarget.closest('.item').dataset.name;
 	app = _.find(appCenterService.getTemplates(), { name });
 	form.querySelector('.modal-title').innerHTML = app.title;
 	form.querySelector('.description').innerHTML = app.description;

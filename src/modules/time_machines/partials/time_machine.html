@@ -5,7 +5,7 @@
 	const newestStr = (moments.length ? moment.max(moments).format('YYYY-MM-DD HH:mm') : '—');
 	const snapshotTooltip = (moments.length ? `Latest: ${newestStr}<br>Oldest: ${oldestStr}` : '');
 %>
-<tr class="time-machine" data-id="<%=timeMachine.name%>">
+<tr class="item" data-id="<%=timeMachine.name%>">
 	<td style="min-width: 210px; max-width: 0;">
 		<div class="d-flex align-items-center mb-n1">
 			<div class="text-truncate"><%=timeMachine.comment%></div>

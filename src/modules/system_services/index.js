@@ -86,7 +86,7 @@ const expand = (event) => {
 	}
 
 	event.preventDefault();
-	const row = event.target.closest('.service');
+	const row = event.target.closest('.item');
 	const unit = row.dataset.unit;
 	page(`/system-services/${encodeURIComponent(unit)}`);
 };

@@ -131,7 +131,7 @@ const updateBookmark = (event) => {
 };
 
 const render = (event) => {
-	const name = event.relatedTarget.closest('.bookmark').dataset.name;
+	const name = event.relatedTarget.closest('.item').dataset.name;
 	const bookmark = _.find(bookmarkService.getBookmarks(), { name: name });
 	form.querySelector('.name').value = bookmark.name;
 	form.querySelector('.title').value = bookmark.title;
