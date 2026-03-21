@@ -241,7 +241,7 @@
 						<%})%>
 					</div>
 
-					<div class="card mb-2 mt-2">
+					<div class="snapshots card mb-2 mt-2">
 						<div class="card-body py-1">
 							<div class="d-flex align-items-center">
 								<i class="icon-light icon-camera icon-fw text-body-tertiary me-2"></i>
@@ -249,42 +249,47 @@
 								<small class="text-body-tertiary ms-2">(<%=_.size(app.snapshots)%>)</small>
 							</div>
 						</div>
-						<table class="table table-hover align-middle m-0">
-							<thead class="sticky-top">
-								<th>Snapshot</th>
-								<th class="text-end" style="width: 100px; min-width: 100px;">Size</th>
-								<th style="width: 40px; min-width: 40px;"></th>
-							</thead>
-							<tbody>
+						<table class="table table-borderless table-hover align-middle m-0" style="border-collapse: separate; border-spacing: 0;">
+							<colgroup>
+								<col>
+								<col style="width: 100px; min-width: 100px;">
+								<col style="width: 40px; min-width: 40px;">
+							</colgroup>
+							<%
+								// Group snapshots by type
+								const groupedSnapshots = _.groupBy(app.snapshots, (snapshot) => {
+									const segments = snapshot.snapshotName.split('_');
+									return _.toLower(_.last(segments));
+								});
+
+								// Define custom order for snapshot types
+								const typeOrder = ['frequently', 'hourly', 'daily', 'monthly', 'yearly'];
+
+								// Sort groups by custom order
+								const sortedGroups = _.sortBy(_.keys(groupedSnapshots), (type) => {
+									const index = _.indexOf(typeOrder, type);
+									return index === -1 ? 999 : index;
+								});
+							%>
+							<%_.each(sortedGroups, (type) => {%>
 								<%
-									// Group snapshots by type
-									const groupedSnapshots = _.groupBy(app.snapshots, (snapshot) => {
+									const typeSnapshots = _.orderBy(groupedSnapshots[type], (snapshot) => {
 										const segments = snapshot.snapshotName.split('_');
-										return _.toLower(_.last(segments));
-									});
-
-									// Define custom order for snapshot types
-									const typeOrder = ['frequently', 'hourly', 'daily', 'monthly', 'yearly'];
-
-									// Sort groups by custom order
-									const sortedGroups = _.sortBy(_.keys(groupedSnapshots), (type) => {
-										const index = _.indexOf(typeOrder, type);
-										return index === -1 ? 999 : index;
-									});
+										const m = moment(segments.slice(1, -1).join(' '), 'YYYY-MM-DD HH:mm:ss', true);
+										return m.isValid() ? m.toDate() : new Date(0);
+									}, ['desc']);
+									const groupId = `snapshot-group-${type}-${_.kebabCase(app.name)}`;
 								%>
-								<%_.each(sortedGroups, (type) => {%>
-									<%
-										const typeSnapshots = _.orderBy(groupedSnapshots[type], (snapshot) => {
-											const segments = snapshot.snapshotName.split('_');
-											const m = moment(datePart = segments.slice(1, -1).join(' '), 'YYYY-MM-DD HH:mm:ss', true);
-											return m.isValid() ? m.toDate() : new Date(0);
-										}, ['desc']);
-									%>
-									<tr class="sticky-top z-0" style="top: 2.6rem;">
-										<td colspan="3" class="bg-light fw-semibold">
-											<%=_.startCase(type)%> (<%=typeSnapshots.length%>)
+								<tbody>
+									<tr class="group-toggle sticky-top cursor-pointer" data-bs-toggle="collapse" data-bs-target="#<%=groupId%>" aria-expanded="false" aria-controls="<%=groupId%>">
+										<td style="padding-left: calc(var(--bs-card-spacer-x) + 1.25em + 0.5rem);"><%=_.startCase(type)%> <small class="text-body-tertiary">(<%=typeSnapshots.length%>)</small></td>
+										<td></td>
+										<td class="text-end">
+											<i class="icon-solid icon-chevron-down icon-fw icon-xs text-secondary"></i>
 										</td>
 									</tr>
+								</tbody>
+								<tbody class="collapse" id="<%=groupId%>">
 									<%_.each(typeSnapshots, (snapshot) => {%>
 										<%
 											const segments = snapshot.snapshotName.split('_');
@@ -292,7 +297,7 @@
 											const createdAt = createdMoment.isValid() ? createdMoment.format('YYYY-MM-DD HH:mm') : snapshot.snapshotName;
 										%>
 										<tr>
-											<td class="font-monospace"><small class="text-body-secondary"><%=createdAt%></small></td>
+											<td class="font-monospace" style="padding-left: calc(var(--bs-card-spacer-x) + 1.25em + 0.5rem);"><small class="text-body-secondary"><%=createdAt%></small></td>
 											<td class="text-end"><small class="fw-light"><%=prettyBytes(snapshot.properties?.used?.value || 0, { binary: true })%></small></td>
 											<td>
 												<div class="dropdown">
@@ -304,8 +309,8 @@
 											</td>
 										</tr>
 									<%})%>
-								<%})%>
-							</tbody>
+								</tbody>
+							<%})%>
 						</table>
 					</div>
 				</div>

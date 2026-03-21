@@ -178,6 +178,16 @@ const renderAppDetails = (name) => {
 				if (fromEl.classList.contains('logs-container') || fromEl.classList.contains('terminal-container')) {
 					return false;
 				}
+
+				if (fromEl.classList.contains('group-toggle')) {
+					morphdom(fromEl, toEl, { childrenOnly: true });
+					return false;
+				}
+
+				if (fromEl.tagName === 'TBODY' && (fromEl.classList.contains('collapse') || fromEl.classList.contains('collapsing'))) {
+					morphdom(fromEl, toEl, { childrenOnly: true });
+					return false;
+				}
 			}
 		}
 	);
