@@ -9,14 +9,14 @@ import page from 'page';
 let subscription;
 const headerTemplate = _.template(headerPartial);
 const navigationTemplate = _.template(navigationPartial);
-const container = document.querySelector('header');
+const header = document.querySelector('header');
 
 const renderSerialNumber = (state) => {
 	if (_.isNull(state.system)) {
 		return;
 	}
 
-	_.each(container.querySelectorAll('.serial-number'), (element) => { element.innerHTML = `SN:${state.system.serial || '&mdash;'}`; });
+	_.each(header.querySelectorAll('.serial-number'), (element) => { element.innerHTML = `SN:${state.system.serial || '&mdash;'}`; });
 	systemService.unsubscribe(subscription);
 	subscription = null;
 };
@@ -27,7 +27,7 @@ const renderSystemUpdatesBadge = (state) => {
 	}
 
 	const newNav = `<div>${navigationTemplate({ active: page.current, updates: state.updates })}</div>`;
-	_.each(container.querySelectorAll('.navbar .nav, .offcanvas .navbar-nav'), (nav) => {
+	_.each(document.querySelectorAll('header .navbar .nav, .offcanvas .navbar-nav'), (nav) => {
 		morphdom(
 			nav,
 			newNav,
@@ -39,7 +39,7 @@ const renderSystemUpdatesBadge = (state) => {
 page.start();
 
 morphdom(
-	container,
+	header,
 	headerTemplate({ isUpdating: false })
 );
 renderSystemUpdatesBadge({ updates: [] });

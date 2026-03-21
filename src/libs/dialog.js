@@ -1,7 +1,7 @@
 (() => {
 	document.body.addEventListener('show.bs.modal', (event) => {
 		const modal = event.target;
-		const bootstrapModalBackdropZIndex = 2000;
+		const bootstrapModalBackdropZIndex = 1055;
 		const modalZIndex = _.size(document.body.querySelectorAll('.modal.show')) + bootstrapModalBackdropZIndex + 1;
 		modal.style.zIndex = modalZIndex;
 	});
