@@ -1,4 +1,4 @@
-<tr class="item cursor-pointer <%=(service.state === 'failed' ? 'table-danger' : '')%>" data-unit="<%=service.unit%>">
+<tr class="item cursor-pointer <%=(service.active === 'failed' ? 'table-danger' : (service.broken ? 'table-warning' : ''))%>" data-unit="<%=service.unit%>">
 	<td>
 		<div class="d-flex align-items-center gap-2">
 			<%=service.unit%>
@@ -15,15 +15,23 @@
 		<small class="text-body-secondary"><%=service.description%></small>
 	</td>
 	<td class="text-end text-nowrap d-none d-md-table-cell">
-		<small class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(service.memory?.usage || 0, { binary: true })%>"><%=service.memory?.percent.toFixed(2)%>%</small>
-		<u-progress shadow="false">
-			<u-progress-bar width="<%=service.memory?.percent%>"></u-progress-bar>
-		</u-progress>
+		<%if (service.type === 'service') {%>
+			<small class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(service.memory?.usage || 0, { binary: true })%>"><%=service.memory?.percent.toFixed(2)%>%</small>
+			<u-progress shadow="false">
+				<u-progress-bar width="<%=service.memory?.percent%>"></u-progress-bar>
+			</u-progress>
+		<%} else {%>
+			<span class="text-body-tertiary">&mdash;</span>
+		<%}%>
 	</td>
 	<td class="d-none d-md-table-cell"><%=service.unitFileState%></td>
 	<td class="text-nowrap">
-		<u-badge color="<%=(service.state === 'running' ? 'green' : (service.state === 'oneshot' ? 'gray' : 'red'))%>" tint="<%=(service.state === 'running' ? 100 : (service.state === 'oneshot' ? 200 : 100))%>" pill>
-			<%=service.state%>
+		<%
+			const stateBadgeColor = (service.active === 'active' ? (service.sub === 'running' ? 'green' : 'blue') : (service.active === 'failed' ? 'red' : 'gray'));
+			const stateBadgeTint = (service.active === 'active' ? 100 : 200);
+		%>
+		<u-badge color="<%=stateBadgeColor%>" tint="<%=stateBadgeTint%>" pill>
+			<%=service.sub%>
 		</u-badge>
 	</td>
 	<td class="text-center px-0">

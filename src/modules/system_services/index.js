@@ -168,7 +168,7 @@ const render = (state) => {
 	services = _.filter(services, (service) => {
 		const text = `${service.unit || ''} ${service.description || ''}`.toLowerCase();
 		const matchesSearch = _.every(searchTerms, (term) => text.includes(term));
-		const matchesState = filterStateValue === '' || service.state === filterStateValue;
+		const matchesState = filterStateValue === '' || service.sub === filterStateValue;
 		const matchesUnitFileState = filterUnitFileStateValue === '' || service.unitFileState === filterUnitFileStateValue;
 		return matchesSearch && matchesState && matchesUnitFileState;
 	});

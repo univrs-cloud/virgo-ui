@@ -3,10 +3,12 @@
 <%} else {%>
 	<%
 	const hasStartStop = (service.type !== 'target' && !service.broken);
-	const isEnableableUnit = (service.unitFileState !== 'static' && service.unitFileState !== 'masked');
-	const canEnable = (isEnableableUnit && service.unitFileState !== 'enabled');
-	const canDisable = (service.unitFileState === 'enabled');
+	const isEnableableUnit = (service.unitFileState !== 'static' && service.unitFileState !== 'masked' && service.unitFileState !== 'indirect');
+	const canEnable = (isEnableableUnit && service.unitFileState !== 'enabled' && service.unitFileState !== 'enabled-runtime');
+	const canDisable = (service.unitFileState === 'enabled' || service.unitFileState === 'enabled-runtime');
 	const hasAnyAction = (hasStartStop || isEnableableUnit);
+	const isActive = (service.active === 'active');
+	const isTransitioning = (service.active === 'activating' || service.active === 'deactivating' || service.active === 'reloading');
 	%>
 	<div class="dropdown">
 		<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
@@ -15,9 +17,9 @@
 				<li><button type="button" class="dropdown-item disabled">No actions</button></li>
 			<%} else {%>
 				<%if (hasStartStop) {%>
-					<li><a href="#" class="dropdown-item <%=(service.state !== 'running' ? '' : 'disabled')%>" data-action="start"><i class="icon-regular icon-play icon-fw me-1"></i>Start</a></li>
-					<li><a href="#" class="dropdown-item <%=(service.state === 'running' ? 'confirm' : 'disabled')%>" data-action="restart"><i class="icon-regular icon-arrow-rotate-left icon-fw me-1"></i>Restart</a></li>
-					<li><a href="#" class="dropdown-item <%=(service.state === 'running' ? 'text-danger confirm' : 'disabled')%>" data-action="stop"><i class="icon-regular icon-stop icon-fw me-1"></i>Stop</a></li>
+					<li><a href="#" class="dropdown-item <%=(!isActive && !isTransitioning ? '' : 'disabled')%>" data-action="start"><i class="icon-regular icon-play icon-fw me-1"></i>Start</a></li>
+					<li><a href="#" class="dropdown-item <%=(isActive ? 'confirm' : 'disabled')%>" data-action="restart"><i class="icon-regular icon-arrow-rotate-left icon-fw me-1"></i>Restart</a></li>
+					<li><a href="#" class="dropdown-item <%=(isActive ? 'text-danger confirm' : 'disabled')%>" data-action="stop"><i class="icon-regular icon-stop icon-fw me-1"></i>Stop</a></li>
 					<%if (isEnableableUnit) {%><li><hr class="dropdown-divider"></li><%}%>
 				<%}%>
 				<%if (isEnableableUnit) {%>
