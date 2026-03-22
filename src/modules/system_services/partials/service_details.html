@@ -51,7 +51,7 @@
 						<div class="card mb-2">
 							<div class="card-body py-1">
 								<small class="text-body-tertiary pb-1"><i class="icon-solid icon-circle-dot icon-fw me-1"></i>State</small>
-								<h5><%=service.state%></h5>
+								<h5><%=service.sub%></h5>
 							</div>
 						</div>
 					</div>
@@ -59,7 +59,7 @@
 						<div class="card mb-2">
 							<div class="card-body py-1">
 								<small class="text-body-tertiary pb-1"><i class="icon-solid icon-circle-half-stroke icon-fw me-1"></i>Activity</small>
-								<h5><%=service.active%> <small class="text-body-secondary fw-normal">(<%=service.sub%>)</small></h5>
+								<h5><%=service.active%></h5>
 							</div>
 						</div>
 					</div>
@@ -75,7 +75,7 @@
 						<div class="card mb-2">
 							<div class="card-body py-1">
 								<small class="text-body-tertiary pb-1"><i class="icon-solid icon-memory icon-fw me-1"></i>RAM</small>
-								<h5><span data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(service.memory?.usage || 0, { binary: true })%>"><%=service.memory?.percent.toFixed(2)%>%</span></h5>
+								<h5><%if (service.type === 'service') {%><span data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(service.memory?.usage || 0, { binary: true })%>"><%=service.memory?.percent.toFixed(2)%>%</span><%} else {%>&mdash;<%}%></h5>
 							</div>
 						</div>
 					</div>
