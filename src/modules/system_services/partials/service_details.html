@@ -75,7 +75,7 @@
 						<div class="card mb-2">
 							<div class="card-body py-1">
 								<small class="text-body-tertiary pb-1"><i class="icon-solid icon-memory icon-fw me-1"></i>RAM</small>
-								<h5><%if (service.type === 'service') {%><span data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(service.memory?.usage || 0, { binary: true })%>"><%=service.memory?.percent.toFixed(2)%>%</span><%} else {%>&mdash;<%}%></h5>
+								<h5><%if (service.type === 'service' && service.active === 'active') {%><span data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(service.memory?.usage || 0, { binary: true })%>"><%=service.memory?.percent.toFixed(2)%>%</span><%} else {%>&mdash;<%}%></h5>
 							</div>
 						</div>
 					</div>

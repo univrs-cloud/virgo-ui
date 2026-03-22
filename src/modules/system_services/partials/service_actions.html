@@ -2,7 +2,7 @@
 	<i class="icon-solid icon-gear icon-fw icon-spin"></i>
 <%} else {%>
 	<%
-	const hasStartStop = (service.type !== 'target' && !service.broken);
+	const hasStartStop = (service.type !== 'target' && !service.broken && service.unitFileState !== 'masked');
 	const isEnableableUnit = (service.unitFileState !== 'static' && service.unitFileState !== 'masked' && service.unitFileState !== 'indirect');
 	const canEnable = (isEnableableUnit && service.unitFileState !== 'enabled' && service.unitFileState !== 'enabled-runtime');
 	const canDisable = (service.unitFileState === 'enabled' || service.unitFileState === 'enabled-runtime');
