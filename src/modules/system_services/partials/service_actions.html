@@ -4,15 +4,21 @@
 	<div class="dropdown">
 		<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
 		<ul class="dropdown-menu">
-			<li><a href="#" class="dropdown-item <%=(service.state !== 'running' && service.type !== 'target' && !service.broken ? '' : 'disabled')%>" data-action="start"><i class="icon-regular icon-play icon-fw me-1"></i>Start</a></li>
-			<li><a href="#" class="dropdown-item <%=(service.state === 'running' && service.type !== 'target' && !service.broken ? 'confirm' : 'disabled')%>" data-action="restart"><i class="icon-regular icon-arrow-rotate-left icon-fw me-1"></i>Restart</a></li>
-			<li><a href="#" class="dropdown-item <%=(service.state === 'running' && service.type !== 'target' && !service.broken ? 'text-danger confirm' : 'disabled')%>" data-action="stop"><i class="icon-regular icon-stop icon-fw me-1"></i>Stop</a></li>
-			<li><hr class="dropdown-divider"></li>
+			<%if (service.type !== 'target' && !service.broken) {%>
+				<li><a href="#" class="dropdown-item <%=(service.state !== 'running' ? '' : 'disabled')%>" data-action="start"><i class="icon-regular icon-play icon-fw me-1"></i>Start</a></li>
+				<li><a href="#" class="dropdown-item <%=(service.state === 'running' ? 'confirm' : 'disabled')%>" data-action="restart"><i class="icon-regular icon-arrow-rotate-left icon-fw me-1"></i>Restart</a></li>
+				<li><a href="#" class="dropdown-item <%=(service.state === 'running' ? 'text-danger confirm' : 'disabled')%>" data-action="stop"><i class="icon-regular icon-stop icon-fw me-1"></i>Stop</a></li>
+				<li><hr class="dropdown-divider"></li>
+			<%}%>
 			<li><a href="#" class="dropdown-item <%=(service.unitFileState !== 'enabled' && service.unitFileState !== 'static' ? '' : 'disabled')%>" data-action="enable"><i class="icon-regular icon-toggle-on icon-fw me-1"></i>Enable</a></li>
-			<li><a href="#" class="dropdown-item <%=(service.unitFileState !== 'enabled' && service.unitFileState !== 'static' && service.type !== 'target' && !service.broken ? '' : 'disabled')%>" data-action="enable-start"><i class="icon-regular icon-toggle-on icon-fw me-1"></i>Enable &amp; start</a></li>
+			<%if (service.type !== 'target' && !service.broken) {%>
+				<li><a href="#" class="dropdown-item <%=(service.unitFileState !== 'enabled' && service.unitFileState !== 'static' ? '' : 'disabled')%>" data-action="enable-start"><i class="icon-regular icon-toggle-on icon-fw me-1"></i>Enable &amp; start</a></li>
+			<%}%>
 			<li><hr class="dropdown-divider"></li>
 			<li><a href="#" class="dropdown-item <%=(service.unitFileState === 'enabled' ? 'text-danger confirm' : 'disabled')%>" data-action="disable"><i class="icon-regular icon-toggle-off icon-fw me-1"></i>Disable</a></li>
-			<li><a href="#" class="dropdown-item <%=(service.unitFileState === 'enabled' && service.type !== 'target' && !service.broken ? 'text-danger confirm' : 'disabled')%>" data-action="disable-stop"><i class="icon-regular icon-toggle-off icon-fw me-1"></i>Disable &amp; stop</a></li>
+			<%if (service.type !== 'target' && !service.broken) {%>
+				<li><a href="#" class="dropdown-item <%=(service.unitFileState === 'enabled' ? 'text-danger confirm' : 'disabled')%>" data-action="disable-stop"><i class="icon-regular icon-toggle-off icon-fw me-1"></i>Disable &amp; stop</a></li>
+			<%}%>
 		</ul>
 	</div>
 <%}%>
