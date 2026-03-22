@@ -15,7 +15,7 @@
 		<small class="text-body-secondary"><%=service.description%></small>
 	</td>
 	<td class="text-end text-nowrap d-none d-md-table-cell">
-		<%if (service.type === 'service') {%>
+		<%if (service.type === 'service' && service.active === 'active') {%>
 			<small class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(service.memory?.usage || 0, { binary: true })%>"><%=service.memory?.percent.toFixed(2)%>%</small>
 			<u-progress shadow="false">
 				<u-progress-bar width="<%=service.memory?.percent%>"></u-progress-bar>
