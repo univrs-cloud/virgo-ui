@@ -6,6 +6,10 @@
 				<u-badge color="red" tip="Service not found or failed to load" pill>
 					<i class="icon-solid icon-triangle-exclamation icon-fw"></i>
 				</u-badge>
+			<%} else if (service.unitFileState === 'masked') {%>
+				<u-badge color="orange" tip="Service is masked and cannot be started or enabled" pill>
+					<i class="icon-solid icon-ban icon-fw"></i>
+				</u-badge>
 			<%}%>
 		</div>
 		<small class="text-body-secondary"><%=service.description%></small>
