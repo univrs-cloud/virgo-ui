@@ -1,4 +1,4 @@
-<div class="item container-fluid" data-name="<%=service.unit%>">
+<div class="item container-fluid" data-unit="<%=service.unit%>">
 	<div class="card rounded-4 border-0 shadow">
 		<div class="card-body">
 			<div class="row g-0 align-items-center mt-n2">
@@ -7,9 +7,9 @@
 						<i class="icon-light icon-arrow-left icon-fw"></i>
 					</button>
 				</div>
-			<div class="col-auto p-2 lh-1">
-				<i class="icon-duotone icon-solid icon-cube icon-fw" style="font-size: 1.875rem; width: 2rem;"></i>
-			</div>
+				<div class="col-auto p-2 lh-1">
+					<i class="icon-duotone icon-solid icon-cube icon-fw" style="font-size: 1.875rem; width: 2rem;"></i>
+				</div>
 				<div class="col ps-1" style="min-width: 0;">
 					<div class="d-flex align-items-center mb-n1" style="min-width: 0;">
 						<div class="text-truncate" style="min-width: 0;"><%=service.unit%></div>
@@ -22,74 +22,69 @@
 					<small class="text-body-secondary text-truncate d-block" style="min-width: 0;"><%=service.description || '&mdash;'%></small>
 				</div>
 				<div class="col-auto ps-3 ms-auto">
-					<div class="dropdown">
-						<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
-						<ul class="dropdown-menu">
-							<li><button type="button" class="dropdown-item disabled">No actions</button></li>
-						</ul>
-					</div>
+					<%=serviceActionsTemplate({ service, jobs })%>
 				</div>
 			</div>
 
 			<div class="position-relative">
-			<div class="logs-container bd-black rounded-3 shadow-sm d-none">
-				<div class="service d-flex align-items-center justify-content-between border-bottom border-dark px-2 py-1">
-					<div class="d-flex align-items-center">
-						<i class="icon-light icon-cube icon-fw me-1 text-gray-500"></i>
-						<span class="name"></span>
-						<small class="text-gray-500 border-start border-dark ps-2 ms-2">
-							<i class="icon-solid icon-tower-broadcast icon-fw me-1"></i>
-							Connecting
-						</small>
+				<div class="logs-container bd-black rounded-3 shadow-sm d-none">
+					<div class="service d-flex align-items-center justify-content-between border-bottom border-dark px-2 py-1">
+						<div class="d-flex align-items-center">
+							<i class="icon-light icon-cube icon-fw me-1 text-gray-500"></i>
+							<span class="name"></span>
+							<small class="text-gray-500 border-start border-dark ps-2 ms-2">
+								<i class="icon-solid icon-tower-broadcast icon-fw me-1"></i>
+								Connecting
+							</small>
+						</div>
+						<a href="#" class="close-logs link-secondary ms-2"><i class="icon-solid icon-times"></i></a>
 					</div>
-					<a href="#" class="close-logs link-secondary ms-2"><i class="icon-solid icon-times"></i></a>
+					<ul></ul>
 				</div>
-				<ul></ul>
-			</div>
 
-			<div class="row g-2 mt-2">
-				<div class="col col-6 col-md-3">
-					<div class="card mb-2">
-						<div class="card-body py-1">
-							<small class="text-body-tertiary pb-1"><i class="icon-solid icon-circle-dot icon-fw me-1"></i>State</small>
-							<h5><%=service.state%></h5>
+				<div class="row g-2 mt-2">
+					<div class="col col-6 col-md-3">
+						<div class="card mb-2">
+							<div class="card-body py-1">
+								<small class="text-body-tertiary pb-1"><i class="icon-solid icon-circle-dot icon-fw me-1"></i>State</small>
+								<h5><%=service.state%></h5>
+							</div>
+						</div>
+					</div>
+					<div class="col col-6 col-md-3">
+						<div class="card mb-2">
+							<div class="card-body py-1">
+								<small class="text-body-tertiary pb-1"><i class="icon-solid icon-circle-half-stroke icon-fw me-1"></i>Activity</small>
+								<h5><%=service.active%> <small class="text-body-secondary fw-normal">(<%=service.sub%>)</small></h5>
+							</div>
+						</div>
+					</div>
+					<div class="col col-6 col-md-3">
+						<div class="card mb-2">
+							<div class="card-body py-1">
+								<small class="text-body-tertiary pb-1"><i class="icon-solid icon-toggle-on icon-fw me-1"></i>Startup</small>
+								<h5><%=service.unitFileState%></h5>
+							</div>
+						</div>
+					</div>
+					<div class="col col-6 col-md-3">
+						<div class="card mb-2">
+							<div class="card-body py-1">
+								<small class="text-body-tertiary pb-1"><i class="icon-solid icon-memory icon-fw me-1"></i>RAM</small>
+								<h5><span data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(service.memory?.usage || 0, { binary: true })%>"><%=service.memory?.percent.toFixed(2)%>%</span></h5>
+							</div>
 						</div>
 					</div>
 				</div>
-				<div class="col col-6 col-md-3">
-					<div class="card mb-2">
-						<div class="card-body py-1">
-							<small class="text-body-tertiary pb-1"><i class="icon-solid icon-circle-half-stroke icon-fw me-1"></i>Activity</small>
-							<h5><%=service.active%> <small class="text-body-secondary fw-normal">(<%=service.sub%>)</small></h5>
-						</div>
-					</div>
-				</div>
-				<div class="col col-6 col-md-3">
-					<div class="card mb-2">
-						<div class="card-body py-1">
-							<small class="text-body-tertiary pb-1"><i class="icon-solid icon-toggle-on icon-fw me-1"></i>Startup</small>
-							<h5><%=service.unitFileState%></h5>
-						</div>
-					</div>
-				</div>
-				<div class="col col-6 col-md-3">
-					<div class="card mb-2">
-						<div class="card-body py-1">
-							<small class="text-body-tertiary pb-1"><i class="icon-solid icon-memory icon-fw me-1"></i>RAM</small>
-							<h5><span data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(service.memory?.usage || 0, { binary: true })%>"><%=service.memory?.percent.toFixed(2)%>%</span></h5>
-						</div>
-					</div>
-				</div>
-			</div>
 
-			<div class="services overflow-y-scroll pe-3 me-n3">
-				<div class="d-flex align-items-center gap-2 mt-2">
-					<a href="#" class="logs btn btn-outline-secondary btn-sm px-1 py-0" data-unit="<%=service.unit%>">
-						<i class="icon-light icon-memo icon-fw me-1"></i>
-						Logs
-					</a>
+				<div class="services overflow-y-scroll pe-3 me-n3">
+					<div class="d-flex align-items-center gap-2 mt-2">
+						<a href="#" class="logs btn btn-outline-secondary btn-sm px-1 py-0" data-unit="<%=service.unit%>">
+							<i class="icon-light icon-memo icon-fw me-1"></i>
+							Logs
+						</a>
+					</div>
 				</div>
-			</div>
 			</div>
 		</div>
 	</div>
