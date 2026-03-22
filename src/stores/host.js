@@ -138,6 +138,10 @@ class Host extends Store {
 		this.socket.emit('host:system:services:fetch');
 	}
 
+	performServiceAction(config) {
+		this.socket.emit(`host:system:service:${config.action}`, { unit: config.unit });
+	}
+
 	getSystem() {
 		return this.getStateProperty('system');
 	}

@@ -1,12 +1,14 @@
 import page from 'page';
 import modulePartial from 'modules/system_services/partials/index.html';
 import servicePartial from 'modules/system_services/partials/service.html';
+import serviceActionsPartial from 'modules/system_services/partials/service_actions.html';
 import serviceDetailsPartial from 'modules/system_services/partials/service_details.html';
 import filterPartial from 'modules/system_services/partials/service_filter.html';
 import * as serviceService from 'modules/system_services/services/service';
 
 const moduleTemplate = _.template(modulePartial);
 const serviceTemplate = _.template(servicePartial);
+const serviceActionsTemplate = _.template(serviceActionsPartial);
 const serviceDetailsTemplate = _.template(serviceDetailsPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate({ filterPartial }));
 const module = document.querySelector('#system-services');
@@ -100,6 +102,30 @@ const compress = (event) => {
 	page('/system-services');
 };
 
+const performServiceAction = async (event) => {
+	if (
+		!event.target.closest('a')?.classList?.contains('dropdown-item') ||
+		event.target.closest('a')?.dataset.action === undefined
+	) {
+		return;
+	}
+
+	event.preventDefault();
+	const button = event.target.closest('a');
+	const row = button.closest('.item');
+	const service = _.find(services, { unit: row.dataset.unit });
+
+	const actionLabel = _.upperFirst(button.dataset.action.replace('-', ' & '));
+	if (
+		button.classList.contains('confirm') &&
+		!await confirm(`Are you sure you want to ${actionLabel.toLowerCase()} the service ${service.unit}?`, { buttons: [{ text: actionLabel, class: (button.classList.contains('confirm') ? 'btn-danger' : 'btn-primary') }] })
+	) {
+		return;
+	}
+
+	serviceService.performServiceAction({ unit: service.unit, action: button.dataset.action });
+};
+
 const renderServiceDetails = (unit) => {
 	if (!unit) {
 		return;
@@ -110,9 +136,10 @@ const renderServiceDetails = (unit) => {
 		return;
 	}
 
+	const jobs = _.filter(serviceService.getJobs(), (job) => { return job.data?.config?.unit === service.unit; });
 	morphdom(
 		details,
-		`<div>${serviceDetailsTemplate({ service, prettyBytes })}</div>`,
+		`<div>${serviceDetailsTemplate({ service, jobs, serviceActionsTemplate, prettyBytes })}</div>`,
 		{
 			childrenOnly: true,
 			onBeforeElUpdated: (fromEl, toEl) => {
@@ -155,7 +182,8 @@ const render = (state) => {
 		[tableOrder.direction]
 	);
 	_.each(services, (service) => {
-		template.innerHTML += serviceTemplate({ service, prettyBytes });
+		const jobs = _.filter(state.jobs, (job) => { return job.data?.config?.unit === service.unit; });
+		template.innerHTML += serviceTemplate({ service, jobs, serviceActionsTemplate, prettyBytes });
 	});
 
 	morphdom(
@@ -166,7 +194,7 @@ const render = (state) => {
 
 	const serviceContainer = container.querySelector('.details .item');
 	if (serviceContainer) {
-		renderServiceDetails(serviceContainer.dataset.name);
+		renderServiceDetails(serviceContainer.dataset.unit);
 	}
 
 	loading.classList.add('d-none');
@@ -188,6 +216,7 @@ const handleRoute = (ctx) => {
 
 module.onRoute = handleRoute;
 module.addEventListener('click', compress);
+module.addEventListener('click', performServiceAction);
 syncButton.addEventListener('click', sync);
 searchInput.addEventListener('input', search);
 _.each(filterStateSelect, (radio) => { radio.addEventListener('change', filterState); });

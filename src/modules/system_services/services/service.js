@@ -1,4 +1,5 @@
 import Host from 'stores/host';
+import Job from 'stores/job';
 
 let callbackCollection = [];
 let storeSubscription = null;
@@ -7,24 +8,32 @@ const getSocket = () => {
 	return Host.socket;
 };
 
-const syncServices = () => {
-	Host.syncServices();
+const getJobs = () => {
+	return Job.getJobs();
 };
 
 const getServices = () => {
 	return Host.getServices();
 };
 
+const syncServices = () => {
+	Host.syncServices();
+};
+
+const performServiceAction = (config) => {
+	Host.performServiceAction(config);
+};
+
 const handleSubscription = (properties) => {
 	_.each(callbackCollection, (callback) => {
-		callback(properties);
+		callback({ services: properties.services, jobs: properties.jobs });
 	});
 };
 
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 	if (!storeSubscription) {
-		storeSubscription = Host.subscribeToProperties(['services'], handleSubscription);
+		storeSubscription = Host.subscribeToProperties(['services', 'jobs'], handleSubscription);
 	}
 
 	return () => {
@@ -45,7 +54,9 @@ const unsubscribe = (subsciption) => {
 export {
 	subscribe,
 	unsubscribe,
-	syncServices,
+	getSocket,
+	getJobs,
 	getServices,
-	getSocket
+	syncServices,
+	performServiceAction
 };
