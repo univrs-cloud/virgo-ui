@@ -1,4 +1,5 @@
 import page from 'page';
+import { loadModule } from 'modules';
 
 const header = document.querySelector('header');
 const offcanvas = document.querySelector('.offcanvas');
@@ -68,8 +69,9 @@ const routes = [
 ];
 
 _.each(routes, ({ path, module, middleware = [] }) => {
-	page(path, ...middleware, (ctx) => {
+	page(path, ...middleware, async (ctx) => {
 		ctx.module = module;
+		await loadModule(module);
 		showPage(ctx);
 	});
 });

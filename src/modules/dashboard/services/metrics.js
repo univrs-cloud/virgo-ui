@@ -27,11 +27,12 @@ const handleSubscription = (properties) => {
 };
 
 const subscribe = (callbacks) => {
-	callbackCollection = _.concat(callbackCollection, callbacks);
-	Metrics.fetch();
 	if (!storeSubscription) {
 		storeSubscription = Metrics.subscribeToProperties(['metrics'], handleSubscription);
 	}
+	callbackCollection = _.concat(callbackCollection, callbacks);
+	Metrics.fetch();
+	handleSubscription(_.pick(Metrics.getState() || {}, ['metrics']));
 
 	return () => {
 		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));
