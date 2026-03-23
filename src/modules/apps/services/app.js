@@ -36,7 +36,7 @@ const composeApps = (configured, containers, appsResourceMetrics, imageUpdates, 
 					['labels.comDockerComposeService'],
 					['asc']
 			);
-			entity.hasUpdates = _.some(imageUpdates, ({ imageName, containerId }) => {
+			entity.hasUpdates = _.some(imageUpdates, ({ containerId }) => {
 				return _.some(entity.projectContainers, (container) => {
 					return container.id === containerId;
 				});

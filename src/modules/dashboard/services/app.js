@@ -25,7 +25,7 @@ const handleSubscription = (properties) => {
 					['labels.comDockerComposeService'],
 					['asc']
 			);
-			entity.hasUpdates = _.some(properties.imageUpdates, ({ imageName, containerId }) => {
+			entity.hasUpdates = _.some(properties.imageUpdates, ({ containerId }) => {
 				return _.some(entity.projectContainers, (container) => {
 					return container.id === containerId;
 				});
