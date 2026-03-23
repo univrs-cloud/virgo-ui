@@ -26,7 +26,11 @@ const subscribe = (callbacks) => {
 		storeSubscription = Configuration.subscribeToProperties(['configuration'], handleSubscription);
 	}
 	callbackCollection = _.concat(callbackCollection, callbacks);
-	handleSubscription(_.pick(Configuration.getState() || {}, ['configuration']));
+	requestAnimationFrame(() => {
+		requestAnimationFrame(() => {
+			handleSubscription(_.pick(Configuration.getState() || {}, ['configuration']));
+		});
+	});
 
 	return () => {
 		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));

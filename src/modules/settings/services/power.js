@@ -22,7 +22,11 @@ const subscribe = (callbacks) => {
 		storeSubscription = Host.subscribeToProperties(['reboot', 'shutdown'], handleSubscription);
 	}
 	callbackCollection = _.concat(callbackCollection, callbacks);
-	handleSubscription(_.pick(Host.getState() || {}, ['reboot', 'shutdown']));
+	requestAnimationFrame(() => {
+		requestAnimationFrame(() => {
+			handleSubscription(_.pick(Host.getState() || {}, ['reboot', 'shutdown']));
+		});
+	});
 
 	return () => {
 		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));

@@ -26,7 +26,11 @@ const subscribe = (callbacks) => {
 		storeSubscription = Host.subscribeToProperties(['system'], handleSubscription);
 	}
 	callbackCollection = _.concat(callbackCollection, callbacks);
-	handleSubscription(_.pick(Host.getState() || {}, ['system']));
+	requestAnimationFrame(() => {
+		requestAnimationFrame(() => {
+			handleSubscription(_.pick(Host.getState() || {}, ['system']));
+		});
+	});
 
 	return () => {
 		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));

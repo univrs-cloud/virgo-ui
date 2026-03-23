@@ -26,7 +26,11 @@ const subscribe = (callbacks) => {
 		storeSubscription = Host.subscribeToProperties(['system', 'memory', 'drives'], handleSubscription);
 	}
 	callbackCollection = _.concat(callbackCollection, callbacks);
-	handleSubscription(_.pick(Host.getState() || {}, ['system', 'memory', 'drives']));
+	requestAnimationFrame(() => {
+		requestAnimationFrame(() => {
+			handleSubscription(_.pick(Host.getState() || {}, ['system', 'memory', 'drives']));
+		});
+	});
 
 	return () => {
 		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));

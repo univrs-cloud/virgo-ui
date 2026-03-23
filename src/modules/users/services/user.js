@@ -60,7 +60,11 @@ const subscribe = (callbacks) => {
 		storeSubscription = User.subscribeToProperties(['users'], handleSubscription);
 	}
 	callbackCollection = _.concat(callbackCollection, callbacks);
-	handleSubscription(_.pick(User.getState() || {}, ['users']));
+	requestAnimationFrame(() => {
+		requestAnimationFrame(() => {
+			handleSubscription(_.pick(User.getState() || {}, ['users']));
+		});
+	});
 
 	return () => {
 		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));
