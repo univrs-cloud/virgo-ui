@@ -43,7 +43,11 @@ const subscribe = (callbacks) => {
 		storeSubscription =  Bookmark.subscribeToProperties(['configured', 'jobs'], handleSubscription);
 	}
 	callbackCollection = _.concat(callbackCollection, callbacks);
-	handleSubscription(_.pick(Bookmark.getState() || {}, ['configured', 'jobs']));
+	requestAnimationFrame(() => {
+		requestAnimationFrame(() => {
+			handleSubscription(_.pick(Bookmark.getState() || {}, ['configured', 'jobs']));
+		});
+	});
 
 	return () => {
 		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));

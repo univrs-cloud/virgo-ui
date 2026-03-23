@@ -41,7 +41,11 @@ const subscribe = (callbacks) => {
 		storeSubscription = Share.subscribeToProperties(['shares', 'system'], handleSubscription);
 	}
 	callbackCollection = _.concat(callbackCollection, callbacks);
-	handleSubscription(_.pick(Share.getState() || {}, ['shares', 'system']));
+	requestAnimationFrame(() => {
+		requestAnimationFrame(() => {
+			handleSubscription(_.pick(Share.getState() || {}, ['shares', 'system']));
+		});
+	});
 
 	return () => {
 		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));

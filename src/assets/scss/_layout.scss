@@ -157,6 +157,10 @@ main,
 	padding-top: map-get($spacers, 3);
 }
 
+.loading {
+	min-height: calc(100vh - 112px);
+}
+
 .line-clamp {
 	overflow: hidden;
 	display: -webkit-box;

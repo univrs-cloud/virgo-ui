@@ -40,7 +40,11 @@ const subscribe = (callbacks) => {
 		storeSubscription = Docker.subscribeToProperties(['containers', 'templates', 'jobs'], handleSubscription);
 	}
 	callbackCollection = _.concat(callbackCollection, callbacks);
-	handleSubscription(_.pick(Docker.getState() || {}, ['containers', 'templates', 'jobs']));
+	requestAnimationFrame(() => {
+		requestAnimationFrame(() => {
+			handleSubscription(_.pick(Docker.getState() || {}, ['containers', 'templates', 'jobs']));
+		});
+	});
 
 	return () => {
 		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));
