@@ -82,10 +82,11 @@ const handleSubscription = (properties) => {
 };
 
 const subscribe = (callbacks) => {
-	callbackCollection = _.concat(callbackCollection, callbacks);
 	if (!storeSubscription) {
 		storeSubscription = Docker.subscribeToProperties(['configured', 'containers', 'appsResourceMetrics', 'imageUpdates', 'snapshots', 'jobs'], handleSubscription);
 	}
+	callbackCollection = _.concat(callbackCollection, callbacks);
+	handleSubscription(_.pick(Docker.getState() || {}, ['configured', 'containers', 'appsResourceMetrics', 'imageUpdates', 'snapshots', 'jobs']));
 
 	return () => {
 		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));

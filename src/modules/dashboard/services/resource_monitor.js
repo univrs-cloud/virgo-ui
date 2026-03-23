@@ -10,10 +10,11 @@ const handleSubscription = (properties) => {
 };
 
 const subscribe = (callbacks) => {
-	callbackCollection = _.concat(callbackCollection, callbacks);
 	if (!storeSubscription) {
 		storeSubscription = Host.subscribeToProperties(['system', 'cpuStats', 'memory', 'networkStats', 'storage', 'drives', 'ups', 'time'], handleSubscription);
 	}
+	callbackCollection = _.concat(callbackCollection, callbacks);
+	handleSubscription(_.pick(Host.getState() || {}, ['system', 'cpuStats', 'memory', 'networkStats', 'storage', 'drives', 'ups', 'time']));
 
 	return () => {
 		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));

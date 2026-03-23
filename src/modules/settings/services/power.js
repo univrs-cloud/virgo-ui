@@ -18,10 +18,11 @@ const handleSubscription = (properties) => {
 };
 
 const subscribe = (callbacks) => {
-	callbackCollection = _.concat(callbackCollection, callbacks);
 	if (!storeSubscription) {
 		storeSubscription = Host.subscribeToProperties(['reboot', 'shutdown'], handleSubscription);
 	}
+	callbackCollection = _.concat(callbackCollection, callbacks);
+	handleSubscription(_.pick(Host.getState() || {}, ['reboot', 'shutdown']));
 
 	return () => {
 		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));

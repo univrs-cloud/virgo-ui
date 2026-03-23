@@ -39,10 +39,11 @@ const handleSubscription = (properties) => {
 };
 
 const subscribe = (callbacks) => {
-	callbackCollection = _.concat(callbackCollection, callbacks);
 	if (!storeSubscription) {
 		storeSubscription =  Bookmark.subscribeToProperties(['configured', 'jobs'], handleSubscription);
 	}
+	callbackCollection = _.concat(callbackCollection, callbacks);
+	handleSubscription(_.pick(Bookmark.getState() || {}, ['configured', 'jobs']));
 
 	return () => {
 		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));

@@ -56,10 +56,11 @@ const handleSubscription = (properties) => {
 };
 
 const subscribe = (callbacks) => {
-	callbackCollection = _.concat(callbackCollection, callbacks);
 	if (!storeSubscription) {
 		storeSubscription = User.subscribeToProperties(['users'], handleSubscription);
 	}
+	callbackCollection = _.concat(callbackCollection, callbacks);
+	handleSubscription(_.pick(User.getState() || {}, ['users']));
 
 	return () => {
 		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));
