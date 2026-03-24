@@ -16,6 +16,7 @@ const container = module.querySelector('.container-fluid');
 const details = container.querySelector('.details');
 const searchInput = module.querySelector('.search');
 const table = container.querySelector('.table');
+let routeAppName = null;
 let searchTimer;
 let searchValue = '';
 let tableOrder = {
@@ -232,9 +233,9 @@ const render = (state) => {
 		{ childrenOnly: true }
 	);
 
-	const appContainer = container.querySelector('.details .item');
-	if (appContainer) {
-		renderAppDetails(appContainer.dataset.name);
+	const detailsAppName = routeAppName || container.querySelector('.details .item')?.dataset.name;
+	if (detailsAppName) {
+		renderAppDetails(detailsAppName);
 	}
 	
 	loading.classList.add('d-none');
@@ -242,7 +243,8 @@ const render = (state) => {
 };
 
 const handleRoute = (ctx) => {
-	const name = ctx?.params?.appName
+	const name = ctx?.params?.appName;
+	routeAppName = (_.isEmpty(name) ? null : name);
 	if (_.isEmpty(name)) {
 		hideAppDetails();
 		return;

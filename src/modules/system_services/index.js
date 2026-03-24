@@ -20,6 +20,7 @@ const searchInput = module.querySelector('.search');
 const filterStateSelect = module.querySelectorAll('.filter-state');
 const filterUnitFileStateSelect = module.querySelectorAll('.filter-unit-file-state');
 const table = container.querySelector('.table');
+let routeServiceUnit = null;
 let searchTimer;
 let searchValue = '';
 let filterStateValue = '';
@@ -192,9 +193,9 @@ const render = (state) => {
 		{ childrenOnly: true }
 	);
 
-	const serviceContainer = container.querySelector('.details .item');
-	if (serviceContainer) {
-		renderServiceDetails(serviceContainer.dataset.unit);
+	const detailsServiceUnit = routeServiceUnit || container.querySelector('.details .item')?.dataset.unit;
+	if (detailsServiceUnit) {
+		renderServiceDetails(detailsServiceUnit);
 	}
 
 	loading.classList.add('d-none');
@@ -205,6 +206,7 @@ const render = (state) => {
 
 const handleRoute = (ctx) => {
 	const unit = ctx?.params?.serviceUnit;
+	routeServiceUnit = (_.isEmpty(unit) ? null : unit);
 	if (_.isEmpty(unit)) {
 		hideServiceDetails();
 		return;
