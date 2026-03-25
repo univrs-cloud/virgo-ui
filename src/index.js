@@ -19,15 +19,14 @@ window.notifier = document.querySelector('u-notifier');
 let subscription;
 
 const render = async (state) => {
-	const isSetupRequired = bootstrapService.checkIfSetupIsRequired(state);
-	if (_.isNull(isSetupRequired) || state.update === -1) {
+	if (_.isNull(state.setupCompleted) || state.update === -1) {
 		return;
 	}
 	
 	bootstrapService.unsubscribe(subscription);
 	subscription = null;
 
-	if (isSetupRequired) {
+	if (state.setupCompleted === false) {
 		await import('shell/setup');
 	} else if (isAuthenticated && isAdmin && !_.isNull(state.update)) {
 		await import('shell/update');

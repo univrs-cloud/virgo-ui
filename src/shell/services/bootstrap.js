@@ -1,5 +1,4 @@
 import Host from 'stores/host';
-import Docker from 'stores/docker'; // need to init store
 
 let callbackCollection = [];
 let storeSubscription = null;
@@ -12,33 +11,6 @@ const disconnectSocket = () => {
 	Host.socket.disconnect();
 };
 
-const checkIfSetupIsRequired = (state) => {
-	if (_.isNull(state.system) || _.isNull(state.drives) || _.isNull(state.storage) || _.isNull(state.containers)) {
-		return null;
-	}
-	const networkInterface = _.find(state.system.networkInterfaces, { default: true });
-	
-	// Check if we have both authelia and traefik containers (by direct name or pattern)
-	const hasAuthelia = _.some(state.containers, (container) => {
-		return container.labels?.comDockerComposeService === 'authelia';
-	});
-	
-	const hasTraefik = _.some(state.containers, (container) => {
-		return container.labels?.comDockerComposeService === 'traefik';
-	});
-	
-	if (
-		!networkInterface?.dhcp &&
-		!_.isEmpty(state.drives) &&
-		_.size(_.filter(state.storage, (storage) => { return storage?.type?.toLowerCase() === 'pool'; })) > 0 &&
-		hasAuthelia && hasTraefik
-	) {
-		return false;
-	}
-
-	return true;
-};
-
 const handleSubscription = (properties) => {
 	_.each(callbackCollection, (callback) => {
 		callback(properties);
@@ -48,7 +20,7 @@ const handleSubscription = (properties) => {
 const subscribe = (callbacks) => {
 	callbackCollection = _.concat(callbackCollection, callbacks);
 	if (!storeSubscription) {
-		storeSubscription = Host.subscribeToProperties(['update', 'system', 'drives', 'storage', 'containers'], handleSubscription);
+		storeSubscription = Host.subscribeToProperties(['setupCompleted', 'update'], handleSubscription);
 	}
 
 	return () => {
@@ -78,6 +50,5 @@ document.addEventListener('visibilitychange', (event) => {
 
 export {
 	subscribe,
-	unsubscribe,
-	checkIfSetupIsRequired
+	unsubscribe
 };
