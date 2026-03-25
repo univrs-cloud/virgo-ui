@@ -3,6 +3,7 @@ import Store from 'stores/store';
 class Host extends Store {
 	constructor() {
 		const initialState = {
+			setupCompleted: null,
 			system: null,
 			configuringNetworkInterface: false,
 			reboot: null,
@@ -37,6 +38,10 @@ class Host extends Store {
 			this.setState(initialState, 'socket_disconnect');
 			_.each(_.keys(initialState), (key) => { initialState[key] = null; });
 		
+		});
+
+		this.socket.on('host:setupCompleted', (setupCompleted) => {
+			this.setState({ setupCompleted }, 'setup_completed');
 		});
 
 		this.socket.on('host:updates:check', (checkUpdates) => {
