@@ -14,7 +14,9 @@ export class Checkbox extends LitElement {
 			reverse: { type: Boolean, reflect: true },
 			indeterminate: { type: Boolean },
 			checked: { type: Boolean, reflect: true },
-			disabled: { type: Boolean, reflect: true }
+			disabled: { type: Boolean, reflect: true },
+			onValue: { type: String, attribute: 'on-value' },
+			offValue: { type: String, attribute: 'off-value' }
 		}
 	}
 

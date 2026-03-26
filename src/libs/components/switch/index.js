@@ -23,8 +23,8 @@ export class Switch extends LitElement {
 	constructor() {
 		super();
 		this.internals = this.attachInternals();
-		this.onValue = '';
-		this.offValue = '';
+		this.onValue = true;
+		this.offValue = false;
 		this.onLabel = '';
 		this.offLabel = '';
 		this.label = '';
