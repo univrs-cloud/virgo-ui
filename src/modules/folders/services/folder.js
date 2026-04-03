@@ -24,8 +24,19 @@ const getFolders = () => {
 	return filter(Share.getShares());
 };
 
-const performAction = (config) => {
-	Share.performAction(config);
+const createFolder = (config) => {
+	config.type = 'folder';
+	Share.createShare(config);
+};
+
+const updateFolder = (config) => {
+	config.type = 'folder';
+	Share.updateShare(config);
+};
+
+const deleteFolder = (config) => {
+	config.type = 'folder';
+	Share.deleteShare(config);
 };
 
 const handleSubscription = (properties) => {
@@ -67,5 +78,7 @@ export {
 	unsubscribe,
 	getSystem,
 	getFolders,
-	performAction
+	createFolder,
+	updateFolder,
+	deleteFolder
 };

@@ -14,10 +14,10 @@ const deleteFolder = async (event) => {
 		return;
 	}
 
-	// let config = {
-	// 	id: row.dataset.id
-	// };
-	// folderService.deleteFolder(config);	
+	let config = {
+		name: row.dataset.id
+	};
+	folderService.deleteFolder(config);	
 };
 
 module.addEventListener('click', deleteFolder);

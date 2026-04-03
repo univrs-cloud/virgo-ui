@@ -114,4 +114,5 @@ table.addEventListener('click', copyToClipboard);
 folderService.subscribe([render]);
 
 import('modules/folders/folder_create');
+import('modules/folders/folder_update');
 import('modules/folders/folder_delete');

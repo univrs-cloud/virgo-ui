@@ -1,0 +1,28 @@
+<div id="folder-update" class="modal fade">
+	<u-form>
+		<u-input type="hidden" name="name" class="name"></u-input>
+		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Edit time machine</h5>
+				</div>
+				<div class="modal-body">
+					<div class="alert alert-light">
+						<dl class="m-0">
+							<dt class="fw-light text-body-tertiary"><small>Name</small></dt>
+							<dd class="comment m-0"></dd>
+						</dl>
+					</div>
+					<u-select name="validUsers" label="Authorized users" class="valid-users"></u-select>
+					<u-input name="refquota" label="Capacity" class="refquota">
+						<span slot="suffix" class="mb-n3">GiB</span>
+					</u-input>
+				</div>
+				<div class="modal-footer">
+					<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="modal" outline>Cancel</u-button>
+					<u-button type="submit" variant="primary">Update</u-button>
+				</div>
+			</div>
+		</div>
+	</u-form>
+</div>
