@@ -5,6 +5,7 @@ import serviceActionsPartial from 'modules/system_services/partials/service_acti
 import serviceDetailsPartial from 'modules/system_services/partials/service_details.html';
 import filterPartial from 'modules/system_services/partials/service_filter.html';
 import * as serviceService from 'modules/system_services/services/service';
+import { filterListByQuery } from 'utils/list_search';
 
 const moduleTemplate = _.template(modulePartial);
 const serviceTemplate = _.template(servicePartial);
@@ -165,13 +166,11 @@ const render = (state) => {
 
 	const template = document.createElement('template');
 	services = state.services;
-	const searchTerms = searchValue.toLowerCase().split(/\s+/);
+	services = filterListByQuery(services, searchValue, ['unit', 'description', 'active', 'sub', 'type', 'unitFileState']);
 	services = _.filter(services, (service) => {
-		const text = `${service.unit || ''} ${service.description || ''}`.toLowerCase();
-		const matchesSearch = _.every(searchTerms, (term) => text.includes(term));
 		const matchesState = filterStateValue === '' || service.sub === filterStateValue;
 		const matchesUnitFileState = filterUnitFileStateValue === '' || service.unitFileState === filterUnitFileStateValue;
-		return matchesSearch && matchesState && matchesUnitFileState;
+		return matchesState && matchesUnitFileState;
 	});
 	services = _.orderBy(services,
 		[

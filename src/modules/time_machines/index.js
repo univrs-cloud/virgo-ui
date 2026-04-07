@@ -2,6 +2,7 @@ import modulePartial from 'modules/time_machines/partials/index.html';
 import timeMachinePartial from 'modules/time_machines/partials/time_machine.html';
 import * as timeMachineService from 'modules/time_machines/services/time_machine';
 import copy from 'copy-to-clipboard';
+import { filterListByQuery } from 'utils/list_search';
 
 const moduleTemplate = _.template(modulePartial);
 const timeMachineTemplate = _.template(timeMachinePartial);
@@ -78,12 +79,7 @@ const render = (state) => {
 	const template = document.createElement('template');
 	const accessOn = _.find(state.networkInterface?.addrInfo, { family: 'inet' })?.local;
 	let timeMachines = state.timeMachines;
-	const searchTerms = searchValue.toLowerCase().split(/\s+/);
-	timeMachines = _.filter(timeMachines, (timeMachines) => {
-		const text = `${timeMachines.name || ''}`.toLowerCase();
-		const matchesSearch = _.every(searchTerms, (term) => text.includes(term));
-		return matchesSearch;
-	});
+	timeMachines = filterListByQuery(timeMachines, searchValue, ['name', 'path', 'comment', 'validUsers']);
 	timeMachines = _.orderBy(timeMachines,
 		[
 			(timeMachines) => {

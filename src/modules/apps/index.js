@@ -4,6 +4,7 @@ import appPartial from 'modules/apps/partials/app.html';
 import appActionsPartial from 'modules/apps/partials/app_actions.html';
 import appDetailsPartial from 'modules/apps/partials/app_details.html';
 import * as appService from 'modules/apps/services/app';
+import { filterListByQuery } from 'utils/list_search';
 
 const moduleTemplate = _.template(modulePartial);
 const appTemplate = _.template(appPartial);
@@ -207,12 +208,7 @@ const render = (state) => {
 	
 	const template = document.createElement('template');
 	apps = state.apps;
-	const searchTerms = searchValue.toLowerCase().split(/\s+/);
-	apps = _.filter(apps, (app) => {
-		const text = `${app.title || ''}`.toLowerCase();
-		const matchesSearch = _.every(searchTerms, (term) => text.includes(term));
-		return matchesSearch;
-	});
+	apps = filterListByQuery(apps, searchValue, ['title', 'name', 'icon', 'urls']);
 	apps = _.orderBy(apps,
 		[
 			(app) => {
