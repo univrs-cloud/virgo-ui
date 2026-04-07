@@ -33,9 +33,9 @@
 			<u-badge color="green" pill>unlocked</u-badge>
 		<%}%>
 	</td>
-	<td class="text-center px-0">
+	<td class="<%=(isSameAsLoggedIn ? 'text-end pe-0' : 'text-center px-0')%>">
 		<%if (isSameAsLoggedIn) {%>
-			<a href="/users/profile"><i class="icon-solid icon-angle-right text-body-tertiary" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="This is you! Edit your profile or change your password in your <strong><u>Profile</u></strong> page."></i></a>
+			<a href="/users/profile"><i class="icon-light icon-angle-right icon-fw text-body-tertiary" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="This is you! Edit your profile or change your password in your <strong><u>Profile</u></strong> page."></i></a>
 		<%} else {%>
 			<div class="dropdown">
 				<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
