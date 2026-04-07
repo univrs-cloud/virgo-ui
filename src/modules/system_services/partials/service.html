@@ -1,18 +1,20 @@
 <tr class="item cursor-pointer <%=(service.active === 'failed' ? 'table-danger' : (service.broken ? 'table-warning' : ''))%>" data-unit="<%=service.unit%>">
-	<td>
-		<div class="d-flex align-items-center gap-2">
-			<%=service.unit%>
+	<td style="min-width: 200px; max-width: 0;">
+		<div class="d-flex align-items-center mb-n1">
+			<div class="text-truncate"><%=service.unit%></div>
 			<%if (service.broken) {%>
-				<u-badge color="red" tip="Service not found or failed to load" pill>
+				<u-badge color="red" class="ms-2 flex-shrink-0" tip="Service not found or failed to load" pill>
 					<i class="icon-solid icon-triangle-exclamation icon-fw"></i>
 				</u-badge>
 			<%} else if (service.unitFileState === 'masked') {%>
-				<u-badge color="orange" tip="Service is masked and cannot be started or enabled" pill>
+				<u-badge color="orange" class="ms-2 flex-shrink-0" tip="Service is masked and cannot be started or enabled" pill>
 					<i class="icon-solid icon-ban icon-fw"></i>
 				</u-badge>
 			<%}%>
 		</div>
-		<small class="text-body-secondary"><%=service.description%></small>
+		<div class="d-flex">
+			<div class="text-truncate"><small class="text-body-secondary"><%=service.description%></small></div>
+		</div>
 	</td>
 	<td class="text-end text-nowrap d-none d-md-table-cell">
 		<%if (service.type === 'service' && service.active === 'active') {%>
@@ -37,7 +39,7 @@
 	<td class="text-center px-0">
 		<%=serviceActionsTemplate({ service, jobs })%>
 	</td>
-	<td class="text-center">
-		<i class="icon-solid icon-angle-right icon-fw text-body-tertiary"></i>
+	<td class="text-end pe-0">
+		<i class="icon-light icon-angle-right icon-fw text-body-tertiary"></i>
 	</td>
 </tr>

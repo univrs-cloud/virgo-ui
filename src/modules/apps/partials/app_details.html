@@ -253,7 +253,7 @@
 							<colgroup>
 								<col>
 								<col style="width: 100px; min-width: 100px;">
-								<col style="width: 40px; min-width: 40px;">
+								<col style="width: 30px; min-width: 30px;">
 							</colgroup>
 							<%
 								// Group snapshots by type
@@ -284,7 +284,7 @@
 									<tr class="group-toggle sticky-top cursor-pointer" data-bs-toggle="collapse" data-bs-target="#<%=groupId%>" aria-expanded="false" aria-controls="<%=groupId%>">
 										<td style="padding-left: calc(var(--bs-card-spacer-x) + 1.25em + 0.5rem);"><%=_.startCase(type)%> <small class="text-body-tertiary">(<%=typeSnapshots.length%>)</small></td>
 										<td></td>
-										<td class="text-end">
+										<td class="text-center px-0">
 											<i class="icon-solid icon-chevron-down icon-fw icon-xs text-secondary"></i>
 										</td>
 									</tr>
@@ -299,7 +299,7 @@
 										<tr>
 											<td class="font-monospace" style="padding-left: calc(var(--bs-card-spacer-x) + 1.25em + 0.5rem);"><small class="text-body-secondary"><%=createdAt%></small></td>
 											<td class="text-end"><small class="fw-light"><%=prettyBytes(snapshot.properties?.used?.value || 0, { binary: true })%></small></td>
-											<td>
+											<td class="px-0">
 												<div class="dropdown">
 													<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
 													<ul class="dropdown-menu">
