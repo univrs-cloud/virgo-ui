@@ -1,6 +1,7 @@
 import modulePartial from 'modules/bookmarks/partials/index.html';
 import bookmarkPartial from 'modules/bookmarks/partials/bookmark.html';
 import * as bookmarkService from 'modules/bookmarks/services/bookmark';
+import { filterListByQuery } from 'utils/list_search';
 
 const moduleTemplate = _.template(modulePartial);
 const bookmarkTemplate = _.template(bookmarkPartial);
@@ -47,12 +48,7 @@ const render = (state) => {
 	
 	const template = document.createElement('template');
 	let bookmarks = state.bookmarks;
-	const searchTerms = searchValue.toLowerCase().split(/\s+/);
-	bookmarks = _.filter(bookmarks, (bookmark) => {
-		const text = `${bookmark.title || ''}`.toLowerCase();
-		const matchesSearch = _.every(searchTerms, (term) => text.includes(term));
-		return matchesSearch;
-	});
+	bookmarks = filterListByQuery(bookmarks, searchValue, ['title', 'name', 'url', 'icon', 'category']);
 	bookmarks = _.orderBy(bookmarks,
 		[
 			(bookmark) => {

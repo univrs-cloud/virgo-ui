@@ -2,6 +2,7 @@ import modulePartial from 'modules/folders/partials/index.html';
 import folderPartial from 'modules/folders/partials/folder.html';
 import * as folderService from 'modules/folders/services/folder';
 import copy from 'copy-to-clipboard';
+import { filterListByQuery } from 'utils/list_search';
 
 const moduleTemplate = _.template(modulePartial);
 const folderTemplate = _.template(folderPartial);
@@ -78,12 +79,7 @@ const render = (state) => {
 	const template = document.createElement('template');
 	const accessOn = _.find(state.networkInterface?.addrInfo, { family: 'inet' })?.local;
 	let folders = state.folders;
-	const searchTerms = searchValue.toLowerCase().split(/\s+/);
-	folders = _.filter(folders, (folder) => {
-		const text = `${folder.name || ''} ${folder.path || ''}`.toLowerCase();
-		const matchesSearch = _.every(searchTerms, (term) => text.includes(term));
-		return matchesSearch;
-	});
+	folders = filterListByQuery(folders, searchValue, ['name', 'path', 'comment', 'validUsers']);
 	folders = _.orderBy(folders,
 		[
 			(folder) => {

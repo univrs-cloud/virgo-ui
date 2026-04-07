@@ -1,6 +1,7 @@
 import modulePartial from 'modules/storage/partials/index.html';
 import storagePartial from 'modules/storage/partials/storage.html';
 import * as storageService from 'modules/storage/services/storage';
+import { filterListByQuery } from 'utils/list_search';
 
 const moduleTemplate = _.template(modulePartial);
 const storageTemplate = _.template(storagePartial);
@@ -31,12 +32,7 @@ const render = (state) => {
 	let drives = state.drives;
 	let pools = state.storage;
 	let snapshots = state.snapshots;
-	const searchTerms = searchValue.toLowerCase().split(/\s+/);
-	pools = _.filter(pools, (pool) => {
-		const text = `${pool.name || ''}`.toLowerCase();
-		const matchesSearch = _.every(searchTerms, (term) => text.includes(term));
-		return matchesSearch;
-	});
+	pools = filterListByQuery(pools, searchValue, ['name', 'poolGuid', 'type']);
 	_.each(pools, (pool) => {
 		if (pool.name !== 'system') {
 			pool.properties.usedbydatasets.percent = (pool.properties.usedbydatasets.value / pool.properties.size.value * 100);

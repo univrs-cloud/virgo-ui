@@ -1,6 +1,7 @@
 import modulePartial from 'modules/users/partials/index.html';
 import userPartial from 'modules/users/partials/user.html';
 import * as userService from 'modules/users/services/user';
+import { filterListByQuery } from 'utils/list_search';
 
 const moduleTemplate = _.template(modulePartial);
 const userTemplate = _.template(userPartial);
@@ -47,12 +48,7 @@ const render = (state) => {
 	
 	const template = document.createElement('template');
 	let users = state.users;
-	const searchTerms = searchValue.toLowerCase().split(/\s+/);
-	users = _.filter(users, (user) => {
-		const text = `${user.username || ''} ${user.email || ''} ${user.fullname || ''}`.toLowerCase();
-		const matchesSearch = _.every(searchTerms, (term) => text.includes(term));
-		return matchesSearch;
-	});
+	users = filterListByQuery(users, searchValue, ['username', 'email', 'fullname', 'groups', 'shell', 'uid']);
 	users = _.orderBy(users,
 		[
 			(user) => {
