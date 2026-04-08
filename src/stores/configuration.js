@@ -24,6 +24,18 @@ class Configuration extends Store {
 		this.socket.emit('configuration:location:update', config);
 	}
 
+	addTrustedProxy(config) {
+		this.socket.emit('configuration:trustedProxy:add', config);
+	}
+
+	updateTrustedProxy(config) {
+		this.socket.emit('configuration:trustedProxy:update', config);
+	}
+
+	deleteTrustedProxy(config) {
+		this.socket.emit('configuration:trustedProxy:delete', config);
+	}
+
 	getConfiguration() {
 		return this.getStateProperty('configuration');
 	};

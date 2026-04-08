@@ -44,20 +44,23 @@ const search = (event) => {
 	searchTimer = setTimeout(() => {
 		searchValue = event.target.value;
 		const services = serviceService.getServices();
-		render({ services });
+		const jobs = serviceService.getJobs();
+		render({ services, jobs });
 	}, 300);
 };
 
 const filterState = (event) => {
 	filterStateValue = event.target.value;
 	const services = serviceService.getServices();
-	render({ services });
+	const jobs = serviceService.getJobs();
+	render({ services, jobs });
 };
 
 const filterUnitFileState = (event) => {
 	filterUnitFileStateValue = event.target.value;
 	const services = serviceService.getServices();
-	render({ services });
+	const jobs = serviceService.getJobs();
+	render({ services, jobs });
 };
 
 const order = (event) => {
@@ -81,7 +84,8 @@ const order = (event) => {
 	_.each(table.querySelectorAll('thead th'), (cell) => { cell.classList.remove('asc', 'desc'); });
 	cell.classList.add(tableOrder.direction);
 	const services = serviceService.getServices();
-	render({ services });
+	const jobs = serviceService.getJobs();
+	render({ services, jobs });
 };
 
 const expand = (event) => {
@@ -182,7 +186,7 @@ const render = (state) => {
 		[tableOrder.direction]
 	);
 	_.each(services, (service) => {
-		const jobs = _.filter(state.jobs, (job) => { return job.data?.config?.unit === service.unit; });
+		const jobs = _.filter(state.jobs, (job) => { return job.name.startsWith('host:system:service') && job.data?.config?.unit === service.unit; });
 		template.innerHTML += serviceTemplate({ service, jobs, serviceActionsTemplate, prettyBytes });
 	});
 

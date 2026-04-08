@@ -1,7 +1,12 @@
+import Job from 'stores/job';
 import Bookmark from 'stores/bookmark';
 
 let callbackCollection = [];
 let storeSubscription = null;
+
+const getJobs = () => {
+	return Job.getJobs();
+};
 
 const composeBookmark = (configured) => {
 	if (_.isNull(configured)) {
@@ -67,6 +72,7 @@ const unsubscribe = (subsciption) => {
 export {
 	subscribe,
 	unsubscribe,
+	getJobs,
 	getBookmarks,
 	createBookmark,
 	updateBookmark,

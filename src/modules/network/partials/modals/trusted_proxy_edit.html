@@ -1,0 +1,25 @@
+<div id="trusted-proxy-edit" class="modal fade">
+	<u-form>
+		<u-input type="hidden" name="address" class="address"></u-input>
+		<div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Edit trusted proxy</h5>
+				</div>
+				<div class="modal-body">
+					<div class="alert alert-light mb-3">
+						<dl class="m-0">
+							<dt class="fw-light text-body-tertiary"><small>Current address</small></dt>
+							<dd class="comment m-0 current-address text-truncate"></dd>
+						</dl>
+					</div>
+					<u-input name="toAddress" label="New address" class="to-address" placeholder="IP, CIDR, or hostname"></u-input>
+				</div>
+				<div class="modal-footer">
+					<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="modal" outline>Cancel</u-button>
+					<u-button type="submit" variant="primary">Save</u-button>
+				</div>
+			</div>
+		</div>
+	</u-form>
+</div>

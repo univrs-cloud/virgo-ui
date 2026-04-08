@@ -36,3 +36,32 @@
 		</div>
 	</div>
 </div>
+
+<div class="col col-12">
+	<div class="card rounded-4 border-0 mb-0">
+		<div class="card-body">
+			<a href="#trusted-proxy-add" class="btn btn-link p-0 float-end" data-bs-toggle="modal"><i class="icon-regular icon-plus icon-fw me-1"></i>Add</a>
+			<h5 class="card-title d-flex align-items-center">Trusted proxies</h5>
+			<p class="text-body-secondary small mb-3">Addresses used when reading reverse proxy headers (for example <code class="small">X-Forwarded-For</code>).</p>
+			<%if (_.isEmpty(trustedProxies)) {%>
+				<p class="text-body-secondary small mb-0">No trusted proxies configured.</p>
+			<%} else {%>
+				<div class="mt-n3 pe-3 mx-0 me-n3">
+					<table class="table table-hover align-middle m-0">
+						<thead>
+							<tr>
+								<th class="text-nowrap"></th>
+								<th style="width: 30px; min-width: 30px;"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<%_.each(trustedProxies, (trustedProxy) => {%>
+								<%=trustedProxy%>
+							<%})%>
+						</tbody>
+					</table>
+				</div>
+			<%}%>
+		</div>
+	</div>
+</div>

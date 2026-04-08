@@ -1,8 +1,13 @@
+import Job from 'stores/job';
 import Host from 'stores/host';
 import Share from 'stores/share';
 
 let callbackCollection = [];
 let storeSubscription = null;
+
+const getJobs = () => {
+	return Job.getJobs();
+};
 
 const filter = (shares) => {
 	if (_.isNull(shares)) {
@@ -43,18 +48,18 @@ const handleSubscription = (properties) => {
 	const folders = filter(properties.shares);
 	const networkInterface = _.find(properties.system.networkInterfaces, { default: true });
 	_.each(callbackCollection, (callback) => {
-		callback({ folders, networkInterface });
+		callback({ folders, networkInterface, jobs: properties.jobs });
 	});
 };
 
 const subscribe = (callbacks) => {
 	if (!storeSubscription) {
-		storeSubscription = Share.subscribeToProperties(['shares', 'system'], handleSubscription);
+		storeSubscription = Share.subscribeToProperties(['shares', 'system', 'jobs'], handleSubscription);
 	}
 	callbackCollection = _.concat(callbackCollection, callbacks);
 	requestAnimationFrame(() => {
 		requestAnimationFrame(() => {
-			handleSubscription(_.pick(Share.getState() || {}, ['shares', 'system']));
+			handleSubscription(_.pick(Share.getState() || {}, ['shares', 'system', 'jobs']));
 		});
 	});
 
@@ -76,6 +81,7 @@ const unsubscribe = (subsciption) => {
 export {
 	subscribe,
 	unsubscribe,
+	getJobs,
 	getSystem,
 	getFolders,
 	createFolder,

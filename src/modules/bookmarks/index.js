@@ -23,7 +23,8 @@ const search = (event) => {
 	searchTimer = setTimeout(() => {
 		searchValue = event.target.value;
 		const bookmarks = bookmarkService.getBookmarks();
-		render({ bookmarks });
+		const jobs = bookmarkService.getJobs();
+		render({ bookmarks, jobs });
 	}, 300);
 };
 
@@ -38,7 +39,8 @@ const order = (event) => {
 	_.each(table.querySelectorAll('thead th'), (cell) => { cell.classList.remove('asc', 'desc'); });
 	cell.classList.add(tableOrder.direction);
 	const bookmarks = bookmarkService.getBookmarks();
-	render({ bookmarks });
+	const jobs = bookmarkService.getJobs();
+	render({ bookmarks, jobs });
 };
 
 const render = (state) => {
@@ -59,7 +61,7 @@ const render = (state) => {
 		[tableOrder.direction]
 	);
 	_.each(bookmarks, (bookmark) => {
-		const jobs = _.filter(state.jobs, (job) => { return job.data?.config?.name === bookmark.name; });
+		const jobs = _.filter(state.jobs, (job) => { return job.name.startsWith('bookmark') && job.data?.config?.title === bookmark.title; });
 		template.innerHTML += bookmarkTemplate({ bookmark, jobs, prettyBytes });
 	});
 	

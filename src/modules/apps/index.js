@@ -31,7 +31,8 @@ const search = (event) => {
 	searchTimer = setTimeout(() => {
 		searchValue = event.target.value;
 		const apps = appService.getApps();
-		render({ apps });
+		const jobs = appService.getJobs();
+		render({ apps, jobs });
 	}, 300);
 };
 
@@ -56,7 +57,8 @@ const order = (event) => {
 	_.each(table.querySelectorAll('thead th'), (cell) => { cell.classList.remove('asc', 'desc'); });
 	cell.classList.add(tableOrder.direction);
 	const apps = appService.getApps();
-	render({ apps });
+	const jobs = appService.getJobs();
+	render({ apps, jobs });
 };
 
 const expand = (event) => {
@@ -219,7 +221,7 @@ const render = (state) => {
 		[tableOrder.direction]
 	);
 	_.each(apps, (app) => {
-		const jobs = _.filter(state.jobs, (job) => { return job.data?.config?.name === app.name; });
+		const jobs = _.filter(state.jobs, (job) => { return job.name.startsWith('app') && job.data?.config?.name === app.name; });
 		template.innerHTML += appTemplate({ app, jobs, appActionsTemplate, prettyBytes });
 	});
 	

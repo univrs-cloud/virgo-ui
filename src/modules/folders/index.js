@@ -24,7 +24,8 @@ const search = (event) => {
 	searchTimer = setTimeout(() => {
 		searchValue = event.target.value;
 		const folders = folderService.getFolders();
-		render({ folders });
+		const jobs = folderService.getJobs();
+		render({ folders, jobs });
 	}, 300);
 };
 
@@ -49,7 +50,8 @@ const order = (event) => {
 	_.each(table.querySelectorAll('thead th'), (cell) => { cell.classList.remove('asc', 'desc'); });
 	cell.classList.add(tableOrder.direction);
 	const folders = folderService.getFolders();
-	render({ folders });
+	const jobs = folderService.getJobs();
+	render({ folders, jobs });
 };
 
 const copyToClipboard = (event) => {
@@ -90,7 +92,8 @@ const render = (state) => {
 		[tableOrder.direction]
 	);
 	_.each(folders, (folder) => {
-		template.innerHTML += folderTemplate({ folder, accessOn, prettyBytes });
+		const jobs = _.filter(state.jobs, (job) => { return job.name.startsWith('share') && job.data?.config?.comment === folder.comment; });
+		template.innerHTML += folderTemplate({ folder, jobs, accessOn, prettyBytes });
 	});
 	
 	morphdom(
