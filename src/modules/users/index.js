@@ -61,7 +61,7 @@ const render = (state) => {
 		[tableOrder.direction]
 	);
 	_.each(users, (user) => {
-		const jobs = _.filter(state.jobs, (job) => { return job.name.startsWith('user') && job.data?.config?.username === user.username; });
+		const jobs = _.filter(state.jobs, (job) => { return job.data?.config?.username === user.username; });
 		const isSameAsLoggedIn = (user.username === account?.user);
 		template.innerHTML += userTemplate({ user, jobs, isSameAsLoggedIn });
 	});

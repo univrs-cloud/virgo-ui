@@ -1,24 +1,39 @@
 import Job from 'stores/job';
 import Bookmark from 'stores/bookmark';
+import { createSubscription, disposeSubscription as unsubscribe, storeAttach } from 'shell/services/module_store_subscription';
 
-let callbackCollection = [];
-let storeSubscription = null;
+const { subscribe } = createSubscription({
+	store: Bookmark,
+	propertyNames: ['configured', 'jobs'],
+	filters: {
+		jobs: isBookmarkModuleJob,
+	},
+	doubleRaf: true,
+	attachStore: storeAttach.beforeCallbacks,
+	mapState: (properties) => {
+		return { bookmarks: composeBookmark(properties.configured), jobs: properties.jobs };
+	},
+});
 
-const getJobs = () => {
-	return Job.getJobs();
-};
+function isBookmarkModuleJob(job) {
+	return job?.name && _.startsWith(job.name, 'bookmark');
+}
 
-const composeBookmark = (configured) => {
+function composeBookmark(configured) {
 	if (_.isNull(configured)) {
 		return null;
 	}
-	
+
 	return _.orderBy(
 		_.filter(configured, { type: 'bookmark' }),
 		[(entity) => { return entity.title.toLowerCase(); }],
 		['asc']
 	);
 }
+
+const getJobs = () => {
+	return _.filter(Job.getJobs() || [], isBookmarkModuleJob);
+};
 
 const getBookmarks = () => {
 	return composeBookmark(Bookmark.getConfigured());
@@ -34,39 +49,6 @@ const updateBookmark = (config) => {
 
 const deleteBookmark = (config) => {
 	Bookmark.deleteBookmark(config);
-};
-
-const handleSubscription = (properties) => {
-	const bookmarks = composeBookmark(properties.configured);
-	_.each(callbackCollection, (callback) => {
-		callback({ bookmarks, jobs: properties.jobs });
-	});
-};
-
-const subscribe = (callbacks) => {
-	if (!storeSubscription) {
-		storeSubscription =  Bookmark.subscribeToProperties(['configured', 'jobs'], handleSubscription);
-	}
-	callbackCollection = _.concat(callbackCollection, callbacks);
-	requestAnimationFrame(() => {
-		requestAnimationFrame(() => {
-			handleSubscription(_.pick(Bookmark.getState() || {}, ['configured', 'jobs']));
-		});
-	});
-
-	return () => {
-		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));
-		if (_.isEmpty(callbackCollection) && storeSubscription) {
-			storeSubscription();
-			storeSubscription = null;
-		}
-	};
-};
-
-const unsubscribe = (subsciption) => {
-	if (subsciption) {
-		subsciption();
-	}
 };
 
 export {

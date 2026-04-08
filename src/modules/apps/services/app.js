@@ -1,27 +1,33 @@
 import Host from 'stores/host';
 import Docker from 'stores/docker';
 import Job from 'stores/job';
+import { createSubscription, disposeSubscription as unsubscribe, storeAttach } from 'shell/services/module_store_subscription';
 
-let callbackCollection = [];
-let storeSubscription = null;
+const { subscribe } = createSubscription({
+	store: Docker,
+	propertyNames: ['configured', 'containers', 'appsResourceMetrics', 'imageUpdates', 'snapshots', 'jobs'],
+	filters: {
+		jobs: isAppModuleJob,
+	},
+	doubleRaf: true,
+	attachStore: storeAttach.beforeCallbacks,
+	mapState: (properties) => {
+		return {
+			apps: composeApps(properties.configured, properties.containers, properties.appsResourceMetrics, properties.imageUpdates, properties.snapshots),
+			jobs: properties.jobs,
+		};
+	},
+});
 
-const getSocket = () => {
-	return Docker.socket;
-};
+function isAppModuleJob(job) {
+	return job?.name && _.startsWith(job.name, 'app');
+}
 
-const getJobs = () => {
-	return Job.getJobs();
-};
-
-const getApps = () => {
-	return composeApps(Docker.getConfigured(), Docker.getContainers(), Docker.getAppsResourceMetrics(), Docker.getImageUpdates(), Host.getSnapshots());
-};
-
-const composeApps = (configured, containers, appsResourceMetrics, imageUpdates, snapshots) => {
+function composeApps(configured, containers, appsResourceMetrics, imageUpdates, snapshots) {
 	if (_.isNull(configured) || _.isNull(containers)) {
 		return null;
 	}
-	
+
 	return _.map(
 		_.orderBy(
 			_.filter(configured, { type: 'app' }),
@@ -62,6 +68,18 @@ const composeApps = (configured, containers, appsResourceMetrics, imageUpdates, 
 		});
 }
 
+const getSocket = () => {
+	return Docker.socket;
+};
+
+const getJobs = () => {
+	return _.filter(Job.getJobs() || [], isAppModuleJob);
+};
+
+const getApps = () => {
+	return composeApps(Docker.getConfigured(), Docker.getContainers(), Docker.getAppsResourceMetrics(), Docker.getImageUpdates(), Host.getSnapshots());
+};
+
 const update = (config) => {
 	Docker.update(config);
 };
@@ -72,39 +90,6 @@ const performAppAction = (config) => {
 
 const performServiceAction = (config) => {
 	Docker.performServiceAction(config);
-};
-
-const handleSubscription = (properties) => {
-	const apps = composeApps(properties.configured, properties.containers, properties.appsResourceMetrics, properties.imageUpdates, properties.snapshots);
-	_.each(callbackCollection, (callback) => {
-		callback({ apps, jobs: properties.jobs });
-	});
-};
-
-const subscribe = (callbacks) => {
-	if (!storeSubscription) {
-		storeSubscription = Docker.subscribeToProperties(['configured', 'containers', 'appsResourceMetrics', 'imageUpdates', 'snapshots', 'jobs'], handleSubscription);
-	}
-	callbackCollection = _.concat(callbackCollection, callbacks);
-	requestAnimationFrame(() => {
-		requestAnimationFrame(() => {
-			handleSubscription(_.pick(Docker.getState() || {}, ['configured', 'containers', 'appsResourceMetrics', 'imageUpdates', 'snapshots', 'jobs']));
-		});
-	});
-
-	return () => {
-		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));
-		if (_.isEmpty(callbackCollection) && storeSubscription) {
-			storeSubscription();
-			storeSubscription = null;
-		}
-	};
-};
-
-const unsubscribe = (subsciption) => {
-	if (subsciption) {
-		subsciption();
-	}
 };
 
 export {

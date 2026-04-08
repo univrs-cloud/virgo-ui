@@ -61,7 +61,7 @@ const render = (state) => {
 		[tableOrder.direction]
 	);
 	_.each(bookmarks, (bookmark) => {
-		const jobs = _.filter(state.jobs, (job) => { return job.name.startsWith('bookmark') && job.data?.config?.title === bookmark.title; });
+		const jobs = _.filter(state.jobs, (job) => { return job.data?.config?.title === bookmark.title; });
 		template.innerHTML += bookmarkTemplate({ bookmark, jobs, prettyBytes });
 	});
 	

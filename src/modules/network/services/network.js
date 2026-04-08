@@ -1,12 +1,25 @@
 import Job from 'stores/job';
 import Host from 'stores/host';
 import Configuration from 'stores/configuration';
+import { createSubscription, disposeSubscription as unsubscribe, storeAttach } from 'shell/services/module_store_subscription';
 
-let callbackCollection = [];
-let storeSubscription = null;
+const { subscribe } = createSubscription({
+	store: Host,
+	propertyNames: ['system', 'configuration', 'jobs'],
+	filters: {
+		jobs: isTrustedProxyJob,
+	},
+	doubleRaf: true,
+	attachStore: storeAttach.beforeCallbacks,
+	mapState: (properties) => properties,
+});
+
+function isTrustedProxyJob(job) {
+	return job?.name && _.startsWith(job.name, 'trustedProxy');
+}
 
 const getJobs = () => {
-	return Job.getJobs();
+	return _.filter(Job.getJobs() || [], isTrustedProxyJob);
 };
 
 const getSystem = () => {
@@ -44,38 +57,6 @@ const isTrustedProxyAddressTaken = (address, ignoreAddress) => {
 		}
 		return p === normalizedValue;
 	});
-};
-
-const handleSubscription = (properties) => {
-	_.each(callbackCollection, (callback) => {
-		callback(properties);
-	});
-};
-
-const subscribe = (callbacks) => {
-	if (!storeSubscription) {
-		storeSubscription = Host.subscribeToProperties(['system', 'configuration', 'jobs'], handleSubscription);
-	}
-	callbackCollection = _.concat(callbackCollection, callbacks);
-	requestAnimationFrame(() => {
-		requestAnimationFrame(() => {
-			handleSubscription(_.pick(Host.getState() || {}, ['system', 'configuration', 'jobs']));
-		});
-	});
-
-	return () => {
-		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));
-		if (_.isEmpty(callbackCollection) && storeSubscription) {
-			storeSubscription();
-			storeSubscription = null;
-		}
-	};
-};
-
-const unsubscribe = (subsciption) => {
-	if (subsciption) {
-		subsciption();
-	}
 };
 
 export {

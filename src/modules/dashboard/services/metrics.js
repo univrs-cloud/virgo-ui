@@ -1,7 +1,19 @@
 import Metrics from 'stores/metrics';
+import { createSubscription, disposeSubscription as unsubscribe, storeAttach } from 'shell/services/module_store_subscription';
 
-let callbackCollection = [];
-let storeSubscription = null;
+const { subscribe: baseSubscribe } = createSubscription({
+	store: Metrics,
+	propertyNames: ['metrics'],
+	mapState: (properties) => ({ metrics: properties.metrics }),
+	doubleRaf: true,
+	attachStore: storeAttach.beforeCallbacks,
+});
+
+const subscribe = (callbacks) => {
+	const remove = baseSubscribe(callbacks);
+	Metrics.fetch();
+	return remove;
+};
 
 const fetch = () => {
 	Metrics.fetch();
@@ -17,40 +29,6 @@ const enable = () => {
 
 const disable = () => {
 	Metrics.disable();
-};
-
-const handleSubscription = (properties) => {
-	_.each(callbackCollection, (callback) => {
-		const metrics = properties.metrics;
-		callback({ metrics });
-	});
-};
-
-const subscribe = (callbacks) => {
-	if (!storeSubscription) {
-		storeSubscription = Metrics.subscribeToProperties(['metrics'], handleSubscription);
-	}
-	callbackCollection = _.concat(callbackCollection, callbacks);
-	Metrics.fetch();
-	requestAnimationFrame(() => {
-		requestAnimationFrame(() => {
-			handleSubscription(_.pick(Metrics.getState() || {}, ['metrics']));
-		});
-	});
-
-	return () => {
-		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));
-		if (_.isEmpty(callbackCollection) && storeSubscription) {
-			storeSubscription();
-			storeSubscription = null;
-		}
-	};
-};
-
-const unsubscribe = (subsciption) => {
-	if (subsciption) {
-		subsciption();
-	}
 };
 
 export {
