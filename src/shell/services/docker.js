@@ -1,7 +1,12 @@
+import Job from 'stores/job';
 import Docker from 'stores/docker';
 
 let callbackCollection = [];
 let storeSubscription = null;
+
+const getJobs = () => {
+	return Job.getJobs();
+};
 
 const getContainers = () => {
 	return Docker.getContainers();
@@ -41,6 +46,7 @@ const unsubscribe = (subsciption) => {
 export {
 	subscribe,
 	unsubscribe,
+	getJobs,
 	getContainers,
 	composeUrlFromLabels
 };

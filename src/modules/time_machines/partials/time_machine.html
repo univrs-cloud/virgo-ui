@@ -42,13 +42,17 @@
 		</u-progress>
 	</td>
 	<td class="text-center px-0">
-		<div class="dropdown">
-			<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
-			<ul class="dropdown-menu">
-				<li><a href="#time-machine-update" class="dropdown-item" data-bs-toggle="modal"><i class="icon-regular icon-pen icon-fw me-1"></i>Edit</a></li>
-				<li><hr class="dropdown-divider"></li>
-				<li><a href="#" class="dropdown-item text-danger confirm" data-action="delete"><i class="icon-regular icon-times icon-fw me-1"></i>Delete</a></li>
-			</ul>
-		</div>
+		<%if (!_.isEmpty(jobs)) {%>
+			<i class="icon-solid icon-gear icon-fw icon-spin"></i>
+		<%} else {%>
+			<div class="dropdown">
+				<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
+				<ul class="dropdown-menu">
+					<li><a href="#time-machine-update" class="dropdown-item" data-bs-toggle="modal"><i class="icon-regular icon-pen icon-fw me-1"></i>Edit</a></li>
+					<li><hr class="dropdown-divider"></li>
+					<li><a href="#" class="dropdown-item text-danger confirm" data-action="delete"><i class="icon-regular icon-times icon-fw me-1"></i>Delete</a></li>
+				</ul>
+			</div>
+		<%}%>
 	</td>
 </tr>

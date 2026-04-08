@@ -23,7 +23,8 @@ const search = (event) => {
 	searchTimer = setTimeout(() => {
 		searchValue = event.target.value;
 		const users = userService.getUsers();
-		render({ users });
+		const jobs = userService.getJobs();
+		render({ users, jobs });
 	}, 300);
 };
 
@@ -38,7 +39,8 @@ const order = (event) => {
 	_.each(table.querySelectorAll('thead th'), (cell) => { cell.classList.remove('asc', 'desc'); });
 	cell.classList.add(tableOrder.direction);
 	const users = userService.getUsers();
-	render({ users });
+	const jobs = userService.getJobs();
+	render({ users, jobs });
 };
 
 const render = (state) => {
@@ -59,8 +61,9 @@ const render = (state) => {
 		[tableOrder.direction]
 	);
 	_.each(users, (user) => {
+		const jobs = _.filter(state.jobs, (job) => { return job.name.startsWith('user') && job.data?.config?.username === user.username; });
 		const isSameAsLoggedIn = (user.username === account?.user);
-		template.innerHTML += userTemplate({ user, isSameAsLoggedIn });
+		template.innerHTML += userTemplate({ user, jobs, isSameAsLoggedIn });
 	});
 	
 	morphdom(

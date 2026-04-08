@@ -1,7 +1,12 @@
+import Job from 'stores/job';
 import User from 'stores/user';
 
 let callbackCollection = [];
 let storeSubscription = null;
+
+const getJobs = () => {
+	return Job.getJobs();
+};
 
 const filter = (users) => {
 	if (_.isNull(users)) {
@@ -51,18 +56,18 @@ const changePassword = (config) => {
 const handleSubscription = (properties) => {
 	const users = filter(properties.users);
 	_.each(callbackCollection, (callback) => {
-		callback({ users });
+		callback({ users, jobs: properties.jobs });
 	});
 };
 
 const subscribe = (callbacks) => {
 	if (!storeSubscription) {
-		storeSubscription = User.subscribeToProperties(['users'], handleSubscription);
+		storeSubscription = User.subscribeToProperties(['users', 'jobs'], handleSubscription);
 	}
 	callbackCollection = _.concat(callbackCollection, callbacks);
 	requestAnimationFrame(() => {
 		requestAnimationFrame(() => {
-			handleSubscription(_.pick(User.getState() || {}, ['users']));
+			handleSubscription(_.pick(User.getState() || {}, ['users', 'jobs']));
 		});
 	});
 
@@ -84,6 +89,7 @@ const unsubscribe = (subsciption) => {
 export {
 	subscribe,
 	unsubscribe,
+	getJobs,
 	getUsers,
 	createUser,
 	updateUser,

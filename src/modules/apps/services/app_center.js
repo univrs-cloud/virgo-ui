@@ -1,9 +1,13 @@
+import Job from 'stores/job'; // need to init store
 import Host from 'stores/host';
 import Docker from 'stores/docker';
-import Job from 'stores/job'; // need to init store
 
 let callbackCollection = [];
 let storeSubscription = null;
+
+const getJobs = () => {
+	return Job.getJobs();
+};
 
 const getFQDN = () => {
 	const system = Host.getSystem();
@@ -64,6 +68,7 @@ const unsubscribe = (subscription) => {
 export {
 	subscribe,
 	unsubscribe,
+	getJobs,
 	getFQDN,
 	getTemplates,
 	install

@@ -1,5 +1,5 @@
-import Host from 'stores/host';
 import Job from 'stores/job';
+import Host from 'stores/host';
 
 let callbackCollection = [];
 let storeSubscription = null;

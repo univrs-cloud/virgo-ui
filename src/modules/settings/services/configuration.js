@@ -1,7 +1,12 @@
+import Job from 'stores/job';
 import Configuration from 'stores/configuration';
 
 let callbackCollection = [];
 let storeSubscription = null;
+
+const getJobs = () => {
+	return Job.getJobs();
+};
 
 const getConfiguration = () => {
 	return Configuration.getConfiguration();
@@ -23,12 +28,12 @@ const handleSubscription = (properties) => {
 
 const subscribe = (callbacks) => {
 	if (!storeSubscription) {
-		storeSubscription = Configuration.subscribeToProperties(['configuration'], handleSubscription);
+		storeSubscription = Configuration.subscribeToProperties(['configuration', 'jobs'], handleSubscription);
 	}
 	callbackCollection = _.concat(callbackCollection, callbacks);
 	requestAnimationFrame(() => {
 		requestAnimationFrame(() => {
-			handleSubscription(_.pick(Configuration.getState() || {}, ['configuration']));
+			handleSubscription(_.pick(Configuration.getState() || {}, ['configuration', 'jobs']));
 		});
 	});
 
@@ -50,6 +55,7 @@ const unsubscribe = (subsciption) => {
 export {
 	subscribe,
 	unsubscribe,
+	getJobs,
 	getConfiguration,
 	updateSmtp,
 	updateLocation
