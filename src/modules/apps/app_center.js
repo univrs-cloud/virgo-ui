@@ -28,16 +28,14 @@ const render = (state) => {
 		return;
 	}
 
-	const templateInstallable = document.createElement('template');
 	const installable = _.filter(state.templates, { isInstalled: false });
-	templateInstallable.innerHTML = _.join(_.map(installable, (app) => {
+	const exploreRows = _.join(_.map(installable, (app) => {
 		const jobs = _.filter(state.jobs, (job) => { return job.data?.config?.name === app.name && job.progress?.state === 'active'; });
 		return itemTemplate({ app, jobs });
 	}), '');
-	
-	const templateInstalled = document.createElement('template');
+
 	const installed = _.filter(state.templates, { isInstalled: true });
-	templateInstalled.innerHTML = _.join(_.map(installed, (app) => {
+	const installedRows = _.join(_.map(installed, (app) => {
 		return itemTemplate({ app, jobs: [] });
 	}), '');
 
@@ -46,12 +44,12 @@ const render = (state) => {
 
 	morphdom(
 		rowExplore,
-		`<div>${templateInstallable.innerHTML}</div>`,
+		`<div>${exploreRows}</div>`,
 		{ childrenOnly: true }
 	);
 	morphdom(
 		rowInstalled,
-		`<div>${templateInstalled.innerHTML}</div>`,
+		`<div>${installedRows}</div>`,
 		{ childrenOnly: true }
 	);
 

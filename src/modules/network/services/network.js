@@ -9,7 +9,6 @@ const { subscribe } = createSubscription({
 	filters: {
 		jobs: isTrustedProxyJob,
 	},
-	doubleRaf: true,
 	attachStore: storeAttach.beforeCallbacks,
 	mapState: (properties) => properties,
 });

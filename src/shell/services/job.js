@@ -7,7 +7,6 @@ const { subscribe } = createSubscription({
 	filters: {
 		jobs: (job) => job.progress !== 0,
 	},
-	doubleRaf: false,
 	attachStore: storeAttach.afterCallbacks,
 	mapState: (properties) => {
 		return { jobs: properties.jobs };

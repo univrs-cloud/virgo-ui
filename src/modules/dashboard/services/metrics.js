@@ -5,7 +5,6 @@ const { subscribe: baseSubscribe } = createSubscription({
 	store: Metrics,
 	propertyNames: ['metrics'],
 	mapState: (properties) => ({ metrics: properties.metrics }),
-	doubleRaf: true,
 	attachStore: storeAttach.beforeCallbacks,
 });
 

@@ -78,7 +78,6 @@ const render = (state) => {
 		return;
 	}
 	
-	const template = document.createElement('template');
 	const accessOn = _.find(state.networkInterface?.addrInfo, { family: 'inet' })?.local;
 	let timeMachines = state.timeMachines;
 	timeMachines = filterListByQuery(timeMachines, searchValue, ['name', 'path', 'comment', 'validUsers']);
@@ -91,14 +90,14 @@ const render = (state) => {
 		],
 		[tableOrder.direction]
 	);
-	_.each(timeMachines, (timeMachine) => {
+	const rows = _.join(_.map(timeMachines, (timeMachine) => {
 		const jobs = _.filter(state.jobs, (job) => { return job.data?.config?.comment === timeMachine.comment; });
-		template.innerHTML += timeMachineTemplate({ timeMachine, jobs, accessOn, prettyBytes, moment });
-	});
+		return timeMachineTemplate({ timeMachine, jobs, accessOn, prettyBytes, moment });
+	}), '');
 	
 	morphdom(
 		table.querySelector('tbody'),
-		`<tbody>${template.innerHTML}</tbody>`,
+		`<tbody>${rows}</tbody>`,
 		{ childrenOnly: true }
 	);
 

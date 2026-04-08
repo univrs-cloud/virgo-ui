@@ -48,7 +48,6 @@ const render = (state) => {
 		return;
 	}
 	
-	const template = document.createElement('template');
 	let bookmarks = state.bookmarks;
 	bookmarks = filterListByQuery(bookmarks, searchValue, ['title', 'name', 'url', 'icon', 'category']);
 	bookmarks = _.orderBy(bookmarks,
@@ -60,14 +59,14 @@ const render = (state) => {
 		],
 		[tableOrder.direction]
 	);
-	_.each(bookmarks, (bookmark) => {
+	const rows = _.join(_.map(bookmarks, (bookmark) => {
 		const jobs = _.filter(state.jobs, (job) => { return job.data?.config?.title === bookmark.title; });
-		template.innerHTML += bookmarkTemplate({ bookmark, jobs, prettyBytes });
-	});
+		return bookmarkTemplate({ bookmark, jobs, prettyBytes });
+	}), '');
 	
 	morphdom(
 		table.querySelector('tbody'),
-		`<tbody>${template.innerHTML}</tbody>`,
+		`<tbody>${rows}</tbody>`,
 		{ childrenOnly: true }
 	);
 

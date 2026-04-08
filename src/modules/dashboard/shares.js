@@ -17,32 +17,24 @@ const render = (state) => {
 		return;
 	}
 
-	const template = document.createElement('template');
-	template.innerHTML = foldersTemplate();
-	
-	const folders = template.content.querySelector('.folders .row');
 	const foldersCollection = _.filter(state.shares, { isTimeMachine: false });
-	if (_.isEmpty(foldersCollection)) {
-		folders.insertAdjacentHTML('beforeend', foldersEmptyTemplate());
-	} else {
-		_.each(foldersCollection, (entity) => {
-			folders.insertAdjacentHTML('beforeend', folderTemplate({ entity }));
-		});
-	}
+	const foldersRowInner = (_.isEmpty(foldersCollection)
+		? foldersEmptyTemplate()
+		: _.join(_.map(foldersCollection, (entity) => folderTemplate({ entity })), ''));
 
-	const timeMachines = template.content.querySelector('.time-machines .row');
 	const timeMachineCollection = _.filter(state.shares, { isTimeMachine: true });
-	if (_.isEmpty(timeMachineCollection)) {
-		timeMachines.insertAdjacentHTML('beforeend', timeMachineEmptyTemplate());
-	} else {
-		_.each(timeMachineCollection, (entity) => {
-			timeMachines.insertAdjacentHTML('beforeend', timeMachineTemplate({ entity }));
-		});
-	}
+	const timeMachinesRowInner = (_.isEmpty(timeMachineCollection)
+		? timeMachineEmptyTemplate()
+		: _.join(_.map(timeMachineCollection, (entity) => timeMachineTemplate({ entity })), ''));
+
+	const rowSlot = /\s*<div class="row"><\/div>/;
+	let html = foldersTemplate();
+	html = html.replace(rowSlot, `<div class="row">${foldersRowInner}</div>`);
+	html = html.replace(rowSlot, `<div class="row">${timeMachinesRowInner}</div>`);
 
 	morphdom(
 		container,
-		`<div>${template.innerHTML}</div>`,
+		`<div>${html}</div>`,
 		{ childrenOnly: true }
 	);
 };

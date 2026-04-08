@@ -17,12 +17,11 @@ const render = (state) => {
 	}
 
 	const user = _.find(state.users, { username: account.user });
-	const template = document.createElement('template');
-	template.innerHTML += profileTemplate({ user: user });
+	const inner = profileTemplate({ user });
 
 	morphdom(
 		row,
-		`<div>${template.innerHTML}</div>`,
+		`<div>${inner}</div>`,
 		{ childrenOnly: true }
 	);
 

@@ -8,7 +8,6 @@ const { subscribe } = createSubscription({
 	filters: {
 		jobs: isBookmarkModuleJob,
 	},
-	doubleRaf: true,
 	attachStore: storeAttach.beforeCallbacks,
 	mapState: (properties) => {
 		return { bookmarks: composeBookmark(properties.configured), jobs: properties.jobs };

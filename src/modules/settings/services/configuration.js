@@ -12,7 +12,6 @@ const { subscribe } = createSubscription({
 	filters: {
 		jobs: isSettingsModuleJob,
 	},
-	doubleRaf: true,
 	attachStore: storeAttach.beforeCallbacks,
 	mapState: (properties) => properties,
 });

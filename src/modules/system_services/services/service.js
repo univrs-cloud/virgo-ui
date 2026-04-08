@@ -8,7 +8,6 @@ const { subscribe } = createSubscription({
 	filters: {
 		jobs: isSystemServiceJob,
 	},
-	doubleRaf: true,
 	attachStore: storeAttach.beforeCallbacks,
 	mapState: (properties) => {
 		return { services: properties.services, jobs: properties.jobs };

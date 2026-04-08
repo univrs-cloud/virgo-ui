@@ -10,7 +10,6 @@ const { subscribe } = createSubscription({
 		}
 		return { apps: composeDashboardApps(properties) };
 	},
-	doubleRaf: true,
 	attachStore: storeAttach.beforeCallbacks,
 });
 

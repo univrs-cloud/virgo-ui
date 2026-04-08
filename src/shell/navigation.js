@@ -30,18 +30,18 @@ const navigate = (event) => {
 };
 
 const requireAuth = (ctx, next) => {
-    if (!isAuthenticated) {
-        page.redirect('/');
-        return;
-    }
+	if (!isAuthenticated) {
+		page.redirect('/');
+		return;
+	}
 
-    next();
+	next();
 };
 
 const requiresAdmin = (ctx, next) => {
 	if (!isAdmin) {
 		page.redirect('/');
-        return;
+		return;
 	}
 
 	next();

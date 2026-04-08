@@ -31,7 +31,7 @@ const buildFilteredProperties = (state, propertyNames, filters) => {
 	return currentProperties;
 };
 
-/** Same filtering as `subscribeToProperties` (e.g. for rAF replays that bypass the store callback). */
+/** Same filtering as `subscribeToProperties` (for catch-up delivery when the first sync ran before callbacks were registered). */
 const pickFilteredStoreSlice = (storeInstance, propertyNames, filters = {}) => {
 	return buildFilteredProperties(storeInstance.getState() || {}, propertyNames, filters);
 };
@@ -116,6 +116,4 @@ class Store extends ObservableStore {
 }
 
 export default Store;
-export {
-	pickFilteredStoreSlice,
-};
+export { pickFilteredStoreSlice };

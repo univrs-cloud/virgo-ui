@@ -42,16 +42,13 @@ const render = (state) => {
 		return;
 	}
 
-	const template = document.createElement('template');
-	if (_.isEmpty(state.updates)) {
-		template.innerHTML = emptyTemplate({ checkUpdates: state.checkUpdates });
-	} else {
-		template.innerHTML += updatesTemplate({ checkUpdates: state.checkUpdates, updates: state.updates });
-	}
+	const inner = (_.isEmpty(state.updates)
+		? emptyTemplate({ checkUpdates: state.checkUpdates })
+		: updatesTemplate({ checkUpdates: state.checkUpdates, updates: state.updates }));
 
 	morphdom(
 		row,
-		`<div>${template.innerHTML}</div>`,
+		`<div>${inner}</div>`,
 		{ childrenOnly: true }
 	);
 

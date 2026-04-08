@@ -28,12 +28,11 @@ const render = (state) => {
 		return;
 	}
 	
-	const template = document.createElement('template');
 	let drives = state.drives;
 	let pools = state.storage;
 	let snapshots = state.snapshots;
 	pools = filterListByQuery(pools, searchValue, ['name', 'poolGuid', 'type']);
-	_.each(pools, (pool) => {
+	const rows = _.join(_.map(pools, (pool) => {
 		if (pool.name !== 'system') {
 			pool.properties.usedbydatasets.percent = (pool.properties.usedbydatasets.value / pool.properties.size.value * 100);
 			pool.properties.usedbysnapshots.percent = (pool.properties.usedbysnapshots.value / pool.properties.size.value * 100);
@@ -41,12 +40,12 @@ const render = (state) => {
 				return snapshot.pool === pool.name;
 			});
 		}
-		template.innerHTML += storageTemplate({ drives, pool, prettyBytes, moment });
-	});
+		return storageTemplate({ drives, pool, prettyBytes, moment });
+	}), '');
 	
 	morphdom(
 		table.querySelector('tbody'),
-		`<tbody>${template.innerHTML}</tbody>`,
+		`<tbody>${rows}</tbody>`,
 		{ childrenOnly: true }
 	);
 

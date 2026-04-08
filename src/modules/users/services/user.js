@@ -8,7 +8,6 @@ const { subscribe } = createSubscription({
 	filters: {
 		jobs: isUserModuleJob,
 	},
-	doubleRaf: true,
 	attachStore: storeAttach.beforeCallbacks,
 	mapState: (properties) => {
 		return { users: normalizeUsers(properties.users), jobs: properties.jobs };
