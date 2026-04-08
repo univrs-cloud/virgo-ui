@@ -1,44 +1,19 @@
 import Share from 'stores/share';
+import { createSubscription, disposeSubscription as unsubscribe, storeAttach } from 'shell/services/module_store_subscription';
 
-let callbackCollection = [];
-let storeSubscription = null;
-
-const handleSubscription = (properties) => {
-	let shares = _.orderBy(
-		properties.shares,
-		[(entity) => { return entity.comment.toLowerCase(); }],
-		['asc']
-	);
-	_.each(callbackCollection, (callback) => {
-		callback({ shares });
-	});
-};
-
-const subscribe = (callbacks) => {
-	if (!storeSubscription) {
-		storeSubscription = Share.subscribeToProperties(['shares'], handleSubscription);
-	}
-	callbackCollection = _.concat(callbackCollection, callbacks);
-	requestAnimationFrame(() => {
-		requestAnimationFrame(() => {
-			handleSubscription(_.pick(Share.getState() || {}, ['shares']));
-		});
-	});
-
-	return () => {
-		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));
-		if (_.isEmpty(callbackCollection) && storeSubscription) {
-			storeSubscription();
-			storeSubscription = null;
-		}
-	};
-};
-
-const unsubscribe = (subsciption) => {
-	if (subsciption) {
-		subsciption();
-	}
-};
+const { subscribe } = createSubscription({
+	store: Share,
+	propertyNames: ['shares'],
+	mapState: (properties) => ({
+		shares: _.orderBy(
+			properties.shares || [],
+			[(entity) => { return entity.comment.toLowerCase(); }],
+			['asc']
+		),
+	}),
+	doubleRaf: true,
+	attachStore: storeAttach.beforeCallbacks,
+});
 
 export {
 	subscribe,

@@ -18,8 +18,13 @@ const render = (state) => {
 	}
 	
 	const networkInterface = _.find(state.system.networkInterfaces, { default: true });
-	const trustedProxies = _.map(state.configuration.trustedProxies, (trustedProxy) => {
-		const jobs = _.filter(state.jobs, (job) => { return job.name.startsWith('trustedProxy') && job.data?.config?.address === trustedProxy; });
+	let trustedProxies = _.orderBy(
+		state.configuration.trustedProxies || [],
+		[(address) => String(address ?? '').toLowerCase()],
+		['asc']
+	);
+	trustedProxies = _.map(trustedProxies, (trustedProxy) => {
+		const jobs = _.filter(state.jobs, (job) => { return job.data?.config?.address === trustedProxy; });
 		return trustedProxyTemplate({ trustedProxy, jobs });
 	});
 	morphdom(

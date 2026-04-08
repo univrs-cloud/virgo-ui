@@ -221,7 +221,7 @@ const render = (state) => {
 		[tableOrder.direction]
 	);
 	_.each(apps, (app) => {
-		const jobs = _.filter(state.jobs, (job) => { return job.name.startsWith('app') && job.data?.config?.name === app.name; });
+		const jobs = _.filter(state.jobs, (job) => { return job.data?.config?.name === app.name; });
 		template.innerHTML += appTemplate({ app, jobs, appActionsTemplate, prettyBytes });
 	});
 	

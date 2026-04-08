@@ -1,8 +1,14 @@
 import Job from 'stores/job';
 import Docker from 'stores/docker';
+import { createSubscription, disposeSubscription as unsubscribe, storeAttach } from 'shell/services/module_store_subscription';
 
-let callbackCollection = [];
-let storeSubscription = null;
+const { subscribe } = createSubscription({
+	store: Docker,
+	propertyNames: ['containers', 'update'],
+	mapState: (properties) => properties,
+	doubleRaf: false,
+	attachStore: storeAttach.afterCallbacks,
+});
 
 const getJobs = () => {
 	return Job.getJobs();
@@ -14,33 +20,6 @@ const getContainers = () => {
 
 const composeUrlFromLabels = (projectContainers) => {
 	return Docker.composeUrlFromLabels(projectContainers);
-};
-
-const handleSubscription = (properties) => {
-	_.each(callbackCollection, (callback) => {
-		callback(properties);
-	});
-};
-
-const subscribe = (callbacks) => {
-	callbackCollection = _.concat(callbackCollection, callbacks);
-	if (!storeSubscription) {
-		storeSubscription = Docker.subscribeToProperties(['containers', 'update'], handleSubscription);
-	}
-	
-	return () => {
-		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));
-		if (_.isEmpty(callbackCollection) && storeSubscription) {
-			storeSubscription();
-			storeSubscription = null;
-		}
-	};
-};
-
-const unsubscribe = (subsciption) => {
-	if (subsciption) {
-		subsciption();
-	}
 };
 
 export {

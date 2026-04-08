@@ -1,19 +1,32 @@
 import Job from 'stores/job';
 import Host from 'stores/host';
 import Share from 'stores/share';
+import { createSubscription, disposeSubscription as unsubscribe, storeAttach } from 'shell/services/module_store_subscription';
 
-let callbackCollection = [];
-let storeSubscription = null;
+const { subscribe } = createSubscription({
+	store: Share,
+	propertyNames: ['shares', 'system', 'jobs'],
+	filters: {
+		jobs: isShareJob,
+	},
+	doubleRaf: true,
+	attachStore: storeAttach.beforeCallbacks,
+	mapState: (properties) => {
+		const folders = filterFolders(properties.shares);
+		const networkInterface = _.find(properties.system.networkInterfaces, { default: true });
+		return { folders, networkInterface, jobs: properties.jobs };
+	},
+});
 
-const getJobs = () => {
-	return Job.getJobs();
-};
+function isShareJob(job) {
+	return job?.name && _.startsWith(job.name, 'share');
+}
 
-const filter = (shares) => {
+function filterFolders(shares) {
 	if (_.isNull(shares)) {
 		return null;
 	}
-	
+
 	return _.orderBy(
 		_.filter(shares, { isTimeMachine: false }),
 		[(entity) => { return entity.name.toLowerCase(); }],
@@ -21,12 +34,16 @@ const filter = (shares) => {
 	);
 }
 
+const getJobs = () => {
+	return _.filter(Job.getJobs() || [], isShareJob);
+};
+
 const getSystem = () => {
 	return Host.getSystem();
 };
 
 const getFolders = () => {
-	return filter(Share.getShares());
+	return filterFolders(Share.getShares());
 };
 
 const createFolder = (config) => {
@@ -42,40 +59,6 @@ const updateFolder = (config) => {
 const deleteFolder = (config) => {
 	config.type = 'folder';
 	Share.deleteShare(config);
-};
-
-const handleSubscription = (properties) => {
-	const folders = filter(properties.shares);
-	const networkInterface = _.find(properties.system.networkInterfaces, { default: true });
-	_.each(callbackCollection, (callback) => {
-		callback({ folders, networkInterface, jobs: properties.jobs });
-	});
-};
-
-const subscribe = (callbacks) => {
-	if (!storeSubscription) {
-		storeSubscription = Share.subscribeToProperties(['shares', 'system', 'jobs'], handleSubscription);
-	}
-	callbackCollection = _.concat(callbackCollection, callbacks);
-	requestAnimationFrame(() => {
-		requestAnimationFrame(() => {
-			handleSubscription(_.pick(Share.getState() || {}, ['shares', 'system', 'jobs']));
-		});
-	});
-
-	return () => {
-		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));
-		if (_.isEmpty(callbackCollection) && storeSubscription) {
-			storeSubscription();
-			storeSubscription = null;
-		}
-	};
-};
-
-const unsubscribe = (subsciption) => {
-	if (subsciption) {
-		subsciption();
-	}
 };
 
 export {

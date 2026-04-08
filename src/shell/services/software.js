@@ -1,9 +1,21 @@
 import Host from 'stores/host';
+import { createSubscription, disposeSubscription as unsubscribe, storeAttach } from 'shell/services/module_store_subscription';
 
-let callbackCollection = {
-	updates: [],
-	update: []
-};
+const { subscribe: subscribeToUpdates } = createSubscription({
+	store: Host,
+	propertyNames: ['updates'],
+	mapState: (properties) => properties,
+	doubleRaf: false,
+	attachStore: storeAttach.afterCallbacks,
+});
+
+const { subscribe: subscribeToUpdate } = createSubscription({
+	store: Host,
+	propertyNames: ['update'],
+	mapState: (properties) => properties,
+	doubleRaf: false,
+	attachStore: storeAttach.afterCallbacks,
+});
 
 const checkUpdates = () => {
 	return Host.checkUpdates();
@@ -27,34 +39,6 @@ const getUpdates = () => {
 
 const getUpdate = () => {
 	return Host.getUpdate();
-};
-
-const handleUpdatesSubscription = (properties) => {
-	_.each(callbackCollection.updates, (callback) => {
-		callback(properties);
-	});
-};
-
-const handleUpdateSubscription = (properties) => {
-	_.each(callbackCollection.update, (callback) => {
-		callback(properties);
-	});
-};
-
-const subscribeToUpdates = (callbacks) => {
-	callbackCollection.updates = _.concat(callbackCollection.updates, callbacks);
-	return Host.subscribeToProperties(['updates'], handleUpdatesSubscription);
-};
-
-const subscribeToUpdate = (callbacks) => {
-	callbackCollection.update = _.concat(callbackCollection.update, callbacks);
-	return Host.subscribeToProperties(['update'], handleUpdateSubscription);
-};
-
-const unsubscribe = (subsciption) => {
-	if (subsciption) {
-		subsciption();
-	}
 };
 
 export {

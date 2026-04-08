@@ -1,21 +1,20 @@
 import Docker from 'stores/docker';
+import { createSubscription, disposeSubscription as unsubscribe, storeAttach } from 'shell/services/module_store_subscription';
 
-let callbackCollection = [];
-let storeSubscription = null;
+const { subscribe } = createSubscription({
+	store: Docker,
+	propertyNames: ['configured', 'containers', 'imageUpdates'],
+	mapState: (properties) => {
+		if (_.isNull(properties.configured) || _.isNull(properties.containers)) {
+			return { apps: null };
+		}
+		return { apps: composeDashboardApps(properties) };
+	},
+	doubleRaf: true,
+	attachStore: storeAttach.beforeCallbacks,
+});
 
-const performAction = (config) => {
-	Docker.performAction(config);
-};
-
-const setOrder = (config) => {
-	Docker.setOrder(config);
-};
-
-const handleSubscription = (properties) => {
-	if (_.isNull(properties.configured) || _.isNull(properties.containers)) {
-		return;
-	}
-	
+function composeDashboardApps(properties) {
 	let apps = _.map(properties.configured, (entity) => {
 		if (entity.type === 'app') {
 			entity.projectContainers = _.orderBy(
@@ -43,37 +42,15 @@ const handleSubscription = (properties) => {
 		return entity;
 	});
 	apps = _.groupBy(apps, 'category');
-	apps = _.pick(apps, _.keys(apps));
+	return _.pick(apps, _.keys(apps));
+}
 
-	_.each(callbackCollection, (callback) => {
-		callback({ apps });
-	});
+const performAction = (config) => {
+	Docker.performAction(config);
 };
 
-const subscribe = (callbacks) => {
-	if (!storeSubscription) {
-		storeSubscription =  Docker.subscribeToProperties(['configured', 'containers', 'imageUpdates'], handleSubscription);
-	}
-	callbackCollection = _.concat(callbackCollection, callbacks);
-	requestAnimationFrame(() => {
-		requestAnimationFrame(() => {
-			handleSubscription(_.pick(Docker.getState() || {}, ['configured', 'containers', 'imageUpdates']));
-		});
-	});
-
-	return () => {
-		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));
-		if (_.isEmpty(callbackCollection) && storeSubscription) {
-			storeSubscription();
-			storeSubscription = null;
-		}
-	};
-};
-
-const unsubscribe = (subsciption) => {
-	if (subsciption) {
-		subsciption();
-	}
+const setOrder = (config) => {
+	Docker.setOrder(config);
 };
 
 export {

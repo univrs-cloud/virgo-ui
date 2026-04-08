@@ -1,34 +1,13 @@
 import Weather from 'stores/weather';
+import { createSubscription, disposeSubscription as unsubscribe, storeAttach } from 'shell/services/module_store_subscription';
 
-let callbackCollection = [];
-let storeSubscription = null;
-
-const handleSubscription = (properties) => {
-	_.each(callbackCollection, (callback) => {
-		callback(properties);
-	});
-};
-
-const subscribe = (callbacks) => {
-	callbackCollection = _.concat(callbackCollection, callbacks);
-	if (!storeSubscription) {
-		storeSubscription = Weather.subscribeToProperties(['weather'], handleSubscription);
-	}
-
-	return () => {
-		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));
-		if (_.isEmpty(callbackCollection) && storeSubscription) {
-			storeSubscription();
-			storeSubscription = null;
-		}
-	};
-};
-
-const unsubscribe = (subsciption) => {
-	if (subsciption) {
-		subsciption();
-	}
-};
+const { subscribe } = createSubscription({
+	store: Weather,
+	propertyNames: ['weather'],
+	mapState: (properties) => properties,
+	doubleRaf: false,
+	attachStore: storeAttach.afterCallbacks,
+});
 
 export {
 	subscribe,

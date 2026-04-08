@@ -1,7 +1,13 @@
 import Host from 'stores/host';
+import { createSubscription, disposeSubscription as unsubscribe, storeAttach } from 'shell/services/module_store_subscription';
 
-let callbackCollection = [];
-let storeSubscription = null;
+const { subscribe } = createSubscription({
+	store: Host,
+	propertyNames: ['system'],
+	mapState: (properties) => properties,
+	doubleRaf: false,
+	attachStore: storeAttach.afterCallbacks,
+});
 
 const getSystem = () => {
 	return Host.getSystem();
@@ -10,33 +16,6 @@ const getSystem = () => {
 const getFQDN = () => {
 	const system = getSystem();
 	return system.osInfo.fqdn;
-};
-
-const handleSubscription = (properties) => {
-	_.each(callbackCollection, (callback) => {
-		callback(properties);
-	});
-};
-
-const subscribe = (callbacks) => {
-	callbackCollection = _.concat(callbackCollection, callbacks);
-	if (!storeSubscription) {
-		storeSubscription = Host.subscribeToProperties(['system'], handleSubscription);
-	}
-
-	return () => {
-		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));
-		if (_.isEmpty(callbackCollection) && storeSubscription) {
-			storeSubscription();
-			storeSubscription = null;
-		}
-	};
-};
-
-const unsubscribe = (subscription) => {
-	if (subscription) {
-		subscription();
-	}
 };
 
 export {

@@ -92,7 +92,7 @@ const render = (state) => {
 		[tableOrder.direction]
 	);
 	_.each(folders, (folder) => {
-		const jobs = _.filter(state.jobs, (job) => { return job.name.startsWith('share') && job.data?.config?.comment === folder.comment; });
+		const jobs = _.filter(state.jobs, (job) => { return job.data?.config?.comment === folder.comment; });
 		template.innerHTML += folderTemplate({ folder, jobs, accessOn, prettyBytes });
 	});
 	

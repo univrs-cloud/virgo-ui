@@ -1,18 +1,29 @@
 import Job from 'stores/job';
 import User from 'stores/user';
+import { createSubscription, disposeSubscription as unsubscribe, storeAttach } from 'shell/services/module_store_subscription';
 
-let callbackCollection = [];
-let storeSubscription = null;
+const { subscribe } = createSubscription({
+	store: User,
+	propertyNames: ['users', 'jobs'],
+	filters: {
+		jobs: isUserModuleJob,
+	},
+	doubleRaf: true,
+	attachStore: storeAttach.beforeCallbacks,
+	mapState: (properties) => {
+		return { users: normalizeUsers(properties.users), jobs: properties.jobs };
+	},
+});
 
-const getJobs = () => {
-	return Job.getJobs();
-};
+function isUserModuleJob(job) {
+	return job?.name && _.startsWith(job.name, 'user');
+}
 
-const filter = (users) => {
+function normalizeUsers(users) {
 	if (_.isNull(users)) {
 		return null;
 	}
-	
+
 	return _.map(users, (user) => {
 		user.groups = _.sortBy(_.map(user.groups, (group) => {
 			if (typeof group === 'string') {
@@ -25,8 +36,12 @@ const filter = (users) => {
 	});
 }
 
+const getJobs = () => {
+	return _.filter(Job.getJobs() || [], isUserModuleJob);
+};
+
 const getUsers = () => {
-	return filter(User.getUsers());
+	return normalizeUsers(User.getUsers());
 };
 
 const createUser = (config) => {
@@ -51,39 +66,6 @@ const unlockUser = (config) => {
 
 const changePassword = (config) => {
 	User.changePassword(config);
-};
-
-const handleSubscription = (properties) => {
-	const users = filter(properties.users);
-	_.each(callbackCollection, (callback) => {
-		callback({ users, jobs: properties.jobs });
-	});
-};
-
-const subscribe = (callbacks) => {
-	if (!storeSubscription) {
-		storeSubscription = User.subscribeToProperties(['users', 'jobs'], handleSubscription);
-	}
-	callbackCollection = _.concat(callbackCollection, callbacks);
-	requestAnimationFrame(() => {
-		requestAnimationFrame(() => {
-			handleSubscription(_.pick(User.getState() || {}, ['users', 'jobs']));
-		});
-	});
-
-	return () => {
-		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));
-		if (_.isEmpty(callbackCollection) && storeSubscription) {
-			storeSubscription();
-			storeSubscription = null;
-		}
-	};
-};
-
-const unsubscribe = (subsciption) => {
-	if (subsciption) {
-		subsciption();
-	}
 };
 
 export {

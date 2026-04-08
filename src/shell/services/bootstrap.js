@@ -1,7 +1,13 @@
 import Host from 'stores/host';
+import { createSubscription, disposeSubscription as unsubscribe, storeAttach } from 'shell/services/module_store_subscription';
 
-let callbackCollection = [];
-let storeSubscription = null;
+const { subscribe } = createSubscription({
+	store: Host,
+	propertyNames: ['setupCompleted', 'update'],
+	mapState: (properties) => properties,
+	doubleRaf: false,
+	attachStore: storeAttach.afterCallbacks,
+});
 
 const reconnectSocket = () => {
 	Host.socket.connect();
@@ -9,33 +15,6 @@ const reconnectSocket = () => {
 
 const disconnectSocket = () => {
 	Host.socket.disconnect();
-};
-
-const handleSubscription = (properties) => {
-	_.each(callbackCollection, (callback) => {
-		callback(properties);
-	});
-};
-
-const subscribe = (callbacks) => {
-	callbackCollection = _.concat(callbackCollection, callbacks);
-	if (!storeSubscription) {
-		storeSubscription = Host.subscribeToProperties(['setupCompleted', 'update'], handleSubscription);
-	}
-
-	return () => {
-		callbackCollection = _.filter(callbackCollection, (callback) => !_.includes(callbacks, callback));
-		if (_.isEmpty(callbackCollection) && storeSubscription) {
-			storeSubscription();
-			storeSubscription = null;
-		}
-	};
-};
-
-const unsubscribe = (subscription) => {
-	if (subscription) {
-		subscription();
-	}
 };
 
 window.addEventListener('beforeunload', (event) => {

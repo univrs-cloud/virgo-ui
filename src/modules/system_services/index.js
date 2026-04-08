@@ -186,7 +186,7 @@ const render = (state) => {
 		[tableOrder.direction]
 	);
 	_.each(services, (service) => {
-		const jobs = _.filter(state.jobs, (job) => { return job.name.startsWith('host:system:service') && job.data?.config?.unit === service.unit; });
+		const jobs = _.filter(state.jobs, (job) => { return job.data?.config?.unit === service.unit; });
 		template.innerHTML += serviceTemplate({ service, jobs, serviceActionsTemplate, prettyBytes });
 	});
 
