@@ -5,7 +5,6 @@ const { subscribe } = createSubscription({
 	store: Host,
 	propertyNames: ['reboot', 'shutdown'],
 	mapState: (properties) => properties,
-	doubleRaf: true,
 	attachStore: storeAttach.beforeCallbacks,
 });
 

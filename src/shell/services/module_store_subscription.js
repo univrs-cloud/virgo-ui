@@ -7,13 +7,13 @@ const storeAttach = {
 	afterCallbacks: 'afterCallbacks',
 };
 
-/** Store slice subscription; `filters` (e.g. `{ jobs: (job) => ... }`) are applied in `Store.subscribeToProperties`. */
+/** Store slice subscription; `filters` (e.g. `{ jobs: (job) => ... }`) are applied in `Store.subscribeToProperties`.
+ * Subscribers are registered on the next macrotask so module init can finish before the first delivery. */
 const createSubscription = ({
 	store,
 	propertyNames,
 	mapState,
 	filters,
-	doubleRaf = false,
 	attachStore = storeAttach.beforeCallbacks,
 }) => {
 	let callbacks = [];
@@ -26,15 +26,12 @@ const createSubscription = ({
 		});
 	};
 
-	const pickSlice = () => {
-		return pickFilteredStoreSlice(store, propertyNames, filters || {});
-	};
-
 	const hasFilters = filters && !_.isEmpty(filters);
 	const subscribeOptions = hasFilters ? { filters } : {};
 
 	const addSubscribers = (newCallbacks) => {
 		const attachBefore = attachStore === storeAttach.beforeCallbacks;
+		const hadStopStore = !!stopStore;
 
 		if (attachBefore && !stopStore) {
 			stopStore = store.subscribeToProperties(propertyNames, deliver, subscribeOptions);
@@ -46,12 +43,10 @@ const createSubscription = ({
 			stopStore = store.subscribeToProperties(propertyNames, deliver, subscribeOptions);
 		}
 
-		if (doubleRaf) {
-			requestAnimationFrame(() => {
-				requestAnimationFrame(() => {
-					deliver(pickSlice());
-				});
-			});
+		/* First sync is empty for `beforeCallbacks`; extra subscribers get no store replay without this. */
+		const needsCatchUpDeliver = (attachBefore && !hadStopStore) || hadStopStore;
+		if (needsCatchUpDeliver && callbacks.length > 0) {
+			deliver(pickFilteredStoreSlice(store, propertyNames, filters || {}));
 		}
 	};
 
@@ -67,8 +62,18 @@ const createSubscription = ({
 
 	return {
 		subscribe: (newCallbacks) => {
-			addSubscribers(newCallbacks);
-			return createUnsubscribe(newCallbacks);
+			let innerUnsubscribe = null;
+			const timeoutId = setTimeout(() => {
+				addSubscribers(newCallbacks);
+				innerUnsubscribe = createUnsubscribe(newCallbacks);
+			}, 0);
+
+			return () => {
+				clearTimeout(timeoutId);
+				if (innerUnsubscribe) {
+					innerUnsubscribe();
+				}
+			};
 		},
 	};
 };

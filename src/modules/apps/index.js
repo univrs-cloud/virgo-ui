@@ -208,7 +208,6 @@ const render = (state) => {
 		return;
 	}
 	
-	const template = document.createElement('template');
 	apps = state.apps;
 	apps = filterListByQuery(apps, searchValue, ['title', 'name', 'icon', 'urls']);
 	apps = _.orderBy(apps,
@@ -220,14 +219,14 @@ const render = (state) => {
 		],
 		[tableOrder.direction]
 	);
-	_.each(apps, (app) => {
+	const rows = _.join(_.map(apps, (app) => {
 		const jobs = _.filter(state.jobs, (job) => { return job.data?.config?.name === app.name; });
-		template.innerHTML += appTemplate({ app, jobs, appActionsTemplate, prettyBytes });
-	});
+		return appTemplate({ app, jobs, appActionsTemplate, prettyBytes });
+	}), '');
 	
 	morphdom(
 		table.querySelector('tbody'),
-		`<tbody>${template.innerHTML}</tbody>`,
+		`<tbody>${rows}</tbody>`,
 		{ childrenOnly: true }
 	);
 

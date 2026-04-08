@@ -92,30 +92,29 @@ const render = (state) => {
 		return;
 	}
 
-	const template = document.createElement('template');
+	const rowSlot = /\s*<div class="row"><\/div>/;
+	let inner;
 	if (_.isEmpty(state.apps)) {
-		template.innerHTML = appsEmptyTemplate();
+		inner = appsEmptyTemplate();
 	} else {
-		_.each(state.apps, (apps, categoryName) => {
-			const categoryTemplate = document.createElement('template');
-			categoryTemplate.innerHTML = categorySomething({ name: categoryName });
-			const category = categoryTemplate.content.querySelector('.group .row');
-			apps = _.orderBy(apps, ['order'], ['asc']);
-			_.each(apps, (entity) => {
+		inner = _.join(_.map(state.apps, (categoryApps, categoryName) => {
+			const ordered = _.orderBy(categoryApps, ['order'], ['asc']);
+			const cardsHtml = _.join(_.map(ordered, (entity) => {
 				if (entity.type === 'app') {
-					category.insertAdjacentHTML('beforeend', appTemplate({ app: entity }));
+					return appTemplate({ app: entity });
 				}
 				if (entity.type === 'bookmark') {
-					category.insertAdjacentHTML('beforeend', bookmarkTemplate({ bookmark: entity }));
+					return bookmarkTemplate({ bookmark: entity });
 				}
-			});
-			template.innerHTML += categoryTemplate.innerHTML;
-		});
+				return '';
+			}), '');
+			return categorySomething({ name: categoryName }).replace(rowSlot, `<div class="row">${cardsHtml}</div>`);
+		}), '');
 	}
 	
 	morphdom(
 		container,
-		`<div>${template.innerHTML}</div>`,
+		`<div>${inner}</div>`,
 		{
 			childrenOnly: true,
 			onBeforeElUpdated: (fromEl, toEl) => {

@@ -6,7 +6,6 @@ const { subscribe } = createSubscription({
 	store: Docker,
 	propertyNames: ['containers', 'update'],
 	mapState: (properties) => properties,
-	doubleRaf: false,
 	attachStore: storeAttach.afterCallbacks,
 });
 

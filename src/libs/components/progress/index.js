@@ -33,18 +33,18 @@ export class ProgressBar extends LitElement {
 	static get properties() {
 		return {
 			color: { type: String, reflect: true, converter: {
-                fromAttribute: (value) => { return value ?? 'blue'; }
-            } },
+				fromAttribute: (value) => { return value ?? 'blue'; }
+			} },
 			tint: { type: String, reflect: true, converter: {
-                fromAttribute: (value) => { return value ?? 300; }
-            }},
+				fromAttribute: (value) => { return value ?? 300; }
+			}},
 			width: { type: Number, reflect: true },
 			warningThreshold: { type: Number, reflect: true, attribute: 'warning-threshold', converter: {
-                fromAttribute: (value) => { return value ?? 80; }
-            } },
+				fromAttribute: (value) => { return value ?? 80; }
+			} },
 			dangerThreshold: { type: Number, reflect: true, attribute: 'danger-threshold', converter: {
-                fromAttribute: (value) => { return value ?? 90; }
-            } },
+				fromAttribute: (value) => { return value ?? 90; }
+			} },
 			striped: { type: Boolean, reflect: true, converter: {
 				fromAttribute: (value) => { return value === null || value === '' || value === 'true' }
 			} },

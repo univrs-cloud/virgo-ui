@@ -78,7 +78,6 @@ const render = (state) => {
 		return;
 	}
 	
-	const template = document.createElement('template');
 	const accessOn = _.find(state.networkInterface?.addrInfo, { family: 'inet' })?.local;
 	let folders = state.folders;
 	folders = filterListByQuery(folders, searchValue, ['name', 'path', 'comment', 'validUsers']);
@@ -91,14 +90,14 @@ const render = (state) => {
 		],
 		[tableOrder.direction]
 	);
-	_.each(folders, (folder) => {
+	const rows = _.join(_.map(folders, (folder) => {
 		const jobs = _.filter(state.jobs, (job) => { return job.data?.config?.comment === folder.comment; });
-		template.innerHTML += folderTemplate({ folder, jobs, accessOn, prettyBytes });
-	});
+		return folderTemplate({ folder, jobs, accessOn, prettyBytes });
+	}), '');
 	
 	morphdom(
 		table.querySelector('tbody'),
-		`<tbody>${template.innerHTML}</tbody>`,
+		`<tbody>${rows}</tbody>`,
 		{ childrenOnly: true }
 	);
 

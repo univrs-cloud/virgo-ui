@@ -48,7 +48,6 @@ const render = (state) => {
 		return;
 	}
 	
-	const template = document.createElement('template');
 	let users = state.users;
 	users = filterListByQuery(users, searchValue, ['username', 'email', 'fullname', 'groups', 'shell', 'uid']);
 	users = _.orderBy(users,
@@ -60,15 +59,15 @@ const render = (state) => {
 		],
 		[tableOrder.direction]
 	);
-	_.each(users, (user) => {
+	const rows = _.join(_.map(users, (user) => {
 		const jobs = _.filter(state.jobs, (job) => { return job.data?.config?.username === user.username; });
 		const isSameAsLoggedIn = (user.username === account?.user);
-		template.innerHTML += userTemplate({ user, jobs, isSameAsLoggedIn });
-	});
+		return userTemplate({ user, jobs, isSameAsLoggedIn });
+	}), '');
 	
 	morphdom(
 		table.querySelector('tbody'),
-		`<tbody>${template.innerHTML}</tbody>`,
+		`<tbody>${rows}</tbody>`,
 		{ childrenOnly: true }
 	);
 

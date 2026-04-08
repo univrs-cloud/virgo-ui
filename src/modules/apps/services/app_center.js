@@ -9,7 +9,6 @@ const { subscribe } = createSubscription({
 	filters: {
 		jobs: isAppInstallJob,
 	},
-	doubleRaf: true,
 	attachStore: storeAttach.beforeCallbacks,
 	mapState: (properties) => {
 		return { templates: mapTemplates(properties), jobs: properties.jobs };

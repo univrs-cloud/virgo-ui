@@ -5,7 +5,6 @@ const { subscribe } = createSubscription({
 	store: Weather,
 	propertyNames: ['weather'],
 	mapState: (properties) => properties,
-	doubleRaf: false,
 	attachStore: storeAttach.afterCallbacks,
 });
 

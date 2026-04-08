@@ -5,7 +5,6 @@ const { subscribe } = createSubscription({
 	store: Host,
 	propertyNames: ['system', 'memory', 'drives'],
 	mapState: (properties) => properties,
-	doubleRaf: true,
 	attachStore: storeAttach.beforeCallbacks,
 });
 

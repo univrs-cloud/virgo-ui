@@ -8,11 +8,11 @@ export class Badge extends LitElement {
 	static get properties() {
 		return {
 			color: { type: String, reflect: true, converter: {
-                fromAttribute: (value) => { return value ?? 'blue'; }
-            } },
+				fromAttribute: (value) => { return value ?? 'blue'; }
+			} },
 			tint: { type: String, reflect: true, converter: {
-                fromAttribute: (value) => { return value ?? 100; }
-            }},
+				fromAttribute: (value) => { return value ?? 100; }
+			}},
 			pill: { type: Boolean, reflect: true },
 			border: { type: Boolean, reflect: true },
 			tip: { type: String, reflect: true }

@@ -5,7 +5,6 @@ const { subscribe } = createSubscription({
 	store: Host,
 	propertyNames: ['checkUpdates', 'updates'],
 	mapState: (properties) => properties,
-	doubleRaf: true,
 	attachStore: storeAttach.beforeCallbacks,
 });
 

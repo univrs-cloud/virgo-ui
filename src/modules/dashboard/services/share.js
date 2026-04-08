@@ -11,7 +11,6 @@ const { subscribe } = createSubscription({
 			['asc']
 		),
 	}),
-	doubleRaf: true,
 	attachStore: storeAttach.beforeCallbacks,
 });
 

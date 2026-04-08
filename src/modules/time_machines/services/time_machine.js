@@ -9,7 +9,6 @@ const { subscribe } = createSubscription({
 	filters: {
 		jobs: isShareJob,
 	},
-	doubleRaf: true,
 	attachStore: storeAttach.beforeCallbacks,
 	mapState: (properties) => {
 		const timeMachines = filterTimeMachines(properties.shares);
