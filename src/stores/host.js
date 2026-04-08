@@ -16,6 +16,7 @@ class Host extends Store {
 			networkStats: null,
 			storage: null,
 			drives: null,
+			services: null,
 			ups: null,
 			time: null
 		};
@@ -140,6 +141,7 @@ class Host extends Store {
 	}
 
 	syncServices() {
+		this.setState({ services: null }, 'services_fetch_start');
 		this.socket.emit('host:system:services:fetch');
 	}
 
