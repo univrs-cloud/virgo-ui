@@ -1,0 +1,19 @@
+<li class="list-group-item indexer-stats py-3">
+	<%if (state.indexerStats === null) {%>
+		<div class="spinner-border spinner-border-sm text-gray-600"></div>
+	<%} else {%>
+		<h6 class="d-flex align-items-center text-body-emphasis mb-2">
+			<i class="icon-regular icon-magnifying-glass icon-fw me-1 text-gray-500"></i>
+			Index
+		</h6>
+		<div class="lh-sm text-body-tertiary small">
+			<div class="d-flex justify-content-between gap-2"><span>Database</span><span class="text-body-secondary text-end"><%=prettyBytes(state.indexerStats.db_bytes || 0, { binary: true })%></span></div>
+			<div class="d-flex justify-content-between gap-2"><span>Datasets</span><span class="text-body-secondary text-end"><%=Number(state.indexerStats.datasets).toLocaleString()%></span></div>
+			<div class="d-flex justify-content-between gap-2"><span>Snapshots</span><span class="text-body-secondary text-end"><%=Number(state.indexerStats.snapshots).toLocaleString()%></span></div>
+			<div class="d-flex justify-content-between gap-2"><span>Files</span><span class="text-body-secondary text-end"><%=Number(state.indexerStats.files).toLocaleString()%></span></div>
+			<div class="d-flex justify-content-between gap-2 ps-2"><span>Versions</span><span class="text-body-secondary text-end"><%=Number(state.indexerStats.versions).toLocaleString()%></span></div>
+			<div class="d-flex justify-content-between gap-2 ps-2"><span>Changes</span><span class="text-body-secondary text-end"><%=Number(state.indexerStats.changes).toLocaleString()%></span></div>
+			<div class="d-flex justify-content-between gap-2 ps-2"><span>Deleted</span><span class="text-body-secondary text-end"><%=Number(state.indexerStats.deleted).toLocaleString()%></span></div>
+		</div>
+	<%}%>
+</li>

@@ -6,6 +6,7 @@ import resourceStorageDataPartial from 'modules/dashboard/partials/resource_stor
 import resourceNetworkPartial from 'modules/dashboard/partials/resource_network.html';
 import resourceUpsPartial from 'modules/dashboard/partials/resource_ups.html';
 import resourceTimePartial from 'modules/dashboard/partials/resource_time.html';
+import resourceIndexerStatsPartial from 'modules/dashboard/partials/resource_indexer_stats.html';
 import * as networkUsage from 'modules/dashboard/network_usage';
 import * as resourceMonitorService from 'modules/dashboard/services/resource_monitor';
 
@@ -17,6 +18,7 @@ const storageDataTemplate = _.template(resourceStorageDataPartial);
 const networkTemplate = _.template(resourceNetworkPartial);
 const upsTemplate = _.template(resourceUpsPartial);
 const timeTemplate = _.template(resourceTimePartial);
+const indexerStatsTemplate = _.template(resourceIndexerStatsPartial);
 const container = document.querySelector('#resources-monitor');
 
 const render = (state) => {
@@ -29,7 +31,8 @@ const render = (state) => {
 			storageData: storageDataTemplate({ state, prettyBytes }),
 			network: networkTemplate({ state, prettyBytes }),
 			ups: upsTemplate({ state }),
-			time: timeTemplate({ state, prettyMilliseconds })
+			time: timeTemplate({ state, prettyMilliseconds }),
+			indexerStats: indexerStatsTemplate({ state, prettyBytes })
 		}),
 		{
 			onBeforeElUpdated: (fromEl, toEl) => {

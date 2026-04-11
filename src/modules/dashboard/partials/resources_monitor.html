@@ -15,6 +15,9 @@
 				<%=storageData%>
 				<%=ups%>
 				<%=time%>
+				<%if (isAuthenticated && isAdmin) {%>
+					<%=indexerStats%>
+				<%}%>
 			</ul>
 		</div>
 	</div>
