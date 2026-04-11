@@ -32,7 +32,7 @@ const render = (state) => {
 			network: networkTemplate({ state, prettyBytes }),
 			ups: upsTemplate({ state }),
 			time: timeTemplate({ state, prettyMilliseconds }),
-			indexerStats: indexerStatsTemplate({ state, prettyBytes })
+			indexerStats: indexerStatsTemplate({ state, prettyBytes, moment })
 		}),
 		{
 			onBeforeElUpdated: (fromEl, toEl) => {
