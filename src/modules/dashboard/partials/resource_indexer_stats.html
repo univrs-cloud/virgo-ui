@@ -7,13 +7,14 @@
 			Index
 		</h6>
 		<div class="lh-sm text-body-tertiary small">
-			<div class="d-flex justify-content-between gap-2"><span>Database</span><span class="text-body-secondary text-end"><%=prettyBytes(state.indexerStats.db_bytes || 0, { binary: true })%></span></div>
+			<div class="d-flex justify-content-between gap-2"><span>Last run</span><span class="text-body-secondary text-end"><%=(state.indexerStats.lastRunAt ? moment(state.indexerStats.lastRunAt).fromNow() : '&mdash;')%></span></div>
+			<div class="d-flex justify-content-between gap-2"><span>DB size</span><span class="text-body-secondary text-end"><%=prettyBytes(state.indexerStats.dbBytes || 0, { binary: true })%></span></div>
 			<div class="d-flex justify-content-between gap-2"><span>Datasets</span><span class="text-body-secondary text-end"><%=Number(state.indexerStats.datasets).toLocaleString()%></span></div>
-			<div class="d-flex justify-content-between gap-2"><span>Snapshots</span><span class="text-body-secondary text-end"><%=Number(state.indexerStats.snapshots).toLocaleString()%></span></div>
-			<div class="d-flex justify-content-between gap-2"><span>Files</span><span class="text-body-secondary text-end"><%=Number(state.indexerStats.files).toLocaleString()%></span></div>
-			<div class="d-flex justify-content-between gap-2 ps-2"><span>Versions</span><span class="text-body-secondary text-end"><%=Number(state.indexerStats.versions).toLocaleString()%></span></div>
-			<div class="d-flex justify-content-between gap-2 ps-2"><span>Changes</span><span class="text-body-secondary text-end"><%=Number(state.indexerStats.changes).toLocaleString()%></span></div>
-			<div class="d-flex justify-content-between gap-2 ps-2"><span>Deleted</span><span class="text-body-secondary text-end"><%=Number(state.indexerStats.deleted).toLocaleString()%></span></div>
+			<div class="d-flex justify-content-between gap-2"><span>Snapshots</span><span class="text-body-secondary text-end"><%=Number(state.indexerStats.snapshots).toLocaleString()%> (<%=Number(state.indexerStats.indexed != null ? state.indexerStats.indexed : 0).toLocaleString()%> indexed)</span></div>
+			<div class="d-flex justify-content-between gap-2"><span>Unique files</span><span class="text-body-secondary text-end"><%=Number(state.indexerStats.files).toLocaleString()%></span></div>
+			<div class="d-flex justify-content-between gap-2"><span>File versions</span><span class="text-body-secondary text-end"><%=Number(state.indexerStats.versions).toLocaleString()%></span></div>
+			<div class="d-flex justify-content-between gap-2"><span>Change events</span><span class="text-body-secondary text-end"><%=Number(state.indexerStats.changes).toLocaleString()%></span></div>
+			<div class="d-flex justify-content-between gap-2"><span>Deleted files</span><span class="text-body-secondary text-end"><%=Number(state.indexerStats.deleted).toLocaleString()%></span></div>
 		</div>
 	<%}%>
 </li>
