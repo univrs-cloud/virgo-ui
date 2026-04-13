@@ -162,6 +162,42 @@ const performServiceAction = async (event) => {
 	appService.performServiceAction(config);
 };
 
+const updateIndexer = async (event) => {
+	if (!event.target.classList.contains('indexer-switch')) {
+		return;
+	}
+
+	const name = event.target.closest('.item')?.dataset?.name;
+	if (!name) {
+		return;
+	}
+
+	const app = _.find(appService.getApps() || [], { name });
+	if (!app?.dataset) {
+		return;
+	}
+
+	const dataset = app.dataset;
+	const optedIn = event.target.checked;
+
+	if (!optedIn) {
+		if (!await confirm('Turn off snapshot indexing for this app? You can turn it back on later.', { buttons: [{ text: 'Turn off', class: 'btn-danger' }] })) {
+			const switchEl = details.querySelector('u-switch.indexer-switch');
+			if (switchEl) {
+				switchEl.checked = true;
+			}
+			return;
+		}
+	}
+
+	const config = {
+		name,
+		dataset,
+		optedIn
+	};
+	appService.updateIndexerConfig(config);
+};
+
 const renderAppDetails = (name) => {
 	if (!name) {
 		return;
@@ -256,6 +292,7 @@ module.addEventListener('click', compress);
 module.addEventListener('click', update);
 module.addEventListener('click', performAppAction);
 module.addEventListener('click', performServiceAction);
+module.addEventListener('switch-changed', updateIndexer);
 searchInput.addEventListener('input', search);
 table.querySelector('thead').addEventListener('click', order);
 table.querySelector('tbody').addEventListener('click', expand);
