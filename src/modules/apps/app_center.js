@@ -4,7 +4,7 @@ import * as appCenterService from 'modules/apps/services/app_center';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', appCenterModalPartial);
 
-let subscription;
+let unsubscribe;
 const itemTemplate = _.template(itemPartial);
 const modal = document.querySelector('#app-center');
 const modalBody = modal.querySelector('.modal-body');
@@ -59,11 +59,11 @@ const render = (state) => {
 
 modal.addEventListener('click', openInstallModal);
 modal.addEventListener('show.bs.modal', () => {
-	subscription = appCenterService.subscribe([render])
+	unsubscribe = appCenterService.subscribe([render]);
 });
 modal.addEventListener('hide.bs.modal', () => {
-	appCenterService.unsubscribe(subscription);
-	subscription = null;
+	unsubscribe?.();
+	unsubscribe = null;
 });
 modal.addEventListener('hidden.bs.modal', () => {
 	rowExplore.innerHTML = '';

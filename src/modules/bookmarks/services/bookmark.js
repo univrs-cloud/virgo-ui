@@ -1,6 +1,6 @@
 import Job from 'stores/job';
 import Bookmark from 'stores/bookmark';
-import { createSubscription, disposeSubscription as unsubscribe, storeAttach } from 'shell/services/module_store_subscription';
+import { createSubscription, storeAttach } from 'shell/services/module_store_subscription';
 
 const { subscribe } = createSubscription({
 	stores: [
@@ -60,7 +60,6 @@ const deleteBookmark = (config) => {
 
 export {
 	subscribe,
-	unsubscribe,
 	getJobs,
 	getBookmarks,
 	createBookmark,

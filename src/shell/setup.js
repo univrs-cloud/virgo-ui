@@ -4,7 +4,7 @@ import navigationPartial from 'shell/partials/navigation_setup.html';
 import mainPartial from 'shell/partials/main.html';
 import * as systemService from 'shell/services/system';
 
-let subscription;
+let unsubscribe;
 const headerTemplate = _.template(headerPartial);
 const navigationTemplate = _.template(navigationPartial);
 const mainTemplate = _.template(mainPartial);
@@ -17,8 +17,8 @@ const renderSerialNumber = (state) => {
 	}
 
 	_.each(document.querySelectorAll('header .serial-number'), (element) => { element.innerHTML = `SN:${state.system.serial || '&mdash;'}`; });
-	systemService.unsubscribe(subscription);
-	subscription = null;
+	unsubscribe?.();
+	unsubscribe = null;
 };
 
 const renderNavigation = () => {
@@ -49,4 +49,4 @@ page('*', (ctx) => {
 });
 page.start();
 
-subscription = systemService.subscribe([renderSerialNumber]);
+unsubscribe = systemService.subscribe([renderSerialNumber]);

@@ -1,5 +1,5 @@
 import Host from 'stores/host';
-import { createSubscription, disposeSubscription as unsubscribe, storeAttach } from 'shell/services/module_store_subscription';
+import { createSubscription, storeAttach } from 'shell/services/module_store_subscription';
 
 const { subscribe: subscribeToUpdates } = createSubscription({
 	stores: [
@@ -50,7 +50,6 @@ const getUpdate = () => {
 export {
 	subscribeToUpdates,
 	subscribeToUpdate,
-	unsubscribe,
 	checkUpdates,
 	update,
 	completeUpdate,

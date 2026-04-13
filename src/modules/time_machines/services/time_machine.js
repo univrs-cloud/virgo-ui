@@ -1,7 +1,7 @@
 import Job from 'stores/job';
 import Host from 'stores/host';
 import Share from 'stores/share';
-import { createSubscription, disposeSubscription as unsubscribe, storeAttach } from 'shell/services/module_store_subscription';
+import { createSubscription, storeAttach } from 'shell/services/module_store_subscription';
 
 const { subscribe } = createSubscription({
 	stores: [
@@ -74,7 +74,6 @@ const deleteTimeMachine = (config) => {
 
 export {
 	subscribe,
-	unsubscribe,
 	getJobs,
 	getSystem,
 	getTimeMachines,

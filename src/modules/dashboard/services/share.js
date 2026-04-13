@@ -1,5 +1,5 @@
 import Share from 'stores/share';
-import { createSubscription, disposeSubscription as unsubscribe, storeAttach } from 'shell/services/module_store_subscription';
+import { createSubscription, storeAttach } from 'shell/services/module_store_subscription';
 
 const { subscribe } = createSubscription({
 	stores: [
@@ -19,6 +19,5 @@ const { subscribe } = createSubscription({
 });
 
 export {
-	subscribe,
-	unsubscribe
+	subscribe
 };

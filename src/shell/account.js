@@ -2,7 +2,7 @@ import accountPartial from 'shell/partials/account.html';
 import * as systemService from 'shell/services/system';
 import * as dockerService from 'shell/services/docker';
 
-let subsciption;
+let unsubscribe;
 let authDomain = null;
 let fqdn = systemService.getFQDN();
 const accountTemplate = _.template(accountPartial);
@@ -21,8 +21,8 @@ const render = (state) => {
 		return;
 	}
 
-	dockerService.unsubscribe(subsciption);
-	subsciption = null;
+	unsubscribe?.();
+	unsubscribe = null;
 	
 	const isUpdating = !_.isNull(state.update);
 	const projectContainers = _.filter(state.containers, (container) => {
@@ -39,7 +39,7 @@ const render = (state) => {
 const init = () => {
 	document.body.addEventListener('click', signOut);
 
-	subsciption = dockerService.subscribe([render]);
+	unsubscribe = dockerService.subscribe([render]);
 };
 
 export {

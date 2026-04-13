@@ -1,6 +1,6 @@
 import Job from 'stores/job';
 import Configuration from 'stores/configuration';
-import { createSubscription, disposeSubscription as unsubscribe, storeAttach } from 'shell/services/module_store_subscription';
+import { createSubscription, storeAttach } from 'shell/services/module_store_subscription';
 
 function isSettingsModuleJob() {
 	return false;
@@ -42,7 +42,6 @@ const updateLocation = (config) => {
 
 export {
 	subscribe,
-	unsubscribe,
 	getJobs,
 	getConfiguration,
 	updateSmtp,
