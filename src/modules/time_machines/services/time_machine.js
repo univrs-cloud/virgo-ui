@@ -4,8 +4,20 @@ import Share from 'stores/share';
 import { createSubscription, disposeSubscription as unsubscribe, storeAttach } from 'shell/services/module_store_subscription';
 
 const { subscribe } = createSubscription({
-	store: Share,
-	propertyNames: ['shares', 'system', 'jobs'],
+	stores: [
+		{
+			store: Host,
+			propertyNames: ['system']
+		},
+		{
+			store: Share,
+			propertyNames: ['shares']
+		},
+		{
+			store: Job,
+			propertyNames: ['jobs']
+		}
+	],
 	filters: {
 		jobs: isShareJob,
 	},

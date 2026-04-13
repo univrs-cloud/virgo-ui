@@ -2,15 +2,19 @@ import Docker from 'stores/docker';
 import { createSubscription, disposeSubscription as unsubscribe, storeAttach } from 'shell/services/module_store_subscription';
 
 const { subscribe } = createSubscription({
-	store: Docker,
-	propertyNames: ['configured', 'containers', 'imageUpdates'],
+	stores: [
+		{
+			store: Docker,
+			propertyNames: ['configured', 'containers', 'imageUpdates']
+		}
+	],
+	attachStore: storeAttach.beforeCallbacks,
 	mapState: (properties) => {
 		if (_.isNull(properties.configured) || _.isNull(properties.containers)) {
 			return { apps: null };
 		}
 		return { apps: composeDashboardApps(properties) };
 	},
-	attachStore: storeAttach.beforeCallbacks,
 });
 
 function composeDashboardApps(properties) {

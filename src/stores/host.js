@@ -15,6 +15,7 @@ class Host extends Store {
 			memory: null,
 			networkStats: null,
 			storage: null,
+			snapshots: null,
 			drives: null,
 			services: null,
 			ups: null,

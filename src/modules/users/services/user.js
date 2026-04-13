@@ -3,8 +3,16 @@ import User from 'stores/user';
 import { createSubscription, disposeSubscription as unsubscribe, storeAttach } from 'shell/services/module_store_subscription';
 
 const { subscribe } = createSubscription({
-	store: User,
-	propertyNames: ['users', 'jobs'],
+	stores: [
+		{
+			store: User,
+			propertyNames: ['users']
+		},
+		{
+			store: Job,
+			propertyNames: ['jobs']
+		}
+	],
 	filters: {
 		jobs: isUserModuleJob,
 	},

@@ -3,8 +3,16 @@ import Host from 'stores/host';
 import { createSubscription, disposeSubscription as unsubscribe, storeAttach } from 'shell/services/module_store_subscription';
 
 const { subscribe } = createSubscription({
-	store: Host,
-	propertyNames: ['services', 'jobs'],
+	stores: [
+		{
+			store: Host,
+			propertyNames: ['services']
+		},
+		{
+			store: Job,
+			propertyNames: ['jobs']
+		}
+	],
 	filters: {
 		jobs: isSystemServiceJob,
 	},

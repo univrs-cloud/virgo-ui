@@ -1,12 +1,28 @@
 import Job from 'stores/job';
-import Host from 'stores/host';
 import Docker from 'stores/docker';
-import Indexer from 'stores/indexer'; // Need to init store
+import Host from 'stores/host';
+import Indexer from 'stores/indexer';
 import { createSubscription, disposeSubscription as unsubscribe, storeAttach } from 'shell/services/module_store_subscription';
 
 const { subscribe } = createSubscription({
-	store: Docker,
-	propertyNames: ['configured', 'containers', 'appsResourceMetrics', 'imageUpdates', 'snapshots', 'jobs', 'indexerDatasets'],
+	stores: [
+		{
+			store: Docker,
+			propertyNames: ['configured', 'containers', 'imageUpdates', 'appsResourceMetrics']
+		},
+		{
+			store: Host,
+			propertyNames: ['snapshots']
+		},
+		{
+			store: Indexer,
+			propertyNames: ['indexerDatasets']
+		},
+		{
+			store: Job,
+			propertyNames: ['jobs']
+		}
+	],
 	filters: {
 		jobs: isAppModuleJob,
 	},

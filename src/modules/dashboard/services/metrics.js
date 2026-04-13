@@ -2,10 +2,14 @@ import Metrics from 'stores/metrics';
 import { createSubscription, disposeSubscription as unsubscribe, storeAttach } from 'shell/services/module_store_subscription';
 
 const { subscribe: baseSubscribe } = createSubscription({
-	store: Metrics,
-	propertyNames: ['metrics'],
-	mapState: (properties) => ({ metrics: properties.metrics }),
+	stores: [
+		{
+			store: Metrics,
+			propertyNames: ['metrics']
+		}
+	],
 	attachStore: storeAttach.beforeCallbacks,
+	mapState: (properties) => ({ metrics: properties.metrics }),
 });
 
 const subscribe = (callbacks) => {

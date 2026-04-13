@@ -3,8 +3,16 @@ import Bookmark from 'stores/bookmark';
 import { createSubscription, disposeSubscription as unsubscribe, storeAttach } from 'shell/services/module_store_subscription';
 
 const { subscribe } = createSubscription({
-	store: Bookmark,
-	propertyNames: ['configured', 'jobs'],
+	stores: [
+		{
+			store: Bookmark,
+			propertyNames: ['configured']
+		},
+		{
+			store: Job,
+			propertyNames: ['jobs']
+		}
+	],
 	filters: {
 		jobs: isBookmarkModuleJob,
 	},
