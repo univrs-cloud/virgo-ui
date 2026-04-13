@@ -66,7 +66,11 @@ const createSubscription = ({
 	const deliverMerged = () => {
 		const payload = mapState(mergedProperties);
 		_.each(callbacks, (callback) => {
-			callback(payload);
+			try {
+				callback(payload);
+			} catch (error) {
+				console.error('createSubscription: subscriber callback threw', error);
+			}
 		});
 	};
 
