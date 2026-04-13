@@ -52,7 +52,7 @@ export class Switch extends LitElement {
 	render() {
 		return html`
 			${this.label ? html`<small class="fw-light text-body-tertiary">${this.label}</small>` : ''}
-			<div class="d-flex align-items-center mb-3">
+			<div class="d-flex align-items-center">
 				${this.offLabel ? html`<div class="form-check form-switch form-check-inline ps-0 mb-0 me-2"><label class="form-check-label">${this.offLabel}</label> </div>` : ''}
 				<div class="form-check form-switch form-check-inline mb-0">
 					<input

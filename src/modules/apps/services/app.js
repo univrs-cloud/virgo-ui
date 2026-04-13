@@ -1,18 +1,19 @@
+import Job from 'stores/job';
 import Host from 'stores/host';
 import Docker from 'stores/docker';
-import Job from 'stores/job';
+import Indexer from 'stores/indexer'; // Need to init store
 import { createSubscription, disposeSubscription as unsubscribe, storeAttach } from 'shell/services/module_store_subscription';
 
 const { subscribe } = createSubscription({
 	store: Docker,
-	propertyNames: ['configured', 'containers', 'appsResourceMetrics', 'imageUpdates', 'snapshots', 'jobs'],
+	propertyNames: ['configured', 'containers', 'appsResourceMetrics', 'imageUpdates', 'snapshots', 'jobs', 'indexerDatasets'],
 	filters: {
 		jobs: isAppModuleJob,
 	},
 	attachStore: storeAttach.beforeCallbacks,
 	mapState: (properties) => {
 		return {
-			apps: composeApps(properties.configured, properties.containers, properties.appsResourceMetrics, properties.imageUpdates, properties.snapshots),
+			apps: composeApps(properties.configured, properties.containers, properties.appsResourceMetrics, properties.imageUpdates, properties.snapshots, properties.indexerDatasets),
 			jobs: properties.jobs,
 		};
 	},
@@ -22,7 +23,7 @@ function isAppModuleJob(job) {
 	return job?.name && _.startsWith(job.name, 'app');
 }
 
-function composeApps(configured, containers, appsResourceMetrics, imageUpdates, snapshots) {
+function composeApps(configured, containers, appsResourceMetrics, imageUpdates, snapshots, indexerDatasets) {
 	if (_.isNull(configured) || _.isNull(containers)) {
 		return null;
 	}
@@ -61,8 +62,9 @@ function composeApps(configured, containers, appsResourceMetrics, imageUpdates, 
 			entity.urls = Docker.composeUrlFromLabels(entity.projectContainers);
 			entity.resourceMetrics = _.find(appsResourceMetrics, { name: entity.name });
 			entity.snapshots = _.filter(_.values(snapshots), (snapshot) => {
-				return snapshot.dataset === `messier/apps/${entity.name}`;
+				return snapshot.dataset === entity.dataset;
 			});
+			entity.indexer = _.isArray(indexerDatasets) && _.includes(indexerDatasets, entity.dataset);
 			return entity;
 		});
 }
@@ -76,7 +78,7 @@ const getJobs = () => {
 };
 
 const getApps = () => {
-	return composeApps(Docker.getConfigured(), Docker.getContainers(), Docker.getAppsResourceMetrics(), Docker.getImageUpdates(), Host.getSnapshots());
+	return composeApps(Docker.getConfigured(), Docker.getContainers(), Docker.getAppsResourceMetrics(), Docker.getImageUpdates(), Host.getSnapshots(), Indexer.getDatasets());
 };
 
 const update = (config) => {
@@ -91,6 +93,10 @@ const performServiceAction = (config) => {
 	Docker.performServiceAction(config);
 };
 
+const updateIndexerConfig = (config) => {
+	Indexer.updateDatasets(config);
+};
+
 export {
 	subscribe,
 	unsubscribe,
@@ -99,5 +105,6 @@ export {
 	getApps,
 	update,
 	performAppAction,
-	performServiceAction
+	performServiceAction,
+	updateIndexerConfig
 };

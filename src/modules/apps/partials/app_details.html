@@ -243,10 +243,13 @@
 
 					<div class="snapshots card mb-2 mt-2">
 						<div class="card-body py-1">
-							<div class="d-flex align-items-center">
-								<i class="icon-light icon-camera icon-fw text-body-tertiary me-2"></i>
-								<span>Snapshots</span>
-								<small class="text-body-tertiary ms-2">(<%=_.size(app.snapshots)%>)</small>
+							<div class="d-flex align-items-center justify-content-between gap-2">
+								<div class="d-flex align-items-center min-w-0">
+									<i class="icon-light icon-camera icon-fw text-body-tertiary me-2"></i>
+									<span>Snapshots</span>
+									<small class="text-body-tertiary ms-2">(<%=_.size(app.snapshots)%>)</small>
+								</div>
+								<u-switch class="indexer-switch me-n3 flex-shrink-0" on-label="Indexer" <%=(app.indexer ? 'checked' : '')%>></u-switch>
 							</div>
 						</div>
 						<table class="table table-borderless table-hover align-middle m-0" style="border-collapse: separate; border-spacing: 0;">
