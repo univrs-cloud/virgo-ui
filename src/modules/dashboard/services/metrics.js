@@ -1,5 +1,5 @@
 import Metrics from 'stores/metrics';
-import { createSubscription, disposeSubscription as unsubscribe, storeAttach } from 'shell/services/module_store_subscription';
+import { createSubscription, storeAttach } from 'shell/services/module_store_subscription';
 
 const { subscribe: baseSubscribe } = createSubscription({
 	stores: [
@@ -36,7 +36,6 @@ const disable = () => {
 
 export {
 	subscribe,
-	unsubscribe,
 	fetch,
 	getMetrics,
 	enable,

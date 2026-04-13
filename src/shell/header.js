@@ -6,7 +6,7 @@ import * as systemService from 'shell/services/system';
 import * as softwareService from 'shell/services/software';
 import page from 'page';
 
-let subscription;
+let unsubscribe;
 const headerTemplate = _.template(headerPartial);
 const navigationTemplate = _.template(navigationPartial);
 const header = document.querySelector('header');
@@ -17,8 +17,8 @@ const renderSerialNumber = (state) => {
 	}
 
 	_.each(header.querySelectorAll('.serial-number'), (element) => { element.innerHTML = `SN:${state.system.serial || '&mdash;'}`; });
-	systemService.unsubscribe(subscription);
-	subscription = null;
+	unsubscribe?.();
+	unsubscribe = null;
 };
 
 const renderSystemUpdatesBadge = (state) => {
@@ -48,6 +48,6 @@ account.init();
 notifications.init();
 
 softwareService.subscribeToUpdates([renderSystemUpdatesBadge]);
-subscription = systemService.subscribe([renderSerialNumber]);
+unsubscribe = systemService.subscribe([renderSerialNumber]);
 
 import('shell/weather');

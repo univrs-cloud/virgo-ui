@@ -1,7 +1,7 @@
 import Job from 'stores/job';
 import Host from 'stores/host';
 import Configuration from 'stores/configuration';
-import { createSubscription, disposeSubscription as unsubscribe, storeAttach } from 'shell/services/module_store_subscription';
+import { createSubscription, storeAttach } from 'shell/services/module_store_subscription';
 
 const { subscribe } = createSubscription({
 	stores: [
@@ -72,7 +72,6 @@ const isTrustedProxyAddressTaken = (address, ignoreAddress) => {
 
 export {
 	subscribe,
-	unsubscribe,
 	getJobs,
 	getSystem,
 	updateHostIdentifier,

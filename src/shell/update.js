@@ -7,7 +7,7 @@ import * as systemService from 'shell/services/system';
 import * as softwareService from 'shell/services/software';
 import * as powerService from 'modules/settings/services/power';
 
-let subscription;
+let unsubscribe;
 let isScrollEventAttached = false;
 let shouldScroll = true;
 const headerTemplate = _.template(headerPartial);
@@ -46,8 +46,8 @@ const reboot = async (event) => {
 
 const renderSerialNumber = (state) => {
 	_.each(document.querySelectorAll('header .serial-number'), (element) => { element.innerHTML = `SN:${state.system.serial || '&mdash;'}`; });
-	systemService.unsubscribe(subscription);
-	subscription = null;
+	unsubscribe?.();
+	unsubscribe = null;
 };
 
 const renderNavigation = () => {
@@ -107,5 +107,5 @@ page('*', (ctx) => {
 });
 page.start();
 
-subscription = systemService.subscribe([renderSerialNumber]);
+unsubscribe = systemService.subscribe([renderSerialNumber]);
 softwareService.subscribeToUpdate([render]);

@@ -16,15 +16,15 @@ window.isAuthenticated = !_.isEmpty(account);
 window.isAdmin = isAuthenticated && _.includes(account.groups, 'admins');
 window.notifier = document.querySelector('u-notifier');
 
-let subscription;
+let unsubscribe;
 
 const render = async (state) => {
 	if (_.isNull(state.setupCompleted) || state.update === -1) {
 		return;
 	}
 	
-	bootstrapService.unsubscribe(subscription);
-	subscription = null;
+	unsubscribe?.();
+	unsubscribe = null;
 
 	if (state.setupCompleted === false) {
 		await import('shell/setup');
@@ -45,4 +45,4 @@ const render = async (state) => {
 	}
 };
 
-subscription = bootstrapService.subscribe([render]);
+unsubscribe = bootstrapService.subscribe([render]);

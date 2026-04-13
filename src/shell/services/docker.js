@@ -1,7 +1,7 @@
 import Job from 'stores/job';
 import Host from 'stores/host';
 import Docker from 'stores/docker';
-import { createSubscription, disposeSubscription as unsubscribe, storeAttach } from 'shell/services/module_store_subscription';
+import { createSubscription, storeAttach } from 'shell/services/module_store_subscription';
 
 const { subscribe } = createSubscription({
 	stores: [
@@ -32,7 +32,6 @@ const composeUrlFromLabels = (projectContainers) => {
 
 export {
 	subscribe,
-	unsubscribe,
 	getJobs,
 	getContainers,
 	composeUrlFromLabels

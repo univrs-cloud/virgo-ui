@@ -9,7 +9,7 @@ const modal = document.querySelector('#metrics');
 const modalBody = modal.querySelector('.modal-body');
 const loading = modalBody.querySelector('.loading');
 const container = modalBody.querySelector('.container-fluid');
-let subsciption;
+let unsubscribe;
 let poller;
 let toggledRows = [];
 
@@ -72,7 +72,7 @@ const render = (state) => {
 };
 
 const showModal = (event) => {
-	subsciption = metricsService.subscribe([render]);
+	unsubscribe = metricsService.subscribe([render]);
 	poller = setInterval(() => {
 		metricsService.fetch();
 	}, 60000);
@@ -80,7 +80,7 @@ const showModal = (event) => {
 
 const restoreModal = (event) => {
 	clearInterval(poller);
-	metricsService.unsubscribe(subsciption);
+	unsubscribe?.();
 	container.innerHTML = '';
 	container.classList.add('d-none');
 	loading.classList.remove('d-none');

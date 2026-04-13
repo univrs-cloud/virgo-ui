@@ -1,5 +1,5 @@
 import Host from 'stores/host';
-import { createSubscription, disposeSubscription as unsubscribe, storeAttach } from 'shell/services/module_store_subscription';
+import { createSubscription, storeAttach } from 'shell/services/module_store_subscription';
 
 const { subscribe } = createSubscription({
 	stores: [
@@ -26,7 +26,6 @@ const getDrives = () => {
 
 export {
 	subscribe,
-	unsubscribe,
 	getSystem,
 	getMemory,
 	getDrives

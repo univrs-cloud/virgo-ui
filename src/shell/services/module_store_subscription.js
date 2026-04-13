@@ -155,14 +155,7 @@ const createSubscription = ({
 	};
 };
 
-const disposeSubscription = (subscription) => {
-	if (subscription) {
-		subscription();
-	}
-};
-
 export {
 	createSubscription,
-	disposeSubscription,
 	storeAttach,
 };
