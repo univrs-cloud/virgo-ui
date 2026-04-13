@@ -14,7 +14,7 @@ const { subscribe } = createSubscription({
 			propertyNames: ['containers']
 		}
 	],
-	attachStore: storeAttach.afterCallbacks,
+	attachStore: storeAttach.beforeCallbacks,
 	mapState: (properties) => properties,
 });
 
