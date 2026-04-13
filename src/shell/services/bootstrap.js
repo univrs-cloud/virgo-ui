@@ -2,10 +2,14 @@ import Host from 'stores/host';
 import { createSubscription, disposeSubscription as unsubscribe, storeAttach } from 'shell/services/module_store_subscription';
 
 const { subscribe } = createSubscription({
-	store: Host,
-	propertyNames: ['setupCompleted', 'update'],
-	mapState: (properties) => properties,
+	stores: [
+		{
+			store: Host,
+			propertyNames: ['setupCompleted', 'update']
+		}
+	],
 	attachStore: storeAttach.afterCallbacks,
+	mapState: (properties) => properties,
 });
 
 const reconnectSocket = () => {

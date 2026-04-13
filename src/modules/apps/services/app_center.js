@@ -4,8 +4,16 @@ import Docker from 'stores/docker';
 import { createSubscription, disposeSubscription as unsubscribe, storeAttach } from 'shell/services/module_store_subscription';
 
 const { subscribe } = createSubscription({
-	store: Docker,
-	propertyNames: ['containers', 'templates', 'jobs'],
+	stores: [
+		{
+			store: Docker,
+			propertyNames: ['containers', 'templates']
+		},
+		{
+			store: Job,
+			propertyNames: ['jobs']
+		}
+	],
 	filters: {
 		jobs: isAppInstallJob,
 	},

@@ -2,10 +2,14 @@ import Host from 'stores/host';
 import { createSubscription, disposeSubscription as unsubscribe, storeAttach } from 'shell/services/module_store_subscription';
 
 const { subscribe } = createSubscription({
-	store: Host,
-	propertyNames: ['drives', 'storage', 'snapshots'],
-	mapState: (properties) => properties,
+	stores: [
+		{
+			store: Host,
+			propertyNames: ['drives', 'storage', 'snapshots']
+		}
+	],
 	attachStore: storeAttach.beforeCallbacks,
+	mapState: (properties) => properties,
 });
 
 const getDrives = () => {

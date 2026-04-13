@@ -6,6 +6,7 @@ class Docker extends Store {
 			configured: null,
 			containers: null,
 			imageUpdates: null,
+			appsResourceMetrics: null,
 			templates: null
 		};
 		super({

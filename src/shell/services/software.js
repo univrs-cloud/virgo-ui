@@ -2,17 +2,25 @@ import Host from 'stores/host';
 import { createSubscription, disposeSubscription as unsubscribe, storeAttach } from 'shell/services/module_store_subscription';
 
 const { subscribe: subscribeToUpdates } = createSubscription({
-	store: Host,
-	propertyNames: ['updates'],
-	mapState: (properties) => properties,
+	stores: [
+		{
+			store: Host,
+			propertyNames: ['updates']
+		}
+	],
 	attachStore: storeAttach.afterCallbacks,
+	mapState: (properties) => properties,
 });
 
 const { subscribe: subscribeToUpdate } = createSubscription({
-	store: Host,
-	propertyNames: ['update'],
-	mapState: (properties) => properties,
+	stores: [
+		{
+			store: Host,
+			propertyNames: ['update']
+		}
+	],
 	attachStore: storeAttach.afterCallbacks,
+	mapState: (properties) => properties,
 });
 
 const checkUpdates = () => {

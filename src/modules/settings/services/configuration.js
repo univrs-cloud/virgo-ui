@@ -7,8 +7,16 @@ function isSettingsModuleJob() {
 }
 
 const { subscribe } = createSubscription({
-	store: Configuration,
-	propertyNames: ['configuration', 'jobs'],
+	stores: [
+		{
+			store: Configuration,
+			propertyNames: ['configuration']
+		},
+		{
+			store: Job,
+			propertyNames: ['jobs']
+		}
+	],
 	filters: {
 		jobs: isSettingsModuleJob,
 	},
