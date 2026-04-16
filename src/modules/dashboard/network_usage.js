@@ -5,6 +5,7 @@ const DATA_SIZE = 60;
 const WINDOW_MS = 60000;
 const UPDATE_INTERVAL = 1000;
 const FRAMES_PER_SECOND = 10;
+const DEFAULT_LINK_CAP_BPS = 1000 * 1_000_000 / 8;
 let chart = null;
 let data = [
 	[], // timestamps (ms)
@@ -88,7 +89,7 @@ const stopAnimation = () => {
 	}
 };
 
-const render = (networkInterface, yAxisMax = 1000 * 1_000_000 / 8) => {
+const render = (networkInterface, yAxisMax = DEFAULT_LINK_CAP_BPS) => {
 	if (networkInterface === false || _.isNull(networkInterface) || _.isNull(networkInterface.rx_sec) || _.isNull(networkInterface.tx_sec)) {
 		return;
 	}
@@ -105,6 +106,8 @@ const render = (networkInterface, yAxisMax = 1000 * 1_000_000 / 8) => {
 		startAnimation();
 		return;
 	}
+
+	const safeYMax = Number.isFinite(yAxisMax) && yAxisMax > 0 ? yAxisMax : DEFAULT_LINK_CAP_BPS;
 
 	const blueColor = getComputedColor('--bs-blue-500');
 	const purpleColor = getComputedColor('--bs-purple-500');
@@ -189,7 +192,7 @@ const render = (networkInterface, yAxisMax = 1000 * 1_000_000 / 8) => {
 	}
 
 	const chartOptions = {
-		width: networkChart.offsetWidth,
+		width: Math.max(1, networkChart.offsetWidth || networkChart.clientWidth),
 		height: 100,
 		pxAlign: 0,
 		ms: 1,
@@ -248,7 +251,7 @@ const render = (networkInterface, yAxisMax = 1000 * 1_000_000 / 8) => {
 			},
 			y: {
 				range: () => {
-					return [0, yAxisMax];
+					return [0, safeYMax];
 				}
 			}
 		}
