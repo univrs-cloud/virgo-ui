@@ -180,41 +180,43 @@
 												</div>
 											</div>
 
-											<div class="col-12">
-												<div class="row g-2">
-													<div class="col-6 col-md-3 col-lg-2">
-														<div class="d-flex align-items-center justify-content-between">
-															<small class="text-body-tertiary">CPU</small>
-															<%if (!resourceMetrics) {%>
-																<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
-															<%} else {%>
-																<small class="fw-light"><%=resourceMetrics?.cpu?.percent.toFixed(2)%>%</small>
+											<%if (_.includes(['running', 'restarting'], container.state)) {%>
+												<div class="col-12">
+													<div class="row g-2">
+														<div class="col-6 col-md-3 col-lg-2">
+															<div class="d-flex align-items-center justify-content-between">
+																<small class="text-body-tertiary">CPU</small>
+																<%if (!resourceMetrics) {%>
+																	<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
+																<%} else {%>
+																	<small class="fw-light"><%=resourceMetrics?.cpu?.percent.toFixed(2)%>%</small>
+																<%}%>
+															</div>
+															<%if (resourceMetrics) {%>
+																<u-progress shadow="false" class="d-block">
+																	<u-progress-bar width="<%=resourceMetrics?.cpu?.percent%>"></u-progress-bar>
+																</u-progress>
 															<%}%>
 														</div>
-														<%if (resourceMetrics) {%>
-															<u-progress shadow="false" class="d-block">
-																<u-progress-bar width="<%=resourceMetrics?.cpu?.percent%>"></u-progress-bar>
-															</u-progress>
-														<%}%>
-													</div>
 
-													<div class="col-6 col-md-3 col-lg-2">
-														<div class="d-flex align-items-center justify-content-between">
-															<small class="text-body-tertiary">RAM</small>
-															<%if (!resourceMetrics) {%>
-																<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
-															<%} else {%>
-																<small class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(resourceMetrics?.memory?.usage || 0, { binary: true })%>"><%=resourceMetrics?.memory?.percent.toFixed(2)%>%</small>
+														<div class="col-6 col-md-3 col-lg-2">
+															<div class="d-flex align-items-center justify-content-between">
+																<small class="text-body-tertiary">RAM</small>
+																<%if (!resourceMetrics) {%>
+																	<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
+																<%} else {%>
+																	<small class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(resourceMetrics?.memory?.usage || 0, { binary: true })%>"><%=resourceMetrics?.memory?.percent.toFixed(2)%>%</small>
+																<%}%>
+															</div>
+															<%if (resourceMetrics) {%>
+																<u-progress shadow="false" class="d-block">
+																	<u-progress-bar width="<%=resourceMetrics?.memory?.percent%>"></u-progress-bar>
+																</u-progress>
 															<%}%>
 														</div>
-														<%if (resourceMetrics) {%>
-															<u-progress shadow="false" class="d-block">
-																<u-progress-bar width="<%=resourceMetrics?.memory?.percent%>"></u-progress-bar>
-															</u-progress>
-														<%}%>
 													</div>
 												</div>
-											</div>
+											<%}%>
 
 											<div class="col-12">
 												<hr class="my-1 border-0 border-top opacity-50">
