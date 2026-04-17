@@ -1,3 +1,4 @@
+<%const hasActiveContainers = _.some(app.projectContainers, (container) => _.includes(['running', 'restarting'], container.state));%>
 <tr class="item cursor-pointer" data-name="<%=app.name%>">
 	<td class="d-none d-md-table-cell" style="width: 1px;">
 		<div class="row-image">
@@ -24,7 +25,9 @@
 		<%}%>
 	</td>
 	<td class="text-end text-nowrap d-none d-md-table-cell">
-		<%if (!app.resourceMetrics) {%>
+		<%if (!hasActiveContainers) {%>
+			<small class="fw-light text-body-tertiary">&mdash;</small>
+		<%} else if (!app.resourceMetrics) {%>
 			<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
 		<%} else {%>
 			<small class="fw-light"><%=app.resourceMetrics?.cpu?.percent.toFixed(2)%>%</small>
@@ -34,7 +37,9 @@
 		<%}%>
 	</td>
 	<td class="text-end text-nowrap d-none d-md-table-cell">
-		<%if (!app.resourceMetrics) {%>
+		<%if (!hasActiveContainers) {%>
+			<small class="fw-light text-body-tertiary">&mdash;</small>
+		<%} else if (!app.resourceMetrics) {%>
 			<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
 		<%} else {%>
 			<small class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(app.resourceMetrics?.memory?.usage || 0, { binary: true })%>"><%=app.resourceMetrics?.memory?.percent.toFixed(2)%>%</small>
