@@ -50,12 +50,19 @@
 			<small class="fw-light"><%=prettyBytes(app.resourceMetrics?.storage?.dataset || 0, { binary: true })%></small>
 		<%}%>
 	</td>
-	<td class="text-end text-nowrap d-none d-md-table-cell">
-		<%if (!app.resourceMetrics) {%>
-			<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
-		<%} else {%>
-			<small class="fw-light"><%=prettyBytes(app.resourceMetrics?.storage?.snapshots || 0, { binary: true })%></small>
-		<%}%>
+	<td class="text-nowrap d-none d-md-table-cell">
+		<div class="d-flex align-items-center w-100">
+			<%if (app.indexer) {%>
+				<i class="icon-regular icon-magnifying-glass icon-fw icon-2xs text-body-tertiary flex-shrink-0" data-bs-toggle="tooltip" data-bs-original-title="Snapshot indexing enabled"></i>
+			<%}%>
+			<div class="ms-auto text-end">
+				<%if (!app.resourceMetrics) {%>
+					<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
+				<%} else {%>
+					<small class="fw-light"><%=prettyBytes(app.resourceMetrics?.storage?.snapshots || 0, { binary: true })%></small>
+				<%}%>
+			</div>
+		</div>
 	</td>
 	<td class="text-center text-nowrap">
 		<%let color =''%>
