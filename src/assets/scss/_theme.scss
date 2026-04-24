@@ -192,10 +192,7 @@ u-toast {
 
 .no-content {
 	height: calc(100dvh - 128px);
-}
-
-#not-found {
-	.no-content {
+	#not-found & {
 		height: calc(100dvh - 88px);
 	}
 }
