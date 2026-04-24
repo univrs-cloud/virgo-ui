@@ -53,6 +53,7 @@ const render = (event) => {
 	const refquota = form.querySelector('.refquota');
 	form.querySelector('.name').value = currentFolder.name;
 	form.querySelector('.comment').innerHTML = currentFolder.comment;
+	form.querySelector('.path').innerHTML = currentFolder.path;
 	refquota.classList.toggle('d-none', isNextcloudPath);
 	form.validation = isNextcloudPath ? [] : [refquotaValidation];
 	if (!isNextcloudPath) {
