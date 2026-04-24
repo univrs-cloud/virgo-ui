@@ -57,6 +57,13 @@ const getFolders = () => {
 	return filterFolders(Share.getShares());
 };
 
+const getCustomPaths = () => {
+	return new Promise((resolve) => {
+		Share.socket.once('share:paths:custom', resolve);
+		Share.socket.emit('share:paths:custom');
+	});
+};
+
 const createFolder = (config) => {
 	config.type = 'folder';
 	Share.createShare(config);
@@ -77,6 +84,7 @@ export {
 	getJobs,
 	getSystem,
 	getFolders,
+	getCustomPaths,
 	createFolder,
 	updateFolder,
 	deleteFolder

@@ -6,15 +6,22 @@
 					<h5 class="modal-title">New folder</h5>
 				</div>
 				<div class="modal-body">
-					<u-input name="comment" label="Name" class="comment"></u-input>
-					<div class="mb-3">
-						<label class="form-label">Authorized users</label>
-						<div class="valid-users d-flex flex-column gap-1"></div>
-						<div class="form-text">Leave all unchecked for guest access</div>
+					<div class="loading d-flex justify-content-center align-items-center gap-2 py-2">
+						<div class="spinner-border spinner-border-sm text-gray-600"></div>
+						<span class="text-body-tertiary">Preparing...</span>
 					</div>
-					<u-input name="refquota" label="Capacity" class="refquota">
-						<span slot="suffix" class="mb-n3">GiB</span>
-					</u-input>
+					<div class="content d-none">
+						<u-select name="path" label="Path" class="path"></u-select>
+						<u-input name="comment" label="Name" class="comment"></u-input>
+						<div class="mb-3">
+							<label class="form-label">Authorized users</label>
+							<div class="valid-users d-flex flex-column gap-1"></div>
+							<div class="form-text">Leave all unchecked for guest access</div>
+						</div>
+						<u-input name="refquota" label="Capacity" class="refquota">
+							<span slot="suffix" class="mb-n3">GiB</span>
+						</u-input>
+					</div>
 				</div>
 				<div class="modal-footer">
 					<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="modal" outline>Cancel</u-button>
