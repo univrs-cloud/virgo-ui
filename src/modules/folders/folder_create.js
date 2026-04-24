@@ -1,6 +1,9 @@
 import folderModalPartial from 'modules/folders/partials/modals/folder_create.html';
+import validUserPartial from 'modules/folders/partials/valid_user.html';
 import * as folderService from 'modules/folders/services/folder';
 import * as userService from 'modules/folders/services/user';
+
+const validUserTemplate = _.template(validUserPartial);
 
 document.querySelector('body').insertAdjacentHTML('beforeend', folderModalPartial);
 
@@ -9,27 +12,22 @@ const form = modal.querySelector('u-form');
 
 const render = () => {
 	const users = userService.getUsers();
-	const options = [
-		{ value: '', label: 'Guest', default: true }
-	];
-	if (!_.isNull(users)) {
-		_.each(_.orderBy(users, ['username'], ['asc']), (user) => {
-			const base = user.fullname || user.username;
-			options.push({
-				value: user.username,
-				label: user.isDisabled ? `${base} (locked)` : base
-			});
-		});
-	}
-	form.querySelector('.valid-users').options = options;
+	const validUsers = form.querySelector('.valid-users');
+	validUsers.innerHTML = _.isNull(users) ? '' : _.map(
+		_.orderBy(users, ['username'], ['asc']),
+		(user) => validUserTemplate({ user, checked: false })
+	).join('');
 };
 
 const createFolder = (event) => {
 	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
 	const data = form.getData();
+	const validUsers = Array.from(form.querySelectorAll('.valid-users u-checkbox'))
+		.filter((cb) => cb.checked)
+		.map((cb) => cb.onValue);
 	const config = {
 		comment: data.comment,
-		validUsers: data.validUsers ? [data.validUsers] : [],
+		validUsers,
 		refquota: Number(data.refquota) * 1024 * 1024 * 1024
 	};
 	folderService.createFolder(config);

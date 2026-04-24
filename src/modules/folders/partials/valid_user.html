@@ -1,0 +1,1 @@
+<u-checkbox on-value="<%=user.username%>" off-value="" label="<%=(user.fullname || user.username) + (user.isDisabled ? ' (locked)' : '')%>" <%=(checked ? 'checked' : '')%> <%=(user.isDisabled ? 'disabled' : '')%>></u-checkbox>

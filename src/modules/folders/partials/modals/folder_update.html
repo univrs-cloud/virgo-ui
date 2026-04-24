@@ -4,7 +4,7 @@
 		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Edit time machine</h5>
+					<h5 class="modal-title">Edit folder</h5>
 				</div>
 				<div class="modal-body">
 					<div class="alert alert-light">
@@ -13,7 +13,11 @@
 							<dd class="comment m-0"></dd>
 						</dl>
 					</div>
-					<u-select name="validUsers" label="Authorized users" class="valid-users"></u-select>
+					<div class="mb-3">
+						<label class="form-label">Authorized users</label>
+						<div class="valid-users d-flex flex-column gap-1"></div>
+						<div class="form-text">Leave all unchecked for guest access</div>
+					</div>
 					<u-input name="refquota" label="Capacity" class="refquota">
 						<span slot="suffix" class="mb-n3">GiB</span>
 					</u-input>
