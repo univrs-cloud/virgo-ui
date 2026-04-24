@@ -10,7 +10,10 @@ const deleteFolder = async (event) => {
 	event.preventDefault();
 	const button = event.target.closest('a');
 	const row = button.closest('.item');
-	if (!await confirm(`Are you sure you want to delete the folder ${row.dataset.id}?<br><br>This action cannot be undone and will permanently delete all associated data.`, { buttons: [{ text: 'Yes, delete', class: 'btn-danger' }] })) {
+	const folder = _.find(folderService.getFolders(), { name: row.dataset.id });
+	const warning = (folder?.isCustom ? 'The folder will be removed but the data at the custom path will NOT be deleted.' : 'This action cannot be undone and will permanently delete all associated data.');
+	const action = folder?.isCustom ? 'remove' : 'delete';
+	if (!await confirm(`Are you sure you want to ${action} the folder ${row.dataset.id}?<br><br>${warning}`, { buttons: [{ text: `Yes, ${action}`, class: 'btn-danger' }] })) {
 		return;
 	}
 

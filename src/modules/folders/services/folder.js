@@ -23,7 +23,11 @@ const { subscribe } = createSubscription({
 	},
 	attachStore: storeAttach.beforeCallbacks,
 	mapState: (properties) => {
-		const folders = filterFolders(properties.shares);
+		let folders = filterFolders(properties.shares);
+		folders = _.map(folders, (folder) => ({
+			...folder,
+			isCustom: !folder.path?.startsWith('/messier/folders/')
+		}));
 		const networkInterface = _.find(properties.system.networkInterfaces, { default: true });
 		return { folders, networkInterface, jobs: properties.jobs };
 	},
@@ -54,7 +58,11 @@ const getSystem = () => {
 };
 
 const getFolders = () => {
-	return filterFolders(Share.getShares());
+	const folders = filterFolders(Share.getShares());
+	return _.map(folders, (folder) => ({
+		...folder,
+		isCustom: !folder.path?.startsWith('/messier/folders/')
+	}));
 };
 
 const getCustomPaths = () => {
