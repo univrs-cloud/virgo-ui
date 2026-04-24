@@ -159,6 +159,9 @@ main,
 
 .loading {
 	min-height: calc(100vh - 112px);
+	.modal & {
+		min-height: unset;
+	}
 }
 
 .line-clamp {
