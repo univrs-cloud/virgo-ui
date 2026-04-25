@@ -32,12 +32,12 @@ const render = async (state) => {
 		await import('shell/update');
 	} else {
 		try {
-		const [, , modulesResult] = await Promise.allSettled([
-			import('shell/header'),
-			import('shell/main'),
-			import('modules').then(({ modulesLoaded }) => { return modulesLoaded; })
-		]);
-		import('shell/navigation');
+			await Promise.all([
+				import('shell/header'),
+				import('shell/main')
+			]);
+			await import('modules').then(({ modulesLoaded }) => { return modulesLoaded; });
+			import('shell/navigation');
 		} catch (error) {
 			alert(`Error during application initialization<br><br>${error}`, );
 			console.error('Error during application initialization:', error);
