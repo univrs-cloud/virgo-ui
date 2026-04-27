@@ -47,8 +47,7 @@ u-toast {
 
 .tooltip {
 	--bs-tooltip-zindex: 99999;
-	&.storage-scan-progress,
-	&.metrics-tooltip {
+	&.storage-scan-progress {
 		--bs-tooltip-max-width: 400px;
 	}
 }
@@ -422,7 +421,6 @@ u-toast {
 		}
 	}
 }
-#metrics,
 #app-center {
 	.modal-body {
 		height: 100dvh;
