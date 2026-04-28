@@ -20,13 +20,13 @@
 		</div>
 	</td>
 	<td class="text-end text-nowrap d-none d-md-table-cell">
-		<small class="fw-light"><%=prettyBytes(pool.properties.size.value || 0, { binary: true })%></small>
+		<small class="fw-light text-body-secondary"><%=prettyBytes(pool.properties.size.value || 0, { binary: true })%></small>
 	</td>
 	<td class="text-end text-nowrap d-none d-md-table-cell">
 		<%if (pool.name === 'system') {%>
-			<small class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(pool.properties.allocated.value || 0, { binary: true })%>"><%=pool.properties.capacity.value?.toFixed(2)%>%</small>
+			<small class="fw-light text-body-secondary" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(pool.properties.allocated.value || 0, { binary: true })%>"><%=pool.properties.capacity.value?.toFixed(2)%>%</small>
 		<%} else {%>
-			<small class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(pool.properties.usedbydatasets.value || 0, { binary: true })%>"><%=(pool.properties.usedbydatasets.value / pool.properties.size.value * 100)?.toFixed(2)%>%</small>
+			<small class="fw-light text-body-secondary" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(pool.properties.usedbydatasets.value || 0, { binary: true })%>"><%=(pool.properties.usedbydatasets.value / pool.properties.size.value * 100)?.toFixed(2)%>%</small>
 		<%}%>
 		<u-progress shadow="false">
 			<%if (pool.name === 'system') {%>
@@ -38,10 +38,9 @@
 	</td>
 	<td class="text-end text-nowrap d-none d-md-table-cell">
 		<%if (pool.name === 'system') {%>
-			&mdash;
+			<span class="text-body-tertiary">&mdash;</span>
 		<%} else {%>
-			<small class="fw-light d-none"><%=_.size(pool.snapshots)%></small>
-			<small class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(pool.properties.usedbysnapshots.value || 0, { binary: true })%>"><%=(pool.properties.usedbysnapshots.value / pool.properties.size.value * 100)?.toFixed(2)%>%</small>
+			<small class="fw-light text-body-secondary" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(pool.properties.usedbysnapshots.value || 0, { binary: true })%>"><%=(pool.properties.usedbysnapshots.value / pool.properties.size.value * 100)?.toFixed(2)%>%</small>
 			<u-progress shadow="false">
 				<u-progress-bar color="indigo" tint="100" width="<%=(pool.properties.usedbysnapshots.value / pool.properties.size.value * 100)%>"></u-progress-bar>
 			</u-progress>
@@ -65,13 +64,13 @@
 				<%const issued = `${prettyBytes(pool.scanStats.issued || 0, { binary: true })} / ${total}`%>
 				<%const tip = (isPaused ? `<strong>Paused</strong> since ${moment.unix(pool.scanStats.scrubPause).fromNow()}.<br>` : ``) + `Started ${moment.unix(pool.scanStats.startTime).fromNow()}.<br>Scanned ${scanned}.<br>Issued ${issued}.<br>Repaired <strong>${prettyBytes(pool.scanStats.processed || 0, { binary: true })}</strong>, ${pool.scanStats.errors || 0} errors.`%>
 				<%const progress = (pool.scanStats.toExamine === 0 ? 0 : (pool.scanStats.issued / pool.scanStats.toExamine) * 100)%>
-				<small class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"><%=progress.toFixed(2)%>%</small>
+				<small class="fw-light text-body-secondary" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"><%=progress.toFixed(2)%>%</small>
 				<u-progress shadow="false">
 					<u-progress-bar color="cyan" tint="300" width="<%=progress%>" striped="<%=(!isPaused)%>" animated="<%=(!isPaused)%>" warning-threshold="999" danger-threshold="999"></u-progress-bar>
 				</u-progress>
 			<%}%>
 		<%} else {%>
-			&mdash;
+			<span class="text-body-tertiary">&mdash;</span>
 		<%}%>
 	</td>
 	<td>

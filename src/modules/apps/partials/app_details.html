@@ -120,32 +120,12 @@
 															<%}%>
 														</div>
 													</div>
-													<div class="d-flex align-items-center gap-2 text-end">
-														<u-badge color="<%=(container.state === 'running' ? 'green' : 'red')%>" pill><%=container.state%></u-badge>
-														<%if (!_.isEmpty(jobs)) {%>
-															<i class="icon-solid icon-gear icon-fw icon-spin"></i>
-														<%} else {%>
-															<div class="dropdown">
-																<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
-																<ul class="dropdown-menu">
-																	<%if (app.canBeRemoved || _.includes(['created', 'exited'], container.state)) {%>
-																		<li><a href="#" class="dropdown-item <%=(_.includes(['created', 'exited'], container.state) ? '' : 'disabled')%>" data-action="start"><i class="icon-regular icon-play icon-fw me-1"></i>Start</a></li>
-																		<li><hr class="dropdown-divider"></li>
-																	<%}%>
-																	<li><a href="#" class="dropdown-item <%=(_.includes(['running', 'paused'], container.state) ? 'confirm' : 'disabled')%>" data-action="restart"><i class="icon-regular icon-arrow-rotate-left icon-fw me-1"></i>Restart</a></li>
-																	<%if (app.canBeRemoved) {%>
-																		<li><a href="#" class="dropdown-item <%=(_.includes(['running', 'paused', 'restarting'], container.state) ? 'text-danger confirm' : 'disabled')%>" data-action="stop"><i class="icon-regular icon-stop icon-fw me-1"></i>Stop</a></li>
-																		<li><a href="#" class="dropdown-item <%=(_.includes(['running', 'paused', 'restarting'], container.state) ? 'text-danger confirm' : 'disabled')%>" data-action="kill"><i class="icon-regular icon-skull icon-fw me-1"></i>Kill</a></li>
-																	<%}%>
-																</ul>
-															</div>
-														<%}%>
-													</div>
+													<u-badge color="<%=(container.state === 'running' ? 'green' : 'red')%>" pill><%=container.state%></u-badge>
 												</div>
 											</div>
 
 											<div class="col-12">
-												<small class="text-body-tertiary text-truncate d-block"><i class="icon-light icon-layer-group icon-fw me-1"></i><%=container.image%></small>
+												<u-badge color="blue" tint="100" pill><i class="icon-light icon-layer-group icon-fw me-1"></i><%=container.image%></u-badge>
 											</div>
 
 											<div class="col-12">
@@ -160,7 +140,7 @@
 														<%_.each(container.networkSettings?.networks, (network, networkName) => {%>
 															<%if (network.ipAddress) {%>
 																<%const isExternal = !!network.gateway;%>
-																<u-badge color="<%=(isExternal ? 'purple' : 'gray')%>" tint="100" tip="<%=networkName%>: <%=network.ipAddress%> &middot; <%=(isExternal ? 'external' : 'internal')%>" pill>
+																<u-badge color="<%=(isExternal ? 'purple' : 'gray')%>" tint="<%=(isExternal ? 100 : 200)%>" tip="<%=networkName%>: <%=network.ipAddress%> &middot; <%=(isExternal ? 'external' : 'internal')%>" pill>
 																	<i class="icon-light icon-network-wired icon-fw me-1"></i><%=network.ipAddress%>
 																</u-badge>
 															<%}%>
@@ -172,12 +152,15 @@
 															<i class="icon-light icon-network-wired icon-fw me-1"></i>1
 														</u-badge>
 													<%}%>
-													<%if (!_.isEmpty(container.mounts)) {%>
-														<u-badge color="orange" tint="100" tip="<%=_.size(container.mounts)%> volume<%=(_.size(container.mounts) !== 1 ? 's' : '')%> mounted" pill>
-															<i class="icon-light icon-hard-drive icon-fw me-1"></i><%=_.size(container.mounts)%>
-														</u-badge>
-													<%}%>
 												</div>
+											</div>
+											
+											<div class="col-12">
+												<%if (!_.isEmpty(container.mounts)) {%>
+													<u-badge color="orange" tint="100" tip="<%=_.size(container.mounts)%> volume<%=(_.size(container.mounts) !== 1 ? 's' : '')%> mounted" pill>
+														<i class="icon-light icon-hard-drive icon-fw me-1"></i><%=_.size(container.mounts)%>
+													</u-badge>
+												<%}%>
 											</div>
 
 											<%if (_.includes(['running', 'restarting'], container.state)) {%>
@@ -222,18 +205,38 @@
 												<hr class="my-1 border-0 border-top opacity-50">
 											</div>
 
-											<div class="col-12 col-lg-4">
+											<div class="col-12">
 												<div class="d-flex align-items-center gap-2">
-													<a href="#" class="logs btn btn-outline-secondary btn-sm px-1 py-0" data-id="<%=container.id%>">
+													<a href="#" class="logs btn btn-outline-secondary btn-sm px-1 py-0 my-1" data-id="<%=container.id%>">
 														<i class="icon-light icon-memo icon-fw me-1"></i>
 														Logs
 													</a>
 													<%if (container.state === 'running') {%>
-														<a href="#" class="terminal btn btn-outline-secondary btn-sm px-1 py-0" data-id="<%=container.id%>">
+														<a href="#" class="terminal btn btn-outline-secondary btn-sm px-1 py-0 my-1" data-id="<%=container.id%>">
 															<i class="icon-light icon-terminal icon-fw me-1"></i>
 															Terminal
 														</a>
 													<%}%>
+													<div class="ms-auto">
+														<%if (!_.isEmpty(jobs)) {%>
+															<i class="icon-solid icon-gear icon-fw icon-spin"></i>
+														<%} else {%>
+															<div class="dropdown">
+																<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
+																<ul class="dropdown-menu">
+																	<%if (app.canBeRemoved || _.includes(['created', 'exited'], container.state)) {%>
+																		<li><a href="#" class="dropdown-item <%=(_.includes(['created', 'exited'], container.state) ? '' : 'disabled')%>" data-action="start"><i class="icon-regular icon-play icon-fw me-1"></i>Start</a></li>
+																		<li><hr class="dropdown-divider"></li>
+																	<%}%>
+																	<li><a href="#" class="dropdown-item <%=(_.includes(['running', 'paused'], container.state) ? 'confirm' : 'disabled')%>" data-action="restart"><i class="icon-regular icon-arrow-rotate-left icon-fw me-1"></i>Restart</a></li>
+																	<%if (app.canBeRemoved) {%>
+																		<li><a href="#" class="dropdown-item <%=(_.includes(['running', 'paused', 'restarting'], container.state) ? 'text-danger confirm' : 'disabled')%>" data-action="stop"><i class="icon-regular icon-stop icon-fw me-1"></i>Stop</a></li>
+																		<li><a href="#" class="dropdown-item <%=(_.includes(['running', 'paused', 'restarting'], container.state) ? 'text-danger confirm' : 'disabled')%>" data-action="kill"><i class="icon-regular icon-skull icon-fw me-1"></i>Kill</a></li>
+																	<%}%>
+																</ul>
+															</div>
+														<%}%>
+													</div>
 												</div>
 											</div>
 										</div>

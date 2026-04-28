@@ -13,7 +13,7 @@
 				<a href="#" class="link-dark link-underline link-underline-opacity-0" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-original-title="Click to copy the folder address. Access the folder using a computer on your local network.">
 					<i class="icon-brands icon-windows icon-fw"></i>
 				</a>
-				<span class="copy d-none">\\<%=accessOn%>/<%=folder.name%></span>
+				<span class="copy d-none">\\<%=accessOn%>\<%=folder.name%></span>
 			</div>
 			<div class="d-flex align-items-center mx-2">
 				<a href="#" class="link-dark link-underline link-underline-opacity-0" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-original-title="Click to copy the folder address. Access the folder using a computer on your local network.">
@@ -39,10 +39,10 @@
 		<%}%>
 	</td>
 	<td class="text-end text-nowrap d-none d-md-table-cell">
-		<small class="fw-light"><%=prettyBytes(folder.size || 0, { binary: true })%></small>
+		<small class="fw-light text-body-secondary"><%=prettyBytes(folder.size || 0, { binary: true })%></small>
 	</td>
 	<td class="text-end text-nowrap d-none d-md-table-cell">
-		<small class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(folder.alloc || 0, { binary: true })%>"><%=folder.cap.toFixed(2)%>%</small>
+		<small class="fw-light text-body-secondary" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(folder.alloc || 0, { binary: true })%>"><%=folder.cap.toFixed(2)%>%</small>
 		<u-progress shadow="false">
 			<u-progress-bar width="<%=folder.cap%>"></u-progress-bar>
 		</u-progress>
