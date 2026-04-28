@@ -30,7 +30,7 @@
 		<%} else if (!app.resourceMetrics) {%>
 			<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
 		<%} else {%>
-			<small class="fw-light"><%=app.resourceMetrics?.cpu?.percent.toFixed(2)%>%</small>
+			<small class="fw-light text-body-secondary"><%=app.resourceMetrics?.cpu?.percent.toFixed(2)%>%</small>
 			<u-progress shadow="false">
 				<u-progress-bar width="<%=app.resourceMetrics?.cpu?.percent%>"></u-progress-bar>
 			</u-progress>
@@ -42,7 +42,7 @@
 		<%} else if (!app.resourceMetrics) {%>
 			<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
 		<%} else {%>
-			<small class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(app.resourceMetrics?.memory?.usage || 0, { binary: true })%>"><%=app.resourceMetrics?.memory?.percent.toFixed(2)%>%</small>
+			<small class="fw-light text-body-secondary" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(app.resourceMetrics?.memory?.usage || 0, { binary: true })%>"><%=app.resourceMetrics?.memory?.percent.toFixed(2)%>%</small>
 			<u-progress shadow="false">
 				<u-progress-bar width="<%=app.resourceMetrics?.memory?.percent%>"></u-progress-bar>
 			</u-progress>
@@ -52,7 +52,7 @@
 		<%if (!app.resourceMetrics) {%>
 			<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
 		<%} else {%>
-			<small class="fw-light"><%=prettyBytes(app.resourceMetrics?.storage?.dataset || 0, { binary: true })%></small>
+			<small class="fw-light text-body-secondary"><%=prettyBytes(app.resourceMetrics?.storage?.dataset || 0, { binary: true })%></small>
 		<%}%>
 	</td>
 	<td class="text-nowrap d-none d-md-table-cell">
@@ -64,7 +64,7 @@
 				<%if (!app.resourceMetrics) {%>
 					<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
 				<%} else {%>
-					<small class="fw-light"><%=prettyBytes(app.resourceMetrics?.storage?.snapshots || 0, { binary: true })%></small>
+					<small class="fw-light text-body-secondary"><%=prettyBytes(app.resourceMetrics?.storage?.snapshots || 0, { binary: true })%></small>
 				<%}%>
 			</div>
 		</div>

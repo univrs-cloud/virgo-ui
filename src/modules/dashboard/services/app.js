@@ -1,6 +1,8 @@
 import Docker from 'stores/docker';
 import { createSubscription, storeAttach } from 'shell/services/module_store_subscription';
 
+const CATEGORY_ORDER = ['Productivity', 'Networking', 'System'];
+
 const { subscribe } = createSubscription({
 	stores: [
 		{
@@ -45,7 +47,16 @@ function composeDashboardApps(properties) {
 		return entity;
 	});
 	apps = _.groupBy(apps, 'category');
-	return _.pick(apps, _.keys(apps));
+	const orderedCategoryNames = _.sortBy(_.keys(apps), [
+		(categoryName) => {
+			const index = _.indexOf(CATEGORY_ORDER, categoryName);
+			return index === -1 ? Number.MAX_SAFE_INTEGER : index;
+		},
+		(categoryName) => {
+			return categoryName;
+		}
+	]);
+	return _.pick(apps, orderedCategoryNames);
 }
 
 const performAction = (config) => {
