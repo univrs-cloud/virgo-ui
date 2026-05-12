@@ -168,7 +168,7 @@
 													<div class="row g-2">
 														<div class="col-6 col-md-3 col-lg-2">
 															<div class="d-flex align-items-center justify-content-between">
-																<small class="text-body-tertiary">CPU</small>
+																<small class="text-body-tertiary"><i class="icon-solid icon-microchip icon-fw me-1"></i>CPU</small>
 																<%if (!resourceMetrics) {%>
 																	<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
 																<%} else {%>
@@ -184,7 +184,7 @@
 
 														<div class="col-6 col-md-3 col-lg-2">
 															<div class="d-flex align-items-center justify-content-between">
-																<small class="text-body-tertiary">RAM</small>
+																<small class="text-body-tertiary"><i class="icon-solid icon-memory icon-fw me-1"></i>RAM</small>
 																<%if (!resourceMetrics) {%>
 																	<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
 																<%} else {%>
@@ -194,6 +194,53 @@
 															<%if (resourceMetrics) {%>
 																<u-progress shadow="false" class="d-block">
 																	<u-progress-bar width="<%=resourceMetrics?.memory?.percent%>"></u-progress-bar>
+																</u-progress>
+															<%}%>
+														</div>
+														<div class="col-6 col-md-3 col-lg-2">
+															<div class="d-flex align-items-center justify-content-between">
+																<small class="text-body-tertiary"><i class="icon-solid icon-arrow-down icon-fw me-1 text-blue-500"></i>RX</small>
+																<%if (!resourceMetrics) {%>
+																	<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
+																<%} else {%>
+																	<%
+																		const rxIsRate = !_.isNil(resourceMetrics?.network?.rx_sec);
+																		const rxValue = resourceMetrics?.network?.rx_sec ?? resourceMetrics?.network?.rx ?? 0;
+																	%>
+																	<small class="fw-light"><%=prettyBytes(rxValue, { binary: true })%><%=(rxIsRate ? '/s' : '')%></small>
+																<%}%>
+															</div>
+															<%if (resourceMetrics) {%>
+																<%
+																	const rxValue = resourceMetrics?.network?.rx_sec ?? resourceMetrics?.network?.rx ?? 0;
+																	const rxPercent = networkMaxBytesPerSec > 0 ? _.min([(rxValue / networkMaxBytesPerSec) * 100, 100]) : 0;
+																%>
+																<u-progress shadow="false" class="d-block">
+																	<u-progress-bar width="<%=rxPercent%>"></u-progress-bar>
+																</u-progress>
+															<%}%>
+														</div>
+
+														<div class="col-6 col-md-3 col-lg-2">
+															<div class="d-flex align-items-center justify-content-between">
+																<small class="text-body-tertiary"><i class="icon-solid icon-arrow-up icon-fw me-1 text-purple-500"></i>TX</small>
+																<%if (!resourceMetrics) {%>
+																	<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
+																<%} else {%>
+																	<%
+																		const txIsRate = !_.isNil(resourceMetrics?.network?.tx_sec);
+																		const txValue = resourceMetrics?.network?.tx_sec ?? resourceMetrics?.network?.tx ?? 0;
+																	%>
+																	<small class="fw-light"><%=prettyBytes(txValue, { binary: true })%><%=(txIsRate ? '/s' : '')%></small>
+																<%}%>
+															</div>
+															<%if (resourceMetrics) {%>
+																<%
+																	const txValue = resourceMetrics?.network?.tx_sec ?? resourceMetrics?.network?.tx ?? 0;
+																	const txPercent = networkMaxBytesPerSec > 0 ? _.min([(txValue / networkMaxBytesPerSec) * 100, 100]) : 0;
+																%>
+																<u-progress shadow="false" class="d-block">
+																	<u-progress-bar width="<%=txPercent%>"></u-progress-bar>
 																</u-progress>
 															<%}%>
 														</div>
