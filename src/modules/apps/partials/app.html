@@ -49,6 +49,26 @@
 		<%}%>
 	</td>
 	<td class="text-end text-nowrap d-none d-md-table-cell">
+		<%if (!hasActiveContainers) {%>
+			<small class="fw-light text-body-tertiary">&mdash;</small>
+		<%} else if (!app.resourceMetrics) {%>
+			<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
+		<%} else {%>
+			<small class="fw-light text-body-secondary d-flex">
+				<span class="d-inline-block text-start" style="width: 12px;">
+					<i class="icon-solid icon-arrow-down icon-fw icon-2xs text-blue-500"></i>
+				</span>
+				<span class="ms-auto"><%=prettyBytes(app.resourceMetrics?.network?.rx || 0, { binary: true })%></span>
+			</small>
+			<small class="fw-light text-body-secondary d-flex">
+				<span class="d-inline-block text-start" style="width: 12px;">
+					<i class="icon-solid icon-arrow-up icon-fw icon-2xs text-purple-500"></i>
+				</span>
+				<span class="ms-auto"><%=prettyBytes(app.resourceMetrics?.network?.tx || 0, { binary: true })%></span>
+			</small>
+		<%}%>
+	</td>
+	<td class="text-end text-nowrap d-none d-md-table-cell">
 		<%if (!app.resourceMetrics) {%>
 			<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
 		<%} else {%>

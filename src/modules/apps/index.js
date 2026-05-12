@@ -209,9 +209,10 @@ const renderAppDetails = (name) => {
 	}
 
 	const jobs = _.filter(appService.getJobs(), (job) => { return job.data?.config?.name === app.name; });
+	const networkMaxBytesPerSec = appService.getDefaultNetworkInterfaceSpeed();
 	morphdom(
 		details,
-		`<div>${appDetailsTemplate({ app, jobs, appActionsTemplate, prettyBytes, moment })}</div>`,
+		`<div>${appDetailsTemplate({ app, jobs, appActionsTemplate, prettyBytes, moment, networkMaxBytesPerSec })}</div>`,
 		{
 			childrenOnly: true,
 			onBeforeElUpdated: (fromEl, toEl) => {

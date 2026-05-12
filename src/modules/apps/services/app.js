@@ -4,6 +4,8 @@ import Host from 'stores/host';
 import Indexer from 'stores/indexer';
 import { createSubscription, storeAttach } from 'shell/services/module_store_subscription';
 
+const DEFAULT_NETWORK_INTERFACE_SPEED_BPS = 1_000_000_000;
+
 const { subscribe } = createSubscription({
 	stores: [
 		{
@@ -97,6 +99,14 @@ const getApps = () => {
 	return composeApps(Docker.getConfigured(), Docker.getContainers(), Docker.getAppsResourceMetrics(), Docker.getImageUpdates(), Host.getSnapshots(), Indexer.getDatasets());
 };
 
+const getDefaultNetworkInterface = () => {
+	return _.find(Host.getSystem()?.networkInterfaces, { default: true });
+};
+
+const getDefaultNetworkInterfaceSpeed = () => {
+	return ((getDefaultNetworkInterface()?.speed || (DEFAULT_NETWORK_INTERFACE_SPEED_BPS / 1_000_000)) * 1_000_000 / 8);
+};
+
 const update = (config) => {
 	Docker.update(config);
 };
@@ -118,6 +128,8 @@ export {
 	getSocket,
 	getJobs,
 	getApps,
+	getDefaultNetworkInterface,
+	getDefaultNetworkInterfaceSpeed,
 	update,
 	performAppAction,
 	performServiceAction,
