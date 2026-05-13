@@ -23,17 +23,9 @@
 		<small class="fw-light text-body-secondary"><%=prettyBytes(pool.properties.size.value || 0, { binary: true })%></small>
 	</td>
 	<td class="text-end text-nowrap d-none d-md-table-cell">
-		<%if (pool.name === 'system') {%>
-			<small class="fw-light text-body-secondary" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(pool.properties.allocated.value || 0, { binary: true })%>"><%=pool.properties.capacity.value?.toFixed(2)%>%</small>
-		<%} else {%>
-			<small class="fw-light text-body-secondary" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(pool.properties.usedbydatasets.value || 0, { binary: true })%>"><%=(pool.properties.usedbydatasets.value / pool.properties.size.value * 100)?.toFixed(2)%>%</small>
-		<%}%>
+		<small class="fw-light text-body-secondary" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(pool.properties.allocated.value || 0, { binary: true })%>"><%=pool.properties.capacity.value?.toFixed(2)%>%</small>
 		<u-progress shadow="false">
-			<%if (pool.name === 'system') {%>
-				<u-progress-bar width="<%=pool.properties.capacity.value%>"></u-progress-bar>
-			<%} else {%>
-				<u-progress-bar width="<%=(pool.properties.usedbydatasets.value / pool.properties.size.value * 100)%>"></u-progress-bar>
-			<%}%>
+			<u-progress-bar width="<%=pool.properties.capacity.value%>"></u-progress-bar>
 		</u-progress>
 	</td>
 	<td class="text-end text-nowrap d-none d-md-table-cell">
