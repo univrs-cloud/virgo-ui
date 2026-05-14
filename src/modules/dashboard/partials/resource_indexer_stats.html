@@ -43,7 +43,7 @@
 				</span>
 			</div>
 			<div class="d-flex justify-content-between gap-2"><span>Unique files</span><span class="text-body-secondary text-end"><%=Number(stats.files).toLocaleString()%></span></div>
-			<div class="d-flex justify-content-between gap-2"><span>File versions</span><span class="text-body-secondary text-end"><%=Number(stats.versions).toLocaleString()%></span></div>
+			<div class="d-flex justify-content-between gap-2 d-none"><span>File versions</span><span class="text-body-secondary text-end"><%=Number(stats.versions).toLocaleString()%></span></div>
 			<div class="d-flex justify-content-between gap-2"><span>Deleted files</span><span class="text-body-secondary text-end"><%=Number(stats.deleted).toLocaleString()%></span></div>
 			<div class="d-flex justify-content-between gap-2"><span>Change events</span><span class="text-body-secondary text-end"><%=Number(stats.changes).toLocaleString()%></span></div>
 		</div>
@@ -53,9 +53,9 @@
 		<%const removedCount = Number(changeTypes.removed || 0)%>
 		<%const totalTypedChanges = addedCount + modifiedCount + renamedCount + removedCount + unknownChanges%>
 		<%if (totalTypedChanges > 0) {%>
-			<div class="d-flex align-items-start mt-1">
-				<div style="width: 12px; height: 12px; align-self: center; transform: translateY(-5px); margin: 0 6px 0 2px; flex-shrink: 0; border-left: 1px dotted var(--bs-gray-500); border-bottom: 1px dotted var(--bs-gray-500); border-bottom-left-radius: 8px;"></div>
-				<div class="d-flex flex-wrap gap-1">
+			<div class="position-relative mt-1">
+				<div class="position-absolute top-0 start-0" style="width: 12px; height: 16px; border-left: 1px dotted var(--bs-gray-600); border-bottom: 1px dotted var(--bs-gray-600); border-bottom-left-radius: 8px; margin-left: 0.25rem;"></div>
+				<div class="ms-4">
 					<%if (addedCount > 0) {%>
 						<u-badge color="green" tint="100" tip="Added" pill><small><i class="icon-regular icon-plus icon-fw me-1 text-green-500"></i><%=addedCount.toLocaleString()%></small></u-badge>
 					<%}%>
