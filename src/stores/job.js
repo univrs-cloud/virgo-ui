@@ -30,7 +30,7 @@ class Job extends Store {
 		});
 
 		this.socket.on('job', (job) => {
-			let jobs = this.getStateProperty('jobs') || [];
+			let jobs = [...(this.getStateProperty('jobs') || [])];
 			const index = _.findIndex(jobs, { id: job.id });
 			if (index !== -1) {
 				jobs[index] = job;
