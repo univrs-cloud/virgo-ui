@@ -3,8 +3,7 @@
 <%}%>
 <li class="list-group-item ups py-3">
 	<h6 class="d-flex align-items-center text-body-emphasis mb-0">
-		<i class="icon-regular icon-car-battery icon-fw me-1 text-gray-500"></i>
-		UPS
+		<i class="icon-regular icon-car-battery icon-fw me-1 text-gray-500"></i>UPS
 		<%if (state.ups !== null && state.ups !== false) {%>
 			<%if (state.ups?.powerSource === 'grid') {%>
 				<u-badge color="green" class="ms-1" pill>GRID</u-badge>
