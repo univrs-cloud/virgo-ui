@@ -124,7 +124,9 @@ module.exports = (env, argv) => {
 			new CopyWebpackPlugin({
 				'patterns': [
 					{ from: './src/assets/img', to: 'assets/img' },
-					{ from: './src/assets/webfonts', to: 'assets/webfonts' }
+					{ from: './src/assets/webfonts', to: 'assets/webfonts' },
+					{ from: './node_modules/inter-ui/web', to: 'assets/webfonts/inter/web' },
+					{ from: './node_modules/inter-ui/variable', to: 'assets/webfonts/inter/variable' }
 				]
 			})
 		],

@@ -1,3 +1,9 @@
+@supports (font-variation-settings: normal) {
+	:root {
+		--bs-body-font-family: "InterVariable", #{$font-family-sans-serif};
+	}
+}
+
 img {
 	max-width: 100%;
 }
