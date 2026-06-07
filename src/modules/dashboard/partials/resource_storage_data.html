@@ -1,8 +1,7 @@
 <%const pool = (state.storage === false ? false : _.find(state.storage, (pool) => { return pool.name === 'messier'; }))%>
 <li class="list-group-item storage-data py-3">
 	<h6 class="d-flex align-items-center text-body-emphasis mb-0">
-		<i class="icon-regular icon-database icon-fw me-1 text-gray-500"></i>
-		Data
+		<i class="icon-regular icon-database icon-fw me-1 text-gray-500"></i>Data
 		<%if (state.storage !== null && pool !== false) {%>
 			<u-badge color="<%=(pool.properties.health.value.toLowerCase() === 'online' ? 'green' : 'red')%>" class="ms-1" pill><%=pool.properties.health.value%></u-badge>
 		<%}%>
@@ -32,8 +31,7 @@
 					<%color = 'red'%>
 				<%}%>
 				<u-badge color="<%=color%>" tint="200" class="me-1" tip="<%=_.last(drive.name.split('/'))%>" pill>
-					<i class="icon-regular icon-hard-drive icon-fw me-1 text-gray-700"></i>
-					<%=drive.temperature%> °C
+					<i class="icon-regular icon-hard-drive icon-fw me-1 text-gray-700"></i><%=drive.temperature%> °C
 				</u-badge>
 			<%})%>
 		</div>

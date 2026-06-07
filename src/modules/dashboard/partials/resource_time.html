@@ -5,8 +5,7 @@
 		<span class="text-red-300">Error fetching data</span>
 	<%} else {%>
 		<small class="text-body-tertiary">
-			<i class="icon-regular icon-timer icon-fw me-1 text-gray-500"></i>
-			Uptime: <%=prettyMilliseconds(state.time.uptime * 1000, { secondsDecimalDigits: 0 })%>
+			<i class="icon-regular icon-timer icon-fw me-1 text-gray-500"></i>Uptime: <%=prettyMilliseconds(state.time.uptime * 1000, { secondsDecimalDigits: 0 })%>
 		</small>
 	<%}%>
 </li>
