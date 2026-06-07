@@ -10,8 +10,8 @@ const digestFilteredJobs = (jobs, jobFilter) => {
 	return _.chain(jobs || [])
 		.filter(jobFilter)
 		.map((job) => {
-			const p = job.progress;
-			return [job.id, p?.state, p?.message, job.failedReason].join('\t');
+			const progress = job.progress;
+			return [job.id, progress?.state, progress?.message, JSON.stringify(progress?.progress || null), job.failedReason].join('\t');
 		})
 		.sort()
 		.value()
