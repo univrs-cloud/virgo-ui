@@ -1,0 +1,12 @@
+@use "inter-ui/default" with (
+	$inter-font-display: swap,
+	$inter-font-path: "../webfonts/inter/web"
+);
+
+@use "inter-ui/variable" with (
+	$inter-font-display: swap,
+	$inter-font-path: "../webfonts/inter/variable"
+);
+
+@include default.all;
+@include variable.all;
