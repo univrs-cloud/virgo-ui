@@ -31,6 +31,7 @@
 .fans,
 .fands,
 .faes,
+.fagt,
 .fajr,
 .fajfr,
 .fajdr,
@@ -50,6 +51,7 @@
 .#{v.$css-prefix}-sharp-duotone,
 .#{v.$css-prefix}-chisel,
 .#{v.$css-prefix}-etch,
+.#{v.$css-prefix}-graphite,
 .#{v.$css-prefix}-jelly,
 .#{v.$css-prefix}-jelly-duo,
 .#{v.$css-prefix}-jelly-fill,
@@ -91,6 +93,7 @@
   .fans,
   .fands,
   .faes,
+  .fagt,
   .fajr,
   .fajfr,
   .fajdr,
@@ -110,6 +113,7 @@
   .#{v.$css-prefix}-sharp-duotone,
   .#{v.$css-prefix}-chisel,
   .#{v.$css-prefix}-etch,
+  .#{v.$css-prefix}-graphite,
   .#{v.$css-prefix}-jelly,
   .#{v.$css-prefix}-jelly-duo,
   .#{v.$css-prefix}-jelly-fill,
@@ -153,6 +157,7 @@
   .fans,
   .fands,
   .faes,
+  .fagt,
   .fajr,
   .fajfr,
   .fajdr,
@@ -172,6 +177,7 @@
   .#{v.$css-prefix}-sharp-duotone,
   .#{v.$css-prefix}-chisel,
   .#{v.$css-prefix}-etch,
+  .#{v.$css-prefix}-graphite,
   .#{v.$css-prefix}-jelly,
   .#{v.$css-prefix}-jelly-duo,
   .#{v.$css-prefix}-jelly-fill,
@@ -209,7 +215,7 @@
   .faudsb,
   .#{v.$css-prefix}-utility-duo
 )::after {
-  content: var(#{v.$icon-property});
+  content: var(#{v.$icon-property})/"";
   font-feature-settings: "ss01";
 }
 

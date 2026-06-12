@@ -2112,6 +2112,7 @@ $var-moon-star: \e7c9;
 $var-rainbow-half: \e7ca;
 $var-temperature-slash: \e7cb;
 $var-dialpad: \e7cc;
+$var-numpad: \e7cc;
 $var-computer-mouse-button-left: \e7cd;
 $var-computer-mouse-button-right: \e7ce;
 $var-dot: \e7d1;
@@ -2203,6 +2204,95 @@ $var-foot-wing: \e834;
 $var-pump-impeller: \e835;
 $var-arrow-rotate-left-10: \e836;
 $var-arrow-rotate-right-10: \e837;
+$var-arrow-archery: \e839;
+$var-bow-archery: \e83a;
+$var-eye-closed: \e83b;
+$var-file-css: \e83c;
+$var-file-html: \e83d;
+$var-file-js: \e83e;
+$var-layer: \e83f;
+$var-file-icns: \e841;
+$var-link-broken: \e842;
+$var-gpu: \e843;
+$var-aquarius: \e845;
+$var-aries: \e846;
+$var-cancer: \e847;
+$var-capricorn: \e848;
+$var-gemini: \e849;
+$var-leo: \e84a;
+$var-libra: \e84b;
+$var-pisces: \e84c;
+$var-sagittarius: \e84d;
+$var-scorpio: \e84e;
+$var-taurus: \e84f;
+$var-virgo: \e850;
+$var-bicep: \e862;
+$var-rectangle-irc: \e86c;
+$var-moon-first-quarter: \e870;
+$var-moon-last-quarter-inverse: \e870;
+$var-moon-full: \e871;
+$var-moon-new-inverse: \e871;
+$var-moon-last-quarter: \e872;
+$var-moon-first-quarter-inverse: \e872;
+$var-moon-new: \e873;
+$var-moon-full-inverse: \e873;
+$var-moon-waning-crescent: \e874;
+$var-moon-waxing-gibbous-inverse: \e874;
+$var-moon-waning-gibbous: \e875;
+$var-moon-waxing-crescent-inverse: \e875;
+$var-moon-waxing-crescent: \e876;
+$var-moon-waning-gibbous-inverse: \e876;
+$var-moon-waxing-gibbous: \e877;
+$var-moon-waning-crescent-inverse: \e877;
+$var-burst-new: \e878;
+$var-rectangle-new: \e87a;
+$var-opossum: \e87c;
+$var-possum: \e87c;
+$var-input-password: \e87d;
+$var-desk: \e87e;
+$var-dresser: \e87f;
+$var-stool: \e880;
+$var-wardrobe: \e881;
+$var-table-dining: \e882;
+$var-chest-drawers: \e883;
+$var-oar: \e884;
+$var-oars: \e885;
+$var-arrow-rotate-left-15: \e886;
+$var-arrow-rotate-left-30: \e887;
+$var-arrow-rotate-right-15: \e888;
+$var-arrow-rotate-right-30: \e889;
+$var-rows-3: \e88b;
+$var-table-cells-merge: \e88c;
+$var-table-cells-split: \e88d;
+$var-table-columns-add-after: \e88e;
+$var-table-columns-add-before: \e88f;
+$var-table-columns-merge-next: \e890;
+$var-table-columns-merge-previous: \e891;
+$var-table-columns-remove-after: \e892;
+$var-table-columns-remove-before: \e893;
+$var-table-rows-add-above: \e894;
+$var-table-rows-add-below: \e895;
+$var-table-rows-merge-next: \e896;
+$var-table-rows-merge-previous: \e897;
+$var-table-rows-remove-above: \e898;
+$var-table-rows-remove-below: \e899;
+$var-table-slash: \e89a;
+$var-kayak: \e89b;
+$var-canoe-person: \e89c;
+$var-utility-can: \e89d;
+$var-table-bar: \e89e;
+$var-owl: \e89f;
+$var-rectangle-api: \e8a0;
+$var-nas: \e8a1;
+$var-poker-chip: \e8a2;
+$var-tower-receive: \e8a3;
+$var-gear-api: \e8a4;
+$var-gear-complex-api: \e8a5;
+$var-globe-www: \e8a6;
+$var-label: \e8a7;
+$var-rectangle-n-a: \e8a8;
+$var-remote: \e8a9;
+$var-image-broken: \e8aa;
 $var-martini-glass-empty: \f000;
 $var-glass-martini: \f000;
 $var-music: \f001;
@@ -4854,6 +4944,42 @@ $var-tex: \e7ff;
 $var-duolingo: \e812;
 $var-supportnow: \e833;
 $var-tor-browser: \e838;
+$var-typescript: \e840;
+$var-square-deskpro: \e844;
+$var-circle-zulip: \e851;
+$var-julia: \e852;
+$var-zulip: \e853;
+$var-unison: \e854;
+$var-board-game-geek: \e855;
+$var-bgg: \e855;
+$var-ko-fi: \e856;
+$var-kubernetes: \e857;
+$var-postgresql: \e858;
+$var-scaleway: \e859;
+$var-venmo: \e85a;
+$var-venmo-v: \e85b;
+$var-unreal-engine: \e85c;
+$var-globaleaks: \e85d;
+$var-solana: \e85e;
+$var-threema: \e85f;
+$var-forgejo: \e860;
+$var-claude: \e861;
+$var-gitee: \e863;
+$var-xmpp: \e864;
+$var-fediverse: \e865;
+$var-tailwind-css: \e866;
+$var-arch-linux: \e867;
+$var-svelte: \e868;
+$var-hugging-face: \e869;
+$var-leetcode: \e86a;
+$var-openstreetmap: \e86b;
+$var-ultralytics: \e86d;
+$var-ultralytics-hub: \e86e;
+$var-ultralytics-yolo: \e86f;
+$var-obsidian: \e879;
+$var-zoom: \e87b;
+$var-vim: \e88a;
+$var-symfonycasts: \e8ab;
 $var-square-twitter: \f081;
 $var-twitter-square: \f081;
 $var-square-facebook: \f082;
@@ -7367,6 +7493,7 @@ $icons: (
   "rainbow-half": $var-rainbow-half,
   "temperature-slash": $var-temperature-slash,
   "dialpad": $var-dialpad,
+  "numpad": $var-numpad,
   "computer-mouse-button-left": $var-computer-mouse-button-left,
   "computer-mouse-button-right": $var-computer-mouse-button-right,
   "dot": $var-dot,
@@ -7458,6 +7585,95 @@ $icons: (
   "pump-impeller": $var-pump-impeller,
   "arrow-rotate-left-10": $var-arrow-rotate-left-10,
   "arrow-rotate-right-10": $var-arrow-rotate-right-10,
+  "arrow-archery": $var-arrow-archery,
+  "bow-archery": $var-bow-archery,
+  "eye-closed": $var-eye-closed,
+  "file-css": $var-file-css,
+  "file-html": $var-file-html,
+  "file-js": $var-file-js,
+  "layer": $var-layer,
+  "file-icns": $var-file-icns,
+  "link-broken": $var-link-broken,
+  "gpu": $var-gpu,
+  "aquarius": $var-aquarius,
+  "aries": $var-aries,
+  "cancer": $var-cancer,
+  "capricorn": $var-capricorn,
+  "gemini": $var-gemini,
+  "leo": $var-leo,
+  "libra": $var-libra,
+  "pisces": $var-pisces,
+  "sagittarius": $var-sagittarius,
+  "scorpio": $var-scorpio,
+  "taurus": $var-taurus,
+  "virgo": $var-virgo,
+  "bicep": $var-bicep,
+  "rectangle-irc": $var-rectangle-irc,
+  "moon-first-quarter": $var-moon-first-quarter,
+  "moon-last-quarter-inverse": $var-moon-last-quarter-inverse,
+  "moon-full": $var-moon-full,
+  "moon-new-inverse": $var-moon-new-inverse,
+  "moon-last-quarter": $var-moon-last-quarter,
+  "moon-first-quarter-inverse": $var-moon-first-quarter-inverse,
+  "moon-new": $var-moon-new,
+  "moon-full-inverse": $var-moon-full-inverse,
+  "moon-waning-crescent": $var-moon-waning-crescent,
+  "moon-waxing-gibbous-inverse": $var-moon-waxing-gibbous-inverse,
+  "moon-waning-gibbous": $var-moon-waning-gibbous,
+  "moon-waxing-crescent-inverse": $var-moon-waxing-crescent-inverse,
+  "moon-waxing-crescent": $var-moon-waxing-crescent,
+  "moon-waning-gibbous-inverse": $var-moon-waning-gibbous-inverse,
+  "moon-waxing-gibbous": $var-moon-waxing-gibbous,
+  "moon-waning-crescent-inverse": $var-moon-waning-crescent-inverse,
+  "burst-new": $var-burst-new,
+  "rectangle-new": $var-rectangle-new,
+  "opossum": $var-opossum,
+  "possum": $var-possum,
+  "input-password": $var-input-password,
+  "desk": $var-desk,
+  "dresser": $var-dresser,
+  "stool": $var-stool,
+  "wardrobe": $var-wardrobe,
+  "table-dining": $var-table-dining,
+  "chest-drawers": $var-chest-drawers,
+  "oar": $var-oar,
+  "oars": $var-oars,
+  "arrow-rotate-left-15": $var-arrow-rotate-left-15,
+  "arrow-rotate-left-30": $var-arrow-rotate-left-30,
+  "arrow-rotate-right-15": $var-arrow-rotate-right-15,
+  "arrow-rotate-right-30": $var-arrow-rotate-right-30,
+  "rows-3": $var-rows-3,
+  "table-cells-merge": $var-table-cells-merge,
+  "table-cells-split": $var-table-cells-split,
+  "table-columns-add-after": $var-table-columns-add-after,
+  "table-columns-add-before": $var-table-columns-add-before,
+  "table-columns-merge-next": $var-table-columns-merge-next,
+  "table-columns-merge-previous": $var-table-columns-merge-previous,
+  "table-columns-remove-after": $var-table-columns-remove-after,
+  "table-columns-remove-before": $var-table-columns-remove-before,
+  "table-rows-add-above": $var-table-rows-add-above,
+  "table-rows-add-below": $var-table-rows-add-below,
+  "table-rows-merge-next": $var-table-rows-merge-next,
+  "table-rows-merge-previous": $var-table-rows-merge-previous,
+  "table-rows-remove-above": $var-table-rows-remove-above,
+  "table-rows-remove-below": $var-table-rows-remove-below,
+  "table-slash": $var-table-slash,
+  "kayak": $var-kayak,
+  "canoe-person": $var-canoe-person,
+  "utility-can": $var-utility-can,
+  "table-bar": $var-table-bar,
+  "owl": $var-owl,
+  "rectangle-api": $var-rectangle-api,
+  "nas": $var-nas,
+  "poker-chip": $var-poker-chip,
+  "tower-receive": $var-tower-receive,
+  "gear-api": $var-gear-api,
+  "gear-complex-api": $var-gear-complex-api,
+  "globe-www": $var-globe-www,
+  "label": $var-label,
+  "rectangle-n-a": $var-rectangle-n-a,
+  "remote": $var-remote,
+  "image-broken": $var-image-broken,
   "martini-glass-empty": $var-martini-glass-empty,
   "glass-martini": $var-glass-martini,
   "music": $var-music,
@@ -10111,6 +10327,42 @@ $brand-icons: (
   "duolingo": $var-duolingo,
   "supportnow": $var-supportnow,
   "tor-browser": $var-tor-browser,
+  "typescript": $var-typescript,
+  "square-deskpro": $var-square-deskpro,
+  "circle-zulip": $var-circle-zulip,
+  "julia": $var-julia,
+  "zulip": $var-zulip,
+  "unison": $var-unison,
+  "board-game-geek": $var-board-game-geek,
+  "bgg": $var-bgg,
+  "ko-fi": $var-ko-fi,
+  "kubernetes": $var-kubernetes,
+  "postgresql": $var-postgresql,
+  "scaleway": $var-scaleway,
+  "venmo": $var-venmo,
+  "venmo-v": $var-venmo-v,
+  "unreal-engine": $var-unreal-engine,
+  "globaleaks": $var-globaleaks,
+  "solana": $var-solana,
+  "threema": $var-threema,
+  "forgejo": $var-forgejo,
+  "claude": $var-claude,
+  "gitee": $var-gitee,
+  "xmpp": $var-xmpp,
+  "fediverse": $var-fediverse,
+  "tailwind-css": $var-tailwind-css,
+  "arch-linux": $var-arch-linux,
+  "svelte": $var-svelte,
+  "hugging-face": $var-hugging-face,
+  "leetcode": $var-leetcode,
+  "openstreetmap": $var-openstreetmap,
+  "ultralytics": $var-ultralytics,
+  "ultralytics-hub": $var-ultralytics-hub,
+  "ultralytics-yolo": $var-ultralytics-yolo,
+  "obsidian": $var-obsidian,
+  "zoom": $var-zoom,
+  "vim": $var-vim,
+  "symfonycasts": $var-symfonycasts,
   "square-twitter": $var-square-twitter,
   "twitter-square": $var-twitter-square,
   "square-facebook": $var-square-facebook,
