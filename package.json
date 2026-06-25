@@ -50,7 +50,7 @@
 		"validator": "^13.15.35"
 	},
 	"devDependencies": {
-		"autoprefixer": "^10.5.0",
+		"autoprefixer": "^10.5.2",
 		"clean-webpack-plugin": "^4.0.0",
 		"copy-webpack-plugin": "^14.0.0",
 		"css-loader": "^7.1.4",
@@ -68,7 +68,7 @@
 		"sass-loader": "^17.0.0",
 		"webpack": "^5.107.2",
 		"webpack-cli": "^7.0.3",
-		"webpack-dev-server": "^5.2.4",
+		"webpack-dev-server": "^5.2.5",
 		"webpack-pwa-manifest": "^4.3.0"
 	}
 }

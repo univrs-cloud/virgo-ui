@@ -18,7 +18,7 @@ const getSystem = () => {
 
 const getFQDN = () => {
 	const system = getSystem();
-	return system.osInfo.fqdn;
+	return system.osInfo?.fqdn || '';
 };
 
 export {

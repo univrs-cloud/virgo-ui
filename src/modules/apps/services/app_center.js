@@ -47,7 +47,7 @@ const getJobs = () => {
 
 const getFQDN = () => {
 	const system = Host.getSystem();
-	return system.osInfo.fqdn;
+	return system.osInfo?.fqdn || '';
 };
 
 const getTemplates = () => {
