@@ -134,6 +134,8 @@ div:not(.navbar) .nav-pills {
 	--bs-offcanvas-height: 726px;
 	--bs-offcanvas-padding-y: 0.875rem;
 	background-color: rgba(237, 242, 249, 0.96);
+	backdrop-filter: blur(6px) grayscale(0.8);
+  	opacity: 0.9;
 }
 .offcanvas-header {
 	--bs-offcanvas-padding-x: 0.575rem;
