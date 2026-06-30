@@ -1,3 +1,10 @@
+<div class="nav-item">
+	<u-select name="site" label="Site">
+		<%_.each(sites, (site) => {%>
+			<option value="<%=site%>" selected><%=site%></option>
+		<%})%>
+	</u-select>
+</div>
 <a href="/dashboard" class="nav-item nav-link <%=(active === '/dashboard' && 'active')%>">
 	<i class="icon-duotone icon-solid icon-objects-column icon-fw me-2"></i>
 	Dashboard
