@@ -36,7 +36,8 @@ const render = async (state) => {
 				import('shell/header'),
 				import('shell/main')
 			]);
-			await import('modules').then(({ modulesLoaded }) => { return modulesLoaded; });
+			const { modulesLoaded } = await import('modules');
+			await modulesLoaded;
 			import('shell/navigation');
 		} catch (error) {
 			alert(`Error during application initialization<br><br>${error}`, );

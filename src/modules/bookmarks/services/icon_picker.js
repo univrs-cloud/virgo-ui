@@ -1,23 +1,32 @@
 import Fuse from 'fuse.js';
 
 const METADATA_URL = 'https://raw.githubusercontent.com/homarr-labs/dashboard-icons/refs/heads/main/metadata.json';
-const ICON_BASE = 'https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@main';
+const ICON_BASE = 'https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons';
 export const DEFAULT_ICON = '/assets/img/virgo.svg';
 
-const getIconUrl = (id, base) => `${ICON_BASE}/${base}/${id}.${base}`;
+const getIconUrl = (id, base) => {
+	return `${ICON_BASE}/${base}/${id}.${base}`;
+}
 const MAX_RESULTS = 48;
 
 let metadataPromise = null;
 let fuse = null;
 let iconList = [];
 
-const isIconEntry = (value) => _.isObject(value) && _.has(value, 'base') && (value.base === 'svg' || value.base === 'png');
+const isIconEntry = (value) => {
+	return _.isObject(value) && _.has(value, 'base') && (value.base === 'svg' || value.base === 'png');
+};
 
-const fetchMetadata = () => {
+const fetchMetadata = async () => {
 	if (!metadataPromise) {
-		metadataPromise = fetch(METADATA_URL)
-			.then((res) => { return res.ok ? res.json() : {}; })
-			.catch(() => { return {}; });
+		metadataPromise = (async () => {
+			try {
+				const response = await fetch(METADATA_URL);
+				return response.ok ? await response.json() : {};
+			} catch {
+				return {};
+			}
+		})();
 	}
 	return metadataPromise;
 };
@@ -29,6 +38,7 @@ const buildIconList = (raw) => {
 		if (!isIconEntry(entry)) {
 			return;
 		}
+
 		const aliases = _.isArray(entry.aliases) ? entry.aliases.join(' ') : '';
 		const categories = _.isArray(entry.categories) ? entry.categories.join(' ') : '';
 		const searchText = [id, aliases, categories].filter(Boolean).join(' ');
