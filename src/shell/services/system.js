@@ -21,8 +21,15 @@ const getFQDN = () => {
 	return system.osInfo?.fqdn || '';
 };
 
+const getSites = () => {
+	return [
+		getFQDN()
+	];
+};
+
 export {
 	subscribe,
 	getSystem,
-	getFQDN
+	getFQDN,
+	getSites
 };

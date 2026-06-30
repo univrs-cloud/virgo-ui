@@ -21,12 +21,13 @@ const renderSerialNumber = (state) => {
 	unsubscribe = null;
 };
 
-const renderSystemUpdatesBadge = (state) => {
+const renderNavigation = async (state) => {
 	if (!state.updates) {
 		return;
 	}
 
-	const newNav = `<div>${navigationTemplate({ active: page.current, updates: state.updates })}</div>`;
+	const sites = await systemService.getSites();
+	const newNav = `<div>${navigationTemplate({ active: page.current, updates: state.updates, sites })}</div>`;
 	_.each(document.querySelectorAll('header .navbar .nav, .offcanvas .navbar-nav'), (nav) => {
 		morphdom(
 			nav,
@@ -42,12 +43,12 @@ morphdom(
 	header,
 	headerTemplate({ isUpdating: false })
 );
-renderSystemUpdatesBadge({ updates: [] });
+renderNavigation({ updates: [] });
 
 account.init();
 notifications.init();
 
-softwareService.subscribeToUpdates([renderSystemUpdatesBadge]);
+softwareService.subscribeToUpdates([renderNavigation]);
 unsubscribe = systemService.subscribe([renderSerialNumber]);
 
 import('shell/weather');
