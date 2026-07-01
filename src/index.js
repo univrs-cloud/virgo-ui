@@ -28,7 +28,7 @@ const render = async (state) => {
 
 	if (state.setupCompleted === false) {
 		await import('shell/setup');
-	} else if (isAuthenticated && isAdmin && !_.isNull(state.update)) {
+	} else if (isAdmin && !_.isNull(state.update)) {
 		await import('shell/update');
 	} else {
 		try {
