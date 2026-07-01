@@ -1,5 +1,6 @@
 import headerPartial from 'shell/partials/header.html';
 import navigationPartial from 'shell/partials/navigation.html';
+import sitesPartial from 'shell/partials/sites.html';
 import * as account from 'shell/account';
 import * as notifications from 'shell/notifications';
 import * as systemService from 'shell/services/system';
@@ -9,6 +10,7 @@ import page from 'page';
 let unsubscribe;
 const headerTemplate = _.template(headerPartial);
 const navigationTemplate = _.template(navigationPartial);
+const sitesTemplate = _.template(sitesPartial);
 const header = document.querySelector('header');
 
 const renderSerialNumber = (state) => {
@@ -27,7 +29,7 @@ const renderNavigation = async (state) => {
 	}
 
 	const sites = await systemService.getSites();
-	const newNav = `<div>${navigationTemplate({ active: page.current, updates: state.updates, sites })}</div>`;
+	const newNav = `<div>${navigationTemplate({ active: page.current, updates: state.updates, sites: sitesTemplate({ sites }) })}</div>`;
 	_.each(document.querySelectorAll('header .navbar .nav, .offcanvas .navbar-nav'), (nav) => {
 		morphdom(
 			nav,

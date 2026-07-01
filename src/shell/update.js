@@ -1,6 +1,7 @@
 import page from 'page';
 import headerPartial from 'shell/partials/header.html';
 import navigationPartial from 'shell/partials/navigation_update.html';
+import sitesPartial from 'shell/partials/sites.html';
 import updateStepsPartial from 'shell/partials/update_steps.html';
 import * as account from 'shell/account';
 import * as systemService from 'shell/services/system';
@@ -12,6 +13,7 @@ let isScrollEventAttached = false;
 let shouldScroll = true;
 const headerTemplate = _.template(headerPartial);
 const navigationTemplate = _.template(navigationPartial);
+const sitesTemplate = _.template(sitesPartial);
 const updateStepsTemplate = _.template(updateStepsPartial);
 const header = document.querySelector('header');
 const container = document.querySelector('#update');
@@ -50,11 +52,12 @@ const renderSerialNumber = (state) => {
 	unsubscribe = null;
 };
 
-const renderNavigation = () => {
+const renderNavigation = async () => {
+	const sites = await systemService.getSites();
 	_.each(header.querySelectorAll('.navbar .nav, .offcanvas .navbar-nav'), (nav) => {
 		morphdom(
 			nav,
-			`<div>${navigationTemplate()}</div>`,
+			`<div>${navigationTemplate({ sites: sitesTemplate({ sites }) })}</div>`,
 			{ childrenOnly: true }
 		);
 	});

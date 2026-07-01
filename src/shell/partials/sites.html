@@ -1,0 +1,21 @@
+<div class="nav-item">
+	<div class="nav-title ps-sm-2">
+		<div class="d-flex align-items-center">
+			<small class="me-auto">Sites</small>
+			<u-button size="sm" data-bs-toggle="modal" data-bs-target="#sites"><i class="icon-solid icon-cog icon-fw"></i></u-button>
+		</div>
+	</div>
+	<div class="dropdown mb-4">
+		<span data-bs-toggle="dropdown" class="dropdown-toggle d-flex justify-content-between align-items-center btn btn-primary bd-blue-100 shadow-sm w-100 text-start"><%=sites[0]%></span>
+		<ul class="dropdown-menu w-100">
+			<%_.each(sites, (site) => {%>
+				<li>
+					<a href="#" class="dropdown-item d-flex align-items-center">
+						<i class="icon-solid icon-dot text-green-400 me-1"></i>
+						<%=site%>
+					</a>
+				</li>
+			<%})%>
+		</ul>
+	</div>
+</div>
