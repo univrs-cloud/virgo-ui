@@ -1,7 +1,7 @@
 const moduleLoaders = {
 	'not-found': () => import('modules/not_found'),
 	'dashboard': () => import('modules/dashboard'),
-	...(isAuthenticated && isAdmin && {
+	...(isAdmin && {
 		'apps': () => import('modules/apps'),
 		'bookmarks': () => import('modules/bookmarks'),
 		'folders': () => import('modules/folders'),

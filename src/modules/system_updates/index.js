@@ -23,7 +23,7 @@ const checkUpdates = (event) => {
 };
 
 const update = (event) => {
-	if (!isAuthenticated || !isAdmin) {
+	if (!isAdmin) {
 		return;
 	}
 
