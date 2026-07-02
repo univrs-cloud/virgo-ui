@@ -4,7 +4,12 @@
 	<div class="btn-group align-items-center w-100 mb-4">
 		<span data-bs-toggle="dropdown" class="dropdown-toggle d-flex justify-content-between align-items-center btn btn-secondary bd-white shadow-sm w-100 text-start">
 			<%if (selectedSite) {%>
-				<%=selectedSite.name%>
+				<span class="d-flex align-items-center text-truncate">
+					<span class="text-truncate"><%=selectedSite.name%></span>
+					<%if (!selectedSite.isOwner) {%>
+						<u-badge color="gray" tint="300" class="ms-2 flex-shrink-0" pill>Invited</u-badge>
+					<%}%>
+				</span>
 			<%} else {%>
 				&mdash;
 			<%}%>
@@ -13,9 +18,14 @@
 		<ul class="dropdown-menu w-100">
 			<%_.each(sites, (site) => {%>
 				<li>
-					<a href="#" class="dropdown-item d-flex align-items-center<%=site.selected ? ' active' : ''%>" data-node-id="<%=site.nodeId%>">
-						<i class="icon-solid icon-dot <%=site.online ? 'text-green-400' : 'text-red-400'%> me-1"></i>
-						<%=site.name%>
+					<a href="#" class="dropdown-item d-flex align-items-center justify-content-between<%=site.selected ? ' active' : ''%>" data-node-id="<%=site.nodeId%>">
+						<span class="d-flex align-items-center text-truncate">
+							<i class="icon-solid icon-dot <%=site.online ? 'text-green-400' : 'text-red-400'%> me-1"></i>
+							<span class="text-truncate"><%=site.name%></span>
+						</span>
+						<%if (!site.isOwner) {%>
+							<u-badge color="gray" tint="300" class="ms-2 flex-shrink-0" pill>Invited</u-badge>
+						<%}%>
 					</a>
 				</li>
 			<%})%>
