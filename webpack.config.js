@@ -49,7 +49,7 @@ module.exports = (env, argv) => {
 			},
 			proxy: [
 				{
-					context: ['/api', '/assets/fleet'],
+					context: ['/api'],
 					target: `https://${upstream}`,
 					secure: false,
 					changeOrigin: true,

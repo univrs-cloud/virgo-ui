@@ -1,7 +1,5 @@
 import page from 'page';
 import { loadModule } from 'modules';
-import * as runtimeService from 'shell/services/runtime';
-import * as sitesService from 'shell/services/sites';
 
 const header = document.querySelector('header');
 const offcanvas = document.querySelector('.offcanvas');
@@ -49,43 +47,12 @@ const requiresAdmin = (ctx, next) => {
 	next();
 };
 
-const requiresFleetMode = (ctx, next) => {
-	if (!isFleetMode) {
-		page.redirect('/');
-		return;
-	}
-
-	next();
-};
-
-const requiresFleetSites = async (ctx, next) => {
-	if (!isFleetMode || runtimeService.getSelectedNodeId()) {
-		next();
-		return;
-	}
-
-	const sites = await sitesService.getSites();
-	if (sites.length) {
-		if (!runtimeService.getSelectedNodeId()) {
-			await sitesService.selectFirstSiteIfNeeded();
-			return;
-		}
-		next();
-		return;
-	}
-
-	ctx.module = 'fleet-empty';
-	await loadModule('fleet-empty');
-	showPage(ctx);
-};
-
 header.addEventListener('click', navigate);
 offcanvas.addEventListener('click', navigate);
 
 const routes = [
-	{ path: '/', module: 'dashboard', middleware: [requiresFleetSites] },
-	{ path: '/dashboard', module: 'dashboard', middleware: [requiresFleetSites] },
-	{ path: '/sites', module: 'sites', middleware: [requireAuth, requiresFleetMode] },
+	{ path: '/', module: 'dashboard' },
+	{ path: '/dashboard', module: 'dashboard' },
 	{ path: '/apps/:appName?', module: 'apps', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/bookmarks', module: 'bookmarks', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/folders', module: 'folders', middleware: [requireAuth, requiresAdmin] },

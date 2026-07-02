@@ -1,5 +1,4 @@
 import Host from 'stores/host';
-import { connectNodeStores } from 'stores/store';
 import { createSubscription, storeAttach } from 'shell/services/module_store_subscription';
 
 const { subscribe } = createSubscription({
@@ -14,7 +13,7 @@ const { subscribe } = createSubscription({
 });
 
 const reconnectSocket = () => {
-	connectNodeStores();
+	Host.socket.connect();
 };
 
 const disconnectSocket = () => {
