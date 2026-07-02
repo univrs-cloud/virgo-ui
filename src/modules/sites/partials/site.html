@@ -2,8 +2,8 @@
 	<td style="min-width: 200px; max-width: 0;">
 		<div class="d-flex align-items-center mb-n1">
 			<div class="text-truncate site-name"><%=node.name%></div>
-			<%if (node.isOwner) {%>
-				<u-badge color="indigo" tint="400" class="ms-2" tip="Owner" pill><i class="icon-solid icon-crown"></i></u-badge>
+			<%if (!node.isOwner) {%>
+				<u-badge color="gray" tint="300" class="ms-2" pill>Invited</u-badge>
 			<%}%>
 		</div>
 		<div class="d-flex">
