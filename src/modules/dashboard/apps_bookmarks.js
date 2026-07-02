@@ -87,7 +87,7 @@ const render = (state) => {
 	if (_.isNull(state.apps)) {
 		return;
 	}
-	
+
 	if (hasDraggingStarted) {
 		return;
 	}

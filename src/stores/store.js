@@ -9,8 +9,10 @@ const getSelectedNodeId = () => {
 };
 
 const getRole = () => {
-	return virgoRole ?? null;
+	return window.virgoRole ?? null;
 };
+
+const nodeStores = new Set();
 
 const isFleetMode = () => {
 	return getRole() === 'fleet';
@@ -61,6 +63,8 @@ class Store extends ObservableStore {
 		super(settings);
 		this.namespace = settings.namespace;
 		this.socket = this.createSocket(this.namespace);
+		nodeStores.add(this);
+		this.connectIfReady();
 		this.propertySubscribers = [];
 		this.previousState = this.getState() || {};
 
@@ -128,6 +132,13 @@ class Store extends ObservableStore {
 
 	/** Opens the store's namespace socket. Overridable so bootstrap stores (e.g. runtime role
 	 * detection) can resolve their path differently. */
+	connectIfReady() {
+		if (this.socket.connected || this.shouldDeferConnect(this.namespace)) {
+			return;
+		}
+		this.socket.connect();
+	}
+
 	createSocket(namespace) {
 		const deferred = this.shouldDeferConnect(namespace);
 		return io(this.getSocketNamespace(namespace), {
@@ -159,5 +170,11 @@ class Store extends ObservableStore {
 	}
 }
 
+const connectNodeStores = () => {
+	for (const store of nodeStores) {
+		store.connectIfReady();
+	}
+};
+
 export default Store;
-export { pickFilteredStoreSlice };
+export { pickFilteredStoreSlice, connectNodeStores };

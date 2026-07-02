@@ -230,5 +230,6 @@ table.querySelector('thead').addEventListener('click', order);
 table.querySelector('tbody').addEventListener('click', expand);
 
 serviceService.subscribe([render]);
+serviceService.syncServices();
 
 import('modules/system_services/logs');

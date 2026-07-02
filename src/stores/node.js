@@ -35,7 +35,7 @@ class Node extends Store {
 	}
 
 	shouldDeferConnect(_namespace) {
-		const role = virgoRole ?? null;
+		const role = window.virgoRole ?? null;
 		if (role === null) {
 			return true;
 		}
