@@ -39,21 +39,20 @@ const bindSiteSelection = () => {
 	});
 };
 
-const renderSites = async () => {
-	if (!isFleetMode || !isAuthenticated) {
-		return '';
-	}
-	const sites = await systemService.getSites();
-	return sitesTemplate({ sites });
-};
-
 const renderNavigation = async (state) => {
 	if (!state.updates && !isFleetMode) {
 		return;
 	}
 
-	const sites = await renderSites();
-	const newNav = `<div>${navigationTemplate({ active: page.current, updates: state.updates || [], sites })}</div>`;
+	let hasSites = true;
+	let sites = '';
+	if (isFleetMode && isAuthenticated) {
+		const siteList = await systemService.getSites();
+		hasSites = siteList.length > 0;
+		sites = sitesTemplate({ sites: siteList });
+	}
+
+	const newNav = `<div>${navigationTemplate({ active: page.current, updates: state.updates || [], sites, hasSites })}</div>`;
 	_.each(document.querySelectorAll('header .navbar .nav, .offcanvas .navbar-nav'), (nav) => {
 		morphdom(
 			nav,

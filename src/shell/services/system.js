@@ -1,5 +1,5 @@
 import Host from 'stores/host';
-import { getNodeStore } from 'stores/node';
+import { waitForNodes } from 'shell/services/node';
 import * as runtimeService from 'shell/services/runtime';
 import { createSubscription, storeAttach } from 'shell/services/module_store_subscription';
 
@@ -28,12 +28,7 @@ const getSites = async () => {
 		return [];
 	}
 
-	const Node = getNodeStore();
-	if (!Node) {
-		return [];
-	}
-
-	const nodes = Node.getNodes() || [];
+	const nodes = await waitForNodes();
 
 	const selectedNodeId = runtimeService.getSelectedNodeId();
 	let selected = selectedNodeId;
