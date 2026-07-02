@@ -5,7 +5,6 @@ import 'libs/dialog';
 import 'libs/components';
 import * as runtimeService from 'shell/services/runtime';
 import * as accountShell from 'shell/account';
-import { getNodeStore } from 'stores/node';
 
 function loadAccount() {
 	try {
@@ -30,6 +29,10 @@ async function launchShell() {
 }
 
 async function bootstrapApp() {
+	if (isFleetMode && isAuthenticated) {
+		await import('stores/node');
+	}
+
 	if (isFleetMode && !runtimeService.getSelectedNodeId()) {
 		try {
 			await launchShell();
@@ -84,10 +87,6 @@ function start() {
 		window.isAdmin = isAuthenticated && (isFleetMode ? Boolean(runtimeService.getSelectedNodeId()) : _.includes(account.groups, 'admins'));
 
 		accountShell.init();
-
-		if (isFleetMode && isAuthenticated) {
-			getNodeStore();
-		}
 
 		if (isFleetMode && !isAuthenticated) {
 			import('shell/login');

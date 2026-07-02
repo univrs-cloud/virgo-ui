@@ -35,6 +35,10 @@ class Node extends Store {
 		});
 	}
 
+	shouldDeferConnect(namespace) {
+		return !runtimeService.isFleetMode();
+	}
+
 	getNodes() {
 		return this.getStateProperty('nodes');
 	}
@@ -89,18 +93,4 @@ class Node extends Store {
 	}
 }
 
-let nodeStore = null;
-
-function getNodeStore() {
-	if (!runtimeService.isFleetMode()) {
-		return null;
-	}
-	if (!nodeStore) {
-		nodeStore = new Node();
-	}
-	return nodeStore;
-}
-
-export {
-	getNodeStore
-};
+export default new Node();
