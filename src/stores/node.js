@@ -35,8 +35,12 @@ class Node extends Store {
 		});
 	}
 
-	shouldDeferConnect(namespace) {
-		return !runtimeService.isFleetMode();
+	shouldDeferConnect(_namespace) {
+		const role = runtimeService.getRole();
+		if (role === null) {
+			return true;
+		}
+		return role !== 'fleet';
 	}
 
 	getNodes() {

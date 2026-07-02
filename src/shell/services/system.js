@@ -1,6 +1,4 @@
 import Host from 'stores/host';
-import { waitForNodes } from 'shell/services/node';
-import * as runtimeService from 'shell/services/runtime';
 import { createSubscription, storeAttach } from 'shell/services/module_store_subscription';
 
 const { subscribe } = createSubscription({
@@ -23,34 +21,8 @@ const getFQDN = () => {
 	return system?.osInfo?.fqdn || '';
 };
 
-const getSites = async () => {
-	if (!isFleetMode) {
-		return [];
-	}
-
-	const nodes = await waitForNodes();
-
-	const selectedNodeId = runtimeService.getSelectedNodeId();
-	let selected = selectedNodeId;
-	if (!selected && nodes.length) {
-		selected = nodes[0].nodeId;
-		runtimeService.setSelectedNodeId(selected);
-		// A page reload is required so boot-time flags derived from the selected node
-		// (e.g. isAdmin for that node's system pages) are recomputed for this first pick.
-		location.reload();
-	}
-
-	return nodes.map((node) => {
-		return {
-			...node,
-			selected: node.nodeId === selected
-		};
-	});
-};
-
 export {
 	subscribe,
 	getSystem,
-	getFQDN,
-	getSites
+	getFQDN
 };

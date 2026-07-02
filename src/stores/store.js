@@ -48,9 +48,19 @@ ObservableStore.addExtension(new ReduxDevToolsExtension());
 class Store extends ObservableStore {
 	constructor(settings) {
 		super(settings);
-		this.socket = this.createSocket(settings.namespace);
+		this.namespace = settings.namespace;
+		this.socket = this.createSocket(this.namespace);
 		this.propertySubscribers = [];
 		this.previousState = this.getState() || {};
+
+		if (this.shouldDeferConnect(this.namespace)) {
+			runtimeService.subscribe([() => {
+				if (this.shouldDeferConnect(this.namespace) || this.socket.connected) {
+					return;
+				}
+				this.socket.connect();
+			}]);
+		}
 
 		this.globalStateWithPropertyChanges.subscribe((stateChange) => {
 			if (stateChange === null) {
@@ -106,9 +116,14 @@ class Store extends ObservableStore {
 	}
 
 	shouldDeferConnect(namespace) {
-		return runtimeService.isFleetMode()
-			&& !FLEET_NAMESPACES.has(namespace)
-			&& !runtimeService.getSelectedNodeId();
+		if (FLEET_NAMESPACES.has(namespace)) {
+			return false;
+		}
+		const role = runtimeService.getRole();
+		if (role === null) {
+			return true;
+		}
+		return role === 'fleet' && !runtimeService.getSelectedNodeId();
 	}
 
 	/** Opens the store's namespace socket. Overridable so bootstrap stores (e.g. runtime role

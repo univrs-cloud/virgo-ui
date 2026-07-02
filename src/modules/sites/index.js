@@ -1,6 +1,6 @@
 import modulePartial from 'modules/sites/partials/index.html';
 import sitePartial from 'modules/sites/partials/site.html';
-import * as nodeService from 'modules/sites/services/node';
+import * as nodeService from 'shell/services/node';
 import { filterListByQuery } from 'utils/list_search';
 
 const moduleTemplate = _.template(modulePartial);
@@ -75,6 +75,7 @@ searchInput.addEventListener('input', search);
 table.querySelector('thead').addEventListener('click', order);
 
 nodeService.subscribe([render]);
+render({ nodes: nodeService.getNodes() });
 
 import('modules/sites/site_access');
 import('modules/sites/site_delete');

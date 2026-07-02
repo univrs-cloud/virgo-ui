@@ -1,7 +1,7 @@
 import page from 'page';
 import { loadModule } from 'modules';
 import * as runtimeService from 'shell/services/runtime';
-import * as systemService from 'shell/services/system';
+import * as sitesService from 'shell/services/sites';
 
 const header = document.querySelector('header');
 const offcanvas = document.querySelector('.offcanvas');
@@ -64,8 +64,12 @@ const requiresFleetSites = async (ctx, next) => {
 		return;
 	}
 
-	const sites = await systemService.getSites();
+	const sites = await sitesService.getSites();
 	if (sites.length) {
+		if (!runtimeService.getSelectedNodeId()) {
+			await sitesService.selectFirstSiteIfNeeded();
+			return;
+		}
 		next();
 		return;
 	}

@@ -3,6 +3,7 @@ import navigationPartial from 'shell/partials/navigation.html';
 import sitesPartial from 'shell/partials/sites.html';
 import * as account from 'shell/account';
 import * as notifications from 'shell/notifications';
+import * as sitesService from 'shell/services/sites';
 import * as systemService from 'shell/services/system';
 import * as softwareService from 'shell/services/software';
 import * as nodeService from 'shell/services/node';
@@ -47,7 +48,7 @@ const renderNavigation = async (state) => {
 	let hasSites = true;
 	let sites = '';
 	if (isFleetMode && isAuthenticated) {
-		const siteList = await systemService.getSites();
+		const siteList = await sitesService.getSites();
 		hasSites = siteList.length > 0;
 		sites = sitesTemplate({ sites: siteList });
 	}
@@ -80,6 +81,8 @@ if (isFleetMode) {
 		renderNavigation({ updates: softwareService.getUpdates() || [] });
 	}]);
 }
-unsubscribe = systemService.subscribe([renderSerialNumber]);
+if (isAdmin) {
+	unsubscribe = systemService.subscribe([renderSerialNumber]);
+}
 
 import('shell/weather');
