@@ -6,7 +6,7 @@ import * as notifications from 'shell/notifications';
 import * as systemService from 'shell/services/system';
 import * as softwareService from 'shell/services/software';
 import * as nodeService from 'shell/services/node';
-import * as runtime from 'config/runtime';
+import * as runtimeService from 'shell/services/runtime';
 import page from 'page';
 
 let unsubscribe;
@@ -30,10 +30,10 @@ const bindSiteSelection = () => {
 		element.addEventListener('click', (event) => {
 			event.preventDefault();
 			const nodeId = element.dataset.nodeId;
-			if (!nodeId || nodeId === runtime.getSelectedNodeId()) {
+			if (!nodeId || nodeId === runtimeService.getSelectedNodeId()) {
 				return;
 			}
-			runtime.setSelectedNodeId(nodeId);
+			runtimeService.setSelectedNodeId(nodeId);
 			location.reload();
 		});
 	});

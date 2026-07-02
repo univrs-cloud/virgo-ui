@@ -1,69 +1,31 @@
-import { ObservableStore } from '@codewithdan/observable-store';
 import { io } from 'socket.io-client';
+import Store from 'stores/store';
 
-const SOCKET_PATHS = ['/api/fleet', '/api'];
-
-class Runtime extends ObservableStore {
-	#socket = null;
-	#pathIndex = 0;
-
+class Runtime extends Store {
 	constructor() {
-		super({});
-		this.setState({ role: null }, 'init');
-		this.#connect();
-	}
-
-	#connect() {
-		if (this.#pathIndex >= SOCKET_PATHS.length) {
-			this.setState({ role: 'node' }, 'runtime_fallback');
-			return;
-		}
-
-		const path = SOCKET_PATHS[this.#pathIndex++];
-		this.#socket = io('/runtime', {
-			path,
-			reconnection: false,
-			timeout: 5000
-		});
-
-		this.#socket.on('runtime', (config) => {
-			this.setState({ role: config.role || 'node' }, 'runtime');
-			this.#socket.disconnect();
-			this.#socket = null;
-		});
-
-		this.#socket.on('connect_error', () => {
-			this.#socket?.disconnect();
-			this.#socket = null;
-			this.#connect();
-		});
-	}
-
-	subscribeToProperties(propertyNames, callback) {
-		const deliver = (state) => {
-			const properties = {};
-			propertyNames.forEach((propertyName) => {
-				properties[propertyName] = state?.[propertyName];
-			});
-			callback(properties);
+		const initialState = {
+			role: null
 		};
+		super({ namespace: 'runtime' });
 
-		const subscription = this.globalStateWithPropertyChanges.subscribe((change) => {
-			if (change === null) {
-				return;
-			}
-			const stateChanges = change.stateChanges || {};
-			const hasChanged = propertyNames.some((propertyName) => {
-				return Object.prototype.hasOwnProperty.call(stateChanges, propertyName);
-			});
-			if (hasChanged) {
-				deliver(change.state);
-			}
+		this.setState(initialState, 'socket_connect');
+
+		this.socket.on('runtime', (config) => {
+			this.setState({ role: config.role || 'node' }, 'runtime');
 		});
+	}
 
-		deliver(this.getState() || {});
-
-		return () => subscription.unsubscribe();
+	/** Runtime detection is the bootstrap that determines the role every other store's path depends
+	 * on, so it can't derive its own path from the role. It always connects to the base API path and
+	 * just listens for the role the server emits on connection (no requests, no probing). */
+	createSocket(namespace) {
+		return io(`/${namespace}`, {
+			path: '/api',
+			reconnection: true,
+			reconnectionAttempts: 30,
+			reconnectionDelay: 1000,
+			reconnectionDelayMax: 5000
+		});
 	}
 }
 

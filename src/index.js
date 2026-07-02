@@ -3,7 +3,6 @@ import 'libs/lodash';
 import 'libs/bootstrap';
 import 'libs/dialog';
 import 'libs/components';
-import * as runtime from 'config/runtime';
 import * as runtimeService from 'shell/services/runtime';
 import * as accountShell from 'shell/account';
 
@@ -63,13 +62,13 @@ function start() {
 			return;
 		}
 
-		window.isFleetMode = runtime.isFleetMode();
+		window.isFleetMode = runtimeService.isFleetMode();
 		window.account = loadAccount();
 		window.isAuthenticated = !_.isEmpty(account);
 		// There is no fleet-wide admin: in fleet mode, a node's system pages are available
 		// to anyone with access to that node, so isAdmin simply reflects whether a node is
 		// currently selected. Outside fleet mode, it still reflects real OS admin group membership.
-		window.isAdmin = isAuthenticated && (isFleetMode ? Boolean(runtime.getSelectedNodeId()) : _.includes(account.groups, 'admins'));
+		window.isAdmin = isAuthenticated && (isFleetMode ? Boolean(runtimeService.getSelectedNodeId()) : _.includes(account.groups, 'admins'));
 
 		accountShell.init();
 

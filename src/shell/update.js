@@ -7,7 +7,7 @@ import * as account from 'shell/account';
 import * as systemService from 'shell/services/system';
 import * as softwareService from 'shell/services/software';
 import * as powerService from 'modules/settings/services/power';
-import * as runtime from 'config/runtime';
+import * as runtimeService from 'shell/services/runtime';
 
 let unsubscribe;
 let isScrollEventAttached = false;
@@ -58,10 +58,10 @@ const bindSiteSelection = () => {
 		element.addEventListener('click', (event) => {
 			event.preventDefault();
 			const nodeId = element.dataset.nodeId;
-			if (!nodeId || nodeId === runtime.getSelectedNodeId()) {
+			if (!nodeId || nodeId === runtimeService.getSelectedNodeId()) {
 				return;
 			}
-			runtime.setSelectedNodeId(nodeId);
+			runtimeService.setSelectedNodeId(nodeId);
 			location.reload();
 		});
 	});

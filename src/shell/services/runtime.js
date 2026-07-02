@@ -1,10 +1,6 @@
 import Runtime from 'stores/runtime';
 import { createSubscription, storeAttach } from 'shell/services/module_store_subscription';
 
-const FLEET_NAMESPACES = new Set(['user', 'group', 'auth', 'node']);
-const FLEET_SOCKET_PATH = '/api/fleet';
-const NODE_SOCKET_PATH = '/api';
-
 const { subscribe } = createSubscription({
 	stores: [
 		{
@@ -13,7 +9,7 @@ const { subscribe } = createSubscription({
 		}
 	],
 	attachStore: storeAttach.afterCallbacks,
-	mapState: (properties) => properties,
+	mapState: (properties) => properties
 });
 
 function getSelectedNodeId() {
@@ -32,25 +28,9 @@ function isFleetMode() {
 	return Runtime.getStateProperty('role') === 'fleet';
 }
 
-function getSocketPath(namespace) {
-	if (!isFleetMode()) {
-		return NODE_SOCKET_PATH;
-	}
-	if (FLEET_NAMESPACES.has(namespace)) {
-		return FLEET_SOCKET_PATH;
-	}
-	const nodeId = getSelectedNodeId();
-	if (!nodeId) {
-		return FLEET_SOCKET_PATH;
-	}
-	return `${FLEET_SOCKET_PATH}/${nodeId}`;
-}
-
 export {
 	subscribe,
 	getSelectedNodeId,
 	setSelectedNodeId,
-	isFleetMode,
-	getSocketPath,
-	FLEET_NAMESPACES
+	isFleetMode
 };

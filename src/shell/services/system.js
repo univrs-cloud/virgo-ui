@@ -1,6 +1,6 @@
 import Host from 'stores/host';
 import { getNodeStore } from 'stores/node';
-import * as runtime from 'config/runtime';
+import * as runtimeService from 'shell/services/runtime';
 import { createSubscription, storeAttach } from 'shell/services/module_store_subscription';
 
 const { subscribe } = createSubscription({
@@ -35,11 +35,11 @@ const getSites = async () => {
 
 	const nodes = Node.getNodes() || [];
 
-	const selectedNodeId = runtime.getSelectedNodeId();
+	const selectedNodeId = runtimeService.getSelectedNodeId();
 	let selected = selectedNodeId;
 	if (!selected && nodes.length) {
 		selected = nodes[0].nodeId;
-		runtime.setSelectedNodeId(selected);
+		runtimeService.setSelectedNodeId(selected);
 		// A page reload is required so boot-time flags derived from the selected node
 		// (e.g. isAdmin for that node's system pages) are recomputed for this first pick.
 		location.reload();

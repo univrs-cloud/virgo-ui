@@ -1,7 +1,9 @@
 import { ObservableStore } from '@codewithdan/observable-store';
 import { ReduxDevToolsExtension } from '@codewithdan/observable-store-extensions';
 import { io } from 'socket.io-client';
-import * as runtime from 'config/runtime';
+import * as runtimeService from 'shell/services/runtime';
+
+const FLEET_NAMESPACES = new Set(['user', 'group', 'auth', 'node']);
 
 const digestFilteredJobs = (jobs, jobFilter) => {
 	if (!jobFilter) {
@@ -46,13 +48,7 @@ ObservableStore.addExtension(new ReduxDevToolsExtension());
 class Store extends ObservableStore {
 	constructor(settings) {
 		super(settings);
-		this.socket = io(`/${settings.namespace}`, {
-			path: runtime.getSocketPath(settings.namespace),
-			reconnection: true,
-			reconnectionAttempts: 30,
-			reconnectionDelay: 1000,
-			reconnectionDelayMax: 5000
-		});
+		this.socket = this.createSocket(settings.namespace);
 		this.propertySubscribers = [];
 		this.previousState = this.getState() || {};
 
@@ -95,6 +91,30 @@ class Store extends ObservableStore {
 			});
 			this.previousState = newState;
 		});
+	}
+
+	/** Opens the store's namespace socket. Overridable so bootstrap stores (e.g. runtime role
+	 * detection) can resolve their path differently. */
+	createSocket(namespace) {
+		return io(`/${namespace}`, {
+			path: this.getSocketPath(namespace),
+			reconnection: true,
+			reconnectionAttempts: 30,
+			reconnectionDelay: 1000,
+			reconnectionDelayMax: 5000
+		});
+	}
+
+	/** In fleet mode, node-scoped namespaces are proxied through the selected node; everything else
+	 * (node role, or fleet-native namespaces) talks to the base API path. */
+	getSocketPath(namespace) {
+		if (runtimeService.isFleetMode() && !FLEET_NAMESPACES.has(namespace)) {
+			const nodeId = runtimeService.getSelectedNodeId();
+			if (nodeId) {
+				return `/api/fleet/${nodeId}`;
+			}
+		}
+		return '/api';
 	}
 
 	subscribeToProperties(propertyNames, callback, options = {}) {
