@@ -17,7 +17,29 @@ const { subscribe } = Node
 	: { subscribe: () => { return () => {}; } };
 
 const getNodes = () => {
-	return Node?.getNodes() || [];
+	return Node?.getNodes() ?? null;
+};
+
+const waitForNodes = () => {
+	const store = getNodeStore();
+	if (!store) {
+		return Promise.resolve([]);
+	}
+
+	const nodes = store.getNodes();
+	if (nodes !== null) {
+		return Promise.resolve(nodes);
+	}
+
+	return new Promise((resolve) => {
+		const unsubscribe = subscribe([({ nodes: nextNodes }) => {
+			if (nextNodes === null) {
+				return;
+			}
+			unsubscribe();
+			resolve(nextNodes);
+		}]);
+	});
 };
 
 const inviteToNode = (config) => {
@@ -51,6 +73,7 @@ const revokeFromNode = (config) => {
 export {
 	subscribe,
 	getNodes,
+	waitForNodes,
 	inviteToNode,
 	deleteNode,
 	getMembers,

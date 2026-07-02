@@ -93,18 +93,6 @@ class Store extends ObservableStore {
 		});
 	}
 
-	/** Opens the store's namespace socket. Overridable so bootstrap stores (e.g. runtime role
-	 * detection) can resolve their path differently. */
-	createSocket(namespace) {
-		return io(`/${namespace}`, {
-			path: this.getSocketPath(namespace),
-			reconnection: true,
-			reconnectionAttempts: 30,
-			reconnectionDelay: 1000,
-			reconnectionDelayMax: 5000
-		});
-	}
-
 	/** In fleet mode, node-scoped namespaces are proxied through the selected node; everything else
 	 * (node role, or fleet-native namespaces) talks to the base API path. */
 	getSocketPath(namespace) {
@@ -115,6 +103,26 @@ class Store extends ObservableStore {
 			}
 		}
 		return '/api';
+	}
+
+	shouldDeferConnect(namespace) {
+		return runtimeService.isFleetMode()
+			&& !FLEET_NAMESPACES.has(namespace)
+			&& !runtimeService.getSelectedNodeId();
+	}
+
+	/** Opens the store's namespace socket. Overridable so bootstrap stores (e.g. runtime role
+	 * detection) can resolve their path differently. */
+	createSocket(namespace) {
+		const deferred = this.shouldDeferConnect(namespace);
+		return io(`/${namespace}`, {
+			path: this.getSocketPath(namespace),
+			autoConnect: !deferred,
+			reconnection: true,
+			reconnectionAttempts: 30,
+			reconnectionDelay: 1000,
+			reconnectionDelayMax: 5000
+		});
 	}
 
 	subscribeToProperties(propertyNames, callback, options = {}) {

@@ -1,5 +1,7 @@
 import page from 'page';
 import { loadModule } from 'modules';
+import * as runtimeService from 'shell/services/runtime';
+import * as nodeService from 'shell/services/node';
 
 const header = document.querySelector('header');
 const offcanvas = document.querySelector('.offcanvas');
@@ -56,12 +58,29 @@ const requiresFleetMode = (ctx, next) => {
 	next();
 };
 
+const requiresFleetSites = async (ctx, next) => {
+	if (!isFleetMode || runtimeService.getSelectedNodeId()) {
+		next();
+		return;
+	}
+
+	const nodes = await nodeService.waitForNodes();
+	if (nodes.length) {
+		next();
+		return;
+	}
+
+	ctx.module = 'fleet-empty';
+	await loadModule('fleet-empty');
+	showPage(ctx);
+};
+
 header.addEventListener('click', navigate);
 offcanvas.addEventListener('click', navigate);
 
 const routes = [
-	{ path: '/', module: 'dashboard' },
-	{ path: '/dashboard', module: 'dashboard' },
+	{ path: '/', module: 'dashboard', middleware: [requiresFleetSites] },
+	{ path: '/dashboard', module: 'dashboard', middleware: [requiresFleetSites] },
 	{ path: '/sites', module: 'sites', middleware: [requireAuth, requiresFleetMode] },
 	{ path: '/apps/:appName?', module: 'apps', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/bookmarks', module: 'bookmarks', middleware: [requireAuth, requiresAdmin] },
