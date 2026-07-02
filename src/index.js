@@ -73,6 +73,17 @@ async function bootstrapApp() {
 function start() {
 	window.notifier = document.querySelector('u-notifier');
 
+	let accountInitialized = false;
+	let loginShown = false;
+	let lastBootstrapSignature = null;
+
+	const getBootstrapSignature = () => {
+		if (!window.isFleetMode) {
+			return 'node';
+		}
+		return `fleet:${window.isAuthenticated ? 1 : 0}:${runtimeService.getSelectedNodeId() || ''}`;
+	};
+
 	runtimeService.subscribe([(state) => {
 		if (!state.role) {
 			return;
@@ -93,12 +104,24 @@ function start() {
 			});
 		}
 
-		accountShell.init();
+		if (!accountInitialized) {
+			accountInitialized = true;
+			accountShell.init();
+		}
 
 		if (isFleetMode && !isAuthenticated) {
-			import('shell/login');
+			if (!loginShown) {
+				loginShown = true;
+				import('shell/login');
+			}
 			return;
 		}
+
+		const bootstrapSignature = getBootstrapSignature();
+		if (lastBootstrapSignature === bootstrapSignature) {
+			return;
+		}
+		lastBootstrapSignature = bootstrapSignature;
 
 		bootstrapApp().catch((error) => {
 			console.error('Failed to initialize application:', error);
