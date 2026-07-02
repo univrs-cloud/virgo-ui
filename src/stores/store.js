@@ -105,16 +105,14 @@ class Store extends ObservableStore {
 		});
 	}
 
-	/** In fleet mode, node-scoped namespaces are proxied through the selected node; everything else
-	 * (node role, or fleet-native namespaces) talks to the base API path. */
-	getSocketPath(namespace) {
+	getSocketNamespace(namespace) {
 		if (isFleetMode() && !FLEET_NAMESPACES.has(namespace)) {
 			const nodeId = getSelectedNodeId();
 			if (nodeId) {
-				return `/api/fleet/${nodeId}`;
+				return `/fleet/${nodeId}/${namespace}`;
 			}
 		}
-		return '/api';
+		return `/${namespace}`;
 	}
 
 	shouldDeferConnect(namespace) {
@@ -132,8 +130,8 @@ class Store extends ObservableStore {
 	 * detection) can resolve their path differently. */
 	createSocket(namespace) {
 		const deferred = this.shouldDeferConnect(namespace);
-		return io(`/${namespace}`, {
-			path: this.getSocketPath(namespace),
+		return io(this.getSocketNamespace(namespace), {
+			path: '/api',
 			autoConnect: !deferred,
 			reconnection: true,
 			reconnectionAttempts: 30,
