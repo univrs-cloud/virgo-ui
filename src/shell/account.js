@@ -1,6 +1,4 @@
 import accountPartial from 'shell/partials/account.html';
-import * as systemService from 'shell/services/system';
-import * as dockerService from 'shell/services/docker';
 import * as authService from 'shell/services/auth';
 
 let unsubscribe;
@@ -24,10 +22,11 @@ const signOut = async (event) => {
 		return;
 	}
 
-	location = `${authDomain}/logout?rd=https://${systemService.getFQDN()}`;
+	const { getFQDN } = await import('shell/services/system');
+	location = `${authDomain}/logout?rd=https://${getFQDN()}`;
 };
 
-const render = (state) => {
+const render = async (state) => {
 	const accountEl = document.querySelector('#account');
 	if (!accountEl) {
 		return;
@@ -53,6 +52,7 @@ const render = (state) => {
 	unsubscribe?.();
 	unsubscribe = null;
 
+	const dockerService = await import('shell/services/docker');
 	const isUpdating = !_.isNull(state.update);
 	const projectContainers = _.filter(state.containers, (container) => {
 		return container.labels && container.labels['comDockerComposeProject'] === 'authelia';
@@ -74,7 +74,9 @@ const init = () => {
 	document.body.addEventListener('click', signOut);
 
 	if (!isFleetMode) {
-		unsubscribe = dockerService.subscribe([render]);
+		import('shell/services/docker').then((dockerService) => {
+			unsubscribe = dockerService.subscribe([render]);
+		});
 	}
 };
 

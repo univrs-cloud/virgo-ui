@@ -1,6 +1,6 @@
 import siteAccessModalPartial from 'modules/sites/partials/modals/site_access.html';
 import siteMemberPartial from 'modules/sites/partials/site_member.html';
-import * as nodeService from 'modules/sites/services/node';
+import * as nodeService from 'shell/services/node';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', siteAccessModalPartial);
 

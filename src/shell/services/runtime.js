@@ -24,12 +24,17 @@ function setSelectedNodeId(nodeId) {
 	}
 }
 
+function getRole() {
+	return Runtime.getStateProperty('role');
+}
+
 function isFleetMode() {
-	return Runtime.getStateProperty('role') === 'fleet';
+	return getRole() === 'fleet';
 }
 
 export {
 	subscribe,
+	getRole,
 	getSelectedNodeId,
 	setSelectedNodeId,
 	isFleetMode

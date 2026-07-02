@@ -1,4 +1,4 @@
-import * as nodeService from 'modules/sites/services/node';
+import * as nodeService from 'shell/services/node';
 
 const module = document.querySelector('#sites');
 

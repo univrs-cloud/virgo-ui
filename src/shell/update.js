@@ -4,6 +4,7 @@ import navigationPartial from 'shell/partials/navigation_update.html';
 import sitesPartial from 'shell/partials/sites.html';
 import updateStepsPartial from 'shell/partials/update_steps.html';
 import * as account from 'shell/account';
+import * as sitesService from 'shell/services/sites';
 import * as systemService from 'shell/services/system';
 import * as softwareService from 'shell/services/software';
 import * as powerService from 'modules/settings/services/power';
@@ -68,7 +69,7 @@ const bindSiteSelection = () => {
 };
 
 const renderNavigation = async () => {
-	const sites = (isFleetMode && isAuthenticated ? sitesTemplate({ sites: await systemService.getSites() }) : '');
+	const sites = (isFleetMode && isAuthenticated ? sitesTemplate({ sites: await sitesService.getSites() }) : '');
 	_.each(header.querySelectorAll('.navbar .nav, .offcanvas .navbar-nav'), (nav) => {
 		morphdom(
 			nav,
