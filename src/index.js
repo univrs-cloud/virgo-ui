@@ -5,6 +5,7 @@ import 'libs/dialog';
 import 'libs/components';
 import * as runtimeService from 'shell/services/runtime';
 import * as accountShell from 'shell/account';
+import { getNodeStore } from 'stores/node';
 
 function loadAccount() {
 	try {
@@ -18,7 +19,26 @@ function loadAccount() {
 	}
 }
 
+async function launchShell() {
+	await Promise.all([
+		import('shell/header'),
+		import('shell/main')
+	]);
+	const { modulesLoaded } = await import('modules');
+	await modulesLoaded;
+	import('shell/navigation');
+}
+
 async function bootstrapApp() {
+	if (isFleetMode && !runtimeService.getSelectedNodeId()) {
+		try {
+			await launchShell();
+		} catch (error) {
+			console.error('Error during application initialization:', error);
+		}
+		return;
+	}
+
 	const bootstrapService = await import('shell/services/bootstrap');
 
 	let unsubscribe;
@@ -37,15 +57,8 @@ async function bootstrapApp() {
 			await import('shell/update');
 		} else {
 			try {
-				await Promise.all([
-					import('shell/header'),
-					import('shell/main')
-				]);
-				const { modulesLoaded } = await import('modules');
-				await modulesLoaded;
-				import('shell/navigation');
+				await launchShell();
 			} catch (error) {
-				alert(`Error during application initialization<br><br>${error}`, );
 				console.error('Error during application initialization:', error);
 			}
 		}
@@ -71,6 +84,10 @@ function start() {
 		window.isAdmin = isAuthenticated && (isFleetMode ? Boolean(runtimeService.getSelectedNodeId()) : _.includes(account.groups, 'admins'));
 
 		accountShell.init();
+
+		if (isFleetMode && isAuthenticated) {
+			getNodeStore();
+		}
 
 		if (isFleetMode && !isAuthenticated) {
 			import('shell/login');

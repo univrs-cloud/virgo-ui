@@ -17,8 +17,9 @@ const moduleLoaders = {
 	...(isAuthenticated && {
 		'profile': () => import('modules/users/profile'),
 	}),
-	...(isFleetMode && {
+	...(isFleetMode && isAuthenticated && {
 		'sites': () => import('modules/sites'),
+		'fleet-empty': () => import('modules/fleet_empty'),
 	}),
 };
 

@@ -1,4 +1,5 @@
 import Store from 'stores/store';
+import * as runtimeService from 'shell/services/runtime';
 
 class Node extends Store {
 	constructor() {
@@ -91,7 +92,7 @@ class Node extends Store {
 let nodeStore = null;
 
 function getNodeStore() {
-	if (!isFleetMode) {
+	if (!runtimeService.isFleetMode()) {
 		return null;
 	}
 	if (!nodeStore) {
