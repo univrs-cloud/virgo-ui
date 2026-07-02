@@ -11,7 +11,11 @@ class Runtime extends Store {
 		this.setState(initialState, 'socket_connect');
 
 		this.socket.on('runtime', (config) => {
-			this.setState({ role: config.role || 'node' }, 'runtime');
+			const role = config.role || 'node';
+			if (this.getStateProperty('role') === role) {
+				return;
+			}
+			this.setState({ role }, 'runtime');
 		});
 	}
 
