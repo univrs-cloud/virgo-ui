@@ -91,8 +91,7 @@ module.exports = (env, argv) => {
 				'morphdom': [path.join(__dirname, 'src/libs/morphdom.js'), 'default'],
 				'moment': 'moment-timezone',
 				'prettyBytes': [path.join(__dirname, 'node_modules/pretty-bytes/index.js'), 'default'],
-				'prettyMilliseconds': [path.join(__dirname, 'node_modules/pretty-ms/index.js'), 'default'],
-				'assetIcon': [path.join(__dirname, 'src/utils/asset_url.js'), 'assetIcon']
+				'prettyMilliseconds': [path.join(__dirname, 'node_modules/pretty-ms/index.js'), 'default']
 			}),
 			new HtmlWebpackPlugin({
 				minify: false,
