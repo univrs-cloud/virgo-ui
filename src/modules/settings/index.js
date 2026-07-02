@@ -26,7 +26,7 @@ const render = (state) => {
 		`<div>
 			${notificationsTemplate({ smtp: state.configuration?.smtp || null })}
 			${locationTemplate({ location: state.configuration?.location || null })}
-			${!isFleetMode ? fleetTemplate({ fleet: state.configuration?.fleet || null }) : ''}
+			${!isFleetMode ? fleetTemplate({ fleet: configurationService.getFleetDisplayState(state.configuration, state.jobs) }) : ''}
 			${powerTemplate()}
 		</div>`,
 		{ childrenOnly: true }
