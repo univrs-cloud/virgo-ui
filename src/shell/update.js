@@ -4,11 +4,9 @@ import navigationPartial from 'shell/partials/navigation_update.html';
 import sitesPartial from 'shell/partials/sites.html';
 import updateStepsPartial from 'shell/partials/update_steps.html';
 import * as account from 'shell/account';
-import * as sitesService from 'shell/services/sites';
 import * as systemService from 'shell/services/system';
 import * as softwareService from 'shell/services/software';
 import * as powerService from 'modules/settings/services/power';
-import * as runtimeService from 'shell/services/runtime';
 
 let unsubscribe;
 let isScrollEventAttached = false;
@@ -54,30 +52,15 @@ const renderSerialNumber = (state) => {
 	unsubscribe = null;
 };
 
-const bindSiteSelection = () => {
-	_.each(document.querySelectorAll('[data-node-id]'), (element) => {
-		element.addEventListener('click', (event) => {
-			event.preventDefault();
-			const nodeId = element.dataset.nodeId;
-			if (!nodeId || nodeId === runtimeService.getSelectedNodeId()) {
-				return;
-			}
-			runtimeService.setSelectedNodeId(nodeId);
-			location.reload();
-		});
-	});
-};
-
 const renderNavigation = async () => {
-	const sites = (isFleetMode && isAuthenticated ? sitesTemplate({ sites: await sitesService.getSites() }) : '');
+	const sites = await systemService.getSites();
 	_.each(header.querySelectorAll('.navbar .nav, .offcanvas .navbar-nav'), (nav) => {
 		morphdom(
 			nav,
-			`<div>${navigationTemplate({ sites })}</div>`,
+			`<div>${navigationTemplate({ sites: sitesTemplate({ sites }) })}</div>`,
 			{ childrenOnly: true }
 		);
 	});
-	bindSiteSelection();
 };
 
 const render = (state) => {
@@ -113,8 +96,9 @@ morphdom(
 	header,
 	headerTemplate({ isUpdating: true })
 );
-account.render();
 renderNavigation();
+
+account.init();
 
 container.addEventListener('click', complete);
 container.addEventListener('click', reboot);
