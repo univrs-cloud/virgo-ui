@@ -78,7 +78,8 @@ function start() {
 			return;
 		}
 
-		window.isFleetMode = runtimeService.isFleetMode();
+		window.virgoRole = state.role;
+		window.isFleetMode = state.role === 'fleet';
 		window.account = loadAccount();
 		window.isAuthenticated = !_.isEmpty(account);
 		// There is no fleet-wide admin: in fleet mode, a node's system pages are available

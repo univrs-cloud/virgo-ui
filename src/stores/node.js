@@ -1,5 +1,4 @@
 import Store from 'stores/store';
-import * as runtimeService from 'shell/services/runtime';
 
 class Node extends Store {
 	constructor() {
@@ -36,7 +35,7 @@ class Node extends Store {
 	}
 
 	shouldDeferConnect(_namespace) {
-		const role = runtimeService.getRole();
+		const role = virgoRole ?? null;
 		if (role === null) {
 			return true;
 		}
