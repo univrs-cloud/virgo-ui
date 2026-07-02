@@ -40,10 +40,15 @@ const updateLocation = (config) => {
 	Configuration.updateLocation(config);
 };
 
+const updateFleet = (config) => {
+	Configuration.updateFleet(config);
+};
+
 export {
 	subscribe,
 	getJobs,
 	getConfiguration,
 	updateSmtp,
-	updateLocation
+	updateLocation,
+	updateFleet
 };

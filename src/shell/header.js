@@ -5,6 +5,8 @@ import * as account from 'shell/account';
 import * as notifications from 'shell/notifications';
 import * as systemService from 'shell/services/system';
 import * as softwareService from 'shell/services/software';
+import { getNodeStore } from 'stores/node';
+import * as runtime from 'config/runtime';
 import page from 'page';
 
 let unsubscribe;
@@ -23,13 +25,35 @@ const renderSerialNumber = (state) => {
 	unsubscribe = null;
 };
 
+const bindSiteSelection = () => {
+	_.each(document.querySelectorAll('[data-node-id]'), (element) => {
+		element.addEventListener('click', (event) => {
+			event.preventDefault();
+			const nodeId = element.dataset.nodeId;
+			if (!nodeId || nodeId === runtime.getSelectedNodeId()) {
+				return;
+			}
+			runtime.setSelectedNodeId(nodeId);
+			location.reload();
+		});
+	});
+};
+
+const renderSites = async () => {
+	if (!isFleetMode || !isAuthenticated) {
+		return '';
+	}
+	const sites = await systemService.getSites();
+	return sitesTemplate({ sites });
+};
+
 const renderNavigation = async (state) => {
-	if (!state.updates) {
+	if (!state.updates && !isFleetMode) {
 		return;
 	}
 
-	const sites = await systemService.getSites();
-	const newNav = `<div>${navigationTemplate({ active: page.current, updates: state.updates, sites: sitesTemplate({ sites }) })}</div>`;
+	const sites = await renderSites();
+	const newNav = `<div>${navigationTemplate({ active: page.current, updates: state.updates || [], sites })}</div>`;
 	_.each(document.querySelectorAll('header .navbar .nav, .offcanvas .navbar-nav'), (nav) => {
 		morphdom(
 			nav,
@@ -37,6 +61,7 @@ const renderNavigation = async (state) => {
 			{ childrenOnly: true }
 		);
 	});
+	bindSiteSelection();
 };
 
 page.start();
@@ -45,12 +70,20 @@ morphdom(
 	header,
 	headerTemplate({ isUpdating: false })
 );
+account.render();
 renderNavigation({ updates: [] });
 
-account.init();
 notifications.init();
 
 softwareService.subscribeToUpdates([renderNavigation]);
+if (isFleetMode) {
+	const Node = getNodeStore();
+	if (Node) {
+		Node.subscribeToProperties(['nodes'], () => {
+			renderNavigation({ updates: softwareService.getUpdates() || [] });
+		});
+	}
+}
 unsubscribe = systemService.subscribe([renderSerialNumber]);
 
 import('shell/weather');

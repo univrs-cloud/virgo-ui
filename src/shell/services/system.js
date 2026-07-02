@@ -1,4 +1,6 @@
 import Host from 'stores/host';
+import { getNodeStore } from 'stores/node';
+import * as runtime from 'config/runtime';
 import { createSubscription, storeAttach } from 'shell/services/module_store_subscription';
 
 const { subscribe } = createSubscription({
@@ -18,13 +20,34 @@ const getSystem = () => {
 
 const getFQDN = () => {
 	const system = getSystem();
-	return system.osInfo?.fqdn || '';
+	return system?.osInfo?.fqdn || '';
 };
 
-const getSites = () => {
-	return [
-		getFQDN()
-	];
+const getSites = async () => {
+	if (!isFleetMode) {
+		return [];
+	}
+
+	const Node = getNodeStore();
+	if (!Node) {
+		return [];
+	}
+
+	const nodes = Node.getNodes() || [];
+
+	const selectedNodeId = runtime.getSelectedNodeId();
+	let selected = selectedNodeId;
+	if (!selected && nodes.length) {
+		selected = nodes[0].nodeId;
+		runtime.setSelectedNodeId(selected);
+	}
+
+	return nodes.map((node) => {
+		return {
+			...node,
+			selected: node.nodeId === selected
+		};
+	});
 };
 
 export {

@@ -1,29 +1,58 @@
 import accountPartial from 'shell/partials/account.html';
 import * as systemService from 'shell/services/system';
 import * as dockerService from 'shell/services/docker';
+import * as authService from 'shell/services/auth';
 
 let unsubscribe;
 let authDomain = null;
-let fqdn = systemService.getFQDN();
 const accountTemplate = _.template(accountPartial);
 
-const signOut = (event) => {
-	if (!authDomain || !event.target.closest('a')?.classList.contains('sign-out')) {
+const signOut = async (event) => {
+	if (!event.target.closest('a')?.classList.contains('sign-out')) {
 		return;
 	}
-	
+
 	event.preventDefault();
-	location = `${authDomain}/logout?rd=https://${fqdn}`;
+
+	if (isFleetMode) {
+		await authService.logout();
+		location.reload();
+		return;
+	}
+
+	if (!authDomain) {
+		return;
+	}
+
+	location = `${authDomain}/logout?rd=https://${systemService.getFQDN()}`;
 };
 
 const render = (state) => {
-	if (_.isNull(state.containers)) {
+	const accountEl = document.querySelector('#account');
+	if (!accountEl) {
+		return;
+	}
+
+	if (isFleetMode) {
+		morphdom(
+			accountEl,
+			accountTemplate({
+				account,
+				authDomain: null,
+				isFleetMode: true,
+				isUpdating: false
+			})
+		);
+		return;
+	}
+
+	if (!state || _.isNull(state.containers)) {
 		return;
 	}
 
 	unsubscribe?.();
 	unsubscribe = null;
-	
+
 	const isUpdating = !_.isNull(state.update);
 	const projectContainers = _.filter(state.containers, (container) => {
 		return container.labels && container.labels['comDockerComposeProject'] === 'authelia';
@@ -31,17 +60,25 @@ const render = (state) => {
 	const urls = dockerService.composeUrlFromLabels(projectContainers);
 	authDomain = urls.length > 0 ? urls[0] : null;
 	morphdom(
-		document.querySelector('#account'),
-		accountTemplate({ account, authDomain, isUpdating })
+		accountEl,
+		accountTemplate({
+			account,
+			authDomain,
+			isFleetMode: false,
+			isUpdating
+		})
 	);
 };
 
 const init = () => {
 	document.body.addEventListener('click', signOut);
 
-	unsubscribe = dockerService.subscribe([render]);
+	if (!isFleetMode) {
+		unsubscribe = dockerService.subscribe([render]);
+	}
 };
 
 export {
-	init
+	init,
+	render
 };
