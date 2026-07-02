@@ -47,12 +47,22 @@ const requiresAdmin = (ctx, next) => {
 	next();
 };
 
+const requiresFleetMode = (ctx, next) => {
+	if (!isFleetMode) {
+		page.redirect('/');
+		return;
+	}
+
+	next();
+};
+
 header.addEventListener('click', navigate);
 offcanvas.addEventListener('click', navigate);
 
 const routes = [
 	{ path: '/', module: 'dashboard' },
 	{ path: '/dashboard', module: 'dashboard' },
+	{ path: '/sites', module: 'sites', middleware: [requireAuth, requiresFleetMode] },
 	{ path: '/apps/:appName?', module: 'apps', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/bookmarks', module: 'bookmarks', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/folders', module: 'folders', middleware: [requireAuth, requiresAdmin] },
