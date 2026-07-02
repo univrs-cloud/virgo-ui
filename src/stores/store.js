@@ -1,6 +1,7 @@
 import { ObservableStore } from '@codewithdan/observable-store';
 import { ReduxDevToolsExtension } from '@codewithdan/observable-store-extensions';
 import { io } from 'socket.io-client';
+import * as runtime from 'config/runtime';
 
 const digestFilteredJobs = (jobs, jobFilter) => {
 	if (!jobFilter) {
@@ -46,7 +47,7 @@ class Store extends ObservableStore {
 	constructor(settings) {
 		super(settings);
 		this.socket = io(`/${settings.namespace}`, {
-			path: '/api',
+			path: runtime.getSocketPath(settings.namespace),
 			reconnection: true,
 			reconnectionAttempts: 30,
 			reconnectionDelay: 1000,

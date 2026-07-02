@@ -1,18 +1,21 @@
-<%if (!isAdmin){%>
-	<%return%>
-<%}%>
-
+<%const selectedSite = _.find(sites, { selected: true })%>
 <div class="nav-item">
 	<div class="nav-title ps-sm-2"><small>Sites</small></div>
 	<div class="btn-group align-items-center w-100 mb-4">
-		<span data-bs-toggle="dropdown" class="dropdown-toggle d-flex justify-content-between align-items-center btn btn-secondary bd-white shadow-sm w-100 text-start"><%=sites[0]%></span>
+		<span data-bs-toggle="dropdown" class="dropdown-toggle d-flex justify-content-between align-items-center btn btn-secondary bd-white shadow-sm w-100 text-start">
+			<%if (selectedSite) {%>
+				<%=selectedSite.name%>
+			<%} else {%>
+				&mdash;
+			<%}%>
+		</span>
 		<button class="btn btn-sm text-white p-0 m-0 ms-2" data-bs-toggle="modal" data-bs-target="#sites"><i class="icon-solid icon-sm icon-cog"></i></button>
 		<ul class="dropdown-menu w-100">
 			<%_.each(sites, (site) => {%>
 				<li>
-					<a href="#" class="dropdown-item d-flex align-items-center">
-						<i class="icon-solid icon-dot text-green-400 me-1"></i>
-						<%=site%>
+					<a href="#" class="dropdown-item d-flex align-items-center<%=site.selected ? ' active' : ''%>" data-node-id="<%=site.nodeId%>">
+						<i class="icon-solid icon-dot <%=site.online ? 'text-green-400' : 'text-red-400'%> me-1"></i>
+						<%=site.name%>
 					</a>
 				</li>
 			<%})%>

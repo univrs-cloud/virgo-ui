@@ -1,6 +1,11 @@
 <div id="account">
 	<%if (!isAuthenticated) {%>
-		<%if (authDomain) {%>
+		<%if (isFleetMode) {%>
+			<a href="/" class="btn btn-sm btn-primary me-2">
+				<i class="icon-duotone icon-solid icon-person-to-portal icon-fw me-2"></i>
+				Sign in
+			</a>
+		<%} else if (authDomain) {%>
 			<a href="<%=authDomain%>/?rd=<%=window.location%>" class="btn btn-sm btn-primary me-2">
 				<i class="icon-duotone icon-solid icon-person-to-portal icon-fw me-2"></i>
 				Sign in
@@ -12,7 +17,7 @@
 			<div class="dropdown-menu dropdown-menu-end" style="width: max-content;">
 				<h6 class="dropdown-header">Logged in as</h6>
 				<p class="d-flex flex-row align-items-center fw-medium px-2 pb-2 mt-n1 mb-0"><%=account.name%></p>
-				<%if (!isUpdating) {%>
+				<%if (!isFleetMode && !isUpdating) {%>
 					<div class="dropdown-divider"></div>
 					<a href="/users/profile" class="dropdown-item">Your profile</a>
 				<%}%>

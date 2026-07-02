@@ -1,0 +1,26 @@
+<div id="fleet" class="modal fade">
+	<u-form>
+		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Fleet</h5>
+				</div>
+				<div class="modal-body">
+					<div class="form-check form-switch mb-3">
+						<input type="checkbox" name="enabled" value="true" class="form-check-input enabled" id="fleet-enabled">
+						<label class="form-check-label" for="fleet-enabled">Connect this node to fleet</label>
+					</div>
+					<div class="fleet-credentials">
+						<u-input type="email" name="email" label="Fleet account email" class="email" autocomplete="username"></u-input>
+						<u-input type="password" name="password" label="Fleet account password" class="password" autocomplete="current-password"></u-input>
+						<small class="text-body-tertiary fleet-credentials-hint d-none">Required to register this node with your fleet account.</small>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="modal" outline>Cancel</u-button>
+					<u-button type="submit" variant="primary">Update</u-button>
+				</div>
+			</div>
+		</div>
+	</u-form>
+</div>
