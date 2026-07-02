@@ -87,6 +87,12 @@ function start() {
 		// currently selected. Outside fleet mode, it still reflects real OS admin group membership.
 		window.isAdmin = isAuthenticated && (isFleetMode ? Boolean(runtimeService.getSelectedNodeId()) : _.includes(account.groups, 'admins'));
 
+		if (isFleetMode && runtimeService.getSelectedNodeId()) {
+			import('stores/store').then(({ connectNodeStores }) => {
+				connectNodeStores();
+			});
+		}
+
 		accountShell.init();
 
 		if (isFleetMode && !isAuthenticated) {

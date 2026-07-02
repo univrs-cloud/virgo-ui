@@ -2,6 +2,7 @@ import bookmarkModalPartial from 'modules/bookmarks/partials/modals/bookmark_upd
 import * as bookmarkService from 'modules/bookmarks/services/bookmark';
 import * as systemService from 'shell/services/system';
 import * as iconPicker from 'modules/bookmarks/services/icon_picker';
+import { assetIcon } from 'utils/asset_url';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', bookmarkModalPartial);
 
@@ -136,7 +137,7 @@ const render = (event) => {
 	form.querySelector('.name').value = bookmark.name;
 	form.querySelector('.title').value = bookmark.title;
 	form.querySelector('.category').value = bookmark.category;
-	form.querySelector('.bookmark-icon-img').src = `/assets/img/bookmarks/${bookmark.icon}`;
+	form.querySelector('.bookmark-icon-img').src = assetIcon(bookmark.icon, 'bookmarks');
 	if (bookmark.traefik) {
 		useProxyCheckbox.checked = true;
 		form.querySelector('.subdomain').value = bookmark.traefik.subdomain;
