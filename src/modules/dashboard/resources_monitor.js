@@ -44,7 +44,7 @@ const render = (state) => {
 			}
 		}
 	);
-	const networkInterface = state.system ? _.find(state.system.networkInterfaces, { default: true }) : null;
+	const networkInterface = _.find(state.system.networkInterfaces, { default: true });
 	networkUsage.render(state.networkStats, (networkInterface?.speed * 1_000_000 / 8));
 };
 

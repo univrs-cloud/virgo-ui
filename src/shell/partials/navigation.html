@@ -1,10 +1,8 @@
 <%=sites%>
-<%if (hasSites) {%>
 <a href="/dashboard" class="nav-item nav-link <%=(active === '/dashboard' && 'active')%>">
 	<i class="icon-duotone icon-solid icon-objects-column icon-fw me-2"></i>
 	Dashboard
 </a>
-<%}%>
 <%if (isAdmin) {%>
 	<div class="nav-title ps-sm-2 mt-2 mt-sm-3"><small>Resources</small></div>
 	<a href="/apps" class="nav-item nav-link <%=(active === '/apps' && 'active')%>">

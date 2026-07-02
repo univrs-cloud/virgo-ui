@@ -18,11 +18,18 @@ const getSystem = () => {
 
 const getFQDN = () => {
 	const system = getSystem();
-	return system?.osInfo?.fqdn || '';
+	return system.osInfo?.fqdn || '';
+};
+
+const getSites = () => {
+	return [
+		getFQDN()
+	];
 };
 
 export {
 	subscribe,
 	getSystem,
-	getFQDN
+	getFQDN,
+	getSites
 };

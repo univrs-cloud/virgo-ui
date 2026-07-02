@@ -2,22 +2,6 @@ import { ObservableStore } from '@codewithdan/observable-store';
 import { ReduxDevToolsExtension } from '@codewithdan/observable-store-extensions';
 import { io } from 'socket.io-client';
 
-const FLEET_NAMESPACES = new Set(['user', 'group', 'auth', 'node']);
-
-const getSelectedNodeId = () => {
-	return localStorage.getItem('virgo.selectedNodeId') || null;
-};
-
-const getRole = () => {
-	return window.virgoRole ?? null;
-};
-
-const nodeStores = new Set();
-
-const isFleetMode = () => {
-	return getRole() === 'fleet';
-};
-
 const digestFilteredJobs = (jobs, jobFilter) => {
 	if (!jobFilter) {
 		return '';
@@ -61,10 +45,13 @@ ObservableStore.addExtension(new ReduxDevToolsExtension());
 class Store extends ObservableStore {
 	constructor(settings) {
 		super(settings);
-		this.namespace = settings.namespace;
-		this.socket = this.createSocket(this.namespace);
-		nodeStores.add(this);
-		this.connectIfReady();
+		this.socket = io(`/${settings.namespace}`, {
+			path: '/api',
+			reconnection: true,
+			reconnectionAttempts: 30,
+			reconnectionDelay: 1000,
+			reconnectionDelayMax: 5000
+		});
 		this.propertySubscribers = [];
 		this.previousState = this.getState() || {};
 
@@ -109,48 +96,6 @@ class Store extends ObservableStore {
 		});
 	}
 
-	getSocketNamespace(namespace) {
-		if (isFleetMode() && !FLEET_NAMESPACES.has(namespace)) {
-			const nodeId = getSelectedNodeId();
-			if (nodeId) {
-				return `/fleet/${nodeId}/${namespace}`;
-			}
-		}
-		return `/${namespace}`;
-	}
-
-	shouldDeferConnect(namespace) {
-		if (namespace === 'runtime' || FLEET_NAMESPACES.has(namespace)) {
-			return false;
-		}
-		const role = getRole();
-		if (role === null) {
-			return true;
-		}
-		return role === 'fleet' && !getSelectedNodeId();
-	}
-
-	/** Opens the store's namespace socket. Overridable so bootstrap stores (e.g. runtime role
-	 * detection) can resolve their path differently. */
-	connectIfReady() {
-		if (this.socket.connected || this.shouldDeferConnect(this.namespace)) {
-			return;
-		}
-		this.socket.connect();
-	}
-
-	createSocket(namespace) {
-		const deferred = this.shouldDeferConnect(namespace);
-		return io(this.getSocketNamespace(namespace), {
-			path: '/api',
-			autoConnect: !deferred,
-			reconnection: true,
-			reconnectionAttempts: 30,
-			reconnectionDelay: 1000,
-			reconnectionDelayMax: 5000
-		});
-	}
-
 	subscribeToProperties(propertyNames, callback, options = {}) {
 		const filters = options.filters || {};
 		this.propertySubscribers.push({
@@ -170,11 +115,5 @@ class Store extends ObservableStore {
 	}
 }
 
-const connectNodeStores = () => {
-	for (const store of nodeStores) {
-		store.connectIfReady();
-	}
-};
-
 export default Store;
-export { pickFilteredStoreSlice, connectNodeStores };
+export { pickFilteredStoreSlice };
