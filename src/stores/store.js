@@ -1,9 +1,20 @@
 import { ObservableStore } from '@codewithdan/observable-store';
 import { ReduxDevToolsExtension } from '@codewithdan/observable-store-extensions';
 import { io } from 'socket.io-client';
-import * as runtimeService from 'shell/services/runtime';
 
 const FLEET_NAMESPACES = new Set(['user', 'group', 'auth', 'node']);
+
+const getSelectedNodeId = () => {
+	return localStorage.getItem('virgo.selectedNodeId') || null;
+};
+
+const getRole = () => {
+	return virgoRole ?? null;
+};
+
+const isFleetMode = () => {
+	return getRole() === 'fleet';
+};
 
 const digestFilteredJobs = (jobs, jobFilter) => {
 	if (!jobFilter) {
@@ -53,15 +64,6 @@ class Store extends ObservableStore {
 		this.propertySubscribers = [];
 		this.previousState = this.getState() || {};
 
-		if (this.shouldDeferConnect(this.namespace)) {
-			runtimeService.subscribe([() => {
-				if (this.shouldDeferConnect(this.namespace) || this.socket.connected) {
-					return;
-				}
-				this.socket.connect();
-			}]);
-		}
-
 		this.globalStateWithPropertyChanges.subscribe((stateChange) => {
 			if (stateChange === null) {
 				return;
@@ -106,8 +108,8 @@ class Store extends ObservableStore {
 	/** In fleet mode, node-scoped namespaces are proxied through the selected node; everything else
 	 * (node role, or fleet-native namespaces) talks to the base API path. */
 	getSocketPath(namespace) {
-		if (runtimeService.isFleetMode() && !FLEET_NAMESPACES.has(namespace)) {
-			const nodeId = runtimeService.getSelectedNodeId();
+		if (isFleetMode() && !FLEET_NAMESPACES.has(namespace)) {
+			const nodeId = getSelectedNodeId();
 			if (nodeId) {
 				return `/api/fleet/${nodeId}`;
 			}
@@ -116,14 +118,14 @@ class Store extends ObservableStore {
 	}
 
 	shouldDeferConnect(namespace) {
-		if (FLEET_NAMESPACES.has(namespace)) {
+		if (namespace === 'runtime' || FLEET_NAMESPACES.has(namespace)) {
 			return false;
 		}
-		const role = runtimeService.getRole();
+		const role = getRole();
 		if (role === null) {
 			return true;
 		}
-		return role === 'fleet' && !runtimeService.getSelectedNodeId();
+		return role === 'fleet' && !getSelectedNodeId();
 	}
 
 	/** Opens the store's namespace socket. Overridable so bootstrap stores (e.g. runtime role
