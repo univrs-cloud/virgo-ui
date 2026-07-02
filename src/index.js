@@ -66,7 +66,10 @@ function start() {
 		window.isFleetMode = runtime.isFleetMode();
 		window.account = loadAccount();
 		window.isAuthenticated = !_.isEmpty(account);
-		window.isAdmin = isAuthenticated && _.includes(account.groups, 'admins');
+		// There is no fleet-wide admin: in fleet mode, a node's system pages are available
+		// to anyone with access to that node, so isAdmin simply reflects whether a node is
+		// currently selected. Outside fleet mode, it still reflects real OS admin group membership.
+		window.isAdmin = isAuthenticated && (isFleetMode ? Boolean(runtime.getSelectedNodeId()) : _.includes(account.groups, 'admins'));
 
 		accountShell.init();
 

@@ -1,0 +1,37 @@
+<tr class="item" data-node-id="<%=node.nodeId%>">
+	<td style="min-width: 200px; max-width: 0;">
+		<div class="d-flex align-items-center mb-n1">
+			<div class="text-truncate site-name"><%=node.name%></div>
+			<%if (node.isOwner) {%>
+				<u-badge color="indigo" tint="400" class="ms-2" tip="Owner" pill><i class="icon-solid icon-crown"></i></u-badge>
+			<%}%>
+		</div>
+		<div class="d-flex">
+			<div class="text-truncate"><small class="text-body-tertiary"><%=node.nodeId%></small></div>
+		</div>
+	</td>
+	<td class="d-none d-md-table-cell text-body-secondary">
+		<%if (node.access === 'direct') {%>
+			<%=node.isOwner ? 'Owned by you' : 'Shared with you'%>
+		<%} else {%>
+			Via group: <%=node.access.split(':').slice(1).join(':')%>
+		<%}%>
+	</td>
+	<td class="text-nowrap">
+		<u-badge color="<%=node.online ? 'green' : 'gray'%>" pill>
+			<i class="icon-solid icon-dot me-1"></i><%=node.online ? 'Online' : 'Offline'%>
+		</u-badge>
+	</td>
+	<td class="text-center px-0">
+		<%if (node.isOwner) {%>
+			<div class="dropdown">
+				<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
+				<ul class="dropdown-menu dropdown-menu-end">
+					<li><a href="#site-access" class="dropdown-item" data-bs-toggle="modal" data-manage-node-id="<%=node.nodeId%>"><i class="icon-regular icon-user-plus icon-fw me-1"></i>Manage access</a></li>
+					<li><hr class="dropdown-divider"></li>
+					<li><a href="#" class="dropdown-item text-danger confirm" data-action="delete"><i class="icon-regular icon-trash icon-fw me-1"></i>Delete</a></li>
+				</ul>
+			</div>
+		<%}%>
+	</td>
+</tr>

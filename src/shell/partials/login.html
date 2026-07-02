@@ -3,12 +3,25 @@
 	<div class="col-12 col-sm-8 col-md-6 col-lg-4">
 		<div class="card rounded-4 border-0 shadow-sm">
 			<div class="card-body p-4">
-				<h5 class="card-title mb-4">Sign in to fleet</h5>
 				<u-form class="fleet-login-form">
+					<h5 class="card-title mb-4">Sign in to fleet</h5>
 					<u-input type="email" name="email" label="Email" class="email" autocomplete="username"></u-input>
 					<u-input type="password" name="password" label="Password" class="password" autocomplete="current-password"></u-input>
-					<div class="fleet-login-error text-danger small mb-3 d-none"></div>
-					<u-button type="submit" variant="primary" class="w-100">Sign in</u-button>
+					<div class="d-flex align-items-center justify-content-between mt-3">
+						<a href="#" class="fleet-toggle-signup small">Create an account</a>
+						<u-button type="submit" variant="primary">Sign in</u-button>
+					</div>
+				</u-form>
+				<u-form class="fleet-signup-form d-none">
+					<h5 class="card-title mb-4">Create your fleet account</h5>
+					<u-input name="fullname" label="Name" class="fullname"></u-input>
+					<u-input type="email" name="email" label="Email" class="email" autocomplete="username"></u-input>
+					<u-input type="password" name="password" label="Password" class="password" autocomplete="new-password"></u-input>
+					<u-input type="password" name="passwordCheck" label="Confirm password" class="password-check" autocomplete="new-password"></u-input>
+					<div class="d-flex align-items-center justify-content-between mt-3">
+						<a href="#" class="fleet-toggle-login small">Sign in instead</a>
+						<u-button type="submit" variant="primary">Create account</u-button>
+					</div>
 				</u-form>
 			</div>
 		</div>

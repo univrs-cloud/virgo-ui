@@ -1,0 +1,20 @@
+<div id="site-access" class="modal fade">
+	<u-form>
+		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Manage access</h5>
+				</div>
+				<div class="modal-body">
+					<div class="members list-group list-group-flush mb-3"></div>
+					<u-input type="email" name="email" label="Invite by email" class="email" autocomplete="off"></u-input>
+					<div class="site-access-error text-danger small mt-2 d-none"></div>
+				</div>
+				<div class="modal-footer">
+					<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="modal" outline>Close</u-button>
+					<u-button type="submit" variant="primary">Invite</u-button>
+				</div>
+			</div>
+		</div>
+	</u-form>
+</div>

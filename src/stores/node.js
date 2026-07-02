@@ -37,6 +37,55 @@ class Node extends Store {
 	getNodes() {
 		return this.getStateProperty('nodes');
 	}
+
+	/** These use an ack callback (unlike other stores' fire-and-forget actions) since the result needs to be reflected inline in a form, not via a subsequent state push. */
+	inviteToNode({ nodeId, email }) {
+		return new Promise((resolve, reject) => {
+			this.socket.emit('nodes:invite', { nodeId, email }, (response) => {
+				if (response?.ok) {
+					resolve(response);
+					return;
+				}
+				reject(new Error(response?.error || 'Failed to invite user'));
+			});
+		});
+	}
+
+	deleteNode({ nodeId }) {
+		return new Promise((resolve, reject) => {
+			this.socket.emit('nodes:delete', { nodeId }, (response) => {
+				if (response?.ok) {
+					resolve(response);
+					return;
+				}
+				reject(new Error(response?.error || 'Failed to delete node'));
+			});
+		});
+	}
+
+	getMembers({ nodeId }) {
+		return new Promise((resolve, reject) => {
+			this.socket.emit('nodes:members', { nodeId }, (response) => {
+				if (response?.ok) {
+					resolve(response);
+					return;
+				}
+				reject(new Error(response?.error || 'Failed to load access list'));
+			});
+		});
+	}
+
+	revokeFromNode({ nodeId, email }) {
+		return new Promise((resolve, reject) => {
+			this.socket.emit('nodes:revoke', { nodeId, email }, (response) => {
+				if (response?.ok) {
+					resolve(response);
+					return;
+				}
+				reject(new Error(response?.error || 'Failed to revoke access'));
+			});
+		});
+	}
 }
 
 let nodeStore = null;

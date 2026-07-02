@@ -1,0 +1,11 @@
+<div class="list-group-item d-flex align-items-center justify-content-between py-2" data-email="<%=member.email%>">
+	<div class="text-truncate me-2">
+		<div class="text-truncate"><%=member.displayName || member.email%></div>
+		<small class="text-body-tertiary"><%=member.email%></small>
+	</div>
+	<%if (member.role === 'owner') {%>
+		<u-badge color="indigo" tint="400" class="flex-shrink-0" pill><i class="icon-solid icon-crown me-1"></i>Owner</u-badge>
+	<%} else {%>
+		<button type="button" class="btn btn-sm text-danger flex-shrink-0 revoke" data-bs-toggle="tooltip" data-bs-original-title="Revoke access"><i class="icon-solid icon-xmark icon-fw"></i></button>
+	<%}%>
+</div>

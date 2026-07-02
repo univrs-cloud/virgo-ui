@@ -9,6 +9,8 @@
 				<%if (fleet?.registered) {%>
 					<dt class="fw-lighter"><small>Account</small></dt>
 					<dd class="m-0"><%=fleet?.email || 'Registered'%></dd>
+					<dt class="fw-lighter"><small>Connection</small></dt>
+					<dd class="m-0<%=(fleet?.connected ? '' : ' text-warning')%>"><%=(fleet?.connected ? 'Connected' : 'Reconnecting...')%></dd>
 				<%} else if (fleet?.enabled) {%>
 					<dd class="m-0 text-warning">Awaiting registration</dd>
 				<%} else {%>

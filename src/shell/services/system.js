@@ -40,6 +40,9 @@ const getSites = async () => {
 	if (!selected && nodes.length) {
 		selected = nodes[0].nodeId;
 		runtime.setSelectedNodeId(selected);
+		// A page reload is required so boot-time flags derived from the selected node
+		// (e.g. isAdmin for that node's system pages) are recomputed for this first pick.
+		location.reload();
 	}
 
 	return nodes.map((node) => {

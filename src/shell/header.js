@@ -5,7 +5,7 @@ import * as account from 'shell/account';
 import * as notifications from 'shell/notifications';
 import * as systemService from 'shell/services/system';
 import * as softwareService from 'shell/services/software';
-import { getNodeStore } from 'stores/node';
+import * as nodeService from 'shell/services/node';
 import * as runtime from 'config/runtime';
 import page from 'page';
 
@@ -26,7 +26,7 @@ const renderSerialNumber = (state) => {
 };
 
 const bindSiteSelection = () => {
-	_.each(document.querySelectorAll('[data-node-id]'), (element) => {
+	_.each(document.querySelectorAll('header [data-node-id], .offcanvas [data-node-id]'), (element) => {
 		element.addEventListener('click', (event) => {
 			event.preventDefault();
 			const nodeId = element.dataset.nodeId;
@@ -77,12 +77,9 @@ notifications.init();
 
 softwareService.subscribeToUpdates([renderNavigation]);
 if (isFleetMode) {
-	const Node = getNodeStore();
-	if (Node) {
-		Node.subscribeToProperties(['nodes'], () => {
-			renderNavigation({ updates: softwareService.getUpdates() || [] });
-		});
-	}
+	nodeService.subscribe([() => {
+		renderNavigation({ updates: softwareService.getUpdates() || [] });
+	}]);
 }
 unsubscribe = systemService.subscribe([renderSerialNumber]);
 
