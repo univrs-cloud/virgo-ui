@@ -3,7 +3,7 @@ import 'libs/lodash';
 import 'libs/bootstrap';
 import 'libs/dialog';
 import 'libs/components';
-import * as bootstrapService from 'shell/services/bootstrap';
+import * as runtimeService from 'shell/services/runtime';
 
 try {
 	let encodedAccount = (document.cookie.match('(^|;)\\s*' + 'account' + '\\s*=\\s*([^;]+)')?.pop());
@@ -15,8 +15,7 @@ try {
 window.isAuthenticated = !_.isEmpty(account);
 window.isAdmin = isAuthenticated && _.includes(account.groups, 'admins');
 window.notifier = document.querySelector('u-notifier');
-
-let unsubscribe;
+window.runtimeRole = null;
 
 const render = async (state) => {
 	if (_.isNull(state.setupCompleted) || state.update === -1) {
@@ -46,4 +45,16 @@ const render = async (state) => {
 	}
 };
 
-unsubscribe = bootstrapService.subscribe([render]);
+const runtime = async (state) => {
+	if (_.isNull(state.role)) {
+		return;
+	}
+	
+	runtimeRole = state.role;
+	unsubscribe?.();
+	unsubscribe = null;
+	const bootstrapService = await import('shell/services/bootstrap');
+	unsubscribe = bootstrapService.subscribe([render]);
+};
+
+let unsubscribe = runtimeService.subscribe([runtime]);
