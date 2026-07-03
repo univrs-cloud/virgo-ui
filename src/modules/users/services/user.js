@@ -5,25 +5,28 @@ import { createSubscription, storeAttach } from 'shell/services/module_store_sub
 const { subscribe } = createSubscription({
 	stores: [
 		{
-			store: User,
-			propertyNames: ['users']
-		},
-		{
 			store: Job,
 			propertyNames: ['jobs']
+		},
+		{
+			store: User,
+			propertyNames: ['users']
 		}
 	],
 	filters: {
-		jobs: isUserModuleJob,
+		jobs: isUsersJob
 	},
 	attachStore: storeAttach.beforeCallbacks,
 	mapState: (properties) => {
-		return { users: normalizeUsers(properties.users), jobs: properties.jobs };
-	},
+		return {
+			users: normalizeUsers(properties?.users),
+			jobs: properties?.jobs || []
+		};
+	}
 });
 
-function isUserModuleJob(job) {
-	return job?.name && _.startsWith(job.name, 'user');
+function isUsersJob(job) {
+	return _.startsWith(job?.name, 'user');
 }
 
 function normalizeUsers(users) {
@@ -44,7 +47,7 @@ function normalizeUsers(users) {
 }
 
 const getJobs = () => {
-	return _.filter(Job.getJobs() || [], isUserModuleJob);
+	return _.filter(Job.getJobs() || [], isUsersJob);
 };
 
 const getUsers = () => {

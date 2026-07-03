@@ -9,7 +9,9 @@ const { subscribe } = createSubscription({
 		}
 	],
 	attachStore: storeAttach.afterCallbacks,
-	mapState: (properties) => properties,
+	mapState: (properties) => {
+		return properties;
+	}
 });
 
 const getSystem = () => {
@@ -21,15 +23,8 @@ const getFQDN = () => {
 	return system.osInfo?.fqdn || '';
 };
 
-const getSites = () => {
-	return [
-		getFQDN()
-	];
-};
-
 export {
 	subscribe,
 	getSystem,
-	getFQDN,
-	getSites
+	getFQDN
 };

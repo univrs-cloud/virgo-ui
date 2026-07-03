@@ -5,25 +5,25 @@ import { createSubscription, storeAttach } from 'shell/services/module_store_sub
 const { subscribe } = createSubscription({
 	stores: [
 		{
-			store: Host,
-			propertyNames: ['services']
-		},
-		{
 			store: Job,
 			propertyNames: ['jobs']
+		},
+		{
+			store: Host,
+			propertyNames: ['services']
 		}
 	],
 	filters: {
-		jobs: isSystemServiceJob,
+		jobs: isSystemServicesJob
 	},
 	attachStore: storeAttach.beforeCallbacks,
 	mapState: (properties) => {
-		return { services: properties.services, jobs: properties.jobs };
-	},
+		return properties;
+	}
 });
 
-function isSystemServiceJob(job) {
-	return job?.name && _.startsWith(job.name, 'host:system:service');
+function isSystemServicesJob(job) {
+	return _.startsWith(job?.name, 'host:system:service');
 }
 
 const getSocket = () => {
@@ -31,7 +31,7 @@ const getSocket = () => {
 };
 
 const getJobs = () => {
-	return _.filter(Job.getJobs() || [], isSystemServiceJob);
+	return _.filter(Job.getJobs() || [], isSystemServicesJob);
 };
 
 const getServices = () => {

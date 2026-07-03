@@ -9,12 +9,14 @@ const { subscribe } = createSubscription({
 		}
 	],
 	filters: {
-		jobs: (job) => job.progress !== 0,
+		jobs: (job) => {
+			return job.progress !== 0;
+		}
 	},
 	attachStore: storeAttach.afterCallbacks,
 	mapState: (properties) => {
-		return { jobs: properties.jobs };
-	},
+		return properties;
+	}
 });
 
 export {

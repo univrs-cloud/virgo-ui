@@ -9,7 +9,9 @@ const { subscribe: subscribeToUpdates } = createSubscription({
 		}
 	],
 	attachStore: storeAttach.afterCallbacks,
-	mapState: (properties) => properties,
+	mapState: (properties) => {
+		return properties;
+	}
 });
 
 const { subscribe: subscribeToUpdate } = createSubscription({
@@ -20,7 +22,9 @@ const { subscribe: subscribeToUpdate } = createSubscription({
 		}
 	],
 	attachStore: storeAttach.afterCallbacks,
-	mapState: (properties) => properties,
+	mapState: (properties) => {
+		return properties;
+	}
 });
 
 const checkUpdates = () => {

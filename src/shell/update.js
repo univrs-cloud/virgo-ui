@@ -1,19 +1,20 @@
 import page from 'page';
 import headerPartial from 'shell/partials/header.html';
 import navigationPartial from 'shell/partials/navigation_update.html';
-import sitesPartial from 'shell/partials/sites.html';
+import nodePickerPartial from 'shell/partials/nodes.html';
 import updateStepsPartial from 'shell/partials/update_steps.html';
 import * as account from 'shell/account';
 import * as systemService from 'shell/services/system';
 import * as softwareService from 'shell/services/software';
 import * as powerService from 'modules/settings/services/power';
+import * as nodeService from 'shell/services/node';
 
 let unsubscribe;
 let isScrollEventAttached = false;
 let shouldScroll = true;
 const headerTemplate = _.template(headerPartial);
 const navigationTemplate = _.template(navigationPartial);
-const sitesTemplate = _.template(sitesPartial);
+const nodePickerTemplate = _.template(nodePickerPartial);
 const updateStepsTemplate = _.template(updateStepsPartial);
 const header = document.querySelector('header');
 const container = document.querySelector('#update');
@@ -53,11 +54,11 @@ const renderSerialNumber = (state) => {
 };
 
 const renderNavigation = async () => {
-	const sites = await systemService.getSites();
+	const nodes = await nodeService.getNodes();
 	_.each(header.querySelectorAll('.navbar .nav, .offcanvas .navbar-nav'), (nav) => {
 		morphdom(
 			nav,
-			`<div>${navigationTemplate({ sites: sitesTemplate({ sites }) })}</div>`,
+			`<div>${navigationTemplate({ nodes: nodePickerTemplate({ nodes }) })}</div>`,
 			{ childrenOnly: true }
 		);
 	});

@@ -9,7 +9,9 @@ const { subscribe } = createSubscription({
 		}
 	],
 	attachStore: storeAttach.afterCallbacks,
-	mapState: (properties) => properties,
+	mapState: (properties) => {
+		return properties;
+	}
 });
 
 const reconnectSocket = () => {

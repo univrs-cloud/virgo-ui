@@ -12,24 +12,29 @@ const { subscribe } = createSubscription({
 	],
 	attachStore: storeAttach.beforeCallbacks,
 	mapState: (properties) => {
-		if (_.isNull(properties.configured) || _.isNull(properties.containers)) {
-			return { apps: null };
+		if (_.isNull(properties?.configured) || _.isNull(properties?.containers)) {
+			return {
+				apps: null
+			};
 		}
-		return { apps: composeDashboardApps(properties) };
-	},
+		
+		return {
+			apps: composeDashboardApps(properties)
+		};
+	}
 });
 
 function composeDashboardApps(properties) {
-	let apps = _.map(properties.configured, (entity) => {
+	let apps = _.map(properties?.configured, (entity) => {
 		if (entity.type === 'app') {
 			entity.projectContainers = _.orderBy(
-				_.filter(properties.containers, (container) => {
+				_.filter(properties?.containers, (container) => {
 					return container.labels && container.labels['comDockerComposeProject'] === entity.name;
 				}),
 					['labels.comDockerComposeService'],
 					['asc']
 			);
-			entity.hasUpdates = _.some(properties.imageUpdates, ({ containerId }) => {
+			entity.hasUpdates = _.some(properties?.imageUpdates, ({ containerId }) => {
 				return _.some(entity.projectContainers, (container) => {
 					return container.id === containerId;
 				});
