@@ -9,13 +9,15 @@ const { subscribe } = createSubscription({
 		}
 	],
 	attachStore: storeAttach.beforeCallbacks,
-	mapState: (properties) => ({
-		shares: _.orderBy(
-			properties.shares || [],
-			[(entity) => { return entity.comment.toLowerCase(); }],
-			['asc']
-		),
-	}),
+	mapState: (properties) => {
+		return {
+			shares: _.orderBy(
+				properties?.shares || [],
+				[(entity) => { return entity.comment.toLowerCase(); }],
+				['asc']
+			)
+		};
+	}
 });
 
 export {

@@ -6,31 +6,33 @@ import { createSubscription, storeAttach } from 'shell/services/module_store_sub
 const { subscribe } = createSubscription({
 	stores: [
 		{
+			store: Job,
+			propertyNames: ['jobs']
+		},
+		{
 			store: Host,
 			propertyNames: ['system']
 		},
 		{
 			store: Configuration,
 			propertyNames: ['configuration']
-		},
-		{
-			store: Job,
-			propertyNames: ['jobs']
 		}
 	],
 	filters: {
-		jobs: isTrustedProxyJob,
+		jobs: isTrustedProxiesJob
 	},
 	attachStore: storeAttach.beforeCallbacks,
-	mapState: (properties) => properties,
+	mapState: (properties) => {
+		return properties;
+	}
 });
 
-function isTrustedProxyJob(job) {
-	return job?.name && _.startsWith(job.name, 'trustedProxy');
+function isTrustedProxiesJob(job) {
+	return _.startsWith(job?.name, 'trustedProxy');
 }
 
 const getJobs = () => {
-	return _.filter(Job.getJobs() || [], isTrustedProxyJob);
+	return _.filter(Job.getJobs() || [], isTrustedProxiesJob);
 };
 
 const getSystem = () => {

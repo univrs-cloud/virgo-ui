@@ -2,30 +2,32 @@ import Job from 'stores/job';
 import Configuration from 'stores/configuration';
 import { createSubscription, storeAttach } from 'shell/services/module_store_subscription';
 
-function isSettingsModuleJob() {
+function isSettingsJob() {
 	return false;
 }
 
 const { subscribe } = createSubscription({
 	stores: [
 		{
-			store: Configuration,
-			propertyNames: ['configuration']
-		},
-		{
 			store: Job,
 			propertyNames: ['jobs']
+		},
+		{
+			store: Configuration,
+			propertyNames: ['configuration']
 		}
 	],
 	filters: {
-		jobs: isSettingsModuleJob,
+		jobs: isSettingsJob
 	},
 	attachStore: storeAttach.beforeCallbacks,
-	mapState: (properties) => properties,
+	mapState: (properties) => {
+		return properties;
+	}
 });
 
 const getJobs = () => {
-	return _.filter(Job.getJobs() || [], isSettingsModuleJob);
+	return _.filter(Job.getJobs() || [], isSettingsJob);
 };
 
 const getConfiguration = () => {

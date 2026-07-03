@@ -8,9 +8,9 @@
 		<span class="text-red-300">Error fetching data</span>
 	<%} else {%>
 		<div class="text-end mt-n3 mb-1">
-			<small class="fw-light text-body-tertiary"><%=state.cpuStats.currentLoad?.toFixed(0)%>%</small>
+			<small class="fw-light text-body-tertiary"><%=state.cpuStats?.currentLoad?.toFixed(0)%>%</small>
 			<u-progress>
-				<u-progress-bar width="<%=state.cpuStats.currentLoad%>"></u-progress-bar>
+				<u-progress-bar width="<%=state.cpuStats?.currentLoad%>"></u-progress-bar>
 			</u-progress>
 		</div>
 		<div>
@@ -18,7 +18,7 @@
 				<i class="icon-regular icon-temperature-half icon-fw me-1 text-gray-500"></i>
 				<%=state.cpuStats?.temperature?.main?.toFixed(0)%> °C
 			</u-badge>
-			<%if (state.cpuStats.fan) {%>
+			<%if (state.cpuStats?.fan) {%>
 				<u-badge color="gray" tint="200" class="me-1" pill>
 					<i class="icon-solid icon-fan icon-fw me-1 text-gray-500"></i>
 					<%=state.cpuStats?.fan%> rpm

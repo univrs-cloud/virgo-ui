@@ -17,14 +17,14 @@ const render = (state) => {
 		return;
 	}
 	
-	const networkInterface = _.find(state.system.networkInterfaces, { default: true });
+	const networkInterface = _.find(state?.system?.networkInterfaces, { default: true });
 	let trustedProxies = _.orderBy(
 		state.configuration.trustedProxies || [],
 		[(address) => String(address ?? '').toLowerCase()],
 		['asc']
 	);
 	trustedProxies = _.map(trustedProxies, (trustedProxy) => {
-		const jobs = _.filter(state.jobs, (job) => { return job.data?.config?.address === trustedProxy; });
+		const jobs = _.filter(state?.jobs, (job) => { return job.data?.config?.address === trustedProxy; });
 		return trustedProxyTemplate({ trustedProxy, jobs });
 	});
 	morphdom(

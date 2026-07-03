@@ -53,6 +53,7 @@ offcanvas.addEventListener('click', navigate);
 const routes = [
 	{ path: '/', module: 'dashboard' },
 	{ path: '/dashboard', module: 'dashboard' },
+	{ path: '/nodes', module: 'nodes', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/apps/:appName?', module: 'apps', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/bookmarks', module: 'bookmarks', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/folders', module: 'folders', middleware: [requireAuth, requiresAdmin] },
@@ -65,7 +66,7 @@ const routes = [
 	{ path: '/system-updates', module: 'system-updates', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/about', module: 'about', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/users/profile', module: 'profile', middleware: [requireAuth] },
-	{ path: '*', module: 'not-found' },
+	{ path: '*', module: 'not-found' }
 ];
 
 _.each(routes, ({ path, module, middleware = [] }) => {
