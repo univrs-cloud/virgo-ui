@@ -6,31 +6,35 @@ import { createSubscription, storeAttach } from 'shell/services/module_store_sub
 const { subscribe } = createSubscription({
 	stores: [
 		{
+			store: Job,
+			propertyNames: ['jobs']
+		},
+		{
 			store: Host,
 			propertyNames: ['system']
 		},
 		{
 			store: Share,
 			propertyNames: ['shares']
-		},
-		{
-			store: Job,
-			propertyNames: ['jobs']
 		}
 	],
 	filters: {
-		jobs: isShareJob,
+		jobs: isTimeMachinesJob
 	},
 	attachStore: storeAttach.beforeCallbacks,
 	mapState: (properties) => {
-		const timeMachines = filterTimeMachines(properties.shares);
-		const networkInterface = _.find(properties.system.networkInterfaces, { default: true });
-		return { timeMachines, networkInterface, jobs: properties.jobs };
-	},
+		const timeMachines = filterTimeMachines(properties?.shares);
+		const networkInterface = _.find(properties?.system?.networkInterfaces, { default: true });
+		return {
+			timeMachines,
+			networkInterface,
+			jobs: properties?.jobs || []
+		};
+	}
 });
 
-function isShareJob(job) {
-	return job?.name && _.startsWith(job.name, 'share');
+function isTimeMachinesJob(job) {
+	return _.startsWith(job?.name, 'share');
 }
 
 function filterTimeMachines(shares) {
@@ -46,7 +50,7 @@ function filterTimeMachines(shares) {
 }
 
 const getJobs = () => {
-	return _.filter(Job.getJobs() || [], isShareJob);
+	return _.filter(Job.getJobs() || [], isTimeMachinesJob);
 };
 
 const getSystem = () => {

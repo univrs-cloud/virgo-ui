@@ -9,6 +9,10 @@ const DEFAULT_NETWORK_INTERFACE_SPEED_BPS = 1_000_000_000;
 const { subscribe } = createSubscription({
 	stores: [
 		{
+			store: Job,
+			propertyNames: ['jobs']
+		},
+		{
 			store: Docker,
 			propertyNames: ['configured', 'containers', 'imageUpdates', 'appsResourceMetrics']
 		},
@@ -19,26 +23,22 @@ const { subscribe } = createSubscription({
 		{
 			store: Indexer,
 			propertyNames: ['indexerDatasets']
-		},
-		{
-			store: Job,
-			propertyNames: ['jobs']
 		}
 	],
 	filters: {
-		jobs: isAppModuleJob,
+		jobs: isAppsJob
 	},
 	attachStore: storeAttach.beforeCallbacks,
 	mapState: (properties) => {
 		return {
-			apps: composeApps(properties.configured, properties.containers, properties.appsResourceMetrics, properties.imageUpdates, properties.snapshots, properties.indexerDatasets),
-			jobs: properties.jobs,
+			apps: composeApps(properties?.configured, properties?.containers, properties?.appsResourceMetrics, properties?.imageUpdates, properties?.snapshots, properties?.indexerDatasets),
+			jobs: properties?.jobs || []
 		};
-	},
+	}
 });
 
-function isAppModuleJob(job) {
-	return job?.name && _.startsWith(job.name, 'app');
+function isAppsJob(job) {
+	return _.startsWith(job?.name, 'app');
 }
 
 function composeApps(configured, containers, appsResourceMetrics, imageUpdates, snapshots, indexerDatasets) {
@@ -92,7 +92,7 @@ const getSocket = () => {
 };
 
 const getJobs = () => {
-	return _.filter(Job.getJobs() || [], isAppModuleJob);
+	return _.filter(Job.getJobs() || [], isAppsJob);
 };
 
 const getApps = () => {

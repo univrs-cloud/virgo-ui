@@ -5,25 +5,28 @@ import { createSubscription, storeAttach } from 'shell/services/module_store_sub
 const { subscribe } = createSubscription({
 	stores: [
 		{
-			store: Bookmark,
-			propertyNames: ['configured']
-		},
-		{
 			store: Job,
 			propertyNames: ['jobs']
+		},
+		{
+			store: Bookmark,
+			propertyNames: ['configured']
 		}
 	],
 	filters: {
-		jobs: isBookmarkModuleJob,
+		jobs: isBookmarksJob
 	},
 	attachStore: storeAttach.beforeCallbacks,
 	mapState: (properties) => {
-		return { bookmarks: composeBookmark(properties.configured), jobs: properties.jobs };
-	},
+		return {
+			bookmarks: composeBookmark(properties?.configured),
+			jobs: properties?.jobs || []
+		};
+	}
 });
 
-function isBookmarkModuleJob(job) {
-	return job?.name && _.startsWith(job.name, 'bookmark');
+function isBookmarksJob(job) {
+	return _.startsWith(job?.name, 'bookmark');
 }
 
 function composeBookmark(configured) {
@@ -39,7 +42,7 @@ function composeBookmark(configured) {
 }
 
 const getJobs = () => {
-	return _.filter(Job.getJobs() || [], isBookmarkModuleJob);
+	return _.filter(Job.getJobs() || [], isBookmarksJob);
 };
 
 const getBookmarks = () => {

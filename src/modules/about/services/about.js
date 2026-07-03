@@ -9,7 +9,9 @@ const { subscribe } = createSubscription({
 		}
 	],
 	attachStore: storeAttach.beforeCallbacks,
-	mapState: (properties) => properties,
+	mapState: (properties) => {
+		return properties;
+	}
 });
 
 const getSystem = () => {

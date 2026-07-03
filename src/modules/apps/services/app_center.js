@@ -6,35 +6,38 @@ import { createSubscription, storeAttach } from 'shell/services/module_store_sub
 const { subscribe } = createSubscription({
 	stores: [
 		{
-			store: Docker,
-			propertyNames: ['containers', 'templates']
-		},
-		{
 			store: Job,
 			propertyNames: ['jobs']
+		},
+		{
+			store: Docker,
+			propertyNames: ['containers', 'templates']
 		}
 	],
 	filters: {
-		jobs: isAppInstallJob,
+		jobs: isAppInstallJob
 	},
 	attachStore: storeAttach.beforeCallbacks,
 	mapState: (properties) => {
-		return { templates: mapTemplates(properties), jobs: properties.jobs };
-	},
+		return {
+			templates: mapTemplates(properties),
+			jobs: properties?.jobs || []
+		};
+	}
 });
 
 function isAppInstallJob(job) {
-	return job?.name === 'app:install';
+	return _.startsWith(job?.name, 'app:install');
 }
 
 function mapTemplates(properties) {
 	let templates = _.orderBy(
-		properties.templates,
+		properties?.templates,
 		[(entity) => { return entity.title.toLowerCase(); }],
 		['asc']
 	);
 	return _.map(templates, (template) => {
-		template.isInstalled = (_.find(properties.containers, (container) => {
+		template.isInstalled = (_.find(properties?.containers, (container) => {
 			return template.name === container.labels?.comDockerComposeProject;
 		}) !== undefined);
 		return template;

@@ -6,35 +6,39 @@ import { createSubscription, storeAttach } from 'shell/services/module_store_sub
 const { subscribe } = createSubscription({
 	stores: [
 		{
+			store: Job,
+			propertyNames: ['jobs']
+		},
+		{
 			store: Host,
 			propertyNames: ['system']
 		},
 		{
 			store: Share,
 			propertyNames: ['shares']
-		},
-		{
-			store: Job,
-			propertyNames: ['jobs']
 		}
 	],
 	filters: {
-		jobs: isShareJob,
+		jobs: isFoldersJob
 	},
 	attachStore: storeAttach.beforeCallbacks,
 	mapState: (properties) => {
-		let folders = filterFolders(properties.shares);
+		let folders = filterFolders(properties?.shares);
 		folders = _.map(folders, (folder) => ({
 			...folder,
 			isCustom: !folder.path?.startsWith('/messier/folders/')
 		}));
-		const networkInterface = _.find(properties.system.networkInterfaces, { default: true });
-		return { folders, networkInterface, jobs: properties.jobs };
-	},
+		const networkInterface = _.find(properties?.system?.networkInterfaces, { default: true });
+		return {
+			folders,
+			networkInterface,
+			jobs: properties?.jobs || []
+		};
+	}
 });
 
-function isShareJob(job) {
-	return job?.name && _.startsWith(job.name, 'share');
+function isFoldersJob(job) {
+	return _.startsWith(job?.name, 'share');
 }
 
 function filterFolders(shares) {
@@ -50,7 +54,7 @@ function filterFolders(shares) {
 }
 
 const getJobs = () => {
-	return _.filter(Job.getJobs() || [], isShareJob);
+	return _.filter(Job.getJobs() || [], isFoldersJob);
 };
 
 const getSystem = () => {
