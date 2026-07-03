@@ -12,11 +12,14 @@ const moduleLoaders = {
 		'settings': () => import('modules/settings'),
 		'system-services': () => import('modules/system_services'),
 		'system-updates': () => import('modules/system_updates'),
-		'about': () => import('modules/about'),
+		'about': () => import('modules/about')
 	}),
 	...(isAuthenticated && {
-		'profile': () => import('modules/users/profile'),
+		'profile': () => import('modules/users/profile')
 	}),
+	...(runtimeRole === 'fleet' && isAuthenticated && {
+		'nodes': () => import('modules/nodes')
+	})
 };
 
 const moduleCache = {};

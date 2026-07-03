@@ -5,7 +5,6 @@ import * as account from 'shell/account';
 import * as notifications from 'shell/notifications';
 import * as systemService from 'shell/services/system';
 import * as softwareService from 'shell/services/software';
-import * as nodeService from 'shell/services/node';
 import page from 'page';
 
 let unsubscribe;
@@ -29,8 +28,11 @@ const renderNavigation = async (state) => {
 		return;
 	}
 
-	const nodes = await nodeService.getNodes();
-	const newNav = `<div>${navigationTemplate({ active: page.current, updates: state.updates, nodes: nodePickerTemplate({ nodes }) })}</div>`;
+	let nodes = '';
+	if (runtimeRole === 'fleet') {
+		nodes = nodePickerTemplate({ nodes: [] });
+	}
+	const newNav = `<div>${navigationTemplate({ active: page.current, updates: state.updates, nodes })}</div>`;
 	_.each(document.querySelectorAll('header .navbar .nav, .offcanvas .navbar-nav'), (nav) => {
 		morphdom(
 			nav,
