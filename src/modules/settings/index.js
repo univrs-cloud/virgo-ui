@@ -1,12 +1,14 @@
 import modulePartial from 'modules/settings/partials/index.html';
 import notificationsPartial from 'modules/settings/partials/notifications.html';
 import locationPartial from 'modules/settings/partials/location.html';
+import fleetPartial from 'modules/settings/partials/fleet.html';
 import powerPartial from 'modules/settings/partials/power.html';
 import * as configurationService from 'modules/settings/services/configuration';
 
 const moduleTemplate = _.template(modulePartial);
 const notificationsTemplate = _.template(notificationsPartial);
 const locationTemplate = _.template(locationPartial);
+const fleetTemplate = _.template(fleetPartial);
 const powerTemplate = _.template(powerPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
 const module = document.querySelector('#settings');
@@ -18,12 +20,13 @@ const render = (state) => {
 	if (_.isNull(state.configuration)) {
 		return;
 	}
-
+	
 	morphdom(
 		row,
 		`<div>
 			${notificationsTemplate({ smtp: state.configuration?.smtp || null })}
 			${locationTemplate({ location: state.configuration?.location || null })}
+			${fleetTemplate({ fleet: state.configuration?.fleet || null })}
 			${powerTemplate()}
 		</div>`,
 		{ childrenOnly: true }
@@ -35,6 +38,7 @@ const render = (state) => {
 
 configurationService.subscribe([render]);
 
+import('modules/settings/power');
 import('modules/settings/notifications_update');
 import('modules/settings/location_update');
-import('modules/settings/power');
+import('modules/settings/fleet_update');
