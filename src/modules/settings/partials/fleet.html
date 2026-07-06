@@ -13,7 +13,9 @@
 					<hr class="border-secondary-subtle my-4">
 
 					<dt class="fw-lighter"><small>Status</small></dt>
-					<dd><%=(fleet?.enabled ? 'Enabled' : 'Disabled')%></dd>
+					<dd>
+						<u-switch class="fleet-switch" on-label="Enabled" <%=(fleet?.enabled ? 'checked' : '')%>></u-switch>
+					</dd>
 					<%if (fleet?.enabled) {%>
 						<dt class="fw-lighter"><small>Connection</small></dt>
 						<dd class="m-0 <%=(fleet?.connected ? '' : 'text-warning')%>"><%=(fleet?.connected ? 'Connected' : 'Reconnecting...')%></dd>
