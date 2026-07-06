@@ -66,9 +66,9 @@
 		"raw-loader": "^4.0.2",
 		"sass": "^1.101.0",
 		"sass-loader": "^17.0.0",
-		"webpack": "^5.108.3",
-		"webpack-cli": "^7.1.0",
-		"webpack-dev-server": "^5.2.5",
+		"webpack": "^5.108.4",
+		"webpack-cli": "^7.2.1",
+		"webpack-dev-server": "^6.0.0",
 		"webpack-pwa-manifest": "^4.3.0"
 	}
 }
