@@ -1,0 +1,25 @@
+<div class="col col-12">
+	<div class="card rounded-4 border-0 mb-0">
+		<div class="card-body">
+            <a href="#fleet" class="btn btn-link p-0 float-end" data-bs-toggle="modal"><i class="icon-regular icon-pen icon-fw me-1"></i><%=(_.isNull(fleet) ? 'Register' : 'Edit')%></a>
+			<h5 class="card-title d-flex align-items-center">Fleet</h5>
+			<%if (_.isNull(fleet)) {%>
+				Not registered
+			<%} else {%>
+				<dl class="m-0">
+					<dt class="fw-lighter"><small>Account</small></dt>
+					<dd><%=fleet?.email%></dd>
+					
+					<hr class="border-secondary-subtle my-4">
+
+					<dt class="fw-lighter"><small>Status</small></dt>
+					<dd><%=(fleet?.enabled ? 'Enabled' : 'Disabled')%></dd>
+					<%if (fleet?.enabled) {%>
+						<dt class="fw-lighter"><small>Connection</small></dt>
+						<dd class="m-0 <%=(fleet?.connected ? '' : 'text-warning')%>"><%=(fleet?.connected ? 'Connected' : 'Reconnecting...')%></dd>
+					<%}%>
+				</dl>
+			<%}%>
+		</div>
+	</div>
+</div>
