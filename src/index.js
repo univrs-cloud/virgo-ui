@@ -57,7 +57,7 @@ const runtime = async (state) => {
 
 	if (runtimeRole === 'fleet') {
 		if (!isAuthenticated) {
-			await import('shell/login');
+			await import('shell/fleet/login');
 		} else {
 			await import('shell/fleet');
 		}
