@@ -38,7 +38,7 @@ const render = (state) => {
 		: _.orderBy(state.nodes, [(node) => { return String(node.name ?? '').toLowerCase(); }], ['asc']);
 	morphdom(
 		modules,
-		`<div>${fleetTemplate({ nodes, nodeTemplate })}</div>`,
+		`<div>${fleetTemplate({ nodes, nodeTemplate, moment })}</div>`,
 		{ childrenOnly: true }
 	);
 };
