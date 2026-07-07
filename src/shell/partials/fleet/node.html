@@ -31,6 +31,9 @@
 			<%if (!node.isOwner) {%>
 				<u-badge color="gray" tint="300" class="ms-1" pill>invited</u-badge>
 			<%}%>
+			<%if (!node.online && node.lastSeenAt) {%>
+				<small class="text-body-tertiary ms-2" data-bs-toggle="tooltip" data-bs-original-title="<%=moment(node.lastSeenAt).format('LLL')%>">Last seen <%=moment(node.lastSeenAt).fromNow()%></small>
+			<%}%>
 		</div>
 	</div>
 </div>
