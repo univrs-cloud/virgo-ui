@@ -282,6 +282,14 @@ main,
 				}
 			}
 		}
+		&.fleet {
+			.navbar {
+				background: linear-gradient(to right, var(--bs-primary) 15rem, transparent 15rem);
+			}
+			~ main {
+				margin-left: 0;
+			}
+		}
 	}
 	main,
 	#update {

@@ -49,10 +49,21 @@ const runtime = async (state) => {
 	if (_.isNull(state.role)) {
 		return;
 	}
-	
+
 	runtimeRole = state.role;
+	// runtimeRole = 'fleet';
 	unsubscribe?.();
 	unsubscribe = null;
+
+	if (runtimeRole === 'fleet') {
+		if (!isAuthenticated) {
+			await import('shell/login');
+		} else {
+			await import('shell/fleet');
+		}
+		return;
+	}
+
 	const bootstrapService = await import('shell/services/bootstrap');
 	unsubscribe = bootstrapService.subscribe([render]);
 };

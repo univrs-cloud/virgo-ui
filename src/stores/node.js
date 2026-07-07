@@ -15,13 +15,38 @@ class Node extends Store {
 			this.setState(initialState, 'socket_disconnect');
 		});
 
-        this.socket.on('nodes', (nodes) => {
+        this.socket.on('node:inventory', (nodes) => {
 			this.setState({ nodes }, 'get_nodes');
 		});
+
+		// setTimeout(() => {
+		// 	// const nodes = [];
+		// 	const nodes = [
+		// 		{
+		// 			name: 'origin',
+		// 			online: true,
+		// 			nodeId: 'ab2729a13199f2a7'
+		// 		},
+		// 		{
+		// 			name: 'ceres',
+		// 			online: true,
+		// 			nodeId: 'c2d7a4766f4d579a'
+		// 		}
+		// 	];
+		// 	this.setState({ nodes }, 'get_nodes');
+		// }, 2000);
     }
 
     getNodes() {
 		return this.getStateProperty('nodes');
+	}
+
+	deleteNode(config) {
+		this.socket.emit('node:delete', config);
+	}
+
+	inviteAdmin(config) {
+		this.socket.emit('node:invite', config);
 	}
 }
 
