@@ -47,6 +47,7 @@ header.addEventListener('click', signOut);
 
 render({ nodes: null });
 nodeService.subscribe([render]);
+setInterval(() => render({ nodes: nodeService.getNodes() }), 60000);
 
 import('shell/fleet/admin_add');
 import('shell/fleet/node_remove');
