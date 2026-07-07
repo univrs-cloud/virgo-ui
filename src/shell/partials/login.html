@@ -1,0 +1,26 @@
+<div class="d-flex align-items-center justify-content-center h-100 p-3">
+	<div class="card shadow-sm border-0" style="width: 100%; max-width: 24rem;">
+		<div class="card-body p-4">
+			<div class="text-center mb-4">
+				<img src="/assets/img/virgo.svg" width="48" alt="">
+			</div>
+			<u-form class="login-form">
+				<u-input type="email" name="email" label="Email" class="email"></u-input>
+				<u-input type="password" name="password" label="Password" class="password" autocomplete="current-password"></u-input>
+				<div class="d-flex align-items-center justify-content-between mt-3">
+					<a href="#" class="show-register text-decoration-none">Register</a>
+					<u-button type="submit" variant="primary">Sign in</u-button>
+				</div>
+			</u-form>
+			<u-form class="register-form d-none">
+				<u-input type="email" name="email" label="Email" class="email"></u-input>
+				<u-input type="password" name="password" label="Password" class="password" autocomplete="new-password"></u-input>
+				<u-input type="password" name="passwordConfirm" label="Confirm password" class="password-confirm" autocomplete="new-password"></u-input>
+				<div class="d-flex align-items-center justify-content-between mt-3">
+					<a href="#" class="show-login text-decoration-none">Sign in</a>
+					<u-button type="submit" variant="primary">Register</u-button>
+				</div>
+			</u-form>
+		</div>
+	</div>
+</div>
