@@ -7,6 +7,7 @@ import * as systemService from 'shell/services/system';
 import * as softwareService from 'shell/services/software';
 import * as nodeService from 'shell/services/node';
 import page from 'page';
+import { getNodeViewId } from 'libs/node_view';
 
 let unsubscribe;
 const headerTemplate = _.template(headerPartial);
@@ -42,8 +43,15 @@ const renderNavigation = async (state) => {
 	});
 };
 
-const renderNodePicker = () => {
-	const nodePicker = nodePickerTemplate({ nodes: nodeService.getNodes() ?? [] });
+const renderNodePicker = (state) => {
+	if (_.isNull(state.nodes)) {
+		return;
+	}
+
+	const nodeId = getNodeViewId();
+	const currentNode = nodeId ? _.find(state.nodes, { nodeId }) : state.nodes[0];
+	const currentNodeLabel = currentNode?.name || currentNode?.nodeId || '';
+	const nodePicker = nodePickerTemplate({ nodes: state.nodes, currentNodeLabel });
 	_.each(document.querySelectorAll('header .navbar .nav .nodes, .offcanvas .navbar-nav .nodes'), (container) => {
 		container.innerHTML = nodePicker;
 	});
