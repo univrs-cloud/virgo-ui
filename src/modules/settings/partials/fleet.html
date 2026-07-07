@@ -18,7 +18,11 @@
 					</dd>
 					<%if (fleet?.enabled) {%>
 						<dt class="fw-lighter"><small>Connection</small></dt>
-						<dd class="m-0 <%=(fleet?.connected ? '' : 'text-warning')%>"><%=(fleet?.connected ? 'Connected' : 'Reconnecting...')%></dd>
+						<%if (fleet?.authFailed) {%>
+							<dd class="m-0 text-danger">Registration expired, please re-register.</dd>
+						<%} else {%>
+							<dd class="m-0 <%=(fleet?.connected ? '' : 'text-warning')%>"><%=(fleet?.connected ? 'Connected' : 'Reconnecting...')%></dd>
+						<%}%>
 					<%}%>
 				</dl>
 			<%}%>

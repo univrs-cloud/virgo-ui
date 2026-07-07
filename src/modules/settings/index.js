@@ -42,3 +42,4 @@ import('modules/settings/power');
 import('modules/settings/notifications_update');
 import('modules/settings/location_update');
 import('modules/settings/fleet_update');
+import('modules/settings/fleet_toggle');
