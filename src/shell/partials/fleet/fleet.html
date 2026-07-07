@@ -17,7 +17,7 @@
 			</h5>
 		</div>
 		<%_.each(nodes, (node) => {%>
-			<%=nodeTemplate({ node })%>
+			<%=nodeTemplate({ node, moment })%>
 		<%})%>
 	</div>
 <%}%>
