@@ -26,8 +26,11 @@
 			</div>
 			<small class="text-body-tertiary text-truncate d-block mb-2"><%=node.nodeId%></small>
 			<u-badge color="<%=node.online ? 'green' : 'gray'%>" pill>
-				<%=node.online ? 'Online' : 'Offline'%>
+				<%=(node.online ? 'Online' : 'Offline')%>
 			</u-badge>
+			<%if (!node.isOwner) {%>
+				<u-badge color="gray" tint="300" class="ms-1" pill>invited</u-badge>
+			<%}%>
 		</div>
 	</div>
 </div>
