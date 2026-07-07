@@ -4,16 +4,15 @@ import * as dockerService from 'shell/services/docker';
 
 let unsubscribe;
 let authDomain = null;
-let fqdn = systemService.getFQDN();
 const accountTemplate = _.template(accountPartial);
 
 const signOut = (event) => {
 	if (!authDomain || !event.target.closest('a')?.classList.contains('sign-out')) {
 		return;
 	}
-	
+
 	event.preventDefault();
-	location = `${authDomain}/logout?rd=https://${fqdn}`;
+	location = `${authDomain}/logout?rd=https://${systemService.getFQDN()}`;
 };
 
 const render = (state) => {
