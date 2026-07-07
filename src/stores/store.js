@@ -46,7 +46,8 @@ class Store extends ObservableStore {
 	constructor(settings) {
 		super(settings);
 		const nodeId = new URL(document.baseURI).pathname.match(/^\/nodes\/([^/]+)\//)?.[1] ?? null;
-		const namespace = nodeId ? `/fleet/${nodeId}/${settings.namespace}` : `/${settings.namespace}`;
+		const proxyable = settings.namespace !== 'runtime';
+		const namespace = (nodeId && proxyable) ? `/fleet/${nodeId}/${settings.namespace}` : `/${settings.namespace}`;
 		this.socket = io(namespace, {
 			path: '/api',
 			reconnection: true,
