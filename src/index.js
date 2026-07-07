@@ -55,7 +55,8 @@ const runtime = async (state) => {
 	unsubscribe?.();
 	unsubscribe = null;
 
-	if (runtimeRole === 'fleet') {
+	const onNodeView = /^\/nodes\/[^/]+\//.test(new URL(document.baseURI).pathname);
+	if (runtimeRole === 'fleet' && !onNodeView) {
 		if (!isAuthenticated) {
 			await import('shell/fleet/login');
 		} else {
