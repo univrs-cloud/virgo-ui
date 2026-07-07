@@ -1,10 +1,10 @@
-import loginPartial from 'shell/partials/login.html';
+import loginPartial from 'shell/partials/fleet/login.html';
 
 const main = document.querySelector('main');
 main.innerHTML = loginPartial;
 
-const loginForm = main.querySelector('.login-form');
-const registerForm = main.querySelector('.register-form');
+const loginForm = main.querySelector('.login');
+const registerForm = main.querySelector('.register');
 
 const submit = async (url, data) => {
 	const response = await fetch(url, {
@@ -38,8 +38,7 @@ const register = async () => {
 	const button = registerForm.querySelector('u-button[type="submit"]');
 	button.disabled = true;
 	try {
-		const data = registerForm.getData();
-		await submit('/auth/signup', { email: data.email, displayName: data.email, password: data.password });
+		await submit('/auth/signup', registerForm.getData());
 		window.location.reload();
 	} catch (error) {
 		notifyError(error.message);
@@ -78,6 +77,12 @@ loginForm.validation = [
 ];
 
 registerForm.validation = [
+	{
+		selector: '.display-name',
+		rules: {
+			isEmpty: `Can't be empty`
+		}
+	},
 	{
 		selector: '.email',
 		rules: {

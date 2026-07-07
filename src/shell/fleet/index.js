@@ -1,7 +1,7 @@
-import headerPartial from 'shell/partials/header_fleet.html';
+import headerPartial from 'shell/partials/fleet/header.html';
 import mainPartial from 'shell/partials/main.html';
-import fleetPartial from 'shell/partials/fleet.html';
-import nodePartial from 'shell/partials/node.html';
+import fleetPartial from 'shell/partials/fleet/fleet.html';
+import nodePartial from 'shell/partials/fleet/node.html';
 import * as nodeService from 'shell/services/node';
 
 const header = document.querySelector('header');
@@ -48,5 +48,5 @@ header.addEventListener('click', signOut);
 render({ nodes: null });
 nodeService.subscribe([render]);
 
-import('shell/admin_add');
-import('shell/node_remove');
+import('shell/fleet/admin_add');
+import('shell/fleet/node_remove');
