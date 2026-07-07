@@ -1,15 +1,34 @@
-import Host from 'stores/host';
 import Node from 'stores/node';
-// import { createSubscription, storeAttach } from 'shell/services/module_store_subscription';
+import { createSubscription, storeAttach } from 'shell/services/module_store_subscription';
+
+const { subscribe } = createSubscription({
+	stores: [
+		{
+			store: Node,
+			propertyNames: ['nodes']
+		}
+	],
+	attachStore: storeAttach.afterCallbacks,
+	mapState: (properties) => {
+		return properties;
+	}
+});
 
 const getNodes = () => {
-    const system = Host.getSystem();
-    const node = system.osInfo?.fqdn || '';
-	return [
-		node
-	];
+	return Node.getNodes();
+};
+
+const deleteNode = (config) => {
+	return Node.deleteNode(config);
+};
+
+const inviteAdmin = (config) => {
+	return Node.inviteAdmin(config);
 };
 
 export {
-    getNodes
+	subscribe,
+	getNodes,
+	deleteNode,
+	inviteAdmin
 };

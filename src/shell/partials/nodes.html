@@ -5,14 +5,14 @@
 <div class="nav-item">
 	<div class="nav-title ps-sm-2"><small>Sites</small></div>
 	<div class="btn-group align-items-center w-100 mb-4">
-		<span data-bs-toggle="dropdown" class="dropdown-toggle d-flex justify-content-between align-items-center btn btn-secondary bd-white shadow-sm w-100 text-start"><%=nodes[0]%></span>
+		<span data-bs-toggle="dropdown" class="dropdown-toggle d-flex justify-content-between align-items-center btn btn-secondary bd-white shadow-sm w-100 text-start"><%=nodes[0]?.name || ''%></span>
 		<a href="/nodes" class="btn btn-sm text-white p-0 m-0 ms-2"><i class="icon-solid icon-sm icon-cog"></i></a>
 		<ul class="dropdown-menu w-100">
 			<%_.each(nodes, (node) => {%>
 				<li>
-					<a href="#" class="dropdown-item d-flex align-items-center">
+					<a href="/nodes/<%=node.nodeId%>" rel="external" class="dropdown-item d-flex align-items-center">
 						<i class="icon-solid icon-dot text-green-400 me-1"></i>
-						<%=node%>
+						<%=node.name%>
 					</a>
 				</li>
 			<%})%>

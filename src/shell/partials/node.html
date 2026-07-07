@@ -1,0 +1,33 @@
+<div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+	<div class="card shadow-sm border-0 h-100">
+		<div class="card-body">
+			<div class="d-flex align-items-center justify-content-between">
+				<h6 class="mb-0 text-truncate flex-grow-1 me-2">
+					<a href="/nodes/<%=node.nodeId%>" rel="external" class="stretched-link text-decoration-none text-body"><%=node.name%></a>
+				</h6>
+				<div class="dropdown z-2">
+					<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm">
+						<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
+					</span>
+					<ul class="dropdown-menu dropdown-menu-end">
+						<li>
+							<a href="#admin-add" class="dropdown-item" data-bs-toggle="modal" data-node-id="<%=node.nodeId%>">
+								<i class="icon-regular icon-user-plus icon-fw me-1"></i>Add new admin
+							</a>
+						</li>
+						<li><hr class="dropdown-divider"></li>
+						<li>
+							<a href="#" class="dropdown-item text-danger confirm" data-action="remove" data-node-id="<%=node.nodeId%>">
+								<i class="icon-regular icon-xmark icon-fw me-1"></i>Remove from inventory
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<small class="text-body-tertiary text-truncate d-block mb-2"><%=node.nodeId%></small>
+			<u-badge color="<%=node.online ? 'green' : 'gray'%>" pill>
+				<%=node.online ? 'Online' : 'Offline'%>
+			</u-badge>
+		</div>
+	</div>
+</div>
