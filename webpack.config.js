@@ -73,7 +73,7 @@ module.exports = (env, argv) => {
 			app: './src/index.js'
 		},
 		output: {
-			publicPath: '/',
+			publicPath: 'auto',
 			path: path.resolve(__dirname, 'dist'),
 			filename: 'assets/js/[name].[fullhash].js',
 			chunkFilename: 'assets/js/[name].[chunkhash].js',
