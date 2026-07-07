@@ -4,7 +4,7 @@
 			<div class="text-center mb-4">
 				<img src="assets/img/virgo.svg" width="48" alt="">
 			</div>
-			<u-form class="login-form">
+			<u-form class="login">
 				<u-input type="email" name="email" label="Email" class="email"></u-input>
 				<u-input type="password" name="password" label="Password" class="password" autocomplete="current-password"></u-input>
 				<div class="d-flex align-items-center justify-content-between mt-3">
@@ -12,7 +12,8 @@
 					<u-button type="submit" variant="primary">Sign in</u-button>
 				</div>
 			</u-form>
-			<u-form class="register-form d-none">
+			<u-form class="register d-none">
+				<u-input name="displayName" label="Name" class="display-name" autocomplete="name"></u-input>
 				<u-input type="email" name="email" label="Email" class="email"></u-input>
 				<u-input type="password" name="password" label="Password" class="password" autocomplete="new-password"></u-input>
 				<u-input type="password" name="passwordConfirm" label="Confirm password" class="password-confirm" autocomplete="new-password"></u-input>
