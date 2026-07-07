@@ -42,10 +42,25 @@ const updateLocation = (config) => {
 	Configuration.updateLocation(config);
 };
 
+const updateFleet = (config) => {
+	Configuration.updateFleet(config);
+};
+
+const enableFleet = () => {
+	Configuration.enableFleet();
+};
+
+const disableFleet = () => {
+	Configuration.disableFleet();
+};
+
 export {
 	subscribe,
 	getJobs,
 	getConfiguration,
 	updateSmtp,
-	updateLocation
+	updateLocation,
+	updateFleet,
+	enableFleet,
+	disableFleet
 };

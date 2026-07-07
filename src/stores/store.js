@@ -45,7 +45,9 @@ ObservableStore.addExtension(new ReduxDevToolsExtension());
 class Store extends ObservableStore {
 	constructor(settings) {
 		super(settings);
-		this.socket = io(`/${settings.namespace}`, {
+		const nodeId = new URL(document.baseURI).pathname.match(/^\/nodes\/([^/]+)\//)?.[1] ?? null;
+		const namespace = nodeId ? `/fleet/${nodeId}/${settings.namespace}` : `/${settings.namespace}`;
+		this.socket = io(namespace, {
 			path: '/api',
 			reconnection: true,
 			reconnectionAttempts: 30,

@@ -9,8 +9,7 @@ const form = modal.querySelector('u-form');
 const updateFleet = (event) => {
 	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
 	let config = form.getData();
-    console.log(config);
-	// configurationService.updateFleet(config);
+	configurationService.updateFleet(config);
 	bootstrap.Modal.getInstance(modal)?.hide();
 };
 

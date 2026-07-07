@@ -2,7 +2,7 @@ import Fuse from 'fuse.js';
 
 const METADATA_URL = 'https://raw.githubusercontent.com/homarr-labs/dashboard-icons/refs/heads/main/metadata.json';
 const ICON_BASE = 'https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons';
-export const DEFAULT_ICON = '/assets/img/virgo.svg';
+export const DEFAULT_ICON = 'assets/img/virgo.svg';
 
 const getIconUrl = (id, base) => {
 	return `${ICON_BASE}/${base}/${id}.${base}`;

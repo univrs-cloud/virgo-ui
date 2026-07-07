@@ -32,6 +32,14 @@ class Configuration extends Store {
 		this.socket.emit('configuration:fleet:update', config);
 	}
 
+	enableFleet() {
+		this.socket.emit('configuration:fleet:enable');
+	}
+
+	disableFleet() {
+		this.socket.emit('configuration:fleet:disable');
+	}
+
 	addTrustedProxy(config) {
 		this.socket.emit('configuration:trustedProxy:add', config);
 	}
