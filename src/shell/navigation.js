@@ -1,9 +1,12 @@
 import page from 'page';
 import { loadModule } from 'modules';
+import { initNodeView } from 'libs/node_view';
 
 const header = document.querySelector('header');
 const offcanvas = document.querySelector('.offcanvas');
 const offcanvasInstance = bootstrap.Offcanvas.getOrCreateInstance(offcanvas);
+
+initNodeView();
 
 const showPage = (ctx) => {
 	const module = ctx.module || 'dashboard';
