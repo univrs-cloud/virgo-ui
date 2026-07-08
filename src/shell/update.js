@@ -8,7 +8,7 @@ import * as systemService from 'shell/services/system';
 import * as softwareService from 'shell/services/software';
 import * as nodeService from 'shell/services/node';
 import * as powerService from 'modules/settings/services/power';
-import { getNodeViewId } from 'libs/node_view';
+import { getNodeViewId, getNodeViewBase, initNodeView } from 'libs/node_view';
 
 let unsubscribe;
 let isScrollEventAttached = false;
@@ -19,6 +19,8 @@ const nodePickerTemplate = _.template(nodePickerPartial);
 const updateStepsTemplate = _.template(updateStepsPartial);
 const header = document.querySelector('header');
 const container = document.querySelector('#update');
+
+initNodeView();
 
 const complete = (event) => {
 	if (event.target.dataset.action !== 'complete') {
@@ -81,7 +83,7 @@ const renderNodePicker = (state) => {
 const render = (state) => {
 	let update = state.update;
 	if (_.isNull(update)) {
-		location.replace('/');
+		location.replace(runtimeRole === 'node' ? '/' : (getNodeViewBase() || '/'));
 		return;
 	}
 
