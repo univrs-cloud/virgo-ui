@@ -16,12 +16,23 @@ const restore = () => {
 	nodeId = null;
 };
 
-const inviteAdmin = () => {
-	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
+const inviteAdmin = async () => {
+	const buttons = form.querySelectorAll('.modal-footer u-button');
+	_.each(buttons, (button) => { button.disabled = true; });
 	let config = form.getData();
 	config.nodeId = nodeId;
-	nodeService.inviteAdmin(config);
-	bootstrap.Modal.getInstance(modal)?.hide();
+	try {
+		const result = await nodeService.inviteAdmin(config);
+		if (result?.ok) {
+			notifier.add({ title: `${config.email} invited as admin`, type: 'success' });
+			bootstrap.Modal.getInstance(modal)?.hide();
+			return;
+		}
+		notifier.add({ title: result?.error || 'Failed to add admin', type: 'error', duration: 0 });
+	} catch (error) {
+		notifier.add({ title: 'Failed to add admin', type: 'error', duration: 0 });
+	}
+	_.each(buttons, (button) => { button.disabled = false; });
 };
 
 form.validation = [

@@ -50,4 +50,5 @@ nodeService.subscribe([render]);
 setInterval(() => render({ nodes: nodeService.getNodes() }), 60000);
 
 import('shell/fleet/admin_add');
+import('shell/fleet/admin_remove');
 import('shell/fleet/node_remove');
