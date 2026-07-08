@@ -6,8 +6,19 @@ let unsubscribe;
 let authDomain = null;
 const accountTemplate = _.template(accountPartial);
 
-const signOut = (event) => {
-	if (!authDomain || !event.target.closest('a')?.classList.contains('sign-out')) {
+const signOut = async (event) => {
+	if (!event.target.closest('a')?.classList.contains('sign-out')) {
+		return;
+	}
+
+	if (runtimeRole === 'fleet') {
+		event.preventDefault();
+		await fetch('/auth/logout', { method: 'POST' });
+		window.location.reload();
+		return;
+	}
+
+	if (!authDomain) {
 		return;
 	}
 
@@ -31,7 +42,7 @@ const render = (state) => {
 	authDomain = urls.length > 0 ? urls[0] : null;
 	morphdom(
 		document.querySelector('#account'),
-		accountTemplate({ account, authDomain, isUpdating })
+		accountTemplate({ account, authDomain, isUpdating, runtimeRole })
 	);
 };
 
