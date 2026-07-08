@@ -1,7 +1,7 @@
 <header>
 	<div class="navbar navbar-position navbar-light p-0">
 		<div class="container-fluid ps-3 pe-0">
-			<a href="/" class="navbar-brand order-sm-0">
+			<a href="/" class="navbar-brand order-sm-0" <%=(runtimeRole === 'fleet' ? 'rel="external"' : '')%>>
 				<span class="d-none d-md-block ms-1"><%=(runtimeRole === 'node' ? 'Spica' : 'Fleet')%></span>
 			</a>
 			<div class="navbar-glass navbar-glass-shadow d-flex align-items-center justify-content-end w-100 p-2">
