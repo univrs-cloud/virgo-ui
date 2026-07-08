@@ -70,10 +70,6 @@ const routes = [
 	{ path: '/users/profile', module: 'profile', middleware: [requireAuth] }
 ];
 
-if (runtimeRole === 'fleet') {
-	routes.push({ path: '/nodes', module: 'nodes', middleware: [requireAuth] });
-}
-
 // Catch all route, must be last
 routes.push({ path: '*', module: 'not-found' });
 
