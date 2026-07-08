@@ -51,18 +51,23 @@ const runtime = async (state) => {
 	}
 
 	runtimeRole = state.role;
-	// runtimeRole = 'fleet';
 	unsubscribe?.();
 	unsubscribe = null;
 
 	const onNodeView = /^\/nodes\/[^/]+\//.test(new URL(document.baseURI).pathname);
-	if (runtimeRole === 'fleet' && !onNodeView) {
-		if (!isAuthenticated) {
-			await import('shell/fleet/login');
+	if (runtimeRole === 'fleet') {
+		if (onNodeView) {
+			if (isAuthenticated) {
+				isAdmin = true;
+			}
 		} else {
-			await import('shell/fleet');
+			if (!isAuthenticated) {
+				await import('shell/fleet/login');
+			} else {
+				await import('shell/fleet');
+			}
+			return;
 		}
-		return;
 	}
 
 	const bootstrapService = await import('shell/services/bootstrap');
