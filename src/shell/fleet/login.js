@@ -18,10 +18,6 @@ const submit = async (url, data) => {
 	}
 };
 
-const notifyError = (message) => {
-	notifier.add({ title: message, type: 'error' });
-};
-
 const login = async () => {
 	const button = loginForm.querySelector('u-button[type="submit"]');
 	button.disabled = true;
@@ -29,7 +25,7 @@ const login = async () => {
 		await submit('/auth/login', loginForm.getData());
 		window.location.reload();
 	} catch (error) {
-		notifyError(error.message);
+		notifier.add({ title: error.message, type: 'error', duration: 0 });
 		button.disabled = false;
 	}
 };
@@ -41,7 +37,7 @@ const register = async () => {
 		await submit('/auth/signup', registerForm.getData());
 		window.location.reload();
 	} catch (error) {
-		notifyError(error.message);
+		notifier.add({ title: error.message, type: 'error', duration: 0 });
 		button.disabled = false;
 	}
 };
