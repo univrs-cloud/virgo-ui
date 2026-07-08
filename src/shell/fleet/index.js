@@ -33,9 +33,7 @@ morphdom(
 const modules = container.querySelector('.modules');
 
 const render = (state) => {
-	const nodes = _.isNull(state.nodes)
-		? null
-		: _.orderBy(state.nodes, [(node) => { return String(node.name ?? '').toLowerCase(); }], ['asc']);
+	const nodes = state.nodes;
 	morphdom(
 		modules,
 		`<div>${fleetTemplate({ nodes, nodeTemplate, moment })}</div>`,
