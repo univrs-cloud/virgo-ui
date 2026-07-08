@@ -6,7 +6,9 @@ import updateStepsPartial from 'shell/partials/update_steps.html';
 import * as account from 'shell/account';
 import * as systemService from 'shell/services/system';
 import * as softwareService from 'shell/services/software';
+import * as nodeService from 'shell/services/node';
 import * as powerService from 'modules/settings/services/power';
+import { getNodeViewId } from 'libs/node_view';
 
 let unsubscribe;
 let isScrollEventAttached = false;
@@ -53,16 +55,26 @@ const renderSerialNumber = (state) => {
 };
 
 const renderNavigation = async () => {
-	let nodes = '';
-	if (runtimeRole === 'fleet') {
-		nodes = nodePickerTemplate({ nodes: [] });
-	}
 	_.each(header.querySelectorAll('.navbar .nav, .offcanvas .navbar-nav'), (nav) => {
 		morphdom(
 			nav,
-			`<div>${navigationTemplate({ nodes })}</div>`,
+			`<div>${navigationTemplate()}</div>`,
 			{ childrenOnly: true }
 		);
+	});
+};
+
+const renderNodePicker = (state) => {
+	if (_.isNull(state.nodes)) {
+		return;
+	}
+
+	const nodeId = getNodeViewId();
+	const currentNode = nodeId ? _.find(state.nodes, { nodeId }) : state.nodes[0];
+	const currentNodeLabel = currentNode?.name || currentNode?.nodeId || '';
+	const nodePicker = nodePickerTemplate({ nodes: state.nodes, currentNodeLabel });
+	_.each(document.querySelectorAll('header .navbar .nav .nodes, .offcanvas .navbar-nav .nodes'), (container) => {
+		container.innerHTML = nodePicker;
 	});
 };
 
@@ -115,3 +127,7 @@ page.start();
 
 unsubscribe = systemService.subscribe([renderSerialNumber]);
 softwareService.subscribeToUpdate([render]);
+
+if (runtimeRole === 'fleet') {
+	nodeService.subscribe([renderNodePicker]);
+}
