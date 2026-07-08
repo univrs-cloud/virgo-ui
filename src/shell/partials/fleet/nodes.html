@@ -10,10 +10,17 @@
 		<ul class="dropdown-menu w-100">
 			<%_.each(nodes, (node) => {%>
 				<li>
-					<a href="/nodes/<%=node.nodeId%>" rel="external" class="dropdown-item d-flex align-items-center">
-						<i class="icon-solid icon-dot text-green-400 me-1"></i>
-						<%=node.name || node.nodeId%>
-					</a>
+					<%if (node.online) {%>
+						<a href="/nodes/<%=node.nodeId%>" rel="external" class="dropdown-item d-flex align-items-center">
+							<i class="icon-solid icon-dot text-green-400 me-1"></i>
+							<%=node.name || node.nodeId%>
+						</a>
+					<%} else {%>
+						<span class="dropdown-item d-flex align-items-center disabled text-body-tertiary">
+							<i class="icon-solid icon-dot text-body-tertiary me-1"></i>
+							<%=node.name || node.nodeId%>
+						</span>
+					<%}%>
 				</li>
 			<%})%>
 		</ul>
