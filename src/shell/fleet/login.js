@@ -6,6 +6,11 @@ main.innerHTML = loginPartial;
 const loginForm = main.querySelector('.login');
 const registerForm = main.querySelector('.register');
 
+const focusFirstInput = (form) => {
+	const input = form.querySelector('u-input');
+	input?.updateComplete.then(() => input.focus());
+};
+
 const submit = async (url, data) => {
 	const response = await fetch(url, {
 		method: 'POST',
@@ -47,6 +52,7 @@ const showRegister = (event) => {
 	loginForm.reset();
 	loginForm.classList.add('d-none');
 	registerForm.classList.remove('d-none');
+	focusFirstInput(registerForm);
 };
 
 const showLogin = (event) => {
@@ -54,6 +60,7 @@ const showLogin = (event) => {
 	registerForm.reset();
 	registerForm.classList.add('d-none');
 	loginForm.classList.remove('d-none');
+	focusFirstInput(loginForm);
 };
 
 loginForm.validation = [
@@ -108,3 +115,5 @@ loginForm.addEventListener('valid', login);
 registerForm.addEventListener('valid', register);
 main.querySelector('.show-register').addEventListener('click', showRegister);
 main.querySelector('.show-login').addEventListener('click', showLogin);
+
+focusFirstInput(loginForm);
