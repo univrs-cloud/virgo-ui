@@ -16,9 +16,6 @@ const moduleLoaders = {
 	}),
 	...(isAuthenticated && {
 		'profile': () => import('modules/users/profile')
-	}),
-	...(runtimeRole === 'fleet' && isAuthenticated && {
-		'nodes': () => import('modules/nodes')
 	})
 };
 
