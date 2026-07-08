@@ -26,9 +26,14 @@ const inviteAdmin = (config) => {
 	return Node.inviteAdmin(config);
 };
 
+const revokeAdmin = (config) => {
+	return Node.revokeAdmin(config);
+};
+
 export {
 	subscribe,
 	getNodes,
 	deleteNode,
-	inviteAdmin
+	inviteAdmin,
+	revokeAdmin
 };

@@ -1,0 +1,126 @@
+@use "sass:color";
+
+// Reusable, static tag component that faithfully mirrors Tagify's tag look and animations
+// (entrance bump, hover recolor, remove-button hover side-effects), for displaying read-only
+// tags with a remove action outside of a live Tagify instance. Colors are driven by the same
+// --tag-* CSS variables Tagify exposes, seeded from the SASS defaults below, so they can be
+// overridden per-context exactly like Tagify.
+
+$tag-margin               : 5px !default;
+$tag-pad                  : 0.3em 0.5em !default;
+$tag-max-width            : 100% !default;
+$tag-text-max-width       : 10rem !default;
+$tag-border-radius        : 3px !default;
+$tag-inset-shadow-size    : 1.1em !default;
+$tag-text-color           : #000 !default;
+$tag-bg                   : #e5e5e5 !default;
+$tag-hover                : #d3e2e2 !default;
+$tag-remove               : #d39494 !default;
+$tag-remove-btn-color     : $tag-text-color !default;
+$tag-remove-btn-bg        : none !default;
+$tag-remove-btn-bg--hover : color.adjust($tag-remove, $lightness: -8%) !default;
+
+@keyframes tags--bump {
+	30% { transform: scale(1.2); }
+}
+
+.tags {
+	--tag-margin               : #{$tag-margin};
+	--tag-pad                  : #{$tag-pad};
+	--tag--max-width           : #{$tag-max-width};
+	--tag-text-max-width       : #{$tag-text-max-width};
+	--tag-border-radius        : #{$tag-border-radius};
+	--tag-inset-shadow-size    : #{$tag-inset-shadow-size};
+	--tag-text-color           : #{$tag-text-color};
+	--tag-bg                   : #{$tag-bg};
+	--tag-hover                : #{$tag-hover};
+	--tag-remove               : #{$tag-remove};
+	--tag-remove-bg            : #{rgba($tag-remove, 0.3)};
+	--tag-remove-btn-color     : #{$tag-remove-btn-color};
+	--tag-remove-btn-bg        : #{$tag-remove-btn-bg};
+	--tag-remove-btn-bg--hover : #{$tag-remove-btn-bg--hover};
+
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--tag-margin);
+}
+
+.tag {
+	position: relative;
+	z-index: 1;
+	display: inline-flex;
+	align-items: center;
+	max-width: var(--tag--max-width);
+	padding: var(--tag-pad);
+	color: var(--tag-text-color);
+	border-radius: var(--tag-border-radius);
+	line-height: normal;
+	white-space: nowrap;
+	transition: 0.13s ease-out;
+
+	// Background is painted by an inset box-shadow on a pseudo-element (as Tagify does), which
+	// both enables the entrance bump and lets the fill recolor independently of the content.
+	&::before {
+		content: "";
+		position: absolute;
+		inset: var(--tag-bg-inset, 0);
+		z-index: -1;
+		border-radius: inherit;
+		pointer-events: none;
+		transition: 120ms ease;
+		animation: tags--bump 0.3s ease-out 1;
+		box-shadow: 0 0 0 var(--tag-inset-shadow-size) var(--tag-bg) inset;
+	}
+
+	&:hover::before {
+		--tag-bg: var(--tag-hover);
+	}
+
+	.tag-text {
+		max-width: var(--tag-text-max-width);
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.tag-remove {
+		$size: 14px;
+
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: $size;
+		height: $size;
+		margin-inline: 0.4em 0;
+		padding: 0;
+		border: 0;
+		border-radius: 50px;
+		background: var(--tag-remove-btn-bg);
+		color: var(--tag-remove-btn-color);
+		font: #{$size}/1 Arial;
+		cursor: pointer;
+		overflow: hidden;
+		transition: 0.2s ease-out;
+
+		&::after {
+			content: "\00D7";
+			transition: 0.3s, color 0s;
+		}
+
+		&:hover,
+		&:focus {
+			color: #fff;
+			background: var(--tag-remove-btn-bg--hover);
+		}
+	}
+
+	// Hovering the remove button tints the tag red and dims its text (Tagify's removeBtn hover).
+	&:has(.tag-remove:hover)::before,
+	&:has(.tag-remove:focus)::before {
+		box-shadow: 0 0 0 var(--tag-inset-shadow-size) var(--tag-remove-bg) inset;
+	}
+
+	&:has(.tag-remove:hover) .tag-text,
+	&:has(.tag-remove:focus) .tag-text {
+		opacity: 0.5;
+	}
+}

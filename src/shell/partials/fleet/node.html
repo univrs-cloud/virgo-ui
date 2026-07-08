@@ -14,12 +14,14 @@
 						<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
 					</span>
 					<ul class="dropdown-menu dropdown-menu-end">
-						<li>
-							<a href="#admin-add" class="dropdown-item" data-bs-toggle="modal" data-node-id="<%=node.nodeId%>">
-								<i class="icon-regular icon-user-plus icon-fw me-1"></i>Add new admin
-							</a>
-						</li>
-						<li><hr class="dropdown-divider"></li>
+						<%if (node.isOwner) {%>
+							<li>
+								<a href="#admin-add" class="dropdown-item" data-bs-toggle="modal" data-node-id="<%=node.nodeId%>">
+									<i class="icon-regular icon-user-plus icon-fw me-1"></i>Add new admin
+								</a>
+							</li>
+							<li><hr class="dropdown-divider"></li>
+						<%}%>
 						<li>
 							<a href="#" class="dropdown-item text-danger confirm" data-action="remove" data-node-id="<%=node.nodeId%>">
 								<i class="icon-regular icon-xmark icon-fw me-1"></i>Remove from inventory
@@ -29,7 +31,7 @@
 				</div>
 			</div>
 			<small class="text-body-tertiary text-truncate d-block mb-2"><%=node.nodeId%></small>
-			<u-badge color="<%=node.online ? 'green' : 'gray'%>" pill>
+			<u-badge color="<%=node.online ? 'green' : 'red'%>" pill>
 				<%=(node.online ? 'Online' : 'Offline')%>
 			</u-badge>
 			<%if (!node.isOwner) {%>
@@ -37,6 +39,16 @@
 			<%}%>
 			<%if (!node.online && node.lastSeenAt) {%>
 				<small class="text-body-tertiary ms-2" data-bs-toggle="tooltip" data-bs-original-title="<%=moment(node.lastSeenAt).format('LLL')%>">Last seen <%=moment(node.lastSeenAt).fromNow()%></small>
+			<%}%>
+			<%if (node.isOwner && !_.isEmpty(node.admins)) {%>
+				<div class="tags mt-2 position-relative z-2">
+					<%_.each(node.admins, (admin) => {%>
+						<span class="tag d-inline-flex align-items-center" title="<%=admin.email%>">
+							<span class="tag-text text-truncate"><%=admin.displayName ? `${admin.displayName} (${admin.email})` : admin.email%></span>
+							<button type="button" class="tag-remove" data-action="revoke" data-node-id="<%=node.nodeId%>" data-email="<%=admin.email%>" aria-label="Remove access for <%=admin.email%>"></button>
+						</span>
+					<%})%>
+				</div>
 			<%}%>
 		</div>
 	</div>

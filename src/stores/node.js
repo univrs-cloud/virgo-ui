@@ -42,11 +42,15 @@ class Node extends Store {
 	}
 
 	deleteNode(config) {
-		this.socket.emit('node:delete', config);
+		return this.socket.timeout(10000).emitWithAck('node:delete', config);
 	}
 
 	inviteAdmin(config) {
-		this.socket.emit('node:invite', config);
+		return this.socket.timeout(10000).emitWithAck('node:invite', config);
+	}
+
+	revokeAdmin(config) {
+		return this.socket.timeout(10000).emitWithAck('node:revoke', config);
 	}
 }
 
