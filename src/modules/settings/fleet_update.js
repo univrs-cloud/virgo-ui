@@ -19,9 +19,12 @@ const restore = (event) => {
 
 const render = (event) => {
 	const configuration = configurationService.getConfiguration();
-	form.querySelector('.modal-footer u-button[type="submit"]').textContent = (!_.isNull(configuration?.fleet) ? 'Update' : 'Register');
-	form.querySelector('.email').value = configuration?.fleet?.email || '';
-	form.querySelector('.email').readonly = !_.isNull(configuration?.fleet);
+	const registered = !_.isNull(configuration?.fleet);
+	form.querySelector('.modal-footer u-button[type="submit"]').textContent = (registered ? 'Update' : 'Register');
+	modal.querySelector('.fleet-link span').textContent = (registered ? 'View fleet' : 'Create account');
+	const email = configuration?.fleet?.email || '';
+	form.querySelector('.email').value = email;
+	form.querySelector('.email').readonly = !_.isNull(configuration?.fleet) && !_.isEmpty(email);
 };
 
 form.validation = [
