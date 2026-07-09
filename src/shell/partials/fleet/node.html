@@ -1,13 +1,18 @@
-<div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
-	<div class="card shadow-sm border-0 h-100">
+<div class="col-12">
+	<div class="card shadow-sm border-0">
 		<div class="card-body">
 			<div class="d-flex align-items-center justify-content-between">
-				<h6 class="mb-0 text-truncate flex-grow-1 me-2">
-					<%if (node.online) {%>
-						<a href="/nodes/<%=node.nodeId%>" rel="external" class="stretched-link text-decoration-none text-body"><%=node.name%></a>
-					<%} else {%>
-						<span class="text-body"><%=node.name%></span>
-					<%}%>
+				<h6 class="mb-0 flex-grow-1 me-2 d-flex align-items-center min-w-0">
+					<span class="text-truncate me-2 min-w-0">
+						<%if (node.online) {%>
+							<a href="/nodes/<%=node.nodeId%>" rel="external" class="stretched-link text-decoration-none text-body"><%=node.name%></a>
+						<%} else {%>
+							<span class="text-body"><%=node.name%></span>
+						<%}%>
+					</span>
+					<u-badge color="<%=node.online ? 'green' : 'red'%>" pill class="flex-shrink-0 me-1">
+						<%=(node.online ? 'Online' : 'Offline')%>
+					</u-badge>
 				</h6>
 				<div class="dropdown z-3">
 					<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm">
@@ -30,26 +35,25 @@
 					</ul>
 				</div>
 			</div>
-			<small class="text-body-tertiary text-truncate d-block mb-2"><%=node.nodeId%></small>
-			<u-badge color="<%=node.online ? 'green' : 'red'%>" pill>
-				<%=(node.online ? 'Online' : 'Offline')%>
-			</u-badge>
-			<%if (!node.isOwner) {%>
-				<u-badge color="gray" tint="300" class="ms-1" pill>invited</u-badge>
-			<%}%>
 			<%if (!node.online && node.lastSeenAt) {%>
-				<small class="text-body-tertiary ms-2" data-bs-toggle="tooltip" data-bs-original-title="<%=moment(node.lastSeenAt).format('LLL')%>">Last seen <%=moment(node.lastSeenAt).fromNow()%></small>
+				<div class="mt-1">
+					<small class="text-body-tertiary" data-bs-toggle="tooltip" data-bs-original-title="<%=moment(node.lastSeenAt).format('LLL')%>">Last seen <%=moment(node.lastSeenAt).fromNow()%>.</small>
+				</div>
 			<%}%>
 			<%if (node.isOwner && !_.isEmpty(node.admins)) {%>
+				<hr class="border-secondary-subtle my-3">
 				<div class="tags mt-2 position-relative z-2">
 					<%_.each(node.admins, (admin) => {%>
 						<span class="tag d-inline-flex align-items-center" title="<%=admin.email%>">
 							<span class="tag-text text-truncate"><%=admin.displayName ? `${admin.displayName} (${admin.email})` : admin.email%></span>
-							<button type="button" class="tag-remove" data-action="revoke" data-node-id="<%=node.nodeId%>" data-email="<%=admin.email%>" title="" aria-label="Remove access for <%=admin.email%>"></button>
+							<button type="button" class="tag-remove" data-action="revoke" data-node-id="<%=node.nodeId%>" data-email="<%=admin.email%>" title=""></button>
 						</span>
 					<%})%>
 				</div>
 			<%}%>
 		</div>
+		<%if (!node.isOwner) {%>
+			<u-badge color="gray" tint="300" class="indicator" style="top: auto; bottom: -1rem;" pill>Invited</u-badge>
+		<%}%>
 	</div>
 </div>
