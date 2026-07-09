@@ -1,28 +1,59 @@
-<div class="col-12">
+<div class="col-12 col-sm-6 col-xl-3">
 	<div class="card shadow-sm border-0">
-		<div class="card-body">
-			<div class="d-flex align-items-center justify-content-between">
-				<h6 class="mb-0 flex-grow-1 me-2 d-flex align-items-center min-w-0">
-					<span class="text-truncate me-2 min-w-0">
+		<div class="card-body py-2 px-3">
+			<div class="d-flex align-items-start justify-content-between">
+				<div class="flex-grow-1 me-2 min-w-0">
+					<h6 class="mb-0 text-truncate">
 						<%if (node.online) {%>
 							<a href="/nodes/<%=node.nodeId%>" rel="external" class="stretched-link text-decoration-none text-body"><%=node.name%></a>
 						<%} else {%>
 							<span class="text-body"><%=node.name%></span>
 						<%}%>
-					</span>
-					<u-badge color="<%=node.online ? 'green' : 'red'%>" pill class="flex-shrink-0 me-1">
-						<%=(node.online ? 'Online' : 'Offline')%>
-					</u-badge>
-				</h6>
-				<div class="dropdown z-3">
-					<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm">
+					</h6>
+					<div class="d-flex align-items-center mt-2">
+						<u-badge color="<%=node.online ? 'green' : 'red'%>" class="me-1" pill>
+							<%=(node.online ? 'Online' : 'Offline')%>
+							<%if (!node.online && node.lastSeenAt) {%>
+								<i class="icon-solid icon-clock-rotate-left ms-1" data-bs-toggle="tooltip" data-bs-original-title="Last seen <%=moment(node.lastSeenAt).fromNow()%>.<br><%=moment(node.lastSeenAt).format('LLL')%>"></i>
+							<%}%>
+						</u-badge>
+						<%if (node.isOwner && !_.isEmpty(node.admins)) {%>
+							<div class="dropdown invited">
+								<span class="d-flex z-1 position-relative" data-bs-toggle="dropdown">
+									<u-badge color="gray" tint="300" class="cursor-pointer">
+										<%=_.size(node.admins)%> invited
+										<i class="icon-solid icon-chevron-down ms-1"></i>
+									</u-badge>
+								</span>
+								<ul class="dropdown-menu dropdown-menu-start shadow">
+									<%_.each(node.admins, (admin) => {%>
+										<li>
+											<span class="dropdown-item d-flex align-items-center">
+												<i class="icon-regular icon-user icon-fw me-2"></i>
+												<div class="lh-1 me-3">
+													<div><%=admin.displayName%></div>
+													<small class="text-body-secondary"><%=admin.email%></small>
+												</div>
+												<a href="#" class="text-danger ms-auto confirm" data-action="revoke" data-node-id="<%=node.nodeId%>" data-email="<%=admin.email%>" data-bs-toggle="tooltip" data-bs-original-title="Revoke access">
+													<i class="icon-solid icon-circle-xmark"></i>
+												</a>
+											</span>
+										</li>
+									<%})%>
+								</ul>
+							</div>
+						<%}%>
+					</div>
+				</div>
+				<div class="dropdown">
+					<span class="dropdown-toggle caret-off btn btn-sm z-1 position-relative" data-bs-toggle="dropdown">
 						<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
 					</span>
 					<ul class="dropdown-menu dropdown-menu-end">
 						<%if (node.isOwner) {%>
 							<li>
 								<a href="#admin-add" class="dropdown-item" data-bs-toggle="modal" data-node-id="<%=node.nodeId%>">
-									<i class="icon-regular icon-user-plus icon-fw me-1"></i>Add new admin
+									<i class="icon-regular icon-user-plus icon-fw me-1"></i>Add admin
 								</a>
 							</li>
 							<li><hr class="dropdown-divider"></li>
@@ -35,22 +66,6 @@
 					</ul>
 				</div>
 			</div>
-			<%if (!node.online && node.lastSeenAt) {%>
-				<div class="mt-1">
-					<small class="text-body-tertiary" data-bs-toggle="tooltip" data-bs-original-title="<%=moment(node.lastSeenAt).format('LLL')%>">Last seen <%=moment(node.lastSeenAt).fromNow()%>.</small>
-				</div>
-			<%}%>
-			<%if (node.isOwner && !_.isEmpty(node.admins)) {%>
-				<hr class="border-secondary-subtle my-3">
-				<div class="tags mt-2 position-relative z-2">
-					<%_.each(node.admins, (admin) => {%>
-						<span class="tag d-inline-flex align-items-center" title="<%=admin.email%>">
-							<span class="tag-text text-truncate"><%=admin.displayName ? `${admin.displayName} (${admin.email})` : admin.email%></span>
-							<button type="button" class="tag-remove" data-action="revoke" data-node-id="<%=node.nodeId%>" data-email="<%=admin.email%>" title=""></button>
-						</span>
-					<%})%>
-				</div>
-			<%}%>
 		</div>
 		<%if (!node.isOwner) {%>
 			<u-badge color="gray" tint="300" class="indicator" style="top: auto; bottom: -1rem;" pill>Invited</u-badge>

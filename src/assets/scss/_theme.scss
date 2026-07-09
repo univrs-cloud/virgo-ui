@@ -512,6 +512,17 @@ u-toast {
 	}
 }
 
+#fleet {
+	.invited {
+		.dropdown-item {
+			&:active {
+				color: var(--bs-dropdown-link-hover-color);
+				background-color: var(--bs-dropdown-link-hover-bg);
+			}
+		}
+	}
+}
+
 [class*="z-depth-"] {
 	transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
 	will-change: box-shadow;

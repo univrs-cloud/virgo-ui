@@ -1,17 +1,21 @@
 import * as nodeService from 'shell/services/node';
 
-const modules = document.querySelector('main .modules');
+const module = document.querySelector('#fleet');
 
 const revoke = async (event) => {
-	const button = event.target.closest('[data-action="revoke"]');
-	if (_.isNull(button)) {
+	if (event.target.closest('a')?.dataset.action !== 'revoke') {
 		return;
 	}
 
 	event.preventDefault();
+	const button = event.target.closest('a');
 	const nodeId = button.dataset.nodeId;
 	const email = button.dataset.email;
-	if (!await confirm(`Are you sure you want to remove access for ${email}?`, { buttons: [{ text: 'Remove', class: 'btn-danger' }] })) {
+
+	if (
+		button.classList.contains('confirm') &&
+		!await confirm(`Are you sure you want to remove access for ${email}?`, { buttons: [{ text: 'Remove', class: 'btn-danger' }] })
+	) {
 		return;
 	}
 
@@ -27,4 +31,13 @@ const revoke = async (event) => {
 	}
 };
 
-modules.addEventListener('click', revoke);
+// Keep the invited-admins dropdown open when clicking a row; only the action control (which
+// bubbles through) should let Bootstrap close it.
+const keepOpen = (event) => {
+	if (event.target.closest('li') && !event.target.closest('[data-action]')) {
+		event.stopPropagation();
+	}
+};
+
+module.addEventListener('click', keepOpen);
+module.addEventListener('click', revoke);
