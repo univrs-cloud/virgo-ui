@@ -11,7 +11,7 @@
 				<a href="#" class="check-updates btn btn-sm me-auto <%=(checkUpdates ? 'cursor-default' : '')%>">
 					<i class="icon-solid icon-arrows-rotate <%=(checkUpdates ? 'icon-spin' : '')%> me-1" style="color: var(--bs-green);"></i><%=(checkUpdates ? 'Checking for updates...' : 'Check for new updates')%>
 				</a>
-				<button type="button" class="install btn btn-primary ms-auto" <%=(checkUpdates ? 'disabled' : '')%>>Install</button>
+				<u-button variant="primary" class="install ms-auto" <%=(checkUpdates ? 'disabled' : '')%>>Install</u-button>
 			</div>
 		</div>
 	</div>

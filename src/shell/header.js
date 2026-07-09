@@ -1,6 +1,6 @@
 import headerPartial from 'shell/partials/header.html';
 import navigationPartial from 'shell/partials/navigation.html';
-import nodePickerPartial from 'shell/partials/fleet/nodes.html';
+import nodePickerPartial from 'shell/partials/fleet/node_picker.html';
 import * as account from 'shell/account';
 import * as notifications from 'shell/notifications';
 import * as systemService from 'shell/services/system';
@@ -20,7 +20,7 @@ const renderSerialNumber = (state) => {
 		return;
 	}
 
-	_.each(header.querySelectorAll('.serial-number'), (element) => { element.innerHTML = `SN:${state.system.serial || '&mdash;'}`; });
+	_.each(header.querySelectorAll('.serial-number'), (element) => { element.innerHTML = `SN:${state.system?.serial || '&mdash;'}`; });
 	unsubscribe?.();
 	unsubscribe = null;
 };

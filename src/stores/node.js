@@ -26,21 +26,24 @@ class Node extends Store {
 		// 			name: 'origin',
 		// 			online: true,
 		// 			isOwner: true,
-		// 			nodeId: 'ab2729a13199f2a7'
+		// 			nodeId: '789'
 		// 		},
 		// 		{
-		// 			name: 'asitec',
+		// 			name: 'm87',
 		// 			online: false,
 		// 			isOwner: false,
-		// 			nodeId: 'ab2729a13199f2a7',
+		// 			nodeId: '456',
 		// 			lastSeenAt: '2026-07-08T23:04:00Z'
 		// 		},
 		// 		{
 		// 			name: 'ceres-xdjshgfdjhsjhkfgkhdsgfkhjdgshfjkgdhjfgahjsgfdjkhsagfk',
 		// 			online: true,
 		// 			isOwner: true,
-		// 			nodeId: 'c2d7a4766f4d579a',
-		// 			admins: [{"email":"robert.gurde@gmail.com","displayName":"Robert Calin"}]
+		// 			nodeId: '123',
+		// 			admins: [
+		// 				{"email":"john.doe@gmail.com","displayName":"John Doe"},
+		// 				{"email":"jane.doe@gmail.com","displayName":"Jane Doe"}
+		// 			]
 		// 		}
 		// 	];
 		// 	this.setState({ nodes }, 'get_nodes');

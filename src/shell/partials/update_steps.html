@@ -17,11 +17,13 @@
 					<li class="text-danger">Something went wrong, could not update.</li>
 				<%}%>
 			</ul>
-			<%if (update.isRebootRequired) {%>
-				<button type="button" class="btn btn-danger d-flex ms-auto mt-4 <%=(!_.includes(['succeeded', 'failed'], update.state) ? 'invisible' : '')%>" data-action="reboot">Reboot</button>
-			<%} else {%>
-				<button type="button" class="btn btn-primary d-flex ms-auto mt-4 <%=(!_.includes(['succeeded', 'failed'], update.state) ? 'invisible' : '')%>" data-action="complete">Continue</button>
-			<%}%>
+			<div class="d-flex align-items-center mt-4">
+				<%if (update.isRebootRequired) {%>
+					<u-button variant="danger" class="ms-auto <%=(!_.includes(['succeeded', 'failed'], update.state) ? 'invisible' : '')%>" data-action="reboot">Reboot</u-button>
+				<%} else {%>
+					<u-button variant="primary" class="ms-auto <%=(!_.includes(['succeeded', 'failed'], update.state) ? 'invisible' : '')%>" data-action="complete">Continue</u-button>
+				<%}%>
+			</div>
 		</div>
 	</div>
 </div>

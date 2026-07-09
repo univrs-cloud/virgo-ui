@@ -1,7 +1,7 @@
 import page from 'page';
 import headerPartial from 'shell/partials/header.html';
 import navigationPartial from 'shell/partials/navigation_update.html';
-import nodePickerPartial from 'shell/partials/fleet/nodes.html';
+import nodePickerPartial from 'shell/partials/fleet/node_picker.html';
 import updateStepsPartial from 'shell/partials/update_steps.html';
 import * as account from 'shell/account';
 import * as systemService from 'shell/services/system';
@@ -51,7 +51,7 @@ const reboot = async (event) => {
 };
 
 const renderSerialNumber = (state) => {
-	_.each(document.querySelectorAll('header .serial-number'), (element) => { element.innerHTML = `SN:${state.system.serial || '&mdash;'}`; });
+	_.each(document.querySelectorAll('header .serial-number'), (element) => { element.innerHTML = `SN:${state.system?.serial || '&mdash;'}`; });
 	unsubscribe?.();
 	unsubscribe = null;
 };
