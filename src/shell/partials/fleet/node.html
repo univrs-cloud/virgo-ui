@@ -9,7 +9,7 @@
 						<span class="text-body"><%=node.name%></span>
 					<%}%>
 				</h6>
-				<div class="dropdown z-2">
+				<div class="dropdown z-3">
 					<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm">
 						<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
 					</span>
@@ -45,7 +45,7 @@
 					<%_.each(node.admins, (admin) => {%>
 						<span class="tag d-inline-flex align-items-center" title="<%=admin.email%>">
 							<span class="tag-text text-truncate"><%=admin.displayName ? `${admin.displayName} (${admin.email})` : admin.email%></span>
-							<button type="button" class="tag-remove" data-action="revoke" data-node-id="<%=node.nodeId%>" data-email="<%=admin.email%>" aria-label="Remove access for <%=admin.email%>"></button>
+							<button type="button" class="tag-remove" data-action="revoke" data-node-id="<%=node.nodeId%>" data-email="<%=admin.email%>" title="" aria-label="Remove access for <%=admin.email%>"></button>
 						</span>
 					<%})%>
 				</div>
