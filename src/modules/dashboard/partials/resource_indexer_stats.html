@@ -105,7 +105,7 @@
 							<%const snapshot = (atIndex >= 0 ? failure.name.slice(atIndex + 1) : '')%>
 							<div class="d-flex gap-1 small lh-sm" data-bs-toggle="tooltip" data-bs-html="true" data-bs-original-title="<%=_.escape(failure.message || '')%>">
 								<i class="icon-solid icon-circle-xmark icon-fw text-red-300 mt-1 flex-shrink-0"></i>
-								<div class="text-truncate" style="min-width: 0;">
+								<div class="text-truncate min-w-0">
 									<div class="text-body-secondary text-truncate"><%=dataset%></div>
 									<%if (snapshot) {%>
 										<div class="text-body-tertiary text-truncate">@<%=snapshot%></div>

@@ -1,0 +1,25 @@
+// Add min-width utility (not shipped by Bootstrap).
+// min-width: 0 is needed so flex children with text-truncate can shrink below their content width.
+$utilities: map-merge(
+	$utilities,
+	(
+		'min-width': (
+			property: min-width,
+			class: min-w,
+			values: (0: 0)
+		)
+	)
+);
+
+// Add `max-w` as an alias of Bootstrap's `mw` (max-width) for symmetry with `min-w`.
+// Bootstrap's native `mw-100` is left intact; this adds `max-w-100` alongside it.
+$utilities: map-merge(
+	$utilities,
+	(
+		'max-width-alias': (
+			property: max-width,
+			class: max-w,
+			values: (100: 100%)
+		)
+	)
+);
