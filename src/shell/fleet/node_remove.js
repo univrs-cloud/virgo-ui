@@ -18,13 +18,13 @@ const remove = async (event) => {
 
 	try {
 		const result = await nodeService.deleteNode({ nodeId });
-		if (result?.ok) {
-			notifier.add({ title: `${name} removed from inventory`, type: 'success' });
+		if (result?.status === 'succeeded') {
+			notifier.add({ title: `${name} removed from inventory.`, type: 'success' });
 		} else {
-			notifier.add({ title: result?.error || `Failed to remove ${name} from inventory`, type: 'error', duration: 0 });
+			notifier.add({ title: result?.message || `Failed to remove ${name} from inventory.`, type: 'error', duration: 0 });
 		}
 	} catch (error) {
-		notifier.add({ title: `Failed to remove ${name} from inventory`, type: 'error', duration: 0 });
+		notifier.add({ title: `Failed to remove ${name} from inventory.`, type: 'error', duration: 0 });
 	}
 };
 
