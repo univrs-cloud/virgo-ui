@@ -10,9 +10,9 @@
 				<div class="col-auto p-2 lh-1">
 					<i class="icon-duotone icon-solid icon-cube icon-fw" style="font-size: 1.875rem; width: 2rem;"></i>
 				</div>
-				<div class="col ps-1" style="min-width: 0;">
-					<div class="d-flex align-items-center mb-n1" style="min-width: 0;">
-						<div class="text-truncate" style="min-width: 0;"><%=service.unit%></div>
+				<div class="col ps-1 min-w-0">
+					<div class="d-flex align-items-center mb-n1 min-w-0">
+						<div class="text-truncate min-w-0"><%=service.unit%></div>
 						<%if (service.broken) {%>
 							<u-badge color="red" class="ms-2" tip="Service not found or failed to load" pill>
 								<i class="icon-solid icon-triangle-exclamation icon-fw"></i>
@@ -23,7 +23,7 @@
 							</u-badge>
 						<%}%>
 					</div>
-					<small class="text-body-secondary text-truncate d-block" style="min-width: 0;"><%=service.description || '&mdash;'%></small>
+					<small class="text-body-secondary text-truncate d-block min-w-0"><%=service.description || '&mdash;'%></small>
 				</div>
 				<div class="col-auto ps-3 ms-auto">
 					<%=serviceActionsTemplate({ service, jobs })%>

@@ -94,7 +94,6 @@ const renderResults = (results, resultsEl, onSelect) => {
 		button.className = 'bookmark-icon-result-item';
 		button.setAttribute('data-id', item.assetId);
 		button.setAttribute('data-base', item.base);
-		button.setAttribute('aria-label', item.id);
 		const img = document.createElement('img');
 		img.src = src;
 		img.alt = '';
