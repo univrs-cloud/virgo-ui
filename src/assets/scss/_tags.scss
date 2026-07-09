@@ -7,7 +7,9 @@
 // overridden per-context exactly like Tagify.
 
 $tag-margin               : 5px !default;
-$tag-pad                  : 0.3em 0.5em !default;
+// Matches the app's Tagify override (see `.tagify` in _forms.scss), not Tagify's taller library
+// default of 0.3em 0.5em, so static tags are the same height as live Tagify tags.
+$tag-pad                  : 0.15em 0.5em !default;
 $tag-max-width            : 100% !default;
 $tag-text-max-width       : 10rem !default;
 $tag-border-radius        : 3px !default;
