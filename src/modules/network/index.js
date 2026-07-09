@@ -17,7 +17,7 @@ const render = (state) => {
 		return;
 	}
 	
-	const networkInterface = _.find(state?.system?.networkInterfaces, { default: true });
+	const networkInterface = _.find(state.system?.networkInterfaces, { default: true });
 	let trustedProxies = _.orderBy(
 		state.configuration.trustedProxies || [],
 		[(address) => String(address ?? '').toLowerCase()],

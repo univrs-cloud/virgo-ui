@@ -1,18 +1,25 @@
 import * as nodeService from 'shell/services/node';
 
-const modules = document.querySelector('main .modules');
+const module = document.querySelector('#fleet');
 
 const remove = async (event) => {
-	const item = event.target.closest('.dropdown-item.confirm[data-action="remove"]');
-	if (_.isNull(item)) {
+	if (
+		!event.target.closest('a')?.classList?.contains('dropdown-item') ||
+		event.target.closest('a')?.dataset.action !== 'remove'
+	) {
 		return;
 	}
 
 	event.preventDefault();
-	const nodeId = item.dataset.nodeId;
+	const button = event.target.closest('a');
+	const nodeId = button.dataset.nodeId;
 	const node = _.find(nodeService.getNodes() ?? [], { nodeId });
 	const name = node?.name ?? nodeId;
-	if (!await confirm(`Are you sure you want to remove ${name} from inventory?`, { buttons: [{ text: 'Remove', class: 'btn-danger' }] })) {
+
+	if (
+		button.classList.contains('confirm') &&
+		!await confirm(`Are you sure you want to remove ${name} from inventory?`, { buttons: [{ text: 'Remove', class: 'btn-danger' }] })
+	) {
 		return;
 	}
 
@@ -28,4 +35,4 @@ const remove = async (event) => {
 	}
 };
 
-modules.addEventListener('click', remove);
+module.addEventListener('click', remove);
