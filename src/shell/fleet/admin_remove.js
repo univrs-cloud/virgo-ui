@@ -17,13 +17,13 @@ const revoke = async (event) => {
 
 	try {
 		const result = await nodeService.revokeAdmin({ nodeId, email });
-		if (result?.ok) {
-			notifier.add({ title: `Access removed for ${email}`, type: 'success' });
+		if (result?.status === 'succeeded') {
+			notifier.add({ title: `Access removed for ${email}.`, type: 'success' });
 		} else {
-			notifier.add({ title: result?.error || `Failed to remove access for ${email}`, type: 'error', duration: 0 });
+			notifier.add({ title: result?.message || `Failed to remove access for ${email}.`, type: 'error', duration: 0 });
 		}
 	} catch (error) {
-		notifier.add({ title: `Failed to remove access for ${email}`, type: 'error', duration: 0 });
+		notifier.add({ title: `Failed to remove access for ${email}.`, type: 'error', duration: 0 });
 	}
 };
 

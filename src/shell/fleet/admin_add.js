@@ -23,14 +23,14 @@ const inviteAdmin = async () => {
 	config.nodeId = nodeId;
 	try {
 		const result = await nodeService.inviteAdmin(config);
-		if (result?.ok) {
-			notifier.add({ title: `${config.email} invited as admin`, type: 'success' });
+		if (result?.status === 'succeeded') {
+			notifier.add({ title: `${config.email} invited as admin.`, type: 'success' });
 			bootstrap.Modal.getInstance(modal)?.hide();
 			return;
 		}
-		notifier.add({ title: result?.error || 'Failed to add admin', type: 'error', duration: 0 });
+		notifier.add({ title: result?.message || 'Failed to add admin.', type: 'error', duration: 0 });
 	} catch (error) {
-		notifier.add({ title: 'Failed to add admin', type: 'error', duration: 0 });
+		notifier.add({ title: 'Failed to add admin.', type: 'error', duration: 0 });
 	}
 	_.each(buttons, (button) => { button.disabled = false; });
 };

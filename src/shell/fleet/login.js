@@ -18,8 +18,8 @@ const submit = async (url, data) => {
 		body: JSON.stringify(data)
 	});
 	const result = await response.json().catch(() => ({}));
-	if (!response.ok || !result.ok) {
-		throw new Error(result.error || 'Something went wrong');
+	if (!response.ok || result.status !== 'succeeded') {
+		throw new Error(result.message || 'Something went wrong.');
 	}
 };
 
