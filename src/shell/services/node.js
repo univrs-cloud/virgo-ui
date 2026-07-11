@@ -34,10 +34,15 @@ const revokeAdmin = (config) => {
 	return Node.revokeAdmin(config);
 };
 
+const revokeGroup = (config) => {
+	return Node.revokeGroup(config);
+};
+
 export {
 	subscribe,
 	getNodes,
 	deleteNode,
 	inviteAdmin,
-	revokeAdmin
+	revokeAdmin,
+	revokeGroup
 };
