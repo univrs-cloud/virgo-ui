@@ -28,6 +28,17 @@ class Host extends Store {
 		this.setState(initialState, 'socket_connect');
 
 		this.socket.on('disconnect', () => {
+			// Expected disconnects — the operation itself drops the socket — must keep the state that
+			// drives their overlays/spinners rather than wiping it to initialState. A network-interface
+			// reconfigure especially: without this the "configuring" state clears mid-operation.
+			if (this.getStateProperty('configuringNetworkInterface')) {
+				return;
+			}
+
+			if (this.getStateProperty('reboot') || this.getStateProperty('shutdown') || !_.isNull(this.getStateProperty('update'))) {
+				return;
+			}
+			
 			this.setState(initialState, 'socket_disconnect');
 		});
 
