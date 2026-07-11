@@ -65,6 +65,10 @@ class Node extends Store {
 	revokeAdmin(config) {
 		return this.socket.timeout(10000).emitWithAck('node:revoke', config);
 	}
+
+	revokeGroup(config) {
+		return this.socket.timeout(10000).emitWithAck('group:node:remove', config);
+	}
 }
 
 export default new Node();

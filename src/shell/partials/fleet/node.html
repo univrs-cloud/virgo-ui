@@ -17,11 +17,11 @@
 								<i class="icon-solid icon-clock-rotate-left ms-1" data-bs-toggle="tooltip" data-bs-original-title="Last seen <%=moment(node.lastSeenAt).fromNow()%>.<br><%=moment(node.lastSeenAt).format('LLL')%>"></i>
 							<%}%>
 						</u-badge>
-						<%if (node.isOwner && !_.isEmpty(node.admins)) {%>
+						<%if (node.isOwner && (!_.isEmpty(node.admins) || !_.isEmpty(node.groups))) {%>
 							<div class="dropdown invited">
 								<span class="d-flex z-1 position-relative" data-bs-toggle="dropdown">
 									<u-badge color="gray" tint="300" class="cursor-pointer">
-										<%=_.size(node.admins)%> invited
+										<%=_.size(node.admins) + _.size(node.groups)%> invited
 										<i class="icon-solid icon-chevron-down ms-1"></i>
 									</u-badge>
 								</span>
@@ -35,6 +35,20 @@
 													<small class="text-body-secondary"><%=admin.email%></small>
 												</div>
 												<a href="#" class="text-danger ms-auto confirm" data-action="revoke" data-node-id="<%=node.nodeId%>" data-email="<%=admin.email%>" data-bs-toggle="tooltip" data-bs-original-title="Revoke access">
+													<i class="icon-solid icon-circle-xmark"></i>
+												</a>
+											</span>
+										</li>
+									<%})%>
+									<%_.each(node.groups, (group) => {%>
+										<li>
+											<span class="dropdown-item d-flex align-items-center">
+												<i class="icon-regular icon-users icon-fw me-2"></i>
+												<div class="lh-1 me-3">
+													<div><%=group.name%></div>
+													<small class="text-body-secondary">Group</small>
+												</div>
+												<a href="#" class="text-danger ms-auto confirm" data-action="revoke-group" data-node-id="<%=node.nodeId%>" data-group-id="<%=group.id%>" data-group-name="<%=group.name%>" data-bs-toggle="tooltip" data-bs-original-title="Revoke group access">
 													<i class="icon-solid icon-circle-xmark"></i>
 												</a>
 											</span>
