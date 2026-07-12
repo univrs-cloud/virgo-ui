@@ -1,6 +1,6 @@
 import headerPartial from 'shell/partials/header.html';
 import navigationPartial from 'shell/partials/navigation.html';
-import nodePickerPartial from 'shell/partials/fleet/node_picker.html';
+import nodePickerPartial from 'fleet/partials/node_picker.html';
 import * as account from 'shell/account';
 import * as notifications from 'shell/notifications';
 import * as systemService from 'shell/services/system';

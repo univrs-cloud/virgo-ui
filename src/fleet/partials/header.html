@@ -11,6 +11,11 @@
 						<h6 class="dropdown-header">Logged in as</h6>
 						<p class="d-flex flex-row align-items-center fw-medium px-2 pb-2 mt-n1 mb-0"><%=account.name || account.email || ''%></p>
 						<div class="dropdown-divider"></div>
+						<a href="/users/profile" class="dropdown-item">
+							Your profile
+							<i class="icon-duotone icon-solid icon-id-card icon-fw ms-2"></i>
+						</a>
+						<div class="dropdown-divider"></div>
 						<a href="#" class="sign-out dropdown-item">
 							Sign out
 							<i class="icon-duotone icon-solid icon-person-from-portal icon-fw ms-2"></i>

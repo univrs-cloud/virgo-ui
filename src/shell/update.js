@@ -1,7 +1,7 @@
 import page from 'page';
 import headerPartial from 'shell/partials/header.html';
 import navigationPartial from 'shell/partials/navigation_update.html';
-import nodePickerPartial from 'shell/partials/fleet/node_picker.html';
+import nodePickerPartial from 'fleet/partials/node_picker.html';
 import updateStepsPartial from 'shell/partials/update_steps.html';
 import * as account from 'shell/account';
 import * as systemService from 'shell/services/system';
