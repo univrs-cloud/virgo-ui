@@ -1,6 +1,5 @@
 import modulePartial from 'modules/users/profile/partials/index.html';
 import profilePartial from 'modules/users/profile/partials/profile.html';
-
 import * as userService from 'modules/users/services/user';
 
 const moduleTemplate = _.template(modulePartial);
@@ -17,11 +16,10 @@ const render = (state) => {
 	}
 
 	const user = _.find(state.users, { username: account.user });
-	const inner = profileTemplate({ user });
 
 	morphdom(
 		row,
-		`<div>${inner}</div>`,
+		`<div>${profileTemplate({ user })}</div>`,
 		{ childrenOnly: true }
 	);
 

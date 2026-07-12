@@ -1,19 +1,16 @@
-import sitesPartial from 'fleet/sites/partials/index.html';
+import modulePartial from 'fleet/sites/partials/index.html';
 import nodePartial from 'fleet/sites/partials/node.html';
 import * as nodeService from 'shell/services/node';
 
-const modules = document.querySelector('main .modules');
-const sitesTemplate = _.template(sitesPartial);
+const moduleTemplate = _.template(modulePartial);
 const nodeTemplate = _.template(nodePartial);
-
-// Mount the sites page once; render() morphs it in place on inventory changes.
-modules.insertAdjacentHTML('beforeend', sitesTemplate({ nodes: null, nodeTemplate, moment }));
-const sites = modules.querySelector('#sites');
+document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate({ nodes: null, nodeTemplate, moment }));
+const module = document.querySelector('#sites');
 
 const render = (state) => {
 	morphdom(
-		sites,
-		sitesTemplate({ nodes: state.nodes, nodeTemplate, moment })
+		module,
+		moduleTemplate({ nodes: state.nodes, nodeTemplate, moment })
 	);
 };
 
