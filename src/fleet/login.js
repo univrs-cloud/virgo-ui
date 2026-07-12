@@ -1,4 +1,5 @@
-import loginPartial from 'shell/partials/fleet/login.html';
+import loginPartial from 'fleet/partials/login.html';
+import * as fleetAuthService from 'shell/services/fleet_auth';
 
 const main = document.querySelector('main');
 main.innerHTML = loginPartial;
@@ -12,29 +13,20 @@ const focusFirstInput = (form) => {
 	input?.updateComplete.then(() => input.focus());
 };
 
-const submit = async (url, data) => {
-	const response = await fetch(url, {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify(data)
-	});
-	const result = await response.json().catch(() => ({}));
-	if (!response.ok || result.status !== 'succeeded') {
-		throw new Error(result.message || 'Something went wrong.');
-	}
-	return result;
-};
-
 const login = async () => {
 	const button = loginForm.querySelector('u-button[type="submit"]');
 	button.disabled = true;
 	try {
-		await submit('/auth/login', loginForm.getData());
-		window.location.reload();
+		const result = await fleetAuthService.login(loginForm.getData());
+		if (result.status === 'succeeded') {
+			window.location.reload();
+			return;
+		}
+		notifier.add({ title: result.message || 'Something went wrong.', type: 'error', duration: 0 });
 	} catch (error) {
-		notifier.add({ title: error.message, type: 'error', duration: 0 });
-		button.disabled = false;
+		notifier.add({ title: 'Something went wrong.', type: 'error', duration: 0 });
 	}
+	button.disabled = false;
 };
 
 const register = async () => {
@@ -42,15 +34,19 @@ const register = async () => {
 	button.disabled = true;
 	try {
 		const data = registerForm.getData();
-		const result = await submit('/auth/signup', data);
-		// The account is not created yet — swap to the "check your email" state instead of
-		// reloading, and re-enable the button so a failed retry from here still works.
-		showCheckEmail(result.email || data.email);
-		button.disabled = false;
+		const result = await fleetAuthService.signup(data);
+		if (result.status === 'succeeded') {
+			// The account is not created yet — swap to the "check your email" state instead of reloading.
+			showCheckEmail(result.email || data.email);
+		} else {
+			notifier.add({ title: result.message || 'Something went wrong.', type: 'error', duration: 0 });
+		}
 	} catch (error) {
-		notifier.add({ title: error.message, type: 'error', duration: 0 });
-		button.disabled = false;
+		notifier.add({ title: 'Something went wrong.', type: 'error', duration: 0 });
 	}
+	// Re-enable so a failed attempt (or a retry from the check-email state) still works; login returns
+	// early on success because the page reloads.
+	button.disabled = false;
 };
 
 const showRegister = (event) => {

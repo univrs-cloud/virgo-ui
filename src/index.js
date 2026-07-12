@@ -62,9 +62,20 @@ const runtime = async (state) => {
 			}
 		} else {
 			if (!isAuthenticated) {
-				await import('shell/fleet/login');
+				await import('fleet/login');
 			} else {
-				await import('shell/fleet');
+				try {
+					await Promise.all([
+						import('fleet/header'),
+						import('fleet/main')
+					]);
+					const { modulesLoaded } = await import('fleet');
+					await modulesLoaded;
+					import('fleet/navigation');
+				} catch (error) {
+					alert(`Error during application initialization<br><br>${error}`, );
+					console.error('Error during application initialization:', error);
+				}
 			}
 			return;
 		}
