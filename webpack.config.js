@@ -80,7 +80,7 @@ module.exports = (env, argv) => {
 			app: './src/index.js'
 		},
 		output: {
-			publicPath: 'auto',
+			publicPath: '',
 			path: path.resolve(__dirname, 'dist'),
 			filename: 'assets/js/[name].[fullhash].js',
 			chunkFilename: 'assets/js/[name].[chunkhash].js',
@@ -116,6 +116,7 @@ module.exports = (env, argv) => {
 				theme_color: '#658ffc',
 				orientation: 'any',
 				crossorigin: 'use-credentials',
+				ios: true,
 				icons: [
 					{
 						src: path.resolve(__dirname, './src/assets/img/virgo.png'),
