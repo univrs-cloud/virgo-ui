@@ -1,5 +1,5 @@
 import modalPartial from 'fleet/profile/partials/modals/edit.html';
-import * as fleetUserService from 'shell/services/fleet_user';
+import * as userService from 'fleet/profile/services/user';
 
 document.body.insertAdjacentHTML('beforeend', modalPartial);
 
@@ -11,7 +11,7 @@ const updateProfile = async () => {
 	_.each(buttons, (button) => { button.disabled = true; });
 	const { fullname } = form.getData();
 	try {
-		const result = await fleetUserService.updateUser({ fullname });
+		const result = await userService.updateUser({ fullname });
 		if (result?.status === 'succeeded') {
 			// Reload so the refreshed account cookie (new name) propagates to the header and the card.
 			window.location.reload();
