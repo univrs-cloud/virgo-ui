@@ -1,6 +1,6 @@
 import * as nodeService from 'shell/services/node';
 
-const module = document.querySelector('#fleet');
+const module = document.querySelector('#sites');
 
 const remove = async (event) => {
 	if (

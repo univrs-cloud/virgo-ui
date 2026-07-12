@@ -1,6 +1,7 @@
 import accountPartial from 'shell/partials/account.html';
 import * as systemService from 'shell/services/system';
 import * as dockerService from 'shell/services/docker';
+import * as fleetAuthService from 'shell/services/fleet_auth';
 
 let unsubscribe;
 let authDomain = null;
@@ -13,7 +14,7 @@ const signOut = async (event) => {
 
 	if (runtimeRole === 'fleet') {
 		event.preventDefault();
-		await fetch('/auth/logout', { method: 'POST' });
+		await fleetAuthService.logout();
 		window.location.reload();
 		return;
 	}
