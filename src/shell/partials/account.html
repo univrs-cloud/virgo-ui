@@ -12,9 +12,9 @@
 			<div class="dropdown-menu dropdown-menu-end" style="width: max-content;">
 				<h6 class="dropdown-header">Logged in as</h6>
 				<p class="d-flex flex-row align-items-center fw-medium px-2 pb-2 mt-n1 mb-0"><%=account.name || account.email || '&mdash;'%></p>
-				<%if (!isUpdating && runtimeRole !== 'fleet') {%>
+				<%if (!isUpdating) {%>
 					<div class="dropdown-divider"></div>
-					<a href="/users/profile" class="dropdown-item">Your profile</a>
+					<a href="/users/profile" class="dropdown-item" <%=(runtimeRole === 'fleet' ? 'rel="external"' : '')%>>Your profile</a>
 				<%}%>
 				<div class="dropdown-divider"></div>
 				<a href="#" rel=“nofollow“ class="sign-out dropdown-item">
