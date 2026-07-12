@@ -1,0 +1,19 @@
+<%if (_.isEmpty(nodes)) {%>
+	<div class="no-content d-flex flex-column justify-content-center align-items-center py-5">
+		<i class="icon-duotone icon-solid icon-server icon-4x"></i>
+		<h5 class="text-body-tertiary mt-4">No sites yet</h5>
+		<p class="text-body-tertiary mb-0">Sites will appear here once they have been registered.</p>
+	</div>
+<%} else {%>
+	<div class="row">
+		<div class="col-12 position-relative mb-3">
+			<h5 class="m-0">
+				<i class="icon-duotone icon-solid icon-server icon-fw me-1"></i>
+				Sites
+			</h5>
+		</div>
+		<%_.each(nodes, (node) => {%>
+			<%=nodeTemplate({ node, moment })%>
+		<%})%>
+	</div>
+<%}%>
