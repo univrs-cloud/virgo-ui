@@ -8,7 +8,7 @@ export const mount = () => {
 
 	const setupPanel = main.querySelector('.setup');
 	const recoveryPanel = main.querySelector('.recovery');
-	const verifyForm = main.querySelector('u-form.verify');
+	const form = main.querySelector('u-form');
 	const qrImg = main.querySelector('.qr');
 	const secretEl = main.querySelector('.secret');
 
@@ -51,10 +51,10 @@ export const mount = () => {
 	};
 
 	const verify = async () => {
-		const button = verifyForm.querySelector('u-button[type="submit"]');
+		const button = form.querySelector('u-button[type="submit"]');
 		button.disabled = true;
 		try {
-			const result = await fleetAuthService.mfaSetupVerify(verifyForm.getData());
+			const result = await fleetAuthService.mfaSetupVerify(form.getData());
 			if (result?.status !== 'succeeded') {
 				throw new Error(result?.message || 'Verification failed.');
 			}
@@ -71,11 +71,14 @@ export const mount = () => {
 		window.location.replace('/signin');
 	};
 
-	verifyForm.validation = [
+	form.validation = [
 		{ selector: '.code', rules: { isEmpty: `Can't be empty` } }
 	];
-	verifyForm.addEventListener('valid', verify);
+	form.addEventListener('valid', verify);
 	main.querySelector('.sign-out').addEventListener('click', signOut);
+
+	const input = form.querySelector('u-input');
+	input?.updateComplete?.then(() => input.focus());
 
 	begin();
 };
