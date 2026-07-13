@@ -11,7 +11,7 @@ const ensureSucceeded = (result) => {
 export const mount = () => {
 	const main = document.querySelector('main');
 	main.innerHTML = signupPartial;
-	const form = main.querySelector('u-form.register');
+	const form = main.querySelector('u-form');
 	const checkEmail = main.querySelector('.check-email');
 
 	// The account isn't created until the emailed link is clicked, so swap to a "check your email"
