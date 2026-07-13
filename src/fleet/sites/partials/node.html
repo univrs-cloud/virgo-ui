@@ -17,6 +17,11 @@
 								<i class="icon-solid icon-clock-rotate-left ms-1" data-bs-toggle="tooltip" data-bs-original-title="Last seen <%=moment(node.lastSeenAt).fromNow()%>.<br><%=moment(node.lastSeenAt).format('LLL')%>"></i>
 							<%}%>
 						</u-badge>
+						<%if (!_.isEmpty(node.updates)) {%>
+							<u-badge color="orange" class="me-1" pill>
+								<i class="icon-solid icon-download" data-bs-toggle="tooltip" data-bs-original-title="<%=_.size(node.updates)%> update<%=_.size(node.updates) === 1 ? '' : 's'%> available"></i>
+							</u-badge>
+						<%}%>
 						<%if (node.isOwner && (!_.isEmpty(node.admins) || !_.isEmpty(node.groups))) {%>
 							<div class="dropdown invited">
 								<span class="d-flex z-1 position-relative" data-bs-toggle="dropdown">
