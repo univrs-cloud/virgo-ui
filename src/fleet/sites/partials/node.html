@@ -18,9 +18,11 @@
 							<%}%>
 						</u-badge>
 						<%if (!_.isEmpty(node.updates)) {%>
-							<u-badge color="orange" class="me-1" pill tip="<%=_.pluralize('update', _.size(node.updates), true)%> available">
-								<i class="icon-solid icon-download"></i>
-							</u-badge>
+							<a href="/nodes/<%=node.nodeId%>/system-updates" rel="external" class="z-1 position-relative text-decoration-none me-1">
+								<u-badge color="orange" pill tip="<%=_.pluralize('update', _.size(node.updates), true)%> available">
+									<i class="icon-solid icon-download"></i>
+								</u-badge>
+							</a>
 						<%}%>
 						<%if (node.isOwner && (!_.isEmpty(node.admins) || !_.isEmpty(node.groups))) {%>
 							<div class="dropdown invited">
