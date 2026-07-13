@@ -30,6 +30,8 @@ export const mount = () => {
 		hide.reset();
 		hide.classList.add('d-none');
 		show.classList.remove('d-none');
+		const shownInput = show.querySelector('u-input');
+		shownInput?.updateComplete?.then(() => shownInput.focus());
 	};
 
 	const signOut = async (event) => {
@@ -45,4 +47,7 @@ export const mount = () => {
 	main.querySelector('.show-recovery').addEventListener('click', toggle(recoveryForm, challengeForm));
 	main.querySelector('.show-challenge').addEventListener('click', toggle(challengeForm, recoveryForm));
 	main.querySelector('.sign-out').addEventListener('click', signOut);
+
+	const input = challengeForm.querySelector('u-input');
+	input?.updateComplete?.then(() => input.focus());
 };

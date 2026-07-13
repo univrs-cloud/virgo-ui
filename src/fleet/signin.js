@@ -12,7 +12,7 @@ const ensureSucceeded = (result) => {
 export const mount = () => {
 	const main = document.querySelector('main');
 	main.innerHTML = signinPartial;
-	const form = main.querySelector('u-form.login');
+	const form = main.querySelector('u-form');
 
 	const login = async () => {
 		const button = form.querySelector('u-button[type="submit"]');
