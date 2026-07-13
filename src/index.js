@@ -61,21 +61,13 @@ const runtime = async (state) => {
 				isAdmin = true;
 			}
 		} else {
-			if (!isAuthenticated) {
-				await import('fleet/login');
-			} else {
-				try {
-					await Promise.all([
-						import('fleet/header'),
-						import('fleet/main')
-					]);
-					const { modulesLoaded } = await import('fleet');
-					await modulesLoaded;
-					import('fleet/navigation');
-				} catch (error) {
-					alert(`Error during application initialization<br><br>${error}`, );
-					console.error('Error during application initialization:', error);
-				}
+			// Every fleet screen (auth, MFA, app) is page-routed; the router's guards redirect based
+			// on isAuthenticated + account.mfa and lazily build the app shell for satisfied routes.
+			try {
+				await import('fleet/navigation');
+			} catch (error) {
+				alert(`Error during application initialization<br><br>${error}`, );
+				console.error('Error during application initialization:', error);
 			}
 			return;
 		}

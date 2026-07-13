@@ -18,12 +18,28 @@ class FleetAuth {
 		return this.#post('/auth/signup', config);
 	}
 
+	confirm(config) {
+		return this.#post('/auth/verify', config);
+	}
+
 	logout() {
 		return this.#post('/auth/logout');
 	}
 
 	changePassword(config) {
 		return this.#post('/auth/password', config);
+	}
+
+	mfaSetup() {
+		return this.#post('/auth/mfa/setup');
+	}
+
+	mfaSetupVerify(config) {
+		return this.#post('/auth/mfa/setup/verify', config);
+	}
+
+	mfaVerify(config) {
+		return this.#post('/auth/mfa/verify', config);
 	}
 }
 

@@ -1,0 +1,28 @@
+<div class="d-flex align-items-center justify-content-center h-100 p-3">
+	<div class="card shadow-sm border-0" style="width: 100%; max-width: 24rem;">
+		<div class="card-body p-4">
+			<div class="text-center mb-4">
+				<img src="assets/img/virgo.svg" width="48" alt="">
+			</div>
+			<u-form class="challenge">
+				<h5 class="text-center mb-3">Two-factor authentication</h5>
+				<u-input name="code" label="6-digit code" class="code" inputmode="numeric" autocomplete="one-time-code"></u-input>
+				<div class="d-flex align-items-center justify-content-between mt-3">
+					<a href="#" class="show-recovery text-decoration-none">Use a recovery code</a>
+					<u-button type="submit" variant="primary">Verify</u-button>
+				</div>
+			</u-form>
+			<u-form class="recovery d-none">
+				<h5 class="text-center mb-3">Enter a recovery code</h5>
+				<u-input name="recoveryCode" label="Recovery code" class="recovery-code"></u-input>
+				<div class="d-flex align-items-center justify-content-between mt-3">
+					<a href="#" class="show-challenge text-decoration-none">Use your app instead</a>
+					<u-button type="submit" variant="primary">Verify</u-button>
+				</div>
+			</u-form>
+			<div class="text-center mt-3">
+				<a href="#" class="sign-out text-decoration-none small text-body-secondary">Sign out</a>
+			</div>
+		</div>
+	</div>
+</div>
