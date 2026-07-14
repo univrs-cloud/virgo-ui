@@ -17,10 +17,17 @@
 								<i class="icon-solid icon-clock-rotate-left ms-1" data-bs-toggle="tooltip" data-bs-original-title="Last seen <%=moment(node.lastSeenAt).fromNow()%>.<br><%=moment(node.lastSeenAt).format('LLL')%>"></i>
 							<%}%>
 						</u-badge>
-						<%if (!_.isEmpty(node.updates)) {%>
+						<%if (!_.isEmpty(node.updates?.system)) {%>
 							<a href="/nodes/<%=node.nodeId%>/system-updates" rel="external" class="z-1 position-relative text-decoration-none me-1">
-								<u-badge color="orange" pill tip="<%=_.pluralize('update', _.size(node.updates), true)%> available">
+								<u-badge color="orange" pill tip="<%=_.pluralize('system update', _.size(node.updates.system), true)%>">
 									<i class="icon-solid icon-download"></i>
+								</u-badge>
+							</a>
+						<%}%>
+						<%if (!_.isEmpty(node.updates?.apps)) {%>
+							<a href="/nodes/<%=node.nodeId%>/apps" rel="external" class="z-1 position-relative text-decoration-none me-1">
+								<u-badge color="orange" pill tip="<%=_.pluralize('app update', _.size(node.updates.apps), true)%>">
+									<i class="icon-solid icon-grid-round-2-plus"></i>
 								</u-badge>
 							</a>
 						<%}%>
