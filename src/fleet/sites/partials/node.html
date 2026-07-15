@@ -10,7 +10,7 @@
 							<span class="text-body"><%=node.name%></span>
 						<%}%>
 					</h6>
-					<div class="d-flex align-items-center mt-2">
+					<div class="d-flex align-items-center mt-2 pt-1">
 						<u-badge color="<%=node.online ? 'green' : 'red'%>" class="me-1" pill>
 							<%=(node.online ? 'Online' : 'Offline')%>
 							<%if (!node.online && node.lastSeenAt) {%>
@@ -112,7 +112,7 @@
 							<u-progress-bar color="<%=color%>" tint="<%=tint%>" width="<%=(seg.endMs - seg.startMs) / totalMs * 100%>" warning-threshold="101" danger-threshold="101" tip="<%=status%> · <%=moment(seg.startMs).format('LT')%> – <%=moment(seg.endMs).format('LT')%>"></u-progress-bar>
 						<%})%>
 					</u-progress>
-					<div class="d-flex justify-content-between mt-1" style="font-size: 0.8125rem;">
+					<div class="d-flex justify-content-between mt-1" style="font-size: 0.75rem;">
 						<span class="text-body-tertiary"><%=moment(startMs).format('LT')%></span>
 						<span class="text-body-tertiary"><%=moment(startMs + totalMs / 2).format('LT')%></span>
 						<span class="text-body-tertiary">Now</span>
