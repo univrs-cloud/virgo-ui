@@ -94,6 +94,33 @@
 					</ul>
 				</div>
 			</div>
+			<%if (!_.isEmpty(node.connectivity)) {%>
+				<%
+					const conn = node.connectivity;
+					const startMs = conn[0].startMs;
+					const endMs = conn[conn.length - 1].endMs;
+					const totalMs = Math.max(endMs - startMs, 1);
+					// z-1/position-relative lifts the bar above the card's stretched-link overlay so its
+					// per-segment tooltips stay hoverable.
+				%>
+				<div class="connectivity position-relative z-1 mt-3">
+					<u-progress shadow="false">
+						<%_.each(conn, (seg) => {%>
+							<%
+								const status = _.isNull(seg.online) ? 'No data' : (seg.online ? 'Online' : 'Offline');
+								const color = _.isNull(seg.online) ? 'gray' : (seg.online ? 'green' : 'orange');
+								const tint = _.isNull(seg.online) ? '300' : '400';
+							%>
+							<u-progress-bar color="<%=color%>" tint="<%=tint%>" width="<%=(seg.endMs - seg.startMs) / totalMs * 100%>" warning-threshold="101" danger-threshold="101" tip="<%=status%> · <%=moment(seg.startMs).format('LT')%> – <%=moment(seg.endMs).format('LT')%>"></u-progress-bar>
+						<%})%>
+					</u-progress>
+					<div class="d-flex justify-content-between mt-1">
+						<small class="text-body-tertiary"><%=moment(startMs).format('LT')%></small>
+						<small class="text-body-tertiary"><%=moment(startMs + totalMs / 2).format('LT')%></small>
+						<small class="text-body-tertiary">Now</small>
+					</div>
+				</div>
+			<%}%>
 		</div>
 		<%if (!node.isOwner) {%>
 			<u-badge color="gray" tint="300" class="indicator" style="top: auto; bottom: -1rem;" pill>Invited</u-badge>
