@@ -17,7 +17,24 @@
 								<i class="icon-solid icon-clock-rotate-left ms-1" data-bs-toggle="tooltip" data-bs-original-title="Last seen <%=moment(node.lastSeenAt).fromNow()%>.<br><%=moment(node.lastSeenAt).format('LLL')%>"></i>
 							<%}%>
 						</u-badge>
-						<%if (!_.isEmpty(node.updates?.system)) {%>
+						<%if (node.update?.state === 'running' && node.update.stage) {%>
+							<u-badge color="<%=(node.update.stage === 'download' ? 'cyan' : 'blue')%>" tint="300" class="me-1" pill tip="<%=(node.update.stage === 'download' ? 'Downloading' : 'Installing')%> system update">
+								<i class="icon-solid <%=(node.update.stage === 'download' ? 'icon-download' : 'icon-cog icon-spin')%> me-1"></i><%=node.update.percent%>%
+							</u-badge>
+						<%} else if (node.update?.state === 'running') {%>
+							<u-badge color="blue" tint="300" class="me-1" pill tip="Updating system">
+								<i class="icon-solid icon-arrows-rotate icon-spin"></i>
+							</u-badge>
+						<%} else if (node.update?.state === 'succeeded') {%>
+							<u-badge color="green" class="me-1" pill tip="System update complete">
+								<i class="icon-solid icon-circle-check"></i>
+							</u-badge>
+						<%} else if (node.update?.state === 'failed') {%>
+							<u-badge color="red" class="me-1" pill tip="System update failed">
+								<i class="icon-solid icon-circle-xmark"></i>
+							</u-badge>
+						<%}%>
+						<%if (!node.update && !_.isEmpty(node.updates?.system)) {%>
 							<a href="/nodes/<%=node.nodeId%>/system-updates" rel="external" class="z-1 position-relative lh-1 text-decoration-none me-1">
 								<u-badge color="orange" pill tip="<%=_.pluralize('system update', _.size(node.updates.system), true)%>">
 									<i class="icon-solid icon-download"></i>
