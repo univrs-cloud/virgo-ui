@@ -17,6 +17,17 @@
 					<li class="text-danger">Something went wrong, could not update.</li>
 				<%}%>
 			</ul>
+			<%if (update.state === 'running' && update.progress) {%>
+				<div class="mt-4">
+					<div class="d-flex justify-content-between mb-1">
+						<span><%=(update.progress.stage === 'download' ? 'Downloading' : 'Installing')%></span>
+						<span><%=update.progress.percent%>%</span>
+					</div>
+					<u-progress>
+						<u-progress-bar color="<%=(update.progress.stage === 'download' ? 'cyan' : 'blue')%>" tint="300" width="<%=update.progress.percent%>" striped animated warning-threshold="101" danger-threshold="101"></u-progress-bar>
+					</u-progress>
+				</div>
+			<%}%>
 			<div class="d-flex align-items-center mt-4">
 				<%if (update.isRebootRequired) {%>
 					<u-button variant="danger" class="ms-auto <%=(!_.includes(['succeeded', 'failed'], update.state) ? 'invisible' : '')%>" data-action="reboot">Reboot</u-button>
