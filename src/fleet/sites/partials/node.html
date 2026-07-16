@@ -124,7 +124,7 @@
 							<%
 								const status = _.isNull(seg.online) ? 'No data' : (seg.online ? 'Online' : 'Offline');
 								const color = _.isNull(seg.online) ? 'gray' : (seg.online ? 'green' : 'orange');
-								const tint = _.isNull(seg.online) ? 300 : (seg.online ? 300 : 400);
+								const tint = _.isNull(seg.online) ? 300 : (seg.online ? 200 : 400);
 							%>
 							<u-progress-bar color="<%=color%>" tint="<%=tint%>" width="<%=(seg.endMs - seg.startMs) / totalMs * 100%>" warning-threshold="101" danger-threshold="101" tip="<%=status%> · <%=moment(seg.startMs).format('LT')%> – <%=moment(seg.endMs).format('LT')%>"></u-progress-bar>
 						<%})%>
