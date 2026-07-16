@@ -18,19 +18,19 @@
 							<%}%>
 						</u-badge>
 						<%if (node.update?.state === 'running' && node.update.stage) {%>
-							<u-badge color="<%=(node.update.stage === 'download' ? 'cyan' : 'blue')%>" tint="300" class="me-1" pill tip="<%=(node.update.stage === 'download' ? 'Downloading' : 'Installing')%> system update">
+							<u-badge color="<%=(node.update.stage === 'download' ? 'cyan' : 'blue')%>" tint="300" class="z-1 position-relative me-1" pill tip="<%=(node.update.stage === 'download' ? 'Downloading' : 'Installing')%> system update">
 								<i class="icon-solid <%=(node.update.stage === 'download' ? 'icon-download' : 'icon-cog icon-spin')%> me-1"></i><%=node.update.percent%>%
 							</u-badge>
 						<%} else if (node.update?.state === 'running') {%>
-							<u-badge color="blue" tint="300" class="me-1" pill tip="Updating system">
+							<u-badge color="blue" tint="300" class="z-1 position-relative me-1" pill tip="Updating system">
 								<i class="icon-solid icon-arrows-rotate icon-spin"></i>
 							</u-badge>
 						<%} else if (node.update?.state === 'succeeded') {%>
-							<u-badge color="green" class="me-1" pill tip="System update complete">
+							<u-badge color="green" class="z-1 position-relative me-1" pill tip="System update complete">
 								<i class="icon-solid icon-circle-check"></i>
 							</u-badge>
 						<%} else if (node.update?.state === 'failed') {%>
-							<u-badge color="red" class="me-1" pill tip="System update failed">
+							<u-badge color="red" class="z-1 position-relative me-1" pill tip="System update failed">
 								<i class="icon-solid icon-circle-xmark"></i>
 							</u-badge>
 						<%}%>
