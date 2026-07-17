@@ -18,23 +18,23 @@
 							<%}%>
 						</u-badge>
 						<%if (node.update?.state === 'running' && node.update.stage) {%>
-							<u-badge color="<%=(node.update.stage === 'download' ? 'cyan' : 'blue')%>" tint="300" class="z-1 position-relative me-1" pill tip="<%=(node.update.stage === 'download' ? 'Downloading' : 'Installing')%> system update">
+							<u-badge color="blue" tint="500" class="z-1 position-relative me-1" pill tip="<%=(node.update.stage === 'download' ? 'Downloading' : 'Installing')%> system update">
 								<i class="icon-solid <%=(node.update.stage === 'download' ? 'icon-download' : 'icon-cog icon-spin')%> me-1"></i><%=node.update.percent%>%
 							</u-badge>
 						<%} else if (node.update?.state === 'running') {%>
-							<u-badge color="blue" tint="200" class="z-1 position-relative me-1" pill tip="Updating system">
+							<u-badge color="blue" tint="500" class="z-1 position-relative me-1" pill tip="Updating system">
 								<i class="icon-solid icon-arrows-rotate icon-spin"></i>
 							</u-badge>
 						<%} else if (node.update?.state === 'succeeded') {%>
 							<a href="#" data-action="complete-update" data-node-id="<%=node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
-								<u-badge color="green" tint="300" pill tip="System update complete">
+								<u-badge color="green" tint="500" pill tip="System update complete">
 									<i class="icon-solid icon-circle-check"></i>
 									<span class="hover-reveal-text">Finish</span>
 								</u-badge>
 							</a>
 						<%} else if (node.update?.state === 'failed') {%>
 							<a href="#" data-action="complete-update" data-node-id="<%=node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
-								<u-badge color="red" tint="300" pill tip="System update failed">
+								<u-badge color="red" tint="500" pill tip="System update failed">
 									<i class="icon-solid icon-circle-xmark"></i>
 									<span class="hover-reveal-text">Dismiss</span>
 								</u-badge>
