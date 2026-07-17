@@ -69,6 +69,10 @@ class Node extends Store {
 	revokeGroup(config) {
 		return this.socket.timeout(10000).emitWithAck('group:node:remove', config);
 	}
+
+	installSystemUpdate(config) {
+		return this.socket.timeout(10000).emitWithAck('node:update', config);
+	}
 }
 
 export default new Node();
