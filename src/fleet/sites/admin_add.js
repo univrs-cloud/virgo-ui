@@ -1,5 +1,5 @@
 import modalPartial from 'fleet/sites/partials/modals/admin_add.html';
-import * as nodeService from 'shell/services/node';
+import * as nodeService from 'fleet/sites/services/node';
 
 document.body.insertAdjacentHTML('beforeend', modalPartial);
 

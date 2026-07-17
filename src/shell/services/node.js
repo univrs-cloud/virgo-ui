@@ -22,27 +22,7 @@ const getNodes = () => {
 	return sortNodes(Node.getNodes());
 };
 
-const deleteNode = (config) => {
-	return Node.deleteNode(config);
-};
-
-const inviteAdmin = (config) => {
-	return Node.inviteAdmin(config);
-};
-
-const revokeAdmin = (config) => {
-	return Node.revokeAdmin(config);
-};
-
-const revokeGroup = (config) => {
-	return Node.revokeGroup(config);
-};
-
 export {
 	subscribe,
-	getNodes,
-	deleteNode,
-	inviteAdmin,
-	revokeAdmin,
-	revokeGroup
+	getNodes
 };

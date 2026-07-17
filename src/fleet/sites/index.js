@@ -1,7 +1,7 @@
 import modulePartial from 'fleet/sites/partials/index.html';
 import sitesPartial from 'fleet/sites/partials/sites.html';
 import nodePartial from 'fleet/sites/partials/node.html';
-import * as nodeService from 'shell/services/node';
+import * as nodeService from 'fleet/sites/services/node';
 
 const moduleTemplate = _.template(modulePartial);
 const sitesTemplate = _.template(sitesPartial);
@@ -32,3 +32,4 @@ setInterval(() => render({ nodes: nodeService.getNodes() }), 60000);
 import('fleet/sites/admin_add');
 import('fleet/sites/admin_remove');
 import('fleet/sites/node_remove');
+import('fleet/sites/system_updates');
