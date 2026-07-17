@@ -81,6 +81,15 @@ u-badge:hover .hover-reveal-text {
 	--bs-modal-border-radius: var(--bs-border-radius-xl);
 	backdrop-filter: blur(6px) grayscale(0.8);
 }
+// u-form renders in light DOM and moves its children into a generated inner <form>, so a modal that
+// wraps its dialog in <u-form> inserts two block wrappers between .modal and .modal-dialog. That
+// breaks the percentage-height chain .modal-dialog-centered relies on, silently defeating its
+// vertical centering. display: contents drops both wrappers from layout so .modal-dialog lays out as
+// a direct child of .modal, exactly as Bootstrap expects.
+.modal > u-form,
+.modal > u-form > form {
+	display: contents;
+}
 .modal-dialog {
 	&.modal-fullscreen {
 		.modal-body {
