@@ -38,8 +38,12 @@ const revokeGroup = (config) => {
 	return Node.revokeGroup(config);
 };
 
-const installSystemUpdate = (config) => {
-	return Node.installSystemUpdate(config);
+const startSystemUpdate = (config) => {
+	return Node.startSystemUpdate(config);
+};
+
+const completeSystemUpdate = (config) => {
+	return Node.completeSystemUpdate(config);
 };
 
 export {
@@ -49,5 +53,6 @@ export {
 	inviteAdmin,
 	revokeAdmin,
 	revokeGroup,
-	installSystemUpdate
+	startSystemUpdate,
+	completeSystemUpdate
 };

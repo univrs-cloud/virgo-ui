@@ -26,13 +26,19 @@
 								<i class="icon-solid icon-arrows-rotate icon-spin"></i>
 							</u-badge>
 						<%} else if (node.update?.state === 'succeeded') {%>
-							<u-badge color="green" class="z-1 position-relative me-1" pill tip="System update complete">
-								<i class="icon-solid icon-circle-check"></i>
-							</u-badge>
+							<a href="#" data-action="complete-update" data-node-id="<%=node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
+								<u-badge color="green" pill>
+									<i class="icon-solid icon-circle-check"></i>
+									<span class="hover-reveal-text">Acknowledge</span>
+								</u-badge>
+							</a>
 						<%} else if (node.update?.state === 'failed') {%>
-							<u-badge color="red" class="z-1 position-relative me-1" pill tip="System update failed">
-								<i class="icon-solid icon-circle-xmark"></i>
-							</u-badge>
+							<a href="#" data-action="complete-update" data-node-id="<%=node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
+								<u-badge color="red" pill>
+									<i class="icon-solid icon-circle-xmark"></i>
+									<span class="hover-reveal-text">Acknowledge</span>
+								</u-badge>
+							</a>
 						<%}%>
 						<%if (!node.update && !_.isEmpty(node.updates?.system)) {%>
 							<a href="#node-system-updates" data-bs-toggle="modal" data-node-id="<%=node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
