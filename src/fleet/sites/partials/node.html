@@ -35,7 +35,7 @@
 							</u-badge>
 						<%}%>
 						<%if (!node.update && !_.isEmpty(node.updates?.system)) {%>
-							<a href="/nodes/<%=node.nodeId%>/system-updates" rel="external" class="z-1 position-relative lh-1 text-decoration-none me-1">
+							<a href="#node-system-updates" data-bs-toggle="modal" data-node-id="<%=node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
 								<u-badge color="orange" pill tip="<%=_.pluralize('system update', _.size(node.updates.system), true)%>">
 									<i class="icon-solid icon-download"></i>
 								</u-badge>
