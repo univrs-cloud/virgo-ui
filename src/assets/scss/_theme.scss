@@ -51,6 +51,25 @@ u-toast {
 	border-radius: 0.1rem;
 }
 
+// Hover-reveal label inside a badge: a .hover-reveal-text child stays collapsed (leaving just the
+// icon) and expands when its u-badge is hovered, growing the badge. Scoped to u-badge so it only
+// applies to badge content. Reverses on mouse-out because the transition lives on the base rule.
+u-badge .hover-reveal-text {
+	display: inline-block;
+	max-width: 0;
+	margin-left: 0;
+	overflow: hidden;
+	opacity: 0;
+	white-space: nowrap;
+	transition: max-width 0.25s ease, margin-left 0.25s ease, opacity 0.25s ease;
+}
+
+u-badge:hover .hover-reveal-text {
+	max-width: 6rem;
+	margin-left: map-get($spacers, 1);
+	opacity: 1;
+}
+
 .tooltip {
 	--bs-tooltip-zindex: 99999;
 	&.storage-scan-progress {

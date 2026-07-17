@@ -70,8 +70,12 @@ class Node extends Store {
 		return this.socket.timeout(10000).emitWithAck('group:node:remove', config);
 	}
 
-	installSystemUpdate(config) {
+	startSystemUpdate(config) {
 		return this.socket.timeout(10000).emitWithAck('node:update', config);
+	}
+
+	completeSystemUpdate(config) {
+		return this.socket.timeout(10000).emitWithAck('node:update:complete', config);
 	}
 }
 
