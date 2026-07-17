@@ -40,7 +40,7 @@ const install = async () => {
 		}
 		notifier.add({ title: result?.message || `Failed to start system update on ${name}.`, type: 'error', duration: 0 });
 	} catch (error) {
-		notifier.add({ title: `Failed to start system update on ${name}.`, type: 'error', duration: 0 });
+		notifier.add({ title: error.message || `Failed to start system update on ${name}.`, type: 'error', duration: 0 });
 	}
 	_.each(buttons, (button) => { button.disabled = false; });
 };
