@@ -117,10 +117,33 @@ module.exports = (env, argv) => {
 				orientation: 'any',
 				crossorigin: 'use-credentials',
 				ios: true,
+				inject: false,
+				fingerprints: false,
+				filename: 'manifest.json',
 				icons: [
 					{
 						src: path.resolve(__dirname, './src/assets/img/virgo.png'),
 						destination: 'assets/icons/',
+						sizes: [36, 48, 72, 96, 144, 192, 512]
+					}
+				]
+			}),
+			new WepackPwaManifest({
+				name: 'univrs',
+				short_name: 'univrs',
+				start_url: '/?utm_source=pwa',
+				background_color: '#e2e3e5',
+				theme_color: '#658ffc',
+				orientation: 'any',
+				crossorigin: 'use-credentials',
+				ios: true,
+				inject: false,
+				fingerprints: false,
+				filename: 'fleet-manifest.json',
+				icons: [
+					{
+						src: path.resolve(__dirname, './src/assets/img/fleet.png'),
+						destination: 'assets/fleet-icons/',
 						sizes: [36, 48, 72, 96, 144, 192, 512]
 					}
 				]

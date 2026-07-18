@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+	<defs>
+		<linearGradient id="cube-top" x1=".2" y1="0" x2=".8" y2="1">
+			<stop offset="0%" stop-color="#CDA7F5"/>
+			<stop offset="100%" stop-color="#B187EC"/>
+		</linearGradient>
+		<linearGradient id="cube-left" x1="0" y1="0" x2="1" y2="1">
+			<stop offset="0%" stop-color="#7A64E2"/>
+			<stop offset="100%" stop-color="#5A48C8"/>
+		</linearGradient>
+		<linearGradient id="cube-right" x1="0" y1="0" x2="1" y2="1">
+			<stop offset="0%" stop-color="#4A56A2"/>
+			<stop offset="100%" stop-color="#38427E"/>
+		</linearGradient>
+	</defs>
+	<polygon points="256,12 467,134 256,256 45,134" fill="url(#cube-top)"/>
+	<polygon points="45,134 256,256 256,500 45,378" fill="url(#cube-left)"/>
+	<polygon points="467,134 256,256 256,500 467,378" fill="url(#cube-right)"/>
+	<g stroke="#0A0A1E" stroke-opacity=".2" stroke-width="2.5" fill="none">
+		<path d="M150.5 73 L361.5 195"/>
+		<path d="M361.5 73 L150.5 195"/>
+		<path d="M150.5 195 L150.5 439"/>
+		<path d="M45 256 L256 378"/>
+		<path d="M361.5 195 L361.5 439"/>
+		<path d="M467 256 L256 378"/>
+	</g>
+	<g stroke="#ffffff" stroke-opacity=".18" stroke-width="2.5" fill="none">
+		<path d="M256 256 L256 500"/>
+		<path d="M256 256 L45 134"/>
+		<path d="M256 256 L467 134"/>
+	</g>
+</svg>
