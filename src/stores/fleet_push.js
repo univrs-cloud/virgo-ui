@@ -23,12 +23,14 @@ class FleetPush {
 		return data?.publicKey || null;
 	}
 
-	subscribe(subscription) {
-		return this.#post('/push/subscribe', subscription);
+	// Account-wide on: registers this device's subscription and sets the preference server-side.
+	enable(subscription) {
+		return this.#post('/push/enable', subscription);
 	}
 
-	unsubscribe(endpoint) {
-		return this.#post('/push/unsubscribe', { endpoint });
+	// Account-wide off: clears the preference and drops every device's subscription server-side.
+	disable() {
+		return this.#post('/push/disable');
 	}
 }
 
