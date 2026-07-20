@@ -56,6 +56,11 @@ const runtime = async (state) => {
 
 	const onNodeView = /^\/nodes\/[^/]+\//.test(new URL(document.baseURI).pathname);
 	if (runtimeRole === 'fleet') {
+		// Push notifications are a fleet-only concern: register the service worker (and silently
+		// re-subscribe an already-opted-in install) here so the node role never installs a worker.
+		if (isAuthenticated) {
+			import('fleet/services/push').then((push) => { return push.init(); }).catch(() => {});
+		}
 		if (onNodeView) {
 			if (isAuthenticated) {
 				isAdmin = true;
