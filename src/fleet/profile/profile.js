@@ -1,5 +1,6 @@
 import modalPartial from 'fleet/profile/partials/modals/edit.html';
 import * as userService from 'fleet/profile/services/user';
+import * as accountService from 'fleet/services/account';
 
 document.body.insertAdjacentHTML('beforeend', modalPartial);
 
@@ -9,19 +10,19 @@ const form = modal.querySelector('u-form');
 const updateProfile = async () => {
 	const buttons = form.querySelectorAll('.modal-footer u-button');
 	_.each(buttons, (button) => { button.disabled = true; });
-	const { fullname } = form.getData();
+	const config = form.getData();
 	try {
-		const result = await userService.updateUser({ fullname });
+		const result = await userService.updateUser(config);
 		if (result?.status === 'succeeded') {
-			// Reload so the refreshed account cookie (new name) propagates to the header and the card.
-			window.location.reload();
+			accountService.patch({ name: config.name });
+			bootstrap.Modal.getInstance(modal)?.hide();
 			return;
 		}
 		notifier.add({ title: result?.message || 'Failed to update profile.', type: 'error', duration: 0 });
 	} catch (error) {
-		notifier.add({ title: 'Failed to update profile.', type: 'error', duration: 0 });
+		notifier.add({ title: error.message || 'Failed to update profile.', type: 'error', duration: 0 });
+		_.each(buttons, (button) => { button.disabled = false; });
 	}
-	_.each(buttons, (button) => { button.disabled = false; });
 };
 
 const restore = () => {
@@ -30,12 +31,12 @@ const restore = () => {
 
 const render = () => {
 	form.querySelector('.title-email').innerHTML = account.email || '';
-	form.querySelector('.fullname').value = account.name || '';
+	form.querySelector('.name').value = account.name || '';
 };
 
 form.validation = [
 	{
-		selector: '.fullname',
+		selector: '.name',
 		rules: {
 			isEmpty: `Can't be empty`
 		}

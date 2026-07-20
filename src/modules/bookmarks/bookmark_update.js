@@ -75,7 +75,7 @@ const updateValidation = (useProxy) => {
 					isEmpty: `Can't be empty`,
 					custom: {
 						validate: (value) => isSubdomainUnique(value),
-						message: 'This subdomain is already in use'
+						message: `This subdomain is already in use`
 					}
 				}
 			},

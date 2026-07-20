@@ -13,13 +13,18 @@ const signOut = async (event) => {
 	window.location.reload();
 };
 
-const init = () => {
+const render = () => {
 	morphdom(
 		document.querySelector('#account'),
 		accountTemplate({ account })
 	);
+};
 
+const init = () => {
+	render();
 	document.body.addEventListener('click', signOut);
+	// Re-render the dropdown (name/email/…) whenever the account global changes.
+	window.addEventListener('account-changed', render);
 };
 
 export {

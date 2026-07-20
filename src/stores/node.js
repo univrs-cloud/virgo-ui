@@ -41,8 +41,8 @@ class Node extends Store {
 		// 			isOwner: true,
 		// 			nodeId: '123',
 		// 			admins: [
-		// 				{"email":"john.doe@gmail.com","displayName":"John Doe"},
-		// 				{"email":"jane.doe@gmail.com","displayName":"Jane Doe"}
+		// 				{"email":"john.doe@gmail.com","name":"John Doe"},
+		// 				{"email":"jane.doe@gmail.com","name":"Jane Doe"}
 		// 			]
 		// 		}
 		// 	];

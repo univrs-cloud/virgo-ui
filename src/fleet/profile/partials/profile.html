@@ -11,22 +11,16 @@
 			<h5 class="card-title d-flex align-items-center"><%=account.name || account.email%></h5>
 			<dl class="m-0">
 				<dt class="fw-lighter"><small>Email address</small></dt>
-				<dd class="m-0"><%=account.email || '&mdash;'%></dd>
+				<dd><%=account.email || '&mdash;'%></dd>
+
+				<hr class="border-secondary-subtle my-4">
+
+				<dt class="fw-lighter"><small>Notifications</small></dt>
+				<dd class="m-0">
+					<u-switch class="notifications-switch" on-label="Enabled" <%=(account.pushEnabled ? 'checked' : '')%> disabled></u-switch>
+					<small class="d-block fw-lighter text-body-tertiary notifications-hint">Get notified when your nodes have system or app updates.</small>
+				</dd>
 			</dl>
-		</div>
-	</div>
-</div>
-<div class="col col-12">
-	<div class="card rounded-4 border-0 mb-0">
-		<div class="card-body">
-			<h5 class="card-title d-flex align-items-center">Notifications</h5>
-			<div class="d-flex align-items-center justify-content-between">
-				<div class="me-3">
-					<div>Update notifications</div>
-					<small class="fw-lighter text-body-tertiary notifications-hint">Get notified when your nodes have system or app updates.</small>
-				</div>
-				<u-switch class="notifications-switch" on-label="Enabled" disabled></u-switch>
-			</div>
 		</div>
 	</div>
 </div>
