@@ -16,3 +16,4 @@ morphdom(
 
 import('fleet/profile/profile');
 import('fleet/profile/password');
+import('fleet/profile/notifications');
