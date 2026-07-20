@@ -36,7 +36,7 @@ export const mount = () => {
 	};
 
 	form.validation = [
-		{ selector: '.display-name', rules: { isEmpty: `Can't be empty` } },
+		{ selector: '.name', rules: { isEmpty: `Can't be empty` } },
 		{ selector: '.email', rules: { isEmpty: `Can't be empty`, isEmail: 'Invalid email address' } },
 		{ selector: '.password', rules: { isEmpty: `Can't be empty` } },
 		{
@@ -45,7 +45,7 @@ export const mount = () => {
 				isEmpty: `Can't be empty`,
 				custom: {
 					validate: (value) => value === form.querySelector('.password').value,
-					message: 'Passwords do not match'
+					message: `Passwords do not match`
 				}
 			}
 		}
