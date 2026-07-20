@@ -12,7 +12,10 @@ export class Toast extends LitElement {
 		title: { type: String },
 		message: { type: String },
 		dismissible: { type: Boolean },
-		duration: { type: Number }
+		duration: { type: Number },
+		// Named handlers for action elements in the (raw HTML) title/message: an element carrying
+		// click="<name>" invokes callbacks[name]({ event, trigger, close }) when clicked.
+		callbacks: { attribute: false }
 	};
 
 	#bsToast = null;
@@ -26,6 +29,7 @@ export class Toast extends LitElement {
 		this.message = '';
 		this.dismissible = true;
 		this.duration = 5000;
+		this.callbacks = {};
 	}
 
 	disconnectedCallback() {
@@ -66,7 +70,7 @@ export class Toast extends LitElement {
 
 	render() {
 		return html`
-			<div class="toast ${classMap({ [`bd-${this.#getColorClass()}-500`]: true })} border-0 position-relative overflow-hidden">
+			<div class="toast ${classMap({ [`bd-${this.#getColorClass()}-500`]: true })} border-0 position-relative overflow-hidden" @click=${this.#onActionClick}>
 				<div class="d-flex">
 					<div class="toast-body w-100">
 						<strong>${unsafeHTML(this.title)}</strong>
@@ -77,6 +81,24 @@ export class Toast extends LitElement {
 			</div>
 		`;
 	}
+
+	// Delegated so it works with the raw-HTML message and survives re-renders. Clicking an element
+	// with a click="<name>" attribute runs the matching entry from `callbacks`, handed a `close` fn
+	// so the callback can dismiss the toast.
+	#onActionClick = (event) => {
+		const trigger = event.target?.closest?.('[click]');
+		if (!trigger) {
+			return;
+		}
+		
+		const handler = this.callbacks?.[trigger.getAttribute('click')];
+		if (typeof handler !== 'function') {
+			return;
+		}
+
+		event.preventDefault();
+		handler({ event, trigger });
+	};
 
 	#initBootstrapToast(retryCount = 0) {
 		const toastEl = this.renderRoot.querySelector('.toast');

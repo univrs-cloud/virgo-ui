@@ -29,6 +29,7 @@ export class Notifier extends LitElement {
 			message: options.message || '',
 			duration,
 			dismissible: options.dismissible ?? true,
+			callbacks: options.callbacks || {},
 		};
 		
 		this.toasts = [...this.toasts, toast];
@@ -39,7 +40,9 @@ export class Notifier extends LitElement {
 				this.updateToast(id, options);
 				return ref;
 			},
-			remove: () => this.removeToast(id),
+			remove: () => {
+				this.removeToast(id)
+			}
 		};
 		return ref;
 	}
@@ -85,6 +88,7 @@ export class Notifier extends LitElement {
 							.message=${toast.message}
 							.dismissible=${toast.dismissible}
 							.duration=${toast.duration}
+							.callbacks=${toast.callbacks}
 							@toast-hidden=${this.#handleToastHidden}
 						></u-toast>
 					`

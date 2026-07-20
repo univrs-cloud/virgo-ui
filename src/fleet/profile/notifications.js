@@ -11,9 +11,10 @@ const wireRetry = () => {
 	if (!link) {
 		return;
 	}
+	
 	link.addEventListener('click', async (event) => {
 		event.preventDefault();
-		await pushService.enable();
+		await pushService.allow();
 		await refresh();
 	});
 };
@@ -46,7 +47,7 @@ const refresh = async () => {
 	} else if (permission === 'denied') {
 		setHint('Blocked on this device. Reset it in your browser settings, then <a href="#" class="push-retry">try again</a>.');
 	} else {
-		setHint('Allow notifications on this device to receive alerts here. <a href="#" class="push-retry">Enable</a>.');
+		setHint('Allow notifications on this device to receive alerts here. <a href="#" class="push-retry">Allow</a>.');
 	}
 };
 
@@ -54,7 +55,7 @@ const onChange = async () => {
 	toggle.disabled = true;
 	try {
 		if (toggle.checked) {
-			const permission = await pushService.enable();
+			const permission = await pushService.allow();
 			if (permission === 'denied') {
 				notifier.add({ title: 'Notifications are blocked for this site. Allow them in your browser settings.', type: 'warning', duration: 0 });
 			}
