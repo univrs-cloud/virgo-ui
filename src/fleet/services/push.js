@@ -30,6 +30,7 @@ const register = async () => {
 	if (!isSupported()) {
 		return null;
 	}
+
 	await navigator.serviceWorker.register('/sw.js');
 	return navigator.serviceWorker.ready;
 };
@@ -41,10 +42,12 @@ const subscribeThisDevice = async () => {
 	if (!publicKey) {
 		return false;
 	}
+
 	const registration = await register();
 	if (!registration) {
 		return false;
 	}
+
 	const subscription = await registration.pushManager.getSubscription()
 		|| await registration.pushManager.subscribe({
 			userVisibleOnly: true,
@@ -52,19 +55,20 @@ const subscribeThisDevice = async () => {
 		});
 	const result = await FleetPush.enable(subscription.toJSON());
 	if (result?.status === 'succeeded') {
-		// The response re-issued the account cookie (pushEnabled=true); pull it into the global.
 		accountService.refresh();
 		return true;
 	}
+
 	return false;
 };
 
 // Opt in on this device. Prompts for permission (must be called from a user gesture) and, if granted,
 // subscribes. Returns the resulting permission ('granted' | 'denied' | 'default' | 'unsupported').
-const enable = async () => {
+const allow = async () => {
 	if (!isSupported()) {
 		return 'unsupported';
 	}
+
 	const permission = await Notification.requestPermission();
 	if (permission === 'granted') {
 		await subscribeThisDevice();
@@ -86,32 +90,35 @@ const disable = async () => {
 	await subscription?.unsubscribe();
 };
 
-let enableToast = null;
+let allowToast = null;
 
 // Shown on load when the account wants notifications but this device hasn't granted permission yet.
 // The button is a real user gesture, so requestPermission() works across browsers (an auto-prompt
 // wouldn't on Firefox/Safari).
-const showEnableToast = () => {
-	if (!window.notifier || enableToast) {
+const showAllowToast = () => {
+	if (allowToast) {
 		return;
 	}
-	enableToast = notifier.add({ title: 'Allow notifications on this device to receive node update alerts.<br><button type="button" class="btn btn-sm btn-light mt-2" onclick="window.__enableFleetNotifications(this)">Enable notifications</button>', type: 'info', duration: 0 });
-};
 
-// Handler for the toast button. Global because the toast renders its message as raw HTML; matches how
-// the app already exposes globals (notifier, account).
-window.__enableFleetNotifications = async (button) => {
-	if (button) {
-		button.disabled = true;
-	}
-	const permission = await enable();
-	enableToast?.remove();
-	enableToast = null;
-	if (permission === 'denied' && window.notifier) {
-		notifier.add({ title: 'Notifications are blocked for this site. Allow them in your browser settings to receive alerts here.', type: 'warning', duration: 0 });
-	}
-	// A successful enable already refreshed the account global (which re-renders the profile toggle
-	// and header via 'account-changed'); nothing more to do here.
+	allowToast = notifier.add({
+		title: 'To receive node update alerts on this device, allow notifications.<br><br><u-button type="button" size="sm" click="grant">Allow notifications</u-button>',
+		type: 'info',
+		duration: 0,
+		callbacks: {
+			grant: async ({ event, trigger }) => {
+				if (trigger) {
+					trigger.disabled = true;
+				}
+				const permission = await allow();
+				if (permission === 'denied') {
+					allowToast.update({ title: 'Notifications are blocked for this site. Allow them in your browser settings to receive notifications.', type: 'warning', duration: 0 });
+				} else {
+					allowToast.remove();
+					allowToast = null;
+				}
+			}
+		}
+	});
 };
 
 // Called on every fleet load. Registers the SW and, if the account wants notifications, either
@@ -121,22 +128,23 @@ const init = async () => {
 	if (!isSupported()) {
 		return;
 	}
+
 	await register();
 	if (!window.account?.pushEnabled) {
 		return;
 	}
+
 	if (Notification.permission === 'granted') {
 		await subscribeThisDevice().catch(() => {});
 	} else if (Notification.permission === 'default') {
-		showEnableToast();
+		showAllowToast();
 	}
-	// 'denied': nothing to do here — the profile screen explains how to unblock.
 };
 
 export {
 	isSupported,
 	getPermission,
-	enable,
+	allow,
 	disable,
 	init
 };

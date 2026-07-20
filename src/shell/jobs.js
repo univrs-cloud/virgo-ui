@@ -48,7 +48,7 @@ const render = (state) => {
 const init = () => {
 	jobService.subscribe([render]);
 
-	// const ref = window.notifier.add({
+	// const ref = notifier.add({
 	// 	type: 'info',
 	// 	title: 'Processing...',
 	// 	message: 'Starting operation (0%)',

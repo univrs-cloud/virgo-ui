@@ -14,7 +14,6 @@ try {
 }
 window.isAuthenticated = !_.isEmpty(account);
 window.isAdmin = isAuthenticated && _.includes(account.groups, 'admins');
-window.notifier = document.querySelector('u-notifier');
 window.runtimeRole = null;
 
 const render = async (state) => {
@@ -54,18 +53,14 @@ const runtime = async (state) => {
 	unsubscribe?.();
 	unsubscribe = null;
 
-	const onNodeView = /^\/nodes\/[^/]+\//.test(new URL(document.baseURI).pathname);
 	if (runtimeRole === 'fleet') {
 		// Push notifications are a fleet-only concern: register the service worker (and silently
 		// re-subscribe an already-opted-in install) here so the node role never installs a worker.
 		if (isAuthenticated) {
-			import('fleet/services/push').then((push) => { return push.init(); }).catch(() => {});
+			import('fleet/services/push').then((pushService) => { pushService.init(); }).catch((error) => {});
 		}
-		if (onNodeView) {
-			if (isAuthenticated) {
-				isAdmin = true;
-			}
-		} else {
+		const onNodeView = /^\/nodes\/[^/]+\//.test(new URL(document.baseURI).pathname);
+		if (!onNodeView) {
 			// Every fleet screen (auth, MFA, app) is page-routed; the router's guards redirect based
 			// on isAuthenticated + account.mfa and lazily build the app shell for satisfied routes.
 			try {
