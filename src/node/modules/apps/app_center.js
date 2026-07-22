@@ -1,0 +1,73 @@
+import appCenterModalPartial from 'node/modules/apps/partials/modals/app_center.html';
+import itemPartial from 'node/modules/apps/partials/modals/app_center_item.html';
+import * as appCenterService from 'node/modules/apps/services/app_center';
+
+document.querySelector('body').insertAdjacentHTML('beforeend', appCenterModalPartial);
+
+let unsubscribe;
+const itemTemplate = _.template(itemPartial);
+const modal = document.querySelector('#app-center');
+const modalBody = modal.querySelector('.modal-body');
+const loading = modalBody.querySelector('.loading');
+const container = modalBody.querySelector('.tab-content');
+const rowExplore = container.querySelector('#app-center-explore .row');
+const rowInstalled = container.querySelector('#app-center-installed .row');
+
+const openInstallModal = (event) => {
+	if (!event.target.classList.contains('install')) {
+		return;
+	}
+
+	event.preventDefault();
+	const modal = bootstrap.Modal.getOrCreateInstance(event.target.dataset.bsTarget);
+	modal.show(event.target);
+};
+
+const render = (state) => {
+	if (_.isNull(state.templates)) {
+		return;
+	}
+
+	const installable = _.filter(state.templates, { isInstalled: false });
+	const exploreRows = _.join(_.map(installable, (app) => {
+		const jobs = _.filter(state.jobs, (job) => { return job.data?.config?.name === app.name && job.progress?.state === 'active'; });
+		return itemTemplate({ app, jobs });
+	}), '');
+
+	const installed = _.filter(state.templates, { isInstalled: true });
+	const installedRows = _.join(_.map(installed, (app) => {
+		return itemTemplate({ app, jobs: [] });
+	}), '');
+
+	modal.querySelector('.count-explore').innerHTML = _.size(installable);
+	modal.querySelector('.count-installed').innerHTML = _.size(installed);
+
+	morphdom(
+		rowExplore,
+		`<div>${exploreRows}</div>`,
+		{ childrenOnly: true }
+	);
+	morphdom(
+		rowInstalled,
+		`<div>${installedRows}</div>`,
+		{ childrenOnly: true }
+	);
+
+	loading.classList.add('d-none');
+	container.classList.remove('d-none');
+};
+
+modal.addEventListener('click', openInstallModal);
+modal.addEventListener('show.bs.modal', () => {
+	unsubscribe = appCenterService.subscribe([render]);
+});
+modal.addEventListener('hide.bs.modal', () => {
+	unsubscribe?.();
+	unsubscribe = null;
+});
+modal.addEventListener('hidden.bs.modal', () => {
+	rowExplore.innerHTML = '';
+	rowInstalled.innerHTML = '';
+	container.classList.add('d-none');
+	loading.classList.remove('d-none');
+});

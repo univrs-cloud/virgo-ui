@@ -1,5 +1,5 @@
 import setupPartial from 'fleet/partials/mfa_setup.html';
-import * as fleetAuthService from 'shell/services/fleet_auth';
+import * as fleetAuthService from 'libs/services/fleet_auth';
 import QRCode from 'qrcode';
 
 export const mount = () => {

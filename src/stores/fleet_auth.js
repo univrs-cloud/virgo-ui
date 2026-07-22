@@ -1,45 +1,36 @@
-class FleetAuth {
-	async #post(url, data) {
-		const response = await fetch(url, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: data === undefined ? undefined : JSON.stringify(data)
-		});
-		// Every /auth/* endpoint answers with the same { status, message } shape as the socket acks
-		// (a failed HTTP status still carries status: 'failed'), so callers check `status` uniformly.
-		return response.json().catch(() => ({}));
-	}
+import * as request from 'stores/request';
 
+class FleetAuth {
 	login(config) {
-		return this.#post('/auth/login', config);
+		return request.post('/auth/login', config);
 	}
 
 	signup(config) {
-		return this.#post('/auth/signup', config);
+		return request.post('/auth/signup', config);
 	}
 
 	confirm(config) {
-		return this.#post('/auth/verify', config);
+		return request.post('/auth/verify', config);
 	}
 
 	logout() {
-		return this.#post('/auth/logout');
+		return request.post('/auth/logout');
 	}
 
 	changePassword(config) {
-		return this.#post('/auth/password', config);
+		return request.post('/auth/password', config);
 	}
 
 	mfaSetup() {
-		return this.#post('/auth/mfa/setup');
+		return request.post('/auth/mfa/setup');
 	}
 
 	mfaSetupVerify(config) {
-		return this.#post('/auth/mfa/setup/verify', config);
+		return request.post('/auth/mfa/setup/verify', config);
 	}
 
 	mfaVerify(config) {
-		return this.#post('/auth/mfa/verify', config);
+		return request.post('/auth/mfa/verify', config);
 	}
 }
 

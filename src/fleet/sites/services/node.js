@@ -1,5 +1,5 @@
 import Node from 'stores/node';
-import { createSubscription, storeAttach } from 'shell/services/module_store_subscription';
+import { createSubscription, storeAttach } from 'libs/services/module_store_subscription';
 
 const sortNodes = (nodes) => {
 	return (_.isNull(nodes) ? nodes : _.orderBy(nodes, [(node) => { return String(node.name ?? '').toLowerCase(); }], ['asc']));
