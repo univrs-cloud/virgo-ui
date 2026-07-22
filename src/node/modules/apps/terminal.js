@@ -2,6 +2,8 @@ import * as appService from 'node/modules/apps/services/app';
 import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 
+const DISCONNECTED_LABEL = 'Disconnected <a href="#" class="reconnect-terminal link-underline link-underline-opacity-0 link-underline-opacity-75-hover ms-1">Connect</a>';
+
 const socket = appService.getSocket();
 const module = document.querySelector('#apps');
 let containerId = null;
@@ -17,7 +19,7 @@ const render = (event) => {
 	event.preventDefault();
 	restore();
 
-	const link = event.target;
+	const link = event.target.closest('a');
 	let service;
 	_.each(appService.getApps(), (app) => {
 		service = _.find(app.projectContainers, { id: link.dataset.id });
@@ -30,6 +32,7 @@ const render = (event) => {
 	containerId = link.dataset.id;
 	terminalContainer.querySelector('.service .name').innerHTML = service.labels?.comDockerComposeService;
 	terminalContainer.classList.remove('d-none');
+	setStatus('Connecting...');
 	socket.emit('docker:container:terminal:connect', containerId);
 };
 
@@ -64,6 +67,23 @@ const restore = () => {
 	containerId = null;
 };
 
+const setStatus = (label, isLive = false) => {
+	const liveIndicator = terminalContainer?.querySelector('.service small');
+	if (!liveIndicator) {
+		return;
+	}
+
+	liveIndicator.classList.toggle('text-green-500', isLive);
+	liveIndicator.classList.toggle('text-gray-500', !isLive);
+	liveIndicator.innerHTML = `<i class="icon-solid icon-tower-broadcast icon-fw me-1"></i>${label}`;
+};
+
+const escapeHtml = (text) => {
+	const div = document.createElement('div');
+	div.textContent = text;
+	return div.innerHTML;
+};
+
 const reconnect = (event) => {
 	if (!event.target.closest('a')?.classList.contains('reconnect-terminal')) {
 		return;
@@ -71,6 +91,7 @@ const reconnect = (event) => {
 	
 	event.preventDefault();
 	if (containerId && terminalContainer) {
+		setStatus('Connecting...');
 		socket.emit('docker:container:terminal:connect', containerId);
 	}
 };
@@ -87,7 +108,9 @@ socket.on('docker:container:terminal:connected', () => {
 			allowTransparency: true
 		});
 		terminal.loadAddon(fitAddon);
-		terminal.open(terminalContainer.querySelector('.wrapper'));
+		const wrapper = terminalContainer.querySelector('.wrapper');
+		wrapper.innerHTML = '';
+		terminal.open(wrapper);
 		terminal.focus();
 		terminal.onData((data) => {
 			socket.emit('docker:container:terminal:input', data);
@@ -99,15 +122,7 @@ socket.on('docker:container:terminal:connected', () => {
 	} else {
 		terminal.clear();
 	}
-	// Update Live indicator
-	if (terminalContainer) {
-		const liveIndicator = terminalContainer.querySelector('.service small');
-		if (liveIndicator) {
-			liveIndicator.classList.remove('text-gray-500');
-			liveIndicator.classList.add('text-green-500');
-			liveIndicator.innerHTML = '<i class="icon-solid icon-tower-broadcast icon-fw me-1"></i>Live';
-		}
-	}
+	setStatus('Live', true);
 });
 socket.on('docker:container:terminal:output', (data) => {
 	if (terminal) {
@@ -115,21 +130,24 @@ socket.on('docker:container:terminal:output', (data) => {
 	}
 });
 socket.on('docker:container:terminal:error', (error) => {
-	if (terminal) {
-		terminal.dispose();
-		terminal = null;
+	if (!terminalContainer) {
+		return;
 	}
+
+	const message = error?.message || error;
+	if (terminal) {
+		terminal.write(`\r\n\x1b[31m${message}\x1b[0m\r\n`);
+	} else {
+		// The stream can fail before it ever connects (a container with no shell), so there is no
+		// terminal to write into — put the reason in the wrapper rather than leaving it blank. Appended,
+		// so a retry that fails again adds to the feedback instead of silently replacing it.
+		terminalContainer.querySelector('.wrapper').insertAdjacentHTML('beforeend', `<div class="text-red-500 p-2">${escapeHtml(message)}</div>`);
+	}
+	setStatus(DISCONNECTED_LABEL);
 });
 socket.on('disconnect', () => {
-	// Update Live indicator to Disconnected (don't dispose terminal)
-	if (terminalContainer) {
-		const liveIndicator = terminalContainer.querySelector('.service small');
-		if (liveIndicator) {
-			liveIndicator.classList.remove('text-green-500');
-			liveIndicator.classList.add('text-gray-500');
-			liveIndicator.innerHTML = '<i class="icon-solid icon-tower-broadcast icon-fw me-1"></i>Disconnected <a href="#" class="reconnect-terminal link-underline link-underline-opacity-0 link-underline-opacity-75-hover ms-1">Connect</a>';
-		}
-	}
+	// Don't dispose the terminal — the reconnect link reuses it.
+	setStatus(DISCONNECTED_LABEL);
 });
 
 module.addEventListener('click', render);
