@@ -27,7 +27,9 @@
 					<u-badge color="gray" tint="200" class="ms-1" pill><%=(networkInterface?.dhcp ? 'Automatic' : 'Manual')%></u-badge>
 				</dd>
 				<dt class="fw-lighter"><small>Default gateway</small></dt>
-				<dd><%=system?.defaultGateway%></dd>
+				<dd><%=networkInterface?.gateway%></dd>
+				<dt class="fw-lighter"><small>DNS</small></dt>
+				<dd><%=_.join(networkInterface?.dnsServers, ', ') || '&mdash;'%></dd>
 				<dt class="fw-lighter"><small>MTU</small></dt>
 				<dd><%=networkInterface?.mtu%></dd>
 				<dt class="fw-lighter"><small>MAC</small></dt>

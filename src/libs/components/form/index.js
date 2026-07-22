@@ -133,7 +133,7 @@ export class Form extends LitElement {
 			return;
 		}
 		
-		const value = input.value;
+		const value = input.value ?? '';
 		const rules = fieldConfig.rules;
 		let error = '';
 		for (const [ruleName, ruleConfig] of Object.entries(rules)) {

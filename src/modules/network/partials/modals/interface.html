@@ -1,4 +1,4 @@
-<div id="network-interface" class="modal fade">
+<div id="network-interface" class="modal fade" tabindex="-1">
 	<u-form>
 		<u-input type="hidden" name="name" class="name"></u-input>
 		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -27,8 +27,32 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-6">
+						<div class="manual col-6">
 							<u-input name="gateway" label="Default gateway" class="gateway" placeholder="###.###.###.###"></u-input>
+						</div>
+						<div class="manual col-12">
+							<div class="dns-server row g-2 align-items-center">
+								<div class="col-6">
+									<u-input name="dnsServer1" label="DNS server 1" class="dns-server-1" placeholder="###.###.###.###"></u-input>
+								</div>
+							</div>
+							<div class="dns-server row g-2 align-items-center d-none">
+								<div class="col-6">
+									<u-input name="dnsServer2" label="DNS server 2" class="dns-server-2" placeholder="###.###.###.###"></u-input>
+								</div>
+								<div class="col-auto mb-4">
+									<u-button variant="secondary" class="remove d-flex" outline><i class="icon-regular icon-times icon-fw"></i></u-button>
+								</div>
+							</div>
+							<div class="dns-server row g-2 align-items-center d-none">
+								<div class="col-6">
+									<u-input name="dnsServer3" label="DNS server 3" class="dns-server-3" placeholder="###.###.###.###"></u-input>
+								</div>
+								<div class="col-auto mb-4">
+									<u-button variant="secondary" class="remove d-flex" outline><i class="icon-regular icon-times icon-fw"></i></u-button>
+								</div>
+							</div>
+							<button type="button" class="add btn btn-link p-0"><i class="icon-regular icon-plus icon-fw me-1"></i>Add DNS</button>
 						</div>
 					</div>
 				</div>
