@@ -344,23 +344,13 @@ u-badge:hover .hover-reveal-text {
 #apps,
 #system-services {
 	.details {
-		.item:has(.logs-container:not(.d-none)) .services,
-		.item:has(.terminal-container:not(.d-none)) .services {
+		.overflow-y-scroll {
+			height: calc(100dvh - 207px);
+		}
+		.item:has(.logs-container:not(.d-none)) .overflow-y-scroll,
+		.item:has(.terminal-container:not(.d-none)) .overflow-y-scroll {
 			overflow-y: hidden !important;
 			margin-right: calc(var(--scrollbar-width) + map-get($spacers, 3) * -1) !important;
-		}
-		.services {
-			height: calc(100dvh - 370px);
-		}
-	}
-}
-@media (min-width: 576px) {
-	#apps,
-	#system-services {
-		.details {
-			.services {
-				height: calc(100dvh - 289px);
-			}
 		}
 	}
 }
