@@ -1,5 +1,7 @@
 import * as serviceService from 'node/modules/system_services/services/service';
 
+const DISCONNECTED_LABEL = 'Disconnected <a href="#" class="reconnect-logs link-underline link-underline-opacity-0 link-underline-opacity-75-hover ms-1">Connect</a>';
+
 const socket = serviceService.getSocket();
 const module = document.querySelector('#system-services');
 let unit = null;
@@ -22,6 +24,7 @@ const render = (event) => {
 	logsContainer = item.querySelector('.logs-container');
 	logsContainer.querySelector('.service .name').innerHTML = unit;
 	logsContainer.classList.remove('d-none');
+	setStatus('Connecting...');
 	socket.emit('host:service:logs:connect', unit);
 };
 
@@ -48,6 +51,50 @@ const restore = () => {
 	unit = null;
 	logsContainer = null;
 	isScrollEventAttached = false;
+};
+
+const reconnect = (event) => {
+	if (!event.target.closest('a')?.classList.contains('reconnect-logs')) {
+		return;
+	}
+
+	event.preventDefault();
+	if (unit && logsContainer) {
+		setStatus('Connecting...');
+		socket.emit('host:service:logs:connect', unit);
+	}
+};
+
+const setStatus = (label, isLive = false) => {
+	const liveIndicator = logsContainer?.querySelector('.service small');
+	if (!liveIndicator) {
+		return;
+	}
+
+	liveIndicator.classList.toggle('text-green-500', isLive);
+	liveIndicator.classList.toggle('text-gray-500', !isLive);
+	liveIndicator.innerHTML = `<i class="icon-solid icon-tower-broadcast icon-fw me-1"></i>${label}`;
+};
+
+const appendLine = (html) => {
+	const li = document.createElement('li');
+	li.innerHTML = html;
+	logs.appendChild(li);
+	if (shouldScroll) {
+		logs.scrollTop = logs.scrollHeight;
+	}
+};
+
+/** The list is resolved lazily because output or an error can arrive before the stream reports connected. */
+const resolveLogs = () => {
+	if (!logs && logsContainer) {
+		logs = logsContainer.querySelector('ul');
+		if (!isScrollEventAttached) {
+			logs.addEventListener('scroll', shouldScrollEvent);
+			isScrollEventAttached = true;
+		}
+	}
+	return logs;
 };
 
 const shouldScrollEvent = () => {
@@ -90,52 +137,36 @@ const escapeHtml = (text) => {
 };
 
 socket.on('host:service:logs:connected', () => {
-	if (!logs) {
-		logs = logsContainer.querySelector('ul');
+	// Only a successful connect clears the list, so failed attempts keep accumulating feedback. The
+	// stream replays its backlog on every connect, so keeping the old lines would just duplicate them.
+	if (resolveLogs()) {
 		logs.innerHTML = '';
-		if (!isScrollEventAttached) {
-			logs.addEventListener('scroll', shouldScrollEvent);
-			isScrollEventAttached = true;
-		}
 	}
-	if (logsContainer) {
-		const liveIndicator = logsContainer.querySelector('.service small');
-		if (liveIndicator) {
-			liveIndicator.classList.remove('text-gray-500');
-			liveIndicator.classList.add('text-green-500');
-			liveIndicator.innerHTML = '<i class="icon-solid icon-tower-broadcast icon-fw me-1"></i>Live';
-		}
-	}
+	setStatus('Live', true);
 });
 
 socket.on('host:service:logs:output', (data) => {
-	if (logs) {
-		const li = document.createElement('li');
-		li.innerHTML = formatLogLine(String(data || ''));
-		logs.appendChild(li);
-		if (!_.isNull(logs) && shouldScroll) {
-			logs.scrollTop = logs.scrollHeight;
-		}
+	if (!resolveLogs()) {
+		return;
 	}
+
+	appendLine(formatLogLine(String(data || '')));
 });
 
 socket.on('host:service:logs:error', (error) => {
-	if (logs) {
-		logs.innerHTML = `<li><span class="log-content text-red-500">${escapeHtml(error.message)}</span></li>`;
+	if (!resolveLogs()) {
+		return;
 	}
+
+	appendLine(`<span class="log-content text-red-500">${escapeHtml(error?.message || error)}</span>`);
+	setStatus(DISCONNECTED_LABEL);
 });
 
 socket.on('disconnect', () => {
-	if (logsContainer) {
-		const liveIndicator = logsContainer.querySelector('.service small');
-		if (liveIndicator) {
-			liveIndicator.classList.remove('text-green-500');
-			liveIndicator.classList.add('text-gray-500');
-			liveIndicator.innerHTML = '<i class="icon-solid icon-tower-broadcast icon-fw me-1"></i>Disconnected';
-		}
-	}
+	setStatus(DISCONNECTED_LABEL);
 });
 
 module.addEventListener('click', render);
+module.addEventListener('click', reconnect);
 module.addEventListener('click', closeLogs);
 module.addEventListener('details:hide', restore);

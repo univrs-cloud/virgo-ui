@@ -1,5 +1,7 @@
 import * as appService from 'node/modules/apps/services/app';
 
+const DISCONNECTED_LABEL = 'Disconnected <a href="#" class="reconnect-logs link-underline link-underline-opacity-0 link-underline-opacity-75-hover ms-1">Connect</a>';
+
 const socket = appService.getSocket();
 const module = document.querySelector('#apps');
 let containerId = null;
@@ -18,7 +20,7 @@ const render = (event) => {
 	event.preventDefault();
 	restore();
 
-	const link = event.target;
+	const link = event.target.closest('a');
 	containerId = link.dataset.id;
 	let service;
 	_.each(appService.getApps(), (app) => {
@@ -33,6 +35,7 @@ const render = (event) => {
 	logsContainer = app.querySelector('.logs-container');
 	logsContainer.querySelector('.service .name').innerHTML = serviceName;
 	logsContainer.classList.remove('d-none');
+	setStatus('Connecting...');
 	socket.emit('docker:container:logs:connect', containerId);
 };
 
@@ -70,8 +73,41 @@ const reconnect = (event) => {
 	
 	event.preventDefault();
 	if (containerId && logsContainer) {
+		setStatus('Connecting...');
 		socket.emit('docker:container:logs:connect', containerId);
 	}
+};
+
+const setStatus = (label, isLive = false) => {
+	const liveIndicator = logsContainer?.querySelector('.service small');
+	if (!liveIndicator) {
+		return;
+	}
+
+	liveIndicator.classList.toggle('text-green-500', isLive);
+	liveIndicator.classList.toggle('text-gray-500', !isLive);
+	liveIndicator.innerHTML = `<i class="icon-solid icon-tower-broadcast icon-fw me-1"></i>${label}`;
+};
+
+const appendLine = (html) => {
+	const li = document.createElement('li');
+	li.innerHTML = html;
+	logs.appendChild(li);
+	if (shouldScroll) {
+		logs.scrollTop = logs.scrollHeight;
+	}
+};
+
+/** The list is resolved lazily because output or an error can arrive before the stream reports connected. */
+const resolveLogs = () => {
+	if (!logs && logsContainer) {
+		logs = logsContainer.querySelector('ul');
+		if (!isScrollEventAttached) {
+			logs.addEventListener('scroll', shouldScrollEvent);
+			isScrollEventAttached = true;
+		}
+	}
+	return logs;
 };
 
 const shouldScrollEvent = (event) => {
@@ -120,50 +156,30 @@ const escapeHtml = (text) => {
 }
 
 socket.on('docker:container:logs:connected', () => {
-	if (!logs) {
-		logs = logsContainer.querySelector('ul');
+	// Only a successful connect clears the list, so failed attempts keep accumulating feedback. The
+	// stream replays its backlog on every connect, so keeping the old lines would just duplicate them.
+	if (resolveLogs()) {
 		logs.innerHTML = '';
-		if (!isScrollEventAttached) {
-			logs.addEventListener('scroll', shouldScrollEvent);
-			isScrollEventAttached = true;
-		}
 	}
-	// Update Live indicator
-	if (logsContainer) {
-		const liveIndicator = logsContainer.querySelector('.service small');
-		if (liveIndicator) {
-			liveIndicator.classList.remove('text-gray-500');
-			liveIndicator.classList.add('text-green-500');
-			liveIndicator.innerHTML = '<i class="icon-solid icon-tower-broadcast icon-fw me-1"></i>Live';
-		}
-	}
+	setStatus('Live', true);
 });
 socket.on('docker:container:logs:output', (data) => {
-	if (logs) {
-		const formattedLog = formatLogLine(containerName, String(data || ''));
-		const li = document.createElement('li');
-		li.innerHTML = formattedLog;
-		logs.appendChild(li);
-		if (!_.isNull(logs) && shouldScroll) {
-			logs.scrollTop = logs.scrollHeight;
-		}
+	if (!resolveLogs()) {
+		return;
 	}
+
+	appendLine(formatLogLine(containerName, String(data || '')));
 });
 socket.on('docker:container:logs:error', (error) => {
-	if (logs) {
-		logs.innerHTML = `<li><span class="log-content text-red-500">${escapeHtml(error.message)}</span></li>`;
+	if (!resolveLogs()) {
+		return;
 	}
+
+	appendLine(`<span class="log-content text-red-500">${escapeHtml(error?.message || error)}</span>`);
+	setStatus(DISCONNECTED_LABEL);
 });
 socket.on('disconnect', () => {
-	// Update Live indicator to Disconnected (don't clear logs)
-	if (logsContainer) {
-		const liveIndicator = logsContainer.querySelector('.service small');
-		if (liveIndicator) {
-			liveIndicator.classList.remove('text-green-500');
-			liveIndicator.classList.add('text-gray-500');
-			liveIndicator.innerHTML = '<i class="icon-solid icon-tower-broadcast icon-fw me-1"></i>Disconnected <a href="#" class="reconnect-logs link-underline link-underline-opacity-0 link-underline-opacity-75-hover ms-1">Connect</a>';
-		}
-	}
+	setStatus(DISCONNECTED_LABEL);
 });
 
 module.addEventListener('click', render);

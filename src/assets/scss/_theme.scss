@@ -444,6 +444,10 @@ u-badge:hover .hover-reveal-text {
 				font-weight: 500;
 				flex-shrink: 0;
 				white-space: nowrap;
+				// The prefix eats most of the width on narrow screens, leaving the message unreadable.
+				@media (max-width: 767.98px) {
+					display: none;
+				}
 			}
 			.log-content {
 				flex: 1;
