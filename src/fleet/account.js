@@ -1,5 +1,5 @@
 import accountPartial from 'fleet/partials/account.html';
-import * as fleetAuthService from 'shell/services/fleet_auth';
+import * as fleetAuthService from 'libs/services/fleet_auth';
 
 const accountTemplate = _.template(accountPartial);
 

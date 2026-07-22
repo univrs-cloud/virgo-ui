@@ -1,5 +1,5 @@
 import signinPartial from 'fleet/partials/signin.html';
-import * as fleetAuthService from 'shell/services/fleet_auth';
+import * as fleetAuthService from 'libs/services/fleet_auth';
 
 const ensureSucceeded = (result) => {
 	if (result.status !== 'succeeded') {

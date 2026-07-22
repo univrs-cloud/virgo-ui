@@ -1,0 +1,46 @@
+import modulePartial from 'node/modules/network/partials/index.html';
+import networkPartial from 'node/modules/network/partials/network.html';
+import trustedProxyPartial from 'node/modules/network/partials/trusted_proxy.html';
+import * as networkService from 'node/modules/network/services/network';
+
+const moduleTemplate = _.template(modulePartial);
+const trustedProxyTemplate = _.template(trustedProxyPartial);
+const networkTemplate = _.template(networkPartial);
+document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
+const module = document.querySelector('#network');
+const loading = module.querySelector('.loading');
+const container = module.querySelector('.container-fluid');
+const row = container.querySelector('.row');
+
+const render = (state) => {
+	if (_.isNull(state.system) || _.isNull(state.configuration)) {
+		return;
+	}
+	
+	const networkInterface = _.find(state.system?.networkInterfaces, { default: true });
+	let trustedProxies = _.orderBy(
+		state.configuration.trustedProxies || [],
+		[(address) => String(address ?? '').toLowerCase()],
+		['asc']
+	);
+	trustedProxies = _.map(trustedProxies, (trustedProxy) => {
+		const jobs = _.filter(state?.jobs, (job) => { return job.data?.config?.address === trustedProxy; });
+		return trustedProxyTemplate({ trustedProxy, jobs });
+	});
+	morphdom(
+		row,
+		`<div>${networkTemplate({ system: state.system, networkInterface, trustedProxies })}</div>`,
+		{ childrenOnly: true }
+	);
+
+	loading.classList.add('d-none');
+	container.classList.remove('d-none');
+};
+
+networkService.subscribe([render]);
+
+import('node/modules/network/identifier_update');
+import('node/modules/network/interface_update');
+import('node/modules/network/trusted_proxy_add');
+import('node/modules/network/trusted_proxy_update');
+import('node/modules/network/trusted_proxy_delete');

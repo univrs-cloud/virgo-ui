@@ -1,0 +1,40 @@
+import Job from 'stores/job';
+import Host from 'stores/host';
+import Docker from 'stores/docker';
+import { createSubscription, storeAttach } from 'libs/services/module_store_subscription';
+
+const { subscribe } = createSubscription({
+	stores: [
+		{
+			store: Host,
+			propertyNames: ['update']
+		},
+		{
+			store: Docker,
+			propertyNames: ['containers']
+		}
+	],
+	attachStore: storeAttach.beforeCallbacks,
+	mapState: (properties) => {
+		return properties;
+	}
+});
+
+const getJobs = () => {
+	return Job.getJobs();
+};
+
+const getContainers = () => {
+	return Docker.getContainers();
+};
+
+const composeUrlFromLabels = (projectContainers) => {
+	return Docker.composeUrlFromLabels(projectContainers);
+};
+
+export {
+	subscribe,
+	getJobs,
+	getContainers,
+	composeUrlFromLabels
+};
