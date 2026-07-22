@@ -1,5 +1,5 @@
 import confirmPartial from 'fleet/partials/confirm.html';
-import * as fleetAuthService from 'shell/services/fleet_auth';
+import * as fleetAuthService from 'libs/services/fleet_auth';
 
 // Landing screen for the email verification link (/signup/confirm?token=…). Verifies the token via
 // the API (which sets the gated session cookies), then reloads so the router forces enrollment.

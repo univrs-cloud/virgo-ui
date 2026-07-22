@@ -3,7 +3,7 @@ import 'libs/lodash';
 import 'libs/bootstrap';
 import 'libs/dialog';
 import 'libs/components';
-import * as runtimeService from 'shell/services/runtime';
+import * as runtimeService from 'libs/services/runtime';
 
 try {
 	let encodedAccount = (document.cookie.match('(^|;)\\s*' + 'account' + '\\s*=\\s*([^;]+)')?.pop());
@@ -25,18 +25,18 @@ const render = async (state) => {
 	unsubscribe = null;
 
 	if (state.setupCompleted === false) {
-		await import('shell/setup');
+		await import('setup/main');
 	} else if (isAdmin && !_.isNull(state.update)) {
-		await import('shell/update');
+		await import('node/update');
 	} else {
 		try {
 			await Promise.all([
-				import('shell/header'),
-				import('shell/main')
+				import('node/header'),
+				import('node/main')
 			]);
-			const { modulesLoaded } = await import('modules');
+			const { modulesLoaded } = await import('node/modules');
 			await modulesLoaded;
-			import('shell/navigation');
+			await import('node/navigation');
 		} catch (error) {
 			alert(`Error during application initialization<br><br>${error}`, );
 			console.error('Error during application initialization:', error);
@@ -73,7 +73,7 @@ const runtime = async (state) => {
 		}
 	}
 
-	const bootstrapService = await import('shell/services/bootstrap');
+	const bootstrapService = await import('libs/services/bootstrap');
 	unsubscribe = bootstrapService.subscribe([render]);
 };
 
