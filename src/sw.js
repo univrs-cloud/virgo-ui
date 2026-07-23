@@ -18,13 +18,14 @@ self.addEventListener('push', (event) => {
 		data = {};
 	}
 	const title = data.title || 'Updates available';
-	// One notification per node (tag), replaced in place if the node re-notifies.
+	// One notification per node per kind (updates vs storage), replaced in place if the node re-notifies.
+	const kind = data.type || 'node-updates';
 	event.waitUntil(
 		self.registration.showNotification(title, {
 			body: data.body || '',
 			icon: '/assets/fleet-icons/icon_192x192.png',
 			badge: '/assets/fleet-icons/icon_96x96.png',
-			tag: data.nodeId ? `node-updates-${data.nodeId}` : 'node-updates',
+			tag: data.nodeId ? `${kind}-${data.nodeId}` : kind,
 			renotify: true,
 			data: { nodeId: data.nodeId || null }
 		})

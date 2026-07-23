@@ -18,7 +18,7 @@ const render = (state) => {
 
 	morphdom(
 		container,
-		`<div>${sitesTemplate({ nodes: state.nodes, nodeTemplate, moment })}</div>`,
+		`<div>${sitesTemplate({ nodes: state.nodes, nodeTemplate, moment, prettyBytes })}</div>`,
 		{ childrenOnly: true }
 	);
 
