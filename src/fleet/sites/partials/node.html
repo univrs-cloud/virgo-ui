@@ -153,15 +153,16 @@
 					<%_.each(pools, (pool) => {%>
 						<%
 							const properties = pool.properties || {};
+							const scan = pool.scanStats;
+							const scanState = scan?.state?.toLowerCase();
 							const health = properties.health?.value?.toLowerCase();
 							const healthColor = (health === 'online' ? 'text-green-300' : (health === 'degraded' ? 'text-orange-300' : 'text-red-300'));
 							const healthLabel = properties.health?.value || 'Unknown';
-							const capacity = (_.isFinite(properties.capacity?.value) ? properties.capacity.value : 0);
 							const usageTip = `${prettyBytes(properties.allocated?.value || 0, { binary: true })} of ${prettyBytes(properties.size?.value || 0, { binary: true })} used`;
-							const scan = pool.scanStats;
-							const scanState = scan?.state?.toLowerCase();
 						%>
 						<div class="d-flex align-items-center" style="font-size: 0.75rem;">
+							<i class="icon-duotone icon-solid icon-hard-drive icon-fw me-1"></i>
+							<span class="text-body-secondary me-2"><%=pool.name%></span>
 							<i class="icon-solid icon-circle icon-fw me-1 <%=healthColor%>" data-bs-toggle="tooltip" data-bs-original-title="<%=healthLabel%>"></i>
 							<span class="me-1 lh-1 text-center" style="width: 0.875rem;">
 								<%if (scanState === 'scanning') {%>
@@ -172,7 +173,7 @@
 										const issued = `${prettyBytes(scan.issued || 0, { binary: true })} / ${total}`;
 										const tip = (isPaused ? `<strong>Paused</strong> since ${moment.unix(scan.scrubPause).fromNow()}.<br>` : ``) + `Started ${moment.unix(scan.startTime).fromNow()}.<br>Scanned ${scanned}.<br>Issued ${issued}.<br>Repaired <strong>${prettyBytes(scan.processed || 0, { binary: true })}</strong>, ${scan.errors || 0} errors.`;
 									%>
-									<i class="icon-solid icon-arrows-rotate <%=(isPaused ? 'text-body-tertiary' : 'text-cyan-600 icon-spin')%>" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
+									<i class="icon-solid <%=(isPaused ? 'icon-pause text-body-tertiary' : 'icon-arrows-rotate icon-spin text-cyan-600')%>" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
 								<%} else if (scanState === 'finished') {%>
 									<%
 										const duration = moment.duration(moment.unix(scan.endTime).diff(moment.unix(scan.startTime))).humanize();
@@ -181,17 +182,16 @@
 									<%if (scan.errors > 0) {%>
 										<i class="icon-solid icon-triangle-exclamation text-red-300" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
 									<%} else {%>
-										<i class="icon-solid icon-circle-check text-green-300" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
+										<i class="icon-solid icon-screwdriver-wrench text-green-300" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
 									<%}%>
 								<%}%>
 							</span>
-							<span class="text-body-secondary me-2"><%=pool.name%></span>
 							<div class="flex-grow-1 me-2" data-bs-toggle="tooltip" data-bs-original-title="<%=usageTip%>">
 								<u-progress shadow="false">
-									<u-progress-bar width="<%=capacity%>"></u-progress-bar>
+									<u-progress-bar width="<%=pool.properties.capacity.value ?? 0%>"></u-progress-bar>
 								</u-progress>
 							</div>
-							<span class="text-body-tertiary"><%=Math.round(capacity)%>%</span>
+							<span class="text-body-tertiary"><%=pool.properties.capacity.value?.toFixed(0)%>%</span>
 						</div>
 					<%})%>
 				</div>
