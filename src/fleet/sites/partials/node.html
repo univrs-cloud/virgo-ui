@@ -1,7 +1,27 @@
+<%
+	const pools = _.filter(node.storage, (pool) => { return pool?.type?.toLowerCase() === 'pool'; });
+	// A resilvering pool (a replaced drive rebuilding) is recovering on its own, so it reads as its own state rather than as a degraded/faulted one needing a swap.
+	const isResilvering = (pool) => { const scan = pool.scanStats; return scan?.function?.toLowerCase() === 'resilver' && scan?.state?.toLowerCase() !== 'finished'; };
+	// Worst pool health drives the badge + border colour: faulted (red) > degraded (orange) > online (green).
+	const hasCriticalPool = pools.some((pool) => { const health = pool.properties?.health?.value?.toLowerCase(); return health && health !== 'online' && health !== 'degraded'; });
+	const hasDegradedPool = pools.some((pool) => { return pool.properties?.health?.value?.toLowerCase() === 'degraded'; });
+	const hasResilveringPool = pools.some(isResilvering);
+	// When the only unhealthy pools are resilvering, the badge shows rebuild progress rather than a Faulted/Degraded label; a non-resilvering unhealthy pool needs a drive swap and keeps that label.
+	const hasUnhealthyNonResilver = pools.some((pool) => { const health = pool.properties?.health?.value?.toLowerCase(); return !isResilvering(pool) && health && health !== 'online'; });
+	const resilveringPools = pools.filter(isResilvering);
+	const resilverPercent = resilveringPools.length ? Math.round(Math.min(...resilveringPools.map((pool) => { return pool.scanStats?.toExamine ? (pool.scanStats.issued / pool.scanStats.toExamine) * 100 : 0; }))) : null;
+	const cardStateClass = !node.online ? 'border border-white' : (hasCriticalPool ? 'border border-red-300' : (hasDegradedPool ? 'border border-orange-300' : 'border border-white'));
+	// Offline has no pools so it stays a neutral gray Offline.
+	const statusColor = !node.online ? 'gray' : (hasCriticalPool ? 'red' : (hasDegradedPool ? 'orange' : 'green'));
+	const statusTint = !node.online ? 300 : 100;
+	const statusLabel = !node.online ? 'Offline' : (hasCriticalPool ? 'Faulted' : (hasDegradedPool ? 'Degraded' : 'Online'));
+	const isRebuilding = node.online && hasResilveringPool && !hasUnhealthyNonResilver;
+	const statusTip = (node.online && hasCriticalPool) ? 'Online · storage faulted' : ((node.online && hasDegradedPool) ? 'Online · storage degraded' : '');
+%>
 <div class="col-12 col-sm-6 col-xl-3">
-	<div class="card rounded-4 border-0">
+	<div class="card rounded-4 <%=cardStateClass%>">
 		<div class="card-body py-2 px-3">
-			<div class="d-flex align-items-start justify-content-between">
+			<div class="d-flex align-items-center justify-content-between">
 				<div class="flex-grow-1 me-2 min-w-0">
 					<h6 class="mb-0 text-truncate">
 						<%if (node.online) {%>
@@ -10,91 +30,6 @@
 							<span class="text-body"><%=node.name%></span>
 						<%}%>
 					</h6>
-					<div class="d-flex align-items-center mt-2 pt-1">
-						<u-badge color="<%=node.online ? 'green' : 'red'%>" class="me-1" pill>
-							<%=(node.online ? 'Online' : 'Offline')%>
-							<%if (!node.online && node.lastSeenAt) {%>
-								<i class="icon-solid icon-clock-rotate-left ms-1" data-bs-toggle="tooltip" data-bs-original-title="Last seen <%=moment(node.lastSeenAt).fromNow()%>.<br><%=moment(node.lastSeenAt).format('LLL')%>"></i>
-							<%}%>
-						</u-badge>
-						<%if (node.update?.state === 'running' && node.update.stage) {%>
-							<u-badge color="blue" tint="500" class="z-1 position-relative me-1" pill tip="<%=(node.update.stage === 'download' ? 'Downloading' : 'Installing')%> system update">
-								<i class="icon-solid <%=(node.update.stage === 'download' ? 'icon-download' : 'icon-cog icon-spin')%> me-1"></i><%=node.update.percent%>%
-							</u-badge>
-						<%} else if (node.update?.state === 'running') {%>
-							<u-badge color="blue" tint="500" class="z-1 position-relative me-1" pill tip="Updating system">
-								<i class="icon-solid icon-arrows-rotate icon-spin"></i>
-							</u-badge>
-						<%} else if (node.update?.state === 'succeeded') {%>
-							<a href="#" data-action="complete-update" data-node-id="<%=node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
-								<u-badge color="green" tint="500" pill tip="System update complete">
-									<i class="icon-solid icon-circle-check"></i>
-									<span class="hover-reveal-text">Finish</span>
-								</u-badge>
-							</a>
-						<%} else if (node.update?.state === 'failed') {%>
-							<a href="#" data-action="complete-update" data-node-id="<%=node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
-								<u-badge color="red" tint="500" pill tip="System update failed">
-									<i class="icon-solid icon-circle-xmark"></i>
-									<span class="hover-reveal-text">Dismiss</span>
-								</u-badge>
-							</a>
-						<%}%>
-						<%if (!node.update && !_.isEmpty(node.updates?.system)) {%>
-							<a href="#node-system-updates" data-bs-toggle="modal" data-node-id="<%=node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
-								<u-badge color="orange" pill tip="<%=_.pluralize('system update', _.size(node.updates.system), true)%>">
-									<i class="icon-solid icon-download"></i>
-								</u-badge>
-							</a>
-						<%}%>
-						<%if (!_.isEmpty(node.updates?.apps)) {%>
-							<a href="/nodes/<%=node.nodeId%>/apps" rel="external" class="z-1 position-relative lh-1 text-decoration-none me-1">
-								<u-badge color="orange" pill tip="<%=_.pluralize('app update', _.size(node.updates.apps), true)%>">
-									<i class="icon-solid icon-grid-round-2-plus"></i>
-								</u-badge>
-							</a>
-						<%}%>
-						<%if (node.isOwner && (!_.isEmpty(node.admins) || !_.isEmpty(node.groups))) {%>
-							<div class="dropdown invited">
-								<span class="d-flex z-1 position-relative" data-bs-toggle="dropdown">
-									<u-badge color="gray" tint="300" class="cursor-pointer">
-										<%=_.size(node.admins) + _.size(node.groups)%> invited
-										<i class="icon-solid icon-chevron-down ms-1"></i>
-									</u-badge>
-								</span>
-								<ul class="dropdown-menu dropdown-menu-start shadow">
-									<%_.each(node.admins, (admin) => {%>
-										<li>
-											<span class="dropdown-item d-flex align-items-center">
-												<i class="icon-regular icon-user icon-fw me-2"></i>
-												<div class="lh-1 me-3">
-													<div><%=admin.name%></div>
-													<small class="text-body-secondary"><%=admin.email%></small>
-												</div>
-												<a href="#" class="text-danger ms-auto confirm" data-action="revoke" data-node-id="<%=node.nodeId%>" data-email="<%=admin.email%>" data-bs-toggle="tooltip" data-bs-original-title="Revoke access">
-													<i class="icon-solid icon-circle-xmark"></i>
-												</a>
-											</span>
-										</li>
-									<%})%>
-									<%_.each(node.groups, (group) => {%>
-										<li>
-											<span class="dropdown-item d-flex align-items-center">
-												<i class="icon-regular icon-users icon-fw me-2"></i>
-												<div class="lh-1 me-3">
-													<div><%=group.name%></div>
-													<small class="text-body-secondary">Group</small>
-												</div>
-												<a href="#" class="text-danger ms-auto confirm" data-action="revoke-group" data-node-id="<%=node.nodeId%>" data-group-id="<%=group.id%>" data-group-name="<%=group.name%>" data-bs-toggle="tooltip" data-bs-original-title="Revoke group access">
-													<i class="icon-solid icon-circle-xmark"></i>
-												</a>
-											</span>
-										</li>
-									<%})%>
-								</ul>
-							</div>
-						<%}%>
-					</div>
 				</div>
 				<div class="dropdown">
 					<span class="dropdown-toggle caret-off btn btn-sm z-1 position-relative" data-bs-toggle="dropdown">
@@ -117,29 +52,148 @@
 					</ul>
 				</div>
 			</div>
-			<%if (!_.isEmpty(node.connectivity)) {%>
-				<%
-					const conn = node.connectivity;
-					const startMs = conn[0].startMs;
-					const endMs = conn[conn.length - 1].endMs;
-					const totalMs = Math.max(endMs - startMs, 1);
-				%>
-				<div class="connectivity position-relative z-1 mt-3">
-					<u-progress shadow="false">
-						<%_.each(conn, (seg) => {%>
-							<%
-								const status = _.isNull(seg.online) ? 'No data' : (seg.online ? 'Online' : 'Offline');
-								const color = _.isNull(seg.online) ? 'gray' : (seg.online ? 'green' : 'orange');
-								const tint = _.isNull(seg.online) ? 300 : (seg.online ? 200 : 400);
-							%>
-							<u-progress-bar color="<%=color%>" tint="<%=tint%>" width="<%=(seg.endMs - seg.startMs) / totalMs * 100%>" warning-threshold="101" danger-threshold="101" tip="<%=status%> · <%=moment(seg.startMs).format('LT')%> – <%=moment(seg.endMs).format('LT')%>"></u-progress-bar>
-						<%})%>
-					</u-progress>
-					<div class="d-flex justify-content-between mt-1" style="font-size: 0.75rem;">
-						<span class="text-body-tertiary"><%=moment(startMs).format('LT')%></span>
-						<span class="text-body-tertiary"><%=moment(startMs + totalMs / 2).format('LT')%></span>
-						<span class="text-body-tertiary">Now</span>
+
+			<div class="d-flex align-items-center mt-2 pt-1 mb-3">
+				<u-badge color="<%=statusColor%>" tint="<%=statusTint%>" class="z-1 position-relative me-1" pill>
+					<%if (isRebuilding) {%>
+						Rebuilding <%=resilverPercent != null ? `${resilverPercent}%` : ''%>
+						<i class="icon-solid icon-triangle-exclamation text-orange-700 ms-1" data-bs-toggle="tooltip" data-bs-original-title="Reduced redundancy until the rebuild completes"></i>
+					<%} else {%>
+						<%=statusLabel%>
+						<%if (statusTip) {%>
+							<i class="icon-solid icon-fw text-<%=statusColor%>-700 icon-circle-info ms-1" data-bs-toggle="tooltip" data-bs-original-title="<%=statusTip%>"></i>
+						<%}%>
+					<%}%>
+				</u-badge>
+				<%if (node.update?.state === 'running' && node.update.stage) {%>
+					<u-badge color="blue" tint="500" class="z-1 position-relative me-1" pill tip="<%=(node.update.stage === 'download' ? 'Downloading' : 'Installing')%> system update">
+						<i class="icon-solid <%=(node.update.stage === 'download' ? 'icon-download' : 'icon-cog icon-spin')%> me-1"></i><%=node.update.percent%>%
+					</u-badge>
+				<%} else if (node.update?.state === 'running') {%>
+					<u-badge color="blue" tint="500" class="z-1 position-relative me-1" pill tip="Updating system">
+						<i class="icon-solid icon-arrows-rotate icon-spin"></i>
+					</u-badge>
+				<%} else if (node.update?.state === 'succeeded') {%>
+					<a href="#" data-action="complete-update" data-node-id="<%=node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
+						<u-badge color="green" tint="500" pill tip="System update complete">
+							<i class="icon-solid icon-circle-check"></i>
+							<span class="hover-reveal-text">Finish</span>
+						</u-badge>
+					</a>
+				<%} else if (node.update?.state === 'failed') {%>
+					<a href="#" data-action="complete-update" data-node-id="<%=node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
+						<u-badge color="red" tint="500" pill tip="System update failed">
+							<i class="icon-solid icon-circle-xmark"></i>
+							<span class="hover-reveal-text">Dismiss</span>
+						</u-badge>
+					</a>
+				<%}%>
+				<%if (!node.update && !_.isEmpty(node.updates?.system)) {%>
+					<a href="#node-system-updates" data-bs-toggle="modal" data-node-id="<%=node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
+						<u-badge color="blue" pill tip="<%=_.pluralize('system update', _.size(node.updates.system), true)%>">
+							<i class="icon-solid icon-download"></i>
+						</u-badge>
+					</a>
+				<%}%>
+				<%if (!_.isEmpty(node.updates?.apps)) {%>
+					<a href="/nodes/<%=node.nodeId%>/apps" rel="external" class="z-1 position-relative lh-1 text-decoration-none me-1">
+						<u-badge color="blue" pill tip="<%=_.pluralize('app update', _.size(node.updates.apps), true)%>">
+							<i class="icon-solid icon-grid-round-2-plus"></i>
+						</u-badge>
+					</a>
+				<%}%>
+				<%if (node.isOwner && (!_.isEmpty(node.admins) || !_.isEmpty(node.groups))) {%>
+					<div class="dropdown invited">
+						<span class="d-flex z-1 position-relative" data-bs-toggle="dropdown">
+							<u-badge color="gray" tint="300" class="cursor-pointer">
+								<%=_.size(node.admins) + _.size(node.groups)%> invited
+								<i class="icon-solid icon-chevron-down icon-xs ms-1"></i>
+							</u-badge>
+						</span>
+						<ul class="dropdown-menu dropdown-menu-start shadow">
+							<%_.each(node.admins, (admin) => {%>
+								<li>
+									<span class="dropdown-item d-flex align-items-center">
+										<i class="icon-regular icon-user icon-fw me-2"></i>
+										<div class="lh-1 me-3">
+											<div><%=admin.name%></div>
+											<small class="text-body-secondary"><%=admin.email%></small>
+										</div>
+										<a href="#" class="text-danger ms-auto confirm" data-action="revoke" data-node-id="<%=node.nodeId%>" data-email="<%=admin.email%>" data-bs-toggle="tooltip" data-bs-original-title="Revoke access">
+											<i class="icon-solid icon-circle-xmark"></i>
+										</a>
+									</span>
+								</li>
+							<%})%>
+							<%_.each(node.groups, (group) => {%>
+								<li>
+									<span class="dropdown-item d-flex align-items-center">
+										<i class="icon-regular icon-users icon-fw me-2"></i>
+										<div class="lh-1 me-3">
+											<div><%=group.name%></div>
+											<small class="text-body-secondary">Group</small>
+										</div>
+										<a href="#" class="text-danger ms-auto confirm" data-action="revoke-group" data-node-id="<%=node.nodeId%>" data-group-id="<%=group.id%>" data-group-name="<%=group.name%>" data-bs-toggle="tooltip" data-bs-original-title="Revoke group access">
+											<i class="icon-solid icon-circle-xmark"></i>
+										</a>
+									</span>
+								</li>
+							<%})%>
+						</ul>
 					</div>
+				<%}%>
+			</div>
+			<%if (!node.online && node.lastSeenAt) {%>
+				<div class="text-body-tertiary mt-3" style="font-size: 0.75rem;">
+					Last seen <%=moment(node.lastSeenAt).fromNow()%>, on <%=moment(node.lastSeenAt).format('MMMM D, YYYY [at] HH:mm')%>.
+				</div>
+			<%}%>
+			<%if (node.online && !_.isEmpty(pools)) {%>
+				<div class="storage position-relative z-1 mt-3">
+					<%_.each(pools, (pool) => {%>
+						<%
+							const properties = pool.properties || {};
+							const health = properties.health?.value?.toLowerCase();
+							const healthColor = (health === 'online' ? 'text-green-300' : (health === 'degraded' ? 'text-orange-300' : 'text-red-300'));
+							const healthLabel = properties.health?.value || 'Unknown';
+							const capacity = (_.isFinite(properties.capacity?.value) ? properties.capacity.value : 0);
+							const usageTip = `${prettyBytes(properties.allocated?.value || 0, { binary: true })} of ${prettyBytes(properties.size?.value || 0, { binary: true })} used`;
+							const scan = pool.scanStats;
+							const scanState = scan?.state?.toLowerCase();
+						%>
+						<div class="d-flex align-items-center" style="font-size: 0.75rem;">
+							<i class="icon-solid icon-circle icon-fw me-1 <%=healthColor%>" data-bs-toggle="tooltip" data-bs-original-title="<%=healthLabel%>"></i>
+							<span class="me-1 lh-1 text-center" style="width: 0.875rem;">
+								<%if (scanState === 'scanning') {%>
+									<%
+										const isPaused = (scan.scrubPause > 0);
+										const total = prettyBytes(scan.toExamine || 0, { binary: true });
+										const scanned = `${prettyBytes(scan.examined || 0, { binary: true })} / ${total}`;
+										const issued = `${prettyBytes(scan.issued || 0, { binary: true })} / ${total}`;
+										const tip = (isPaused ? `<strong>Paused</strong> since ${moment.unix(scan.scrubPause).fromNow()}.<br>` : ``) + `Started ${moment.unix(scan.startTime).fromNow()}.<br>Scanned ${scanned}.<br>Issued ${issued}.<br>Repaired <strong>${prettyBytes(scan.processed || 0, { binary: true })}</strong>, ${scan.errors || 0} errors.`;
+									%>
+									<i class="icon-solid icon-arrows-rotate <%=(isPaused ? 'text-body-tertiary' : 'text-cyan-600 icon-spin')%>" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
+								<%} else if (scanState === 'finished') {%>
+									<%
+										const duration = moment.duration(moment.unix(scan.endTime).diff(moment.unix(scan.startTime))).humanize();
+										const tip = `Completed ${moment.unix(scan.endTime).fromNow()}.<br>Took ${duration} to scan <strong>${prettyBytes(scan.toExamine || 0, { binary: true })}</strong>.<br>Repaired <strong>${prettyBytes(scan.processed || 0, { binary: true })}</strong>, ${scan.errors || 0} errors.`;
+									%>
+									<%if (scan.errors > 0) {%>
+										<i class="icon-solid icon-triangle-exclamation text-red-300" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
+									<%} else {%>
+										<i class="icon-solid icon-circle-check text-green-300" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
+									<%}%>
+								<%}%>
+							</span>
+							<span class="text-body-secondary me-2"><%=pool.name%></span>
+							<div class="flex-grow-1 me-2" data-bs-toggle="tooltip" data-bs-original-title="<%=usageTip%>">
+								<u-progress shadow="false">
+									<u-progress-bar width="<%=capacity%>"></u-progress-bar>
+								</u-progress>
+							</div>
+							<span class="text-body-tertiary"><%=Math.round(capacity)%>%</span>
+						</div>
+					<%})%>
 				</div>
 			<%}%>
 		</div>
