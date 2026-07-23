@@ -535,6 +535,9 @@ u-badge:hover .hover-reveal-text {
 }
 
 #sites {
+	.card-body {
+		min-height: 7rem;
+	}
 	.invited {
 		.dropdown-item {
 			&:active {

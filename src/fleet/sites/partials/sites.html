@@ -5,6 +5,37 @@
 		<p class="text-body-tertiary mb-0">Sites will appear here once they have been registered.</p>
 	</div>
 <%} else {%>
+	<%
+		// Every pool across the fleet whose vdev state is not healthy. The message reflects the actual
+		// vdev state: the specific non-online leaf drives when the tree resolves them, otherwise the pool
+		// health as a fallback. A pool resilvering (a replaced drive rebuilding) is already recovering, so
+		// it needs no swap and is kept out of the alert.
+		const badPools = [];
+		const collectBadDrives = (vdev, drives) => {
+			if (!vdev) { return; }
+			if (vdev.vdevType?.toLowerCase() === 'disk' && vdev.state && vdev.state.toLowerCase() !== 'online') {
+				drives.push({ name: vdev.name, state: vdev.state });
+			}
+			_.each(vdev.vdevs, (child) => { collectBadDrives(child, drives); });
+		};
+		_.each(nodes, (node) => {
+			_.each(_.filter(node.storage, (pool) => { return pool?.type?.toLowerCase() === 'pool'; }), (pool) => {
+				const health = pool.properties?.health?.value;
+				const isResilvering = pool.scanStats?.function?.toLowerCase() === 'resilver' && pool.scanStats?.state?.toLowerCase() !== 'finished';
+				if (!health || health.toLowerCase() === 'online' || isResilvering) {
+					return;
+				}
+
+				const drives = [];
+				_.each(pool.vdevs, (vdev) => { collectBadDrives(vdev, drives); });
+				if (_.isEmpty(drives)) {
+					badPools.push({ node: node.name, pool: pool.name, label: pool.name, state: health });
+				} else {
+					_.each(drives, (drive) => { badPools.push({ node: node.name, pool: pool.name, label: drive.name, state: drive.state }); });
+				}
+			});
+		});
+	%>
 	<div class="row">
 		<div class="col-12 position-relative mb-3">
 			<h5 class="m-0">
@@ -12,8 +43,26 @@
 				Sites
 			</h5>
 		</div>
+		<%if (!_.isEmpty(badPools)) {%>
+			<div class="col-12">
+				<div class="alert alert-danger">
+					<div class="d-flex align-items-center">
+						<i class="icon-solid icon-triangle-exclamation icon-fw me-2"></i>
+						<strong>Storage needs attention</strong>
+					</div>
+					<div class="small ps-4 ms-1 mt-1">
+						Replace the faulty <%=_.pluralize('drive', badPools.length)%> as soon as possible to avoid data loss:
+						<ul class="mb-0 mt-1">
+							<%_.each(badPools, (bad) => {%>
+								<li><%=bad.node%> &middot; <%=bad.label%> &mdash; <%=bad.state%></li>
+							<%})%>
+						</ul>
+					</div>
+				</div>
+			</div>
+		<%}%>
 		<%_.each(nodes, (node) => {%>
-			<%=nodeTemplate({ node, moment })%>
+			<%=nodeTemplate({ node, moment, prettyBytes })%>
 		<%})%>
 	</div>
 <%}%>
