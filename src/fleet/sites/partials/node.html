@@ -160,38 +160,37 @@
 							const healthLabel = properties.health?.value || 'Unknown';
 							const usageTip = `${prettyBytes(properties.allocated?.value || 0, { binary: true })} of ${prettyBytes(properties.size?.value || 0, { binary: true })} used`;
 						%>
-						<div class="d-flex align-items-center" style="font-size: 0.75rem;">
-							<i class="icon-duotone icon-solid icon-hard-drive icon-fw me-1"></i>
-							<span class="text-body-secondary me-2"><%=pool.name%></span>
+						<div class="d-flex align-items-center border border-gray-400 bd-gray-100 shadow-sm px-2 py-1 rounded-4" style="font-size: 0.75rem;">
 							<i class="icon-solid icon-circle icon-fw me-1 <%=healthColor%>" data-bs-toggle="tooltip" data-bs-original-title="<%=healthLabel%>"></i>
-							<span class="me-1 lh-1 text-center" style="width: 0.875rem;">
-								<%if (scanState === 'scanning') {%>
-									<%
-										const isPaused = (scan.scrubPause > 0);
-										const total = prettyBytes(scan.toExamine || 0, { binary: true });
-										const scanned = `${prettyBytes(scan.examined || 0, { binary: true })} / ${total}`;
-										const issued = `${prettyBytes(scan.issued || 0, { binary: true })} / ${total}`;
-										const tip = (isPaused ? `<strong>Paused</strong> since ${moment.unix(scan.scrubPause).fromNow()}.<br>` : ``) + `Started ${moment.unix(scan.startTime).fromNow()}.<br>Scanned ${scanned}.<br>Issued ${issued}.<br>Repaired <strong>${prettyBytes(scan.processed || 0, { binary: true })}</strong>, ${scan.errors || 0} errors.`;
-									%>
-									<i class="icon-solid <%=(isPaused ? 'icon-pause text-body-tertiary' : 'icon-arrows-rotate icon-spin text-cyan-600')%>" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
-								<%} else if (scanState === 'finished') {%>
-									<%
-										const duration = moment.duration(moment.unix(scan.endTime).diff(moment.unix(scan.startTime))).humanize();
-										const tip = `Completed ${moment.unix(scan.endTime).fromNow()}.<br>Took ${duration} to scan <strong>${prettyBytes(scan.toExamine || 0, { binary: true })}</strong>.<br>Repaired <strong>${prettyBytes(scan.processed || 0, { binary: true })}</strong>, ${scan.errors || 0} errors.`;
-									%>
-									<%if (scan.errors > 0) {%>
-										<i class="icon-solid icon-triangle-exclamation text-red-300" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
-									<%} else {%>
-										<i class="icon-solid icon-screwdriver-wrench text-green-300" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
-									<%}%>
+							<span class="text-body-secondary me-2"><%=pool.name%></span>
+							<%if (scanState === 'scanning') {%>
+								<%
+									const isPaused = (scan.scrubPause > 0);
+									const total = prettyBytes(scan.toExamine || 0, { binary: true });
+									const scanned = `${prettyBytes(scan.examined || 0, { binary: true })} / ${total}`;
+									const issued = `${prettyBytes(scan.issued || 0, { binary: true })} / ${total}`;
+									const tip = (isPaused ? `<strong>Data integrity check is paused</strong> since ${moment.unix(scan.scrubPause).fromNow()}.<br>` : ``) + `Data integrity check started ${moment.unix(scan.startTime).fromNow()}.<br>Scanned ${scanned}.<br>Issued ${issued}.<br>Repaired <strong>${prettyBytes(scan.processed || 0, { binary: true })}</strong>, ${scan.errors || 0} errors.`;
+								%>
+								<i class="icon-solid <%=(isPaused ? 'icon-pause text-body-tertiary' : 'icon-arrows-rotate icon-spin text-cyan-600')%> me-2" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
+							<%} else if (scanState === 'finished') {%>
+								<%
+									const duration = moment.duration(moment.unix(scan.endTime).diff(moment.unix(scan.startTime))).humanize();
+									const tip = `Data integrity check completed ${moment.unix(scan.endTime).fromNow()}.<br>Took ${duration} to scan <strong>${prettyBytes(scan.toExamine || 0, { binary: true })}</strong>.<br>Repaired <strong>${prettyBytes(scan.processed || 0, { binary: true })}</strong>, ${scan.errors || 0} errors.`;
+								%>
+								<%if (scan.errors > 0) {%>
+									<i class="icon-solid icon-triangle-exclamation icon-fw text-red-300 me-2" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
+								<%} else {%>
+									<i class="icon-solid icon-binary-circle-check icon-fw text-green-300 me-2" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
 								<%}%>
-							</span>
+							<%} else {%>
+								<i class="icon-solid icon-binary-circle-check icon-fw text-gray-500 me-2" data-bs-toggle="tooltip" data-bs-original-title="Data integrity check has not run yet"></i>
+							<%}%>
 							<div class="flex-grow-1 me-2" data-bs-toggle="tooltip" data-bs-original-title="<%=usageTip%>">
 								<u-progress shadow="false">
 									<u-progress-bar width="<%=pool.properties.capacity.value ?? 0%>"></u-progress-bar>
 								</u-progress>
 							</div>
-							<span class="text-body-tertiary"><%=pool.properties.capacity.value?.toFixed(0)%>%</span>
+							<span class="text-body-tertiary text-end" style="min-width: 2.25rem; font-variant-numeric: tabular-nums;"><%=pool.properties.capacity.value?.toFixed(0)%>%</span>
 						</div>
 					<%})%>
 				</div>
