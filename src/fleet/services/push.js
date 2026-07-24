@@ -6,6 +6,8 @@ import * as accountService from 'fleet/services/account';
 // permission, PushManager). "Enabled" is an account-level intent carried in the account cookie (so it
 // reflects across devices); each device still obtains its own (per-device) Notification permission.
 
+let allowToast = null;
+
 const isSupported = () => {
 	return 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
 };
@@ -90,20 +92,39 @@ const disable = async () => {
 	await subscription?.unsubscribe();
 };
 
-let allowToast = null;
+const isPromptDismissed = () => {
+	try {
+		return localStorage.getItem('fleet:notificationsPromptDismissed') === '1';
+	} catch (error) {
+		return false;
+	}
+};
 
-// Shown on load when the account wants notifications but this device hasn't granted permission yet.
-// The button is a real user gesture, so requestPermission() works across browsers (an auto-prompt
-// wouldn't on Firefox/Safari).
+const rememberPromptDismissed = () => {
+	try {
+		localStorage.setItem('fleet:notificationsPromptDismissed', '1');
+	} catch (error) {
+		// localStorage unavailable (private mode / blocked) — the toast just won't be remembered.
+	}
+};
+
+// Shown on load when the account wants notifications but this device hasn't granted permission yet, and
+// the user hasn't already dismissed this prompt. The button is a real user gesture, so
+// requestPermission() works across browsers (an auto-prompt wouldn't on Firefox/Safari).
 const showAllowToast = () => {
-	if (allowToast) {
+	if (allowToast || isPromptDismissed()) {
 		return;
 	}
 
 	allowToast = notifier.add({
-		title: 'To receive node update alerts on this device, allow notifications.<br><br><u-button type="button" size="sm" click="grant">Allow notifications</u-button>',
+		title: 'To receive node alerts on this device, allow notifications.<br><br><u-button type="button" size="sm" click="grant">Allow notifications</u-button>',
 		type: 'info',
 		duration: 0,
+		dismissible: true,
+		onDismiss: () => {
+			rememberPromptDismissed();
+			allowToast = null;
+		},
 		callbacks: {
 			grant: async ({ event, trigger }) => {
 				if (trigger) {
