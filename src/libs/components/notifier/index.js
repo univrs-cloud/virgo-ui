@@ -30,6 +30,7 @@ export class Notifier extends LitElement {
 			duration,
 			dismissible: options.dismissible ?? true,
 			callbacks: options.callbacks || {},
+			onDismiss: options.onDismiss || null
 		};
 		
 		this.toasts = [...this.toasts, toast];
@@ -99,6 +100,7 @@ export class Notifier extends LitElement {
 
 	#handleToastHidden = (event) => {
 		const id = event.detail.id;
+		this.toasts.find((toast) => { return toast.id === id; })?.onDismiss?.();
 		this.toasts = this.toasts.filter((toast) => { return toast.id !== id; });
 	};
 }

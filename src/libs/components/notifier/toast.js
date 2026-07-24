@@ -14,7 +14,7 @@ export class Toast extends LitElement {
 		dismissible: { type: Boolean },
 		duration: { type: Number },
 		// Named handlers for action elements in the (raw HTML) title/message: an element carrying
-		// click="<name>" invokes callbacks[name]({ event, trigger, close }) when clicked.
+		// click="<name>" invokes callbacks[name]({ event, trigger }) when clicked.
 		callbacks: { attribute: false }
 	};
 
@@ -83,8 +83,7 @@ export class Toast extends LitElement {
 	}
 
 	// Delegated so it works with the raw-HTML message and survives re-renders. Clicking an element
-	// with a click="<name>" attribute runs the matching entry from `callbacks`, handed a `close` fn
-	// so the callback can dismiss the toast.
+	// with a click="<name>" attribute runs the matching entry from `callbacks`, passed { event, trigger }.
 	#onActionClick = (event) => {
 		const trigger = event.target?.closest?.('[click]');
 		if (!trigger) {
