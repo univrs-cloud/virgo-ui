@@ -41,9 +41,9 @@ const refresh = async () => {
 	toggle.disabled = false;
 
 	if (!toggle.checked) {
-		setHint('Get notified when your nodes have system or app updates.');
+		setHint('Get notified when your nodes have updates or storage issues.');
 	} else if (permission === 'granted') {
-		setHint(`You'll receive node update alerts on this device.`);
+		setHint(`You'll receive node alerts on this device.`);
 	} else if (permission === 'denied') {
 		setHint('Blocked on this device. Reset it in your browser settings, then <a href="#" class="push-retry">try again</a>.');
 	} else {
