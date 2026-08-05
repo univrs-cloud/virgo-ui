@@ -44,7 +44,7 @@ const render = (state) => {
 
 	const inner = (_.isEmpty(state.updates)
 		? emptyTemplate({ checkUpdates: state.checkUpdates })
-		: updatesTemplate({ checkUpdates: state.checkUpdates, updates: state.updates }));
+		: updatesTemplate({ checkUpdates: state.checkUpdates, updates: state.updates, hasUpdatingApps: state.hasUpdatingApps }));
 
 	morphdom(
 		row,

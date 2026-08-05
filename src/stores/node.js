@@ -88,7 +88,18 @@ class Node extends Store {
 		// 			online: true,
 		// 			isOwner: true,
 		// 			nodeId: '123',
-		// 			updates: { system: [1, 2], apps: [1] },
+		// 			// Plex is mid-update (its job spins), Nextcloud is not (it offers Update).
+		// 			updates: {
+		// 				system: [
+		// 					{ package: 'linux-image-amd64', version: { installed: '6.1.106-3', updatableTo: '6.1.112-1' } },
+		// 					{ package: 'openssh-server', version: { installed: '1:9.2p1-2+deb12u2', updatableTo: '1:9.2p1-2+deb12u3' } }
+		// 				],
+		// 				apps: [
+		// 					{ name: 'plex', title: 'Plex', services: ['plex', 'transcoder'] },
+		// 					{ name: 'nextcloud', title: 'Nextcloud', services: ['app'] }
+		// 				]
+		// 			},
+		// 			appUpdateJobs: [{ data: { config: { name: 'plex' } } }],
 		// 			admins: [
 		// 				{ "email": "john.doe@gmail.com", "name": "John Doe" },
 		// 				{ "email": "jane.doe@gmail.com", "name": "Jane Doe" }
@@ -162,6 +173,10 @@ class Node extends Store {
 
 	completeSystemUpdate(config) {
 		return this.socket.timeout(10000).emitWithAck('node:update:complete', config);
+	}
+
+	startAppUpdate(config) {
+		return this.socket.timeout(10000).emitWithAck('node:app:update', config);
 	}
 }
 

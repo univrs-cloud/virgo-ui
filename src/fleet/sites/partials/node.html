@@ -96,10 +96,21 @@
 					</a>
 				<%}%>
 				<%if (!_.isEmpty(node.updates?.apps)) {%>
-					<a href="/nodes/<%=node.nodeId%>/apps" rel="external" class="z-1 position-relative lh-1 text-decoration-none me-1">
-						<u-badge color="blue" pill tip="<%=_.pluralize('app update', _.size(node.updates.apps), true)%>">
-							<i class="icon-solid icon-grid-round-2-plus"></i>
-						</u-badge>
+					<%
+						const updating = _.filter(node.updates.apps, (app) => {
+							return _.some(node.appUpdateJobs, (job) => { return job.data?.config?.name === app.name; });
+						});
+					%>
+					<a href="#node-app-updates" data-bs-toggle="modal" data-node-id="<%=node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
+						<%if (!_.isEmpty(updating)) {%>
+							<u-badge color="blue" pill tip="Updating <%=_.join(_.map(updating, (app) => { return app.title; }), ', ')%>">
+								<i class="icon-solid icon-gear icon-spin me-1"></i><%=_.size(updating)%>
+							</u-badge>
+						<%} else {%>
+							<u-badge color="blue" pill tip="<%=_.pluralize('app update', _.size(node.updates.apps), true)%>">
+								<i class="icon-solid icon-grid-round-2-plus"></i>
+							</u-badge>
+						<%}%>
 					</a>
 				<%}%>
 				<%if (node.isOwner && (!_.isEmpty(node.admins) || !_.isEmpty(node.groups))) {%>
