@@ -7,8 +7,8 @@ const form = modal.querySelector('u-form');
 
 const addTrustedProxy = (event) => {
 	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
-	const config = form.getData();
-	networkService.addTrustedProxy(config);
+	const data = form.getData();
+	networkService.addTrustedProxy(data);
 	bootstrap.Modal.getInstance(modal)?.hide();
 };
 

@@ -25,8 +25,8 @@ export const mount = () => {
 	const register = async () => {
 		const button = form.querySelector('u-button[type="submit"]');
 		button.disabled = true;
+		const data = form.getData();
 		try {
-			const data = form.getData();
 			const result = ensureSucceeded(await fleetAuthService.signup(data));
 			showCheckEmail(result.email || data.email);
 		} catch (error) {

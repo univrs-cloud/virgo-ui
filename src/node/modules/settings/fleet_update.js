@@ -8,8 +8,8 @@ const form = modal.querySelector('u-form');
 
 const updateFleet = (event) => {
 	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
-	let config = form.getData();
-	configurationService.updateFleet(config);
+	const data = form.getData();
+	configurationService.updateFleet(data);
 	bootstrap.Modal.getInstance(modal)?.hide();
 };
 
@@ -19,12 +19,12 @@ const restore = (event) => {
 
 const render = (event) => {
 	const configuration = configurationService.getConfiguration();
-	const registered = !_.isNull(configuration?.fleet);
-	form.querySelector('.modal-footer u-button[type="submit"]').textContent = (registered ? 'Update' : 'Register');
-	modal.querySelector('.fleet-link span').textContent = (registered ? 'View fleet' : 'Create account');
+	const isRegistered = !_.isEmpty(configuration?.fleet?.token);
+	form.querySelector('.modal-footer u-button[type="submit"]').textContent = (isRegistered ? 'Update' : 'Register');
+	modal.querySelector('.fleet-link span').textContent = (isRegistered ? 'View fleet' : 'Create account');
 	const email = configuration?.fleet?.email || '';
 	form.querySelector('.email').value = email;
-	form.querySelector('.email').readonly = !_.isNull(configuration?.fleet) && !_.isEmpty(email);
+	form.querySelector('.email').readonly = !_.isEmpty(email);
 };
 
 form.validation = [

@@ -10,9 +10,9 @@ let user;
 
 const updateUser = (event) => {
 	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
-	let config = form.getData();
-	config.username = user.username;
-	userService.updateUser(config);
+	let data = form.getData();
+	data.username = user.username;
+	userService.updateUser(data);
 	bootstrap.Modal.getInstance(modal)?.hide();
 };
 

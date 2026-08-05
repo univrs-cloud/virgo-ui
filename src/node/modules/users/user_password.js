@@ -9,9 +9,9 @@ let user;
 
 const changePassword = (event) => {
 	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
-	let config = form.getData();
-	config.username = user.username;
-	userService.changePassword(config);
+	let data = form.getData();
+	data.username = user.username;
+	userService.changePassword(data);
 	bootstrap.Modal.getInstance(modal)?.hide();
 };
 

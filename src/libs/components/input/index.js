@@ -161,6 +161,8 @@ export class Input extends LitElement {
 							.value=${this.value}
 							?disabled=${this.disabled}
 							?readonly=${this.readonly}
+							tabindex=${this.readonly ? '-1' : '0'}
+							@focus=${this.#onFocus}
 							@input=${this.#onInput}
 						>
 						<label>
@@ -177,7 +179,16 @@ export class Input extends LitElement {
 	}
 
 	focus() {
+		if (this.readonly) {
+			return;
+		}
 		this.renderRoot.querySelector('input').focus();
+	}
+
+	#onFocus(event) {
+		if (this.readonly) {
+			event.target.blur();
+		}
 	}
 
 	#onInput(event) {

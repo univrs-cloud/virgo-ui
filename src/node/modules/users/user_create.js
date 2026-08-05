@@ -8,8 +8,8 @@ const form = modal.querySelector('u-form');
 
 const createUser = (event) => {
 	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
-	let config = form.getData();
-	userService.createUser(config);
+	const data = form.getData();
+	userService.createUser(data);
 	bootstrap.Modal.getInstance(modal)?.hide();
 };
 

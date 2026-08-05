@@ -17,8 +17,9 @@ export const mount = () => {
 	const login = async () => {
 		const button = form.querySelector('u-button[type="submit"]');
 		button.disabled = true;
+		const data = form.getData();
 		try {
-			ensureSucceeded(await fleetAuthService.login(form.getData()));
+			ensureSucceeded(await fleetAuthService.login(data));
 			// Full navigation so the fresh cookie (with its mfa flag) is re-read and the router routes
 			// on to /mfa/setup, /mfa/challenge, or the app.
 			window.location.replace('/');

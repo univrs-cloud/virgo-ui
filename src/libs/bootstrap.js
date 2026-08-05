@@ -107,7 +107,7 @@ bootstrap.Modal.addScrollbar = (modal) => {
 
 document.addEventListener('shown.bs.modal', (event) => {
 	const modal = event.target;
-	modal.querySelector('u-input:not([type="hidden"])')?.focus(); // focus 1st input after modal is shown
+	modal.querySelector('u-input:not([type="hidden"]):not([disabled]):not([readonly])')?.focus(); // focus 1st input after modal is shown
 	bootstrap.Modal.addScrollbar(modal);
 });
 

@@ -10,19 +10,19 @@ const form = modal.querySelector('u-form');
 const updateProfile = async () => {
 	const buttons = form.querySelectorAll('.modal-footer u-button');
 	_.each(buttons, (button) => { button.disabled = true; });
-	const config = form.getData();
+	const data = form.getData();
 	try {
-		const result = await userService.updateUser(config);
+		const result = await userService.updateUser(data);
 		if (result?.status === 'succeeded') {
-			accountService.patch({ name: config.name });
+			accountService.patch({ name: data.name });
 			bootstrap.Modal.getInstance(modal)?.hide();
 			return;
 		}
 		notifier.add({ title: result?.message || 'Failed to update profile.', type: 'error', duration: 0 });
 	} catch (error) {
 		notifier.add({ title: error.message || 'Failed to update profile.', type: 'error', duration: 0 });
-		_.each(buttons, (button) => { button.disabled = false; });
 	}
+	_.each(buttons, (button) => { button.disabled = false; });
 };
 
 const restore = () => {

@@ -18,8 +18,8 @@ const render = (event) => {
 
 const updateTrustedProxy = (event) => {
 	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
-	let config = form.getData();
-	networkService.updateTrustedProxy(config);
+	const data = form.getData();
+	networkService.updateTrustedProxy(data);
 	bootstrap.Modal.getInstance(modal)?.hide();
 };
 

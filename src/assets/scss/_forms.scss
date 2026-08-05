@@ -45,6 +45,15 @@ textarea {
 	color: var(--bs-tertiary-color);
 }
 
+.form-control {
+	&[readonly] {
+		background-color: var(--bs-gray-200);
+		~ label {
+			background-color: transparent !important;
+		}
+	}
+}
+
 .form-floating {
 	&:not(.form-control:disabled)::before {
 		display: none;
