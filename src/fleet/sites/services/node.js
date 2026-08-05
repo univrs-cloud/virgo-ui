@@ -46,6 +46,10 @@ const completeSystemUpdate = (config) => {
 	return Node.completeSystemUpdate(config);
 };
 
+const startAppUpdate = (config) => {
+	return Node.startAppUpdate(config);
+};
+
 export {
 	subscribe,
 	getNodes,
@@ -54,5 +58,6 @@ export {
 	revokeAdmin,
 	revokeGroup,
 	startSystemUpdate,
-	completeSystemUpdate
+	completeSystemUpdate,
+	startAppUpdate
 };

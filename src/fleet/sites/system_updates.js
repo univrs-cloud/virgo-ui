@@ -15,6 +15,9 @@ const render = (event) => {
 	nodeId = event.relatedTarget?.dataset.nodeId ?? null;
 	const node = _.find(nodeService.getNodes() ?? [], { nodeId });
 	updates.innerHTML = updatesTemplate({ updates: node?.updates?.system ?? [] });
+	const hasUpdatingApps = !_.isEmpty(node?.appUpdateJobs);
+	installButton.disabled = hasUpdatingApps;
+	installButton.tip = (hasUpdatingApps ? 'An app update is in progress' : '');
 };
 
 const restore = () => {
