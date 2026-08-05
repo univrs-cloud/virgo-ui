@@ -33,3 +33,4 @@ import('fleet/sites/admin_add');
 import('fleet/sites/admin_remove');
 import('fleet/sites/node_remove');
 import('fleet/sites/system_updates');
+import('fleet/sites/app_updates');
