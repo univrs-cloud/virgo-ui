@@ -22,12 +22,12 @@ let app;
 
 const install = (event) => {
 	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
-	let env = form.getData();
-	let config = {
+	const env = form.getData();
+	const data = {
 		name: app.name,
 		env
 	};
-	appCenterService.install(config);
+	appCenterService.install(data);
 	bootstrap.Modal.getInstance(modal)?.hide();
 };
 

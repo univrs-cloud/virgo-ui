@@ -53,8 +53,9 @@ export const mount = () => {
 	const verify = async () => {
 		const button = form.querySelector('u-button[type="submit"]');
 		button.disabled = true;
+		const data = form.getData();
 		try {
-			const result = await fleetAuthService.mfaSetupVerify(form.getData());
+			const result = await fleetAuthService.mfaSetupVerify(data);
 			if (result?.status !== 'succeeded') {
 				throw new Error(result?.message || 'Verification failed.');
 			}

@@ -106,27 +106,27 @@ const updateValidation = (useProxy) => {
 
 const updateBookmark = (event) => {
 	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
-	let config = form.getData();
-	const useProxy = (config.useProxy === 'true');
+	let data = form.getData();
+	const useProxy = (data.useProxy === 'true');
 	
 	if (useProxy) {
 		const fqdn = getFQDN();
-		config.url = `https://${config.subdomain}.${fqdn}`;
-		config.traefik = {
-			subdomain: config.subdomain,
-			backendUrl: config.backendUrl,
-			isAuthRequired: config.requireAuth === true || config.requireAuth === 'true'
+		data.url = `https://${data.subdomain}.${fqdn}`;
+		data.traefik = {
+			subdomain: data.subdomain,
+			backendUrl: data.backendUrl,
+			isAuthRequired: data.requireAuth === true || data.requireAuth === 'true'
 		};
 	} else {
-		config.traefik = null;
+		data.traefik = null;
 	}
 	
-	delete config.useProxy;
-	delete config.subdomain;
-	delete config.backendUrl;
-	delete config.requireAuth;
+	delete data.useProxy;
+	delete data.subdomain;
+	delete data.backendUrl;
+	delete data.requireAuth;
 	
-	bookmarkService.updateBookmark(config);
+	bookmarkService.updateBookmark(data);
 	bootstrap.Modal.getInstance(modal)?.hide();
 };
 

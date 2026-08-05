@@ -8,9 +8,9 @@ const form = modal.querySelector('u-form');
 
 const updateSmtp = (event) => {
 	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
-	let config = form.getData();
-	config.recipients = _.compact(_.split(_.trim(config.recipients), ','));
-	configurationService.updateSmtp(config);
+	let data = form.getData();
+	data.recipients = _.compact(_.split(_.trim(data.recipients), ','));
+	configurationService.updateSmtp(data);
 	bootstrap.Modal.getInstance(modal)?.hide();
 };
 
