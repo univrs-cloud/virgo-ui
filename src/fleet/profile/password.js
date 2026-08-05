@@ -21,8 +21,8 @@ const changePassword = async () => {
 		notifier.add({ title: result?.message || 'Failed to change password.', type: 'error', duration: 0 });
 	} catch (error) {
 		notifier.add({ title: error.message || 'Failed to change password.', type: 'error', duration: 0 });
-		_.each(buttons, (button) => { button.disabled = false; });
 	}
+	_.each(buttons, (button) => { button.disabled = false; });
 };
 
 const restore = () => {

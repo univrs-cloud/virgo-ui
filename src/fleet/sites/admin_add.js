@@ -19,12 +19,12 @@ const restore = () => {
 const inviteAdmin = async () => {
 	const buttons = form.querySelectorAll('.modal-footer u-button');
 	_.each(buttons, (button) => { button.disabled = true; });
-	let config = form.getData();
-	config.nodeId = nodeId;
+	let data = form.getData();
+	data.nodeId = nodeId;
 	try {
-		const result = await nodeService.inviteAdmin(config);
+		const result = await nodeService.inviteAdmin(data);
 		if (result?.status === 'succeeded') {
-			notifier.add({ title: `${config.email} invited as admin.`, type: 'success' });
+			notifier.add({ title: `${data.email} invited as admin.`, type: 'success' });
 			bootstrap.Modal.getInstance(modal)?.hide();
 			return;
 		}

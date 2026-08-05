@@ -56,16 +56,16 @@ const removeDnsRow = (event) => {
 
 const updateInterface = (event) => {
 	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
-	let config = form.getData();
-	const isAuto = (config.method === 'auto');
-	config.ipAddress = (!isAuto ? config.ipAddress : null);
-	config.netmask = (!isAuto ? config.netmask : null);
-	config.gateway = (!isAuto ? config.gateway : null);
-	config.dnsServers = (!isAuto ? _.compact(_.map(_.filter(dnsRows, isVisible), (row) => {
-		return _.trim(config[row.querySelector('u-input').getAttribute('name')]);
+	let data = form.getData();
+	const isAuto = (data.method === 'auto');
+	data.ipAddress = (!isAuto ? data.ipAddress : null);
+	data.netmask = (!isAuto ? data.netmask : null);
+	data.gateway = (!isAuto ? data.gateway : null);
+	data.dnsServers = (!isAuto ? _.compact(_.map(_.filter(dnsRows, isVisible), (row) => {
+		return _.trim(data[row.querySelector('u-input').getAttribute('name')]);
 	})) : null);
-	_.each(dnsRows, (row) => { delete config[row.querySelector('u-input').getAttribute('name')]; });
-	networkService.updateInterface(config);
+	_.each(dnsRows, (row) => { delete data[row.querySelector('u-input').getAttribute('name')]; });
+	networkService.updateInterface(data);
 	bootstrap.Modal.getInstance(modal)?.hide();
 };
 

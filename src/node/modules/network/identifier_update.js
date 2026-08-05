@@ -8,8 +8,8 @@ const form = modal.querySelector('u-form');
 
 const updateIdentifier = (event) => {
 	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
-	let config = form.getData();
-	networkService.updateHostIdentifier(config);
+	const data = form.getData();
+	networkService.updateHostIdentifier(data);
 	bootstrap.Modal.getInstance(modal)?.hide();
 };
 

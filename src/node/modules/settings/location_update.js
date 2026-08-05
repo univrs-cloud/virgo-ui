@@ -28,8 +28,8 @@ const getLocation = (event) => {
 
 const updateLocation = (event) => {
 	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
-	let config = form.getData();
-	configurationService.updateLocation(config);
+	const data = form.getData();
+	configurationService.updateLocation(data);
 	bootstrap.Modal.getInstance(modal)?.hide();
 };
 

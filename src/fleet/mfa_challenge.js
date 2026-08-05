@@ -13,8 +13,9 @@ export const mount = () => {
 	const submit = (form) => async () => {
 		const button = form.querySelector('u-button[type="submit"]');
 		button.disabled = true;
+		const data = form.getData();
 		try {
-			const result = await fleetAuthService.mfaVerify(form.getData());
+			const result = await fleetAuthService.mfaVerify(data);
 			if (result?.status !== 'succeeded') {
 				throw new Error(result?.message || 'That code is not valid.');
 			}
