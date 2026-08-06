@@ -182,10 +182,7 @@ const updateIndexer = async (event) => {
 
 	if (!optedIn) {
 		if (!await confirm('Turn off snapshot indexing for this app? You can turn it back on later.', { buttons: [{ text: 'Turn off', class: 'btn-danger' }] })) {
-			const switchEl = details.querySelector('u-switch.indexer-switch');
-			if (switchEl) {
-				switchEl.checked = true;
-			}
+			event.target.checked = app.indexer;
 			return;
 		}
 	}
