@@ -24,7 +24,8 @@ const currentIdentifier = (system) => {
 };
 
 // The hostname and domain are what the node answers to once setup finishes, so spell the resulting
-// address out while it is still being typed.
+// address out while it is still being typed. Seeding the fields fires `value-changed` too, so this
+// covers the prefilled values without render having to call it.
 const renderAccess = () => {
 	const data = form.getData();
 	const hostname = _.trim(data.hostname);
@@ -32,18 +33,6 @@ const renderAccess = () => {
 	accessUrl.textContent = `https://${hostname}.${domainName}`;
 	access.classList.toggle('d-none', _.isEmpty(hostname) || _.isEmpty(domainName));
 	access.classList.toggle('d-flex', !_.isEmpty(hostname) && !_.isEmpty(domainName));
-};
-
-const prefill = (system) => {
-	if (isPrefilled || _.isEmpty(system?.osInfo)) {
-		return;
-	}
-
-	const identifier = currentIdentifier(system);
-	form.querySelector('.hostname').value = identifier.hostname;
-	form.querySelector('.domain-name').value = identifier.domainName;
-	isPrefilled = true;
-	renderAccess();
 };
 
 const goNext = () => {
@@ -73,9 +62,18 @@ const settle = (job) => {
 	goNext();
 };
 
-const render = (state) => {
-	prefill(state.system);
-	_.each(state.jobs, settle);
+// The fields are seeded once, from the first delivery that carries the node's identifier; after
+// that the form belongs to whoever is typing in it.
+const render = ({ system, jobs }) => {
+	_.each(jobs, settle);
+	if (isPrefilled || _.isEmpty(system?.osInfo)) {
+		return;
+	}
+
+	const identifier = currentIdentifier(system);
+	form.querySelector('.hostname').value = identifier.hostname;
+	form.querySelector('.domain-name').value = identifier.domainName;
+	isPrefilled = true;
 };
 
 const updateIdentifier = (event) => {
@@ -133,6 +131,5 @@ form.addEventListener('valid', updateIdentifier);
 form.addEventListener('value-changed', renderAccess);
 back.addEventListener('click', goBack);
 
-step.onRoute = () => { prefill(networkService.getSystem()); };
 
 networkService.subscribe([render]);

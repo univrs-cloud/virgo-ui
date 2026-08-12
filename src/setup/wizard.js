@@ -2,8 +2,11 @@ const STEPS = [
 	{ name: 'welcome', path: '/' },
 	{ name: 'host', path: '/network/host' },
 	{ name: 'interface', path: '/network/interface' },
+	{ name: 'ports', path: '/network/ports' },
 	{ name: 'storage', path: '/storage' },
-	{ name: 'fleet', path: '/fleet' }
+	{ name: 'password', path: '/password' },
+	{ name: 'fleet', path: '/fleet' },
+	{ name: 'finish', path: '/finish' }
 ];
 
 let completedSteps = [];

@@ -3,8 +3,11 @@ import page from 'page';
 import 'setup/steps/welcome';
 import 'setup/steps/host';
 import 'setup/steps/interface';
+import 'setup/steps/ports';
 import 'setup/steps/storage';
+import 'setup/steps/password';
 import 'setup/steps/fleet';
+import 'setup/steps/finish';
 import { STEPS, completeStepsBefore } from 'setup/wizard';
 
 const container = document.querySelector('main');

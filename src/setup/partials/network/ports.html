@@ -1,0 +1,58 @@
+<div id="ports" class="row d-none">
+	<div class="col-12 col-md-10 col-lg-8 col-xl-6 mx-auto">
+		<div class="mb-4">
+			<h4 class="mb-2">Network</h4>
+			<p class="text-body-secondary m-0">Apps can be reached from outside your network through your router, which has to be told to send those connections to this node.</p>
+		</div>
+		<div class="card rounded-4 border-0 mb-0">
+			<div class="card-body">
+				<h5 class="card-title">Port forwarding</h5>
+				<p class="text-body-secondary">Forward these ports to <span class="address text-body"></span>.</p>
+				<div class="table-responsive">
+					<table class="table align-middle m-0">
+						<thead>
+							<tr>
+								<th class="text-nowrap">What it is for</th>
+								<th class="text-nowrap">Ports</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Node management and apps</td>
+								<td class="text-nowrap">TCP and UDP 443</td>
+							</tr>
+							<tr>
+								<td>Certificates <small class="text-body-tertiary">for automatic SSL</small></td>
+								<td class="text-nowrap">TCP 80</td>
+							</tr>
+							<tr>
+								<td>VPN <small class="text-body-tertiary">WireGuard</small></td>
+								<td class="text-nowrap">UDP 51820</td>
+							</tr>
+							<tr>
+								<td>Email <small class="text-body-tertiary">Mail server</small></td>
+								<td class="text-nowrap">TCP 25, 465, 587, 993, 4190</td>
+							</tr>
+							<tr>
+								<td>Torrents <small class="text-body-tertiary">qBittorrent</small></td>
+								<td class="text-nowrap">TCP and UDP 6881</td>
+							</tr>
+							<tr>
+								<td>Video calls <small class="text-body-tertiary">Nextcloud Talk</small></td>
+								<td class="text-nowrap">TCP and UDP 3478</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="alert alert-warning mt-3 mb-0">
+					<i class="icon-duotone icon-solid icon-triangle-exclamation icon-fw me-1"></i>
+					Never forward port 53. Pi-hole answers DNS on the local network only, and a name server open to the internet will be abused.
+				</div>
+				<div class="d-flex justify-content-end gap-2 mt-4">
+					<u-button variant="secondary" data-action="back" outline>Back</u-button>
+					<u-button variant="primary" data-action="continue">Continue</u-button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
