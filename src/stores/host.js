@@ -15,6 +15,7 @@ class Host extends Store {
 			memory: null,
 			networkStats: null,
 			storage: null,
+			importable: null,
 			snapshots: null,
 			drives: null,
 			services: null,
@@ -96,6 +97,10 @@ class Host extends Store {
 			this.setState({ storage }, 'get_storage');
 		});
 
+		this.socket.on('host:storage:importable', (importable) => {
+			this.setState({ importable }, 'get_importable');
+		});
+
 		this.socket.on('host:storage:snapshots', (snapshots) => {
 			this.setState({ snapshots }, 'get_snapshots');
 		});
@@ -141,6 +146,18 @@ class Host extends Store {
 		this.socket.emit('host:shutdown');
 	}
 
+	fetchImportable() {
+		this.socket.emit('host:storage:importable:fetch');
+	}
+
+	importPool(config) {
+		this.socket.emit('host:storage:pool:import', config);
+	}
+
+	createPool(config) {
+		this.socket.emit('host:storage:pool:create', config);
+	}
+
 	syncServices() {
 		this.setState({ services: null }, 'services_fetch_start');
 		this.socket.emit('host:system:services:fetch');
@@ -176,6 +193,10 @@ class Host extends Store {
 
 	getStorage() {
 		return this.getStateProperty('storage');
+	}
+
+	getImportable() {
+		return this.getStateProperty('importable');
 	}
 
 	getSnapshots() {
