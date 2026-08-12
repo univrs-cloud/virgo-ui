@@ -25,7 +25,13 @@ const render = async (state) => {
 	unsubscribe = null;
 
 	if (state.setupCompleted === false) {
-		await import('setup/main');
+		try {
+			await import('setup/main');
+			await import('setup/navigation');
+		} catch (error) {
+			alert(`Error during application initialization<br><br>${error}`, );
+			console.error('Error during application initialization:', error);
+		}
 	} else if (isAdmin && !_.isNull(state.update)) {
 		await import('node/update');
 	} else {
