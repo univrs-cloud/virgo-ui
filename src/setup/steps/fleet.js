@@ -7,6 +7,9 @@ import { completeStep, nextStepPath, previousStepPath } from 'setup/wizard';
 let isPrefilled = false;
 let isSubmitting = false;
 let isRegistering = false;
+// The last configuration the node reported, so entering the step can re-render without reading the
+// store behind the subscription's back.
+let configuration = null;
 let settleTimeout = null;
 // The node's own connect attempt times out after 10s, plus the job round trip.
 const SETTLE_TIMEOUT = 60000;
@@ -22,30 +25,15 @@ const fleetLink = step.querySelector('.fleet-link span');
 const skip = step.querySelector('.skip');
 const submit = form.querySelector('[type="submit"]');
 
-const isRegistered = (configuration) => {
-	return !_.isEmpty(configuration?.fleet?.token);
-};
-
-// A node that already holds a token is tied to that account, so the email can only be confirmed.
-const prefill = (configuration) => {
-	if (isPrefilled || _.isNull(configuration) || _.isUndefined(configuration)) {
-		return;
-	}
-
-	const email = configuration?.fleet?.email || '';
-	form.querySelector('.email').value = email;
-	form.querySelector('.email').readonly = !_.isEmpty(email);
-	isPrefilled = true;
-};
-
 // Registration state and connection health both come off the same configuration, so this runs on
 // every delivery — a node that reconnects (or drops) while the step is open says so straight away.
-const renderStatus = (configuration) => {
-	const needsRegistration = (!isRegistered(configuration) || isRegistering);
+const renderStatus = () => {
+	const registeredNode = fleetService.isRegistered(configuration);
+	const needsRegistration = (!registeredNode || isRegistering);
 	form.classList.toggle('d-none', !needsRegistration);
 	registered.classList.toggle('d-none', needsRegistration);
-	fleetLink.textContent = (isRegistered(configuration) ? 'View fleet' : 'Create account');
-	submit.textContent = (isRegistered(configuration) ? 'Register again' : 'Register');
+	fleetLink.textContent = (registeredNode ? 'View fleet' : 'Create account');
+	submit.textContent = (registeredNode ? 'Register again' : 'Register');
 	if (needsRegistration) {
 		return;
 	}
@@ -87,10 +75,20 @@ const settle = (job) => {
 	goNext();
 };
 
+// A node that already holds a token is tied to that account, so the email is seeded once and can
+// only be confirmed from then on.
 const render = (state) => {
-	prefill(state.configuration);
-	renderStatus(state.configuration);
+	configuration = state.configuration;
 	_.each(state.jobs, settle);
+	renderStatus();
+	if (isPrefilled || _.isNull(configuration) || _.isUndefined(configuration)) {
+		return;
+	}
+
+	const email = configuration?.fleet?.email || '';
+	form.querySelector('.email').value = email;
+	form.querySelector('.email').readonly = !_.isEmpty(email);
+	isPrefilled = true;
 };
 
 const registerFleet = (event) => {
@@ -111,7 +109,7 @@ const registerFleet = (event) => {
 const showRegistrationForm = (event) => {
 	event.preventDefault();
 	isRegistering = true;
-	renderStatus(fleetService.getConfiguration());
+	renderStatus();
 	form.querySelector('.password').focus();
 };
 
@@ -153,10 +151,11 @@ reRegister.addEventListener('click', showRegistrationForm);
 registered.querySelector('[data-action="continue"]').addEventListener('click', goNext);
 _.each(step.querySelectorAll('[data-action="back"]'), (button) => { button.addEventListener('click', goBack); });
 
+// The subscription keeps this step current while it is hidden; arriving here only has to drop a
+// re-registration the user started and walked away from.
 step.onRoute = () => {
 	isRegistering = false;
-	prefill(fleetService.getConfiguration());
-	renderStatus(fleetService.getConfiguration());
+	renderStatus();
 };
 
 fleetService.subscribe([render]);

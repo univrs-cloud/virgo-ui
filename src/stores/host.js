@@ -146,6 +146,10 @@ class Host extends Store {
 		this.socket.emit('host:shutdown');
 	}
 
+	completeSetup() {
+		this.socket.emit('host:setup:complete');
+	}
+
 	fetchImportable() {
 		this.socket.emit('host:storage:importable:fetch');
 	}
