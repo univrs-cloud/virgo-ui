@@ -170,6 +170,20 @@ main,
 	}
 }
 
+.eula {
+	// Everything around the scroll area (navbar, hero, card padding, button) adds up to ~275px.
+	max-height: calc(100dvh - 275px);
+	min-height: 12rem;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	h6 {
+		color: var(--bs-body-color);
+	}
+	> :last-child {
+		margin-bottom: 0;
+	}
+}
+
 .line-clamp {
 	overflow: hidden;
 	display: -webkit-box;
@@ -286,7 +300,8 @@ main,
 				}
 			}
 		}
-		&.fleet {
+		&.fleet,
+		&.setup {
 			.navbar {
 				background: linear-gradient(to right, var(--bs-primary) 15rem, transparent 15rem);
 			}

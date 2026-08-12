@@ -1,0 +1,12 @@
+<dt class="fw-lighter"><small>Status</small></dt>
+<dd>Registered</dd>
+<dt class="fw-lighter"><small>Account</small></dt>
+<dd><%=fleet?.email%></dd>
+<dt class="fw-lighter"><small>Connection</small></dt>
+<%if (fleet?.authFailed) {%>
+	<dd class="m-0 text-danger">Registration expired, please register again.</dd>
+<%} else if (!fleet?.enabled) {%>
+	<dd class="m-0 text-warning">Disabled</dd>
+<%} else {%>
+	<dd class="m-0 <%=(fleet?.connected ? '' : 'text-warning')%>"><%=(fleet?.connected ? 'Connected' : 'Reconnecting...')%></dd>
+<%}%>

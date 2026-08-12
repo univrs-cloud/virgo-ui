@@ -1,27 +1,69 @@
-<u-form id="network-interface" novalidate>
-	<u-input type="hidden" name="name" class="name"></u-input>
-	<h5>Network interface</h5>
-	<div class="alert alert-light">
-		<dl class="m-0">
-			<dt class="fw-light text-body-tertiary"><small>Name</small></dt>
-			<dd class="name m-0"></dd>
-		</dl>
-	</div>
-	<u-switch name="method" on-value="auto" off-value="manual" on-label="Automatic" off-;abel="Manual" label="Configuration method" class="dhcp"></u-switch>
-	<div class="row">
-		<div class="manual col-12">
-			<div class="row">
-				<div class="col-6">
-					<u-input name="ipAddress" label="IP address" class="ip-address" placeholder="###.###.###.###"></u-input>
-				</div>
-				<div class="col-3">
-					<u-input name="netmask" label="Netmask" class="netmask" placeholder="##"></u-input>
+<div id="interface" class="row d-none">
+	<div class="col-12 col-md-10 col-lg-8 col-xl-6 mx-auto">
+		<div class="mb-4">
+			<h4 class="mb-2">Network</h4>
+			<p class="text-body-secondary m-0">This node needs a static address so it stays reachable at the same place.</p>
+		</div>
+		<u-form>
+			<u-input type="hidden" name="name" class="name"></u-input>
+			<div class="card rounded-4 border-0 mb-0">
+				<div class="card-body">
+					<h5 class="card-title">Interface</h5>
+					<div class="configuration">
+						<div class="mb-3">
+							<u-switch name="method" on-value="auto" off-value="manual" on-label="Automatic" off-label="Manual" label="Configuration method" class="dhcp" disabled></u-switch>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<div class="row g-2">
+									<div class="col-6">
+										<u-input name="ipAddress" label="IP address" class="ip-address" placeholder="###.###.###.###"></u-input>
+									</div>
+									<div class="col-3">
+										<u-input name="netmask" label="Netmask" class="netmask" placeholder="##"></u-input>
+									</div>
+								</div>
+							</div>
+							<div class="col-6">
+								<u-input name="gateway" label="Default gateway" class="gateway" placeholder="###.###.###.###"></u-input>
+							</div>
+							<div class="col-12">
+								<div class="dns-server row g-2 align-items-center">
+									<div class="col-6">
+										<u-input name="dnsServer1" label="DNS server 1" class="dns-server-1" placeholder="###.###.###.###"></u-input>
+									</div>
+								</div>
+								<div class="dns-server row g-2 align-items-center d-none">
+									<div class="col-6">
+										<u-input name="dnsServer2" label="DNS server 2" class="dns-server-2" placeholder="###.###.###.###"></u-input>
+									</div>
+									<div class="col-auto mb-4">
+										<u-button variant="secondary" class="remove d-flex" outline><i class="icon-regular icon-times icon-fw"></i></u-button>
+									</div>
+								</div>
+								<div class="dns-server row g-2 align-items-center d-none">
+									<div class="col-6">
+										<u-input name="dnsServer3" label="DNS server 3" class="dns-server-3" placeholder="###.###.###.###"></u-input>
+									</div>
+									<div class="col-auto mb-4">
+										<u-button variant="secondary" class="remove d-flex" outline><i class="icon-regular icon-times icon-fw"></i></u-button>
+									</div>
+								</div>
+								<button type="button" class="add btn btn-link p-0 mb-3"><i class="icon-regular icon-plus icon-fw me-1"></i>Add DNS</button>
+							</div>
+						</div>
+						<div class="d-flex justify-content-end gap-2">
+							<u-button variant="secondary" data-action="back" outline>Back</u-button>
+							<u-button type="submit" variant="primary">Continue</u-button>
+						</div>
+					</div>
+					<div class="applying d-none text-center py-5">
+						<div class="spinner-border text-gray-600 mb-3"></div>
+						<div>Applying network settings...</div>
+						<div class="address text-body-tertiary"><small></small></div>
+					</div>
 				</div>
 			</div>
-		</div>
-		<div class="col-6">
-			<u-input name="gateway" label="Default gateway" class="gateway" placeholder="###.###.###.###"></u-input>
-		</div>
+		</u-form>
 	</div>
-	<u-button type="submit" variant="primary">Next</u-button>
-</u-form>
+</div>
