@@ -23,43 +23,6 @@ const goNext = () => {
 	page(nextStepPath('storage'));
 };
 
-// `importable` is [] once scanned and false when the scan itself failed, so both are answers; only
-// null means the node has not reported yet and the step keeps waiting.
-const renderState = () => {
-	const importable = storageService.getImportable();
-	const drives = storageService.getDrives();
-	if (_.isNull(importable) || _.isNull(drives)) {
-		return;
-	}
-
-	const pool = storageService.getPool();
-	const importablePool = storageService.getImportablePool();
-	const template = stateTemplate({
-		pool,
-		importable,
-		importablePool,
-		foreignPools: storageService.getForeignPools(),
-		drives,
-		poolName: storageService.POOL_NAME,
-		prettyBytes
-	});
-	morphdom(
-		summary,
-		`<div>${template}</div>`,
-		{ childrenOnly: true }
-	);
-
-	// A pool that is already imported leaves nothing to do; otherwise it is adopt-or-create, and
-	// creating needs the two drives the mirror is made of.
-	const canCreate = (_.isUndefined(pool) && _.isUndefined(importablePool) && _.size(drives) >= 2);
-	continueButton.classList.toggle('d-none', _.isUndefined(pool));
-	importButton.classList.toggle('d-none', !_.isUndefined(pool) || _.isUndefined(importablePool));
-	createButton.classList.toggle('d-none', !canCreate);
-	fetching.classList.add('d-none');
-	summary.classList.remove('d-none');
-	actions.classList.remove('d-none');
-};
-
 const finish = () => {
 	isSubmitting = false;
 	importButton.reset();
@@ -82,12 +45,43 @@ const settle = (job) => {
 	goNext();
 };
 
-const render = (state) => {
-	if (!isSubmitting) {
-		renderState();
+// `importablePools` is [] once scanned and false when the scan itself failed, so both are answers;
+// only null means the node has not reported yet and the step keeps waiting. A submission owns the
+// view until its job settles, so the summary is left alone while one is in flight.
+const render = ({ storage, drives, importablePools, jobs }) => {
+	_.each(jobs, settle);
+	if (isSubmitting || _.isNull(importablePools) || _.isNull(drives)) {
+		return;
 	}
 
-	_.each(state.jobs, settle);
+	const pool = storageService.findPool(storage);
+	const importablePool = storageService.findImportablePool(importablePools);
+	const usableDrives = storageService.findUsableDrives(drives);
+	const template = stateTemplate({
+		pool,
+		importablePools,
+		importablePool,
+		foreignPools: storageService.findForeignPools(importablePools),
+		drives: usableDrives,
+		poolName: storageService.POOL_NAME,
+		minimumDrives: storageService.MINIMUM_DRIVES,
+		prettyBytes
+	});
+	morphdom(
+		summary,
+		`<div>${template}</div>`,
+		{ childrenOnly: true }
+	);
+
+	// A pool that is already imported leaves nothing to do; otherwise it is adopt-or-create, and
+	// creating needs the drives the mirror is made of.
+	const canCreate = (_.isUndefined(pool) && _.isUndefined(importablePool) && _.size(usableDrives) >= storageService.MINIMUM_DRIVES);
+	continueButton.classList.toggle('d-none', _.isUndefined(pool));
+	importButton.classList.toggle('d-none', !_.isUndefined(pool) || _.isUndefined(importablePool));
+	createButton.classList.toggle('d-none', !canCreate);
+	fetching.classList.add('d-none');
+	summary.classList.remove('d-none');
+	actions.classList.remove('d-none');
 };
 
 const start = (button) => {
@@ -111,7 +105,7 @@ const createPool = async (event) => {
 		return;
 	}
 
-	const drives = storageService.getDrives();
+	const drives = storageService.findUsableDrives(storageService.getDrives());
 	const names = _.map(drives, (drive) => { return `${drive.model} (SN: ${drive.serialNumber})`; }).join('<br>');
 	if (!await confirm(`Everything on these drives will be erased:<br><br>${names}<br><br>This cannot be undone.`, { buttons: [{ text: 'Erase and create pool', class: 'btn-danger' }] })) {
 		return;
@@ -120,7 +114,8 @@ const createPool = async (event) => {
 	start(createButton);
 	storageService.createPool({
 		name: storageService.POOL_NAME,
-		drives: _.map(drives, 'serialNumber')
+		type: storageService.POOL_TYPE,
+		drives: _.map(drives, 'eui')
 	});
 };
 
@@ -133,7 +128,7 @@ const scanAgain = (event) => {
 	fetching.classList.remove('d-none');
 	summary.classList.add('d-none');
 	actions.classList.add('d-none');
-	storageService.fetchImportable();
+	storageService.fetchImportablePools();
 };
 
 const goBack = (event) => {
@@ -150,14 +145,12 @@ createButton.addEventListener('click', createPool);
 continueButton.addEventListener('click', goNext);
 back.addEventListener('click', goBack);
 
+// The subscription keeps this step current even while it is hidden, so arriving here only has to
+// cover the case where the node never reported a scan for this client to render.
 step.onRoute = () => {
-	// A scan that failed before this client connected is never replayed on connect, so ask for one
-	// rather than sitting on the spinner.
-	if (_.isNull(storageService.getImportable())) {
-		storageService.fetchImportable();
+	if (_.isNull(storageService.getImportablePools())) {
+		storageService.fetchImportablePools();
 	}
-
-	renderState();
 };
 
 storageService.subscribe([render]);

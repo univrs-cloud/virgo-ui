@@ -28,8 +28,9 @@ const { subscribe } = createSubscription({
 	}
 });
 
-const getConfiguration = () => {
-	return Configuration.getConfiguration();
+/** A node is enrolled once it holds a token; the email alone only means an attempt was made. */
+const isRegistered = (configuration) => {
+	return !_.isEmpty(configuration?.fleet?.token);
 };
 
 const updateFleet = (config) => {
@@ -39,6 +40,6 @@ const updateFleet = (config) => {
 export {
 	REGISTER_JOB,
 	subscribe,
-	getConfiguration,
+	isRegistered,
 	updateFleet
 };

@@ -91,24 +91,6 @@ const formConfiguration = () => {
 	};
 };
 
-const prefill = (system) => {
-	const networkInterface = _.find(system?.networkInterfaces, { default: true });
-	if (isPrefilled || _.isUndefined(networkInterface)) {
-		return;
-	}
-
-	const current = currentConfiguration(networkInterface);
-	form.querySelector('.name').value = current.name;
-	form.querySelector('.ip-address').value = current.ipAddress;
-	form.querySelector('.netmask').value = current.netmask;
-	form.querySelector('.gateway').value = current.gateway;
-	_.each(dnsRows, (row, index) => {
-		row.querySelector('u-input').value = current.dnsServers[index] || '';
-	});
-	showDnsRows(Math.max(1, Math.min(current.dnsServers.length, MAX_DNS_SERVERS)));
-	isPrefilled = true;
-};
-
 const goNext = () => {
 	completeStep('interface');
 	page(nextStepPath('interface'));
@@ -170,9 +152,25 @@ const settle = (job) => {
 	alert(job.failedReason || 'Network interface was not updated.');
 };
 
-const render = (state) => {
-	prefill(state.system);
-	_.each(state.jobs, settle);
+// The fields are seeded once, from the first delivery that carries the interface; after that the
+// form belongs to whoever is typing in it.
+const render = ({ system, jobs }) => {
+	_.each(jobs, settle);
+	const networkInterface = networkService.getDefaultInterface(system);
+	if (isPrefilled || _.isUndefined(networkInterface)) {
+		return;
+	}
+
+	const current = currentConfiguration(networkInterface);
+	form.querySelector('.name').value = current.name;
+	form.querySelector('.ip-address').value = current.ipAddress;
+	form.querySelector('.netmask').value = current.netmask;
+	form.querySelector('.gateway').value = current.gateway;
+	_.each(dnsRows, (row, index) => {
+		row.querySelector('u-input').value = current.dnsServers[index] || '';
+	});
+	showDnsRows(Math.max(1, Math.min(current.dnsServers.length, MAX_DNS_SERVERS)));
+	isPrefilled = true;
 };
 
 const updateInterface = (event) => {
@@ -254,6 +252,5 @@ addDnsButton.addEventListener('click', addDnsRow);
 _.each(form.querySelectorAll('.dns-server .remove'), (button) => { button.addEventListener('click', removeDnsRow); });
 back.addEventListener('click', goBack);
 
-step.onRoute = () => { prefill(networkService.getSystem()); };
 
 networkService.subscribe([render]);

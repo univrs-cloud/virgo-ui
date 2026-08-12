@@ -33,8 +33,22 @@ const getSystem = () => {
 	return Host.getSystem();
 };
 
-const getDefaultInterface = () => {
-	return _.find(getSystem()?.networkInterfaces, { default: true });
+// Each of these reads the delivered system when a render passes one, and falls back to the store for
+// callers with no payload in hand, such as a submit handler.
+
+/** The interface this node answers on — the only one setup configures. */
+const getDefaultInterface = (system = getSystem()) => {
+	return _.find(system?.networkInterfaces, { default: true });
+};
+
+/** hostname.domain — the name the node answers to once setup is finished. */
+const getFqdn = (system = getSystem()) => {
+	return system?.osInfo?.fqdn || '';
+};
+
+/** The IPv4 address that interface currently holds, which is what a router forwards ports to. */
+const getDefaultInterfaceAddress = (system = getSystem()) => {
+	return _.find(getDefaultInterface(system)?.addrInfo, { family: 'inet' })?.local;
 };
 
 const updateHostIdentifier = (config) => {
@@ -51,6 +65,8 @@ export {
 	subscribe,
 	getSystem,
 	getDefaultInterface,
+	getFqdn,
+	getDefaultInterfaceAddress,
 	updateHostIdentifier,
 	updateInterface
 };
