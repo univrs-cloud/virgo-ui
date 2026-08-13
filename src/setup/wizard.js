@@ -1,7 +1,7 @@
 const STEPS = [
 	{ name: 'welcome', path: '/' },
-	{ name: 'host', path: '/network/host' },
 	{ name: 'interface', path: '/network/interface' },
+	{ name: 'host', path: '/network/host' },
 	{ name: 'ports', path: '/network/ports' },
 	{ name: 'storage', path: '/storage' },
 	{ name: 'password', path: '/password' },
