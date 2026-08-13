@@ -102,6 +102,12 @@ export class Form extends LitElement {
 
 	#onSubmit(event) {
 		event.preventDefault();
+		// Enter reaches here even when the submit button is disabled, which is how a form mid-submission
+		// gets asked to submit again. A disabled submit means the form is not taking any.
+		if (this.#form.querySelector('[type="submit"]')?.disabled) {
+			return;
+		}
+
 		if (this.#isFormValid()) {
 			this.dispatchEvent(new CustomEvent('valid', { detail: event, bubbles: true, composed: true }));
 		} else {

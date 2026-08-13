@@ -4,15 +4,14 @@ import * as networkService from 'setup/services/network';
 import { completeStep, nextStepPath, previousStepPath } from 'setup/wizard';
 
 let isPrefilled = false;
-let isSubmitting = false;
 let settleTimeout = null;
 const SETTLE_TIMEOUT = 30000;
 const hostTemplate = _.template(hostPartial);
 document.querySelector('main .wizard').insertAdjacentHTML('beforeend', hostTemplate());
 const step = document.querySelector('#host');
 const form = step.querySelector('u-form');
-const back = step.querySelector('[data-action="back"]');
-const submit = step.querySelector('[type="submit"]');
+const backButton = step.querySelector('[data-action="back"]');
+const submitButton = step.querySelector('[type="submit"]');
 const access = step.querySelector('.access');
 const accessUrl = access.querySelector('.url');
 
@@ -40,32 +39,41 @@ const goNext = () => {
 	page(nextStepPath('host'));
 };
 
-const finish = () => {
-	isSubmitting = false;
+const idle = () => {
 	clearTimeout(settleTimeout);
 	settleTimeout = null;
-	submit.reset();
-	back.disabled = false;
+	submitButton.reset();
+	backButton.disabled = false;
 };
 
-const settle = (job) => {
-	if (!isSubmitting || job.name !== networkService.IDENTIFIER_JOB || !_.includes(['completed', 'failed'], job.progress?.state)) {
+// The job is what the form follows: while one is running the form is locked, and the step advances
+// when it finishes — but only if it is the step on screen, since a job outlives the page that
+// started it. A failure leaves the user here; the job toaster carries the reason.
+const renderJob = (jobs) => {
+	const job = _.find(jobs, { name: networkService.IDENTIFIER_JOB });
+	const isSettled = _.includes(['completed', 'failed'], job?.progress?.state);
+	if (job && !isSettled) {
+		clearTimeout(settleTimeout);
+		backButton.disabled = true;
+		submitButton.loading();
 		return;
 	}
 
-	finish();
-	if (job.progress.state === 'failed') {
-		alert(job.failedReason || 'Host was not updated.');
+	// A locked form is the record that this step has a job of its own to conclude.
+	if (!submitButton.disabled) {
 		return;
 	}
 
-	goNext();
+	idle();
+	if (job?.progress?.state === 'completed' && !step.classList.contains('d-none')) {
+		goNext();
+	}
 };
 
 // The fields are seeded once, from the first delivery that carries the node's identifier; after
 // that the form belongs to whoever is typing in it.
 const render = ({ system, jobs }) => {
-	_.each(jobs, settle);
+	renderJob(jobs);
 	if (isPrefilled || _.isEmpty(system?.osInfo)) {
 		return;
 	}
@@ -77,10 +85,6 @@ const render = ({ system, jobs }) => {
 };
 
 const updateIdentifier = (event) => {
-	if (isSubmitting) {
-		return;
-	}
-
 	// Nothing to apply when the identifier is already what the form holds — move on without a job.
 	const data = form.getData();
 	if (_.isEqual(data, currentIdentifier(networkService.getSystem()))) {
@@ -88,22 +92,17 @@ const updateIdentifier = (event) => {
 		return;
 	}
 
-	isSubmitting = true;
-	back.disabled = true;
-	submit.loading();
-	// The update is applied by a job on the API; without a terminal job the button would spin forever.
+	backButton.disabled = true;
+	submitButton.loading();
+	// The job locks the form once it appears; until it does, this covers a request that never lands.
 	settleTimeout = setTimeout(() => {
-		finish();
-		alert('Host was not updated, the request timed out.');
+		idle();
+		notifier.add({ title: 'Host was not updated, the request timed out.', type: 'error', duration: 0 });
 	}, SETTLE_TIMEOUT);
 	networkService.updateHostIdentifier(data);
 };
 
 const goBack = (event) => {
-	if (isSubmitting) {
-		return;
-	}
-
 	page(previousStepPath('host'));
 };
 
@@ -129,7 +128,6 @@ form.validation = [
 ];
 form.addEventListener('valid', updateIdentifier);
 form.addEventListener('value-changed', renderAccess);
-back.addEventListener('click', goBack);
-
+backButton.addEventListener('click', goBack);
 
 networkService.subscribe([render]);

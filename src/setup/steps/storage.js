@@ -4,7 +4,6 @@ import statePartial from 'setup/partials/storage_state.html';
 import * as storageService from 'setup/services/storage';
 import { completeStep, nextStepPath, previousStepPath } from 'setup/wizard';
 
-let isSubmitting = false;
 const storageTemplate = _.template(storagePartial);
 const stateTemplate = _.template(statePartial);
 document.querySelector('main .wizard').insertAdjacentHTML('beforeend', storageTemplate());
@@ -12,45 +11,55 @@ const step = document.querySelector('#storage');
 const fetching = step.querySelector('.fetching');
 const summary = step.querySelector('.summary');
 const actions = step.querySelector('.actions');
-const rescan = step.querySelector('.rescan');
+const rescanLink = step.querySelector('.rescan');
 const importButton = step.querySelector('[data-action="import"]');
 const createButton = step.querySelector('[data-action="create"]');
 const continueButton = step.querySelector('[data-action="continue"]');
-const back = step.querySelector('[data-action="back"]');
+const backButton = step.querySelector('[data-action="back"]');
 
 const goNext = () => {
 	completeStep('storage');
 	page(nextStepPath('storage'));
 };
 
-const finish = () => {
-	isSubmitting = false;
+const idle = () => {
 	importButton.reset();
 	createButton.reset();
-	back.disabled = false;
-	rescan.classList.remove('d-none');
+	backButton.disabled = false;
+	rescanLink.classList.remove('d-none');
 };
 
-const settle = (job) => {
-	if (!isSubmitting || !_.includes(['completed', 'failed'], job.progress?.state)) {
-		return;
+// Preparing a pool is the node's work, not this tab's, so the actions follow the job: locked while
+// one runs, and the step advances when it finishes — but only if it is the step on screen, since a
+// job outlives the page that started it. A failure leaves the user here to try again.
+const renderJob = (jobs) => {
+	const job = _.find(jobs, (job) => { return _.includes([storageService.IMPORT_JOB, storageService.CREATE_JOB], job.name); });
+	const isSettled = _.includes(['completed', 'failed'], job?.progress?.state);
+	if (job && !isSettled) {
+		backButton.disabled = true;
+		rescanLink.classList.add('d-none');
+		return true;
 	}
 
-	finish();
-	if (job.progress.state === 'failed') {
-		alert(job.failedReason || 'The pool could not be prepared.');
-		return;
+	// Locked actions are the record that this step has a job of its own to conclude.
+	if (!backButton.disabled) {
+		return false;
 	}
 
-	goNext();
+	idle();
+	if (job?.progress?.state === 'completed' && !step.classList.contains('d-none')) {
+		goNext();
+	}
+
+	return false;
 };
 
 // `importablePools` is [] once scanned and false when the scan itself failed, so both are answers;
 // only null means the node has not reported yet and the step keeps waiting. A submission owns the
 // view until its job settles, so the summary is left alone while one is in flight.
 const render = ({ storage, drives, importablePools, jobs }) => {
-	_.each(jobs, settle);
-	if (isSubmitting || _.isNull(importablePools) || _.isNull(drives)) {
+	// A summary rendered while the pool is being prepared would describe a node that no longer exists.
+	if (renderJob(jobs) || _.isNull(importablePools) || _.isNull(drives)) {
 		return;
 	}
 
@@ -85,26 +94,17 @@ const render = ({ storage, drives, importablePools, jobs }) => {
 };
 
 const start = (button) => {
-	isSubmitting = true;
-	back.disabled = true;
-	rescan.classList.add('d-none');
+	backButton.disabled = true;
+	rescanLink.classList.add('d-none');
 	button.loading();
 };
 
 const importPool = (event) => {
-	if (isSubmitting) {
-		return;
-	}
-
 	start(importButton);
 	storageService.importPool({ name: storageService.POOL_NAME });
 };
 
 const createPool = async (event) => {
-	if (isSubmitting) {
-		return;
-	}
-
 	const drives = storageService.findUsableDrives(storageService.getDrives());
 	const names = _.map(drives, (drive) => { return `${drive.model} (SN: ${drive.serialNumber})`; }).join('<br>');
 	if (!await confirm(`Everything on these drives will be erased:<br><br>${names}<br><br>This cannot be undone.`, { buttons: [{ text: 'Erase and create pool', class: 'btn-danger' }] })) {
@@ -121,10 +121,6 @@ const createPool = async (event) => {
 
 const scanAgain = (event) => {
 	event.preventDefault();
-	if (isSubmitting) {
-		return;
-	}
-
 	fetching.classList.remove('d-none');
 	summary.classList.add('d-none');
 	actions.classList.add('d-none');
@@ -132,18 +128,14 @@ const scanAgain = (event) => {
 };
 
 const goBack = (event) => {
-	if (isSubmitting) {
-		return;
-	}
-
 	page(previousStepPath('storage'));
 };
 
-rescan.addEventListener('click', scanAgain);
+rescanLink.addEventListener('click', scanAgain);
 importButton.addEventListener('click', importPool);
 createButton.addEventListener('click', createPool);
 continueButton.addEventListener('click', goNext);
-back.addEventListener('click', goBack);
+backButton.addEventListener('click', goBack);
 
 // The subscription keeps this step current even while it is hidden, so arriving here only has to
 // cover the case where the node never reported a scan for this client to render.

@@ -20,7 +20,7 @@
 			<dt class="fw-lighter"><small>Status</small></dt>
 			<dd class="text-warning"><%=importablePool.status%></dd>
 		<%}%>
-		<dt class="fw-lighter"><small>Drives</small></dt>
+		<dt class="fw-lighter"><small>Structure</small></dt>
 		<dd class="m-0">
 			<%_.each(importablePool.vdevs, (vdev) => {%>
 				<div><%=vdev.name%> <small class="text-body-tertiary"><%=vdev.state%></small></div>

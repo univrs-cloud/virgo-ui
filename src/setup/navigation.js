@@ -1,5 +1,6 @@
 import page from 'page';
 // Steps render themselves into `main .wizard` on import, so this module must load after `setup/main`.
+import 'setup/jobs';
 import 'setup/steps/welcome';
 import 'setup/steps/host';
 import 'setup/steps/interface';
