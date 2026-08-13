@@ -41,13 +41,14 @@ const renderJob = (jobs) => {
 		return true;
 	}
 
-	// Locked actions are the record that this step has a job of its own to conclude.
-	if (!backButton.disabled) {
-		return false;
+	// Only a job that has reported back concludes the step. An empty list is the gap between asking
+	// for one and the node queueing it, and unlocking there would hand the actions back mid-import.
+	if (!isSettled || !backButton.disabled) {
+		return backButton.disabled;
 	}
 
 	idle();
-	if (job?.progress?.state === 'completed' && !step.classList.contains('d-none')) {
+	if (job.progress.state === 'completed' && !step.classList.contains('d-none')) {
 		goNext();
 	}
 
