@@ -64,13 +64,14 @@ const renderJob = (jobs) => {
 		return;
 	}
 
-	// A locked form is the record that this step has a job of its own to conclude.
-	if (!submitButton.disabled) {
+	// Only a job that has reported back concludes the step. An empty list is the gap between asking
+	// for one and the node queueing it, and unlocking there would hand the form back mid-flight.
+	if (!isSettled || !submitButton.disabled) {
 		return;
 	}
 
 	idle();
-	if (job?.progress?.state === 'completed' && !step.classList.contains('d-none')) {
+	if (job.progress.state === 'completed' && !step.classList.contains('d-none')) {
 		goNext();
 	}
 };
