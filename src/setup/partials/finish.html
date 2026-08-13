@@ -9,13 +9,13 @@
 				<h5 class="card-title">Before you continue</h5>
 				<p>Finishing closes the setup wizard for good. From here on the node is managed from its dashboard, and everything you have just configured can be changed there.</p>
 				<p class="m-0">This node will be waiting at <span class="url text-body-secondary"></span>, where you will be asked to sign in with the password you set. Signing in only works through that name, so make sure your network resolves it to this node — an IP address will not do.</p>
-				<div class="unnamed alert alert-warning d-none mt-3 mb-0">
+				<div class="unnamed alert alert-warning d-none mt-4 mb-0">
 					<i class="icon-duotone icon-solid icon-triangle-exclamation icon-fw me-1"></i>
 					This node has no hostname and domain yet, and sign-in needs one. Go back to the network step and set them before finishing.
 				</div>
 				<div class="d-flex justify-content-end gap-2 mt-4">
 					<u-button variant="secondary" data-action="back" outline>Back</u-button>
-					<u-button variant="primary" data-action="finish">Finish setup</u-button>
+					<u-button variant="primary" data-action="finish" loading-text="Finishing setup...">Finish setup</u-button>
 				</div>
 			</div>
 		</div>
