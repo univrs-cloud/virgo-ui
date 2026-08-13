@@ -1,7 +1,7 @@
 import page from 'page';
 import welcomePartial from 'setup/partials/welcome.html';
 import eulaPartial from 'setup/partials/eula.html';
-import { completeStep, isStepCompleted } from 'setup/wizard';
+import { completeStep, isStepCompleted, nextStepPath } from 'setup/wizard';
 
 const welcomeTemplate = _.template(welcomePartial);
 document.querySelector('main .wizard').insertAdjacentHTML('beforeend', welcomeTemplate({ eula: eulaPartial }));
@@ -24,7 +24,7 @@ const proceed = (event) => {
 	}
 
 	completeStep('welcome');
-	page('/network/host');
+	page(nextStepPath('welcome'));
 };
 
 eula.addEventListener('scroll', unlockAccept);
