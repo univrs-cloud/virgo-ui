@@ -10,6 +10,7 @@ import 'setup/steps/apps';
 import 'setup/steps/password';
 import 'setup/steps/fleet';
 import 'setup/steps/finish';
+import * as appsService from 'setup/services/apps';
 import * as storageService from 'setup/services/storage';
 import { STEPS, completeStepsBefore, stepPath } from 'setup/wizard';
 
@@ -25,15 +26,21 @@ const showStep = (ctx) => {
 
 // Everything past storage is kept on the pool — the password reaches Authelia's file, registration
 // writes to the database — so those steps stay out of reach until there is one, however the wizard
-// is entered: by clicking forward, by refreshing, or by typing the address.
-const needsPool = (name) => {
-	return _.findIndex(STEPS, { name }) > _.findIndex(STEPS, { name: 'storage' });
+// is entered: by clicking forward, by refreshing, or by typing the address. Past the apps step the
+// same holds for the apps themselves: listed in the registry is not enough, they have to be running.
+const isAfter = (name, step) => {
+	return _.findIndex(STEPS, { name }) > _.findIndex(STEPS, { name: step });
 };
 
 _.each(STEPS, ({ name, path }) => {
 	page(path, (ctx) => {
-		if (needsPool(name) && !storageService.hasPool()) {
+		if (isAfter(name, 'storage') && !storageService.hasPool()) {
 			page.redirect(stepPath('storage'));
+			return;
+		}
+
+		if (isAfter(name, 'apps') && !appsService.isReady()) {
+			page.redirect(stepPath('apps'));
 			return;
 		}
 
