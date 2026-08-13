@@ -8,6 +8,10 @@ const { subscribe } = createSubscription({
 			propertyNames: ['jobs']
 		}
 	],
+	filters: {
+		// A job that has not reported yet carries a plain number, and there is nothing to say about it.
+		jobs: (job) => { return job.progress !== 0; }
+	},
 	attachStore: storeAttach.afterCallbacks,
 	mapState: (properties) => {
 		return properties;
