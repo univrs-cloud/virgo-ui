@@ -6,6 +6,7 @@ import 'setup/steps/host';
 import 'setup/steps/interface';
 import 'setup/steps/ports';
 import 'setup/steps/storage';
+import 'setup/steps/apps';
 import 'setup/steps/password';
 import 'setup/steps/fleet';
 import 'setup/steps/finish';

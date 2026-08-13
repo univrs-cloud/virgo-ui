@@ -1,4 +1,4 @@
-import jobProgressPartial from 'node/partials/job_progress.html';
+import jobProgressPartial from 'setup/partials/job_progress.html';
 import * as jobService from 'setup/services/job';
 
 const jobProgressTemplate = _.template(jobProgressPartial);
