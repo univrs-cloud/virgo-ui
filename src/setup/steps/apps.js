@@ -24,15 +24,19 @@ const goBack = (event) => {
 };
 
 // The node installs these on its own once the pool is ready, so this step only reports what it is
-// doing — and holds the wizard here until both are in place, since the password written by the next
-// step goes into a file Authelia has to have created.
-const render = ({ configured, jobs }) => {
+// doing — and holds the wizard here, in both directions, until both apps are up: the password written
+// by the next step goes into a file Authelia has to have created.
+const render = ({ configured, containers, jobs }) => {
+	const apps = appsService.getCoreApps(configured, containers, jobs);
 	morphdom(
 		core,
-		`<dl>${stateTemplate({ apps: appsService.getCoreApps(configured, jobs), jobProgressTemplate })}</dl>`,
+		`<dl>${stateTemplate({ apps, jobProgressTemplate })}</dl>`,
 		{ childrenOnly: true }
 	);
-	continueButton.disabled = !appsService.isInstalled(configured);
+
+	const isReady = appsService.isReady(configured, containers);
+	backButton.disabled = !isReady;
+	continueButton.disabled = !isReady;
 };
 
 continueButton.addEventListener('click', goNext);
