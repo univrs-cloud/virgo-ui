@@ -9,7 +9,7 @@ const toasts = {};
 // reach a node being set up, and a second tab watching the same node should see the same work.
 const render = (state) => {
 	_.each(state.jobs, (job) => {
-		if (job.opts.repeat || acknowledgedJobIds.has(job.id)) {
+		if (job.opts?.repeat || acknowledgedJobIds.has(job.id)) {
 			return;
 		}
 

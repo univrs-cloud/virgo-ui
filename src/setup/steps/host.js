@@ -14,6 +14,8 @@ const backButton = step.querySelector('[data-action="back"]');
 const submitButton = step.querySelector('[type="submit"]');
 const access = step.querySelector('.access');
 const accessUrl = access.querySelector('.url');
+const accessFqdn = access.querySelector('.fqdn');
+const accessAddress = access.querySelector('.address');
 
 const currentIdentifier = (system) => {
 	return {
@@ -22,16 +24,19 @@ const currentIdentifier = (system) => {
 	};
 };
 
-// The hostname and domain are what the node answers to once setup finishes, so spell the resulting
-// address out while it is still being typed. Seeding the fields fires `value-changed` too, so this
-// covers the prefilled values without render having to call it.
+// The hostname and domain are what the node answers to once setup finishes, and nothing resolves that
+// name until someone says so — so both the resulting address and the record that has to exist for it
+// are spelled out while it is still being typed. Seeding the fields fires `value-changed` too, so
+// this covers the prefilled values without render having to call it.
 const renderAccess = () => {
 	const data = form.getData();
 	const hostname = _.trim(data.hostname);
 	const domainName = _.trim(data.domainName);
-	accessUrl.textContent = `https://${hostname}.${domainName}`;
+	const fqdn = `${hostname}.${domainName}`;
+	accessUrl.textContent = `https://${fqdn}`;
+	accessFqdn.textContent = fqdn;
+	accessAddress.textContent = (networkService.getDefaultInterfaceAddress() || `this node's address`);
 	access.classList.toggle('d-none', _.isEmpty(hostname) || _.isEmpty(domainName));
-	access.classList.toggle('d-flex', !_.isEmpty(hostname) && !_.isEmpty(domainName));
 };
 
 const goNext = () => {

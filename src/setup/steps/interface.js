@@ -4,19 +4,16 @@ import * as networkService from 'setup/services/network';
 import { completeStep, nextStepPath, previousStepPath } from 'setup/wizard';
 
 const MAX_DNS_SERVERS = 3;
-// The old connection can answer for a moment after the update is queued, so give it time to drop
-// before the first probe — otherwise an unchanged address looks reachable while it is still going down.
-const REACHABLE_DELAY = 5000;
-const REACHABLE_INTERVAL = 2000;
-const REACHABLE_TIMEOUT = 180000;
+// Long enough for the connection to be torn down and brought back up on the new address, since the
+// browser cannot ask: the node answers on its own certificate, and one issued for an address this
+// browser has never visited fails every probe until someone accepts it.
+const APPLY_DELAY = 8000;
 
 let isPrefilled = false;
 const interfaceTemplate = _.template(interfacePartial);
 document.querySelector('main .wizard').insertAdjacentHTML('beforeend', interfaceTemplate());
 const step = document.querySelector('#interface');
 const form = step.querySelector('u-form');
-const configuration = step.querySelector('.configuration');
-const applying = step.querySelector('.applying');
 const dnsRows = form.querySelectorAll('.dns-server');
 const addDnsButton = form.querySelector('.add');
 const backButton = step.querySelector('[data-action="back"]');
@@ -95,15 +92,13 @@ const goNext = () => {
 	page(nextStepPath('interface'));
 };
 
-// The applying panel doubles as this step's state: while it is up the node is being reconfigured and
-// the browser is waiting for it to answer somewhere else.
+// The locked form is this step's state: while it is locked the node is being reconfigured and the
+// browser is on its way to the address it will answer on.
 const isApplying = () => {
-	return !applying.classList.contains('d-none');
+	return submitButton.disabled;
 };
 
 const restore = () => {
-	applying.classList.add('d-none');
-	configuration.classList.remove('d-none');
 	submitButton.reset();
 	backButton.disabled = false;
 };
@@ -115,36 +110,21 @@ const stepUrl = (ipAddress) => {
 	return `${location.protocol}//${ipAddress}${port}${nextStepPath('interface')}`;
 };
 
-const isReachable = async (url) => {
-	try {
-		await fetch(url, { mode: 'no-cors', cache: 'no-store' });
-		return true;
-	} catch (error) {
-		return false;
-	}
-};
-
 const sleep = (delay) => {
 	return new Promise((resolve) => { setTimeout(resolve, delay); });
 };
 
-const waitForNode = async (url) => {
-	await sleep(REACHABLE_DELAY);
-	const deadline = Date.now() + REACHABLE_TIMEOUT;
-	while (Date.now() < deadline) {
-		await sleep(REACHABLE_INTERVAL);
-		if (!isApplying()) {
-			return;
-		}
-
-		if (await isReachable(url)) {
-			location.replace(url);
-			return;
-		}
+/** Nothing can be waited for here: the old address stops answering the moment the connection comes
+ * back up, and the new one is a different origin whose certificate this browser has never been shown
+ * — every probe of it fails before it reaches the node. So the wizard simply follows the node over,
+ * and the browser asks about the certificate the way it did for the address being left behind. */
+const followNode = async (url) => {
+	await sleep(APPLY_DELAY);
+	if (!isApplying()) {
+		return;
 	}
 
-	restore();
-	notifier.add({ title: `The node did not come back at <a href="${url}">${url}</a>. Check the address and try again.`, type: 'error', duration: 0 });
+	location.replace(url);
 };
 
 // A failed job means the node stayed where it is, so there is nothing left to wait for. Success is
@@ -186,12 +166,8 @@ const updateInterface = (event) => {
 
 	backButton.disabled = true;
 	submitButton.loading();
-	configuration.classList.add('d-none');
-	const url = stepUrl(config.ipAddress);
-	applying.querySelector('.address small').innerHTML = url;
-	applying.classList.remove('d-none');
 	networkService.updateInterface(config);
-	waitForNode(url);
+	followNode(stepUrl(config.ipAddress));
 };
 
 const goBack = (event) => {
