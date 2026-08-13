@@ -11,7 +11,6 @@ const REACHABLE_INTERVAL = 2000;
 const REACHABLE_TIMEOUT = 180000;
 
 let isPrefilled = false;
-let isSubmitting = false;
 const interfaceTemplate = _.template(interfacePartial);
 document.querySelector('main .wizard').insertAdjacentHTML('beforeend', interfaceTemplate());
 const step = document.querySelector('#interface');
@@ -20,8 +19,8 @@ const configuration = step.querySelector('.configuration');
 const applying = step.querySelector('.applying');
 const dnsRows = form.querySelectorAll('.dns-server');
 const addDnsButton = form.querySelector('.add');
-const back = step.querySelector('[data-action="back"]');
-const submit = step.querySelector('[type="submit"]');
+const backButton = step.querySelector('[data-action="back"]');
+const submitButton = step.querySelector('[type="submit"]');
 
 const isVisible = (row) => {
 	return !row.classList.contains('d-none');
@@ -96,12 +95,17 @@ const goNext = () => {
 	page(nextStepPath('interface'));
 };
 
+// The applying panel doubles as this step's state: while it is up the node is being reconfigured and
+// the browser is waiting for it to answer somewhere else.
+const isApplying = () => {
+	return !applying.classList.contains('d-none');
+};
+
 const restore = () => {
-	isSubmitting = false;
 	applying.classList.add('d-none');
 	configuration.classList.remove('d-none');
-	submit.reset();
-	back.disabled = false;
+	submitButton.reset();
+	backButton.disabled = false;
 };
 
 // Reconfiguring the connection drops this browser's link to the node — on a new address the old
@@ -129,7 +133,7 @@ const waitForNode = async (url) => {
 	const deadline = Date.now() + REACHABLE_TIMEOUT;
 	while (Date.now() < deadline) {
 		await sleep(REACHABLE_INTERVAL);
-		if (!isSubmitting) {
+		if (!isApplying()) {
 			return;
 		}
 
@@ -140,22 +144,21 @@ const waitForNode = async (url) => {
 	}
 
 	restore();
-	alert(`The node did not come back at <a href="${url}">${url}</a>. Check the address and try again.`);
+	notifier.add({ title: `The node did not come back at <a href="${url}">${url}</a>. Check the address and try again.`, type: 'error', duration: 0 });
 };
 
-const settle = (job) => {
-	if (!isSubmitting || job.name !== networkService.INTERFACE_JOB || job.progress?.state !== 'failed') {
-		return;
+// A failed job means the node stayed where it is, so there is nothing left to wait for. Success is
+// not handled here: the browser has to reach the node at its new address to know it arrived.
+const renderJob = (jobs) => {
+	if (_.find(jobs, { name: networkService.INTERFACE_JOB })?.progress?.state === 'failed' && isApplying()) {
+		restore();
 	}
-
-	restore();
-	alert(job.failedReason || 'Network interface was not updated.');
 };
 
 // The fields are seeded once, from the first delivery that carries the interface; after that the
 // form belongs to whoever is typing in it.
 const render = ({ system, jobs }) => {
-	_.each(jobs, settle);
+	renderJob(jobs);
 	const networkInterface = networkService.getDefaultInterface(system);
 	if (isPrefilled || _.isUndefined(networkInterface)) {
 		return;
@@ -174,10 +177,6 @@ const render = ({ system, jobs }) => {
 };
 
 const updateInterface = (event) => {
-	if (isSubmitting) {
-		return;
-	}
-
 	// Nothing to apply when the interface already holds this configuration — move on without a job.
 	const config = formConfiguration();
 	if (_.isEqual(config, currentConfiguration(networkService.getDefaultInterface()))) {
@@ -185,9 +184,8 @@ const updateInterface = (event) => {
 		return;
 	}
 
-	isSubmitting = true;
-	back.disabled = true;
-	submit.loading();
+	backButton.disabled = true;
+	submitButton.loading();
 	configuration.classList.add('d-none');
 	const url = stepUrl(config.ipAddress);
 	applying.querySelector('.address small').innerHTML = url;
@@ -197,10 +195,6 @@ const updateInterface = (event) => {
 };
 
 const goBack = (event) => {
-	if (isSubmitting) {
-		return;
-	}
-
 	page(previousStepPath('interface'));
 };
 
@@ -250,7 +244,7 @@ form.validation = [
 form.addEventListener('valid', updateInterface);
 addDnsButton.addEventListener('click', addDnsRow);
 _.each(form.querySelectorAll('.dns-server .remove'), (button) => { button.addEventListener('click', removeDnsRow); });
-back.addEventListener('click', goBack);
+backButton.addEventListener('click', goBack);
 
 
 networkService.subscribe([render]);

@@ -5,7 +5,6 @@ import * as fleetService from 'setup/services/fleet';
 import { completeStep, nextStepPath, previousStepPath } from 'setup/wizard';
 
 let isPrefilled = false;
-let isSubmitting = false;
 let isRegistering = false;
 // The last configuration the node reported, so entering the step can re-render without reading the
 // store behind the subscription's back.
@@ -20,10 +19,10 @@ const step = document.querySelector('#fleet');
 const form = step.querySelector('u-form');
 const registered = step.querySelector('.registered');
 const status = registered.querySelector('.status');
-const reRegister = registered.querySelector('.re-register');
+const reRegisterLink = registered.querySelector('.re-register');
 const fleetLink = step.querySelector('.fleet-link span');
-const skip = step.querySelector('.skip');
-const submit = form.querySelector('[type="submit"]');
+const skipLink = step.querySelector('.skip');
+const submitButton = form.querySelector('[type="submit"]');
 
 // Registration state and connection health both come off the same configuration, so this runs on
 // every delivery — a node that reconnects (or drops) while the step is open says so straight away.
@@ -33,7 +32,7 @@ const renderStatus = () => {
 	form.classList.toggle('d-none', !needsRegistration);
 	registered.classList.toggle('d-none', needsRegistration);
 	fleetLink.textContent = (registeredNode ? 'View fleet' : 'Create account');
-	submit.textContent = (registeredNode ? 'Register again' : 'Register');
+	submitButton.textContent = (registeredNode ? 'Register again' : 'Register');
 	if (needsRegistration) {
 		return;
 	}
@@ -43,7 +42,7 @@ const renderStatus = () => {
 		`<dl>${statusTemplate({ fleet: configuration?.fleet })}</dl>`,
 		{ childrenOnly: true }
 	);
-	reRegister.classList.toggle('d-none', !configuration?.fleet?.authFailed);
+	reRegisterLink.classList.toggle('d-none', !configuration?.fleet?.authFailed);
 };
 
 const goNext = () => {
@@ -51,35 +50,45 @@ const goNext = () => {
 	page(nextStepPath('fleet'));
 };
 
-const finish = () => {
-	isSubmitting = false;
+const idle = () => {
 	clearTimeout(settleTimeout);
 	settleTimeout = null;
-	submit.reset();
+	submitButton.reset();
+	skipLink.classList.remove('disabled', 'pe-none');
 	_.each(step.querySelectorAll('[data-action="back"]'), (button) => { button.disabled = false; });
 };
 
-const settle = (job) => {
-	if (!isSubmitting || job.name !== fleetService.REGISTER_JOB || !_.includes(['completed', 'failed'], job.progress?.state)) {
+// The job is what the form follows: while one is running the form is locked, and the step advances
+// when it finishes — but only if it is the step on screen, since a job outlives the page that
+// started it. A failure leaves the user here; the job toaster carries the reason.
+const renderJob = (jobs) => {
+	const job = _.find(jobs, { name: fleetService.REGISTER_JOB });
+	const isSettled = _.includes(['completed', 'failed'], job?.progress?.state);
+	if (job && !isSettled) {
+		clearTimeout(settleTimeout);
+		skipLink.classList.add('disabled', 'pe-none');
+		_.each(step.querySelectorAll('[data-action="back"]'), (button) => { button.disabled = true; });
+		submitButton.loading();
 		return;
 	}
 
-	finish();
-	if (job.progress.state === 'failed') {
-		// Unreachable fleet and rejected credentials both land here, told apart by the job's reason.
-		alert(job.failedReason || 'Fleet registration failed.');
+	// A locked form is the record that this step has a job of its own to conclude.
+	if (!submitButton.disabled) {
 		return;
 	}
 
-	isRegistering = false;
-	goNext();
+	idle();
+	if (job?.progress?.state === 'completed' && !step.classList.contains('d-none')) {
+		isRegistering = false;
+		goNext();
+	}
 };
 
 // A node that already holds a token is tied to that account, so the email is seeded once and can
 // only be confirmed from then on.
 const render = (state) => {
 	configuration = state.configuration;
-	_.each(state.jobs, settle);
+	renderJob(state.jobs);
 	renderStatus();
 	if (isPrefilled || _.isNull(configuration) || _.isUndefined(configuration)) {
 		return;
@@ -92,16 +101,14 @@ const render = (state) => {
 };
 
 const registerFleet = (event) => {
-	if (isSubmitting) {
-		return;
-	}
-
-	isSubmitting = true;
+	// Leaving mid-registration would hand the next step a node whose enrolment is still in flight.
+	skipLink.classList.add('disabled', 'pe-none');
 	_.each(step.querySelectorAll('[data-action="back"]'), (button) => { button.disabled = true; });
-	submit.loading();
+	submitButton.loading();
+	// The job locks the form once it appears; until it does, this covers a request that never lands.
 	settleTimeout = setTimeout(() => {
-		finish();
-		alert('Fleet registration timed out. Check that this node can reach the internet, or skip this step.');
+		idle();
+		notifier.add({ title: 'Fleet registration timed out. Check that this node can reach the internet, or skip this step.', type: 'error', duration: 0 });
 	}, SETTLE_TIMEOUT);
 	fleetService.updateFleet(form.getData());
 };
@@ -115,18 +122,10 @@ const showRegistrationForm = (event) => {
 
 const skipStep = (event) => {
 	event.preventDefault();
-	if (isSubmitting) {
-		return;
-	}
-
 	goNext();
 };
 
 const goBack = (event) => {
-	if (isSubmitting) {
-		return;
-	}
-
 	page(previousStepPath('fleet'));
 };
 
@@ -146,8 +145,8 @@ form.validation = [
 	}
 ];
 form.addEventListener('valid', registerFleet);
-skip.addEventListener('click', skipStep);
-reRegister.addEventListener('click', showRegistrationForm);
+skipLink.addEventListener('click', skipStep);
+reRegisterLink.addEventListener('click', showRegistrationForm);
 registered.querySelector('[data-action="continue"]').addEventListener('click', goNext);
 _.each(step.querySelectorAll('[data-action="back"]'), (button) => { button.addEventListener('click', goBack); });
 

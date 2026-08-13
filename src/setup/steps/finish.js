@@ -12,8 +12,8 @@ document.querySelector('main .wizard').insertAdjacentHTML('beforeend', finishTem
 const step = document.querySelector('#finish');
 const url = step.querySelector('.url');
 const unnamed = step.querySelector('.unnamed');
-const back = step.querySelector('[data-action="back"]');
-const finish = step.querySelector('[data-action="finish"]');
+const backButton = step.querySelector('[data-action="back"]');
+const finishButton = step.querySelector('[data-action="finish"]');
 
 // Setup is reached by address, but a finished node authenticates through Authelia, which only issues
 // a session for the node's own name — so the browser has to be sent there, and there is nowhere else
@@ -47,13 +47,13 @@ const completeSetup = (event) => {
 	}
 
 	isFinishing = true;
-	back.disabled = true;
-	finish.loading();
+	backButton.disabled = true;
+	finishButton.loading();
 	settleTimeout = setTimeout(() => {
 		isFinishing = false;
-		back.disabled = false;
-		finish.reset();
-		alert('Setup could not be completed.');
+		backButton.disabled = false;
+		finishButton.reset();
+		notifier.add({ title: 'Setup could not be completed.', type: 'error', duration: 0 });
 	}, SETTLE_TIMEOUT);
 	setupService.completeSetup();
 };
@@ -67,6 +67,6 @@ const goBack = (event) => {
 };
 
 finish.addEventListener('click', completeSetup);
-back.addEventListener('click', goBack);
+backButton.addEventListener('click', goBack);
 
 setupService.subscribe([render]);

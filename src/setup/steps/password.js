@@ -3,7 +3,6 @@ import passwordPartial from 'setup/partials/password.html';
 import * as userService from 'setup/services/user';
 import { completeStep, nextStepPath, previousStepPath } from 'setup/wizard';
 
-let isSubmitting = false;
 let settleTimeout = null;
 // Linux, samba and authelia are written in sequence, so the job outlives a quick round trip.
 const SETTLE_TIMEOUT = 60000;
@@ -12,74 +11,69 @@ document.querySelector('main .wizard').insertAdjacentHTML('beforeend', passwordT
 const step = document.querySelector('#password');
 const form = step.querySelector('u-form');
 const username = step.querySelector('.username');
-const back = step.querySelector('[data-action="back"]');
-const submit = step.querySelector('[type="submit"]');
+const backButton = step.querySelector('[data-action="back"]');
+const submitButton = step.querySelector('[type="submit"]');
 
 const goNext = () => {
 	completeStep('password');
 	page(nextStepPath('password'));
 };
 
-const finish = () => {
-	isSubmitting = false;
+const idle = () => {
 	clearTimeout(settleTimeout);
 	settleTimeout = null;
-	submit.reset();
-	back.disabled = false;
+	submitButton.reset();
+	backButton.disabled = false;
 };
 
-const settle = (job) => {
-	if (!isSubmitting || !_.includes(['completed', 'failed'], job.progress?.state)) {
+// The job is what the form follows: while one is running the form is locked, and the step advances
+// when it finishes — but only if it is the step on screen, since a job outlives the page that
+// started it. A failure leaves the user here; the job toaster carries the reason.
+const renderJob = (jobs) => {
+	const job = _.find(jobs, { name: userService.PASSWORD_JOB });
+	const isSettled = _.includes(['completed', 'failed'], job?.progress?.state);
+	if (job && !isSettled) {
+		clearTimeout(settleTimeout);
+		backButton.disabled = true;
+		submitButton.loading();
 		return;
 	}
 
-	finish();
-	if (job.progress.state === 'failed') {
-		// A missing authelia users file lands here: the linux and samba passwords are already changed
-		// by then, so the reason matters more than a generic message.
-		alert(job.failedReason || 'The password could not be changed.');
+	// A locked form is the record that this step has a job of its own to conclude.
+	if (!submitButton.disabled) {
 		return;
 	}
 
-	form.reset();
-	goNext();
+	idle();
+	if (job?.progress?.state === 'completed' && !step.classList.contains('d-none')) {
+		form.reset();
+		goNext();
+	}
 };
 
 const render = ({ users, jobs }) => {
-	_.each(jobs, settle);
-	if (isSubmitting) {
-		return;
-	}
-
+	renderJob(jobs);
 	username.textContent = (userService.findDefaultUser(users)?.username || '—');
 };
 
 const changePassword = (event) => {
-	if (isSubmitting) {
-		return;
-	}
-
 	const user = userService.getDefaultUser();
 	if (_.isUndefined(user)) {
-		alert('The default account has not been reported by this node yet.');
+		notifier.add({ title: 'The default account has not been reported by this node yet.', type: 'error', duration: 0 });
 		return;
 	}
 
-	isSubmitting = true;
-	back.disabled = true;
-	submit.loading();
+	backButton.disabled = true;
+	submitButton.loading();
+	// The job locks the form once it appears; until it does, this covers a request that never lands.
 	settleTimeout = setTimeout(() => {
-		finish();
-		alert('The password change timed out.');
+		idle();
+		notifier.add({ title: 'The password change timed out.', type: 'error', duration: 0 });
 	}, SETTLE_TIMEOUT);
 	userService.changePassword({ ...form.getData(), username: user.username });
 };
 
 const goBack = (event) => {
-	if (isSubmitting) {
-		return;
-	}
-
 	page(previousStepPath('password'));
 };
 
@@ -110,6 +104,6 @@ form.validation = [
 	}
 ];
 form.addEventListener('valid', changePassword);
-back.addEventListener('click', goBack);
+backButton.addEventListener('click', goBack);
 
 userService.subscribe([render]);
