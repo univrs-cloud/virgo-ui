@@ -63,14 +63,14 @@ const render = ({ storage, drives, importablePools, jobs }) => {
 		return;
 	}
 
-	const pool = storageService.findPool(storage);
-	const importablePool = storageService.findImportablePool(importablePools);
-	const usableDrives = storageService.findUsableDrives(drives);
+	const pool = storageService.getPool(storage);
+	const importablePool = storageService.getImportablePool(importablePools);
+	const usableDrives = storageService.getUsableDrives(drives);
 	const template = stateTemplate({
 		pool,
 		importablePools,
 		importablePool,
-		foreignPools: storageService.findForeignPools(importablePools),
+		foreignPools: storageService.getForeignPools(importablePools),
 		drives: usableDrives,
 		poolName: storageService.POOL_NAME,
 		minimumDrives: storageService.MINIMUM_DRIVES,
@@ -105,7 +105,7 @@ const importPool = (event) => {
 };
 
 const createPool = async (event) => {
-	const drives = storageService.findUsableDrives(storageService.getDrives());
+	const drives = storageService.getUsableDrives(storageService.getDrives());
 	const names = _.map(drives, (drive) => { return `${drive.model} (SN: ${drive.serialNumber})`; }).join('<br>');
 	if (!await confirm(`Everything on these drives will be erased:<br><br>${names}<br><br>This cannot be undone.`, { buttons: [{ text: 'Erase and create pool', class: 'btn-danger' }] })) {
 		return;

@@ -9,7 +9,8 @@ import 'setup/steps/storage';
 import 'setup/steps/password';
 import 'setup/steps/fleet';
 import 'setup/steps/finish';
-import { STEPS, completeStepsBefore } from 'setup/wizard';
+import * as storageService from 'setup/services/storage';
+import { STEPS, completeStepsBefore, stepPath } from 'setup/wizard';
 
 const container = document.querySelector('main');
 
@@ -21,8 +22,20 @@ const showStep = (ctx) => {
 	step?.onRoute?.(ctx);
 };
 
+// Everything past storage is kept on the pool — the password reaches Authelia's file, registration
+// writes to the database — so those steps stay out of reach until there is one, however the wizard
+// is entered: by clicking forward, by refreshing, or by typing the address.
+const needsPool = (name) => {
+	return _.findIndex(STEPS, { name }) > _.findIndex(STEPS, { name: 'storage' });
+};
+
 _.each(STEPS, ({ name, path }) => {
 	page(path, (ctx) => {
+		if (needsPool(name) && !storageService.hasPool()) {
+			page.redirect(stepPath('storage'));
+			return;
+		}
+
 		ctx.step = name;
 		completeStepsBefore(name);
 		showStep(ctx);

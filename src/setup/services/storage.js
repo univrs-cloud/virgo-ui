@@ -34,24 +34,29 @@ const { subscribe } = createSubscription({
 });
 
 /** This node's pool, already imported and in use. */
-const findPool = (storage) => {
+const getPool = (storage) => {
 	return _.find(storage, { name: POOL_NAME });
 };
 
 /** This node's pool sitting on the drives unimported — what setup offers to adopt. */
-const findImportablePool = (importablePools) => {
+const getImportablePool = (importablePools) => {
 	return _.find(importablePools, { name: POOL_NAME });
 };
 
 /** Importable pools that aren't this node's: foreign data that creating a new pool would destroy. */
-const findForeignPools = (importablePools) => {
+const getForeignPools = (importablePools) => {
 	return _.reject(_.filter(importablePools, _.isObject), { name: POOL_NAME });
 };
 
 /** Drives a pool can be built from: the node has to be able to name one by its stable id before it
  * can be handed to zpool. */
-const findUsableDrives = (drives) => {
+const getUsableDrives = (drives) => {
 	return _.filter(drives, 'eui');
+};
+
+/** Whether the node has its pool, which is what everything after the storage step is stored on. */
+const hasPool = () => {
+	return !_.isUndefined(getPool(Host.getStorage()));
 };
 
 const getDrives = () => {
@@ -79,10 +84,11 @@ export {
 	POOL_TYPE,
 	MINIMUM_DRIVES,
 	subscribe,
-	findPool,
-	findImportablePool,
-	findForeignPools,
-	findUsableDrives,
+	getPool,
+	getImportablePool,
+	getForeignPools,
+	getUsableDrives,
+	hasPool,
 	getDrives,
 	getImportablePools,
 	fetchImportablePools,
