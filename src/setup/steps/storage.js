@@ -29,45 +29,39 @@ const idle = () => {
 	rescanLink.classList.remove('d-none');
 };
 
-// Preparing a pool is the node's work, not this tab's, so the actions follow the job: locked while
-// one runs, and the step advances when it finishes — but only if it is the step on screen, since a
-// job outlives the page that started it. A failure leaves the user here to try again.
-const renderJob = (jobs, pool) => {
+// Preparing a pool is the node's work, not this tab's, so the actions follow the job: locked while one
+// runs, and the step advances when it finishes — but only if it is the step on screen, since a job
+// outlives the page that started it. A failure leaves the user here to try again. `importablePools` is
+// [] once scanned and false when the scan itself failed, so both are answers; only null means the node
+// has not reported yet and the step keeps waiting. A submission owns the view until its job settles,
+// so the summary is left alone while one is in flight.
+const render = ({ storage, drives, importablePools, jobs }) => {
+	const pool = storageService.getPool(storage);
 	const job = _.find(jobs, (job) => { return _.includes([storageService.IMPORT_JOB, storageService.CREATE_JOB], job.name); });
 	const isSettled = _.includes(['completed', 'failed'], job?.progress?.state);
+	// A summary rendered while the pool is being prepared would describe a node that no longer exists.
 	if (job && !isSettled) {
 		backButton.disabled = true;
 		rescanLink.classList.add('d-none');
-		return true;
+		return;
 	}
 
-	if (!backButton.disabled) {
-		return false;
+	if (backButton.disabled) {
+		// The pool being there is the outcome the job was reporting, and it outlives the report: a socket
+		// that dropped over the import comes back to an empty job list and would otherwise wait forever.
+		// An empty list on its own decides nothing — that is also the gap before the node queues the job.
+		const isPrepared = !_.isUndefined(pool);
+		if (!isSettled && !isPrepared) {
+			return;
+		}
+
+		idle();
+		if (isPrepared && !step.classList.contains('d-none')) {
+			goNext();
+		}
 	}
 
-	// The pool being there is the outcome the job was reporting, and it outlives the report: a socket
-	// that dropped over the import comes back to an empty job list and would otherwise wait forever.
-	// An empty list on its own decides nothing — that is also the gap before the node queues the job.
-	const isPrepared = !_.isUndefined(pool);
-	if (!isSettled && !isPrepared) {
-		return true;
-	}
-
-	idle();
-	if (isPrepared && !step.classList.contains('d-none')) {
-		goNext();
-	}
-
-	return false;
-};
-
-// `importablePools` is [] once scanned and false when the scan itself failed, so both are answers;
-// only null means the node has not reported yet and the step keeps waiting. A submission owns the
-// view until its job settles, so the summary is left alone while one is in flight.
-const render = ({ storage, drives, importablePools, jobs }) => {
-	const pool = storageService.getPool(storage);
-	// A summary rendered while the pool is being prepared would describe a node that no longer exists.
-	if (renderJob(jobs, pool) || _.isNull(importablePools) || _.isNull(drives)) {
+	if (_.isNull(importablePools) || _.isNull(drives)) {
 		return;
 	}
 

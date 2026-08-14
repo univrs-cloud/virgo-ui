@@ -115,17 +115,14 @@ const followNode = async (url) => {
 };
 
 // A failed job means the node stayed where it is, so there is nothing left to wait for. Success is
-// not handled here: the browser has to reach the node at its new address to know it arrived.
-const renderJob = (jobs) => {
+// not handled here: the browser has to reach the node at its new address to know it arrived. The
+// fields are seeded once, from the first delivery that carries the interface; after that the form
+// belongs to whoever is typing in it.
+const render = ({ system, jobs }) => {
 	if (_.find(jobs, { name: networkService.INTERFACE_JOB })?.progress?.state === 'failed' && isApplying()) {
 		restore();
 	}
-};
 
-// The fields are seeded once, from the first delivery that carries the interface; after that the
-// form belongs to whoever is typing in it.
-const render = ({ system, jobs }) => {
-	renderJob(jobs);
 	const networkInterface = networkService.getDefaultInterface(system);
 	if (isPrefilled || _.isUndefined(networkInterface)) {
 		return;
