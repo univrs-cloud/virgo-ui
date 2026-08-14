@@ -43,24 +43,17 @@ const isAppRunning = (name, containers) => {
 	return _.includes(RUNNING_STATES, container?.state);
 };
 
-/** A registry row only says the app was installed at some point. The wizard cannot move on until both
- * apps are actually answering, so being listed and being up are both required. */
-const isReady = (configured = Docker.getConfigured(), containers = Docker.getContainers()) => {
-	return _.every(CORE_APPS, (app) => {
-		return !_.isUndefined(_.find(configured, { name: app.name })) && isAppRunning(app.name, containers);
-	});
-};
-
 /** What the node reports about one core app: the job while it is being installed, its entry in the app
- * registry, and its containers. An imported pool lists both apps from the start and they are installed
- * again over it, so a running job outranks the registry — otherwise the work would look done while it
- * is still downloading. */
+ * registry, and its containers. A registry row only says the app was installed at some point, so it
+ * counts as running once its container is up as well. An imported pool lists both apps from the start
+ * and they are installed again over it, so a running job outranks the registry — otherwise the work
+ * would look done while it is still downloading. */
 const getInstall = (name, configured, containers, jobs) => {
 	const job = _.find(jobs, (job) => { return job?.data?.config?.name === name; });
 	const isInstalling = !_.isUndefined(job) && !_.includes(['completed', 'failed'], job?.progress?.state);
 	return {
 		isInstalling,
-		isReady: !_.isUndefined(_.find(configured, { name })) && isAppRunning(name, containers),
+		isRunning: !_.isUndefined(_.find(configured, { name })) && isAppRunning(name, containers),
 		isFailed: (job?.progress?.state === 'failed'),
 		message: (isInstalling ? job?.progress?.message : ''),
 		job: (isInstalling ? job : undefined),
@@ -68,7 +61,9 @@ const getInstall = (name, configured, containers, jobs) => {
 	};
 };
 
-const getCoreApps = (configured, containers, jobs) => {
+/** Reads the delivered state when a render passes it, and falls back to the store for callers with
+ * none in hand — those ask what the apps are, not what a job is doing to them. */
+const getCoreApps = (configured = Docker.getConfigured(), containers = Docker.getContainers(), jobs = []) => {
 	return _.map(CORE_APPS, (app) => {
 		return { ...app, ...getInstall(app.name, configured, containers, jobs) };
 	});
@@ -80,7 +75,6 @@ const getConfigured = () => {
 
 export {
 	subscribe,
-	isReady,
 	getCoreApps,
 	getConfigured
 };

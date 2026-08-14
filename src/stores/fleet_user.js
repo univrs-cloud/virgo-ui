@@ -13,8 +13,8 @@ class FleetUser extends Store {
 		});
 	}
 
-	updateUser(config) {
-		return this.socket.timeout(10000).emitWithAck('user:update', config);
+	updateUser(data) {
+		return this.socket.timeout(10000).emitWithAck('user:update', data);
 	}
 }
 

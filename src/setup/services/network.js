@@ -51,12 +51,12 @@ const getDefaultInterfaceAddress = (system = getSystem()) => {
 	return _.find(getDefaultInterface(system)?.addrInfo, { family: 'inet' })?.local;
 };
 
-const updateHostIdentifier = (config) => {
-	Host.updateHostIdentifier(config);
+const updateHostIdentifier = (data) => {
+	Host.updateHostIdentifier(data);
 };
 
-const updateInterface = (config) => {
-	Host.updateInterface(config);
+const updateInterface = (data) => {
+	Host.updateInterface(data);
 };
 
 export {

@@ -16,10 +16,10 @@ const deleteBookmark = async (event) => {
 		return;
 	}
 
-	let config = {
+	const data = {
 		name: bookmark.name
 	}
-	bookmarkService.deleteBookmark(config);
+	bookmarkService.deleteBookmark(data);
 };
 
 module.addEventListener('click', deleteBookmark);

@@ -4,8 +4,6 @@ import * as networkService from 'setup/services/network';
 import { completeStep, nextStepPath, previousStepPath } from 'setup/wizard';
 
 let isPrefilled = false;
-let settleTimeout = null;
-const SETTLE_TIMEOUT = 30000;
 const hostTemplate = _.template(hostPartial);
 document.querySelector('main .wizard').insertAdjacentHTML('beforeend', hostTemplate());
 const step = document.querySelector('#host');
@@ -30,8 +28,8 @@ const currentIdentifier = (system) => {
 // this covers the prefilled values without render having to call it.
 const renderAccess = () => {
 	const data = form.getData();
-	const hostname = _.trim(data.hostname);
-	const domainName = _.trim(data.domainName);
+	const hostname = data.hostname;
+	const domainName = data.domainName;
 	const fqdn = `${hostname}.${domainName}`;
 	accessUrl.textContent = `https://${fqdn}`;
 	accessFqdn.textContent = fqdn;
@@ -45,8 +43,6 @@ const goNext = () => {
 };
 
 const idle = () => {
-	clearTimeout(settleTimeout);
-	settleTimeout = null;
 	submitButton.reset();
 	backButton.disabled = false;
 };
@@ -58,7 +54,6 @@ const renderJob = (jobs) => {
 	const job = _.find(jobs, { name: networkService.IDENTIFIER_JOB });
 	const isSettled = _.includes(['completed', 'failed'], job?.progress?.state);
 	if (job && !isSettled) {
-		clearTimeout(settleTimeout);
 		backButton.disabled = true;
 		submitButton.loading();
 		return;
@@ -100,11 +95,6 @@ const updateIdentifier = (event) => {
 
 	backButton.disabled = true;
 	submitButton.loading();
-	// The job locks the form once it appears; until it does, this covers a request that never lands.
-	settleTimeout = setTimeout(() => {
-		idle();
-		notifier.add({ title: 'Host was not updated, the request timed out.', type: 'error', duration: 0 });
-	}, SETTLE_TIMEOUT);
 	networkService.updateHostIdentifier(data);
 };
 
@@ -118,7 +108,7 @@ form.validation = [
 		rules: {
 			isEmpty: `Can't be empty`,
 			custom: {
-				validate: (value) => { return /^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$/i.test(_.trim(value)); },
+				validate: (value) => { return /^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$/i.test(value); },
 				message: 'Letters, digits and hyphens only'
 			}
 		}

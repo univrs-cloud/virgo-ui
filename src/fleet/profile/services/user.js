@@ -1,7 +1,7 @@
 import FleetUser from 'stores/fleet_user';
 
-const updateUser = (config) => {
-	return FleetUser.updateUser(config);
+const updateUser = (data) => {
+	return FleetUser.updateUser(data);
 };
 
 export {

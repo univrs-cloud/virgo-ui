@@ -34,16 +34,16 @@ const getConfiguration = () => {
 	return Configuration.getConfiguration();
 };
 
-const updateSmtp = (config) => {
-	Configuration.updateSmtp(config);
+const updateSmtp = (data) => {
+	Configuration.updateSmtp(data);
 };
 
-const updateLocation = (config) => {
-	Configuration.updateLocation(config);
+const updateLocation = (data) => {
+	Configuration.updateLocation(data);
 };
 
-const updateFleet = (config) => {
-	Configuration.updateFleet(config);
+const updateFleet = (data) => {
+	Configuration.updateFleet(data);
 };
 
 const enableFleet = () => {

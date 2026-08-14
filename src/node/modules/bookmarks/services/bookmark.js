@@ -49,16 +49,16 @@ const getBookmarks = () => {
 	return composeBookmark(Bookmark.getConfigured());
 };
 
-const createBookmark = (config) => {
-	Bookmark.createBookmark(config);
+const createBookmark = (data) => {
+	Bookmark.createBookmark(data);
 };
 
-const updateBookmark = (config) => {
-	Bookmark.updateBookmark(config);
+const updateBookmark = (data) => {
+	Bookmark.updateBookmark(data);
 };
 
-const deleteBookmark = (config) => {
-	Bookmark.deleteBookmark(config);
+const deleteBookmark = (data) => {
+	Bookmark.deleteBookmark(data);
 };
 
 export {

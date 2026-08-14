@@ -54,28 +54,28 @@ const getUsers = () => {
 	return normalizeUsers(User.getUsers());
 };
 
-const createUser = (config) => {
-	User.createUser(config);
+const createUser = (data) => {
+	User.createUser(data);
 };
 
-const updateUser = (config) => {
-	User.updateUser(config);
+const updateUser = (data) => {
+	User.updateUser(data);
 };
 
-const deleteUser = (config) => {
-	User.deleteUser(config);
+const deleteUser = (data) => {
+	User.deleteUser(data);
 };
 
-const lockUser = (config) => {
-	User.lockUser(config);
+const lockUser = (data) => {
+	User.lockUser(data);
 };
 
-const unlockUser = (config) => {
-	User.unlockUser(config);
+const unlockUser = (data) => {
+	User.unlockUser(data);
 };
 
-const changePassword = (config) => {
-	User.changePassword(config);
+const changePassword = (data) => {
+	User.changePassword(data);
 };
 
 export {

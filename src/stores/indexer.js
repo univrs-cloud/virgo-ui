@@ -29,8 +29,8 @@ class Indexer extends Store {
 		return this.getStateProperty('indexerDatasets');
 	}
 
-	updateDatasets(config) {
-		this.socket.emit('indexer:dataset:config:update', config);
+	updateDatasets(data) {
+		this.socket.emit('indexer:dataset:config:update', data);
 	}
 }
 
