@@ -16,10 +16,10 @@ const deleteTrustedProxy = async (event) => {
 		return;
 	}
 
-	let config = {
+	const data = {
 		address
 	};
-	networkService.deleteTrustedProxy(config);
+	networkService.deleteTrustedProxy(data);
 };
 
 module.addEventListener('click', deleteTrustedProxy);

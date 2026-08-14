@@ -59,8 +59,9 @@ const removeDnsRow = (event) => {
 	showDnsRows(values.length);
 };
 
-// The wizard only configures static addressing, so the current config is compared as manual too —
-// a node still on DHCP therefore always differs and gets converted, even with untouched fields.
+// Shaped like the form, so what the node holds can be compared against what was typed. The wizard only
+// configures static addressing, so a node still on DHCP always differs and gets converted, even with
+// untouched fields.
 const currentConfiguration = (networkInterface) => {
 	const address = _.find(networkInterface?.addrInfo, { family: 'inet' });
 	return {
@@ -70,20 +71,6 @@ const currentConfiguration = (networkInterface) => {
 		netmask: _.toString(address?.prefixlen || ''),
 		gateway: networkInterface?.gateway || '',
 		dnsServers: _.compact(networkInterface?.dnsServers || [])
-	};
-};
-
-const formConfiguration = () => {
-	const data = form.getData();
-	return {
-		name: data.name || '',
-		method: 'manual',
-		ipAddress: _.trim(data.ipAddress),
-		netmask: _.trim(data.netmask),
-		gateway: _.trim(data.gateway),
-		dnsServers: _.compact(_.map(_.filter(dnsRows, isVisible), (row) => {
-			return _.trim(data[row.querySelector('u-input').getAttribute('name')]);
-		}))
 	};
 };
 
@@ -157,17 +144,24 @@ const render = ({ system, jobs }) => {
 };
 
 const updateInterface = (event) => {
+	const data = form.getData();
+	// The form carries one field per DNS server; the node takes them as a list, in the order they were
+	// asked for. No branch on the method here the way the node's own form has one: setup only writes
+	// static addressing, which is what the hidden field says.
+	data.dnsServers = _.compact(_.map(_.filter(dnsRows, isVisible), (row) => {
+		return data[row.querySelector('u-input').getAttribute('name')];
+	}));
+	_.each(dnsRows, (row) => { delete data[row.querySelector('u-input').getAttribute('name')]; });
 	// Nothing to apply when the interface already holds this configuration — move on without a job.
-	const config = formConfiguration();
-	if (_.isEqual(config, currentConfiguration(networkService.getDefaultInterface()))) {
+	if (_.isEqual(data, currentConfiguration(networkService.getDefaultInterface()))) {
 		goNext();
 		return;
 	}
 
 	backButton.disabled = true;
 	submitButton.loading();
-	networkService.updateInterface(config);
-	followNode(stepUrl(config.ipAddress));
+	networkService.updateInterface(data);
+	followNode(stepUrl(data.ipAddress));
 };
 
 const goBack = (event) => {
@@ -187,7 +181,7 @@ const dnsServerRules = (selector) => {
 		selector,
 		rules: {
 			custom: (value, input) => {
-				return (isVisible(input.closest('.dns-server')) ? requiredIpAddress(_.trim(value)) : true);
+				return (isVisible(input.closest('.dns-server')) ? requiredIpAddress(value) : true);
 			}
 		}
 	};
@@ -197,7 +191,7 @@ form.validation = [
 	{
 		selector: '.ip-address',
 		rules: {
-			custom: (value) => { return requiredIpAddress(_.trim(value)); }
+			custom: (value) => { return requiredIpAddress(value); }
 		}
 	},
 	{
@@ -210,7 +204,7 @@ form.validation = [
 	{
 		selector: '.gateway',
 		rules: {
-			custom: (value) => { return requiredIpAddress(_.trim(value)); }
+			custom: (value) => { return requiredIpAddress(value); }
 		}
 	},
 	dnsServerRules('.dns-server-1'),

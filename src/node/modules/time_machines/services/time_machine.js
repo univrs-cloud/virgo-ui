@@ -61,19 +61,19 @@ const getTimeMachines = () => {
 	return filterTimeMachines(Share.getShares());
 };
 
-const createTimeMachine = (config) => {
-	config.type = 'timeMachine';
-	Share.createShare(config);
+const createTimeMachine = (data) => {
+	data.type = 'timeMachine';
+	Share.createShare(data);
 };
 
-const updateTimeMachine = (config) => {
-	config.type = 'timeMachine';
-	Share.updateShare(config);
+const updateTimeMachine = (data) => {
+	data.type = 'timeMachine';
+	Share.updateShare(data);
 };
 
-const deleteTimeMachine = (config) => {
-	config.type = 'timeMachine';
-	Share.deleteShare(config);
+const deleteTimeMachine = (data) => {
+	data.type = 'timeMachine';
+	Share.deleteShare(data);
 };
 
 export {

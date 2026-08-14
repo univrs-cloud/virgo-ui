@@ -39,24 +39,24 @@ const getSystem = () => {
 	return Host.getSystem();
 };
 
-const updateHostIdentifier = (config) => {
-	Host.updateHostIdentifier(config);
+const updateHostIdentifier = (data) => {
+	Host.updateHostIdentifier(data);
 };
 
-const updateInterface = (config) => {
-	Host.updateInterface(config);
+const updateInterface = (data) => {
+	Host.updateInterface(data);
 };
 
-const addTrustedProxy = (config) => {
-	Configuration.addTrustedProxy(config);
+const addTrustedProxy = (data) => {
+	Configuration.addTrustedProxy(data);
 };
 
-const updateTrustedProxy = (config) => {
-	Configuration.updateTrustedProxy(config);
+const updateTrustedProxy = (data) => {
+	Configuration.updateTrustedProxy(data);
 };
 
-const deleteTrustedProxy = (config) => {
-	Configuration.deleteTrustedProxy(config);
+const deleteTrustedProxy = (data) => {
+	Configuration.deleteTrustedProxy(data);
 };
 
 const isTrustedProxyAddressTaken = (address, ignoreAddress) => {

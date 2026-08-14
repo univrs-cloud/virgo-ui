@@ -1,36 +1,36 @@
 import * as request from 'stores/request';
 
 class FleetAuth {
-	login(config) {
-		return request.post('/auth/login', config);
+	login(data) {
+		return request.post('/auth/login', data);
 	}
 
-	signup(config) {
-		return request.post('/auth/signup', config);
+	signup(data) {
+		return request.post('/auth/signup', data);
 	}
 
-	confirm(config) {
-		return request.post('/auth/verify', config);
+	confirm(data) {
+		return request.post('/auth/verify', data);
 	}
 
 	logout() {
 		return request.post('/auth/logout');
 	}
 
-	changePassword(config) {
-		return request.post('/auth/password', config);
+	changePassword(data) {
+		return request.post('/auth/password', data);
 	}
 
 	mfaSetup() {
 		return request.post('/auth/mfa/setup');
 	}
 
-	mfaSetupVerify(config) {
-		return request.post('/auth/mfa/setup/verify', config);
+	mfaSetupVerify(data) {
+		return request.post('/auth/mfa/setup/verify', data);
 	}
 
-	mfaVerify(config) {
-		return request.post('/auth/mfa/verify', config);
+	mfaVerify(data) {
+		return request.post('/auth/mfa/verify', data);
 	}
 }
 

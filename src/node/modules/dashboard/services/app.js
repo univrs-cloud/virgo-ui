@@ -64,12 +64,12 @@ function composeDashboardApps(properties) {
 	return _.pick(apps, orderedCategoryNames);
 }
 
-const performAction = (config) => {
-	Docker.performAction(config);
+const performAction = (data) => {
+	Docker.performAction(data);
 };
 
-const setOrder = (config) => {
-	Docker.setOrder(config);
+const setOrder = (data) => {
+	Docker.setOrder(data);
 };
 
 export {

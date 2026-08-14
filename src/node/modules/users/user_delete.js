@@ -16,10 +16,10 @@ const deleteUser = async (event) => {
 		return;
 	}
 
-	let config = {
+	const data = {
 		username: user.username
 	}
-	userService.deleteUser(config);
+	userService.deleteUser(data);
 };
 
 module.addEventListener('click', deleteUser);

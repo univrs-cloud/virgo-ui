@@ -94,11 +94,10 @@ const update = (event) => {
 	const button = event.target;
 	const row = button.closest('.item');
 	const app = _.find(appService.getApps(), { name: row.dataset.name });
-
-	let config = {
+	const data = {
 		name: app.name
 	};
-	appService.update(config);
+	appService.update(data);
 };
 
 const performAppAction = async (event) => {
@@ -127,11 +126,11 @@ const performAppAction = async (event) => {
 		return;
 	}
 
-	let config = {
+	const data = {
 		name: app.name,
 		action: button.dataset.action
 	};
-	appService.performAppAction(config);
+	appService.performAppAction(data);
 };
 
 const performServiceAction = async (event) => {
@@ -155,11 +154,11 @@ const performServiceAction = async (event) => {
 		return;
 	}
 
-	let config = {
+	const data = {
 		id: service.id,
 		action: button.dataset.action
 	};
-	appService.performServiceAction(config);
+	appService.performServiceAction(data);
 };
 
 const updateIndexer = async (event) => {
@@ -187,12 +186,12 @@ const updateIndexer = async (event) => {
 		}
 	}
 
-	const config = {
+	const data = {
 		name,
 		dataset,
 		optedIn
 	};
-	appService.updateIndexerConfig(config);
+	appService.updateIndexerConfig(data);
 };
 
 const renderAppDetails = (name) => {

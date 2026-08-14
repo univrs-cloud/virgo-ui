@@ -14,16 +14,16 @@ class Bookmark extends Store {
 		return this.getStateProperty('configured');
 	}
 
-	createBookmark(config) {
-		this.socket.emit('bookmark:create', config);
+	createBookmark(data) {
+		this.socket.emit('bookmark:create', data);
 	}
 
-	updateBookmark(config) {
-		this.socket.emit('bookmark:update', config);
+	updateBookmark(data) {
+		this.socket.emit('bookmark:update', data);
 	}
 
-	deleteBookmark(config) {
-		this.socket.emit('bookmark:delete', config);
+	deleteBookmark(data) {
+		this.socket.emit('bookmark:delete', data);
 	}
 }
 

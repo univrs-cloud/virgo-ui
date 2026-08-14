@@ -57,8 +57,8 @@ const getTemplates = () => {
 	return Docker.getTemplates();
 };
 
-const install = (config) => {
-	Docker.install(config);
+const install = (data) => {
+	Docker.install(data);
 };
 
 export {

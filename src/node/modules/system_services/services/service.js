@@ -42,8 +42,8 @@ const syncServices = () => {
 	Host.syncServices();
 };
 
-const performServiceAction = (config) => {
-	Host.performServiceAction(config);
+const performServiceAction = (data) => {
+	Host.performServiceAction(data);
 };
 
 export {

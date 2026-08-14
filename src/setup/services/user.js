@@ -43,8 +43,8 @@ const getDefaultUser = () => {
 	return findDefaultUser(getUsers());
 };
 
-const changePassword = (config) => {
-	User.changePassword(config);
+const changePassword = (data) => {
+	User.changePassword(data);
 };
 
 export {

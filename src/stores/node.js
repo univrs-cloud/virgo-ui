@@ -151,32 +151,32 @@ class Node extends Store {
 		return this.getStateProperty('nodes');
 	}
 
-	deleteNode(config) {
-		return this.socket.timeout(10000).emitWithAck('node:delete', config);
+	deleteNode(data) {
+		return this.socket.timeout(10000).emitWithAck('node:delete', data);
 	}
 
-	inviteAdmin(config) {
-		return this.socket.timeout(10000).emitWithAck('node:invite', config);
+	inviteAdmin(data) {
+		return this.socket.timeout(10000).emitWithAck('node:invite', data);
 	}
 
-	revokeAdmin(config) {
-		return this.socket.timeout(10000).emitWithAck('node:revoke', config);
+	revokeAdmin(data) {
+		return this.socket.timeout(10000).emitWithAck('node:revoke', data);
 	}
 
-	revokeGroup(config) {
-		return this.socket.timeout(10000).emitWithAck('group:node:remove', config);
+	revokeGroup(data) {
+		return this.socket.timeout(10000).emitWithAck('group:node:remove', data);
 	}
 
-	startSystemUpdate(config) {
-		return this.socket.timeout(10000).emitWithAck('node:update', config);
+	startSystemUpdate(data) {
+		return this.socket.timeout(10000).emitWithAck('node:update', data);
 	}
 
-	completeSystemUpdate(config) {
-		return this.socket.timeout(10000).emitWithAck('node:update:complete', config);
+	completeSystemUpdate(data) {
+		return this.socket.timeout(10000).emitWithAck('node:update:complete', data);
 	}
 
-	startAppUpdate(config) {
-		return this.socket.timeout(10000).emitWithAck('node:app:update', config);
+	startAppUpdate(data) {
+		return this.socket.timeout(10000).emitWithAck('node:app:update', data);
 	}
 }
 

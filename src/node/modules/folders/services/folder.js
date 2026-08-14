@@ -76,19 +76,19 @@ const getCustomPaths = () => {
 	});
 };
 
-const createFolder = (config) => {
-	config.type = 'folder';
-	Share.createShare(config);
+const createFolder = (data) => {
+	data.type = 'folder';
+	Share.createShare(data);
 };
 
-const updateFolder = (config) => {
-	config.type = 'folder';
-	Share.updateShare(config);
+const updateFolder = (data) => {
+	data.type = 'folder';
+	Share.updateShare(data);
 };
 
-const deleteFolder = (config) => {
-	config.type = 'folder';
-	Share.deleteShare(config);
+const deleteFolder = (data) => {
+	data.type = 'folder';
+	Share.deleteShare(data);
 };
 
 export {

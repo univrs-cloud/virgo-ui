@@ -20,16 +20,16 @@ class Configuration extends Store {
 		});
 	}
 
-	updateSmtp(config) {
-		this.socket.emit('configuration:smtp:update', config);
+	updateSmtp(data) {
+		this.socket.emit('configuration:smtp:update', data);
 	}
 
-	updateLocation(config) {
-		this.socket.emit('configuration:location:update', config);
+	updateLocation(data) {
+		this.socket.emit('configuration:location:update', data);
 	}
 
-	updateFleet(config) {
-		this.socket.emit('configuration:fleet:update', config);
+	updateFleet(data) {
+		this.socket.emit('configuration:fleet:update', data);
 	}
 
 	enableFleet() {
@@ -40,16 +40,16 @@ class Configuration extends Store {
 		this.socket.emit('configuration:fleet:disable');
 	}
 
-	addTrustedProxy(config) {
-		this.socket.emit('configuration:trustedProxy:add', config);
+	addTrustedProxy(data) {
+		this.socket.emit('configuration:trustedProxy:add', data);
 	}
 
-	updateTrustedProxy(config) {
-		this.socket.emit('configuration:trustedProxy:update', config);
+	updateTrustedProxy(data) {
+		this.socket.emit('configuration:trustedProxy:update', data);
 	}
 
-	deleteTrustedProxy(config) {
-		this.socket.emit('configuration:trustedProxy:delete', config);
+	deleteTrustedProxy(data) {
+		this.socket.emit('configuration:trustedProxy:delete', data);
 	}
 
 	getConfiguration() {

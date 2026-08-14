@@ -33,8 +33,8 @@ const isRegistered = (configuration) => {
 	return !_.isEmpty(configuration?.fleet?.token);
 };
 
-const updateFleet = (config) => {
-	Configuration.updateFleet(config);
+const updateFleet = (data) => {
+	Configuration.updateFleet(data);
 };
 
 export {

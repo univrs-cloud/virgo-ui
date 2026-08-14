@@ -24,28 +24,28 @@ class User extends Store {
 		return this.getStateProperty('users');
 	}
 
-	createUser(config) {
-		this.socket.emit('user:create', config);
+	createUser(data) {
+		this.socket.emit('user:create', data);
 	}
 
-	updateUser(config) {
-		this.socket.emit('user:update', config);
+	updateUser(data) {
+		this.socket.emit('user:update', data);
 	}
 
-	deleteUser(config) {
-		this.socket.emit('user:delete', config);
+	deleteUser(data) {
+		this.socket.emit('user:delete', data);
 	}
 
-	lockUser(config) {
-		this.socket.emit('user:lock', config);
+	lockUser(data) {
+		this.socket.emit('user:lock', data);
 	}
 
-	unlockUser(config) {
-		this.socket.emit('user:unlock', config);
+	unlockUser(data) {
+		this.socket.emit('user:unlock', data);
 	}
 
-	changePassword(config) {
-		this.socket.emit('user:password', config);
+	changePassword(data) {
+		this.socket.emit('user:password', data);
 	}
 }
 

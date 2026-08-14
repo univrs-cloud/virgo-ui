@@ -107,20 +107,20 @@ const getDefaultNetworkInterfaceSpeed = () => {
 	return ((getDefaultNetworkInterface()?.speed || (DEFAULT_NETWORK_INTERFACE_SPEED_BPS / 1_000_000)) * 1_000_000 / 8);
 };
 
-const update = (config) => {
-	Docker.update(config);
+const update = (data) => {
+	Docker.update(data);
 };
 
-const performAppAction = (config) => {
-	Docker.performAppAction(config);
+const performAppAction = (data) => {
+	Docker.performAppAction(data);
 };
 
-const performServiceAction = (config) => {
-	Docker.performServiceAction(config);
+const performServiceAction = (data) => {
+	Docker.performServiceAction(data);
 };
 
-const updateIndexerConfig = (config) => {
-	Indexer.updateDatasets(config);
+const updateIndexerConfig = (data) => {
+	Indexer.updateDatasets(data);
 };
 
 export {

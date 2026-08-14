@@ -3,9 +3,6 @@ import passwordPartial from 'setup/partials/password.html';
 import * as userService from 'setup/services/user';
 import { completeStep, nextStepPath, previousStepPath } from 'setup/wizard';
 
-let settleTimeout = null;
-// Linux, samba and authelia are written in sequence, so the job outlives a quick round trip.
-const SETTLE_TIMEOUT = 60000;
 const passwordTemplate = _.template(passwordPartial);
 document.querySelector('main .wizard').insertAdjacentHTML('beforeend', passwordTemplate());
 const step = document.querySelector('#password');
@@ -20,8 +17,6 @@ const goNext = () => {
 };
 
 const idle = () => {
-	clearTimeout(settleTimeout);
-	settleTimeout = null;
 	submitButton.reset();
 	backButton.disabled = false;
 };
@@ -33,7 +28,6 @@ const renderJob = (jobs) => {
 	const job = _.find(jobs, { name: userService.PASSWORD_JOB });
 	const isSettled = _.includes(['completed', 'failed'], job?.progress?.state);
 	if (job && !isSettled) {
-		clearTimeout(settleTimeout);
 		backButton.disabled = true;
 		submitButton.loading();
 		return;
@@ -66,12 +60,8 @@ const changePassword = (event) => {
 
 	backButton.disabled = true;
 	submitButton.loading();
-	// The job locks the form once it appears; until it does, this covers a request that never lands.
-	settleTimeout = setTimeout(() => {
-		idle();
-		notifier.add({ title: 'The password change timed out.', type: 'error', duration: 0 });
-	}, SETTLE_TIMEOUT);
-	userService.changePassword({ ...form.getData(), username: user.username });
+	const data = form.getData();
+	userService.changePassword({ ...data, username: user.username });
 };
 
 const goBack = (event) => {
