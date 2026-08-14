@@ -114,12 +114,12 @@ class Host extends Store {
 		});
 	}
 
-	updateHostIdentifier(config) {
-		this.socket.emit('host:network:identifier:update', config);
+	updateHostIdentifier(data) {
+		this.socket.emit('host:network:identifier:update', data);
 	}
 	
-	updateInterface(config) {
-		this.socket.emit('host:network:interface:update', config);
+	updateInterface(data) {
+		this.socket.emit('host:network:interface:update', data);
 		this.setState({ 'configuringNetworkInterface': true }, 'set_configuring');
 	}
 
@@ -154,12 +154,12 @@ class Host extends Store {
 		this.socket.emit('host:storage:importable:fetch');
 	}
 
-	importPool(config) {
-		this.socket.emit('host:storage:pool:import', config);
+	importPool(data) {
+		this.socket.emit('host:storage:pool:import', data);
 	}
 
-	createPool(config) {
-		this.socket.emit('host:storage:pool:create', config);
+	createPool(data) {
+		this.socket.emit('host:storage:pool:create', data);
 	}
 
 	syncServices() {
@@ -167,8 +167,8 @@ class Host extends Store {
 		this.socket.emit('host:system:services:fetch');
 	}
 
-	performServiceAction(config) {
-		this.socket.emit(`host:system:service:${config.action}`, { unit: config.unit });
+	performServiceAction(data) {
+		this.socket.emit(`host:system:service:${data.action}`, { unit: data.unit });
 	}
 
 	getSystem() {

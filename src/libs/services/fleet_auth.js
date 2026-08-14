@@ -1,35 +1,35 @@
 import FleetAuth from 'stores/fleet_auth';
 
-const login = (config) => {
-	return FleetAuth.login(config);
+const login = (data) => {
+	return FleetAuth.login(data);
 };
 
-const signup = (config) => {
-	return FleetAuth.signup(config);
+const signup = (data) => {
+	return FleetAuth.signup(data);
 };
 
-const confirm = (config) => {
-	return FleetAuth.confirm(config);
+const confirm = (data) => {
+	return FleetAuth.confirm(data);
 };
 
 const logout = () => {
 	return FleetAuth.logout();
 };
 
-const changePassword = (config) => {
-	return FleetAuth.changePassword(config);
+const changePassword = (data) => {
+	return FleetAuth.changePassword(data);
 };
 
 const mfaSetup = () => {
 	return FleetAuth.mfaSetup();
 };
 
-const mfaSetupVerify = (config) => {
-	return FleetAuth.mfaSetupVerify(config);
+const mfaSetupVerify = (data) => {
+	return FleetAuth.mfaSetupVerify(data);
 };
 
-const mfaVerify = (config) => {
-	return FleetAuth.mfaVerify(config);
+const mfaVerify = (data) => {
+	return FleetAuth.mfaVerify(data);
 };
 
 export {

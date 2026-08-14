@@ -22,32 +22,32 @@ const getNodes = () => {
 	return sortNodes(Node.getNodes());
 };
 
-const deleteNode = (config) => {
-	return Node.deleteNode(config);
+const deleteNode = (data) => {
+	return Node.deleteNode(data);
 };
 
-const inviteAdmin = (config) => {
-	return Node.inviteAdmin(config);
+const inviteAdmin = (data) => {
+	return Node.inviteAdmin(data);
 };
 
-const revokeAdmin = (config) => {
-	return Node.revokeAdmin(config);
+const revokeAdmin = (data) => {
+	return Node.revokeAdmin(data);
 };
 
-const revokeGroup = (config) => {
-	return Node.revokeGroup(config);
+const revokeGroup = (data) => {
+	return Node.revokeGroup(data);
 };
 
-const startSystemUpdate = (config) => {
-	return Node.startSystemUpdate(config);
+const startSystemUpdate = (data) => {
+	return Node.startSystemUpdate(data);
 };
 
-const completeSystemUpdate = (config) => {
-	return Node.completeSystemUpdate(config);
+const completeSystemUpdate = (data) => {
+	return Node.completeSystemUpdate(data);
 };
 
-const startAppUpdate = (config) => {
-	return Node.startAppUpdate(config);
+const startAppUpdate = (data) => {
+	return Node.startAppUpdate(data);
 };
 
 export {

@@ -34,9 +34,9 @@ const render = ({ configured, containers, jobs }) => {
 		{ childrenOnly: true }
 	);
 
-	const isReady = appsService.isReady(configured, containers);
-	backButton.disabled = !isReady;
-	continueButton.disabled = !isReady;
+	const isRunning = _.every(apps, 'isRunning');
+	backButton.disabled = !isRunning;
+	continueButton.disabled = !isRunning;
 };
 
 continueButton.addEventListener('click', goNext);

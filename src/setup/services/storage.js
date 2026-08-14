@@ -33,8 +33,9 @@ const { subscribe } = createSubscription({
 	}
 });
 
-/** This node's pool, already imported and in use. */
-const getPool = (storage) => {
+/** This node's pool, already imported and in use. Reads the delivered storage when a render passes
+ * one, and falls back to the store for callers with none in hand. */
+const getPool = (storage = Host.getStorage()) => {
 	return _.find(storage, { name: POOL_NAME });
 };
 
@@ -54,11 +55,6 @@ const getUsableDrives = (drives) => {
 	return _.filter(drives, 'eui');
 };
 
-/** Whether the node has its pool, which is what everything after the storage step is stored on. */
-const hasPool = () => {
-	return !_.isUndefined(getPool(Host.getStorage()));
-};
-
 const getDrives = () => {
 	return Host.getDrives();
 };
@@ -71,12 +67,12 @@ const fetchImportablePools = () => {
 	Host.fetchImportable();
 };
 
-const importPool = (config) => {
-	Host.importPool(config);
+const importPool = (data) => {
+	Host.importPool(data);
 };
 
-const createPool = (config) => {
-	Host.createPool(config);
+const createPool = (data) => {
+	Host.createPool(data);
 };
 
 export {
@@ -88,7 +84,6 @@ export {
 	getImportablePool,
 	getForeignPools,
 	getUsableDrives,
-	hasPool,
 	getDrives,
 	getImportablePools,
 	fetchImportablePools,

@@ -5,8 +5,6 @@ import * as networkService from 'setup/services/network';
 import { previousStepPath } from 'setup/wizard';
 
 let isFinishing = false;
-let settleTimeout = null;
-const SETTLE_TIMEOUT = 30000;
 const finishTemplate = _.template(finishPartial);
 document.querySelector('main .wizard').insertAdjacentHTML('beforeend', finishTemplate());
 const step = document.querySelector('#finish');
@@ -30,14 +28,13 @@ const render = ({ setupCompleted, system }) => {
 	url.textContent = (_.isEmpty(address) ? 'this node' : address);
 	unnamed.classList.toggle('d-none', !_.isEmpty(address));
 	if (!isFinishing) {
-		finish.disabled = _.isEmpty(address);
+		finishButton.disabled = _.isEmpty(address);
 	}
 
 	if (!isFinishing || setupCompleted !== true) {
 		return;
 	}
 
-	clearTimeout(settleTimeout);
 	location.replace(address);
 };
 
@@ -49,12 +46,6 @@ const completeSetup = (event) => {
 	isFinishing = true;
 	backButton.disabled = true;
 	finishButton.loading();
-	settleTimeout = setTimeout(() => {
-		isFinishing = false;
-		backButton.disabled = false;
-		finishButton.reset();
-		notifier.add({ title: 'Setup could not be completed.', type: 'error', duration: 0 });
-	}, SETTLE_TIMEOUT);
 	setupService.completeSetup();
 };
 
@@ -66,7 +57,7 @@ const goBack = (event) => {
 	page(previousStepPath('finish'));
 };
 
-finish.addEventListener('click', completeSetup);
+finishButton.addEventListener('click', completeSetup);
 backButton.addEventListener('click', goBack);
 
 setupService.subscribe([render]);

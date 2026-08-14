@@ -1,6 +1,6 @@
 <%_.each(apps, (app) => {%>
 	<dt class="fw-lighter d-flex align-items-center">
-		<%if (app.isReady) {%>
+		<%if (app.isRunning) {%>
 			<i class="icon-duotone icon-solid icon-circle-check icon-fw me-2" style="--icon-secondary-color: var(--bs-green);"></i>
 		<%} else if (app.isFailed) {%>
 			<i class="icon-duotone icon-solid icon-circle-xmark icon-fw me-2" style="--icon-secondary-color: var(--bs-red);"></i>
@@ -11,12 +11,12 @@
 	</dt>
 	<dd class="ms-4 ps-2">
 		<small class="text-body-tertiary"><%=app.description%></small>
-		<%if (app.isFailed && !app.isReady) {%>
+		<%if (app.isFailed && !app.isRunning) {%>
 			<div class="text-danger"><small>Installation failed. Setup cannot continue until this app is installed and running.</small></div>
 			<%if (app.failedReason) {%>
 				<div class="text-body-secondary"><small><%=app.failedReason%></small></div>
 			<%}%>
-		<%} else if (!app.isReady) {%>
+		<%} else if (!app.isRunning) {%>
 			<%if (app.message) {%>
 				<div class="text-body-secondary"><small><%=app.message%></small></div>
 			<%}%>

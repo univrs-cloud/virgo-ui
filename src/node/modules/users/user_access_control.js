@@ -16,10 +16,10 @@ const lockUser = async (event) => {
 		return;
 	}
 
-	let config = {
+	const data = {
 		username: user.username
 	}
-	userService.lockUser(config);
+	userService.lockUser(data);
 };
 
 const unlockUser = async (event) => {
@@ -36,10 +36,10 @@ const unlockUser = async (event) => {
 		return;
 	}
 
-	let config = {
+	const data = {
 		username: user.username
 	}
-	userService.unlockUser(config);
+	userService.unlockUser(data);
 };
 
 module.addEventListener('click', lockUser);

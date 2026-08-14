@@ -60,24 +60,24 @@ class Docker extends Store {
 		return this.getStateProperty('templates');
 	}
 
-	install(config) {
-		this.socket.emit('app:install', config);
+	install(data) {
+		this.socket.emit('app:install', data);
 	}
 
-	update(config) {
-		this.socket.emit('app:update', config);
+	update(data) {
+		this.socket.emit('app:update', data);
 	}
 
-	performAppAction(config) {
-		this.socket.emit('app:performAction', config);
+	performAppAction(data) {
+		this.socket.emit('app:performAction', data);
 	}
 
-	performServiceAction(config) {
-		this.socket.emit('app:service:performAction', config);
+	performServiceAction(data) {
+		this.socket.emit('app:service:performAction', data);
 	}
 
-	setOrder(config) {
-		this.socket.emit('app:order', config);
+	setOrder(data) {
+		this.socket.emit('app:order', data);
 	}
 
 	composeUrlFromLabels(projectContainers) {

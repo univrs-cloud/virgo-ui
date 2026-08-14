@@ -9,9 +9,6 @@ let isRegistering = false;
 // The last configuration the node reported, so entering the step can re-render without reading the
 // store behind the subscription's back.
 let configuration = null;
-let settleTimeout = null;
-// The node's own connect attempt times out after 10s, plus the job round trip.
-const SETTLE_TIMEOUT = 60000;
 const fleetTemplate = _.template(fleetPartial);
 const statusTemplate = _.template(statusPartial);
 document.querySelector('main .wizard').insertAdjacentHTML('beforeend', fleetTemplate());
@@ -51,45 +48,35 @@ const goNext = () => {
 };
 
 const idle = () => {
-	clearTimeout(settleTimeout);
-	settleTimeout = null;
 	submitButton.reset();
 	skipLink.classList.remove('disabled', 'pe-none');
 	_.each(step.querySelectorAll('[data-action="back"]'), (button) => { button.disabled = false; });
 };
 
 // The job is what the form follows: while one is running the form is locked, and the step advances
-// when it finishes — but only if it is the step on screen, since a job outlives the page that
-// started it. A failure leaves the user here; the job toaster carries the reason.
-const renderJob = (jobs) => {
-	const job = _.find(jobs, { name: fleetService.REGISTER_JOB });
+// when it finishes — but only if it is the step on screen, since a job outlives the page that started
+// it. What it advances on is the node's own answer: a registered node reports a configuration carrying
+// its token, emitted before the job reports back. Anything else leaves the user here, with the reason
+// in the job toaster. Only a job that has reported back concludes the step: an empty list is the gap
+// between asking for one and the node queueing it, and unlocking there would hand the form back
+// mid-flight. A node that already holds a token is tied to that account, so the email is seeded once
+// and can only be confirmed from then on.
+const render = (state) => {
+	configuration = state.configuration;
+	const job = _.find(state.jobs, { name: fleetService.REGISTER_JOB });
 	const isSettled = _.includes(['completed', 'failed'], job?.progress?.state);
 	if (job && !isSettled) {
-		clearTimeout(settleTimeout);
 		skipLink.classList.add('disabled', 'pe-none');
 		_.each(step.querySelectorAll('[data-action="back"]'), (button) => { button.disabled = true; });
 		submitButton.loading();
-		return;
+	} else if (isSettled && submitButton.disabled) {
+		idle();
+		if (fleetService.isRegistered(configuration) && !step.classList.contains('d-none')) {
+			isRegistering = false;
+			goNext();
+		}
 	}
 
-	// Only a job that has reported back concludes the step. An empty list is the gap between asking
-	// for one and the node queueing it, and unlocking there would hand the form back mid-flight.
-	if (!isSettled || !submitButton.disabled) {
-		return;
-	}
-
-	idle();
-	if (job.progress.state === 'completed' && !step.classList.contains('d-none')) {
-		isRegistering = false;
-		goNext();
-	}
-};
-
-// A node that already holds a token is tied to that account, so the email is seeded once and can
-// only be confirmed from then on.
-const render = (state) => {
-	configuration = state.configuration;
-	renderJob(state.jobs);
 	renderStatus();
 	if (isPrefilled || _.isNull(configuration) || _.isUndefined(configuration)) {
 		return;
@@ -106,12 +93,8 @@ const registerFleet = (event) => {
 	skipLink.classList.add('disabled', 'pe-none');
 	_.each(step.querySelectorAll('[data-action="back"]'), (button) => { button.disabled = true; });
 	submitButton.loading();
-	// The job locks the form once it appears; until it does, this covers a request that never lands.
-	settleTimeout = setTimeout(() => {
-		idle();
-		notifier.add({ title: 'Fleet registration timed out. Check that this node can reach the internet, or skip this step.', type: 'error', duration: 0 });
-	}, SETTLE_TIMEOUT);
-	fleetService.updateFleet(form.getData());
+	const data = form.getData();
+	fleetService.updateFleet(data);
 };
 
 const showRegistrationForm = (event) => {

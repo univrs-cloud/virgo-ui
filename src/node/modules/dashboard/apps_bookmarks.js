@@ -71,16 +71,16 @@ const saveReorder = (cards) => {
 		return;
 	}
 
-	let config = [];
+	let data = [];
 	_.each(cards, (card, order) => {
 		const item = {
 			id: card.dataset.id,
 			type: card.dataset.type,
 			order: order + 1
 		};
-		config.push(item);
+		data.push(item);
 	});
-	appService.setOrder(config);
+	appService.setOrder(data);
 };
 
 const render = (state) => {

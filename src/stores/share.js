@@ -24,16 +24,16 @@ class Share extends Store {
 		return this.getStateProperty('shares');
 	}
 
-	createShare(config) {
-		this.socket.emit('share:create', config);
+	createShare(data) {
+		this.socket.emit('share:create', data);
 	}
 
-	updateShare(config) {
-		this.socket.emit('share:update', config);
+	updateShare(data) {
+		this.socket.emit('share:update', data);
 	}
 
-	deleteShare(config) {
-		this.socket.emit('share:delete', config);
+	deleteShare(data) {
+		this.socket.emit('share:delete', data);
 	}
 }
 
