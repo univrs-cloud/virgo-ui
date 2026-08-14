@@ -48,33 +48,25 @@ const idle = () => {
 };
 
 // The job is what the form follows: while one is running the form is locked, and the step advances
-// when it finishes — but only if it is the step on screen, since a job outlives the page that
-// started it. A failure leaves the user here; the job toaster carries the reason.
-const renderJob = (jobs) => {
+// when it completes — but only if it is the step on screen, since a job outlives the page that
+// started it. Only a job that has reported back concludes the step: an empty list is the gap between
+// asking for one and the node queueing it, and unlocking there would hand the form back mid-flight.
+// A failure leaves the user here; the job toaster carries the reason. The fields are seeded once,
+// from the first delivery that carries the node's identifier; after that the form belongs to whoever
+// is typing in it.
+const render = ({ system, jobs }) => {
 	const job = _.find(jobs, { name: networkService.IDENTIFIER_JOB });
 	const isSettled = _.includes(['completed', 'failed'], job?.progress?.state);
 	if (job && !isSettled) {
 		backButton.disabled = true;
 		submitButton.loading();
-		return;
+	} else if (isSettled && submitButton.disabled) {
+		idle();
+		if (job.progress.state === 'completed' && !step.classList.contains('d-none')) {
+			goNext();
+		}
 	}
 
-	// Only a job that has reported back concludes the step. An empty list is the gap between asking
-	// for one and the node queueing it, and unlocking there would hand the form back mid-flight.
-	if (!isSettled || !submitButton.disabled) {
-		return;
-	}
-
-	idle();
-	if (job.progress.state === 'completed' && !step.classList.contains('d-none')) {
-		goNext();
-	}
-};
-
-// The fields are seeded once, from the first delivery that carries the node's identifier; after
-// that the form belongs to whoever is typing in it.
-const render = ({ system, jobs }) => {
-	renderJob(jobs);
 	if (isPrefilled || _.isEmpty(system?.osInfo)) {
 		return;
 	}
