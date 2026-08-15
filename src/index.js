@@ -35,16 +35,11 @@ const render = async (state) => {
 			console.error('Error during application initialization:', error);
 		}
 	} else if (location.pathname === LOGIN_PATH) {
-		// Whoever is already signed in has nothing to do here. Home rather than wherever they came from:
-		// the only thing that sends a session holder to this page is an app that turned them away, and
-		// returning them to it would turn them away again.
 		if (isAuthenticated) {
 			location.replace('/');
 			return;
 		}
 
-		// Signing in is the one screen a node shows to someone it knows nothing about, so it loads on
-		// its own: no shell, no modules, nothing that expects an account.
 		await import('node/login');
 	} else if (isAdmin && !_.isNull(state.update)) {
 		await import('node/update');
