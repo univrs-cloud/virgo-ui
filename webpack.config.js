@@ -63,6 +63,12 @@ module.exports = (env, argv) => {
 					ws: true
 				},
 				{
+					context: ['/session'],
+					target: `https://${upstream}`,
+					secure: false,
+					changeOrigin: true
+				},
+				{
 					context: ['/assets/img/apps'],
 					target: `https://${upstream}`,
 					secure: false,

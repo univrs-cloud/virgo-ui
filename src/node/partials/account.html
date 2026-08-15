@@ -1,11 +1,9 @@
 <div id="account">
 	<%if (!isAuthenticated) {%>
-		<%if (authDomain) {%>
-			<a href="<%=authDomain%>/?rd=<%=window.location%>" class="btn btn-sm btn-primary me-2">
-				<i class="icon-duotone icon-solid icon-person-to-portal icon-fw me-2"></i>
-				Sign in
-			</a>
-		<%}%>
+		<a href="/login?rd=<%=encodeURIComponent(window.location)%>" rel="external" class="btn btn-sm btn-primary me-2">
+			<i class="icon-duotone icon-solid icon-person-to-portal icon-fw me-2"></i>
+			Sign in
+		</a>
 	<%} else {%>
 		<div class="dropdown dropup d-flex align-items-center me-2" style="height: 40px;">
 			<img src="assets/img/user-circle.svg" alt="profile" class="dropdown-toggle caret-off rounded-circle cursor-pointer" data-bs-toggle="dropdown" style="width: 30px; height: 30px;">
