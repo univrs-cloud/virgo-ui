@@ -30,14 +30,14 @@ const target = () => {
 const signIn = async (event) => {
 	const data = form.getData();
 	submitButton.loading();
-	const { isAuthenticated, message } = await sessionService.login({
+	const isAuthenticated = await sessionService.login({
 		username: data.username,
 		password: data.password,
 		keepMeLoggedIn: Boolean(data.keepMeLoggedIn)
 	});
 	if (!isAuthenticated) {
 		submitButton.reset();
-		notifier.add({ title: message || 'Could not sign in.', type: 'error', duration: 0 });
+		notifier.add({ title: 'Incorrect username or password.', type: 'error', duration: 0 });
 		form.querySelector('.password').value = '';
 		form.querySelector('.password').focus();
 		return;
