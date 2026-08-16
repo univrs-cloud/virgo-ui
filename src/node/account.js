@@ -20,9 +20,8 @@ const signOut = async (event) => {
 		return;
 	}
 
-	const { isEnded, message } = await sessionService.logout();
-	if (!isEnded) {
-		notifier.add({ title: message || 'Could not sign out.', type: 'error', duration: 0 });
+	if (!await sessionService.logout()) {
+		notifier.add({ title: 'Could not sign out.', type: 'error', duration: 0 });
 		return;
 	}
 
