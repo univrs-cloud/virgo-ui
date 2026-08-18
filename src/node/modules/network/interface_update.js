@@ -84,7 +84,7 @@ const toggleDhcp = (event) => {
 const render = (event) => {
 	const system = networkService.getSystem();
 	const networkInterface = _.find(system?.networkInterfaces, { default: true });
-	modal.querySelector('.alert .interface-name').innerHTML = networkInterface?.ifname;
+	modal.querySelector('.alert .interface-name').textContent = networkInterface?.ifname;
 	form.querySelector('.name').value = networkInterface?.ifname || '';
 	form.querySelector('.dhcp').checked = networkInterface?.dhcp;
 	form.querySelector('.ip-address').value = _.find(networkInterface?.addrInfo, { family: 'inet' })?.local || '';

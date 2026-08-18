@@ -30,7 +30,7 @@ const render = (event) => {
 	const app = link.closest('.item');
 	terminalContainer = app.querySelector('.terminal-container');
 	containerId = link.dataset.id;
-	terminalContainer.querySelector('.service .name').innerHTML = service.labels?.comDockerComposeService;
+	terminalContainer.querySelector('.service .name').textContent = service.labels?.comDockerComposeService;
 	terminalContainer.classList.remove('d-none');
 	setStatus('Connecting...');
 	socket.emit('docker:container:terminal:connect', containerId);

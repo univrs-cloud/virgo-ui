@@ -7,18 +7,18 @@
 		<%} else {%>
 			<div class="spinner-border spinner-border-sm text-gray-600 me-2"></div>
 		<%}%>
-		<span class="text-body"><%=app.title%></span>
+		<span class="text-body"><%-app.title%></span>
 	</dt>
 	<dd class="ms-4 ps-2">
-		<small class="text-body-tertiary"><%=app.description%></small>
+		<small class="text-body-tertiary"><%-app.description%></small>
 		<%if (app.isFailed && !app.isRunning) {%>
 			<div class="text-danger"><small>Installation failed. Setup cannot continue until this app is installed and running.</small></div>
 			<%if (app.failedReason) {%>
-				<div class="text-body-secondary"><small><%=app.failedReason%></small></div>
+				<div class="text-body-secondary"><small><%-app.failedReason%></small></div>
 			<%}%>
 		<%} else if (!app.isRunning) {%>
 			<%if (app.message) {%>
-				<div class="text-body-secondary"><small><%=app.message%></small></div>
+				<div class="text-body-secondary"><small><%-app.message%></small></div>
 			<%}%>
 			<%if (app.job) {%>
 				<div class="small"><%=jobProgressTemplate({ job: app.job })%></div>

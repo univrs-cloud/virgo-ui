@@ -54,7 +54,7 @@
 						Replace the faulty <%=_.pluralize('drive', badPools.length)%> as soon as possible to avoid data loss:
 						<ul class="mb-0 mt-1">
 							<%_.each(badPools, (bad) => {%>
-								<li><%=bad.node%> &middot; <%=bad.label%> &mdash; <%=bad.state%></li>
+								<li><%-bad.node%> &middot; <%-bad.label%> &mdash; <%-bad.state%></li>
 							<%})%>
 						</ul>
 					</div>

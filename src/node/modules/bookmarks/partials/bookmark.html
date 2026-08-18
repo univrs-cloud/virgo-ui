@@ -1,23 +1,23 @@
-<tr class="item" data-name="<%=bookmark.name%>">
+<tr class="item" data-name="<%-bookmark.name%>">
 	<td class="d-none d-md-table-cell" style="width: 1px;">
 		<div class="row-image">
-			<img src="<%=(_.includes(bookmark.icon, '/') ? bookmark.icon : `assets/img/bookmarks/${bookmark.icon}`)%>">
+			<img src="<%-(_.includes(bookmark.icon, '/') ? bookmark.icon : `assets/img/bookmarks/${bookmark.icon}`)%>">
 		</div>
 	</td>
 	<td style="min-width: 210px; max-width: 0;">
 		<div class="d-flex align-items-center mb-n1">
-			<div class="text-truncate"><%=bookmark.title%></div>
+			<div class="text-truncate"><%-bookmark.title%></div>
 		</div>
 		<%if (!_.isEmpty(bookmark.url)) {%>
-			<a href="<%=bookmark.url%>" target="<%=(bookmark?.target || bookmark.name)%>" class="d-inline-flex align-items-center link-underline link-underline-opacity-0 link-underline-opacity-75-hover max-w-100">
-				<small class="text-truncate min-w-0"><%=bookmark.url%></small><i class="icon-solid icon-arrow-up-right-from-square icon-fw icon-2xs ms-1 d-none d-sm-block"></i>
+			<a href="<%-bookmark.url%>" target="<%-(bookmark?.target || bookmark.name)%>" class="d-inline-flex align-items-center link-underline link-underline-opacity-0 link-underline-opacity-75-hover max-w-100">
+				<small class="text-truncate min-w-0"><%-bookmark.url%></small><i class="icon-solid icon-arrow-up-right-from-square icon-fw icon-2xs ms-1 d-none d-sm-block"></i>
 			</a>
 		<%} else {%>
 			&mdash;
 		<%}%>
 	</td>
 	<td class="d-none d-md-table-cell">
-		<u-badge color="purple" pill><%=bookmark.category%></u-badge>
+		<u-badge color="purple" pill><%-bookmark.category%></u-badge>
 	</td>
 	<td class="text-center px-0">
 		<%if (!_.isEmpty(jobs)) {%>

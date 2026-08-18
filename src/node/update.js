@@ -51,7 +51,7 @@ const reboot = async (event) => {
 };
 
 const renderSerialNumber = (state) => {
-	_.each(document.querySelectorAll('header .serial-number'), (element) => { element.innerHTML = `SN:${state.system?.serial || '&mdash;'}`; });
+	_.each(document.querySelectorAll('header .serial-number'), (element) => { element.textContent = `SN:${state.system?.serial || '—'}`; });
 	unsubscribe?.();
 	unsubscribe = null;
 };

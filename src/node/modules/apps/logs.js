@@ -33,7 +33,7 @@ const render = (event) => {
 	serviceName = service?.labels?.comDockerComposeService || service?.name || 'unknown';
 	const app = link.closest('.item');
 	logsContainer = app.querySelector('.logs-container');
-	logsContainer.querySelector('.service .name').innerHTML = serviceName;
+	logsContainer.querySelector('.service .name').textContent = serviceName;
 	logsContainer.classList.remove('d-none');
 	setStatus('Connecting...');
 	socket.emit('docker:container:logs:connect', containerId);

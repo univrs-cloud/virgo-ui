@@ -7,7 +7,7 @@
 						<%step = _.last(_.initial(_.split(step, '\r')))%>
 					<%}%>
 					<%if (!_.isEmpty(step)) {%>
-						<li><%=step%></li>
+						<li><%-step%></li>
 					<%}%>
 				<%})%>
 				<%if (update.state === 'succeeded') {%>

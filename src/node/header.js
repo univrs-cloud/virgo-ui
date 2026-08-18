@@ -20,7 +20,7 @@ const renderSerialNumber = (state) => {
 		return;
 	}
 
-	_.each(header.querySelectorAll('.serial-number'), (element) => { element.innerHTML = `SN:${state.system?.serial || '&mdash;'}`; });
+	_.each(header.querySelectorAll('.serial-number'), (element) => { element.textContent = `SN:${state.system?.serial || '—'}`; });
 	unsubscribe?.();
 	unsubscribe = null;
 };

@@ -22,7 +22,7 @@ const render = (event) => {
 	unit = link.dataset.unit;
 	const item = link.closest('.item');
 	logsContainer = item.querySelector('.logs-container');
-	logsContainer.querySelector('.service .name').innerHTML = unit;
+	logsContainer.querySelector('.service .name').textContent = unit;
 	logsContainer.classList.remove('d-none');
 	setStatus('Connecting...');
 	socket.emit('host:service:logs:connect', unit);

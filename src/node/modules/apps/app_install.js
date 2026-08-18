@@ -34,9 +34,9 @@ const install = (event) => {
 const render = (event) => {
 	const name = event.relatedTarget.closest('.item').dataset.name;
 	app = _.find(appCenterService.getTemplates(), { name });
-	form.querySelector('.modal-title').innerHTML = app.title;
-	form.querySelector('.description').innerHTML = app.description;
-	form.querySelector('.note').innerHTML = app.note || '';
+	form.querySelector('.modal-title').textContent = app.title;
+	form.querySelector('.description').textContent = app.description;
+	form.querySelector('.note').textContent = app.note || '';
 	form.querySelector('.note').classList[app.note ? 'remove' : 'add']('d-none');
 	const fqdn = appCenterService.getFQDN();
 	_.each(app.env, (env) => {

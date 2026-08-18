@@ -5,25 +5,25 @@
 	const newestStr = (moments.length ? moment.max(moments).format('YYYY-MM-DD HH:mm') : '—');
 	const snapshotTooltip = (moments.length ? `Latest: ${newestStr}<br>Oldest: ${oldestStr}` : '');
 %>
-<tr class="item" data-id="<%=timeMachine.name%>">
+<tr class="item" data-id="<%-timeMachine.name%>">
 	<td style="min-width: 210px; max-width: 0;">
 		<div class="d-flex align-items-center mb-n1">
-			<div class="text-truncate"><%=timeMachine.comment%></div>
+			<div class="text-truncate"><%-timeMachine.comment%></div>
 		</div>
 		<div class="d-flex">
-			<div class="text-truncate"><small class="text-body-tertiary"><%=timeMachine.path%></small></div>
+			<div class="text-truncate"><small class="text-body-tertiary"><%-timeMachine.path%></small></div>
 		</div>
 	</td>
 	<td class="text-center">
 		<a href="#" class="link-dark link-underline link-underline-opacity-0" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-original-title="Click to copy the time machine address. In Finder, press ⌘K and paste it to connect. This lets Time Machine use it for backups.">
 			<i class="icon-brands icon-apple icon-fw"></i>
 		</a>
-		<span class="copy d-none">smb://<%=(timeMachine.isPrivate ? `${_.first(timeMachine.validUsers)}@` : '')%><%=accessOn%>/<%=timeMachine.name%></span>
+		<span class="copy d-none">smb://<%-(timeMachine.isPrivate ? `${_.first(timeMachine.validUsers)}@` : '')%><%-accessOn%>/<%-timeMachine.name%></span>
 	</td>
 	<td class="d-none d-md-table-cell">
 		<%if (timeMachine.validUsers) {%>
 			<%_.each(timeMachine.validUsers, (user) => {%>
-				<u-badge color="purple" pill><%=user%></u-badge>
+				<u-badge color="purple" pill><%-user%></u-badge>
 			<%})%>
 		<%} else {%>
 			<u-badge color="purple" pill>Guest</u-badge>
