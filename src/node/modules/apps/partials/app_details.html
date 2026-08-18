@@ -1,4 +1,4 @@
-<div class="item container-fluid" data-name="<%=app.name%>">
+<div class="item container-fluid" data-name="<%-app.name%>">
 	<div class="card rounded-4 border-0 shadow">
 		<div class="card-body">
 			<div class="row g-0 align-items-center mt-n2 mb-2">
@@ -8,11 +8,11 @@
 					</button>
 				</div>
 				<div class="card-image card-spacer col-auto p-2">
-					<img src="<%=(_.includes(app.icon, '/') ? app.icon : `assets/img/apps/${app.icon}`)%>">
+					<img src="<%-(_.includes(app.icon, '/') ? app.icon : `assets/img/apps/${app.icon}`)%>">
 				</div>
 				<div class="col ps-1 min-w-0">
 					<div class="d-flex align-items-center mb-n1 min-w-0">
-						<div class="text-truncate min-w-0"><%=app.title%></div>
+						<div class="text-truncate min-w-0"><%-app.title%></div>
 						<%if (app.hasUpdates) {%>
 							<u-badge color="green" class="ms-2" tip="Updates available" pill>
 								<i class="icon-solid icon-download icon-fw"></i>
@@ -21,8 +21,8 @@
 					</div>
 					<%if (!_.isEmpty(app.urls)) {%>
 						<%_.each(app.urls, (url) => {%>
-							<a href="<%=url%>" target="<%=(app?.target || app.name)%>" class="d-inline-flex align-items-center link-underline link-underline-opacity-0 link-underline-opacity-75-hover max-w-100">
-								<small class="text-truncate min-w-0"><%=_.replace(url, /^https?:\/\//, '')%></small><i class="icon-solid icon-arrow-up-right-from-square icon-fw icon-2xs ms-1"></i>
+							<a href="<%-url%>" target="<%-(app?.target || app.name)%>" class="d-inline-flex align-items-center link-underline link-underline-opacity-0 link-underline-opacity-75-hover max-w-100">
+								<small class="text-truncate min-w-0"><%-_.replace(url, /^https?:\/\//, '')%></small><i class="icon-solid icon-arrow-up-right-from-square icon-fw icon-2xs ms-1"></i>
 							</a>
 						<%})%>
 					<%} else {%>
@@ -71,7 +71,7 @@
 							<div class="card mb-2">
 								<div class="card-body py-1">
 									<small class="text-body-tertiary pb-1"><i class="icon-solid icon-microchip icon-fw me-1"></i>CPU</small>
-									<h5><%=app.resourceMetrics?.cpu?.percent?.toFixed(2)%>%</h5>
+									<h5><%-app.resourceMetrics?.cpu?.percent?.toFixed(2)%>%</h5>
 								</div>
 							</div>
 						</div>
@@ -79,7 +79,7 @@
 							<div class="card mb-2">
 								<div class="card-body py-1">
 									<small class="text-body-tertiary pb-1"><i class="icon-solid icon-memory icon-fw me-1"></i>RAM</small>
-									<h5><%=app.resourceMetrics?.memory?.percent?.toFixed(2)%>%</h5>
+									<h5><%-app.resourceMetrics?.memory?.percent?.toFixed(2)%>%</h5>
 								</div>
 							</div>
 						</div>
@@ -106,14 +106,14 @@
 							<%_.each(app.projectContainers, (container, index) => {%>
 								<%const resourceMetrics = _.find((app.resourceMetrics?.containers || []), { id: container.id })%>
 								<div class="col-12">
-									<div class="service card mb-2 h-100" data-id="<%=container.id%>">
+									<div class="service card mb-2 h-100" data-id="<%-container.id%>">
 										<div class="card-body py-1">
 											<div class="row g-2 align-items-center">
 												<div class="col-12">
 													<div class="d-flex align-items-center justify-content-between w-100">
 														<div class="d-flex align-items-center min-w-0">
 															<i class="icon-light icon-cube icon-fw text-body-tertiary me-2"></i>
-															<div class="text-truncate min-w-0"><%=container.labels?.comDockerComposeService%>
+															<div class="text-truncate min-w-0"><%-container.labels?.comDockerComposeService%>
 																<%if (container.hasUpdates) {%>
 																	<u-badge color="green" class="ms-1" tip="Updates available" pill>
 																		<i class="icon-solid icon-download icon-fw"></i>
@@ -121,12 +121,12 @@
 																<%}%>
 															</div>
 														</div>
-														<u-badge color="<%=(container.state === 'running' ? 'green' : 'red')%>" pill><%=container.state%></u-badge>
+														<u-badge color="<%=(container.state === 'running' ? 'green' : 'red')%>" pill><%-container.state%></u-badge>
 													</div>
 												</div>
 
 												<div class="col-12">
-													<u-badge color="blue" tint="100" pill><i class="icon-light icon-layer-group icon-fw me-1"></i><%=container.image%></u-badge>
+													<u-badge color="blue" tint="100" pill><i class="icon-light icon-layer-group icon-fw me-1"></i><%-container.image%></u-badge>
 												</div>
 
 												<div class="col-12">
@@ -141,15 +141,15 @@
 															<%_.each(container.networkSettings?.networks, (network, networkName) => {%>
 																<%if (network.ipAddress) {%>
 																	<%const isExternal = !!network.gateway;%>
-																	<u-badge color="<%=(isExternal ? 'purple' : 'gray')%>" tint="<%=(isExternal ? 100 : 200)%>" tip="<%=networkName%>: <%=network.ipAddress%> &middot; <%=(isExternal ? 'external' : 'internal')%>" pill>
-																		<i class="icon-light icon-network-wired icon-fw me-1"></i><%=network.ipAddress%>
+																	<u-badge color="<%=(isExternal ? 'purple' : 'gray')%>" tint="<%=(isExternal ? 100 : 200)%>" tip="<%-networkName%>: <%-network.ipAddress%> &middot; <%=(isExternal ? 'external' : 'internal')%>" pill>
+																		<i class="icon-light icon-network-wired icon-fw me-1"></i><%-network.ipAddress%>
 																	</u-badge>
 																<%}%>
 															<%})%>
 														<%} else {%>
 															<%const hostIp = container.networkSettings?.networks?.host?.ipAddress;%>
 															<%const hostTip = (!hostIp || hostIp === '127.0.0.1' || hostIp.startsWith('127.') || hostIp === '::1') ? 'host: no IP' : `host: ${hostIp}`;%>
-															<u-badge color="purple" tint="100" tip="<%=hostTip%>" pill>
+															<u-badge color="purple" tint="100" tip="<%-hostTip%>" pill>
 																<i class="icon-light icon-network-wired icon-fw me-1"></i>1
 															</u-badge>
 														<%}%>
@@ -158,7 +158,7 @@
 												
 												<div class="col-12">
 													<%if (!_.isEmpty(container.mounts)) {%>
-														<u-badge color="orange" tint="100" tip="<%=_.size(container.mounts)%> volume<%=(_.size(container.mounts) !== 1 ? 's' : '')%> mounted" pill>
+														<u-badge color="orange" tint="100" tip="<%=_.pluralize('volume', _.size(container.mounts), true)%> mounted" pill>
 															<i class="icon-light icon-hard-drive icon-fw me-1"></i><%=_.size(container.mounts)%>
 														</u-badge>
 													<%}%>
@@ -173,12 +173,12 @@
 																	<%if (!resourceMetrics) {%>
 																		<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
 																	<%} else {%>
-																		<small class="fw-light"><%=resourceMetrics?.cpu?.percent.toFixed(2)%>%</small>
+																		<small class="fw-light"><%-resourceMetrics?.cpu?.percent.toFixed(2)%>%</small>
 																	<%}%>
 																</div>
 																<%if (resourceMetrics) {%>
 																	<u-progress shadow="false" class="d-block">
-																		<u-progress-bar width="<%=resourceMetrics?.cpu?.percent%>"></u-progress-bar>
+																		<u-progress-bar width="<%-resourceMetrics?.cpu?.percent%>"></u-progress-bar>
 																	</u-progress>
 																<%}%>
 															</div>
@@ -194,7 +194,7 @@
 																</div>
 																<%if (resourceMetrics) {%>
 																	<u-progress shadow="false" class="d-block">
-																		<u-progress-bar width="<%=resourceMetrics?.memory?.percent%>"></u-progress-bar>
+																		<u-progress-bar width="<%-resourceMetrics?.memory?.percent%>"></u-progress-bar>
 																	</u-progress>
 																<%}%>
 															</div>
@@ -255,12 +255,12 @@
 
 												<div class="col-12">
 													<div class="d-flex align-items-center gap-2">
-														<a href="#" class="logs btn btn-outline-secondary btn-sm px-1 py-0 my-1" data-id="<%=container.id%>">
+														<a href="#" class="logs btn btn-outline-secondary btn-sm px-1 py-0 my-1" data-id="<%-container.id%>">
 															<i class="icon-light icon-memo icon-fw me-1"></i>
 															Logs
 														</a>
 														<%if (container.state === 'running') {%>
-															<a href="#" class="terminal btn btn-outline-secondary btn-sm px-1 py-0 my-1" data-id="<%=container.id%>">
+															<a href="#" class="terminal btn btn-outline-secondary btn-sm px-1 py-0 my-1" data-id="<%-container.id%>">
 																<i class="icon-light icon-terminal icon-fw me-1"></i>
 																Terminal
 															</a>
@@ -338,7 +338,7 @@
 									const groupId = `snapshot-group-${type}-${_.kebabCase(app.name)}`;
 								%>
 								<tbody>
-									<tr class="group-toggle cursor-pointer" data-bs-toggle="collapse" data-bs-target="#<%=groupId%>" aria-expanded="false" aria-controls="<%=groupId%>">
+									<tr class="group-toggle cursor-pointer" data-bs-toggle="collapse" data-bs-target="#<%-groupId%>" aria-expanded="false" aria-controls="<%-groupId%>">
 										<td style="padding-left: calc(var(--bs-card-spacer-x) + 1.25em + 0.5rem);"><%=_.startCase(type)%> <small class="text-body-tertiary">(<%=typeSnapshots.length%>)</small></td>
 										<td></td>
 										<td class="text-center px-0">
@@ -346,7 +346,7 @@
 										</td>
 									</tr>
 								</tbody>
-								<tbody class="collapse" id="<%=groupId%>">
+								<tbody class="collapse" id="<%-groupId%>">
 									<%_.each(typeSnapshots, (snapshot) => {%>
 										<%
 											const segments = snapshot.snapshotName.split('_');
@@ -354,7 +354,7 @@
 											const createdAt = createdMoment.isValid() ? createdMoment.format('YYYY-MM-DD HH:mm') : snapshot.snapshotName;
 										%>
 										<tr>
-											<td class="font-monospace" style="padding-left: calc(var(--bs-card-spacer-x) + 1.25em + 0.5rem);"><small class="text-body-secondary"><%=createdAt%></small></td>
+											<td class="font-monospace" style="padding-left: calc(var(--bs-card-spacer-x) + 1.25em + 0.5rem);"><small class="text-body-secondary"><%-createdAt%></small></td>
 											<td class="text-end"><small class="fw-light"><%=prettyBytes(snapshot.properties?.used?.value || 0, { binary: true })%></small></td>
 											<td class="px-0">
 												<div class="dropdown">

@@ -52,8 +52,8 @@ const render = (event) => {
 	const isNextcloudPath = currentFolder.path?.startsWith('/messier/apps/nextcloud/');
 	const refquota = form.querySelector('.refquota');
 	form.querySelector('.name').value = currentFolder.name;
-	form.querySelector('.comment').innerHTML = currentFolder.comment;
-	form.querySelector('.path').innerHTML = currentFolder.path;
+	form.querySelector('.comment').textContent = currentFolder.comment;
+	form.querySelector('.path').textContent = currentFolder.path;
 	refquota.classList.toggle('d-none', isNextcloudPath);
 	form.validation = isNextcloudPath ? [] : [refquotaValidation];
 	if (!isNextcloudPath) {

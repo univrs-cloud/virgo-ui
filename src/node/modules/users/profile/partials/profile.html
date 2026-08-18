@@ -8,12 +8,12 @@
 					<li><a href="#profile-password" class="dropdown-item" data-bs-toggle="modal"><i class="icon-regular icon-key icon-fw me-1"></i>Change password</a></li>
 				</ul>
 			</div>
-			<h5 class="card-title d-flex align-items-center"><%=user.fullname || user.username%></h5>
+			<h5 class="card-title d-flex align-items-center"><%-user.fullname || user.username%></h5>
 			<dl class="m-0">
 				<dt class="fw-lighter"><small>Username</small></dt>
-				<dd><%=user.username%></dd>
+				<dd><%-user.username%></dd>
 				<dt class="fw-lighter"><small>Email address</small></dt>
-				<dd class="m-0"><%=user.email || '&mdash;'%></dd>
+				<dd class="m-0"><%-user.email || '—'%></dd>
 			</dl>
 		</div>
 	</div>

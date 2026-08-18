@@ -30,7 +30,7 @@ const restore = () => {
 };
 
 const render = () => {
-	form.querySelector('.title-email').innerHTML = account.email || '';
+	form.querySelector('.title-email').textContent = account.email || '';
 	form.querySelector('.name').value = account.name || '';
 };
 

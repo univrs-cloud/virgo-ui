@@ -1,10 +1,10 @@
-<tr class="item" data-id="<%=folder.name%>">
+<tr class="item" data-id="<%-folder.name%>">
 	<td style="min-width: 210px; max-width: 0;">
 		<div class="d-flex align-items-center mb-n1">
-			<div class="text-truncate"><%=folder.comment%></div>
+			<div class="text-truncate"><%-folder.comment%></div>
 		</div>
 		<div class="d-flex">
-			<div class="text-truncate"><small class="text-body-tertiary"><%=folder.path%></small></div>
+			<div class="text-truncate"><small class="text-body-tertiary"><%-folder.path%></small></div>
 		</div>
 	</td>
 	<td>
@@ -13,26 +13,26 @@
 				<a href="#" class="link-dark link-underline link-underline-opacity-0" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-original-title="Click to copy the folder address. Access the folder using a computer on your local network.">
 					<i class="icon-brands icon-windows icon-fw"></i>
 				</a>
-				<span class="copy d-none">\\<%=accessOn%>\<%=folder.name%></span>
+				<span class="copy d-none">\\<%-accessOn%>\<%-folder.name%></span>
 			</div>
 			<div class="d-flex align-items-center mx-2">
 				<a href="#" class="link-dark link-underline link-underline-opacity-0" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-original-title="Click to copy the folder address. Access the folder using a computer on your local network.">
 					<i class="icon-brands icon-apple icon-fw"></i>
 				</a>
-				<span class="copy d-none">smb://<%=accessOn%>/<%=folder.name%></span>
+				<span class="copy d-none">smb://<%-accessOn%>/<%-folder.name%></span>
 			</div>
 			<div class="d-flex align-items-center">
 				<a href="#" class="link-dark link-underline link-underline-opacity-0" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-original-title="Click to copy the folder address. Access the folder using a computer on your local network.">
 					<i class="icon-brands icon-linux icon-fw"></i>
 				</a>
-				<span class="copy d-none">smb://<%=accessOn%>/<%=folder.name%></span>
+				<span class="copy d-none">smb://<%-accessOn%>/<%-folder.name%></span>
 			</div>
 		</div>
 	</td>
 	<td class="d-none d-md-table-cell">
 		<%if (folder.validUsers) {%>
 			<%_.each(folder.validUsers, (user) => {%>
-				<u-badge color="purple" pill><%=user%></u-badge>
+				<u-badge color="purple" pill><%-user%></u-badge>
 			<%})%>
 		<%} else {%>
 			<u-badge color="purple" pill>Guest</u-badge>

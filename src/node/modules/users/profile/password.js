@@ -20,7 +20,7 @@ const restore = (event) => {
 };
 
 const render = (event) => {
-	form.querySelector('.title-username').innerHTML = account.user;
+	form.querySelector('.title-username').textContent = account.user;
 };
 
 form.validation = [

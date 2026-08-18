@@ -5,9 +5,9 @@
 			<h5 class="card-title d-flex align-items-center">Host</h5>
 			<dl class="m-0">
 				<dt class="fw-lighter"><small>Hostname</small></dt>
-				<dd><%=system?.osInfo?.hostname%></dd>
+				<dd><%-system?.osInfo?.hostname%></dd>
 				<dt class="fw-lighter"><small>Domain name</small></dt>
-				<dd class="m-0"><%=_.replace(system?.osInfo?.fqdn, `${system?.osInfo?.hostname}.`, '') || '&mdash;'%></dd>
+				<dd class="m-0"><%-_.replace(system?.osInfo?.fqdn, `${system?.osInfo?.hostname}.`, '') || '—'%></dd>
 			</dl>
 		</div>
 	</div>
@@ -20,20 +20,20 @@
 			<h5 class="card-title d-flex align-items-center">Interface</h5>
 			<dl class="m-0">
 				<dt class="fw-lighter"><small>Name</small></dt>
-				<dd><%=networkInterface?.ifname%></dd>
+				<dd><%-networkInterface?.ifname%></dd>
 				<dt class="fw-lighter"><small>Address</small></dt>
 				<dd class="d-flex align-items-center">
-					<%=_.find(networkInterface?.addrInfo, { family: 'inet' })?.local%>/<%=_.find(networkInterface?.addrInfo, { family: 'inet' })?.prefixlen%>
+					<%-_.find(networkInterface?.addrInfo, { family: 'inet' })?.local%>/<%-_.find(networkInterface?.addrInfo, { family: 'inet' })?.prefixlen%>
 					<u-badge color="gray" tint="200" class="ms-1" pill><%=(networkInterface?.dhcp ? 'Automatic' : 'Manual')%></u-badge>
 				</dd>
 				<dt class="fw-lighter"><small>Default gateway</small></dt>
-				<dd><%=networkInterface?.gateway%></dd>
+				<dd><%-networkInterface?.gateway%></dd>
 				<dt class="fw-lighter"><small>DNS</small></dt>
-				<dd><%=_.join(networkInterface?.dnsServers, ', ') || '&mdash;'%></dd>
+				<dd><%-_.join(networkInterface?.dnsServers, ', ') || '—'%></dd>
 				<dt class="fw-lighter"><small>MTU</small></dt>
-				<dd><%=networkInterface?.mtu%></dd>
+				<dd><%-networkInterface?.mtu%></dd>
 				<dt class="fw-lighter"><small>MAC</small></dt>
-				<dd class="m-0"><%=networkInterface?.address%></dd>
+				<dd class="m-0"><%-networkInterface?.address%></dd>
 			</dl>
 		</div>
 	</div>

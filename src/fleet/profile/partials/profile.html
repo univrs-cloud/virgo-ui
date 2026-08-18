@@ -8,10 +8,10 @@
 					<li><a href="#fleet-user-password" class="dropdown-item" data-bs-toggle="modal"><i class="icon-regular icon-key icon-fw me-1"></i>Change password</a></li>
 				</ul>
 			</div>
-			<h5 class="card-title d-flex align-items-center"><%=account.name || account.email%></h5>
+			<h5 class="card-title d-flex align-items-center"><%-account.name || account.email%></h5>
 			<dl class="m-0">
 				<dt class="fw-lighter"><small>Email address</small></dt>
-				<dd><%=account.email || '&mdash;'%></dd>
+				<dd><%-account.email || '—'%></dd>
 
 				<hr class="border-secondary-subtle my-4">
 

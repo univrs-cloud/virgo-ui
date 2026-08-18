@@ -6,11 +6,11 @@
 		<%const isUpdating = !_.isEmpty(_.filter(jobs, (job) => { return job.data?.config?.name === app.name; })) || _.includes(pending, app.name);%>
 		<div class="d-flex align-items-center border-top py-2">
 			<div class="min-w-0 me-3">
-				<div class="text-truncate"><%=app.title%></div>
+				<div class="text-truncate"><%-app.title%></div>
 				<div class="d-flex flex-wrap align-items-center">
 					<%_.each(app.services, (service) => {%>
 						<small class="text-secondary d-inline-flex align-items-center me-2">
-							<i class="icon-light icon-cube icon-fw text-body-tertiary me-1"></i><%=service%>
+							<i class="icon-light icon-cube icon-fw text-body-tertiary me-1"></i><%-service%>
 						</small>
 					<%})%>
 				</div>
@@ -18,7 +18,7 @@
 			<%if (isUpdating) {%>
 				<i class="icon-solid icon-gear icon-fw icon-spin ms-auto flex-shrink-0"></i>
 			<%} else {%>
-				<u-button variant="primary" size="sm" class="update ms-auto flex-shrink-0" data-name="<%=app.name%>" tip="<%=(isUpdatingSystem ? 'A system update is in progress' : '')%>" <%=(isUpdatingSystem ? 'disabled' : '')%>>Update</u-button>
+				<u-button variant="primary" size="sm" class="update ms-auto flex-shrink-0" data-name="<%-app.name%>" tip="<%=(isUpdatingSystem ? 'A system update is in progress' : '')%>" <%=(isUpdatingSystem ? 'disabled' : '')%>>Update</u-button>
 			<%}%>
 		</div>
 	<%})%>

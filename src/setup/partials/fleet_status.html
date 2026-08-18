@@ -1,7 +1,7 @@
 <dt class="fw-lighter"><small>Status</small></dt>
 <dd>Registered</dd>
 <dt class="fw-lighter"><small>Account</small></dt>
-<dd><%=fleet?.email%></dd>
+<dd><%-fleet?.email%></dd>
 <dt class="fw-lighter"><small>Connection</small></dt>
 <%if (fleet?.authFailed) {%>
 	<dd class="m-0 text-danger">Registration expired, please register again.</dd>

@@ -53,7 +53,7 @@ const render = (event) => {
 	}
 
 	form.querySelector('.name').value = timeMachine.name;
-	form.querySelector('.comment').innerHTML = timeMachine.comment;
+	form.querySelector('.comment').textContent = timeMachine.comment;
 	form.querySelector('.refquota').value = (timeMachine.size ? Math.round(timeMachine.size / (1024 * 1024 * 1024)) : 0);
 	populateValidUsers(timeMachine);
 };
