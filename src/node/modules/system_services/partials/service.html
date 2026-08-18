@@ -1,7 +1,7 @@
-<tr class="item cursor-pointer <%=(service.active === 'failed' ? 'table-danger' : (service.broken ? 'table-warning' : ''))%>" data-unit="<%=service.unit%>">
+<tr class="item cursor-pointer <%=(service.active === 'failed' ? 'table-danger' : (service.broken ? 'table-warning' : ''))%>" data-unit="<%-service.unit%>">
 	<td style="min-width: 200px; max-width: 0;">
 		<div class="d-flex align-items-center mb-n1">
-			<div class="text-truncate"><%=service.unit%></div>
+			<div class="text-truncate"><%-service.unit%></div>
 			<%if (service.broken) {%>
 				<u-badge color="red" class="ms-2 flex-shrink-0" tip="Service not found or failed to load" pill>
 					<i class="icon-solid icon-triangle-exclamation icon-fw"></i>
@@ -13,7 +13,7 @@
 			<%}%>
 		</div>
 		<div class="d-flex">
-			<div class="text-truncate"><small class="text-body-secondary"><%=service.description%></small></div>
+			<div class="text-truncate"><small class="text-body-secondary"><%-service.description%></small></div>
 		</div>
 	</td>
 	<td class="text-end text-nowrap d-none d-md-table-cell">
@@ -26,13 +26,13 @@
 			<span class="text-body-tertiary">&mdash;</span>
 		<%}%>
 	</td>
-	<td class="d-none d-md-table-cell text-body-secondary"><%=service.unitFileState%></td>
+	<td class="d-none d-md-table-cell text-body-secondary"><%-service.unitFileState%></td>
 	<td class="text-nowrap">
 		<%
 			const stateBadgeColor = (service.active === 'active' ? (service.sub === 'running' ? 'green' : 'blue') : (service.active === 'failed' ? 'red' : 'gray'));
 			const stateBadgeTint = (service.active === 'active' ? 100 : 200);
 		%>
-		<u-badge color="<%=stateBadgeColor%>" tint="<%=stateBadgeTint%>" pill><%=service.sub%></u-badge>
+		<u-badge color="<%=stateBadgeColor%>" tint="<%=stateBadgeTint%>" pill><%-service.sub%></u-badge>
 	</td>
 	<td class="text-center px-0">
 		<%=serviceActionsTemplate({ service, jobs })%>

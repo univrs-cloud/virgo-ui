@@ -1,4 +1,4 @@
-<div class="item container-fluid" data-unit="<%=service.unit%>">
+<div class="item container-fluid" data-unit="<%-service.unit%>">
 	<div class="card rounded-4 border-0 shadow">
 		<div class="card-body">
 			<div class="row g-0 align-items-center mt-n2 mb-2">
@@ -12,7 +12,7 @@
 				</div>
 				<div class="col ps-1 min-w-0">
 					<div class="d-flex align-items-center mb-n1 min-w-0">
-						<div class="text-truncate min-w-0"><%=service.unit%></div>
+						<div class="text-truncate min-w-0"><%-service.unit%></div>
 						<%if (service.broken) {%>
 							<u-badge color="red" class="ms-2" tip="Service not found or failed to load" pill>
 								<i class="icon-solid icon-triangle-exclamation icon-fw"></i>
@@ -23,7 +23,7 @@
 							</u-badge>
 						<%}%>
 					</div>
-					<small class="text-body-secondary text-truncate d-block min-w-0"><%=service.description || '&mdash;'%></small>
+					<small class="text-body-secondary text-truncate d-block min-w-0"><%-service.description || '—'%></small>
 				</div>
 				<div class="col-auto ps-3 ms-auto">
 					<%=serviceActionsTemplate({ service, jobs })%>
@@ -52,7 +52,7 @@
 							<div class="card mb-2">
 								<div class="card-body py-1">
 									<small class="text-body-tertiary pb-1"><i class="icon-solid icon-circle-dot icon-fw me-1"></i>State</small>
-									<h5><%=service.sub%></h5>
+									<h5><%-service.sub%></h5>
 								</div>
 							</div>
 						</div>
@@ -60,7 +60,7 @@
 							<div class="card mb-2">
 								<div class="card-body py-1">
 									<small class="text-body-tertiary pb-1"><i class="icon-solid icon-circle-half-stroke icon-fw me-1"></i>Activity</small>
-									<h5><%=service.active%></h5>
+									<h5><%-service.active%></h5>
 								</div>
 							</div>
 						</div>
@@ -68,7 +68,7 @@
 							<div class="card mb-2">
 								<div class="card-body py-1">
 									<small class="text-body-tertiary pb-1"><i class="icon-solid icon-toggle-on icon-fw me-1"></i>Startup</small>
-									<h5><%=service.unitFileState%></h5>
+									<h5><%-service.unitFileState%></h5>
 								</div>
 							</div>
 						</div>
@@ -84,7 +84,7 @@
 
 					<div class="services pe-3 me-n3">
 						<div class="d-flex align-items-center gap-2 mt-2">
-							<a href="#" class="logs btn btn-outline-secondary btn-sm px-1 py-0" data-unit="<%=service.unit%>">
+							<a href="#" class="logs btn btn-outline-secondary btn-sm px-1 py-0" data-unit="<%-service.unit%>">
 								<i class="icon-light icon-memo icon-fw me-1"></i>Logs
 							</a>
 						</div>

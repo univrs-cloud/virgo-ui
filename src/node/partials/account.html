@@ -9,7 +9,7 @@
 			<img src="assets/img/user-circle.svg" alt="profile" class="dropdown-toggle caret-off rounded-circle cursor-pointer" data-bs-toggle="dropdown" style="width: 30px; height: 30px;">
 			<div class="dropdown-menu dropdown-menu-end" style="width: max-content;">
 				<h6 class="dropdown-header">Logged in as</h6>
-				<p class="d-flex flex-row align-items-center fw-medium px-2 pb-2 mt-n1 mb-0"><%=account.name || account.email || '&mdash;'%></p>
+				<p class="d-flex flex-row align-items-center fw-medium px-2 pb-2 mt-n1 mb-0"><%-account.name || account.email || '—'%></p>
 				<%if (!isUpdating) {%>
 					<div class="dropdown-divider"></div>
 					<a href="/users/profile" class="dropdown-item" <%=(runtimeRole === 'fleet' ? 'rel="external"' : '')%>>Your profile</a>

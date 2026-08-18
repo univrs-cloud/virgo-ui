@@ -25,9 +25,9 @@
 				<div class="flex-grow-1 me-2 min-w-0">
 					<h6 class="mb-0 text-truncate">
 						<%if (node.online) {%>
-							<a href="/nodes/<%=node.nodeId%>" rel="external" class="stretched-link text-decoration-none text-body"><%=node.name%></a>
+							<a href="/nodes/<%-node.nodeId%>" rel="external" class="stretched-link text-decoration-none text-body"><%-node.name%></a>
 						<%} else {%>
-							<span class="text-body"><%=node.name%></span>
+							<span class="text-body"><%-node.name%></span>
 						<%}%>
 					</h6>
 				</div>
@@ -38,14 +38,14 @@
 					<ul class="dropdown-menu dropdown-menu-end">
 						<%if (node.isOwner) {%>
 							<li>
-								<a href="#admin-add" class="dropdown-item" data-bs-toggle="modal" data-node-id="<%=node.nodeId%>">
+								<a href="#admin-add" class="dropdown-item" data-bs-toggle="modal" data-node-id="<%-node.nodeId%>">
 									<i class="icon-regular icon-user-plus icon-fw me-1"></i>Add admin
 								</a>
 							</li>
 							<li><hr class="dropdown-divider"></li>
 						<%}%>
 						<li>
-							<a href="#" class="dropdown-item text-danger confirm" data-action="remove" data-node-id="<%=node.nodeId%>">
+							<a href="#" class="dropdown-item text-danger confirm" data-action="remove" data-node-id="<%-node.nodeId%>">
 								<i class="icon-regular icon-xmark icon-fw me-1"></i>Remove from inventory
 							</a>
 						</li>
@@ -74,14 +74,14 @@
 						<i class="icon-solid icon-arrows-rotate icon-spin"></i>
 					</u-badge>
 				<%} else if (node.update?.state === 'succeeded') {%>
-					<a href="#" data-action="complete-update" data-node-id="<%=node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
+					<a href="#" data-action="complete-update" data-node-id="<%-node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
 						<u-badge color="green" tint="500" pill tip="System update complete">
 							<i class="icon-solid icon-circle-check"></i>
 							<span class="hover-reveal-text">Finish</span>
 						</u-badge>
 					</a>
 				<%} else if (node.update?.state === 'failed') {%>
-					<a href="#" data-action="complete-update" data-node-id="<%=node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
+					<a href="#" data-action="complete-update" data-node-id="<%-node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
 						<u-badge color="red" tint="500" pill tip="System update failed">
 							<i class="icon-solid icon-circle-xmark"></i>
 							<span class="hover-reveal-text">Dismiss</span>
@@ -89,7 +89,7 @@
 					</a>
 				<%}%>
 				<%if (!node.update && !_.isEmpty(node.updates?.system)) {%>
-					<a href="#node-system-updates" data-bs-toggle="modal" data-node-id="<%=node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
+					<a href="#node-system-updates" data-bs-toggle="modal" data-node-id="<%-node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
 						<u-badge color="blue" pill tip="<%=_.pluralize('system update', _.size(node.updates.system), true)%>">
 							<i class="icon-solid icon-download"></i>
 						</u-badge>
@@ -101,9 +101,9 @@
 							return _.some(node.appUpdateJobs, (job) => { return job.data?.config?.name === app.name; });
 						});
 					%>
-					<a href="#node-app-updates" data-bs-toggle="modal" data-node-id="<%=node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
+					<a href="#node-app-updates" data-bs-toggle="modal" data-node-id="<%-node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
 						<%if (!_.isEmpty(updating)) {%>
-							<u-badge color="blue" pill tip="Updating <%=_.join(_.map(updating, (app) => { return app.title; }), ', ')%>">
+							<u-badge color="blue" pill tip="Updating <%-_.join(_.map(updating, (app) => { return app.title; }), ', ')%>">
 								<i class="icon-solid icon-gear icon-spin me-1"></i><%=_.size(updating)%>
 							</u-badge>
 						<%} else {%>
@@ -127,10 +127,10 @@
 									<span class="dropdown-item d-flex align-items-center">
 										<i class="icon-regular icon-user icon-fw me-2"></i>
 										<div class="lh-1 me-3">
-											<div><%=admin.name%></div>
-											<small class="text-body-secondary"><%=admin.email%></small>
+											<div><%-admin.name%></div>
+											<small class="text-body-secondary"><%-admin.email%></small>
 										</div>
-										<a href="#" class="text-danger ms-auto confirm" data-action="revoke" data-node-id="<%=node.nodeId%>" data-email="<%=admin.email%>" data-bs-toggle="tooltip" data-bs-original-title="Revoke access">
+										<a href="#" class="text-danger ms-auto confirm" data-action="revoke" data-node-id="<%-node.nodeId%>" data-email="<%-admin.email%>" data-bs-toggle="tooltip" data-bs-original-title="Revoke access">
 											<i class="icon-solid icon-circle-xmark"></i>
 										</a>
 									</span>
@@ -141,10 +141,10 @@
 									<span class="dropdown-item d-flex align-items-center">
 										<i class="icon-regular icon-users icon-fw me-2"></i>
 										<div class="lh-1 me-3">
-											<div><%=group.name%></div>
+											<div><%-group.name%></div>
 											<small class="text-body-secondary">Group</small>
 										</div>
-										<a href="#" class="text-danger ms-auto confirm" data-action="revoke-group" data-node-id="<%=node.nodeId%>" data-group-id="<%=group.id%>" data-group-name="<%=group.name%>" data-bs-toggle="tooltip" data-bs-original-title="Revoke group access">
+										<a href="#" class="text-danger ms-auto confirm" data-action="revoke-group" data-node-id="<%-node.nodeId%>" data-group-id="<%-group.id%>" data-group-name="<%-group.name%>" data-bs-toggle="tooltip" data-bs-original-title="Revoke group access">
 											<i class="icon-solid icon-circle-xmark"></i>
 										</a>
 									</span>
@@ -172,8 +172,8 @@
 							const usageTip = `${prettyBytes(properties.allocated?.value || 0, { binary: true })} of ${prettyBytes(properties.size?.value || 0, { binary: true })} used`;
 						%>
 						<div class="d-flex align-items-center border border-gray-400 bd-gray-100 shadow-sm px-2 py-1 rounded-4" style="font-size: 0.75rem;">
-							<i class="icon-solid icon-circle icon-fw me-1 <%=healthColor%>" data-bs-toggle="tooltip" data-bs-original-title="<%=healthLabel%>"></i>
-							<span class="text-body-secondary me-2"><%=pool.name%></span>
+							<i class="icon-solid icon-circle icon-fw me-1 <%=healthColor%>" data-bs-toggle="tooltip" data-bs-original-title="<%-healthLabel%>"></i>
+							<span class="text-body-secondary me-2"><%-pool.name%></span>
 							<%if (scanState === 'scanning') {%>
 								<%
 									const isPaused = (scan.scrubPause > 0);

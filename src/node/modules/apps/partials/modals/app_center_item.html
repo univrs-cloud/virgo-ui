@@ -1,12 +1,12 @@
 <div class="col col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
-	<div class="item card text-bg-light" data-name="<%=app.name%>">
+	<div class="item card text-bg-light" data-name="<%-app.name%>">
 		<div class="card-title">
 			<div class="row g-0 align-items-center">
 				<div class="card-image card-spacer col-auto p-2">
-					<img src="<%=app.logo%>">
+					<img src="<%-app.logo%>">
 				</div>
 				<div class="col pe-2">
-					<h6 class="card-title fw-medium mb-0"><%=app.title%></h6>
+					<h6 class="card-title fw-medium mb-0"><%-app.title%></h6>
 				</div>
 			</div>
 		</div>
@@ -14,10 +14,10 @@
 			<div class="row g-0">
 				<div class="card-spacer col-auto p-2"></div>
 				<div class="col">
-					<p class="card-text line-clamp three-line"><%=app.description%></p>
+					<p class="card-text line-clamp three-line"><%-app.description%></p>
 					<div class="d-flex align-items-center justify-content-between">
 						<%_.each(app.categories, (category) => {%>
-							<u-badge color="purple" pill><%=category%></u-badge>
+							<u-badge color="purple" pill><%-category%></u-badge>
 						<%})%>
 						<%if (!_.isEmpty(jobs)) {%>
 							<u-button variant="primary" size="sm" disabled><div class="spinner-border spinner-border-sm me-2"></div>Installing...</u-button>

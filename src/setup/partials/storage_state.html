@@ -1,8 +1,8 @@
 <%if (!_.isUndefined(pool)) {%>
-	<p>This node's <strong><%=pool.name%></strong> storage pool is imported and in use.</p>
+	<p>This node's <strong><%-pool.name%></strong> storage pool is imported and in use.</p>
 	<dl class="m-0">
 		<dt class="fw-lighter"><small>Health</small></dt>
-		<dd class="<%=(pool.properties?.health?.value === 'ONLINE' ? '' : 'text-warning')%>"><%=(pool.properties?.health?.value || '—')%></dd>
+		<dd class="<%=(pool.properties?.health?.value === 'ONLINE' ? '' : 'text-warning')%>"><%-(pool.properties?.health?.value || '—')%></dd>
 		<dt class="fw-lighter"><small>Capacity</small></dt>
 		<dd class="m-0">
 			<%=prettyBytes(pool.properties?.free?.value || 0, { binary: true })%> free
@@ -12,20 +12,20 @@
 <%} else if (importablePools === false) {%>
 	<p class="text-danger m-0">The drives could not be scanned for existing pools. Check that the drives are attached, then scan again.</p>
 <%} else if (!_.isUndefined(importablePool)) {%>
-	<p>An existing <strong><%=importablePool.name%></strong> pool was found on this node's drives. Importing keeps everything it holds.</p>
+	<p>An existing <strong><%-importablePool.name%></strong> pool was found on this node's drives. Importing keeps everything it holds.</p>
 	<dl class="m-0">
 		<dt class="fw-lighter"><small>State</small></dt>
-		<dd class="<%=(importablePool.state === 'ONLINE' ? '' : 'text-warning')%>"><%=importablePool.state%></dd>
+		<dd class="<%=(importablePool.state === 'ONLINE' ? '' : 'text-warning')%>"><%-importablePool.state%></dd>
 		<%if (importablePool.status) {%>
 			<dt class="fw-lighter"><small>Status</small></dt>
-			<dd class="text-warning"><%=importablePool.status%></dd>
+			<dd class="text-warning"><%-importablePool.status%></dd>
 		<%}%>
 		<dt class="fw-lighter"><small>Structure</small></dt>
 		<dd class="m-0">
 			<%_.each(importablePool.vdevs, (vdev) => {%>
-				<div><%=vdev.name%> <small class="text-body-tertiary"><%=vdev.state%></small></div>
+				<div><%-vdev.name%> <small class="text-body-tertiary"><%-vdev.state%></small></div>
 				<%_.each(vdev.devices, (device) => {%>
-					<div class="ms-3"><%=device.name%> <small class="text-body-tertiary"><%=device.state%></small></div>
+					<div class="ms-3"><%-device.name%> <small class="text-body-tertiary"><%-device.state%></small></div>
 				<%})%>
 			<%})%>
 		</dd>
@@ -34,13 +34,13 @@
 	<%if (_.isEmpty(drives)) {%>
 		<p class="text-danger m-0">No drives were detected, so a pool cannot be created.</p>
 	<%} else {%>
-		<p>No existing pool was found, so a new mirrored pool named <strong><%=poolName%></strong> will be created from these drives.</p>
+		<p>No existing pool was found, so a new mirrored pool named <strong><%-poolName%></strong> will be created from these drives.</p>
 		<dl class="m-0">
 			<dt class="fw-lighter"><small>Drives</small></dt>
 			<dd class="<%=(_.size(drives) < minimumDrives ? '' : 'm-0')%>">
 				<%_.each(drives, (drive) => {%>
-					<div><%=drive.model%> @ <%=prettyBytes(drive.capacity?.bytes || 0, { binary: true })%></div>
-					<small class="d-block text-body-tertiary mt-n1">SN: <%=drive.serialNumber%></small>
+					<div><%-drive.model%> @ <%=prettyBytes(drive.capacity?.bytes || 0, { binary: true })%></div>
+					<small class="d-block text-body-tertiary mt-n1">SN: <%-drive.serialNumber%></small>
 				<%})%>
 			</dd>
 			<%if (_.size(drives) < minimumDrives) {%>
@@ -49,7 +49,7 @@
 		</dl>
 		<%if (!_.isEmpty(foreignPools)) {%>
 			<div class="alert alert-warning mt-3 mb-0">
-				These drives already carry <%=_.map(foreignPools, 'name').join(', ')%>, which is not this node's pool. Creating a new pool destroys it.
+				These drives already carry <%-_.map(foreignPools, 'name').join(', ')%>, which is not this node's pool. Creating a new pool destroys it.
 			</div>
 		<%}%>
 		<%if (_.size(drives) >= minimumDrives) {%>

@@ -1,18 +1,18 @@
-<tr class="item" data-id="<%=pool.poolGuid%>">
+<tr class="item" data-id="<%-pool.poolGuid%>">
 	<td style="min-width: 210px; max-width: 0;">
 		<div class="d-flex align-items-center mb-n1">
 			<div class="text-truncate">
 				<%if (pool.name === 'system') {%>
 					VirgoOS
 				<%} else {%>
-					<%=pool.name%>
+					<%-pool.name%>
 				<%}%>
 			</div>
 			<%const rootVdev = pool.vdevs?.[pool.name]%>
 			<%const childVdevs = (rootVdev?.vdevs ? Object.values(rootVdev.vdevs) : [])%>
 			<%const poolConfig = (childVdevs.length > 0 ? childVdevs[0].vdevType : null)%>
 			<%if (poolConfig && poolConfig !== 'disk') {%>
-				<u-badge class="ms-2" pill><small><%=poolConfig%></small></u-badge>
+				<u-badge class="ms-2" pill><small><%-poolConfig%></small></u-badge>
 			<%}%>
 		</div>
 		<div class="d-flex">
@@ -66,7 +66,7 @@
 		<%}%>
 	</td>
 	<td>
-		<u-badge color="<%=(pool.properties.health.value.toLowerCase() === 'online' ? 'green' : 'red')%>" pill><small><%=pool.properties.health.value%></small></u-badge>
+		<u-badge color="<%=(pool.properties.health.value.toLowerCase() === 'online' ? 'green' : 'red')%>" pill><small><%-pool.properties.health.value%></small></u-badge>
 	</td>
 	<td class="text-center px-0">
 		<div class="dropdown">

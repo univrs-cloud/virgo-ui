@@ -4,7 +4,7 @@
 			<h5 class="card-title"><%=_.pluralize('update', _.size(updates), true)%> available:</h5>
 			<ul>
 				<%_.each(updates, (update) => {%>
-					<li><%=update.package%> <small class="text-secondary">(<%=update.version.installed%> &rarr; <%=update.version.updatableTo%>)</small></li>
+					<li><%-update.package%> <small class="text-secondary">(<%-update.version.installed%> &rarr; <%-update.version.updatableTo%>)</small></li>
 				<%})%>
 			</ul>
 			<div class="d-flex align-items-center mt-4">

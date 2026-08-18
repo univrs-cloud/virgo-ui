@@ -20,7 +20,7 @@ const restore = (event) => {
 
 const render = (event) => {
 	const user = _.find(userService.getUsers(), { username: account.user });
-	form.querySelector('.title-username').innerHTML = user.username;
+	form.querySelector('.title-username').textContent = user.username;
 	form.querySelector('.fullname').value = user.fullname || user.username;
 	form.querySelector('.email').value = user.email;
 };
