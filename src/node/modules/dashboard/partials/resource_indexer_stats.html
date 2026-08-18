@@ -12,8 +12,12 @@
 		<%const unknownChanges = Number(changeTypes.unknown || 0)%>
 		<%const isCatchingUp = (stats.indexed != null && stats.snapshots != null && stats.indexed < stats.snapshots)%>
 		<%const hasFailures = failedSnapshots.length > 0%>
-		<%const isDegraded = hasFailures || orphanChanges > 0%>
-		<%const hasIssues = isDegraded || restartCount > 0%>
+		<%// Only a snapshot the indexer could not process is a degraded state. Orphan
+		// changes are routine background noise on datasets with rotating logs (a
+		// deletion arrives for a name whose row moved with the rotation), so they
+		// stay visible in the detail below without colouring the whole card.%>
+		<%const isDegraded = hasFailures%>
+		<%const hasIssues = isDegraded || restartCount > 0 || orphanChanges > 0 || statFailures > 0%>
 		<%let healthColor = 'green'%>
 		<%let healthLabel = 'Healthy'%>
 		<%if (isDegraded) {%>
@@ -91,8 +95,8 @@
 						</div>
 					<%}%>
 					<%if (orphanChanges > 0) {%>
-						<div class="d-flex justify-content-between gap-2" data-bs-toggle="tooltip" data-bs-original-title="Change events the indexer could not tie back to a file row. Should be 0 — non-zero indicates a real bug.">
-							<span>Orphan changes</span><span class="text-red-300 text-end"><%=orphanChanges.toLocaleString()%></span>
+						<div class="d-flex justify-content-between gap-2" data-bs-toggle="tooltip" data-bs-original-title="Change events the indexer could not tie back to a file row. A small steady count is normal where files rotate (logrotate); a sudden spike means a real indexing gap.">
+							<span>Orphan changes</span><span class="text-body-secondary text-end"><%=orphanChanges.toLocaleString()%></span>
 						</div>
 					<%}%>
 				</div>
