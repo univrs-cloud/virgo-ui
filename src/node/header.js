@@ -2,7 +2,6 @@ import headerPartial from 'node/partials/header.html';
 import navigationPartial from 'node/partials/navigation.html';
 import nodePickerPartial from 'fleet/partials/node_picker.html';
 import * as account from 'node/account';
-import * as notifications from 'node/notifications';
 import * as systemService from 'node/services/system';
 import * as softwareService from 'node/services/software';
 import * as nodeService from 'node/services/node';
@@ -66,7 +65,6 @@ morphdom(
 renderNavigation({ updates: [] });
 
 account.init();
-notifications.init();
 
 softwareService.subscribeToUpdates([renderNavigation]);
 unsubscribe = systemService.subscribe([renderSerialNumber]);
