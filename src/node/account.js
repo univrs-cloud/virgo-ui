@@ -35,12 +35,12 @@ const render = (state) => {
 
 	unsubscribe?.();
 	unsubscribe = null;
-	
+
 	const isUpdating = !_.isNull(state.update);
-	morphdom(
-		document.querySelector('#account'),
-		accountTemplate({ account, isUpdating, runtimeRole })
-	);
+	const newAccount = `<div>${accountTemplate({ account, isUpdating, runtimeRole })}</div>`;
+	_.each(document.querySelectorAll('header .account'), (element) => {
+		morphdom(element, newAccount, { childrenOnly: true });
+	});
 };
 
 const init = () => {

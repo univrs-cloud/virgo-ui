@@ -16,8 +16,6 @@ window.isAuthenticated = !_.isEmpty(account);
 window.isAdmin = isAuthenticated && _.includes(account.groups, 'admins');
 window.runtimeRole = null;
 
-const LOGIN_PATH = '/login';
-
 const render = async (state) => {
 	if (_.isNull(state.setupCompleted) || state.update === -1) {
 		return;
@@ -34,7 +32,7 @@ const render = async (state) => {
 			alert(`Error during application initialization<br><br>${error}`, );
 			console.error('Error during application initialization:', error);
 		}
-	} else if (location.pathname === LOGIN_PATH) {
+	} else if (location.pathname === '/login') {
 		if (isAuthenticated) {
 			location.replace('/');
 			return;

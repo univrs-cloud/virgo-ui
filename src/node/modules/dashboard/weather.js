@@ -1,6 +1,6 @@
-import weatherPartial from 'node/partials/weather.html';
-import weatherForecastPartial from 'node/partials/weather_forecast.html';
-import * as weatherService from 'node/services/weather';
+import weatherPartial from 'node/modules/dashboard/partials/weather.html';
+import weatherForecastPartial from 'node/modules/dashboard/partials/weather_forecast.html';
+import * as weatherService from 'node/modules/dashboard/services/weather';
 
 // see https://open-meteo.com/en/docs
 

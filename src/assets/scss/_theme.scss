@@ -224,9 +224,9 @@ u-badge:hover .hover-reveal-text {
 }
 
 .no-content {
-	height: calc(100dvh - 128px);
+	height: calc(100dvh - 72px - var(--chrome));
 	#not-found & {
-		height: calc(100dvh - 88px);
+		height: calc(100dvh - 32px - var(--chrome));
 	}
 }
 #weather {
@@ -269,7 +269,7 @@ u-badge:hover .hover-reveal-text {
 	ul {
 		list-style: none;
 		overflow-y: scroll;
-		height: calc(100dvh - 254px);
+		height: calc(100dvh - 198px - var(--chrome));
 		padding: 0 map-get($spacers, 3) 0 0;
 		margin: 0 map-get($spacers, 3) * -1 0 0;
 	}
@@ -278,7 +278,7 @@ u-badge:hover .hover-reveal-text {
 	ul {
 		list-style: none;
 		overflow-y: scroll;
-		height: calc(100dvh - 222px);
+		height: calc(100dvh - 166px - var(--chrome));
 		padding: 0 map-get($spacers, 3) 0 0;
 		margin: 0 map-get($spacers, 3) * -1 0 0;
 	}
@@ -330,7 +330,7 @@ u-badge:hover .hover-reveal-text {
 #system-services,
 #nodes {
 	.overflow-y-scroll {
-		height: calc(100dvh - 226px);
+		height: calc(100dvh - 170px - var(--chrome));
 	}
 	.table {
 		tbody {
@@ -345,7 +345,7 @@ u-badge:hover .hover-reveal-text {
 #system-services {
 	.details {
 		.overflow-y-scroll {
-			height: calc(100dvh - 207px);
+			height: calc(100dvh - 151px - var(--chrome));
 		}
 		.item:has(.logs-container:not(.d-none)) .overflow-y-scroll,
 		.item:has(.terminal-container:not(.d-none)) .overflow-y-scroll {
@@ -379,7 +379,7 @@ u-badge:hover .hover-reveal-text {
 		margin-left: map-get($spacers, 4);
 		margin-right: map-get($spacers, 4);
 		.overflow-y-scroll {
-			height: calc(100dvh - 218px);
+			height: calc(100dvh - 162px - var(--chrome));
 		}
 	}
 	.details {
@@ -413,7 +413,7 @@ u-badge:hover .hover-reveal-text {
 		ul {
 			list-style: none;
 			overflow-y: scroll;
-			height: calc(100dvh - 264px - map-get($spacers, 2));
+			height: calc(100dvh - 208px - var(--chrome) - map-get($spacers, 2));
 			background-color: var(--bs-black);
 			padding: 0 map-get($spacers, 3) 0 0;
 			margin: map-get($spacers, 2) map-get($spacers, 1) map-get($spacers, 2) map-get($spacers, 3);

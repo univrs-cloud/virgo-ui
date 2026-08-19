@@ -14,6 +14,9 @@ html {
 }
 
 body {
+	// Vertical chrome the viewport-height calcs have to allow for: the bottom bar below sm,
+	// the top bar above it. Sidebar shells drop to 0 at sm — see the min-width block below.
+	--chrome: 56px;
 	--bs-bg: rgba(237, 242, 249, 0.96);
 	overflow-y: scroll;
 	width: 100%;
@@ -164,15 +167,15 @@ main,
 }
 
 .loading {
-	min-height: calc(100vh - 112px);
+	min-height: calc(100vh - 56px - var(--chrome));
 	.modal & {
 		min-height: unset;
 	}
 }
 
 .eula {
-	// Everything around the scroll area (navbar, hero, card padding, button) adds up to ~275px.
-	max-height: calc(100dvh - 275px);
+	// Everything around the scroll area (hero, card padding, button) adds up to ~219px.
+	max-height: calc(100dvh - 219px - var(--chrome));
 	min-height: 12rem;
 	overflow-y: auto;
 	overscroll-behavior: contain;
@@ -211,6 +214,7 @@ main,
 			padding-right: 0;
 			.navbar-glass {
 				width: auto !important;
+				padding: map-get($spacers, 2);
 			}
 		}
 	}
@@ -228,6 +232,11 @@ main,
 	body {
 		margin-top: 3.5rem;
 		margin-bottom: 0;
+		// Sidebar shells put their top bar over the sidebar, so nothing has to clear it.
+		&:has(header nav) {
+			--chrome: 0px;
+			margin-top: 0;
+		}
 	}
 	header {
 		nav {
@@ -238,6 +247,12 @@ main,
 			.navbar {
 				height: 100%;
 				padding: 3.5rem 0.75rem 1rem 0.75rem;
+			}
+			.account {
+				.dropdown-menu {
+					left: 0;
+					right: auto;
+				}
 			}
 			.nav {
 				width: 100%;
@@ -269,7 +284,7 @@ main,
 				right: 0;
 			}
 			.navbar-glass {
-				width: calc(100% - 15rem + 1rem) !important;
+				width: 0 !important;
 				box-shadow: none;
 			}
 			.navbar-glass-shadow {
@@ -293,20 +308,26 @@ main,
 					}
 				}
 			}
-			.dropup {
-				.dropdown-menu {
-					top: 100%;
-					bottom: unset;
+			&.navbar-position {
+				.dropup {
+					.dropdown-menu {
+						top: 100%;
+						bottom: unset;
+					}
 				}
 			}
 		}
-		&.fleet,
+		&:has(nav) .navbar.navbar-position {
+			right: auto;
+			width: 15rem;
+		}
+		// Setup, and the auth screens that leave the header empty, have no sidebar to make room for.
+		&:not(:has(nav)) ~ main {
+			margin-left: 0;
+		}
 		&.setup {
 			.navbar {
-				background: linear-gradient(to right, var(--bs-primary) 15rem, transparent 15rem);
-			}
-			~ main {
-				margin-left: 0;
+				background: var(--bs-primary);
 			}
 		}
 	}
