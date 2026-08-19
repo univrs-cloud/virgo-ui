@@ -4,13 +4,11 @@ import navigationPartial from 'node/partials/navigation_update.html';
 import nodePickerPartial from 'fleet/partials/node_picker.html';
 import updateStepsPartial from 'node/partials/update_steps.html';
 import * as account from 'node/account';
-import * as systemService from 'node/services/system';
 import * as softwareService from 'node/services/software';
 import * as nodeService from 'node/services/node';
 import * as powerService from 'node/modules/settings/services/power';
 import { getNodeViewId, getNodeViewBase, initNodeView } from 'node/view';
 
-let unsubscribe;
 let isScrollEventAttached = false;
 let shouldScroll = true;
 const headerTemplate = _.template(headerPartial);
@@ -48,12 +46,6 @@ const reboot = async (event) => {
 
 	event.target.disabled = true;
 	powerService.reboot();
-};
-
-const renderSerialNumber = (state) => {
-	_.each(document.querySelectorAll('header .serial-number'), (element) => { element.textContent = `SN:${state.system?.serial || '—'}`; });
-	unsubscribe?.();
-	unsubscribe = null;
 };
 
 const renderNavigation = async () => {
@@ -127,7 +119,6 @@ page('*', (ctx) => {
 });
 page.start();
 
-unsubscribe = systemService.subscribe([renderSerialNumber]);
 softwareService.subscribeToUpdate([render]);
 
 if (runtimeRole === 'fleet') {

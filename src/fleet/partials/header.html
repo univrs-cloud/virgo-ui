@@ -4,9 +4,20 @@
 			<a href="/" class="navbar-brand order-sm-0">
 				<span class="d-none d-md-block ms-1">Fleet</span>
 			</a>
-			<div class="navbar-glass navbar-glass-shadow d-flex align-items-center justify-content-end w-100 p-2">
-				<div id="account"></div>
+			<div class="navbar-glass navbar-glass-shadow d-flex align-items-center justify-content-end">
+				<div class="account d-sm-none"></div>
+				<button type="button" class="navbar-toggler border-0 p-2" data-bs-toggle="offcanvas" data-bs-target=".offcanvas" role="button">
+					<i class="icon-solid icon-ellipsis-vertical icon-fw icon-fw text-secondary"></i>
+				</button>
 			</div>
 		</div>
 	</div>
+	<nav class="bg-primary d-none d-sm-block">
+		<div id="navbar" class="navbar navbar-dark d-flex flex-column">
+			<hr class="border-secondary-subtle w-100 mt-0 mb-3">
+			<div class="nav nav-pills mb-auto"></div>
+			<hr class="border-secondary-subtle w-100 my-2">
+			<div class="account ms-2 me-auto mb-n2"></div>
+		</div>
+	</nav>
 </header>
