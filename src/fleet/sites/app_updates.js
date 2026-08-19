@@ -13,6 +13,7 @@ const modal = document.querySelector('#node-app-updates');
 const updates = modal.querySelector('.updates');
 const pending = new Map();
 let nodeId = null;
+let unsubscribe = null;
 
 const clearPending = (name) => {
 	clearTimeout(pending.get(name));
@@ -53,9 +54,13 @@ const render = () => {
 const show = (event) => {
 	nodeId = event.relatedTarget?.dataset.nodeId ?? null;
 	render();
+	unsubscribe?.();
+	unsubscribe = nodeService.subscribe([render]);
 };
 
 const restore = () => {
+	unsubscribe?.();
+	unsubscribe = null;
 	nodeId = null;
 	_.each([...pending.keys()], (name) => { clearPending(name); });
 	updates.innerHTML = '';
@@ -87,7 +92,6 @@ const update = async (event) => {
 	render();
 };
 
-nodeService.subscribe([render]);
 updates.addEventListener('click', update);
 modal.addEventListener('show.bs.modal', show);
 modal.addEventListener('hidden.bs.modal', restore);
