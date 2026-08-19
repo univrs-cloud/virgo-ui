@@ -14,10 +14,10 @@ const signOut = async (event) => {
 };
 
 const render = () => {
-	morphdom(
-		document.querySelector('#account'),
-		accountTemplate({ account })
-	);
+	const newAccount = `<div>${accountTemplate({ account })}</div>`;
+	_.each(document.querySelectorAll('header .account'), (element) => {
+		morphdom(element, newAccount, { childrenOnly: true });
+	});
 };
 
 const init = () => {

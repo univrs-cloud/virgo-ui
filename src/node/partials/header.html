@@ -2,11 +2,10 @@
 	<div class="navbar navbar-position navbar-light p-0">
 		<div class="container-fluid ps-3 pe-0">
 			<a href="/" class="navbar-brand order-sm-0 <%=(runtimeRole === 'fleet' ? 'fleet' : '')%>" <%=(runtimeRole === 'fleet' ? 'rel="external"' : '')%>>
-				<span class="d-none d-md-block ms-1"><%=(runtimeRole === 'node' ? 'Spica' : 'Fleet')%></span>
+				<span class="d-none d-md-block ms-1"><%=(runtimeRole === 'node' ? 'univrs' : 'Fleet')%></span>
 			</a>
-			<div class="navbar-glass navbar-glass-shadow d-flex align-items-center justify-content-end w-100 p-2">
-				<div id="weather"></div>
-				<div id="account"></div>
+			<div class="navbar-glass navbar-glass-shadow d-flex align-items-center justify-content-end">
+				<div class="account d-sm-none"></div>
 				<button type="button" class="navbar-toggler border-0 p-2 <%=(!isAuthenticated || isUpdating ? 'd-none' : '')%>" data-bs-toggle="offcanvas" data-bs-target=".offcanvas" role="button">
 					<i class="icon-solid icon-ellipsis-vertical icon-fw icon-fw text-secondary"></i>
 				</button>
@@ -17,8 +16,8 @@
 		<div id="navbar" class="navbar navbar-dark d-flex flex-column">
 			<hr class="border-secondary-subtle w-100 mt-0 mb-3">
 			<div class="nav nav-pills mb-auto"></div>
-			<hr class="border-secondary-subtle w-100 my-3">
-			<small class="serial-number navbar-text p-0 me-auto"></small>
+			<hr class="border-secondary-subtle w-100 my-2">
+			<div class="account ms-2 me-auto mb-n2"></div>
 		</div>
 	</nav>
 </header>

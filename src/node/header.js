@@ -2,27 +2,15 @@ import headerPartial from 'node/partials/header.html';
 import navigationPartial from 'node/partials/navigation.html';
 import nodePickerPartial from 'fleet/partials/node_picker.html';
 import * as account from 'node/account';
-import * as systemService from 'node/services/system';
 import * as softwareService from 'node/services/software';
 import * as nodeService from 'node/services/node';
 import page from 'page';
 import { getNodeViewId } from 'node/view';
 
-let unsubscribe;
 const headerTemplate = _.template(headerPartial);
 const navigationTemplate = _.template(navigationPartial);
 const nodePickerTemplate = _.template(nodePickerPartial);
 const header = document.querySelector('header');
-
-const renderSerialNumber = (state) => {
-	if (_.isNull(state.system)) {
-		return;
-	}
-
-	_.each(header.querySelectorAll('.serial-number'), (element) => { element.textContent = `SN:${state.system?.serial || '—'}`; });
-	unsubscribe?.();
-	unsubscribe = null;
-};
 
 const renderNavigation = async (state) => {
 	if (!state.updates) {
@@ -67,10 +55,7 @@ renderNavigation({ updates: [] });
 account.init();
 
 softwareService.subscribeToUpdates([renderNavigation]);
-unsubscribe = systemService.subscribe([renderSerialNumber]);
 
 if (runtimeRole === 'fleet') {
 	nodeService.subscribe([renderNodePicker]);
 }
-
-import('node/weather');

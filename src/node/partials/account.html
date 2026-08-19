@@ -1,25 +1,23 @@
-<div id="account">
-	<%if (!isAuthenticated) {%>
-		<a href="/login?rd=<%=encodeURIComponent(window.location)%>" rel="external" class="btn btn-sm btn-primary me-2">
-			<i class="icon-duotone icon-solid icon-person-to-portal icon-fw me-2"></i>
-			Sign in
-		</a>
-	<%} else {%>
-		<div class="dropdown dropup d-flex align-items-center me-2" style="height: 40px;">
-			<img src="assets/img/user-circle.svg" alt="profile" class="dropdown-toggle caret-off rounded-circle cursor-pointer" data-bs-toggle="dropdown" style="width: 30px; height: 30px;">
-			<div class="dropdown-menu dropdown-menu-end" style="width: max-content;">
-				<h6 class="dropdown-header">Logged in as</h6>
-				<p class="d-flex flex-row align-items-center fw-medium px-2 pb-2 mt-n1 mb-0"><%-account.name || account.email || '—'%></p>
-				<%if (!isUpdating) {%>
-					<div class="dropdown-divider"></div>
-					<a href="/users/profile" class="dropdown-item" <%=(runtimeRole === 'fleet' ? 'rel="external"' : '')%>>Your profile</a>
-				<%}%>
+<%if (!isAuthenticated) {%>
+	<a href="/login?rd=<%=encodeURIComponent(window.location)%>" rel="external" class="btn btn-sm btn-primary me-2">
+		<i class="icon-duotone icon-solid icon-person-to-portal icon-fw me-2"></i>
+		Sign in
+	</a>
+<%} else {%>
+	<div class="dropdown dropup d-flex align-items-center me-2" style="height: 40px;">
+		<img src="assets/img/user-circle.svg" alt="profile" class="dropdown-toggle caret-off rounded-circle cursor-pointer" data-bs-toggle="dropdown" style="width: 30px; height: 30px;">
+		<div class="dropdown-menu dropdown-menu-end" style="width: max-content;">
+			<h6 class="dropdown-header">Logged in as</h6>
+			<p class="d-flex flex-row align-items-center fw-medium px-2 pb-2 mt-n1 mb-0"><%-account.name || account.email || '—'%></p>
+			<%if (!isUpdating) {%>
 				<div class="dropdown-divider"></div>
-				<a href="#" rel=“nofollow“ class="sign-out dropdown-item">
-					Sign out
-					<i class="icon-duotone icon-solid icon-person-from-portal icon-fw ms-2"></i>
-				</a>
-			</div>
+				<a href="/users/profile" class="dropdown-item" <%=(runtimeRole === 'fleet' ? 'rel="external"' : '')%>>Your profile</a>
+			<%}%>
+			<div class="dropdown-divider"></div>
+			<a href="#" rel=“nofollow“ class="sign-out dropdown-item">
+				Sign out
+				<i class="icon-duotone icon-solid icon-person-from-portal icon-fw ms-2"></i>
+			</a>
 		</div>
-	<%}%>
-</div>
+	</div>
+<%}%>

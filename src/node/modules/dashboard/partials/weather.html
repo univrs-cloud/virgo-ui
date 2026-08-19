@@ -1,0 +1,13 @@
+<div id="weather" class="card rounded-4 border-0 cursor-pointer mb-2" tabindex="0">
+	<div class="card-body p-2">
+		<div class="row g-0 align-items-center" style="height: 38px;">
+			<div class="col-auto" style="width: 55px;">
+				<div class="weather-icon"><%=weather.icon%></div>
+			</div>
+			<div class="col lh-1">
+				<small class="temperature fw-bold text-dark text-opacity-75"><%-weather.temperature%></small><br>
+				<small class="condition d-inline-block text-dark text-opacity-75 text-truncate"><%=_.capitalize(weather.condition)%></small>
+			</div>
+		</div>
+	</div>
+</div>

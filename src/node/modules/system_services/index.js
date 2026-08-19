@@ -27,8 +27,8 @@ let searchValue = '';
 let filterStateValue = '';
 let filterUnitFileStateValue = '';
 let tableOrder = {
-	field: 'unit',
-	direction: 'asc'
+	field: 'memory.percent',
+	direction: 'desc'
 };
 let services = [];
 
