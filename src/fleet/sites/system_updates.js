@@ -10,20 +10,38 @@ const updates = modal.querySelector('.updates');
 const installButton = modal.querySelector('.install');
 const sites = document.querySelector('#sites');
 let nodeId = null;
+let installing = false;
+let unsubscribe = null;
 
-const render = (event) => {
-	nodeId = event.relatedTarget?.dataset.nodeId ?? null;
+const render = () => {
+	if (_.isNull(nodeId)) {
+		return;
+	}
+
 	const node = _.find(nodeService.getNodes() ?? [], { nodeId });
-	updates.innerHTML = updatesTemplate({ updates: node?.updates?.system ?? [] });
+	morphdom(updates, `<div>${updatesTemplate({ updates: node?.updates?.system ?? [] })}</div>`, { childrenOnly: true });
+	// An app update holds the button only while the node still reports a job for one, so the
+	// subscription has to keep evaluating this for as long as the modal stays open.
 	const hasUpdatingApps = !_.isEmpty(node?.appUpdateJobs);
-	installButton.disabled = hasUpdatingApps;
+	installButton.disabled = (installing || hasUpdatingApps);
 	installButton.tip = (hasUpdatingApps ? 'An app update is in progress' : '');
 };
 
+const show = (event) => {
+	nodeId = event.relatedTarget?.dataset.nodeId ?? null;
+	render();
+	unsubscribe?.();
+	unsubscribe = nodeService.subscribe([render]);
+};
+
 const restore = () => {
+	unsubscribe?.();
+	unsubscribe = null;
 	nodeId = null;
+	installing = false;
 	updates.innerHTML = '';
 	_.each(modal.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = false; });
+	installButton.tip = '';
 };
 
 const install = async () => {
@@ -32,6 +50,7 @@ const install = async () => {
 	}
 
 	const buttons = modal.querySelectorAll('.modal-footer u-button');
+	installing = true;
 	_.each(buttons, (button) => { button.disabled = true; });
 	const node = _.find(nodeService.getNodes() ?? [], { nodeId });
 	const name = node?.name ?? nodeId;
@@ -46,7 +65,9 @@ const install = async () => {
 	} catch (error) {
 		notifier.add({ title: error.message || `Failed to start system update on ${name}.`, type: 'error', duration: 0 });
 	}
+	installing = false;
 	_.each(buttons, (button) => { button.disabled = false; });
+	render();
 };
 
 // The green "update complete" badge in the grid finishes the update on the node — the same
@@ -74,5 +95,5 @@ const complete = async (event) => {
 
 installButton.addEventListener('click', install);
 sites.addEventListener('click', complete);
-modal.addEventListener('show.bs.modal', render);
+modal.addEventListener('show.bs.modal', show);
 modal.addEventListener('hidden.bs.modal', restore);
