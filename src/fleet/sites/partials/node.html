@@ -17,6 +17,16 @@
 	const statusLabel = !node.online ? 'Offline' : (hasCriticalPool ? 'Faulted' : (hasDegradedPool ? 'Degraded' : 'Online'));
 	const isRebuilding = node.online && hasResilveringPool && !hasUnhealthyNonResilver;
 	const statusTip = (node.online && hasCriticalPool) ? 'Online · storage faulted' : ((node.online && hasDegradedPool) ? 'Online · storage degraded' : '');
+	// UPS reads the same host:ups shape the node dashboard uses: a status object, or null/false/'remote i/o error' when the reading is unusable.
+	const ups = (node.online && _.isObject(node.ups) && node.ups.batteryCharge !== false) ? node.ups : null;
+	const onBattery = ups?.powerSource === 'battery';
+	const upsPercent = Math.round(ups?.capacity ?? 0);
+	const upsColor = onBattery ? 'orange' : (ups?.isCharging ? 'green' : 'blue');
+	const batteryIcon = (upsPercent >= 87 ? 'icon-battery-full' : (upsPercent >= 62 ? 'icon-battery-three-quarters' : (upsPercent >= 37 ? 'icon-battery-half' : (upsPercent >= 12 ? 'icon-battery-quarter' : 'icon-battery-empty'))));
+	// Running on the battery fades the icon out as it drains, charging pulses it, mains at rest holds still.
+	const upsIcon = (onBattery ? `${batteryIcon} icon-fade` : `icon-plug${ups?.isCharging ? ' icon-beat-fade' : ''}`);
+	const upsAnimation = (onBattery ? '--icon-animation-duration: 2.2s;' : (ups?.isCharging ? '--icon-animation-duration: 1.6s;' : ''));
+	const upsTip = (onBattery ? `On battery · ${upsPercent}% remaining` : (ups?.isCharging ? `On grid · charging ${upsPercent}%` : `On grid · ${upsPercent}% charged`));
 %>
 <div class="col-12 col-sm-6 col-xl-3">
 	<div class="card rounded-4 <%=cardStateClass%>">
@@ -65,6 +75,11 @@
 						<%}%>
 					<%}%>
 				</u-badge>
+				<%if (ups) {%>
+					<u-badge color="<%=upsColor%>" tint="500" class="z-1 position-relative me-1" pill tip="<%=upsTip%>">
+						<i class="icon-solid <%=upsIcon%> me-1" style="<%=upsAnimation%>"></i><%=upsPercent%>%
+					</u-badge>
+				<%}%>
 				<%if (node.update?.state === 'running' && node.update.stage) {%>
 					<u-badge color="blue" tint="500" class="z-1 position-relative me-1" pill tip="<%=(node.update.stage === 'download' ? 'Downloading' : 'Installing')%> system update">
 						<i class="icon-solid <%=(node.update.stage === 'download' ? 'icon-download' : 'icon-cog icon-spin')%> me-1"></i><%=node.update.percent%>%
