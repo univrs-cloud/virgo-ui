@@ -45,38 +45,32 @@ const render = (state) => {
 	});
 };
 
-const init = () => {
-	jobService.subscribe([render]);
+jobService.subscribe([render]);
 
-	// const ref = notifier.add({
-	// 	type: 'info',
-	// 	title: 'Processing...',
-	// 	message: 'Starting operation (0%)',
-	// 	duration: 0,
-	// 	dismissible: false
-	//   });
-	  
-	//   let progress = 0;
-	//   const interval = setInterval(() => {
-	// 	progress += 20;
+// const ref = notifier.add({
+// 	type: 'info',
+// 	title: 'Processing...',
+// 	message: 'Starting operation (0%)',
+// 	duration: 0,
+// 	dismissible: false
+//   });
+  
+//   let progress = 0;
+//   const interval = setInterval(() => {
+// 	progress += 20;
 		
-	// 	if (progress < 100) {
-	// 	  ref.update({
-	// 		message: `Processing... (${progress}%)`
-	// 	  });
-	// 	} else {
-	// 	  ref.update({
-	// 		type: 'success',
-	// 		title: 'Complete!',
-	// 		message: 'Operation finished successfully.',
-	// 		dismissible: true,
-	// 		duration: 3000
-	// 	  });
-	// 	  clearInterval(interval);
-	// 	}
-	//   }, 800);
-};
-
-export {
-	init
-};
+// 	if (progress < 100) {
+// 	  ref.update({
+// 		message: `Processing... (${progress}%)`
+// 	  });
+// 	} else {
+// 	  ref.update({
+// 		type: 'success',
+// 		title: 'Complete!',
+// 		message: 'Operation finished successfully.',
+// 		dismissible: true,
+// 		duration: 3000
+// 	  });
+// 	  clearInterval(interval);
+// 	}
+//   }, 800);
