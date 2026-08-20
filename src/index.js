@@ -44,6 +44,7 @@ const render = async (state) => {
 	} else {
 		try {
 			await Promise.all([
+				import('node/jobs'),
 				import('node/header'),
 				import('node/main')
 			]);
