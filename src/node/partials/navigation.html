@@ -30,15 +30,6 @@
 		<i class="icon-duotone icon-solid icon-user icon-fw me-2"></i>
 		Users
 	</a>
-	<a href="/system-updates" class="nav-item nav-link d-flex align-items-center <%=(active === '/system-updates' && 'active')%>">
-		<span>
-			<i class="icon-duotone icon-solid icon-download icon-fw me-2"></i>
-			Updates
-		</span>
-		<%if (typeof updates !== 'undefined' && !_.isEmpty(updates)) {%>
-			<u-badge color="white" class="ms-md-auto ms-auto" pill><small><%=_.size(updates)%></small></u-badge>
-		<%}%>
-	</a>
 	<a href="/system-services" class="nav-item nav-link <%=(active === '/system-services' && 'active')%>">
 		<i class="icon-duotone icon-solid icon-cube icon-fw me-2"></i>
 		Services
@@ -50,6 +41,15 @@
 	<a href="/settings" class="nav-item nav-link <%=(active === '/settings' && 'active')%>">
 		<i class="icon-duotone icon-solid icon-sliders-up icon-fw me-2"></i>
 		Settings
+	</a>
+	<a href="/system-updates" class="nav-item nav-link d-flex align-items-center <%=(active === '/system-updates' && 'active')%>">
+		<span>
+			<i class="icon-duotone icon-solid icon-download icon-fw me-2"></i>
+			Updates
+		</span>
+		<%if (typeof updates !== 'undefined' && !_.isEmpty(updates)) {%>
+			<u-badge color="white" class="ms-md-auto ms-auto" pill><small><%=_.size(updates)%></small></u-badge>
+		<%}%>
 	</a>
 	<a href="/about" class="nav-item nav-link <%=(active === '/about' && 'active')%>">
 		<i class="icon-duotone icon-solid icon-fingerprint icon-fw me-2"></i>
