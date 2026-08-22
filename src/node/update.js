@@ -2,7 +2,8 @@ import page from 'page';
 import headerPartial from 'node/partials/header.html';
 import navigationPartial from 'node/partials/navigation_update.html';
 import nodePickerPartial from 'fleet/partials/node_picker.html';
-import updateStepsPartial from 'node/partials/update_steps.html';
+import updatePartial from 'node/partials/update.html';
+import updateProgressPartial from 'node/partials/update_progress.html';
 import * as account from 'node/account';
 import * as softwareService from 'node/services/software';
 import * as nodeService from 'node/services/node';
@@ -14,9 +15,14 @@ let shouldScroll = true;
 const headerTemplate = _.template(headerPartial);
 const navigationTemplate = _.template(navigationPartial);
 const nodePickerTemplate = _.template(nodePickerPartial);
-const updateStepsTemplate = _.template(updateStepsPartial);
+const updateTemplate = _.template(updatePartial);
+const updateProgressTemplate = _.template(updateProgressPartial);
 const header = document.querySelector('header');
+const main = document.querySelector('main');
+
+main.insertAdjacentHTML('afterend', updateTemplate());
 const container = document.querySelector('#update');
+const row = container.querySelector('.row');
 
 initNodeView();
 
@@ -79,13 +85,12 @@ const render = (state) => {
 		return;
 	}
 
-	document.querySelector('main').classList.add('d-none');
+	main.classList.add('d-none');
 	if (!_.isUndefined(update.state) || !_.isEmpty(update.state)) {
-		_.each(container.querySelectorAll(`.state:not(.${update.state})`), (element) => { element.classList.add('d-none'); });
-		container.querySelector(`.state.${update.state}`).classList.remove('d-none');
 		morphdom(
-			container.querySelector('.steps'),
-			updateStepsTemplate({ update })
+			row,
+			`<div>${updateProgressTemplate({ update })}</div>`,
+			{ childrenOnly: true }
 		);
 		const stepsList = container.querySelector('.steps ul');
 		if (!isScrollEventAttached) {

@@ -1,3 +1,17 @@
+<div class="col-12 position-relative mb-3">
+	<h5 class="d-flex align-items-center m-0">
+		<%if (update.state === 'succeeded') {%>
+			<i class="icon-duotone icon-solid icon-circle-check icon-fw me-2" style="--icon-secondary-color: var(--bs-green);"></i>
+			Update succeeded
+		<%} else if (update.state === 'failed') {%>
+			<i class="icon-duotone icon-solid icon-circle-xmark icon-fw me-2" style="--icon-secondary-color: var(--bs-red);"></i>
+			Something went wrong, could not update
+		<%} else {%>
+			<div class="spinner-border spinner-border-sm me-2"></div>
+			Updating...
+		<%}%>
+	</h5>
+</div>
 <div class="steps text-secondary">
 	<div class="card rounded-4 border-0">
 		<div class="card-body">
