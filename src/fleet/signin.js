@@ -9,16 +9,15 @@ const ensureSucceeded = (result) => {
 	return result;
 };
 
-// The panel is only offered on a device that can do biometrics and has enrolled here; anything
-// else gets exactly the password form it had before. Returns whether a biometric prompt is on
-// screen, so the caller knows not to steal focus into the email field — that would pop the keyboard
-// up behind the system dialog on mobile.
+// The panel is offered on any device that can do biometrics; the password form below is untouched
+// either way. Returns whether a prompt was opened unasked, so the caller knows not to steal focus
+// into the email field — that would pop the keyboard up behind the system dialog on mobile.
 const mountBiometrics = async (main) => {
-	const panel = main.querySelector('.biometrics');
-	if (!webauthnService.isEnrolledOnThisDevice() || !await webauthnService.hasBiometrics()) {
+	if (!await webauthnService.hasBiometrics()) {
 		return false;
 	}
 
+	const panel = main.querySelector('.biometrics');
 	const button = panel.querySelector('.biometrics-action');
 	const hint = panel.querySelector('.biometrics-hint');
 	panel.classList.remove('d-none');
@@ -61,6 +60,15 @@ const mountBiometrics = async (main) => {
 	};
 
 	button.addEventListener('click', () => run());
+
+	// The local marker decides only whether to prompt without being asked. It must not gate the
+	// button: it's a best-effort localStorage write that a privacy setting can silently refuse, and
+	// a forgotten breadcrumb must never hide a credential the device still holds.
+	if (!webauthnService.isEnrolledOnThisDevice()) {
+		hint.textContent = 'Tap above if you have set up biometrics here, or sign in below.';
+		return false;
+	}
+
 	run({ automatic: true });
 	return true;
 };
