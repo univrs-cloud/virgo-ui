@@ -14,11 +14,12 @@ const render = () => {
 		`<div>${profileTemplate({ account })}</div>`,
 		{
 			childrenOnly: true,
-			// The permission hint is runtime/per-device (it depends on Notification.permission, not the
-			// account), so it's JS-managed — leave it untouched on re-render. The toggle's checked state
-			// comes from account.pushEnabled in the template, so morphdom can update it normally.
+			// Both hints are runtime/per-device (browser permission, and whether this device holds a
+			// passkey) rather than account state, so they're JS-managed — leave them untouched on
+			// re-render. The toggles' checked state comes from the account in the template, so
+			// morphdom can update those normally.
 			onBeforeElUpdated: (fromEl) => {
-				return !fromEl.classList?.contains('notifications-hint');
+				return !fromEl.classList?.contains('notifications-hint') && !fromEl.classList?.contains('biometrics-hint');
 			}
 		}
 	);
@@ -29,4 +30,5 @@ window.addEventListener('account-changed', render);
 
 import('fleet/profile/profile');
 import('fleet/profile/password');
+import('fleet/profile/biometrics');
 import('fleet/profile/notifications');

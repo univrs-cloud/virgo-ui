@@ -15,6 +15,14 @@
 
 				<hr class="border-secondary-subtle my-4">
 
+				<dt class="fw-lighter"><small>Biometric sign-in</small></dt>
+				<dd class="m-0">
+					<u-switch class="biometrics-switch" on-label="Enabled" <%=(account.passkeyEnabled ? 'checked' : '')%> disabled></u-switch>
+					<small class="d-block fw-lighter text-body-tertiary biometrics-hint">Sign in with your fingerprint or face instead of your password and code.</small>
+				</dd>
+
+				<hr class="border-secondary-subtle my-4">
+
 				<dt class="fw-lighter"><small>Notifications</small></dt>
 				<dd class="m-0">
 					<u-switch class="notifications-switch" on-label="Enabled" <%=(account.pushEnabled ? 'checked' : '')%> disabled></u-switch>
