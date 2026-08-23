@@ -129,6 +129,10 @@ const serializeAuthentication = (credential) => {
  * Enroll this device. Requires a fully authenticated session — the server rejects the options call
  * otherwise. Resolves false when the user dismisses the system prompt, which is a cancellation
  * rather than a failure and should not be reported as an error.
+ *
+ * Safe to run on a device that is already enrolled: the server sends no excludeCredentials, so the
+ * authenticator replaces its existing credential rather than refusing. That makes this the repair
+ * path when the local marker has been lost.
  */
 const enroll = async () => {
 	if (!await hasBiometrics()) {
@@ -141,12 +145,6 @@ const enroll = async () => {
 	} catch (error) {
 		if (error.name === 'NotAllowedError' || error.name === 'AbortError') {
 			return false;
-		}
-		if (error.name === 'InvalidStateError') {
-			// The authenticator matched an excludeCredentials entry: this device is already enrolled
-			// on the account, so record that locally and treat it as a success.
-			setEnrolledOnThisDevice(true);
-			return true;
 		}
 		throw error;
 	}
