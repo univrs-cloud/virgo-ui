@@ -34,8 +34,24 @@ const ensureSucceeded = (result) => {
 	return result;
 };
 
-const isSupported = () => {
-	return Boolean(window.PublicKeyCredential && navigator.credentials?.create);
+// The one gate on this feature: does the device have a built-in authenticator the user can verify
+// against — a fingerprint reader, a face camera, or the platform equivalent. Enrollment asks for a
+// platform authenticator, so a device without one can't enroll and stays on password + TOTP.
+//
+// Memoised: it can't change within a page load, and both the sign-in screen and the profile ask.
+// The optional call also covers a browser with no WebAuthn at all, which answers the same way.
+let biometricsAvailable = null;
+const hasBiometrics = () => {
+	if (!biometricsAvailable) {
+		biometricsAvailable = (async () => {
+			try {
+				return await window.PublicKeyCredential?.isUserVerifyingPlatformAuthenticatorAvailable() === true;
+			} catch (error) {
+				return false;
+			}
+		})();
+	}
+	return biometricsAvailable;
 };
 
 const isEnrolledOnThisDevice = () => {
@@ -115,7 +131,7 @@ const serializeAuthentication = (credential) => {
  * rather than a failure and should not be reported as an error.
  */
 const enroll = async () => {
-	if (!isSupported()) {
+	if (!await hasBiometrics()) {
 		throw new Error('This device does not support biometric sign-in.');
 	}
 	const { options, challengeId } = ensureSucceeded(await FleetWebauthn.registerOptions());
@@ -147,7 +163,7 @@ const enroll = async () => {
  * cookie, so the caller only needs to navigate. Resolves false when the user dismisses the prompt.
  */
 const authenticate = async () => {
-	if (!isSupported()) {
+	if (!await hasBiometrics()) {
 		throw new Error('This device does not support biometric sign-in.');
 	}
 	const { options, challengeId } = ensureSucceeded(await FleetWebauthn.authenticateOptions());
@@ -182,7 +198,7 @@ const disable = async () => {
 };
 
 export {
-	isSupported,
+	hasBiometrics,
 	isEnrolledOnThisDevice,
 	setEnrolledOnThisDevice,
 	enroll,
