@@ -16,7 +16,7 @@ const wireAdd = () => {
 	link.addEventListener('click', async (event) => {
 		event.preventDefault();
 		await add();
-		refresh();
+		await refresh();
 	});
 };
 
@@ -30,11 +30,11 @@ const setHint = (html) => {
 // The toggle mirrors the account-level state (any device enrolled); the hint covers whether *this*
 // device is one of them, which the account can't tell us — it's held in local storage by the
 // service that enrolled it.
-const refresh = () => {
-	if (!webauthnService.isSupported()) {
+const refresh = async () => {
+	if (!await webauthnService.hasBiometrics()) {
 		toggle.checked = false;
 		toggle.disabled = true;
-		setHint('Biometric sign-in is not supported on this device.');
+		setHint('This device has no fingerprint or face sensor — sign in with your password and code.');
 		return;
 	}
 
@@ -79,7 +79,7 @@ const onChange = async () => {
 			notifier.add({ title: error.message || 'Could not turn off biometric sign-in.', type: 'error', duration: 0 });
 		}
 	}
-	refresh();
+	await refresh();
 };
 
 refresh();
