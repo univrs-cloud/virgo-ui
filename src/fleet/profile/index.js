@@ -5,15 +5,13 @@ const moduleTemplate = _.template(modulePartial);
 const profileTemplate = _.template(profilePartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
 const module = document.querySelector('#profile');
-const container = module.querySelector('.container-fluid');
-const row = container.querySelector('.row');
+const container = module.querySelector('.profile');
 
 const render = () => {
 	morphdom(
-		row,
-		`<div>${profileTemplate({ account })}</div>`,
+		container,
+		profileTemplate({ account }),
 		{
-			childrenOnly: true,
 			// Both hints are runtime/per-device (browser permission, and whether this device holds a
 			// passkey) rather than account state, so they're JS-managed — leave them untouched on
 			// re-render. The toggles' checked state comes from the account in the template, so
@@ -28,6 +26,7 @@ const render = () => {
 render();
 window.addEventListener('account-changed', render);
 
+import('fleet/profile/sessions');
 import('fleet/profile/profile');
 import('fleet/profile/password');
 import('fleet/profile/biometrics');
