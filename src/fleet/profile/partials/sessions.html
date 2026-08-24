@@ -1,0 +1,54 @@
+<div class="sessions">
+	<div class="row gx-4 gy-3 mb-3">
+		<div class="col col-12">
+			<div class="card rounded-4 border-0 mb-0">
+				<div class="card-body">
+					<h5 class="card-title d-flex align-items-center">
+						Active sessions
+						<%if (_.size(sessions) > 1) {%>
+							<a href="#" class="ms-auto small text-danger text-decoration-none revoke-others"><i class="icon-regular icon-right-from-bracket icon-fw me-1"></i>Sign out everywhere else</a>
+						<%}%>
+					</h5>
+					<%if (_.isNull(sessions)) {%>
+						<div class="text-body-tertiary">Loading…</div>
+					<%} else {%>
+						<div class="list-group list-group-flush">
+							<%_.each(sessions, (session) => {%>
+								<div class="list-group-item bg-transparent px-0 d-flex align-items-center gap-3">
+									<div class="min-w-0 flex-grow-1">
+										<div class="d-flex align-items-center gap-2">
+											<span class="d-block text-truncate" data-bs-toggle="tooltip" data-bs-original-title="<%-session.userAgent || 'No user agent recorded'%>"><%-session.userAgent || 'Unknown device'%></span>
+											<%if (session.current) {%>
+												<u-badge color="green" tint="100" pill><small>This device</small></u-badge>
+											<%}%>
+											<%if (session.pending) {%>
+												<u-badge color="yellow" tint="100" pill tip="Signed in but hasn't passed the code challenge yet — it can't reach anything until it does."><small>Awaiting code</small></u-badge>
+											<%}%>
+										</div>
+										<small class="d-block fw-lighter text-body-tertiary">
+											<%-session.ipAddress || 'Unknown address'%>
+											&middot;
+											<%if (session.lastSeenAt) {%>
+												active <%=moment(session.lastSeenAt).fromNow()%>
+											<%} else {%>
+												no activity recorded
+											<%}%>
+											&middot;
+											<span data-bs-toggle="tooltip" data-bs-original-title="Signed in on <%=moment(session.createdAt).format('MMMM D, YYYY [at] HH:mm')%>. Expires <%=moment(session.expiresAt).format('MMMM D, YYYY')%>.">signed in <%=moment(session.createdAt).fromNow()%></span>
+										</small>
+									</div>
+									<%if (!session.current) {%>
+										<a href="#" class="ms-auto text-danger revoke" data-session-id="<%-session.id%>" data-bs-toggle="tooltip" data-bs-original-title="Sign this session out">
+											<i class="icon-solid icon-circle-xmark"></i>
+										</a>
+									<%}%>
+								</div>
+							<%})%>
+						</div>
+						<small class="d-block fw-lighter text-body-tertiary mt-3">Signing a session out ends it immediately on that device.</small>
+					<%}%>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
