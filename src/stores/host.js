@@ -162,6 +162,10 @@ class Host extends Store {
 		this.socket.emit('host:storage:pool:create', data);
 	}
 
+	installCoreApps() {
+		this.socket.emit('host:apps:core:install');
+	}
+
 	syncServices() {
 		this.setState({ services: null }, 'services_fetch_start');
 		this.socket.emit('host:system:services:fetch');

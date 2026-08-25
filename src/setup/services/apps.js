@@ -7,11 +7,9 @@ const CORE_APPS = [
 	{ name: 'authelia', title: 'Authelia', description: 'Owns the accounts everything else signs in with' },
 	{ name: 'traefik', title: 'Traefik', description: 'Answers on this node\'s name and routes to its apps' }
 ];
-const INSTALL_JOB = 'app:install';
-const RUNNING_STATES = ['running', 'restarting'];
 
 function isInstallJob(job) {
-	return job?.name === INSTALL_JOB;
+	return job?.name === 'app:install';
 }
 
 const { subscribe } = createSubscription({
@@ -40,7 +38,7 @@ const isAppRunning = (name, containers) => {
 	const container = _.find(containers, (container) => {
 		return container?.labels?.comDockerComposeProject === name && container?.labels?.comDockerComposeService === name;
 	});
-	return _.includes(RUNNING_STATES, container?.state);
+	return _.includes(['running', 'restarting'], container?.state);
 };
 
 /** What the node reports about one core app: the job while it is being installed, its entry in the app

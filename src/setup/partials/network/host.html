@@ -15,9 +15,17 @@
 							<i class="icon-duotone icon-solid icon-globe icon-fw me-2"></i>
 							<small>Once setup completes this node will be reachable at <span class="url text-body"></span></small>
 						</div>
-						<div class="d-flex align-items-center mt-1">
+						<div class="dns-record d-flex align-items-center mt-1">
 							<i class="icon-duotone icon-solid icon-list-tree icon-fw me-2"></i>
 							<small>On your router or DNS server, point an A record for <span class="fqdn text-body"></span> to <span class="address text-body"></span></small>
+						</div>
+						<div class="dns-managed d-none align-items-center mt-1">
+							<i class="icon-duotone icon-solid icon-list-tree icon-fw me-2"></i>
+							<small>The DNS record and certificate for <span class="fqdn-managed text-body"></span> are created automatically</small>
+						</div>
+						<div class="availability d-none align-items-center mt-1">
+							<i class="icon-duotone icon-solid icon-circle-notch icon-fw me-2"></i>
+							<small class="availability-message"></small>
 						</div>
 					</div>
 					<div class="d-flex justify-content-end gap-2">

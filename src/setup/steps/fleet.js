@@ -43,6 +43,7 @@ const renderStatus = () => {
 };
 
 const goNext = () => {
+	fleetService.installCoreApps();
 	completeStep('fleet');
 	page(nextStepPath('fleet'));
 };

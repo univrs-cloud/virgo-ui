@@ -1,4 +1,5 @@
 import Job from 'stores/job';
+import Host from 'stores/host';
 import Configuration from 'stores/configuration';
 import { createSubscription, storeAttach } from 'libs/services/module_store_subscription';
 
@@ -37,9 +38,14 @@ const updateFleet = (data) => {
 	Configuration.updateFleet(data);
 };
 
+const installCoreApps = () => {
+	Host.installCoreApps();
+};
+
 export {
 	REGISTER_JOB,
 	subscribe,
 	isRegistered,
-	updateFleet
+	updateFleet,
+	installCoreApps
 };

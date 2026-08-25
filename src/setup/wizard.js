@@ -4,9 +4,9 @@ const STEPS = [
 	{ name: 'host', path: '/network/host' },
 	{ name: 'ports', path: '/network/ports' },
 	{ name: 'storage', path: '/storage' },
+	{ name: 'fleet', path: '/fleet' },
 	{ name: 'apps', path: '/apps' },
 	{ name: 'password', path: '/password' },
-	{ name: 'fleet', path: '/fleet' },
 	{ name: 'finish', path: '/finish' }
 ];
 
