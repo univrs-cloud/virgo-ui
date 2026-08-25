@@ -13,22 +13,22 @@
 						<div class="list-group list-group-flush">
 							<%_.each(sessions, (session) => {%>
 								<%const active = session.lastSeenAt && moment().diff(session.lastSeenAt, 'minutes') < 5;%>
-								<div class="list-group-item bg-transparent px-0 d-flex align-items-center gap-2 flex-wrap">
-									<i class="icon-solid icon-circle icon-fw icon-2xs <%=(active ? 'text-green-500' : 'text-body-tertiary')%>"></i>
-									<span class="text-truncate" style="min-width: 12rem;" data-bs-toggle="tooltip" data-bs-original-title="<%-session.userAgent || 'No user agent recorded'%>"><%-session.userAgent || 'Unknown device'%></span>
-									<small class="fw-lighter text-body-tertiary text-nowrap">
-										<%-session.ipAddress || 'Unknown address'%>
+								<div class="list-group-item bg-transparent px-0 small d-flex align-items-center gap-2">
+									<i class="icon-solid icon-circle icon-fw icon-2xs flex-shrink-0 <%=(active ? 'text-green-500' : 'text-body-tertiary')%>"></i>
+									<span class="text-nowrap flex-shrink-0"><%-session.ipAddress || 'Unknown address'%></span>
+									<span class="fw-light text-truncate">
 										&middot;
 										<%if (session.lastSeenAt) {%>active <%=moment(session.lastSeenAt).fromNow()%><%} else {%>no activity recorded<%}%>
 										&middot;
 										<span data-bs-toggle="tooltip" data-bs-original-title="Signed in on <%=moment(session.createdAt).format('MMMM D, YYYY [at] HH:mm')%>. Expires <%=moment(session.expiresAt).format('MMMM D, YYYY')%>.">signed in <%=moment(session.createdAt).fromNow()%></span>
-									</small>
-									<span class="ms-auto d-flex align-items-center gap-2">
+									</span>
+									<span class="fw-lighter text-body-tertiary text-truncate" style="flex-shrink: 999;" data-bs-toggle="tooltip" data-bs-original-title="<%-session.userAgent || 'No user agent recorded'%>"><%-session.userAgent || 'Unknown device'%></span>
+									<span class="ms-auto d-flex align-items-center gap-2 flex-shrink-0">
 										<%if (session.pending) {%>
-											<u-badge color="yellow" tint="100" pill tip="Signed in but hasn't passed the code challenge yet — it can't reach anything until it does."><small>Awaiting code</small></u-badge>
+											<u-badge color="yellow" tint="100" pill tip="Signed in but hasn't passed the code challenge yet — it can't reach anything until it does.">Awaiting code</u-badge>
 										<%}%>
 										<%if (session.current) {%>
-											<u-badge color="green" tint="100" pill><small>This device</small></u-badge>
+											<u-badge color="green" tint="100" pill>This device</u-badge>
 										<%} else {%>
 											<a href="#" class="text-danger revoke" data-session-id="<%-session.id%>" data-bs-toggle="tooltip" data-bs-original-title="Sign this session out">
 												<i class="icon-solid icon-circle-xmark"></i>
