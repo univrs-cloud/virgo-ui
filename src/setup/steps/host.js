@@ -3,7 +3,12 @@ import hostPartial from 'setup/partials/network/host.html';
 import * as networkService from 'setup/services/network';
 import { completeStep, nextStepPath, previousStepPath } from 'setup/wizard';
 
+const HOSTNAME_PATTERN = /^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$/i;
+const FLEET_ZONE = 'univrs.cloud';
+const CHECK_DELAY_MS = 400;
 let isPrefilled = false;
+let availability = { key: '', status: 'idle' };
+let availabilityRequest = null;
 const hostTemplate = _.template(hostPartial);
 document.querySelector('main .wizard').insertAdjacentHTML('beforeend', hostTemplate());
 const step = document.querySelector('#host');
@@ -14,6 +19,11 @@ const access = step.querySelector('.access');
 const accessUrl = access.querySelector('.url');
 const accessFqdn = access.querySelector('.fqdn');
 const accessAddress = access.querySelector('.address');
+const dnsRecord = access.querySelector('.dns-record');
+const dnsManaged = access.querySelector('.dns-managed');
+const dnsManagedFqdn = access.querySelector('.fqdn-managed');
+const availabilityRow = access.querySelector('.availability');
+const availabilityMessage = access.querySelector('.availability-message');
 
 const currentIdentifier = (system) => {
 	return {
@@ -34,8 +44,60 @@ const renderAccess = () => {
 	accessUrl.textContent = `https://${fqdn}`;
 	accessFqdn.textContent = fqdn;
 	accessAddress.textContent = (networkService.getDefaultInterfaceAddress() || `this node's address`);
+	dnsManagedFqdn.textContent = fqdn;
 	access.classList.toggle('d-none', _.isEmpty(hostname) || _.isEmpty(domainName));
+	renderAvailability();
 };
+
+const isFleetZone = (domainName) => {
+	return String(domainName || '').trim().toLowerCase() === FLEET_ZONE;
+};
+
+const renderAvailability = () => {
+	const managed = isFleetZone(form.getData().domainName);
+	dnsRecord.classList.toggle('d-none', managed);
+	dnsRecord.classList.toggle('d-flex', !managed);
+	dnsManaged.classList.toggle('d-none', !managed);
+	dnsManaged.classList.toggle('d-flex', managed);
+	availabilityRow.classList.toggle('d-none', !managed || availability.status === 'idle');
+	availabilityRow.classList.toggle('d-flex', managed && availability.status !== 'idle');
+	availabilityMessage.textContent = {
+		checking: 'Checking availability...',
+		available: 'This name is available',
+		taken: 'This name is already taken',
+		unknown: 'Could not reach the fleet to check this name'
+	}[availability.status] || '';
+};
+
+const checkAvailability = _.debounce(() => {
+	const data = form.getData();
+	const key = `${data.hostname}.${data.domainName}`.toLowerCase();
+	if (!isFleetZone(data.domainName) || !HOSTNAME_PATTERN.test(data.hostname || '')) {
+		availability = { key: '', status: 'idle' };
+		renderAvailability();
+		return;
+	}
+
+	availability = { key, status: 'checking' };
+	renderAvailability();
+	availabilityRequest = networkService.checkDomainAvailability(data.hostname)
+		.then((response) => {
+			if (availability.key !== key) {
+				return;
+			}
+
+			availability = { key, status: (response?.status === 'succeeded' ? (response.available ? 'available' : 'taken') : 'unknown') };
+		})
+		.catch(() => {
+			if (availability.key === key) {
+				availability = { key, status: 'unknown' };
+			}
+		})
+		.finally(() => {
+			availabilityRequest = null;
+			renderAvailability();
+		});
+}, CHECK_DELAY_MS);
 
 const goNext = () => {
 	completeStep('host');
@@ -77,7 +139,15 @@ const render = ({ system, jobs }) => {
 	isPrefilled = true;
 };
 
-const updateIdentifier = (event) => {
+const updateIdentifier = async (event) => {
+	if (availabilityRequest) {
+		await availabilityRequest;
+	}
+
+	if (availability.status === 'taken') {
+		return;
+	}
+
 	// Nothing to apply when the identifier is already what the form holds — move on without a job.
 	const data = form.getData();
 	if (_.isEqual(data, currentIdentifier(networkService.getSystem()))) {
@@ -100,7 +170,13 @@ form.validation = [
 		rules: {
 			isEmpty: `Can't be empty`,
 			custom: {
-				validate: (value) => { return /^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$/i.test(value); },
+				validate: (value) => {
+					if (!HOSTNAME_PATTERN.test(value)) {
+						return 'Letters, digits and hyphens only';
+					}
+
+					return (availability.status === 'taken' ? 'This name is already taken' : true);
+				},
 				message: 'Letters, digits and hyphens only'
 			}
 		}
@@ -116,6 +192,7 @@ form.validation = [
 ];
 form.addEventListener('valid', updateIdentifier);
 form.addEventListener('value-changed', renderAccess);
+form.addEventListener('value-changed', checkAvailability);
 backButton.addEventListener('click', goBack);
 
 networkService.subscribe([render]);

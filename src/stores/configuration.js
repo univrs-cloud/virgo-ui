@@ -32,6 +32,10 @@ class Configuration extends Store {
 		this.socket.emit('configuration:fleet:update', data);
 	}
 
+	checkDomainAvailability(label) {
+		return this.socket.timeout(10000).emitWithAck('configuration:fleet:domain:availability', { label });
+	}
+
 	enableFleet() {
 		this.socket.emit('configuration:fleet:enable');
 	}

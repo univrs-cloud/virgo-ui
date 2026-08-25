@@ -1,4 +1,5 @@
 import Host from 'stores/host';
+import Configuration from 'stores/configuration';
 import Job from 'stores/job';
 import { createSubscription, storeAttach } from 'libs/services/module_store_subscription';
 
@@ -55,6 +56,10 @@ const updateHostIdentifier = (data) => {
 	Host.updateHostIdentifier(data);
 };
 
+const checkDomainAvailability = (label) => {
+	return Configuration.checkDomainAvailability(label);
+};
+
 const updateInterface = (data) => {
 	Host.updateInterface(data);
 };
@@ -68,5 +73,6 @@ export {
 	getFqdn,
 	getDefaultInterfaceAddress,
 	updateHostIdentifier,
-	updateInterface
+	updateInterface,
+	checkDomainAvailability
 };
