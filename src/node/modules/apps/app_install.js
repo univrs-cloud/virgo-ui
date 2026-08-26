@@ -32,7 +32,7 @@ const renderCertResolver = (domain) => {
 		return;
 	}
 
-	slot.innerHTML = isFleetDomain(domain)
+	slot.innerHTML = (String(domain || '').toLowerCase() === appCenterService.getFQDN())
 		? inputHiddenTemplate({ env: { ...certResolverEnv, default: '' } })
 		: inputRadioTemplate({ env: certResolverEnv });
 };
