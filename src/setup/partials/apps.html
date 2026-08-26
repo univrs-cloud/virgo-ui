@@ -8,6 +8,14 @@
 			<div class="card-body">
 				<h5 class="card-title">Core apps</h5>
 				<dl class="core m-0"></dl>
+				<div class="certificate-checking d-none align-items-center text-body-secondary mt-3">
+					<i class="icon-duotone icon-solid icon-circle-notch icon-fw me-2"></i>
+					<small>Waiting for the certificate for <span class="certificate-fqdn text-body"></span>...</small>
+				</div>
+				<div class="certificate-warning alert alert-warning d-none mt-3 mb-0" role="alert">
+					<div class="fw-semibold">The certificate is not ready yet</div>
+					<small class="certificate-reason"></small>
+				</div>
 				<div class="d-flex justify-content-end gap-2 mt-4">
 					<u-button variant="secondary" data-action="back" outline>Back</u-button>
 					<u-button variant="primary" data-action="continue" disabled>Continue</u-button>
