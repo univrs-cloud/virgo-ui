@@ -1,4 +1,5 @@
 import Docker from 'stores/docker';
+import Host from 'stores/host';
 import Job from 'stores/job';
 import { createSubscription, storeAttach } from 'libs/services/module_store_subscription';
 
@@ -21,6 +22,10 @@ const { subscribe } = createSubscription({
 		{
 			store: Job,
 			propertyNames: ['jobs']
+		},
+		{
+			store: Host,
+			propertyNames: ['certificate']
 		}
 	],
 	filters: {
@@ -71,8 +76,18 @@ const getConfigured = () => {
 	return Docker.getConfigured();
 };
 
+const getCertificate = (certificate = Host.getCertificate()) => {
+	return certificate;
+};
+
+const fetchCertificate = () => {
+	Host.fetchCertificate();
+};
+
 export {
 	subscribe,
 	getCoreApps,
-	getConfigured
+	getConfigured,
+	getCertificate,
+	fetchCertificate
 };

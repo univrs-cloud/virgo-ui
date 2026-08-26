@@ -4,6 +4,7 @@ class Host extends Store {
 	constructor() {
 		const initialState = {
 			setupCompleted: null,
+			certificate: null,
 			system: null,
 			configuringNetworkInterface: false,
 			reboot: null,
@@ -68,6 +69,10 @@ class Host extends Store {
 			this.setState({ shutdown }, 'get_shutdown');
 		});
 
+		this.socket.on('host:certificate', (certificate) => {
+			this.setState({ certificate });
+		});
+		
 		this.socket.on('host:system', (system) => {
 			this.setState({ system }, 'get_system');
 			this.setState({ 'configuringNetworkInterface': false }, 'set_configuring');
@@ -162,6 +167,10 @@ class Host extends Store {
 		this.socket.emit('host:storage:pool:create', data);
 	}
 
+	fetchCertificate() {
+		this.socket.emit('host:certificate:fetch');
+	}
+
 	installCoreApps() {
 		this.socket.emit('host:apps:core:install');
 	}
@@ -173,6 +182,10 @@ class Host extends Store {
 
 	performServiceAction(data) {
 		this.socket.emit(`host:system:service:${data.action}`, { unit: data.unit });
+	}
+
+	getCertificate() {
+		return this.getStateProperty('certificate');
 	}
 
 	getSystem() {
