@@ -80,14 +80,10 @@ const getCertificate = (certificate = Host.getCertificate()) => {
 	return certificate;
 };
 
-const fetchCertificate = () => {
-	Host.fetchCertificate();
-};
 
 export {
 	subscribe,
 	getCoreApps,
 	getConfigured,
-	getCertificate,
-	fetchCertificate
+	getCertificate
 };

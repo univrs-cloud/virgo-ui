@@ -167,10 +167,6 @@ class Host extends Store {
 		this.socket.emit('host:storage:pool:create', data);
 	}
 
-	fetchCertificate() {
-		this.socket.emit('host:certificate:fetch');
-	}
-
 	installCoreApps() {
 		this.socket.emit('host:apps:core:install');
 	}
