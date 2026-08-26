@@ -24,6 +24,18 @@ const dnsManaged = access.querySelector('.dns-managed');
 const dnsManagedFqdn = access.querySelector('.fqdn-managed');
 const availabilityRow = access.querySelector('.availability');
 const availabilityMessage = access.querySelector('.availability-message');
+const availabilityIcon = access.querySelector('.availability-icon');
+const AVAILABILITY_ICONS = {
+	checking: 'icon-solid icon-spinner-third icon-fw icon-spin me-2',
+	available: 'icon-duotone icon-solid icon-circle-check icon-fw me-2',
+	taken: 'icon-duotone icon-solid icon-circle-xmark icon-fw me-2',
+	unknown: 'icon-duotone icon-solid icon-triangle-exclamation icon-fw me-2'
+};
+const AVAILABILITY_COLOURS = {
+	available: 'var(--bs-green)',
+	taken: 'var(--bs-red)',
+	unknown: 'var(--bs-yellow)'
+};
 
 const currentIdentifier = (system) => {
 	return {
@@ -67,6 +79,8 @@ const renderAvailability = () => {
 		taken: 'This name is already taken',
 		unknown: 'Could not reach the fleet to check this name'
 	}[availability.status] || '';
+	availabilityIcon.className = `availability-icon ${AVAILABILITY_ICONS[availability.status] || AVAILABILITY_ICONS.checking}`;
+	availabilityIcon.style.setProperty('--icon-secondary-color', AVAILABILITY_COLOURS[availability.status] || '');
 };
 
 const checkAvailability = _.debounce(() => {
