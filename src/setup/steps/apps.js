@@ -18,23 +18,16 @@ const checkingFqdn = step.querySelector('.certificate-fqdn');
 const warningRow = step.querySelector('.certificate-warning');
 const warningReason = step.querySelector('.certificate-reason');
 const CERTIFICATE_GRACE_MS = 60000;
-const CERTIFICATE_POLL_MS = 5000;
 let waitStartedAt = null;
-let pollTimer = null;
+let gaveUp = false;
 
 const goNext = (event) => {
-	stopPolling();
 	completeStep('apps');
 	page(nextStepPath('apps'));
 };
 
 const goBack = (event) => {
 	page(previousStepPath('apps'));
-};
-
-const stopPolling = () => {
-	clearInterval(pollTimer);
-	pollTimer = null;
 };
 
 const certificateReason = (certificate) => {
@@ -45,18 +38,9 @@ const certificateReason = (certificate) => {
 	return `${certificate.fqdn} resolves, but no certificate has been issued yet. Check port forwarding and the node's logs.`;
 };
 
-const startPolling = () => {
-	if (pollTimer) {
-		return;
-	}
-
-	appsService.fetchCertificate();
-	pollTimer = setInterval(() => { appsService.fetchCertificate(); }, CERTIFICATE_POLL_MS);
-};
-
 const renderWaiting = (fqdn) => {
 	waitStartedAt = waitStartedAt || Date.now();
-	const expired = (Date.now() - waitStartedAt) >= CERTIFICATE_GRACE_MS;
+	const expired = gaveUp || (Date.now() - waitStartedAt) >= CERTIFICATE_GRACE_MS;
 	checkingFqdn.textContent = fqdn || 'this node';
 	checkingRow.classList.toggle('d-none', expired);
 	checkingRow.classList.toggle('d-flex', !expired);
@@ -65,27 +49,17 @@ const renderWaiting = (fqdn) => {
 };
 
 const renderCertificate = (certificate) => {
-	if (_.isNil(certificate)) {
-		startPolling();
-		warningReason.textContent = 'The node has not reported its certificate state yet.';
-		return renderWaiting(null);
-	}
-
-	if (!certificate.required || certificate.hasCertificate) {
-		stopPolling();
+	if (!_.isNil(certificate) && (!certificate.required || certificate.hasCertificate)) {
 		checkingRow.classList.add('d-none');
 		warningRow.classList.add('d-none');
 		return true;
 	}
 
-	startPolling();
-	warningReason.textContent = certificateReason(certificate);
-	const expired = renderWaiting(certificate.fqdn);
-	if (expired) {
-		stopPolling();
-	}
-
-	return expired;
+	warningReason.textContent = (_.isNil(certificate)
+		? 'The node has not reported its certificate state yet.'
+		: certificateReason(certificate));
+	gaveUp = renderWaiting(certificate?.fqdn);
+	return gaveUp;
 };
 
 // The node installs these on its own once the pool is ready, so this step only reports what it is
@@ -100,13 +74,15 @@ const render = ({ configured, containers, jobs, certificate }) => {
 	);
 
 	const isRunning = _.every(apps, 'isRunning');
-	backButton.disabled = !isRunning;
 	if (!isRunning) {
+		backButton.disabled = true;
 		continueButton.disabled = true;
 		return;
 	}
 
-	continueButton.disabled = !renderCertificate(appsService.getCertificate(certificate));
+	const isReady = renderCertificate(appsService.getCertificate(certificate));
+	backButton.disabled = !isReady;
+	continueButton.disabled = !isReady;
 };
 
 continueButton.addEventListener('click', goNext);
