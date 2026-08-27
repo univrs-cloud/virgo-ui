@@ -75,6 +75,9 @@ const runtime = async (state) => {
 		}
 		const onNodeView = /^\/nodes\/[^/]+\//.test(new URL(document.baseURI).pathname);
 		if (!onNodeView) {
+			if (process.env.NODE_ENV === 'production') {
+				await import('fleet/services/analytics').catch((error) => {});
+			}
 			// Every fleet screen (auth, MFA, app) is page-routed; the router's guards redirect based
 			// on isAuthenticated + account.mfa and lazily build the app shell for satisfied routes.
 			try {
