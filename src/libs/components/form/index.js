@@ -85,6 +85,17 @@ export class Form extends LitElement {
 		});
 	}
 
+	/** Re-runs one field's rules on demand, for rules that depend on another field's value. */
+	validateField(selector) {
+		if (!this.#form) {
+			return;
+		}
+
+		this.#form.querySelectorAll(selector).forEach((input) => {
+			this.#validateField(input, selector);
+		});
+	}
+
 	getData() {
 		if (!this.#form) {
 			return {};

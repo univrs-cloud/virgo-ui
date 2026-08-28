@@ -31,6 +31,9 @@
 					<%if (system?.virtualIp?.address) {%>
 						<%-system.virtualIp.address%>/<%-system.virtualIp.netmask%>
 						<u-badge color="<%=(system.virtualIp.holding ? 'green' : 'gray')%>" tint="200" class="ms-1" pill><%=(system.virtualIp.holding ? 'Holding' : 'Standby')%></u-badge>
+					<%} else if (peerVirtualIp) {%>
+						<%-peerVirtualIp.virtualIp%>
+						<u-badge color="gray" tint="200" class="ms-1" pill>On <%-peerVirtualIp.name || peerVirtualIp.address%></u-badge>
 					<%} else {%>
 						—
 					<%}%>
