@@ -29,7 +29,12 @@ const render = (state) => {
 	});
 	morphdom(
 		row,
-		`<div>${networkTemplate({ system: state.system, networkInterface, trustedProxies })}</div>`,
+		`<div>${networkTemplate({
+			system: state.system,
+			networkInterface,
+			trustedProxies,
+			peerVirtualIp: _.find(state.discovery, (peer) => { return Boolean(peer?.virtualIp); }) || null
+		})}</div>`,
 		{ childrenOnly: true }
 	);
 

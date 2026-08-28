@@ -11,7 +11,7 @@ const { subscribe } = createSubscription({
 		},
 		{
 			store: Host,
-			propertyNames: ['system']
+			propertyNames: ['system', 'discovery']
 		},
 		{
 			store: Configuration,
