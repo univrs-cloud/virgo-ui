@@ -29,7 +29,7 @@
 				<dt class="fw-lighter"><small>Virtual IP</small></dt>
 				<dd class="d-flex align-items-center">
 					<%if (system?.virtualIp?.address) {%>
-						<%-system.virtualIp.address%>/<%-system.virtualIp.netmask%>
+						<%-system.virtualIp.address%>
 						<u-badge color="<%=(system.virtualIp.holding ? 'green' : 'gray')%>" tint="200" class="ms-1" pill><%=(system.virtualIp.holding ? 'Holding' : 'Standby')%></u-badge>
 					<%} else if (peerVirtualIp) {%>
 						<%-peerVirtualIp.virtualIp%>
