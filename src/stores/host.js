@@ -15,6 +15,7 @@ class Host extends Store {
 			cpuStats: null,
 			memory: null,
 			networkStats: null,
+			discovery: null,
 			storage: null,
 			importable: null,
 			snapshots: null,
@@ -90,6 +91,10 @@ class Host extends Store {
 			this.setState({ memory }, 'get_memory');
 		});
 
+		this.socket.on('host:discovery', (discovery) => {
+			this.setState({ discovery }, 'get_discovery');
+		});
+
 		this.socket.on('host:network:stats', (networkStats) => {
 			this.setState({ networkStats }, 'get_network_stats');
 		});
@@ -126,6 +131,22 @@ class Host extends Store {
 	updateInterface(data) {
 		this.socket.emit('host:network:interface:update', data);
 		this.setState({ 'configuringNetworkInterface': true }, 'set_configuring');
+	}
+
+	discoverPeers() {
+		this.socket.emit('host:discovery:fetch');
+	}
+
+	getDiscovery() {
+		return this.getStateProperty('discovery');
+	}
+
+	promoteVirtualIp() {
+		this.socket.emit('host:network:virtualIp:promote');
+	}
+
+	releaseVirtualIp() {
+		this.socket.emit('host:network:virtualIp:release');
 	}
 
 	checkUpdates() {
