@@ -28,6 +28,15 @@
 								<u-input name="gateway" label="Default gateway" class="gateway" placeholder="###.###.###.###"></u-input>
 							</div>
 							<div class="col-12">
+								<div class="row g-2">
+									<div class="col-6">
+										<u-input name="virtualIp" label="Virtual IP" class="virtual-ip" placeholder="###.###.###.###"></u-input>
+									</div>
+								</div>
+								<p class="virtual-ip-warning text-orange-500 small mt-1 mb-0 d-none"></p>
+								<p class="text-body-secondary small mt-1 mb-0">A second, permanent address for this node. Your router forwards ports to it, so replacing the node later does not mean reconfiguring the router. Leave empty if this is the only node.</p>
+							</div>
+							<div class="col-12">
 								<div class="dns-server row g-2 align-items-center">
 									<div class="col-6">
 										<u-input name="dnsServer1" label="DNS server 1" class="dns-server-1" placeholder="###.###.###.###"></u-input>

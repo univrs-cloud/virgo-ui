@@ -63,14 +63,16 @@ const removeDnsRow = (event) => {
 // configures static addressing, so a node still on DHCP always differs and gets converted, even with
 // untouched fields.
 const currentConfiguration = (networkInterface) => {
-	const address = _.find(networkInterface?.addrInfo, { family: 'inet' });
+	const virtualIp = networkService.getSystem()?.virtualIp?.address;
+	const address = _.find(_.reject(networkInterface?.addrInfo, { local: virtualIp }), { family: 'inet' });
 	return {
 		name: networkInterface?.ifname || '',
 		method: (networkInterface?.dhcp ? 'auto' : 'manual'),
 		ipAddress: address?.local || '',
 		netmask: _.toString(address?.prefixlen || ''),
 		gateway: networkInterface?.gateway || '',
-		dnsServers: _.compact(networkInterface?.dnsServers || [])
+		dnsServers: _.compact(networkInterface?.dnsServers || []),
+		virtualIp: (networkService.getSystem()?.virtualIp?.address || '')
 	};
 };
 
@@ -118,7 +120,42 @@ const followNode = async (url) => {
 // not handled here: the browser has to reach the node at its new address to know it arrived. The
 // fields are seeded once, from the first delivery that carries the interface; after that the form
 // belongs to whoever is typing in it.
+/** Editable when this node already has a virtual IP, or when nothing else on the network has one.
+ * Otherwise the address the other node carries is shown but locked — the operator's route is to join
+ * that node, not to configure a second address here. The API enforces the same rule. */
+const lockedPeer = () => {
+	if (networkService.getSystem()?.virtualIp?.address) {
+		return null;
+	}
+
+	return _.first(networkService.getPeersWithVirtualIp()) || null;
+};
+
+/** Mandatory while this node is the only one on the network: it is the node that has to establish the
+ * virtual IP, because a second node can only join one that already exists. Only a definite empty peer
+ * list counts — discovery that has not answered, or that failed, leaves the field optional. */
+const isVirtualIpRequired = () => {
+	const peers = networkService.getPeers();
+	return !lockedPeer() && _.isArray(peers) && _.isEmpty(peers);
+};
+
+const applyVirtualIp = () => {
+	const input = form.querySelector('.virtual-ip');
+	const note = step.querySelector('.virtual-ip-warning');
+	const peer = lockedPeer();
+	if (peer) {
+		input.value = peer.virtualIp;
+	}
+
+	input.disabled = Boolean(peer);
+	note.classList[peer ? 'remove' : 'add']('d-none');
+	note.textContent = (peer
+		? `${peer.name || peer.address} already has this virtual IP. Join that node to share the address.`
+		: '');
+};
+
 const render = ({ system, jobs }) => {
+	applyVirtualIp();
 	if (_.find(jobs, { name: networkService.INTERFACE_JOB })?.progress?.state === 'failed' && isApplying()) {
 		restore();
 	}
@@ -129,6 +166,7 @@ const render = ({ system, jobs }) => {
 	}
 
 	const current = currentConfiguration(networkInterface);
+	form.querySelector('.virtual-ip').value = current.virtualIp;
 	form.querySelector('.name').value = current.name;
 	form.querySelector('.ip-address').value = current.ipAddress;
 	form.querySelector('.netmask').value = current.netmask;
@@ -145,6 +183,7 @@ const updateInterface = (event) => {
 	// The form carries one field per DNS server; the node takes them as a list, in the order they were
 	// asked for. No branch on the method here the way the node's own form has one: setup only writes
 	// static addressing, which is what the hidden field says.
+	data.virtualIp = (lockedPeer() ? '' : _.trim(data.virtualIp));
 	data.dnsServers = _.compact(_.map(_.filter(dnsRows, isVisible), (row) => {
 		return data[row.querySelector('u-input').getAttribute('name')];
 	}));
@@ -171,6 +210,39 @@ const requiredIpAddress = (value) => {
 	}
 
 	return form.validator.isIP(value, 4) || `Invalid IP address`;
+};
+
+/** Optional. Anything typed has to be usable: a v4 address, not the node's own, and inside the subnet
+ * being submitted — all checkable here because both values are in this one form. */
+const virtualIpRules = (value) => {
+	const address = _.trim(value);
+	if (_.isEmpty(address)) {
+		return (isVirtualIpRequired() ? `Required while this is the only node on the network` : true);
+	}
+
+	if (!form.validator.isIP(address, 4)) {
+		return `Invalid IP address`;
+	}
+
+	const ipAddress = _.trim(form.querySelector('.ip-address').value);
+	if (address === ipAddress) {
+		return `Can't be the same as the IP address`;
+	}
+
+	const prefixLength = Number.parseInt(form.querySelector('.netmask').value, 10);
+	if (!form.validator.isIP(ipAddress, 4) || !Number.isFinite(prefixLength)) {
+		return true;
+	}
+
+	const toInteger = (value) => {
+		return _.reduce(_.split(value, '.'), (total, octet) => { return ((total << 8) >>> 0) + Number(octet); }, 0) >>> 0;
+	};
+	const mask = (prefixLength === 0 ? 0 : (0xFFFFFFFF << (32 - prefixLength)) >>> 0);
+	if (((toInteger(address) & mask) >>> 0) !== ((toInteger(ipAddress) & mask) >>> 0)) {
+		return `Must be in the same subnet as the IP address`;
+	}
+
+	return true;
 };
 
 const dnsServerRules = (selector) => {
@@ -204,6 +276,12 @@ form.validation = [
 			custom: (value) => { return requiredIpAddress(value); }
 		}
 	},
+	{
+		selector: '.virtual-ip',
+		rules: {
+			custom: (value) => { return (lockedPeer() ? true : virtualIpRules(value)); }
+		}
+	},
 	dnsServerRules('.dns-server-1'),
 	dnsServerRules('.dns-server-2'),
 	dnsServerRules('.dns-server-3')
@@ -214,4 +292,5 @@ _.each(form.querySelectorAll('.dns-server .remove'), (button) => { button.addEve
 backButton.addEventListener('click', goBack);
 
 
+networkService.discoverPeers();
 networkService.subscribe([render]);

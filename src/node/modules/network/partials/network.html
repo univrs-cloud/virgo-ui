@@ -23,8 +23,17 @@
 				<dd><%-networkInterface?.ifname%></dd>
 				<dt class="fw-lighter"><small>Address</small></dt>
 				<dd class="d-flex align-items-center">
-					<%-_.find(networkInterface?.addrInfo, { family: 'inet' })?.local%>/<%-_.find(networkInterface?.addrInfo, { family: 'inet' })?.prefixlen%>
+					<%-_.find(_.reject(networkInterface?.addrInfo, { local: system?.virtualIp?.address }), { family: 'inet' })?.local%>/<%-_.find(_.reject(networkInterface?.addrInfo, { local: system?.virtualIp?.address }), { family: 'inet' })?.prefixlen%>
 					<u-badge color="gray" tint="200" class="ms-1" pill><%=(networkInterface?.dhcp ? 'Automatic' : 'Manual')%></u-badge>
+				</dd>
+				<dt class="fw-lighter"><small>Virtual IP</small></dt>
+				<dd class="d-flex align-items-center">
+					<%if (system?.virtualIp?.address) {%>
+						<%-system.virtualIp.address%>/<%-system.virtualIp.netmask%>
+						<u-badge color="<%=(system.virtualIp.holding ? 'green' : 'gray')%>" tint="200" class="ms-1" pill><%=(system.virtualIp.holding ? 'Holding' : 'Standby')%></u-badge>
+					<%} else {%>
+						—
+					<%}%>
 				</dd>
 				<dt class="fw-lighter"><small>Default gateway</small></dt>
 				<dd><%-networkInterface?.gateway%></dd>

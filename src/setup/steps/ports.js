@@ -8,10 +8,11 @@ document.querySelector('main .wizard').insertAdjacentHTML('beforeend', portsTemp
 const step = document.querySelector('#ports');
 const address = step.querySelector('.address');
 
-// The ports themselves are fixed, but the address they go to is whatever the interface step left the
-// node on — and it is the one thing the user has to copy into the router.
+// The ports themselves are fixed, but the address they go to is the one thing the user has to copy
+// into the router — and it must be the virtual IP when there is one, so replacing a node later does
+// not mean going back into the customer's router.
 const render = ({ system }) => {
-	address.textContent = (networkService.getDefaultInterfaceAddress(system) || `this node's address`);
+	address.textContent = (networkService.getPortForwardAddress(system) || `this node's address`);
 };
 
 const goNext = (event) => {

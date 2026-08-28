@@ -47,6 +47,31 @@ const updateInterface = (data) => {
 	Host.updateInterface(data);
 };
 
+/** The raw peer list, or null while discovery has not answered — `false` is the error state and an
+ * empty array is a definite "nothing else is out there". The difference matters: only a definite
+ * empty answer may make the virtual IP mandatory. */
+const getPeers = (discovery = Host.getDiscovery()) => {
+	return (_.isArray(discovery) ? discovery : null);
+};
+
+const discoverPeers = () => {
+	Host.discoverPeers();
+};
+
+/** Peers that already carry a virtual IP. Advisory only: the advertisement is unauthenticated, so it
+ * drives a warning in the form and never a refusal — the binding check is the node's own ARP probe. */
+const getPeersWithVirtualIp = (discovery = Host.getDiscovery()) => {
+	return _.filter(discovery, (peer) => { return Boolean(peer?.virtualIp); });
+};
+
+const promoteVirtualIp = () => {
+	Host.promoteVirtualIp();
+};
+
+const releaseVirtualIp = () => {
+	Host.releaseVirtualIp();
+};
+
 const addTrustedProxy = (data) => {
 	Configuration.addTrustedProxy(data);
 };
@@ -78,6 +103,11 @@ export {
 	getSystem,
 	updateHostIdentifier,
 	updateInterface,
+	discoverPeers,
+	getPeers,
+	getPeersWithVirtualIp,
+	promoteVirtualIp,
+	releaseVirtualIp,
 	addTrustedProxy,
 	updateTrustedProxy,
 	deleteTrustedProxy,
