@@ -178,6 +178,11 @@ socket.on('docker:container:logs:error', (error) => {
 	appendLine(`<span class="log-content text-red-500">${escapeHtml(error?.message || error)}</span>`);
 	setStatus(DISCONNECTED_LABEL);
 });
+// The stream ending on its own — the container stopped or restarted — as opposed to this browser
+// losing the socket.
+socket.on('docker:container:logs:disconnected', () => {
+	setStatus(DISCONNECTED_LABEL);
+});
 socket.on('disconnect', () => {
 	setStatus(DISCONNECTED_LABEL);
 });
