@@ -286,6 +286,27 @@ form.validation = [
 	dnsServerRules('.dns-server-2'),
 	dnsServerRules('.dns-server-3')
 ];
+/** The virtual IP rules read the address and netmask, and the address rules are read back by the
+ * virtual IP, so a change to either leaves the other's verdict stale. Re-run it — but only when that
+ * field already has a value or is already showing an error, so editing the address never raises an
+ * error on a virtual IP field the operator has not touched yet. */
+const revalidate = (selector) => {
+	const input = form.querySelector(selector);
+	if (!input || (_.isEmpty(_.trim(input.value || '')) && _.isEmpty(input.error))) {
+		return;
+	}
+
+	form.validateField(selector);
+};
+
+const crossValidate = () => {
+	_.each(['.ip-address', '.netmask'], (selector) => {
+		form.querySelector(selector)?.addEventListener('value-changed', () => { revalidate('.virtual-ip'); });
+	});
+	form.querySelector('.virtual-ip')?.addEventListener('value-changed', () => { revalidate('.ip-address'); });
+};
+
+crossValidate();
 form.addEventListener('valid', updateInterface);
 addDnsButton.addEventListener('click', addDnsRow);
 _.each(form.querySelectorAll('.dns-server .remove'), (button) => { button.addEventListener('click', removeDnsRow); });
