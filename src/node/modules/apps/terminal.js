@@ -145,6 +145,11 @@ socket.on('docker:container:terminal:error', (error) => {
 	}
 	setStatus(DISCONNECTED_LABEL);
 });
+// The session ending on its own — the shell exited, or the stream failed — as opposed to this browser
+// losing the socket. Both leave the terminal in place so the reconnect link can reuse it.
+socket.on('docker:container:terminal:disconnected', () => {
+	setStatus(DISCONNECTED_LABEL);
+});
 socket.on('disconnect', () => {
 	// Don't dispose the terminal — the reconnect link reuses it.
 	setStatus(DISCONNECTED_LABEL);
