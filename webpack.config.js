@@ -209,7 +209,15 @@ module.exports = (env, argv) => {
 							options: {
 								postcssOptions: {
 									plugins: [
-										cssnano	
+										cssnano({
+											preset: [
+												'default',
+												{
+													calc: false,
+													svgo: false
+												}
+											]
+										})
 									]
 								}
 							}
@@ -259,7 +267,8 @@ module.exports = (env, argv) => {
 						preset: [
 							'default',
 							{
-								calc: false
+								calc: false,
+								svgo: false
 							}
 						]
 					}

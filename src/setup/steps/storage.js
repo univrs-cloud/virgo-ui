@@ -37,7 +37,7 @@ const idle = () => {
 // so the summary is left alone while one is in flight.
 const render = ({ storage, drives, importablePools, jobs }) => {
 	const pool = storageService.getPool(storage);
-	const job = _.find(jobs, (job) => { return _.includes([storageService.IMPORT_JOB, storageService.CREATE_JOB], job.name); });
+	const job = _.first(jobs);
 	const isSettled = _.includes(['completed', 'failed'], job?.progress?.state);
 	// A summary rendered while the pool is being prepared would describe a node that no longer exists.
 	if (job && !isSettled) {
