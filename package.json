@@ -67,8 +67,8 @@
 		"postcss-loader": "^8.2.1",
 		"raw-loader": "^4.0.2",
 		"sass": "^1.103.1",
-		"sass-loader": "^17.0.0",
-		"webpack": "^5.110.1",
+		"sass-loader": "^17.0.1",
+		"webpack": "^5.110.2",
 		"webpack-cli": "^7.2.3",
 		"webpack-dev-server": "^6.0.0",
 		"webpack-pwa-manifest": "^4.3.0"
