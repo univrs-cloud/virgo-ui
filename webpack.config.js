@@ -32,6 +32,10 @@ module.exports = (env, argv) => {
 			port: 443,
 			allowedHosts: 'all',
 			compress: true,
+			headers: {
+				'Content-Security-Policy': "frame-ancestors 'none'",
+				'X-Frame-Options': 'DENY'
+			},
 			historyApiFallback: { disableDotRule: true },
 			open: true,
 			hot: false,
