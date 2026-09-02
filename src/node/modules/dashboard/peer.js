@@ -15,21 +15,22 @@ const render = (state) => {
 		return;
 	}
 
-	const adopted = peerService.getPeers();
-	const discovered = peerService.getDiscovered();
+	const system = state.system;
+	const adopted = state.peers;
+	const discovered = state.discovery;
 	morphdom(
 		container,
 		`<div>${peerTemplate({
+			system,
 			adopted,
 			discovered,
-			available: _.reject(discovered, (node) => { return _.some(adopted, { id: node.id }); }),
-			virtualIp: state.system?.virtualIp || null
+			available: _.reject(discovered, (node) => { return _.some(adopted, { id: node.id }); })
 		})}</div>`,
 		{ childrenOnly: true }
 	);
 };
 
-const act = (event) => {
+const performActions = (event) => {
 	const button = event.target.closest('[data-action]');
 	if (!button || !container?.contains(button)) {
 		return;
@@ -50,5 +51,5 @@ const act = (event) => {
 	actions[button.getAttribute('data-action')]?.();
 };
 
-document.addEventListener('click', act);
+document.addEventListener('click', performActions);
 peerService.subscribe([render]);
