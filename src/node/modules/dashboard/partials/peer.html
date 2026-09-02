@@ -6,6 +6,15 @@
 		<h6 class="d-flex align-items-center text-body-emphasis mb-2">
 			<i class="icon-regular icon-nas icon-fw me-1 text-gray-500"></i>Nodes
 		</h6>
+		<div class="d-flex align-items-center justify-content-between gap-2 border-top py-2">
+			<div class="lh-sm text-body-tertiary small">
+				<div class="text-body-secondary d-flex align-items-center">
+					<%-system?.osInfo?.hostname%>
+					<u-badge color="green" tint="100" class="ms-1" pill>this node</u-badge>
+				</div>
+				<div><%-_.find(_.reject(_.find(system.networkInterfaces, { 'default': true })?.addrInfo, { local: system?.virtualIp?.address }), { family: 'inet' })?.local%></div>
+			</div>
+		</div>
 		<%_.each(adopted, (node) => {%>
 			<%const seen = _.find(discovered, { id: node.id })%>
 			<div class="d-flex align-items-center justify-content-between gap-2 border-top py-2">
