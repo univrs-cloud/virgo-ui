@@ -23,15 +23,15 @@ const nodeUrl = (system) => {
 
 // Leaving setup mode changes which app the shell builds, and the shell only decides that once per
 // load — so the node reporting a finished setup is the cue to load it again at its own address.
-const render = ({ setupCompleted, system }) => {
-	const address = nodeUrl(system);
+const render = (state) => {
+	const address = nodeUrl(state.system);
 	url.textContent = (_.isEmpty(address) ? 'this node' : address);
 	unnamed.classList.toggle('d-none', !_.isEmpty(address));
 	if (!isFinishing) {
 		finishButton.disabled = _.isEmpty(address);
 	}
 
-	if (!isFinishing || setupCompleted !== true) {
+	if (!isFinishing || state.setupCompleted !== true) {
 		return;
 	}
 
