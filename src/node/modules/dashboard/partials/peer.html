@@ -1,10 +1,10 @@
-<%if (_.isEmpty(adopted) && _.isEmpty(available)) {%>
-	<%return%>
+<%if (_.isEmpty(system) && _.isEmpty(adopted) && _.isEmpty(available)) {%>
+	<%return ''%>
 <%}%>
 <div class="card rounded-4 border-0 mb-2">
-	<div class="card-body py-3">
+	<div class="card-body py-3 pb-1">
 		<h6 class="d-flex align-items-center text-body-emphasis mb-2">
-			<i class="icon-regular icon-network-wired icon-fw me-1 text-gray-500"></i><%=_.capitalize(_.pluralize('node', _.size(adopted) + _.size(available), true))%>
+			<i class="icon-regular icon-nas icon-fw me-1 text-gray-500"></i>Nodes
 		</h6>
 		<%_.each(adopted, (node) => {%>
 			<%const seen = _.find(discovered, { id: node.id })%>
@@ -12,38 +12,33 @@
 				<div class="lh-sm text-body-tertiary small">
 					<div class="text-body-secondary d-flex align-items-center">
 						<%-node.name || node.address%>
-						<u-badge color="<%=(seen ? 'green' : 'red')%>" tint="200" class="ms-1" pill><%=(seen ? 'Reachable' : 'Offline')%></u-badge>
+						<u-badge color="<%=(seen ? 'green' : 'red')%>" tint="100" class="ms-1" pill><%=(seen ? 'ONLINE' : 'OFFLINE')%></u-badge>
 					</div>
 					<div><%-(seen && seen.address) || node.address%><%if (seen && seen.virtualIp) {%> · <%-seen.virtualIp%><%}%></div>
 				</div>
 				<div class="dropdown">
-					<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm p-0"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
-					<ul class="dropdown-menu">
-						<li><a href="#" class="dropdown-item text-danger" data-action="remove" data-peer="<%-node.id%>"><i class="icon-regular icon-times icon-fw me-1"></i>Remove node</a></li>
-					</ul>
+					<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
+					<div class="dropdown-menu dropdown-menu-end" style="width: max-content;">
+						<%if (system.virtualIp && system.virtualIp.holding && seen) {%>
+							<a href="#" class="dropdown-item" data-action="release"><i class="icon-regular icon-right-left icon-fw me-1"></i>Hand over virtual IP</a>
+							<div class="dropdown-divider"></div>
+						<%} else if (system.virtualIp && seen && seen.holdsVirtualIp && seen.virtualIp === system.virtualIp.address) {%>
+							<a href="#" class="dropdown-item" data-action="promote"><i class="icon-regular icon-right-left icon-fw me-1"></i>Take over virtual IP</a>
+							<div class="dropdown-divider"></div>
+						<%}%>
+						<a href="#" class="dropdown-item text-danger" data-action="remove" data-peer="<%-node.id%>"><i class="icon-regular icon-times icon-fw me-1"></i>Remove node</a>
+					</div>
 				</div>
 			</div>
 		<%})%>
 		<%_.each(available, (node) => {%>
 			<div class="d-flex align-items-center justify-content-between gap-2 border-top py-2">
 				<div class="lh-sm text-body-tertiary small">
-					<div class="text-body-secondary"><%-node.name || node.address%></div>
-					<div><%-node.address%><%if (node.virtualIp) {%> · <%-node.virtualIp%><%}%></div>
+					<div class="text-body-secondary"><%-node.name || 'unknown'%></div>
+					<div><%-node.address%></div>
 				</div>
-				<u-button data-action="adopt" data-peer="<%-node.id%>" color="blue" tint="500" size="sm">Adopt</u-button>
+				<u-button color="blue" size="sm" data-action="adopt" data-peer="<%-node.id%>" <%=(_.isEmpty(system.virtualIp) ? 'tip="To adopt another node a <u>virtual IP</u> must be configured.<br>It can be configured on <strong>System > Network > Interface</strong>." disabled' : (!system.virtualIp.holding ? 'tip="Only the virtual IP holder can adopt another node." disabled' : ''))%>>Adopt</u-button>
 			</div>
 		<%})%>
-		<%if (virtualIp) {%>
-			<div class="d-flex justify-content-between gap-2 border-top pt-2 lh-sm text-body-tertiary small">
-				<span>Virtual IP</span>
-				<span class="text-body-secondary text-end">
-					<%-virtualIp.address%>
-					<u-badge color="<%=(virtualIp.holding ? 'green' : 'gray')%>" tint="200" class="ms-1" pill><%=(virtualIp.holding ? 'Held here' : 'Elsewhere')%></u-badge>
-				</span>
-			</div>
-			<div class="d-grid mt-2">
-				<u-button data-action="<%=(virtualIp.holding ? 'release' : 'promote')%>" color="gray" tint="200" size="sm"><%=(virtualIp.holding ? 'Hand over virtual IP' : 'Take over virtual IP')%></u-button>
-			</div>
-		<%}%>
 	</div>
 </div>
