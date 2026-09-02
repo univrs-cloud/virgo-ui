@@ -271,17 +271,17 @@
 															<%} else {%>
 																<div class="dropdown">
 																	<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
-																	<ul class="dropdown-menu">
+																	<div class="dropdown-menu">
 																		<%if (app.canBeRemoved || _.includes(['created', 'exited'], container.state)) {%>
-																			<li><a href="#" class="dropdown-item <%=(_.includes(['created', 'exited'], container.state) ? '' : 'disabled')%>" data-action="start"><i class="icon-regular icon-play icon-fw me-1"></i>Start</a></li>
-																			<li><hr class="dropdown-divider"></li>
+																			<a href="#" class="dropdown-item <%=(_.includes(['created', 'exited'], container.state) ? '' : 'disabled')%>" data-action="start"><i class="icon-regular icon-play icon-fw me-1"></i>Start</a>
+																			<div class="dropdown-divider"></div>
 																		<%}%>
-																		<li><a href="#" class="dropdown-item <%=(_.includes(['running', 'paused'], container.state) ? 'confirm' : 'disabled')%>" data-action="restart"><i class="icon-regular icon-arrow-rotate-left icon-fw me-1"></i>Restart</a></li>
+																		<a href="#" class="dropdown-item <%=(_.includes(['running', 'paused'], container.state) ? 'confirm' : 'disabled')%>" data-action="restart"><i class="icon-regular icon-arrow-rotate-left icon-fw me-1"></i>Restart</a>
 																		<%if (app.canBeRemoved) {%>
-																			<li><a href="#" class="dropdown-item <%=(_.includes(['running', 'paused', 'restarting'], container.state) ? 'text-danger confirm' : 'disabled')%>" data-action="stop"><i class="icon-regular icon-stop icon-fw me-1"></i>Stop</a></li>
-																			<li><a href="#" class="dropdown-item <%=(_.includes(['running', 'paused', 'restarting'], container.state) ? 'text-danger confirm' : 'disabled')%>" data-action="kill"><i class="icon-regular icon-skull icon-fw me-1"></i>Kill</a></li>
+																			<a href="#" class="dropdown-item <%=(_.includes(['running', 'paused', 'restarting'], container.state) ? 'text-danger confirm' : 'disabled')%>" data-action="stop"><i class="icon-regular icon-stop icon-fw me-1"></i>Stop</a>
+																			<a href="#" class="dropdown-item <%=(_.includes(['running', 'paused', 'restarting'], container.state) ? 'text-danger confirm' : 'disabled')%>" data-action="kill"><i class="icon-regular icon-skull icon-fw me-1"></i>Kill</a>
 																		<%}%>
-																	</ul>
+																	</div>
 																</div>
 															<%}%>
 														</div>
@@ -359,9 +359,9 @@
 											<td class="px-0">
 												<div class="dropdown">
 													<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
-													<ul class="dropdown-menu">
-														<li><button type="button" class="dropdown-item disabled">No actions</button></li>
-													</ul>
+													<div class="dropdown-menu">
+														<button type="button" class="dropdown-item disabled">No actions</button>
+													</div>
 												</div>
 											</td>
 										</tr>

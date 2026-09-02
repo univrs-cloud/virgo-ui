@@ -45,21 +45,17 @@
 					<span class="dropdown-toggle caret-off btn btn-sm z-1 position-relative" data-bs-toggle="dropdown">
 						<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
 					</span>
-					<ul class="dropdown-menu dropdown-menu-end">
+					<div class="dropdown-menu dropdown-menu-end">
 						<%if (node.isOwner) {%>
-							<li>
-								<a href="#admin-add" class="dropdown-item" data-bs-toggle="modal" data-node-id="<%-node.nodeId%>">
-									<i class="icon-regular icon-user-plus icon-fw me-1"></i>Add admin
-								</a>
-							</li>
-							<li><hr class="dropdown-divider"></li>
-						<%}%>
-						<li>
-							<a href="#" class="dropdown-item text-danger confirm" data-action="remove" data-node-id="<%-node.nodeId%>">
-								<i class="icon-regular icon-xmark icon-fw me-1"></i>Remove from inventory
+							<a href="#admin-add" class="dropdown-item" data-bs-toggle="modal" data-node-id="<%-node.nodeId%>">
+								<i class="icon-regular icon-user-plus icon-fw me-1"></i>Add admin
 							</a>
-						</li>
-					</ul>
+							<div class="dropdown-divider"></div>
+						<%}%>
+						<a href="#" class="dropdown-item text-danger confirm" data-action="remove" data-node-id="<%-node.nodeId%>">
+							<i class="icon-regular icon-xmark icon-fw me-1"></i>Remove from inventory
+						</a>
+					</div>
 				</div>
 			</div>
 
@@ -136,36 +132,32 @@
 								<i class="icon-solid icon-chevron-down icon-xs ms-1"></i>
 							</u-badge>
 						</span>
-						<ul class="dropdown-menu dropdown-menu-start shadow">
+						<div class="dropdown-menu dropdown-menu-start shadow">
 							<%_.each(node.admins, (admin) => {%>
-								<li>
-									<span class="dropdown-item d-flex align-items-center">
-										<i class="icon-regular icon-user icon-fw me-2"></i>
-										<div class="lh-1 me-3">
-											<div><%-admin.name%></div>
-											<small class="text-body-secondary"><%-admin.email%></small>
-										</div>
-										<a href="#" class="text-danger ms-auto confirm" data-action="revoke" data-node-id="<%-node.nodeId%>" data-email="<%-admin.email%>" data-bs-toggle="tooltip" data-bs-original-title="Revoke access">
-											<i class="icon-solid icon-circle-xmark"></i>
-										</a>
-									</span>
-								</li>
+								<div class="dropdown-item d-flex align-items-center">
+									<i class="icon-regular icon-user icon-fw me-2"></i>
+									<div class="lh-1 me-3">
+										<div><%-admin.name%></div>
+										<small class="text-body-secondary"><%-admin.email%></small>
+									</div>
+									<a href="#" class="text-danger ms-auto confirm" data-action="revoke" data-node-id="<%-node.nodeId%>" data-email="<%-admin.email%>" data-bs-toggle="tooltip" data-bs-original-title="Revoke access">
+										<i class="icon-solid icon-circle-xmark"></i>
+									</a>
+								</div>
 							<%})%>
 							<%_.each(node.groups, (group) => {%>
-								<li>
-									<span class="dropdown-item d-flex align-items-center">
-										<i class="icon-regular icon-users icon-fw me-2"></i>
-										<div class="lh-1 me-3">
-											<div><%-group.name%></div>
-											<small class="text-body-secondary">Group</small>
-										</div>
-										<a href="#" class="text-danger ms-auto confirm" data-action="revoke-group" data-node-id="<%-node.nodeId%>" data-group-id="<%-group.id%>" data-group-name="<%-group.name%>" data-bs-toggle="tooltip" data-bs-original-title="Revoke group access">
-											<i class="icon-solid icon-circle-xmark"></i>
-										</a>
-									</span>
-								</li>
+								<div class="dropdown-item d-flex align-items-center">
+									<i class="icon-regular icon-users icon-fw me-2"></i>
+									<div class="lh-1 me-3">
+										<div><%-group.name%></div>
+										<small class="text-body-secondary">Group</small>
+									</div>
+									<a href="#" class="text-danger ms-auto confirm" data-action="revoke-group" data-node-id="<%-node.nodeId%>" data-group-id="<%-group.id%>" data-group-name="<%-group.name%>" data-bs-toggle="tooltip" data-bs-original-title="Revoke group access">
+										<i class="icon-solid icon-circle-xmark"></i>
+									</a>
+								</div>
 							<%})%>
-						</ul>
+						</div>
 					</div>
 				<%}%>
 			</div>
