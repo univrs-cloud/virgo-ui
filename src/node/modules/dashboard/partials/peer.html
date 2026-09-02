@@ -1,7 +1,7 @@
 <%if (_.isEmpty(system) && _.isEmpty(adopted) && _.isEmpty(available)) {%>
 	<%return ''%>
 <%}%>
-<div class="card rounded-4 border-0 mb-2">
+<div class="card rounded-4 border-0 mb-3">
 	<div class="card-body py-3 pb-1">
 		<h6 class="d-flex align-items-center text-body-emphasis mb-2">
 			<i class="icon-regular icon-nas icon-fw me-1 text-gray-500"></i>Nodes
@@ -35,7 +35,7 @@
 					<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
 					<div class="dropdown-menu dropdown-menu-end" style="width: max-content;">
 						<%if (system?.virtualIp?.holding && seen) {%>
-							<a href="#" class="dropdown-item" data-action="release"><i class="icon-regular icon-right-left icon-fw me-1"></i>Hand over virtual IP</a>
+							<a href="#" class="dropdown-item" data-action="handover" data-peer="<%-node.id%>"><i class="icon-regular icon-right-left icon-fw me-1"></i>Hand over virtual IP</a>
 							<div class="dropdown-divider"></div>
 						<%} else if (seen && seen.holdsVirtualIp && seen.virtualIp === system?.virtualIp?.address) {%>
 							<a href="#" class="dropdown-item" data-action="promote"><i class="icon-regular icon-right-left icon-fw me-1"></i>Take over virtual IP</a>
@@ -55,7 +55,7 @@
 						<div><i class="icon-regular icon-ghost icon-fw me-1"></i><%-node.virtualIp%></div>
 					<%}%>
 				</div>
-				<u-button color="blue" size="sm" data-action="adopt" data-peer="<%-node?.id%>" <%=(isVirtualIpConfigured ? 'tip="To adopt another node a <u>virtual IP</u> must be configured.<br>It can be configured on <strong>System > Network > Interface</strong>." disabled' : (!system?.virtualIp?.holding ? 'tip="Only the virtual IP holder can adopt another node." disabled' : ''))%>>Adopt</u-button>
+				<u-button color="blue" size="sm" data-action="adopt" data-peer="<%-node?.id%>" <%=(!isVirtualIpConfigured ? 'tip="To adopt another node a <u>virtual IP</u> must be configured.<br>It can be configured on <strong>System > Network > Interface</strong>." disabled' : (!system?.virtualIp?.holding ? 'tip="Only the virtual IP holder can adopt another node." disabled' : ''))%>>Adopt</u-button>
 			</div>
 		<%})%>
 	</div>
