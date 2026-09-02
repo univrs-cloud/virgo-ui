@@ -26,8 +26,8 @@ const idle = () => {
 // started it. Only a job that has reported back concludes the step: an empty list is the gap between
 // asking for one and the node queueing it, and unlocking there would hand the form back mid-flight.
 // A failure leaves the user here; the job toaster carries the reason.
-const render = ({ users, jobs }) => {
-	const job = _.find(jobs, { name: userService.PASSWORD_JOB });
+const render = (state) => {
+	const job = _.find(state.jobs, { name: userService.PASSWORD_JOB });
 	const isSettled = _.includes(['completed', 'failed'], job?.progress?.state);
 	if (job && !isSettled) {
 		backButton.disabled = true;
@@ -40,7 +40,7 @@ const render = ({ users, jobs }) => {
 		}
 	}
 
-	username.textContent = (userService.findDefaultUser(users)?.username || '—');
+	username.textContent = (userService.findDefaultUser(state.users)?.username || '—');
 };
 
 const changePassword = (event) => {

@@ -130,8 +130,8 @@ const idle = () => {
 // A failure leaves the user here; the job toaster carries the reason. The fields are seeded once,
 // from the first delivery that carries the node's identifier; after that the form belongs to whoever
 // is typing in it.
-const render = ({ system, jobs }) => {
-	const job = _.find(jobs, { name: networkService.IDENTIFIER_JOB });
+const render = (state) => {
+	const job = _.find(state.jobs, { name: networkService.IDENTIFIER_JOB });
 	const isSettled = _.includes(['completed', 'failed'], job?.progress?.state);
 	if (job && !isSettled) {
 		backButton.disabled = true;
@@ -143,11 +143,11 @@ const render = ({ system, jobs }) => {
 		}
 	}
 
-	if (isPrefilled || _.isEmpty(system?.osInfo)) {
+	if (isPrefilled || _.isEmpty(state.system?.osInfo)) {
 		return;
 	}
 
-	const identifier = currentIdentifier(system);
+	const identifier = currentIdentifier(state.system);
 	form.querySelector('.hostname').value = identifier.hostname;
 	form.querySelector('.domain-name').value = identifier.domainName;
 	isPrefilled = true;

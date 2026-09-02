@@ -16,6 +16,7 @@ class Host extends Store {
 			memory: null,
 			networkStats: null,
 			discovery: null,
+			peers: null,
 			storage: null,
 			importable: null,
 			snapshots: null,
@@ -91,6 +92,10 @@ class Host extends Store {
 			this.setState({ memory }, 'get_memory');
 		});
 
+		this.socket.on('host:peers', (peers) => {
+			this.setState({ peers }, 'get_peers');
+		});
+
 		this.socket.on('host:discovery', (discovery) => {
 			this.setState({ discovery }, 'get_discovery');
 		});
@@ -133,12 +138,12 @@ class Host extends Store {
 		this.setState({ 'configuringNetworkInterface': true }, 'set_configuring');
 	}
 
-	discoverPeers() {
-		this.socket.emit('host:discovery:fetch');
+	adoptPeer(data) {
+		this.socket.emit('host:peer:adopt', data);
 	}
 
-	getDiscovery() {
-		return this.getStateProperty('discovery');
+	removePeer(data) {
+		this.socket.emit('host:peer:remove', data);
 	}
 
 	promoteVirtualIp() {
@@ -199,6 +204,14 @@ class Host extends Store {
 
 	performServiceAction(data) {
 		this.socket.emit(`host:system:service:${data.action}`, { unit: data.unit });
+	}
+
+	getPeers() {
+		return this.getStateProperty('peers');
+	}
+
+	getDiscovery() {
+		return this.getStateProperty('discovery');
 	}
 
 	getCertificate() {

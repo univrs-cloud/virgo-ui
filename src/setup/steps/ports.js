@@ -11,8 +11,8 @@ const address = step.querySelector('.address');
 // The ports themselves are fixed, but the address they go to is the one thing the user has to copy
 // into the router — and it must be the virtual IP when there is one, so replacing a node later does
 // not mean going back into the customer's router.
-const render = ({ system }) => {
-	address.textContent = (networkService.getPortForwardAddress(system) || `this node's address`);
+const render = (state) => {
+	address.textContent = (networkService.getPortForwardAddress(state.system) || `this node's address`);
 };
 
 const goNext = (event) => {

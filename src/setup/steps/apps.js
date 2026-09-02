@@ -65,8 +65,8 @@ const renderCertificate = (certificate) => {
 // The node installs these on its own once the pool is ready, so this step only reports what it is
 // doing — and holds the wizard here, in both directions, until both apps are up: the password written
 // by the next step goes into a file Authelia has to have created.
-const render = ({ configured, containers, jobs, certificate }) => {
-	const apps = appsService.getCoreApps(configured, containers, jobs);
+const render = (state) => {
+	const apps = appsService.getCoreApps(state.configured, state.containers, state.jobs);
 	morphdom(
 		core,
 		`<dl>${stateTemplate({ apps, jobProgressTemplate })}</dl>`,
@@ -80,7 +80,7 @@ const render = ({ configured, containers, jobs, certificate }) => {
 		return;
 	}
 
-	const isReady = renderCertificate(appsService.getCertificate(certificate));
+	const isReady = renderCertificate(appsService.getCertificate(state.certificate));
 	backButton.disabled = !isReady;
 	continueButton.disabled = !isReady;
 };
