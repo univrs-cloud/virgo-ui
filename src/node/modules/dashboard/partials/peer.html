@@ -12,30 +12,36 @@
 					<%-system?.osInfo?.hostname%>
 					<u-badge color="green" tint="100" class="ms-1" pill>this node</u-badge>
 				</div>
-				<div><%-_.find(_.reject(_.find(system.networkInterfaces, { 'default': true })?.addrInfo, { local: system?.virtualIp?.address }), { family: 'inet' })?.local%></div>
+				<div><i class="icon-regular icon-ethernet icon-fw me-1"></i><%-_.find(_.reject(_.find(system.networkInterfaces, { 'default': true })?.addrInfo, { local: system?.virtualIp?.address }), { family: 'inet' })?.local%></div>
+				<%if (system?.virtualIp?.holding) {%>
+					<div><i class="icon-regular icon-ghost icon-fw me-1"></i><%-system?.virtualIp?.address%></div>
+				<%}%>
 			</div>
 		</div>
 		<%_.each(adopted, (node) => {%>
-			<%const seen = _.find(discovered, { id: node.id })%>
+			<%const seen = _.find(discovered, { id: node?.id })%>
 			<div class="d-flex align-items-center justify-content-between gap-2 border-top py-2">
 				<div class="lh-sm text-body-tertiary small">
 					<div class="text-body-secondary d-flex align-items-center">
-						<%-node.name || node.address%>
+						<%-node?.name || 'unknown'%>
 						<u-badge color="<%=(seen ? 'green' : 'red')%>" tint="100" class="ms-1" pill><%=(seen ? 'ONLINE' : 'OFFLINE')%></u-badge>
 					</div>
-					<div><%-(seen && seen.address) || node.address%><%if (seen && seen.virtualIp) {%> · <%-seen.virtualIp%><%}%></div>
+					<div><i class="icon-regular icon-ethernet icon-fw me-1"></i><%-(seen?.address) || node?.address%></div>
+					<%if (seen?.virtualIp) {%>
+						<div><i class="icon-regular icon-ghost icon-fw me-1"></i><%-seen.virtualIp%></div>
+					<%}%>
 				</div>
 				<div class="dropdown">
 					<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
 					<div class="dropdown-menu dropdown-menu-end" style="width: max-content;">
-						<%if (system.virtualIp && system.virtualIp.holding && seen) {%>
+						<%if (system?.virtualIp?.holding && seen) {%>
 							<a href="#" class="dropdown-item" data-action="release"><i class="icon-regular icon-right-left icon-fw me-1"></i>Hand over virtual IP</a>
 							<div class="dropdown-divider"></div>
-						<%} else if (system.virtualIp && seen && seen.holdsVirtualIp && seen.virtualIp === system.virtualIp.address) {%>
+						<%} else if (seen && seen.holdsVirtualIp && seen.virtualIp === system?.virtualIp?.address) {%>
 							<a href="#" class="dropdown-item" data-action="promote"><i class="icon-regular icon-right-left icon-fw me-1"></i>Take over virtual IP</a>
 							<div class="dropdown-divider"></div>
 						<%}%>
-						<a href="#" class="dropdown-item text-danger" data-action="remove" data-peer="<%-node.id%>"><i class="icon-regular icon-times icon-fw me-1"></i>Remove node</a>
+						<a href="#" class="dropdown-item text-danger" data-action="remove" data-peer="<%-node?.id%>"><i class="icon-regular icon-times icon-fw me-1"></i>Remove node</a>
 					</div>
 				</div>
 			</div>
@@ -43,10 +49,13 @@
 		<%_.each(available, (node) => {%>
 			<div class="d-flex align-items-center justify-content-between gap-2 border-top py-2">
 				<div class="lh-sm text-body-tertiary small">
-					<div class="text-body-secondary"><%-node.name || 'unknown'%></div>
-					<div><%-node.address%></div>
+					<div class="text-body-secondary"><%-node?.name || 'unknown'%></div>
+					<div><i class="icon-regular icon-ethernet icon-fw me-1"></i><%-node?.address%></div>
+					<%if (node?.virtualIp) {%>
+						<div><i class="icon-regular icon-ghost icon-fw me-1"></i><%-node.virtualIp%></div>
+					<%}%>
 				</div>
-				<u-button color="blue" size="sm" data-action="adopt" data-peer="<%-node.id%>" <%=(isVirtualIpConfigured ? 'tip="To adopt another node a <u>virtual IP</u> must be configured.<br>It can be configured on <strong>System > Network > Interface</strong>." disabled' : (!system.virtualIp.holding ? 'tip="Only the virtual IP holder can adopt another node." disabled' : ''))%>>Adopt</u-button>
+				<u-button color="blue" size="sm" data-action="adopt" data-peer="<%-node?.id%>" <%=(isVirtualIpConfigured ? 'tip="To adopt another node a <u>virtual IP</u> must be configured.<br>It can be configured on <strong>System > Network > Interface</strong>." disabled' : (!system?.virtualIp?.holding ? 'tip="Only the virtual IP holder can adopt another node." disabled' : ''))%>>Adopt</u-button>
 			</div>
 		<%})%>
 	</div>
