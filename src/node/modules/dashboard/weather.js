@@ -351,6 +351,19 @@ const render = (state) => {
 		{ childrenOnly: true }
 	);
 
+	if (_.isNull(popover)) {
+		popover = new bootstrap.Popover(container.querySelector('.card'), {
+			customClass: 'weather-forecast-popover',
+			allowList: { 'div': ['class', 'style'], span: ['class'], i: ['class'] },
+			content: () => {
+				return weatherForecast.innerHTML;
+			},
+			trigger: 'manual',
+			html: true,
+			placement: 'bottom'
+		});
+	}
+
 	function weatherCondition(weatherStatusCode, timeOfDay) {
 		const mapping = conditions.find((condition) => { return condition.code === weatherStatusCode; });
 		return {
@@ -360,16 +373,7 @@ const render = (state) => {
 	};
 };
 
-const popover = new bootstrap.Popover(container, {
-	customClass: 'weather-forecast-popover',
-	allowList: { 'div': ['class', 'style'], span: ['class'], i: ['class'] },
-	content: () => {
-		return weatherForecast.innerHTML;
-	},
-	trigger: 'manual',
-	html: true,
-	placement: 'bottom'
-});
+let popover = null;
 container.addEventListener('click', (event) => {
 	event.stopPropagation();
 	popover.toggle();

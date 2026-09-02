@@ -150,8 +150,8 @@ class Host extends Store {
 		this.socket.emit('host:network:virtualIp:promote');
 	}
 
-	releaseVirtualIp() {
-		this.socket.emit('host:network:virtualIp:release');
+	handoverVirtualIp(data) {
+		this.socket.emit('host:network:virtualIp:handover', data);
 	}
 
 	checkUpdates() {

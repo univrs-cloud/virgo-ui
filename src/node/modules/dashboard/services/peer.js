@@ -34,8 +34,8 @@ const promoteVirtualIp = () => {
 	Host.promoteVirtualIp();
 };
 
-const releaseVirtualIp = () => {
-	Host.releaseVirtualIp();
+const handoverVirtualIp = (data) => {
+	Host.handoverVirtualIp(data);
 };
 
 export {
@@ -45,5 +45,5 @@ export {
 	adoptPeer,
 	removePeer,
 	promoteVirtualIp,
-	releaseVirtualIp,
+	handoverVirtualIp,
 };

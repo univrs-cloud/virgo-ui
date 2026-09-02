@@ -25,7 +25,7 @@ const render = (state) => {
 			adopted,
 			discovered,
 			available: _.reject(discovered, (node) => { return _.some(adopted, { id: node.id }); }),
-			isVirtualIpConfigured: _.isEmpty(system?.virtualIp) && _.isUndefined(_.find(discovered, (peer) => { return Boolean(peer?.virtualIp); }))
+			isVirtualIpConfigured: (!_.isEmpty(system?.virtualIp) || _.some(discovered, (node) => { return Boolean(node?.virtualIp); }))
 		})}</div>`,
 		{ childrenOnly: true }
 	);
@@ -47,7 +47,7 @@ const performActions = (event) => {
 			}
 		},
 		promote: () => { peerService.promoteVirtualIp(); },
-		release: () => { peerService.releaseVirtualIp(); }
+		handover: () => { peerService.handoverVirtualIp({ peerId }); }
 	};
 	actions[button.getAttribute('data-action')]?.();
 };
