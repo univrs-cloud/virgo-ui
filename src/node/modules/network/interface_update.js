@@ -81,14 +81,14 @@ const lockedPeer = () => {
 		return null;
 	}
 
-	return _.first(networkService.getPeersWithVirtualIp()) || null;
+	return _.first(networkService.getDiscoveredWithVirtualIp()) || null;
 };
 
 /** Mandatory while this node is the only one on the network: it is the node that has to establish the
  * virtual IP, because a second node can only join one that already exists. Only a definite empty peer
  * list counts — discovery that has not answered, or that failed, leaves the field optional. */
 const isVirtualIpRequired = () => {
-	const peers = networkService.getPeers();
+	const peers = networkService.getDiscovered();
 	return !lockedPeer() && _.isArray(peers) && _.isEmpty(peers);
 };
 
@@ -127,8 +127,7 @@ const render = (event) => {
 	form.querySelector('.ip-address').value = _.find(networkInterface?.addrInfo, { family: 'inet' })?.local || '';
 	form.querySelector('.netmask').value = _.find(networkInterface?.addrInfo, { family: 'inet' })?.prefixlen || '';
 	form.querySelector('.gateway').value = networkInterface?.gateway || '';
-	networkService.discoverPeers();
-	const dnsServers = networkInterface?.dnsServers || [];
+		const dnsServers = networkInterface?.dnsServers || [];
 	_.each(dnsRows, (row, index) => {
 		row.querySelector('u-input').value = dnsServers[index] || '';
 	});
@@ -189,6 +188,33 @@ const virtualIpRules = (value) => {
 	return true;
 };
 
+const sameSubnet = (first, second, prefixLength) => {
+	const toInteger = (address) => {
+		return _.reduce(_.split(address, '.'), (total, octet) => { return ((total << 8) >>> 0) + Number(octet); }, 0) >>> 0;
+	};
+	const mask = (prefixLength === 0 ? 0 : (0xFFFFFFFF << (32 - prefixLength)) >>> 0);
+	return ((toInteger(first) & mask) >>> 0) === ((toInteger(second) & mask) >>> 0);
+};
+
+/** When another node already carries the virtual IP, this node's own address has to sit in the same
+ * subnet as it — the two share the address, so an address elsewhere could never answer for it. The
+ * error goes on the field the operator can actually change, since the virtual IP itself is locked. */
+const addressRules = (value) => {
+	const required = requiredIpAddress(value);
+	if (required !== true) {
+		return required;
+	}
+
+	const peer = lockedPeer();
+	const prefixLength = Number.parseInt(form.querySelector('.netmask').value, 10);
+	if (!peer || !Number.isFinite(prefixLength)) {
+		return true;
+	}
+
+	return (sameSubnet(_.trim(value), peer.virtualIp, prefixLength)
+		|| `Must be in the same subnet as ${peer.virtualIp}, the virtual IP on ${peer.name || peer.address}`);
+};
+
 const dnsServerRules = (selector) => {
 	return manualRules(selector, (value, input) => {
 		return (isVisible(input.closest('.dns-server')) ? requiredIpAddress(value) : true);
@@ -196,7 +222,7 @@ const dnsServerRules = (selector) => {
 };
 
 form.validation = [
-	manualRules('.ip-address', requiredIpAddress),
+	manualRules('.ip-address', addressRules),
 	manualRules('.netmask', (value) => { return !_.isEmpty(value) || `Can't be empty`; }),
 	manualRules('.gateway', requiredIpAddress),
 	manualRules('.virtual-ip', (value) => {
@@ -231,6 +257,7 @@ const crossValidate = () => {
 	_.each(['.ip-address', '.netmask'], (selector) => {
 		form.querySelector(selector)?.addEventListener('value-changed', () => { revalidate('.virtual-ip'); });
 	});
+	form.querySelector('.netmask')?.addEventListener('value-changed', () => { revalidate('.ip-address'); });
 	form.querySelector('.virtual-ip')?.addEventListener('value-changed', () => { revalidate('.ip-address'); });
 };
 

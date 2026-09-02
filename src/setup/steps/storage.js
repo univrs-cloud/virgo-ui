@@ -35,9 +35,9 @@ const idle = () => {
 // [] once scanned and false when the scan itself failed, so both are answers; only null means the node
 // has not reported yet and the step keeps waiting. A submission owns the view until its job settles,
 // so the summary is left alone while one is in flight.
-const render = ({ storage, drives, importablePools, jobs }) => {
-	const pool = storageService.getPool(storage);
-	const job = _.first(jobs);
+const render = (state) => {
+	const pool = storageService.getPool(state.storage);
+	const job = _.first(state.jobs);
 	const isSettled = _.includes(['completed', 'failed'], job?.progress?.state);
 	// A summary rendered while the pool is being prepared would describe a node that no longer exists.
 	if (job && !isSettled) {
@@ -61,17 +61,17 @@ const render = ({ storage, drives, importablePools, jobs }) => {
 		}
 	}
 
-	if (_.isNull(importablePools) || _.isNull(drives)) {
+	if (_.isNull(state.importablePools) || _.isNull(state.drives)) {
 		return;
 	}
 
-	const importablePool = storageService.getImportablePool(importablePools);
-	const usableDrives = storageService.getUsableDrives(drives);
+	const importablePool = storageService.getImportablePool(state.importablePools);
+	const usableDrives = storageService.getUsableDrives(state.drives);
 	const template = stateTemplate({
 		pool,
-		importablePools,
+		importablePools: state.importablePools,
 		importablePool,
-		foreignPools: storageService.getForeignPools(importablePools),
+		foreignPools: storageService.getForeignPools(state.importablePools),
 		drives: usableDrives,
 		poolName: storageService.POOL_NAME,
 		minimumDrives: storageService.MINIMUM_DRIVES,
