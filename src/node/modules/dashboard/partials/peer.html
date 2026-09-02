@@ -27,7 +27,7 @@
 						<u-badge color="<%=(seen ? 'green' : 'red')%>" tint="100" class="ms-1" pill><%=(seen ? 'ONLINE' : 'OFFLINE')%></u-badge>
 					</div>
 					<div><i class="icon-regular icon-ethernet icon-fw me-1"></i><%-(seen?.address) || node?.address%></div>
-					<%if (seen?.virtualIp) {%>
+					<%if (seen?.holdsVirtualIp) {%>
 						<div><i class="icon-regular icon-ghost icon-fw me-1"></i><%-seen.virtualIp%></div>
 					<%}%>
 				</div>
@@ -51,7 +51,7 @@
 				<div class="lh-sm text-body-tertiary small">
 					<div class="text-body-secondary"><%-node?.name || 'unknown'%></div>
 					<div><i class="icon-regular icon-ethernet icon-fw me-1"></i><%-node?.address%></div>
-					<%if (node?.virtualIp) {%>
+					<%if (node?.holdsVirtualIp) {%>
 						<div><i class="icon-regular icon-ghost icon-fw me-1"></i><%-node.virtualIp%></div>
 					<%}%>
 				</div>
