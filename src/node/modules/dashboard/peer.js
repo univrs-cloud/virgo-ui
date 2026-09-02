@@ -24,7 +24,8 @@ const render = (state) => {
 			system,
 			adopted,
 			discovered,
-			available: _.reject(discovered, (node) => { return _.some(adopted, { id: node.id }); })
+			available: _.reject(discovered, (node) => { return _.some(adopted, { id: node.id }); }),
+			isVirtualIpConfigured: _.isEmpty(system?.virtualIp) && _.isUndefined(_.find(discovered, (peer) => { return Boolean(peer?.virtualIp); }))
 		})}</div>`,
 		{ childrenOnly: true }
 	);
