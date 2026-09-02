@@ -1,4 +1,4 @@
-<%if (_.isEmpty(system) && _.isEmpty(adopted) && _.isEmpty(available)) {%>
+<%if (_.isEmpty(adopted) && _.isEmpty(available)) {%>
 	<%return ''%>
 <%}%>
 <div class="card rounded-4 border-0 mb-3">
@@ -12,7 +12,7 @@
 					<%-system?.osInfo?.hostname%>
 					<u-badge color="green" tint="100" class="ms-1" pill>this node</u-badge>
 				</div>
-				<div><i class="icon-regular icon-ethernet icon-fw me-1"></i><%-_.find(_.reject(_.find(system.networkInterfaces, { 'default': true })?.addrInfo, { local: system?.virtualIp?.address }), { family: 'inet' })?.local%></div>
+				<div><i class="icon-regular icon-ethernet icon-fw me-1"></i><%-_.find(_.reject(_.find(system?.networkInterfaces, { 'default': true })?.addrInfo, { local: system?.virtualIp?.address }), { family: 'inet' })?.local%></div>
 				<%if (system?.virtualIp?.holding) {%>
 					<div><i class="icon-regular icon-ghost icon-fw me-1"></i><%-system?.virtualIp?.address%></div>
 				<%}%>
