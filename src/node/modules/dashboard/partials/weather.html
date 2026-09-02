@@ -1,12 +1,21 @@
-<div id="weather" class="card rounded-4 border-0 cursor-pointer mb-2" tabindex="0">
-	<div class="card-body p-2">
-		<div class="row g-0 align-items-center" style="height: 38px;">
-			<div class="col-auto" style="width: 55px;">
-				<div class="weather-icon"><%=weather.icon%></div>
+<div id="weather">
+	<div class="row">
+		<div class="col col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 pt-2">
+			<div class="d-flex align-items-center pb-2">
+				<u-badge color="gray" tint="300" pill>Weather</u-badge>
 			</div>
-			<div class="col lh-1">
-				<small class="temperature fw-bold text-dark text-opacity-75"><%-weather.temperature%></small><br>
-				<small class="condition d-inline-block text-dark text-opacity-75 text-truncate"><%=_.capitalize(weather.condition)%></small>
+			<div class="card rounded-4 border-0 cursor-pointer mb-3" tabindex="0">
+				<div class="card-body p-2">
+					<div class="row g-0 align-items-center" style="height: 38px;">
+						<div class="col-auto" style="width: 55px;">
+							<div class="weather-icon"><%=weather.icon%></div>
+						</div>
+						<div class="col lh-1">
+							<small class="temperature fw-bold text-dark text-opacity-75"><%-weather.temperature%></small><br>
+							<small class="condition d-inline-block text-dark text-opacity-75 text-truncate"><%=_.capitalize(weather.condition)%></small>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

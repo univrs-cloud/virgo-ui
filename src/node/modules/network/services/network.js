@@ -76,8 +76,8 @@ const promoteVirtualIp = () => {
 	Host.promoteVirtualIp();
 };
 
-const releaseVirtualIp = () => {
-	Host.releaseVirtualIp();
+const handoverVirtualIp = (data) => {
+	Host.handoverVirtualIp(data);
 };
 
 const addTrustedProxy = (data) => {
@@ -117,7 +117,7 @@ export {
 	getDiscovered,
 	getDiscoveredWithVirtualIp,
 	promoteVirtualIp,
-	releaseVirtualIp,
+	handoverVirtualIp,
 	addTrustedProxy,
 	updateTrustedProxy,
 	deleteTrustedProxy,
