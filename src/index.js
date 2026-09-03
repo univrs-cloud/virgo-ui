@@ -46,7 +46,8 @@ const render = async (state) => {
 			await Promise.all([
 				import('node/jobs'),
 				import('node/header'),
-				import('node/main')
+				import('node/main'),
+				import('node/power')
 			]);
 			const { modulesLoaded } = await import('node/modules');
 			await modulesLoaded;
