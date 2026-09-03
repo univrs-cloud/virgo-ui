@@ -52,7 +52,7 @@ class Store extends ObservableStore {
 		this.socket = io(namespace, {
 			path: '/api',
 			reconnection: true,
-			reconnectionAttempts: 30,
+			reconnectionAttempts: 120,
 			reconnectionDelay: 1000,
 			reconnectionDelayMax: 5000
 		});
