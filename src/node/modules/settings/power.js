@@ -38,6 +38,8 @@ const shutdown = async (event) => {
 	powerService.shutDown();
 };
 
+let wasRebooting = false;
+
 const render = (state) => {
 	if (_.isNull(state.reboot) || _.isNull(state.shutdown)) {
 		return;
@@ -53,6 +55,7 @@ const render = (state) => {
 			location.replace('/');
 			return;
 		}
+		wasRebooting = true;
 		document.body.classList.add('reboot');
 		document.querySelector('#power .rebooting').classList.remove('d-none');
 		document.querySelector('#power').classList.remove('d-none');
@@ -70,6 +73,12 @@ const render = (state) => {
 		document.querySelector('#power .powered-off').classList.remove('d-none');
 		document.body.classList.add('powered-off');
 		document.querySelector('#power').classList.remove('d-none');
+		return;
+	}
+
+	if (wasRebooting) {
+		wasRebooting = false;
+		location.reload();
 		return;
 	}
 
