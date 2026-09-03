@@ -61,8 +61,28 @@
 				</div>
 			</div>
 		<%}%>
-		<%_.each(nodes, (node) => {%>
-			<%=nodeTemplate({ node, moment, prettyBytes })%>
+		<%
+			// Nodes that have adopted one another (virtual-IP peering) share a clusterId, assigned per
+			// caller's own inventory server-side. Every card keeps the same fixed size regardless of
+			// group - each cluster gets its own labeled group, standalone nodes get one more, and a rule
+			// separates consecutive groups. Only worth labeling at all once a cluster exists.
+			const clusters = _.groupBy(_.filter(nodes, 'clusterId'), 'clusterId');
+			const standalone = _.filter(nodes, (node) => { return !node.clusterId; });
+			const groups = [
+				..._.map(_.values(clusters), (members) => { return { label: 'Cluster', members }; }),
+				...(_.isEmpty(standalone) ? [] : [{ label: 'Standalone', members: standalone }])
+			];
+			const showLabels = !_.isEmpty(clusters);
+		%>
+		<%_.each(groups, (group, index) => {%>
+			<%if (showLabels) {%>
+				<div class="col-12">
+					<h6 class="text-body-tertiary ps-1 mb-2 <%=index > 0 ? 'mt-3' : ''%>"><%-group.label%> &middot; <%=_.pluralize('node', group.members.length, true)%></h6>
+				</div>
+			<%}%>
+			<%_.each(group.members, (node) => {%>
+				<%=nodeTemplate({ node, moment, prettyBytes })%>
+			<%})%>
 		<%})%>
 	</div>
 <%}%>
