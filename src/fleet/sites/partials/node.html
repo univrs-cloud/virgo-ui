@@ -36,7 +36,7 @@
 			<div class="d-flex align-items-center justify-content-between">
 				<div class="flex-grow-1 me-2 min-w-0">
 					<h6 class="mb-0 d-flex align-items-center">
-						<i class="icon-solid icon-circle icon-fw me-1 <%=statusDotColor%>" data-bs-toggle="tooltip" data-bs-original-title="<%-statusDotTip%>"></i>
+						<i class="icon-solid icon-circle icon-fw z-2 position-relative me-1 <%=statusDotColor%>" data-bs-toggle="tooltip" data-bs-original-title="<%-statusDotTip%>"></i>
 						<%if (node.online) {%>
 							<a href="/nodes/<%-node.nodeId%>" rel="external" class="stretched-link text-decoration-none text-body text-truncate min-w-0"><%-node.name%></a>
 						<%} else {%>
