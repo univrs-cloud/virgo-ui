@@ -17,6 +17,8 @@
 	const statusLabel = !node.online ? 'Offline' : (hasCriticalPool ? 'Faulted' : (hasDegradedPool ? 'Degraded' : 'Online'));
 	const isRebuilding = node.online && hasResilveringPool && !hasUnhealthyNonResilver;
 	const statusTip = (node.online && hasCriticalPool) ? 'Online · storage faulted' : ((node.online && hasDegradedPool) ? 'Online · storage degraded' : '');
+	const statusDotColor = !node.online ? 'text-gray-400' : (hasCriticalPool ? 'text-red-300' : (hasDegradedPool ? 'text-orange-300' : 'text-green-300'));
+	const statusDotTip = statusTip || statusLabel;
 	// UPS reads the same host:ups shape the node dashboard uses: a status object, or null/false/'remote i/o error' when the reading is unusable.
 	const ups = (node.online && _.isObject(node.ups) && node.ups.batteryCharge !== false) ? node.ups : null;
 	const onBattery = ups?.powerSource === 'battery';
@@ -33,11 +35,12 @@
 		<div class="card-body py-2 px-3">
 			<div class="d-flex align-items-center justify-content-between">
 				<div class="flex-grow-1 me-2 min-w-0">
-					<h6 class="mb-0 text-truncate">
+					<h6 class="mb-0 d-flex align-items-center">
+						<i class="icon-solid icon-circle icon-fw me-1 <%=statusDotColor%>" data-bs-toggle="tooltip" data-bs-original-title="<%-statusDotTip%>"></i>
 						<%if (node.online) {%>
-							<a href="/nodes/<%-node.nodeId%>" rel="external" class="stretched-link text-decoration-none text-body"><%-node.name%></a>
+							<a href="/nodes/<%-node.nodeId%>" rel="external" class="stretched-link text-decoration-none text-body text-truncate min-w-0"><%-node.name%></a>
 						<%} else {%>
-							<span class="text-body"><%-node.name%></span>
+							<span class="text-body text-truncate min-w-0"><%-node.name%></span>
 						<%}%>
 					</h6>
 				</div>
@@ -60,17 +63,12 @@
 			</div>
 
 			<div class="d-flex align-items-center mt-2 pt-1 mb-3">
-				<u-badge color="<%=statusColor%>" tint="<%=statusTint%>" class="z-1 position-relative me-1" pill>
-					<%if (isRebuilding) {%>
+				<%if (isRebuilding) {%>
+					<u-badge color="<%=statusColor%>" tint="<%=statusTint%>" class="z-1 position-relative me-1" pill>
 						Rebuilding <%=resilverPercent != null ? `${resilverPercent}%` : ''%>
 						<i class="icon-solid icon-triangle-exclamation text-orange-700 ms-1" data-bs-toggle="tooltip" data-bs-original-title="Reduced redundancy until the rebuild completes"></i>
-					<%} else {%>
-						<%=statusLabel%>
-						<%if (statusTip) {%>
-							<i class="icon-solid icon-fw text-<%=statusColor%>-700 icon-circle-info ms-1" data-bs-toggle="tooltip" data-bs-original-title="<%=statusTip%>"></i>
-						<%}%>
-					<%}%>
-				</u-badge>
+					</u-badge>
+				<%}%>
 				<%if (ups) {%>
 					<u-badge color="<%=upsColor%>" tint="100" class="z-1 position-relative me-1" pill tip="<%=upsTip%>">
 						<i class="icon-solid <%=upsIcon%> me-1" style="<%=upsAnimation%>"></i><%=upsPercent%>%
