@@ -120,12 +120,23 @@ const followNode = async (url) => {
 // not handled here: the browser has to reach the node at its new address to know it arrived. The
 // fields are seeded once, from the first delivery that carries the interface; after that the form
 // belongs to whoever is typing in it.
-/** Editable when this node already has a virtual IP, or when nothing else on the network has one.
- * Otherwise the address the other node carries is shown but locked — the operator's route is to join
- * that node, not to configure a second address here. The API enforces the same rule. */
+/** Editable while holding the virtual IP, or while nothing else on the network has one. Otherwise the
+ * address the other node carries is shown but locked — the operator's route is to adopt, not to
+ * configure a second address here. The API enforces the same rule.
+ *
+ * Holding, not merely configured: a node that carries the address without holding it is a standby, and
+ * a standby takes over from the dashboard rather than by editing this form. Setup does not normally
+ * reach that state, but this and the node's own interface form have to answer identically — they are
+ * the same field, and a rule that holds in one of them only is not a rule. */
 const lockedPeer = () => {
-	if (networkService.getSystem()?.virtualIp?.address) {
+	const system = networkService.getSystem();
+	if (system?.virtualIp?.holding) {
 		return null;
+	}
+
+	if (system?.virtualIp?.address) {
+		const holder = _.find(networkService.getDiscovered(), { holdsVirtualIp: true });
+		return { ...holder, virtualIp: system.virtualIp.address, standby: true };
 	}
 
 	return _.first(networkService.getDiscoveredWithVirtualIp()) || null;
@@ -150,7 +161,9 @@ const applyVirtualIp = () => {
 	input.disabled = Boolean(peer);
 	note.classList[peer ? 'remove' : 'add']('d-none');
 	note.textContent = (peer
-		? `${peer.name || peer.address} already has this virtual IP. Join that node from the dashboard once setup is finished.`
+		? (peer.standby
+			? `${peer.name || peer.address || 'Another node'} holds this virtual IP. Take it over from the dashboard once setup is finished.`
+			: `${peer.name || peer.address} already has this virtual IP. Adopt that node from the dashboard once setup is finished.`)
 		: '');
 };
 
@@ -183,7 +196,13 @@ const updateInterface = (event) => {
 	// The form carries one field per DNS server; the node takes them as a list, in the order they were
 	// asked for. No branch on the method here the way the node's own form has one: setup only writes
 	// static addressing, which is what the hidden field says.
-	data.virtualIp = (lockedPeer() ? '' : _.trim(data.virtualIp));
+	// Omitted rather than emptied when locked: an empty value is how the address is removed, so sending
+	// one would clear the very virtual IP this node is locked out of changing.
+	if (lockedPeer()) {
+		delete data.virtualIp;
+	} else {
+		data.virtualIp = _.trim(data.virtualIp);
+	}
 	data.dnsServers = _.compact(_.map(_.filter(dnsRows, isVisible), (row) => {
 		return data[row.querySelector('u-input').getAttribute('name')];
 	}));
