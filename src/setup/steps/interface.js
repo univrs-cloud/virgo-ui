@@ -150,21 +150,26 @@ const isVirtualIpRequired = () => {
 	return !lockedPeer() && _.isArray(peers) && _.isEmpty(peers);
 };
 
+/** Same two locks as the node's own interface form, worded for a node that has not finished setup —
+ * the dashboard it points at is not reachable yet. */
+const lockedTip = (peer) => {
+	const holder = (peer.name || peer.address);
+	if (peer.standby) {
+		return `${holder ? `Held by <strong>${holder}</strong>` : 'Held by the other node'}. Both nodes share one virtual IP; it can be moved here from the dashboard once setup is finished.`;
+	}
+
+	return `Already in use by <strong>${holder}</strong>. Finish setup, then adopt that node from the dashboard to share its virtual IP.`;
+};
+
 const applyVirtualIp = () => {
 	const input = form.querySelector('.virtual-ip');
-	const note = step.querySelector('.virtual-ip-warning');
 	const peer = lockedPeer();
 	if (peer) {
 		input.value = peer.virtualIp;
 	}
 
 	input.disabled = Boolean(peer);
-	note.classList[peer ? 'remove' : 'add']('d-none');
-	note.textContent = (peer
-		? (peer.standby
-			? `${peer.name || peer.address || 'Another node'} holds this virtual IP. Take it over from the dashboard once setup is finished.`
-			: `${peer.name || peer.address} already has this virtual IP. Adopt that node from the dashboard once setup is finished.`)
-		: '');
+	input.tip = (peer ? lockedTip(peer) : '');
 };
 
 const render = (state) => {
