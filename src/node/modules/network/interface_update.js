@@ -107,26 +107,25 @@ const isVirtualIpRequired = () => {
 	return !lockedPeer() && _.isArray(peers) && _.isEmpty(peers);
 };
 
-/** Says who has the address and what to do about it, which differs by how this node is locked: a
- * standby takes it over, while an unadopted neighbour has to be adopted first. */
-const lockedNote = (peer) => {
-	const held = `${peer.name || peer.address || 'Another node'} holds this virtual IP`;
+/** Why the field is locked and what to do instead. The two locks need different answers: a standby is
+ * one half of a pair that already shares this address, while an unadopted neighbour is a separate
+ * install that has to be adopted before there is anything to share. */
+const lockedTip = (peer) => {
+	const holder = (peer.name || peer.address);
 	if (peer.standby) {
-		return `${held}. Take it over from the Nodes card on the dashboard.`;
+		return `${holder ? `Held by <strong>${holder}</strong>` : 'Held by the other node'}. Both nodes share one virtual IP, so it is changed on whichever node holds it. To move it here, use <strong>Take over virtual IP</strong> on the dashboard.`;
 	}
 
-	return `${peer.name || peer.address} already has this virtual IP. Adopt that node to share the address.`;
+	return `Already in use by <strong>${holder}</strong>. Adopt that node from the dashboard to share its virtual IP, rather than configuring a second one here.`;
 };
 
 const applyVirtualIp = () => {
 	const system = networkService.getSystem();
 	const input = form.querySelector('.virtual-ip');
-	const note = form.querySelector('.virtual-ip-note');
 	const peer = lockedPeer();
 	input.value = (system?.virtualIp?.address || peer?.virtualIp || '');
 	input.disabled = (isDhcp() || Boolean(peer));
-	note.classList[peer ? 'remove' : 'add']('d-none');
-	note.textContent = (peer ? lockedNote(peer) : '');
+	input.tip = (peer ? lockedTip(peer) : '');
 };
 
 // The switch only emits on user interaction, so render() has to apply this too
