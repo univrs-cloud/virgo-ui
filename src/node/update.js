@@ -7,7 +7,7 @@ import updateProgressPartial from 'node/partials/update_progress.html';
 import * as account from 'node/account';
 import * as softwareService from 'node/services/software';
 import * as nodeService from 'node/services/node';
-import * as powerService from 'node/modules/settings/services/power';
+import * as powerService from 'node/services/power';
 import { getNodeViewId, getNodeViewBase, initNodeView } from 'node/view';
 
 let isScrollEventAttached = false;
