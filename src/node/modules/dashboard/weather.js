@@ -375,11 +375,15 @@ const render = (state) => {
 
 let popover = null;
 container.addEventListener('click', (event) => {
+	if (!event.target.closest('.card')) {
+		return;
+	}
+	
 	event.stopPropagation();
 	popover.toggle();
 });
 document.addEventListener('click', (event) => {
-	if (!container.contains(event.target) && !document.querySelector('.popover')?.contains(event.target)) {
+	if (!event.target.closest('#weather .card') && !document.querySelector('.popover')?.contains(event.target)) {
 		popover.hide();
 	}
 });
