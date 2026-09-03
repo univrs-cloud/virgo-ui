@@ -61,7 +61,13 @@ const updateInterface = (event) => {
 	data.ipAddress = (!isAuto ? data.ipAddress : null);
 	data.netmask = (!isAuto ? data.netmask : null);
 	data.gateway = (!isAuto ? data.gateway : null);
-	data.virtualIp = ((isAuto || lockedPeer()) ? null : _.trim(data.virtualIp));
+	// Omitted rather than nulled when locked: null is how the operator clears the address, and a
+	// standby submitting this form must leave the virtual IP exactly as it is.
+	if (lockedPeer()) {
+		delete data.virtualIp;
+	} else {
+		data.virtualIp = (!isAuto ? _.trim(data.virtualIp) : null);
+	}
 	data.dnsServers = (!isAuto ? _.compact(_.map(_.filter(dnsRows, isVisible), (row) => {
 		return _.trim(data[row.querySelector('u-input').getAttribute('name')]);
 	})) : null);
@@ -70,15 +76,24 @@ const updateInterface = (event) => {
 	bootstrap.Modal.getInstance(modal)?.hide();
 };
 
-/** Editable when this node has a virtual IP of its own, or when nothing else on the network has one.
- * Otherwise the address another node carries is shown but locked: two unrelated holders is the state
- * the design exists to avoid, and the operator's route is to join that node rather than configure a
- * second address here. The API enforces the same rule, since a disabled input is not a permission
- * check. */
+/** The node whose virtual IP this field is showing, when it is not this node's to change. Editable
+ * only while holding the address, or while nothing on the network has one.
+ *
+ * A standby is locked whether or not the holder can currently be seen. It carries the address so it
+ * can take over later, and taking over is a deliberate action on the dashboard — never a side effect
+ * of editing DNS servers in this form. Locking only when the holder is visible would mean a rebooting
+ * peer briefly turns a standby into a node that can claim the address.
+ *
+ * The API enforces the same rule, since a disabled input is not a permission check. */
 const lockedPeer = () => {
 	const system = networkService.getSystem();
-	if (system?.virtualIp?.address) {
+	if (system?.virtualIp?.holding) {
 		return null;
+	}
+
+	if (system?.virtualIp?.address) {
+		const holder = _.find(networkService.getDiscovered(), { holdsVirtualIp: true });
+		return { ...holder, virtualIp: system.virtualIp.address, standby: true };
 	}
 
 	return _.first(networkService.getDiscoveredWithVirtualIp()) || null;
@@ -92,6 +107,17 @@ const isVirtualIpRequired = () => {
 	return !lockedPeer() && _.isArray(peers) && _.isEmpty(peers);
 };
 
+/** Says who has the address and what to do about it, which differs by how this node is locked: a
+ * standby takes it over, while an unadopted neighbour has to be adopted first. */
+const lockedNote = (peer) => {
+	const held = `${peer.name || peer.address || 'Another node'} holds this virtual IP`;
+	if (peer.standby) {
+		return `${held}. Take it over from the Nodes card on the dashboard.`;
+	}
+
+	return `${peer.name || peer.address} already has this virtual IP. Adopt that node to share the address.`;
+};
+
 const applyVirtualIp = () => {
 	const system = networkService.getSystem();
 	const input = form.querySelector('.virtual-ip');
@@ -100,9 +126,7 @@ const applyVirtualIp = () => {
 	input.value = (system?.virtualIp?.address || peer?.virtualIp || '');
 	input.disabled = (isDhcp() || Boolean(peer));
 	note.classList[peer ? 'remove' : 'add']('d-none');
-	note.textContent = (peer
-		? `${peer.name || peer.address} already has this virtual IP. Join that node to share the address.`
-		: '');
+	note.textContent = (peer ? lockedNote(peer) : '');
 };
 
 // The switch only emits on user interaction, so render() has to apply this too
