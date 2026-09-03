@@ -77,7 +77,7 @@
 					</u-badge>
 				<%}%>
 				<%if (node.update?.state === 'running' && node.update.stage) {%>
-					<u-badge color="blue" tint="500" class="z-1 position-relative me-1" pill tip="<%=(node.update.stage === 'download' ? 'Downloading' : 'Installing')%> system update">
+					<u-badge color="blue" tint="500" class="z-1 position-relative me-1" pill tip="<%=(node.update.stage === 'download' ? 'Downloading' : 'Installing')%> system updates">
 						<i class="icon-solid <%=(node.update.stage === 'download' ? 'icon-download' : 'icon-cog icon-spin')%> me-1"></i><%=node.update.percent%>%
 					</u-badge>
 				<%} else if (node.update?.state === 'running') {%>
