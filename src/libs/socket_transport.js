@@ -1,6 +1,8 @@
 import { io } from 'socket.io-client';
 
 const RESERVED_EVENTS = ['connect', 'disconnect', 'connect_error'];
+const ENGINE_DRAIN_TIMEOUT_MS = 1500;
+const MIN_DRAIN_GRACE_MS = 100;
 
 class SocketTransport {
 	#io;
@@ -9,6 +11,9 @@ class SocketTransport {
 	#bound = null;
 	#anyHandler;
 	#reservedHandlers = new Map();
+	#pendingSocketIoCalls = new Set();
+	#switchGeneration = 0;
+	#state = 'SOCKET_IO';
 
 	constructor(namespace, options) {
 		this.#anyHandler = (event, ...args) => { this.#dispatch(event, args); };
@@ -25,6 +30,14 @@ class SocketTransport {
 
 	get usingWebrtc() {
 		return this.#rtc !== null;
+	}
+
+	get state() {
+		return this.#state;
+	}
+
+	get socketIoConnected() {
+		return Boolean(this.#io.connected);
 	}
 
 	get #target() {
@@ -87,40 +100,126 @@ class SocketTransport {
 		return this;
 	}
 
+	#trackSocketIoCall(promise) {
+		this.#pendingSocketIoCalls.add(promise);
+		promise.finally(() => { this.#pendingSocketIoCalls.delete(promise); }).catch(() => {});
+		return promise;
+	}
+
 	timeout(ms) {
 		const target = this.#target;
 		return {
 			emitWithAck: (event, ...args) => {
-				return target.timeout(ms).emitWithAck(event, ...args);
+				const pending = target.timeout(ms).emitWithAck(event, ...args);
+				return target === this.#io ? this.#trackSocketIoCall(pending) : pending;
 			}
 		};
 	}
 
+	whenSocketIoConnected(timeoutMs) {
+		if (this.#io.connected) {
+			return Promise.resolve();
+		}
+
+		return new Promise((resolve, reject) => {
+			const cleanup = () => {
+				clearTimeout(timer);
+				this.#io.off('connect', onConnect);
+			};
+			const onConnect = () => {
+				cleanup();
+				resolve();
+			};
+			const timer = setTimeout(() => {
+				cleanup();
+				reject(new Error('Socket.IO proxy timed out'));
+			}, timeoutMs);
+			this.#io.once('connect', onConnect);
+		});
+	}
+
 	connect() {
 		if (!this.#rtc) {
+			this.#state = 'SOCKET_IO';
 			this.#io.connect();
 		}
 		return this;
 	}
 
 	disconnect() {
+		this.#switchGeneration += 1;
 		this.#revert();
 		this.#io.disconnect();
+		this.#state = 'CLOSED';
 		return this;
 	}
 
-	useWebrtc(channel) {
+	async useWebrtc(channel, timeoutMs) {
 		if (this.#rtc === channel) {
 			return;
+		}
+
+		const generation = ++this.#switchGeneration;
+		this.#state = 'SWITCHING';
+		try {
+			await channel.activate(timeoutMs);
+		} catch (error) {
+			if (this.#switchGeneration === generation && this.#state === 'SWITCHING') {
+				this.#state = this.#rtc ? 'WEBRTC' : 'SOCKET_IO';
+			}
+			throw error;
+		}
+		if (this.#switchGeneration !== generation || this.#state === 'CLOSED') {
+			throw new Error('WebRTC activation was cancelled');
+		}
+		if (!channel.connected) {
+			this.#state = 'SOCKET_IO';
+			throw new Error('WebRTC namespace closed during activation');
 		}
 
 		this.#unbind();
 		this.#rtc = channel;
 		this.#bind(channel);
-		this.#io.disconnect();
+		this.#state = 'WEBRTC';
 		if (channel.connected) {
 			this.#dispatch('connect', []);
 		}
+		this.#drainSocketIo(generation);
+	}
+
+	async #drainSocketIo(generation) {
+		const calls = [...this.#pendingSocketIoCalls];
+		await new Promise((resolve) => { setTimeout(resolve, MIN_DRAIN_GRACE_MS); });
+		if (calls.length) {
+			// Each call already owns its caller-selected acknowledgement timeout. Keeping the old path
+			// alive through that bound preserves its result without allowing new work onto it.
+			await Promise.allSettled(calls);
+		}
+		await this.#waitForEngineDrain();
+		if (this.#switchGeneration === generation && this.#rtc) {
+			this.#io.disconnect();
+		}
+	}
+
+	#waitForEngineDrain() {
+		const engine = this.#io.io?.engine;
+		if (!engine || !engine.writeBuffer?.length) {
+			return Promise.resolve();
+		}
+		return new Promise((resolve) => {
+			let settled = false;
+			const finish = () => {
+				if (settled) {
+					return;
+				}
+				settled = true;
+				clearTimeout(timer);
+				engine.off?.('drain', finish);
+				resolve();
+			};
+			const timer = setTimeout(finish, ENGINE_DRAIN_TIMEOUT_MS);
+			engine.once?.('drain', finish);
+		});
 	}
 
 	#revert() {
@@ -132,6 +231,7 @@ class SocketTransport {
 		this.#unbind();
 		this.#rtc = null;
 		this.#bind(this.#io);
+		this.#state = 'SOCKET_IO';
 		channel.close({ notify: true });
 	}
 
@@ -140,7 +240,11 @@ class SocketTransport {
 			return;
 		}
 
+		this.#switchGeneration += 1;
 		this.#revert();
+		if (this.#io.connected) {
+			this.#io.disconnect();
+		}
 		this.#io.connect();
 	}
 }
