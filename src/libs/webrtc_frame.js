@@ -7,13 +7,28 @@ const EVENT_TAG = {
 	REPLY: 0x15,
 	ACTIVATE: 0x16,
 	CLOSE: 0x17,
+	PING: 0x18,
+	PONG: 0x19,
 	CONT: 0x1F
+};
+
+const ASSET_TAG = {
+	REQ: 0x20,
+	RES: 0x21,
+	CHUNK: 0x22,
+	END: 0x23,
+	ERR: 0x24,
+	ABORT: 0x25
 };
 
 const MAX_MESSAGE_SIZE = 64 * 1024;
 const CONT_HEADER_SIZE = 9;
 const CONT_SLICE_SIZE = MAX_MESSAGE_SIZE - CONT_HEADER_SIZE;
 const MAX_CONTINUATION_PARTS = 256;
+const ASSET_HEADER_SIZE = 5;
+const ASSET_CHUNK_HEADER_SIZE = 9;
+const ASSET_CHUNK_SIZE = MAX_MESSAGE_SIZE - ASSET_CHUNK_HEADER_SIZE;
+const ASSET_TAGS = new Set(Object.values(ASSET_TAG));
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
@@ -96,13 +111,59 @@ const encodeContinuation = (cid, payload) => {
 	return frames;
 };
 
+const encodeAssetControl = (tag, requestId, body) => {
+	const header = new Uint8Array(ASSET_HEADER_SIZE);
+	header[0] = tag;
+	new DataView(header.buffer).setUint32(1, requestId, true);
+	return concat([header, encoder.encode(JSON.stringify(body ?? {}))]);
+};
+
+const decodeAssetFrame = (message) => {
+	const bytes = asBytes(message);
+	if (!bytes.length || !ASSET_TAGS.has(bytes[0])) {
+		return null;
+	}
+
+	const tag = bytes[0];
+	const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+	if (tag === ASSET_TAG.CHUNK) {
+		if (bytes.length < ASSET_CHUNK_HEADER_SIZE) {
+			return null;
+		}
+		return {
+			tag,
+			requestId: view.getUint32(1, true),
+			seq: view.getUint32(5, true),
+			bytes: bytes.subarray(ASSET_CHUNK_HEADER_SIZE)
+		};
+	}
+
+	if (bytes.length < ASSET_HEADER_SIZE) {
+		return null;
+	}
+	try {
+		const json = decoder.decode(bytes.subarray(ASSET_HEADER_SIZE));
+		return {
+			tag,
+			requestId: view.getUint32(1, true),
+			body: json ? JSON.parse(json) : {}
+		};
+	} catch (error) {
+		return null;
+	}
+};
+
 export {
 	EVENT_TAG,
+	ASSET_TAG,
+	ASSET_CHUNK_SIZE,
 	MAX_MESSAGE_SIZE,
 	CONT_SLICE_SIZE,
 	MAX_CONTINUATION_PARTS,
 	concat,
 	encodeEvent,
 	decodeEvent,
-	encodeContinuation
+	encodeContinuation,
+	encodeAssetControl,
+	decodeAssetFrame
 };

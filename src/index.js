@@ -75,6 +75,9 @@ const runtime = async (state) => {
 			import('fleet/services/push').then((pushService) => { pushService.init(); }).catch((error) => {});
 		}
 		const onNodeView = /^\/nodes\/[^/]+\//.test(new URL(document.baseURI).pathname);
+		if (onNodeView) {
+			import('libs/node_asset_bridge').then((assetBridge) => { assetBridge.start(); }).catch((error) => {});
+		}
 		if (!onNodeView) {
 			if (process.env.NODE_ENV === 'production') {
 				await import('fleet/services/analytics').catch((error) => {});
