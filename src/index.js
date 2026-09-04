@@ -89,7 +89,6 @@ const runtime = async (state) => {
 			}
 			return;
 		}
-		import('node/services/asset_worker').then((assetWorker) => { assetWorker.start(); }).catch((error) => {});
 	}
 
 	const bootstrapService = await import('libs/services/bootstrap');

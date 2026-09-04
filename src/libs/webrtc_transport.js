@@ -1,14 +1,11 @@
 import { io } from 'socket.io-client';
 import {
 	EVENT_TAG,
-	HTTP_TAG,
 	MAX_MESSAGE_SIZE,
 	concat,
 	encodeEvent,
 	decodeEvent,
-	encodeContinuation,
-	encodeHttp,
-	decodeHttp
+	encodeContinuation
 } from 'libs/webrtc_frame';
 
 const CONNECT_TIMEOUT_MS = 8000;
@@ -16,7 +13,6 @@ const SESSION_REQUEST_TIMEOUT_MS = 10000;
 const CALL_TIMEOUT_MS = 30000;
 const BUFFER_HIGH_WATER = 1024 * 1024;
 const BUFFER_LOW_WATER = 256 * 1024;
-const HTTP_CHANNEL_COUNT = 2;
 const PROTOCOL_VERSION = 1;
 const RETRY_COOLDOWN_MS = 60000;
 
@@ -161,14 +157,10 @@ class WebrtcTransport {
 	#sessionId = null;
 	#token = null;
 	#events = null;
-	#httpChannels = [];
-	#httpCursor = 0;
 	#channels = new Map();
 	#pendingCalls = new Map();
-	#pendingRequests = new Map();
 	#continuations = new Map();
 	#nextCallId = 1;
-	#nextRequestId = 1;
 	#nextContinuationId = 1;
 	#closed = false;
 	#onLost = new Set();
@@ -231,13 +223,6 @@ class WebrtcTransport {
 		this.#events.binaryType = 'arraybuffer';
 		this.#events.onmessage = ({ data }) => { this.#onEventMessage(data); };
 		this.#events.onclose = () => { this.#lose(); };
-
-		for (let index = 0; index < HTTP_CHANNEL_COUNT; index += 1) {
-			const channel = this.#pc.createDataChannel(`http.${index}`, { ordered: true });
-			channel.binaryType = 'arraybuffer';
-			channel.onmessage = ({ data }) => { this.#onHttpMessage(data); };
-			this.#httpChannels.push(channel);
-		}
 
 		const offer = await this.#pc.createOffer();
 		await this.#pc.setLocalDescription(offer);
@@ -308,31 +293,6 @@ class WebrtcTransport {
 			}, timeout ?? CALL_TIMEOUT_MS);
 			this.#pendingCalls.set(cid, { resolve, reject, timer });
 			this.#sendEventFrame(EVENT_TAG.CALL, { ns: namespace, cid, event, args, timeout });
-		});
-	}
-
-	fetchAsset(path) {
-		return new Promise((resolve, reject) => {
-			if (!this.connected) {
-				reject(new Error('Transport is closed'));
-				return;
-			}
-
-			const requestId = this.#nextRequestId;
-			this.#nextRequestId = (this.#nextRequestId + 1) >>> 0 || 1;
-			const channel = this.#httpChannels[this.#httpCursor % this.#httpChannels.length];
-			this.#httpCursor += 1;
-			if (channel?.readyState !== 'open') {
-				reject(new Error('Asset channel is not open'));
-				return;
-			}
-
-			const timer = setTimeout(() => {
-				this.#pendingRequests.delete(requestId);
-				reject(new Error('Asset request timed out'));
-			}, CONNECT_TIMEOUT_MS * 4);
-			this.#pendingRequests.set(requestId, { resolve, reject, timer, chunks: [], status: 200, headers: {} });
-			this.#send(channel, encodeHttp(HTTP_TAG.REQ, requestId, { method: 'GET', path }));
 		});
 	}
 
@@ -428,39 +388,6 @@ class WebrtcTransport {
 		}
 	}
 
-	#onHttpMessage(data) {
-		const frame = decodeHttp(data);
-		if (!frame) {
-			return;
-		}
-
-		const pending = this.#pendingRequests.get(frame.requestId);
-		if (!pending) {
-			return;
-		}
-
-		switch (frame.tag) {
-			case HTTP_TAG.RESP:
-				pending.status = frame.body?.status ?? 200;
-				pending.headers = frame.body?.headers ?? {};
-				return;
-			case HTTP_TAG.CHUNK:
-				pending.chunks.push(frame.bytes.slice());
-				return;
-			case HTTP_TAG.END:
-				this.#pendingRequests.delete(frame.requestId);
-				clearTimeout(pending.timer);
-				pending.resolve({ status: pending.status, headers: pending.headers, body: concat(pending.chunks) });
-				return;
-			case HTTP_TAG.ERR:
-				this.#pendingRequests.delete(frame.requestId);
-				clearTimeout(pending.timer);
-				pending.reject(new Error(frame.body?.message || 'Asset request failed'));
-				return;
-			default:
-		}
-	}
-
 	#lose() {
 		if (this.#closed) {
 			return;
@@ -483,11 +410,7 @@ class WebrtcTransport {
 			pending.reject(new Error('Transport closed'));
 		}
 		this.#pendingCalls.clear();
-		for (const pending of this.#pendingRequests.values()) {
-			clearTimeout(pending.timer);
-			pending.reject(new Error('Transport closed'));
-		}
-		this.#pendingRequests.clear();
+		this.#continuations.clear();
 		for (const channel of this.#channels.values()) {
 			channel.close();
 		}
