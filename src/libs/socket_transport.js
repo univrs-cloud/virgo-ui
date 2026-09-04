@@ -2,7 +2,7 @@ import { io } from 'socket.io-client';
 
 const RESERVED_EVENTS = ['connect', 'disconnect', 'connect_error'];
 
-class TransportSocket {
+class SocketTransport {
 	#io;
 	#rtc = null;
 	#listeners = new Map();
@@ -138,4 +138,4 @@ class TransportSocket {
 	}
 }
 
-export default TransportSocket;
+export default SocketTransport;

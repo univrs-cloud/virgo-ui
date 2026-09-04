@@ -1,6 +1,6 @@
 import { ObservableStore } from '@codewithdan/observable-store';
 import { ReduxDevToolsExtension } from '@codewithdan/observable-store-extensions';
-import TransportSocket from 'libs/transport_socket';
+import SocketTransport from 'libs/socket_transport';
 import { forNode, isAvailable } from 'libs/webrtc_transport';
 
 const NAMESPACE_OPEN_TIMEOUT_MS = 8000;
@@ -68,7 +68,7 @@ class Store extends ObservableStore {
 		const fleetOnlyNamespaces = ['runtime', 'node'];
 		const proxyable = !fleetOnlyNamespaces.includes(settings.namespace);
 		const namespace = (nodeId && proxyable) ? `/fleet/${nodeId}/${settings.namespace}` : `/${settings.namespace}`;
-		this.socket = new TransportSocket(namespace, {
+		this.socket = new SocketTransport(namespace, {
 			path: '/api',
 			reconnection: true,
 			reconnectionAttempts: 120,
