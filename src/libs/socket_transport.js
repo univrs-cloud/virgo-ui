@@ -104,10 +104,7 @@ class SocketTransport {
 	}
 
 	disconnect() {
-		if (this.#rtc) {
-			this.#rtc.close();
-			return this;
-		}
+		this.#revert();
 		this.#io.disconnect();
 		return this;
 	}
@@ -126,14 +123,24 @@ class SocketTransport {
 		}
 	}
 
+	#revert() {
+		if (!this.#rtc) {
+			return;
+		}
+
+		const channel = this.#rtc;
+		this.#unbind();
+		this.#rtc = null;
+		this.#bind(this.#io);
+		channel.close({ notify: true });
+	}
+
 	useSocketIo() {
 		if (!this.#rtc) {
 			return;
 		}
 
-		this.#unbind();
-		this.#rtc = null;
-		this.#bind(this.#io);
+		this.#revert();
 		this.#io.connect();
 	}
 }

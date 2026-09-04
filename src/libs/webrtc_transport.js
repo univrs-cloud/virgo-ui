@@ -15,6 +15,7 @@ const BUFFER_HIGH_WATER = 1024 * 1024;
 const BUFFER_LOW_WATER = 256 * 1024;
 const PROTOCOL_VERSION = 1;
 const RETRY_COOLDOWN_MS = 60000;
+const MAX_PENDING_CONTINUATIONS = 8;
 
 const transports = new Map();
 const cooldowns = new Map();
@@ -143,8 +144,14 @@ class NamespaceChannel {
 		});
 	}
 
-	close() {
+	close({ notify = false } = {}) {
+		if (this.#closed) {
+			return;
+		}
 		this.#closed = true;
+		if (notify) {
+			this.#transport.closeNamespace(this.#namespace);
+		}
 		this.setConnected(false);
 		this.#waiters.clear();
 	}
@@ -283,6 +290,13 @@ class WebrtcTransport {
 		this.#sendEventFrame(EVENT_TAG.EVT, { ns: namespace, event, args });
 	}
 
+	closeNamespace(namespace) {
+		if (this.connected) {
+			this.#sendEventFrame(EVENT_TAG.STATE, { ns: namespace });
+		}
+		this.#channels.delete(namespace);
+	}
+
 	call(namespace, event, args, timeout) {
 		return new Promise((resolve, reject) => {
 			const cid = this.#nextCallId;
@@ -340,12 +354,22 @@ class WebrtcTransport {
 	}
 
 	#reassemble(frame) {
-		const pending = this.#continuations.get(frame.cid) ?? { parts: new Array(frame.total).fill(null), received: 0 };
+		let pending = this.#continuations.get(frame.cid);
+		if (!pending) {
+			if (this.#continuations.size >= MAX_PENDING_CONTINUATIONS) {
+				return;
+			}
+			pending = { parts: new Array(frame.total).fill(null), received: 0 };
+			this.#continuations.set(frame.cid, pending);
+		}
+		if (pending.parts.length !== frame.total) {
+			this.#continuations.delete(frame.cid);
+			return;
+		}
 		if (!pending.parts[frame.part]) {
 			pending.parts[frame.part] = frame.slice.slice();
 			pending.received += 1;
 		}
-		this.#continuations.set(frame.cid, pending);
 		if (pending.received < frame.total) {
 			return;
 		}
