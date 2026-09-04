@@ -11,8 +11,6 @@ import {
 const CONNECT_TIMEOUT_MS = 8000;
 const SESSION_REQUEST_TIMEOUT_MS = 10000;
 const CALL_TIMEOUT_MS = 30000;
-const BUFFER_HIGH_WATER = 1024 * 1024;
-const BUFFER_LOW_WATER = 256 * 1024;
 const PROTOCOL_VERSION = 1;
 const RETRY_COOLDOWN_MS = 60000;
 const MAX_PENDING_CONTINUATIONS = 8;
@@ -108,19 +106,18 @@ class NamespaceChannel {
 	}
 
 	setConnected(connected) {
-		if (this.#connected === connected) {
-			return;
+		if (this.#connected !== connected) {
+			this.#connected = connected;
+			const event = connected ? 'connect' : 'disconnect';
+			const args = connected ? [] : ['transport close'];
+			for (const handler of [...(this.#listeners.get(event) ?? [])]) {
+				handler(...args);
+			}
 		}
-		this.#connected = connected;
-		const event = connected ? 'connect' : 'disconnect';
-		const args = connected ? [] : ['transport close'];
-		for (const handler of [...(this.#listeners.get(event) ?? [])]) {
-			handler(...args);
-		}
-		if (connected) {
-			this.#waiters.forEach((waiter) => { waiter(); });
-			this.#waiters.clear();
-		}
+
+		const waiters = [...this.#waiters];
+		this.#waiters.clear();
+		waiters.forEach((waiter) => { waiter(connected); });
 	}
 
 	whenConnected(timeoutMs) {
@@ -136,9 +133,13 @@ class NamespaceChannel {
 				this.#waiters.delete(waiter);
 				reject(new Error('Namespace did not open'));
 			}, timeoutMs);
-			const waiter = () => {
+			const waiter = (connected) => {
 				clearTimeout(timer);
-				resolve(this);
+				if (connected) {
+					resolve(this);
+					return;
+				}
+				reject(new Error('Namespace did not open'));
 			};
 			this.#waiters.add(waiter);
 		});
@@ -328,9 +329,6 @@ class WebrtcTransport {
 		if (!channel || channel.readyState !== 'open') {
 			return false;
 		}
-		if (channel.bufferedAmount > BUFFER_HIGH_WATER) {
-			channel.bufferedAmountLowThreshold = BUFFER_LOW_WATER;
-		}
 
 		try {
 			channel.send(bytes);
@@ -417,17 +415,19 @@ class WebrtcTransport {
 			return;
 		}
 		const handlers = [...this.#onLost];
-		this.close();
+		this.close({ failed: true });
 		handlers.forEach((handler) => { handler(); });
 	}
 
-	close() {
+	close({ failed = false } = {}) {
 		if (this.#closed) {
 			return;
 		}
 		this.#closed = true;
 		transports.delete(this.#nodeId);
-		cooldowns.set(this.#nodeId, Date.now() + RETRY_COOLDOWN_MS);
+		if (failed) {
+			cooldowns.set(this.#nodeId, Date.now() + RETRY_COOLDOWN_MS);
+		}
 
 		for (const pending of this.#pendingCalls.values()) {
 			clearTimeout(pending.timer);
@@ -465,7 +465,7 @@ const forNode = (nodeId) => {
 	if (!pending) {
 		const transport = new WebrtcTransport(nodeId);
 		pending = transport.start().catch((error) => {
-			transport.close();
+			transport.close({ failed: true });
 			throw error;
 		});
 		transports.set(nodeId, pending);
