@@ -1,6 +1,25 @@
 import { ObservableStore } from '@codewithdan/observable-store';
 import { ReduxDevToolsExtension } from '@codewithdan/observable-store-extensions';
-import { io } from 'socket.io-client';
+import TransportSocket from 'libs/transport_socket';
+import { forNode, isAvailable } from 'libs/webrtc_transport';
+
+const NAMESPACE_OPEN_TIMEOUT_MS = 8000;
+
+const upgradeToWebrtc = (socket, nodeId, namespace) => {
+	if (!isAvailable()) {
+		return;
+	}
+
+	forNode(nodeId)
+		.then((transport) => {
+			return transport.channel(namespace).whenConnected(NAMESPACE_OPEN_TIMEOUT_MS)
+				.then((channel) => {
+					transport.onLost(() => { socket.useSocketIo(); });
+					socket.useWebrtc(channel);
+				});
+		})
+		.catch(() => {});
+};
 
 const digestFilteredJobs = (jobs, jobFilter) => {
 	if (!jobFilter) {
@@ -49,13 +68,16 @@ class Store extends ObservableStore {
 		const fleetOnlyNamespaces = ['runtime', 'node'];
 		const proxyable = !fleetOnlyNamespaces.includes(settings.namespace);
 		const namespace = (nodeId && proxyable) ? `/fleet/${nodeId}/${settings.namespace}` : `/${settings.namespace}`;
-		this.socket = io(namespace, {
+		this.socket = new TransportSocket(namespace, {
 			path: '/api',
 			reconnection: true,
 			reconnectionAttempts: 120,
 			reconnectionDelay: 1000,
 			reconnectionDelayMax: 5000
 		});
+		if (nodeId && proxyable) {
+			upgradeToWebrtc(this.socket, nodeId, `/${settings.namespace}`);
+		}
 		this.propertySubscribers = [];
 		this.previousState = this.getState() || {};
 
