@@ -1,25 +1,6 @@
 import { ObservableStore } from '@codewithdan/observable-store';
 import { ReduxDevToolsExtension } from '@codewithdan/observable-store-extensions';
-import SocketTransport from 'libs/socket_transport';
-import { forNode, isAvailable } from 'libs/webrtc_transport';
-
-const NAMESPACE_OPEN_TIMEOUT_MS = 8000;
-
-const upgradeToWebrtc = (socket, nodeId, namespace) => {
-	if (!isAvailable()) {
-		return;
-	}
-
-	forNode(nodeId)
-		.then((transport) => {
-			return transport.channel(namespace).whenConnected(NAMESPACE_OPEN_TIMEOUT_MS)
-				.then((channel) => {
-					transport.onLost(() => { socket.useSocketIo(); });
-					socket.useWebrtc(channel);
-				});
-		})
-		.catch(() => {});
-};
+import RemoteNodeConnection from 'libs/remote_node_connection';
 
 const digestFilteredJobs = (jobs, jobFilter) => {
 	if (!jobFilter) {
@@ -68,16 +49,16 @@ class Store extends ObservableStore {
 		const fleetOnlyNamespaces = ['runtime', 'node'];
 		const proxyable = !fleetOnlyNamespaces.includes(settings.namespace);
 		const namespace = (nodeId && proxyable) ? `/fleet/${nodeId}/${settings.namespace}` : `/${settings.namespace}`;
-		this.socket = new SocketTransport(namespace, {
+		this.socket = new RemoteNodeConnection(namespace, {
 			path: '/api',
 			reconnection: true,
 			reconnectionAttempts: 120,
 			reconnectionDelay: 1000,
 			reconnectionDelayMax: 5000
+		}, {
+			nodeId: nodeId && proxyable ? nodeId : null,
+			namespace: nodeId && proxyable ? `/${settings.namespace}` : null
 		});
-		if (nodeId && proxyable) {
-			upgradeToWebrtc(this.socket, nodeId, `/${settings.namespace}`);
-		}
 		this.propertySubscribers = [];
 		this.previousState = this.getState() || {};
 

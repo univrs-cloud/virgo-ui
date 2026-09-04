@@ -5,6 +5,8 @@ const EVENT_TAG = {
 	EVT: 0x13,
 	CALL: 0x14,
 	REPLY: 0x15,
+	ACTIVATE: 0x16,
+	CLOSE: 0x17,
 	CONT: 0x1F
 };
 
