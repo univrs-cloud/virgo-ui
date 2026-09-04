@@ -11,6 +11,7 @@ const EVENT_TAG = {
 const MAX_MESSAGE_SIZE = 64 * 1024;
 const CONT_HEADER_SIZE = 9;
 const CONT_SLICE_SIZE = MAX_MESSAGE_SIZE - CONT_HEADER_SIZE;
+const MAX_CONTINUATION_PARTS = 256;
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
@@ -55,11 +56,17 @@ const decodeEvent = (message) => {
 		}
 
 		const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+		const part = view.getUint16(5, true);
+		const total = view.getUint16(7, true);
+		if (!total || total > MAX_CONTINUATION_PARTS || part >= total) {
+			return null;
+		}
+
 		return {
 			tag,
 			cid: view.getUint32(1, true),
-			part: view.getUint16(5, true),
-			total: view.getUint16(7, true),
+			part,
+			total,
 			slice: bytes.subarray(CONT_HEADER_SIZE)
 		};
 	}
@@ -91,6 +98,7 @@ export {
 	EVENT_TAG,
 	MAX_MESSAGE_SIZE,
 	CONT_SLICE_SIZE,
+	MAX_CONTINUATION_PARTS,
 	concat,
 	encodeEvent,
 	decodeEvent,

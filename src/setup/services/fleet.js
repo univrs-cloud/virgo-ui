@@ -30,7 +30,7 @@ const { subscribe } = createSubscription({
 });
 
 /** A node is enrolled once it holds a token; the email alone only means an attempt was made. */
-const isRegistered = (configuration) => {
+const isRegistered = (configuration = Configuration.getConfiguration()) => {
 	return !_.isEmpty(configuration?.fleet?.token);
 };
 

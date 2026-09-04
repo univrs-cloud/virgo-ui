@@ -11,6 +11,7 @@ import 'setup/steps/apps';
 import 'setup/steps/password';
 import 'setup/steps/finish';
 import * as appsService from 'setup/services/apps';
+import * as fleetService from 'setup/services/fleet';
 import * as networkService from 'setup/services/network';
 import * as storageService from 'setup/services/storage';
 import { STEPS, completeStepsBefore, stepPath } from 'setup/wizard';
@@ -29,7 +30,8 @@ const showStep = (ctx) => {
 // by clicking forward, by refreshing, or by typing the address. A leased address would move under the
 // node, so nothing past the interface step runs until it is static. Everything past storage is kept on
 // the pool — the password reaches Authelia's file, registration writes to the database — so those
-// steps stay out of reach until there is one. Past the apps step the same holds for the apps
+// steps stay out of reach until there is one. Registration is not optional either, so nothing past
+// the fleet step runs until the node holds a token. Past the apps step the same holds for the apps
 // themselves: listed in the registry is not enough, they have to be running.
 const isAfter = (name, step) => {
 	return _.findIndex(STEPS, { name }) > _.findIndex(STEPS, { name: step });
@@ -46,6 +48,10 @@ const hasStoragePool = () => {
 	return !_.isUndefined(storageService.getPool());
 };
 
+const hasFleetRegistration = () => {
+	return fleetService.isRegistered();
+};
+
 // Both apps the node cannot be signed in to without, up rather than merely listed.
 const hasCoreAppsRunning = () => {
 	return _.every(appsService.getCoreApps(), 'isRunning');
@@ -60,6 +66,11 @@ _.each(STEPS, ({ name, path }) => {
 
 		if (isAfter(name, 'storage') && !hasStoragePool()) {
 			page.redirect(stepPath('storage'));
+			return;
+		}
+
+		if (isAfter(name, 'fleet') && !hasFleetRegistration()) {
+			page.redirect(stepPath('fleet'));
 			return;
 		}
 
