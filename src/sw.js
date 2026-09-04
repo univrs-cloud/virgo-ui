@@ -59,6 +59,7 @@ const ASSET_READY_TYPE = 'virgo:asset:ready';
 const ASSET_UNREADY_TYPE = 'virgo:asset:unready';
 const ASSET_PROBE_TYPE = 'virgo:asset:probe';
 const ASSET_HEAD_TIMEOUT_MS = 5000;
+const ASSET_MAX_FRAME_BYTES = 64 * 1024;
 
 const readyClients = new Map();
 
@@ -87,8 +88,19 @@ const requestAssetFromPage = (client, nodeId, path) => {
 		const channel = new MessageChannel();
 		let controller = null;
 		let settled = false;
+		let finished = false;
+		let resolvePull = null;
+		const finishPull = () => {
+			const resolve = resolvePull;
+			resolvePull = null;
+			resolve?.();
+		};
 
 		const fail = (message) => {
+			if (finished) { return; }
+			finished = true;
+			clearTimeout(timer);
+			channel.port1.postMessage({ type: 'abort' });
 			const error = new Error(message || 'Asset fetch failed');
 			if (!settled) {
 				settled = true;
@@ -102,20 +114,37 @@ const requestAssetFromPage = (client, nodeId, path) => {
 				}
 			}
 			channel.port1.close();
+			finishPull();
 		};
 
-		const timer = setTimeout(() => { fail('Asset request timed out'); }, ASSET_HEAD_TIMEOUT_MS);
+		let timer = setTimeout(() => { fail('Asset request timed out'); }, ASSET_HEAD_TIMEOUT_MS);
 
 		channel.port1.onmessage = ({ data }) => {
+			if (finished) { return; }
 			if (data?.type === 'head') {
 				if (settled) {
+					return;
+				}
+				if (data.flowControl !== true) {
+					fail('Asset page does not support flow control');
 					return;
 				}
 				settled = true;
 				clearTimeout(timer);
 				const stream = new ReadableStream({
 					start: (streamController) => { controller = streamController; },
+					pull: () => {
+						if (finished) { return; }
+						return new Promise((resolve) => {
+							resolvePull = resolve;
+							timer = setTimeout(() => { fail('Asset body stalled'); }, 30000);
+							channel.port1.postMessage({ type: 'pull' });
+						});
+					},
 					cancel: () => {
+						finished = true;
+						clearTimeout(timer);
+						finishPull();
 						try {
 							channel.port1.postMessage({ type: 'abort' });
 						} catch (ignored) {
@@ -123,19 +152,30 @@ const requestAssetFromPage = (client, nodeId, path) => {
 						}
 						channel.port1.close();
 					}
-				});
+				}, { highWaterMark: 0 });
 				resolve({ status: data.status, headers: data.headers || {}, stream });
 				return;
 			}
 			if (data?.type === 'chunk') {
+				if (!resolvePull || !(data.bytes instanceof ArrayBuffer) || data.bytes.byteLength > ASSET_MAX_FRAME_BYTES) {
+					fail('Unexpected asset chunk');
+					return;
+				}
+				clearTimeout(timer);
 				try {
 					controller?.enqueue(new Uint8Array(data.bytes));
 				} catch (ignored) {
-					controller = null;
+					fail('Asset stream is not writable');
 				}
+				finishPull();
 				return;
 			}
 			if (data?.type === 'end') {
+				if (!settled) {
+					fail('Asset stream ended before its response');
+					return;
+				}
+				finished = true;
 				clearTimeout(timer);
 				try {
 					controller?.close();
@@ -143,6 +183,7 @@ const requestAssetFromPage = (client, nodeId, path) => {
 					controller = null;
 				}
 				channel.port1.close();
+				finishPull();
 				return;
 			}
 			if (data?.type === 'error') {
@@ -150,7 +191,7 @@ const requestAssetFromPage = (client, nodeId, path) => {
 			}
 		};
 
-		client.postMessage({ type: ASSET_REQUEST_TYPE, nodeId, path }, [channel.port2]);
+		client.postMessage({ type: ASSET_REQUEST_TYPE, nodeId, path, flowControl: true }, [channel.port2]);
 	});
 };
 
