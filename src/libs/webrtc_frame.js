@@ -8,15 +8,6 @@ const EVENT_TAG = {
 	CONT: 0x1F
 };
 
-const HTTP_TAG = {
-	REQ: 0x01,
-	RESP: 0x02,
-	CHUNK: 0x03,
-	END: 0x04,
-	ERR: 0x05,
-	ABORT: 0x06
-};
-
 const MAX_MESSAGE_SIZE = 64 * 1024;
 const CONT_HEADER_SIZE = 9;
 const CONT_SLICE_SIZE = MAX_MESSAGE_SIZE - CONT_HEADER_SIZE;
@@ -96,55 +87,12 @@ const encodeContinuation = (cid, payload) => {
 	return frames;
 };
 
-const encodeHttp = (tag, requestId, body) => {
-	const header = new Uint8Array(5);
-	const view = new DataView(header.buffer);
-	header[0] = tag;
-	view.setUint32(1, requestId >>> 0, true);
-	if (body === undefined) {
-		return header;
-	}
-
-	return concat([header, encoder.encode(JSON.stringify(body))]);
-};
-
-const decodeHttp = (message) => {
-	const bytes = asBytes(message);
-	if (bytes.length < 5) {
-		return null;
-	}
-
-	const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
-	const tag = bytes[0];
-	const requestId = view.getUint32(1, true);
-	if (tag === HTTP_TAG.CHUNK) {
-		if (bytes.length < 9) {
-			return null;
-		}
-
-		return { tag, requestId, seq: view.getUint32(5, true), bytes: bytes.subarray(9) };
-	}
-
-	if (bytes.length === 5) {
-		return { tag, requestId, body: {} };
-	}
-
-	try {
-		return { tag, requestId, body: JSON.parse(decoder.decode(bytes.subarray(5))) };
-	} catch (error) {
-		return null;
-	}
-};
-
 export {
 	EVENT_TAG,
-	HTTP_TAG,
 	MAX_MESSAGE_SIZE,
 	CONT_SLICE_SIZE,
 	concat,
 	encodeEvent,
 	decodeEvent,
-	encodeContinuation,
-	encodeHttp,
-	decodeHttp
+	encodeContinuation
 };
