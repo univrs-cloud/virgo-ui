@@ -1,14 +1,6 @@
 // Push-only service worker for the fleet PWA. It does no precaching or offline caching — its sole
 // job is to surface the update notifications virgo-fleet pushes while the app is closed. Registered
-// for the fleet role (see fleet/services/push) and, for the WebRTC asset bridge below, by the node
-// role (see node/services/asset_worker).
-
-const NODE_ASSET_PATTERN = /^\/nodes\/([^/]+)\/(.+)$/;
-const STATIC_ASSET_PATTERN = /\.(?:js|mjs|css|map|json|txt|wasm|png|jpe?g|gif|svg|ico|webp|avif|woff2?|ttf|eot)$/i;
-const ASSET_TIMEOUT_MS = 15000;
-
-const pendingAssets = new Map();
-let nextAssetId = 1;
+// only for the fleet role (see fleet/services/push); the node role never installs it.
 
 self.addEventListener('install', () => {
 	self.skipWaiting();
@@ -55,71 +47,5 @@ self.addEventListener('notificationclick', (event) => {
 			}
 			return self.clients.openWindow(target);
 		})
-	);
-});
-
-self.addEventListener('message', (event) => {
-	const data = event.data || {};
-	if (data.type !== 'asset:response') {
-		return;
-	}
-
-	const pending = pendingAssets.get(data.id);
-	if (!pending) {
-		return;
-	}
-	pendingAssets.delete(data.id);
-	clearTimeout(pending.timer);
-	if (!data.ok) {
-		pending.reject(new Error(data.message || 'Asset unavailable'));
-		return;
-	}
-
-	pending.resolve(new Response(data.body, { status: data.status || 200, headers: data.headers || {} }));
-});
-
-const requestAssetFromClient = async (clientId, path) => {
-	const client = clientId ? await self.clients.get(clientId) : null;
-	if (!client) {
-		throw new Error('No controlled client');
-	}
-
-	const id = nextAssetId;
-	nextAssetId += 1;
-	return new Promise((resolve, reject) => {
-		const timer = setTimeout(() => {
-			pendingAssets.delete(id);
-			reject(new Error('Asset request timed out'));
-		}, ASSET_TIMEOUT_MS);
-		pendingAssets.set(id, { resolve, reject, timer });
-		client.postMessage({ type: 'asset:request', id, path });
-	});
-};
-
-self.addEventListener('fetch', (event) => {
-	const request = event.request;
-	if (request.method !== 'GET' || request.mode === 'navigate') {
-		return;
-	}
-
-	let url = null;
-	try {
-		url = new URL(request.url);
-	} catch (error) {
-		return;
-	}
-
-	if (url.origin !== self.location.origin) {
-		return;
-	}
-
-	const match = NODE_ASSET_PATTERN.exec(url.pathname);
-	if (!match || !STATIC_ASSET_PATTERN.test(url.pathname)) {
-		return;
-	}
-
-	event.respondWith(
-		requestAssetFromClient(event.clientId, `/${match[2]}${url.search}`)
-			.catch(() => { return fetch(request); })
 	);
 });
