@@ -1,11 +1,14 @@
 import { io } from 'socket.io-client';
 import {
 	EVENT_TAG,
+	ASSET_TAG,
 	MAX_MESSAGE_SIZE,
 	concat,
 	encodeEvent,
 	decodeEvent,
-	encodeContinuation
+	encodeContinuation,
+	encodeAssetControl,
+	decodeAssetFrame
 } from 'libs/webrtc_frame';
 import DataChannelSendQueue from 'libs/data_channel_send_queue';
 
@@ -19,6 +22,13 @@ const MAX_CONTINUATION_BYTES = 8 * 1024 * 1024;
 const CONTINUATION_TIMEOUT_MS = 30000;
 const MAX_PENDING_ICE_CANDIDATES = 128;
 const HELLO_FEATURE_CLOSE = 'namespace-close';
+const HELLO_FEATURE_HEARTBEAT = 'heartbeat';
+const HEARTBEAT_INTERVAL_MS = 15000;
+const LIVENESS_TIMEOUT_MS = 45000;
+const IDLE_CLOSE_MS = 30000;
+const MAX_CONCURRENT_ASSET_REQUESTS = 8;
+const ASSET_CHANNEL_TIMEOUT_MS = 5000;
+const ASSET_HEAD_TIMEOUT_MS = 15000;
 
 const transports = new Map();
 const cooldowns = new Map();
@@ -283,6 +293,12 @@ class WebrtcTransport {
 	#pendingCandidates = [];
 	#features = new Set();
 	#idleTimer = null;
+	#assets = null;
+	#assetsReady = null;
+	#assetRequests = new Map();
+	#nextAssetId = 1;
+	#heartbeatTimer = null;
+	#lastInboundAt = 0;
 
 	constructor(nodeId) {
 		this.#nodeId = nodeId;
@@ -357,6 +373,19 @@ class WebrtcTransport {
 		});
 		this.#signal.on('disconnect', () => { this.#lose(); });
 
+		this.#assets = this.#pc.createDataChannel('assets', { ordered: true });
+		this.#assets.binaryType = 'arraybuffer';
+		this.#assets.onmessage = ({ data }) => { this.#onAssetMessage(data); };
+		this.#assets.onclose = () => { this.#failAssetRequests('Asset channel closed'); };
+		this.#assets.onerror = () => { this.#failAssetRequests('Asset channel failed'); };
+		this.#assetsReady = new Promise((resolve) => {
+			if (this.#assets.readyState === 'open') {
+				resolve();
+				return;
+			}
+			this.#assets.onopen = () => { resolve(); };
+		});
+
 		this.#events = this.#pc.createDataChannel('events', { ordered: true });
 		this.#events.binaryType = 'arraybuffer';
 		this.#events.onmessage = ({ data }) => { this.#onEventMessage(data); };
@@ -421,13 +450,171 @@ class WebrtcTransport {
 				clearTimeout(timer);
 				reject(error);
 			};
-			this.#events.onopen = () => {
-				this.#send(this.#events, [encodeEvent(EVENT_TAG.HELLO, { v: PROTOCOL_VERSION })]);
+			const hello = () => {
+				this.#send(this.#events, [encodeEvent(EVENT_TAG.HELLO, {
+					v: PROTOCOL_VERSION,
+					features: [HELLO_FEATURE_HEARTBEAT]
+				})]);
 			};
+			this.#events.onopen = hello;
 			if (this.#events.readyState === 'open') {
-				this.#send(this.#events, [encodeEvent(EVENT_TAG.HELLO, { v: PROTOCOL_VERSION })]);
+				hello();
 			}
 		});
+	}
+
+	async fetchAsset(path) {
+		if (this.#closed || !this.#assets) {
+			throw new Error('Transport closed');
+		}
+		if (this.#assetRequests.size >= MAX_CONCURRENT_ASSET_REQUESTS) {
+			throw new Error('Too many asset requests');
+		}
+
+		await Promise.race([
+			this.#assetsReady,
+			new Promise((resolve, reject) => {
+				setTimeout(() => { reject(new Error('Asset channel did not open')); }, ASSET_CHANNEL_TIMEOUT_MS);
+			})
+		]);
+		if (this.#closed || this.#assets.readyState !== 'open') {
+			throw new Error('Asset channel is not open');
+		}
+
+		const requestId = this.#nextAssetId;
+		this.#nextAssetId = (this.#nextAssetId + 1) >>> 0 || 1;
+
+		return new Promise((resolve, reject) => {
+			const request = {
+				controller: null,
+				head: false,
+				nextSeq: 0,
+				resolveHead: resolve,
+				rejectHead: reject,
+				timer: setTimeout(() => {
+					this.#abortAsset(requestId, 'Asset request timed out');
+				}, ASSET_HEAD_TIMEOUT_MS)
+			};
+			this.#assetRequests.set(requestId, request);
+			if (!this.#sendAssetFrame(ASSET_TAG.REQ, requestId, { path })) {
+				this.#assetRequests.delete(requestId);
+				clearTimeout(request.timer);
+				reject(new Error('Asset channel is not writable'));
+			}
+		});
+	}
+
+	#sendAssetFrame(tag, requestId, body) {
+		if (!this.#assets || this.#assets.readyState !== 'open') {
+			return false;
+		}
+		try {
+			this.#assets.send(encodeAssetControl(tag, requestId, body));
+			return true;
+		} catch (error) {
+			return false;
+		}
+	}
+
+	#settleAssetFailure(request, error) {
+		if (request.controller) {
+			try {
+				request.controller.error(error);
+			} catch (ignored) {
+				return;
+			}
+			return;
+		}
+		request.rejectHead(error);
+	}
+
+	#abortAsset(requestId, message) {
+		const request = this.#assetRequests.get(requestId);
+		if (!request) {
+			return;
+		}
+		this.#assetRequests.delete(requestId);
+		clearTimeout(request.timer);
+		this.#sendAssetFrame(ASSET_TAG.ABORT, requestId, {});
+		if (message) {
+			this.#settleAssetFailure(request, new Error(message));
+		}
+	}
+
+	#failAssetRequests(message) {
+		const requests = [...this.#assetRequests.values()];
+		this.#assetRequests.clear();
+		for (const request of requests) {
+			clearTimeout(request.timer);
+			this.#settleAssetFailure(request, new Error(message));
+		}
+	}
+
+	#onAssetMessage(data) {
+		this.#lastInboundAt = Date.now();
+		const frame = decodeAssetFrame(data);
+		if (!frame) {
+			return;
+		}
+		const request = this.#assetRequests.get(frame.requestId);
+		if (!request) {
+			return;
+		}
+
+		switch (frame.tag) {
+			case ASSET_TAG.RES: {
+				if (request.head) {
+					return;
+				}
+				clearTimeout(request.timer);
+				request.timer = null;
+				request.head = true;
+				const stream = new ReadableStream({
+					start: (controller) => { request.controller = controller; },
+					cancel: () => { this.#abortAsset(frame.requestId, null); }
+				});
+				request.resolveHead({
+					status: Number(frame.body?.status) || 200,
+					headers: frame.body?.headers ?? {},
+					stream
+				});
+				return;
+			}
+			case ASSET_TAG.CHUNK: {
+				if (!request.controller || frame.seq !== request.nextSeq) {
+					this.#assetRequests.delete(frame.requestId);
+					this.#sendAssetFrame(ASSET_TAG.ABORT, frame.requestId, {});
+					this.#settleAssetFailure(request, new Error('Unexpected asset chunk sequence'));
+					return;
+				}
+				request.nextSeq += 1;
+				request.controller.enqueue(new Uint8Array(frame.bytes));
+				return;
+			}
+			case ASSET_TAG.END: {
+				this.#assetRequests.delete(frame.requestId);
+				clearTimeout(request.timer);
+				if (request.controller) {
+					try {
+						request.controller.close();
+					} catch (error) {
+						return;
+					}
+					return;
+				}
+				request.rejectHead(new Error('Asset stream ended before its response'));
+				return;
+			}
+			case ASSET_TAG.ERR: {
+				this.#assetRequests.delete(frame.requestId);
+				clearTimeout(request.timer);
+				const error = new Error(frame.body?.message || 'Asset fetch failed');
+				error.status = frame.body?.status;
+				this.#settleAssetFailure(request, error);
+				return;
+			}
+			default:
+		}
 	}
 
 	channel(namespace) {
@@ -464,10 +651,10 @@ class WebrtcTransport {
 		if (!this.#channels.size && !this.#closed) {
 			this.#idleTimer = setTimeout(() => {
 				this.#idleTimer = null;
-				if (!this.#channels.size) {
+				if (!this.#channels.size && !this.#assetRequests.size) {
 					this.close();
 				}
-			}, 1000);
+			}, IDLE_CLOSE_MS);
 		}
 	}
 
@@ -506,7 +693,25 @@ class WebrtcTransport {
 		return this.#sendQueue?.enqueueMany(frames) ?? false;
 	}
 
+	#startHeartbeat() {
+		if (this.#heartbeatTimer || !this.#features.has(HELLO_FEATURE_HEARTBEAT)) {
+			return;
+		}
+		this.#lastInboundAt = Date.now();
+		this.#heartbeatTimer = setInterval(() => {
+			if (this.#closed) {
+				return;
+			}
+			if (Date.now() - this.#lastInboundAt >= LIVENESS_TIMEOUT_MS) {
+				this.#lose();
+				return;
+			}
+			this.#sendEventFrame(EVENT_TAG.PING, {});
+		}, HEARTBEAT_INTERVAL_MS);
+	}
+
 	#onEventMessage(data) {
+		this.#lastInboundAt = Date.now();
 		const frame = decodeEvent(data);
 		if (!frame) {
 			return;
@@ -568,6 +773,7 @@ class WebrtcTransport {
 					this.#helloReject?.(new Error('Incompatible WebRTC protocol'));
 				} else {
 					this.#features = new Set(Array.isArray(frame.body?.features) ? frame.body.features : []);
+					this.#startHeartbeat();
 					this.#helloResolve?.();
 				}
 				this.#helloResolve = null;
@@ -616,6 +822,10 @@ class WebrtcTransport {
 			clearTimeout(this.#idleTimer);
 			this.#idleTimer = null;
 		}
+		if (this.#heartbeatTimer) {
+			clearInterval(this.#heartbeatTimer);
+			this.#heartbeatTimer = null;
+		}
 		transports.delete(this.#nodeId);
 		if (failed) {
 			cooldowns.set(this.#nodeId, Date.now() + RETRY_COOLDOWN_MS);
@@ -636,6 +846,7 @@ class WebrtcTransport {
 		}
 		this.#continuations.clear();
 		this.#pendingCandidates = [];
+		this.#failAssetRequests('Transport closed');
 		this.#sendQueue?.close();
 		for (const channel of this.#channels.values()) {
 			channel.close();
@@ -645,6 +856,11 @@ class WebrtcTransport {
 			this.#signal.emit('webrtc:close', { sessionId: this.#sessionId });
 		}
 		this.#signal?.disconnect();
+		try {
+			this.#assets?.close();
+		} catch (error) {
+			this.#assets = null;
+		}
 		try {
 			this.#pc?.close();
 		} catch (error) {
