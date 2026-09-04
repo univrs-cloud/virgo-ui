@@ -18,7 +18,6 @@ const registered = step.querySelector('.registered');
 const status = registered.querySelector('.status');
 const reRegisterLink = registered.querySelector('.re-register');
 const fleetLink = step.querySelector('.fleet-link span');
-const skipLink = step.querySelector('.skip');
 const submitButton = form.querySelector('[type="submit"]');
 
 // Registration state and connection health both come off the same configuration, so this runs on
@@ -50,7 +49,6 @@ const goNext = () => {
 
 const idle = () => {
 	submitButton.reset();
-	skipLink.classList.remove('disabled', 'pe-none');
 	_.each(step.querySelectorAll('[data-action="back"]'), (button) => { button.disabled = false; });
 };
 
@@ -58,15 +56,14 @@ const idle = () => {
 // a completed job that left the node holding a token — but only if it is the step on screen, since a
 // job outlives the page that started it. Only a job that has reported back concludes the step: an
 // empty list is the gap between asking for one and the node queueing it, and unlocking there would
-// hand the form back mid-flight. Anything short of a registered node leaves the user here to try again
-// or skip; the job toaster carries the reason. A node that already holds a token is tied to that
-// account, so the email is seeded once and can only be confirmed from then on.
+// hand the form back mid-flight. Anything short of a registered node leaves the user here to try again;
+// the job toaster carries the reason. A node that already holds a token is tied to that account, so the
+// email is seeded once and can only be confirmed from then on.
 const render = (state) => {
 	configuration = state.configuration;
 	const job = _.find(state.jobs, { name: fleetService.REGISTER_JOB });
 	const isSettled = _.includes(['completed', 'failed'], job?.progress?.state);
 	if (job && !isSettled) {
-		skipLink.classList.add('disabled', 'pe-none');
 		_.each(step.querySelectorAll('[data-action="back"]'), (button) => { button.disabled = true; });
 		submitButton.loading();
 	} else if (isSettled && submitButton.disabled) {
@@ -90,7 +87,6 @@ const render = (state) => {
 
 const registerFleet = (event) => {
 	// Leaving mid-registration would hand the next step a node whose enrolment is still in flight.
-	skipLink.classList.add('disabled', 'pe-none');
 	_.each(step.querySelectorAll('[data-action="back"]'), (button) => { button.disabled = true; });
 	submitButton.loading();
 	const data = form.getData();
@@ -102,11 +98,6 @@ const showRegistrationForm = (event) => {
 	isRegistering = true;
 	renderStatus();
 	form.querySelector('.password').focus();
-};
-
-const skipStep = (event) => {
-	event.preventDefault();
-	goNext();
 };
 
 const goBack = (event) => {
@@ -129,7 +120,6 @@ form.validation = [
 	}
 ];
 form.addEventListener('valid', registerFleet);
-skipLink.addEventListener('click', skipStep);
 reRegisterLink.addEventListener('click', showRegistrationForm);
 registered.querySelector('[data-action="continue"]').addEventListener('click', goNext);
 _.each(step.querySelectorAll('[data-action="back"]'), (button) => { button.addEventListener('click', goBack); });
