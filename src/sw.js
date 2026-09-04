@@ -55,7 +55,32 @@ self.addEventListener('notificationclick', (event) => {
 const NODE_ASSET_PATTERN = /^\/nodes\/([^/]+)\/(.+)$/;
 const ASSET_EXTENSION_PATTERN = /\.(js|mjs|css|map|json|png|jpe?g|gif|svg|webp|ico|woff2?|ttf|otf|eot|txt|webmanifest)$/i;
 const ASSET_REQUEST_TYPE = 'virgo:asset:request';
-const ASSET_HEAD_TIMEOUT_MS = 15000;
+const ASSET_READY_TYPE = 'virgo:asset:ready';
+const ASSET_UNREADY_TYPE = 'virgo:asset:unready';
+const ASSET_PROBE_TYPE = 'virgo:asset:probe';
+const ASSET_HEAD_TIMEOUT_MS = 5000;
+
+const readyClients = new Map();
+
+self.addEventListener('message', (event) => {
+	const clientId = event.source?.id;
+	if (!clientId) {
+		return;
+	}
+	if (event.data?.type === ASSET_READY_TYPE) {
+		readyClients.set(clientId, event.data.nodeId || null);
+		return;
+	}
+	if (event.data?.type === ASSET_UNREADY_TYPE) {
+		readyClients.delete(clientId);
+	}
+});
+
+const probeClient = (clientId) => {
+	self.clients.get(clientId)
+		.then((client) => { client?.postMessage({ type: ASSET_PROBE_TYPE }); })
+		.catch(() => {});
+};
 
 const requestAssetFromPage = (client, nodeId, path) => {
 	return new Promise((resolve, reject) => {
@@ -169,7 +194,15 @@ self.addEventListener('fetch', (event) => {
 		return;
 	}
 
+	if (readyClients.get(event.clientId) !== match[1]) {
+		probeClient(event.clientId);
+		return;
+	}
+
 	event.respondWith(
-		routeNodeAsset(event, match[1], `/${match[2]}${url.search}`).catch(() => { return fetch(request); })
+		routeNodeAsset(event, match[1], `/${match[2]}${url.search}`).catch(() => {
+			readyClients.delete(event.clientId);
+			return fetch(request);
+		})
 	);
 });

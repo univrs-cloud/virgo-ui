@@ -1,12 +1,24 @@
 import { activeTransport } from 'libs/webrtc_transport';
 
 const REQUEST_TYPE = 'virgo:asset:request';
+const READY_TYPE = 'virgo:asset:ready';
+const PROBE_TYPE = 'virgo:asset:probe';
 
 const transferableBytes = (value) => {
 	if (value.byteOffset === 0 && value.buffer.byteLength === value.byteLength) {
 		return value.buffer;
 	}
 	return value.slice().buffer;
+};
+
+const announceWhenReady = (nodeId) => {
+	const pending = activeTransport(nodeId);
+	if (!pending) {
+		return;
+	}
+	pending.then(() => {
+		navigator.serviceWorker.controller?.postMessage({ type: READY_TYPE, nodeId });
+	}).catch(() => {});
 };
 
 const serve = async (port, { nodeId, path }) => {
@@ -41,12 +53,16 @@ const serve = async (port, { nodeId, path }) => {
 	port.close();
 };
 
-const start = () => {
-	if (!('serviceWorker' in navigator)) {
+const start = (nodeId) => {
+	if (!('serviceWorker' in navigator) || !nodeId) {
 		return;
 	}
 
 	navigator.serviceWorker.addEventListener('message', (event) => {
+		if (event.data?.type === PROBE_TYPE) {
+			announceWhenReady(nodeId);
+			return;
+		}
 		if (event.data?.type !== REQUEST_TYPE) {
 			return;
 		}
@@ -64,7 +80,10 @@ const start = () => {
 		});
 	});
 
-	navigator.serviceWorker.register('/sw.js').catch((error) => {});
+	navigator.serviceWorker.addEventListener('controllerchange', () => { announceWhenReady(nodeId); });
+	navigator.serviceWorker.register('/sw.js')
+		.then(() => { announceWhenReady(nodeId); })
+		.catch((error) => {});
 };
 
-export { start, REQUEST_TYPE };
+export { start, REQUEST_TYPE, READY_TYPE, PROBE_TYPE };
