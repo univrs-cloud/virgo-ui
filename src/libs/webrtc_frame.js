@@ -18,7 +18,8 @@ const ASSET_TAG = {
 	CHUNK: 0x22,
 	END: 0x23,
 	ERR: 0x24,
-	ABORT: 0x25
+	ABORT: 0x25,
+	CREDIT: 0x26
 };
 
 const MAX_MESSAGE_SIZE = 64 * 1024;
