@@ -9,7 +9,12 @@
 		<a href="/" rel="external" class="btn btn-sm text-white p-0 m-0 ms-2"><i class="icon-solid icon-sm icon-cog"></i></a>
 		<div class="dropdown-menu w-100">
 			<%_.each(nodes, (node) => {%>
-				<%if (node.online) {%>
+				<%if (node.nodeId === currentNodeId) {%>
+					<div class="dropdown-item d-flex align-items-center pe-none">
+						<i class="icon-solid icon-dot me-1 <%-node.online ? 'text-green-400' : 'text-red-500'%>"></i>
+						<%-node.name || node.nodeId%>
+					</div>
+				<%} else if (node.online) {%>
 					<a href="/nodes/<%-node.nodeId%>" rel="external" class="dropdown-item d-flex align-items-center">
 						<i class="icon-solid icon-dot text-green-400 me-1"></i>
 						<%-node.name || node.nodeId%>
