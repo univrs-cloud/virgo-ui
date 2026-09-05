@@ -1,8 +1,12 @@
-import { activeTransport } from 'libs/webrtc_transport';
+import { activeTransport, forNode, isAvailable, onTransportChange } from 'libs/webrtc_transport';
 
 const REQUEST_TYPE = 'virgo:asset:request';
 const READY_TYPE = 'virgo:asset:ready';
+const UNREADY_TYPE = 'virgo:asset:unready';
 const PROBE_TYPE = 'virgo:asset:probe';
+const TRANSPORT_WAIT_MS = 10000;
+
+let activeNodeId = null;
 
 const transferableBytes = (value) => {
 	if (value.byteOffset === 0 && value.buffer.byteLength === value.byteLength) {
@@ -11,14 +15,37 @@ const transferableBytes = (value) => {
 	return value.slice().buffer;
 };
 
+const announceReady = (nodeId) => {
+	navigator.serviceWorker.controller?.postMessage({ type: READY_TYPE, nodeId });
+};
+
+const announceUnready = () => {
+	navigator.serviceWorker.controller?.postMessage({ type: UNREADY_TYPE });
+};
+
 const announceWhenReady = (nodeId) => {
 	const pending = activeTransport(nodeId);
 	if (!pending) {
 		return;
 	}
-	pending.then(() => {
-		navigator.serviceWorker.controller?.postMessage({ type: READY_TYPE, nodeId });
-	}).catch(() => {});
+	pending.then(() => { announceReady(nodeId); }).catch(() => {});
+};
+
+const prepareTransport = (nodeId, timeoutMs = TRANSPORT_WAIT_MS) => {
+	if (!nodeId || !isAvailable()) {
+		return Promise.resolve(false);
+	}
+
+	let timer = null;
+	const attempt = forNode(nodeId).then(() => {
+		announceReady(nodeId);
+		return true;
+	}).catch(() => { return false; });
+	const deadline = new Promise((resolve) => {
+		timer = setTimeout(() => { resolve(false); }, timeoutMs);
+	});
+
+	return Promise.race([attempt, deadline]).finally(() => { clearTimeout(timer); });
 };
 
 const serve = async (port, { nodeId, path, flowControl, acceptEncoding }) => {
@@ -95,6 +122,18 @@ const start = (nodeId) => {
 	if (!('serviceWorker' in navigator) || !nodeId) {
 		return;
 	}
+	activeNodeId = nodeId;
+
+	onTransportChange((changedNodeId, ready) => {
+		if (changedNodeId !== activeNodeId) {
+			return;
+		}
+		if (ready) {
+			announceReady(changedNodeId);
+			return;
+		}
+		announceUnready();
+	});
 
 	navigator.serviceWorker.addEventListener('message', (event) => {
 		if (event.data?.type === PROBE_TYPE) {
@@ -124,4 +163,4 @@ const start = (nodeId) => {
 		.catch((error) => {});
 };
 
-export { start, REQUEST_TYPE, READY_TYPE, PROBE_TYPE };
+export { start, prepareTransport, REQUEST_TYPE, READY_TYPE, UNREADY_TYPE, PROBE_TYPE };
