@@ -33,6 +33,22 @@ const ASSET_WINDOW_CHUNKS = 8;
 
 const transports = new Map();
 const cooldowns = new Map();
+const transportListeners = new Set();
+
+const notifyTransport = (nodeId, ready) => {
+	for (const handler of [...transportListeners]) {
+		try {
+			handler(nodeId, ready);
+		} catch (error) {
+			continue;
+		}
+	}
+};
+
+const onTransportChange = (handler) => {
+	transportListeners.add(handler);
+	return () => { transportListeners.delete(handler); };
+};
 
 const remaining = (deadline) => {
 	return Math.max(1, deadline - Date.now());
@@ -909,6 +925,7 @@ class WebrtcTransport {
 		if (failed) {
 			cooldowns.set(this.#nodeId, Date.now() + RETRY_COOLDOWN_MS);
 		}
+		notifyTransport(this.#nodeId, false);
 
 		const helloReject = this.#helloReject;
 		this.#helloResolve = null;
@@ -970,7 +987,10 @@ const forNode = (nodeId) => {
 	let pending = transports.get(nodeId);
 	if (!pending) {
 		const transport = new WebrtcTransport(nodeId);
-		pending = transport.start().catch((error) => {
+		pending = transport.start().then((started) => {
+			notifyTransport(nodeId, true);
+			return started;
+		}).catch((error) => {
 			transport.close({ failed: true });
 			error.retryAfterMs = RETRY_COOLDOWN_MS;
 			throw error;
@@ -986,5 +1006,5 @@ const activeTransport = (nodeId) => {
 	return (pending && typeof pending.then === 'function') ? pending : null;
 };
 
-export default { forNode, isAvailable, activeTransport };
-export { forNode, isAvailable, activeTransport, NamespaceChannel, CONNECT_TIMEOUT_MS };
+export default { forNode, isAvailable, activeTransport, onTransportChange };
+export { forNode, isAvailable, activeTransport, onTransportChange, NamespaceChannel, CONNECT_TIMEOUT_MS };
