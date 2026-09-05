@@ -4,8 +4,17 @@
 		Sign in
 	</a>
 <%} else {%>
-	<div class="dropdown dropup d-flex align-items-center me-2" style="height: 40px;">
-		<img src="assets/img/user-circle.svg" alt="profile" class="dropdown-toggle caret-off rounded-circle cursor-pointer" data-bs-toggle="dropdown" style="width: 30px; height: 30px;">
+	<div class="dropdown dropup d-flex align-items-center">
+		<button type="button" class="account-toggle dropdown-toggle caret-off d-flex align-items-center gap-2 w-100 border-0 bg-transparent rounded p-1 text-white" data-bs-toggle="dropdown">
+			<img src="assets/img/user-circle.svg" alt="profile" class="rounded-circle flex-shrink-0" style="width: 30px; height: 30px;">
+			<span class="d-none d-sm-block text-start min-w-0 flex-grow-1" style="line-height: 1.2;">
+				<span class="d-block text-truncate fw-normal" style="font-size: 0.875rem;"><%-account.name || account.email || '—'%></span>
+				<%if (account.name && account.email) {%>
+					<span class="d-block text-truncate fw-light opacity-75" style="font-size: 0.75rem;"><%-account.email%></span>
+				<%}%>
+			</span>
+			<i class="icon-solid icon-angles-up-down icon-fw d-none d-sm-inline-block small opacity-75"></i>
+		</button>
 		<div class="dropdown-menu dropdown-menu-end" style="width: max-content;">
 			<h6 class="dropdown-header">Logged in as</h6>
 			<p class="d-flex flex-row align-items-center fw-medium px-2 pb-2 mt-n1 mb-0"><%-account.name || account.email || '—'%></p>
