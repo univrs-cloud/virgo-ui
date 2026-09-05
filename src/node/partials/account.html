@@ -5,19 +5,19 @@
 	</a>
 <%} else {%>
 	<div class="dropdown dropup d-flex align-items-center">
-		<button type="button" class="account-toggle dropdown-toggle caret-off d-flex align-items-center gap-2 w-100 border-0 bg-transparent rounded p-1 text-white" data-bs-toggle="dropdown">
-			<img src="assets/img/user-circle.svg" alt="profile" class="rounded-circle flex-shrink-0" style="width: 30px; height: 30px;">
+		<button type="button" class="account-toggle dropdown-toggle caret-off d-flex align-items-center gap-2 w-100 border-0 bg-transparent rounded p-2 text-white" data-bs-toggle="dropdown">
+			<img src="assets/img/user-circle.svg" alt="profile" class="rounded-circle flex-shrink-0" style="width: 32px; height: 32px;">
 			<span class="d-none d-sm-block text-start min-w-0 flex-grow-1" style="line-height: 1.2;">
-				<span class="d-block text-truncate fw-normal" style="font-size: 0.875rem;"><%-account.name || account.email || '—'%></span>
+				<span class="d-block text-truncate fw-medium" style="font-size: 0.875rem;" title="<%-account.name || account.email || '—'%>"><%-account.name || account.email || '—'%></span>
 				<%if (account.name && account.email) {%>
-					<span class="d-block text-truncate fw-light opacity-75" style="font-size: 0.75rem;"><%-account.email%></span>
+					<span class="d-block text-truncate fw-light opacity-75" style="font-size: 0.8125rem;"><%-account.email%></span>
 				<%}%>
 			</span>
-			<i class="icon-solid icon-angles-up-down icon-fw d-none d-sm-inline-block small opacity-75"></i>
+			<i class="icon-light icon-angles-up-down icon-fw d-none d-sm-inline-block flex-shrink-0 opacity-75" style="font-size: 0.8125rem;"></i>
 		</button>
-		<div class="dropdown-menu dropdown-menu-end" style="width: max-content;">
+		<div class="dropdown-menu dropdown-menu-end" style="max-width: min(18rem, calc(100vw - 1.5rem));">
 			<h6 class="dropdown-header">Logged in as</h6>
-			<p class="d-flex flex-row align-items-center fw-medium px-2 pb-2 mt-n1 mb-0"><%-account.name || account.email || '—'%></p>
+			<p class="text-truncate fw-medium px-2 pb-2 mt-n1 mb-0" title="<%-account.name || account.email || '—'%>"><%-account.name || account.email || '—'%></p>
 			<%if (!isUpdating) {%>
 				<div class="dropdown-divider"></div>
 				<a href="/users/profile" class="dropdown-item" <%=(runtimeRole === 'fleet' ? 'rel="external"' : '')%>>Your profile</a>
