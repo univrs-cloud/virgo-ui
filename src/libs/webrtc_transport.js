@@ -22,9 +22,6 @@ const MAX_PENDING_CONTINUATIONS = 8;
 const MAX_CONTINUATION_BYTES = 8 * 1024 * 1024;
 const CONTINUATION_TIMEOUT_MS = 30000;
 const MAX_PENDING_ICE_CANDIDATES = 128;
-const HELLO_FEATURE_CLOSE = 'namespace-close';
-const HELLO_FEATURE_HEARTBEAT = 'heartbeat';
-const HELLO_FEATURE_ASSET_CREDIT = 'asset-credit';
 const HEARTBEAT_INTERVAL_MS = 15000;
 const LIVENESS_TIMEOUT_MS = 45000;
 const IDLE_CLOSE_MS = 30000;
@@ -130,8 +127,7 @@ class NamespaceChannel {
 	}
 
 	emit(event, ...args) {
-		this.#transport.sendEvent(this.#namespace, event, args);
-		return this;
+		return this.connected && this.#transport.sendEvent(this.#namespace, event, args);
 	}
 
 	timeout(ms) {
@@ -295,7 +291,6 @@ class WebrtcTransport {
 	#helloReject = null;
 	#state = 'IDLE';
 	#pendingCandidates = [];
-	#features = new Set();
 	#idleTimer = null;
 	#assets = null;
 	#assetsReady = null;
@@ -318,10 +313,6 @@ class WebrtcTransport {
 
 	get state() {
 		return this.#state;
-	}
-
-	get supportsAssets() {
-		return !this.#closed && this.#features.has(HELLO_FEATURE_ASSET_CREDIT);
 	}
 
 	onLost(handler) {
@@ -351,7 +342,9 @@ class WebrtcTransport {
 		this.#state = 'REQUESTED';
 		this.#signal = io(`/fleet/${this.#nodeId}/signal`, {
 			path: '/api',
-			reconnection: false
+			reconnection: true,
+			reconnectionDelay: 1000,
+			reconnectionDelayMax: 10000
 		});
 
 		const ack = await this.#requestSession(remaining(deadline));
@@ -397,7 +390,16 @@ class WebrtcTransport {
 				this.#lose();
 			}
 		});
-		this.#signal.on('disconnect', () => { this.#lose(); });
+		this.#signal.on('disconnect', () => {
+			if (this.#state !== 'CONNECTED') {
+				this.#lose({ failed: true });
+			}
+		});
+		this.#signal.on('connect', () => {
+			if (this.#state === 'CONNECTED' && this.#sessionId) {
+				this.#signal.emit('webrtc:session:resume', { sessionId: this.#sessionId }, () => {});
+			}
+		});
 
 		this.#assets = this.#pc.createDataChannel('assets', { ordered: true });
 		this.#assets.binaryType = 'arraybuffer';
@@ -418,7 +420,7 @@ class WebrtcTransport {
 		this.#events.onclose = () => { this.#lose(); };
 		this.#events.onerror = () => { this.#lose(); };
 		this.#sendQueue = new DataChannelSendQueue(this.#events, {
-			onFailure: (error) => { this.#lose({ failed: !error?.overflow }); }
+			onFailure: () => { this.#lose(); }
 		});
 
 		const offer = await this.#pc.createOffer();
@@ -450,8 +452,8 @@ class WebrtcTransport {
 				clearTimeout(timer);
 				reject(new Error(message));
 			};
-			this.#signal.on('connect_error', (error) => { fail(error?.message || 'Signaling refused'); });
-			this.#signal.on('connect', () => {
+			this.#signal.once('connect_error', (error) => { fail(error?.message || 'Signaling refused'); });
+			this.#signal.once('connect', () => {
 				this.#signal.emit('webrtc:session:request', (response = {}) => {
 					clearTimeout(timer);
 					if (response.status !== 'succeeded') {
@@ -480,10 +482,7 @@ class WebrtcTransport {
 				reject(error);
 			};
 			const hello = () => {
-				this.#send(this.#events, [encodeEvent(EVENT_TAG.HELLO, {
-					v: PROTOCOL_VERSION,
-					features: [HELLO_FEATURE_HEARTBEAT]
-				})]);
+				this.#send(this.#events, [encodeEvent(EVENT_TAG.HELLO, { v: PROTOCOL_VERSION })]);
 			};
 			this.#events.onopen = hello;
 			if (this.#events.readyState === 'open') {
@@ -494,10 +493,6 @@ class WebrtcTransport {
 
 	async fetchAsset(path, { signal, acceptEncoding } = {}) {
 		signal?.throwIfAborted();
-		// Older nodes still use the HTTP fallback, avoiding an unbounded push stream.
-		if (!this.supportsAssets) {
-			throw new Error('Node does not support asset flow control');
-		}
 		if (this.#closed || !this.#assets) {
 			throw new Error('Transport closed');
 		}
@@ -714,7 +709,7 @@ class WebrtcTransport {
 	}
 
 	sendEvent(namespace, event, args) {
-		this.#sendEventFrame(EVENT_TAG.EVT, { ns: namespace, event, args });
+		return this.#sendEventFrame(EVENT_TAG.EVT, { ns: namespace, event, args });
 	}
 
 	activateNamespace(namespace) {
@@ -723,8 +718,7 @@ class WebrtcTransport {
 
 	closeNamespace(namespace) {
 		if (this.connected) {
-			const tag = this.#features.has(HELLO_FEATURE_CLOSE) ? EVENT_TAG.CLOSE : EVENT_TAG.STATE;
-			this.#sendEventFrame(tag, { ns: namespace });
+			this.#sendEventFrame(EVENT_TAG.CLOSE, { ns: namespace });
 		}
 		this.#channels.delete(namespace);
 		this.#scheduleIdleClose();
@@ -780,7 +774,7 @@ class WebrtcTransport {
 	}
 
 	#startHeartbeat() {
-		if (this.#heartbeatTimer || !this.#features.has(HELLO_FEATURE_HEARTBEAT)) {
+		if (this.#heartbeatTimer) {
 			return;
 		}
 		this.#lastInboundAt = Date.now();
@@ -858,7 +852,6 @@ class WebrtcTransport {
 				if (frame.body?.v !== PROTOCOL_VERSION || frame.body?.ok === false) {
 					this.#helloReject?.(new Error('Incompatible WebRTC protocol'));
 				} else {
-					this.#features = new Set(Array.isArray(frame.body?.features) ? frame.body.features : []);
 					this.#startHeartbeat();
 					this.#helloResolve?.();
 				}
@@ -889,7 +882,7 @@ class WebrtcTransport {
 		}
 	}
 
-	#lose({ failed = true } = {}) {
+	#lose({ failed = false } = {}) {
 		if (this.#closed) {
 			return;
 		}
@@ -961,10 +954,16 @@ const forNode = (nodeId) => {
 		return Promise.reject(new Error('WebRTC is unavailable'));
 	}
 
+	const now = Date.now();
+	for (const [id, until] of cooldowns) {
+		if (until <= now) {
+			cooldowns.delete(id);
+		}
+	}
 	const cooldown = cooldowns.get(nodeId);
-	if (cooldown && Date.now() < cooldown) {
+	if (cooldown) {
 		const error = new Error('WebRTC recently failed for this node');
-		error.retryAfterMs = cooldown - Date.now();
+		error.retryAfterMs = cooldown - now;
 		return Promise.reject(error);
 	}
 

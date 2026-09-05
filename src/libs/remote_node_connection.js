@@ -4,19 +4,16 @@ import { forNode, isAvailable, CONNECT_TIMEOUT_MS } from 'libs/webrtc_transport'
 const PREPARE_BUDGET_MS = 5000;
 const ACTIVATE_BUDGET_MS = 5000;
 const UPGRADE_DEADLINE_MS = CONNECT_TIMEOUT_MS + PREPARE_BUDGET_MS + ACTIVATE_BUDGET_MS;
+const RETRY_DELAY_MS = 5000;
 
 const remaining = (deadline) => {
 	return Math.max(0, deadline - Date.now());
 };
 
-const nextTask = () => {
-	return new Promise((resolve) => { setTimeout(resolve, 0); });
-};
-
 /**
  * The UI-facing connection. It starts on the Fleet Socket.IO proxy and privately prepares a
- * WebRTC namespace. The fallback must establish first so its initial state snapshot is delivered;
- * only then is the prepared namespace activated and made the single event source.
+ * WebRTC namespace. Activating the prepared namespace makes the node re-emit its state snapshot
+ * over the data channel, which then becomes the single event source.
  */
 class RemoteNodeConnection {
 	#connection;
@@ -25,7 +22,6 @@ class RemoteNodeConnection {
 	#closed = false;
 	#generation = 0;
 	#retryTimer = null;
-	#retryDelay = 5000;
 	#upgrading = false;
 	#unsubscribeLost = null;
 	#unsubscribeChannelLost = null;
@@ -52,7 +48,7 @@ class RemoteNodeConnection {
 		this.#unsubscribeChannelLost = null;
 	}
 
-	#scheduleUpgrade(delay = this.#retryDelay) {
+	#scheduleUpgrade(delay = RETRY_DELAY_MS) {
 		if (this.#closed || this.#upgrading || this.#retryTimer !== null || this.#connection.usingWebrtc ||
 			!this.#nodeId || !this.#namespace || !isAvailable()) {
 			return;
@@ -64,14 +60,12 @@ class RemoteNodeConnection {
 			let retryAfter = 0;
 			try {
 				await this.#upgrade(generation);
-				this.#retryDelay = 5000;
 			} catch (error) {
 				retryAfter = error.retryAfterMs || 0;
 			} finally {
 				this.#upgrading = false;
 				if (!this.#closed && !this.#connection.usingWebrtc) {
-					this.#scheduleUpgrade(Math.max(this.#retryDelay, retryAfter));
-					this.#retryDelay = Math.min(this.#retryDelay * 2, 60000);
+					this.#scheduleUpgrade(Math.max(RETRY_DELAY_MS, retryAfter));
 				}
 			}
 		}, delay);
@@ -87,12 +81,7 @@ class RemoteNodeConnection {
 		let unsubscribeLost = null;
 		let unsubscribeChannelLost = null;
 		try {
-			await Promise.all([
-				channel.whenPrepared(remaining(deadline)),
-				this.#connection.whenSocketIoConnected(remaining(deadline))
-			]);
-			// Let Socket.IO deliver packets queued with its connect packet before suppressing that path.
-			await nextTask();
+			await channel.whenPrepared(remaining(deadline));
 			if (this.#closed || generation !== this.#generation || remaining(deadline) <= 0) {
 				throw new Error('WebRTC upgrade deadline exceeded');
 			}
