@@ -1,8 +1,7 @@
 import { io } from 'socket.io-client';
 
 const RESERVED_EVENTS = ['connect', 'disconnect', 'connect_error'];
-const ENGINE_DRAIN_TIMEOUT_MS = 1500;
-const MIN_DRAIN_GRACE_MS = 100;
+const DRAIN_GRACE_MS = 1500;
 
 class SocketTransport {
 	#io;
@@ -34,10 +33,6 @@ class SocketTransport {
 
 	get state() {
 		return this.#state;
-	}
-
-	get socketIoConnected() {
-		return Boolean(this.#io.connected);
 	}
 
 	get #target() {
@@ -96,7 +91,9 @@ class SocketTransport {
 	}
 
 	emit(event, ...args) {
-		this.#target.emit(event, ...args);
+		if (!this.#rtc || !this.#rtc.emit(event, ...args)) {
+			this.#io.emit(event, ...args);
+		}
 		return this;
 	}
 
@@ -114,28 +111,6 @@ class SocketTransport {
 				return target === this.#io ? this.#trackSocketIoCall(pending) : pending;
 			}
 		};
-	}
-
-	whenSocketIoConnected(timeoutMs) {
-		if (this.#io.connected) {
-			return Promise.resolve();
-		}
-
-		return new Promise((resolve, reject) => {
-			const cleanup = () => {
-				clearTimeout(timer);
-				this.#io.off('connect', onConnect);
-			};
-			const onConnect = () => {
-				cleanup();
-				resolve();
-			};
-			const timer = setTimeout(() => {
-				cleanup();
-				reject(new Error('Socket.IO proxy timed out'));
-			}, timeoutMs);
-			this.#io.once('connect', onConnect);
-		});
 	}
 
 	connect() {
@@ -189,37 +164,15 @@ class SocketTransport {
 
 	async #drainSocketIo(generation) {
 		const calls = [...this.#pendingSocketIoCalls];
-		await new Promise((resolve) => { setTimeout(resolve, MIN_DRAIN_GRACE_MS); });
+		await new Promise((resolve) => { setTimeout(resolve, DRAIN_GRACE_MS); });
 		if (calls.length) {
 			// Each call already owns its caller-selected acknowledgement timeout. Keeping the old path
 			// alive through that bound preserves its result without allowing new work onto it.
 			await Promise.allSettled(calls);
 		}
-		await this.#waitForEngineDrain();
 		if (this.#switchGeneration === generation && this.#rtc) {
 			this.#io.disconnect();
 		}
-	}
-
-	#waitForEngineDrain() {
-		const engine = this.#io.io?.engine;
-		if (!engine || !engine.writeBuffer?.length) {
-			return Promise.resolve();
-		}
-		return new Promise((resolve) => {
-			let settled = false;
-			const finish = () => {
-				if (settled) {
-					return;
-				}
-				settled = true;
-				clearTimeout(timer);
-				engine.off?.('drain', finish);
-				resolve();
-			};
-			const timer = setTimeout(finish, ENGINE_DRAIN_TIMEOUT_MS);
-			engine.once?.('drain', finish);
-		});
 	}
 
 	#revert() {

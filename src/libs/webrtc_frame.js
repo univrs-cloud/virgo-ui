@@ -119,6 +119,15 @@ const encodeAssetControl = (tag, requestId, body) => {
 	return concat([header, encoder.encode(JSON.stringify(body ?? {}))]);
 };
 
+const encodeAssetChunk = (requestId, seq, bytes) => {
+	const header = new Uint8Array(ASSET_CHUNK_HEADER_SIZE);
+	header[0] = ASSET_TAG.CHUNK;
+	const view = new DataView(header.buffer);
+	view.setUint32(1, requestId, true);
+	view.setUint32(5, seq, true);
+	return concat([header, bytes]);
+};
+
 const decodeAssetFrame = (message) => {
 	const bytes = asBytes(message);
 	if (!bytes.length || !ASSET_TAGS.has(bytes[0])) {
@@ -166,5 +175,6 @@ export {
 	decodeEvent,
 	encodeContinuation,
 	encodeAssetControl,
+	encodeAssetChunk,
 	decodeAssetFrame
 };
