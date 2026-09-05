@@ -4,13 +4,9 @@ const REQUEST_TYPE = 'virgo:asset:request';
 const READY_TYPE = 'virgo:asset:ready';
 const UNREADY_TYPE = 'virgo:asset:unready';
 const PROBE_TYPE = 'virgo:asset:probe';
-const PING_TYPE = 'virgo:asset:ping';
-const PONG_TYPE = 'virgo:asset:pong';
 const TRANSPORT_WAIT_MS = 10000;
-const WORKER_REPLY_MS = 1500;
 
 let activeNodeId = null;
-let workerRecovered = false;
 
 const transferableBytes = (value) => {
 	if (value.byteOffset === 0 && value.buffer.byteLength === value.byteLength) {
@@ -122,52 +118,6 @@ const serve = async (port, { nodeId, path, flowControl, acceptEncoding }) => {
 	}
 };
 
-const workerResponds = () => {
-	return new Promise((resolve) => {
-		const controller = navigator.serviceWorker.controller;
-		if (!controller) {
-			resolve(false);
-			return;
-		}
-		const onMessage = (event) => {
-			if (event.data?.type === PONG_TYPE) {
-				cleanup();
-				resolve(true);
-			}
-		};
-		const cleanup = () => {
-			clearTimeout(timer);
-			navigator.serviceWorker.removeEventListener('message', onMessage);
-		};
-		const timer = setTimeout(() => {
-			cleanup();
-			resolve(false);
-		}, WORKER_REPLY_MS);
-		navigator.serviceWorker.addEventListener('message', onMessage);
-		controller.postMessage({ type: PING_TYPE });
-	});
-};
-
-const ensureFreshWorker = async (registration) => {
-	if (workerRecovered || !navigator.serviceWorker.controller) {
-		return;
-	}
-	if (await workerResponds()) {
-		return;
-	}
-	if (!navigator.serviceWorker.controller) {
-		return;
-	}
-	workerRecovered = true;
-	console.warn('Replacing a stale asset service worker.');
-	try {
-		await registration.unregister();
-		await navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' });
-	} catch (error) {
-		console.error('Error replacing the asset service worker:', error);
-	}
-};
-
 const start = (nodeId) => {
 	if (!('serviceWorker' in navigator) || !nodeId) {
 		return;
@@ -212,7 +162,6 @@ const start = (nodeId) => {
 		.then((registration) => {
 			registration.update().catch(() => {});
 			announceWhenReady(nodeId);
-			return ensureFreshWorker(registration);
 		})
 		.catch((error) => {
 			console.error('Error registering the asset service worker:', error);
