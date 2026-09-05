@@ -45,6 +45,9 @@ u-toast {
 		margin-bottom: 0;
 	}
 }
+.account-toggle:hover {
+	background-color: tint-color($primary, 20%) !important;
+}
 
 .badge:not(.rounded-pill) {
 	font-weight: 300;
