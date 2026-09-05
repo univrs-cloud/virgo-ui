@@ -82,7 +82,13 @@ const runtime = async (state) => {
 			import('fleet/services/push').then((pushService) => { pushService.init(); }).catch((error) => {});
 		}
 		if (onNodeView) {
-			import('libs/node_asset_bridge').then((assetBridge) => { assetBridge.start(viewedNodeId); }).catch((error) => {});
+			try {
+				const assetBridge = await import('libs/node_asset_bridge');
+				assetBridge.start(viewedNodeId);
+				await assetBridge.prepareTransport(viewedNodeId);
+			} catch (error) {
+				console.error('Error preparing the node asset transport:', error);
+			}
 		}
 		if (!onNodeView) {
 			if (process.env.NODE_ENV === 'production') {
