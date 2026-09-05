@@ -4,6 +4,7 @@ import 'libs/bootstrap';
 import 'libs/dialog';
 import 'libs/components';
 import * as runtimeService from 'libs/services/runtime';
+import { forNode, isAvailable } from 'libs/webrtc_transport';
 
 try {
 	let encodedAccount = (document.cookie.match('(^|;)\\s*' + 'account' + '\\s*=\\s*([^;]+)')?.pop());
@@ -15,6 +16,12 @@ try {
 window.isAuthenticated = !_.isEmpty(account);
 window.isAdmin = isAuthenticated && _.includes(account.groups, 'admins');
 window.runtimeRole = null;
+
+const viewedNodeId = new URL(document.baseURI).pathname.match(/^\/nodes\/([^/]+)\//)?.[1] ?? null;
+const onNodeView = Boolean(viewedNodeId);
+if (onNodeView && isAuthenticated && isAvailable()) {
+	forNode(viewedNodeId).catch((error) => {});
+}
 
 const render = async (state) => {
 	if (_.isNull(state.setupCompleted) || state.update === -1) {
@@ -74,8 +81,6 @@ const runtime = async (state) => {
 		if (isAuthenticated) {
 			import('fleet/services/push').then((pushService) => { pushService.init(); }).catch((error) => {});
 		}
-		const viewedNodeId = new URL(document.baseURI).pathname.match(/^\/nodes\/([^/]+)\//)?.[1] ?? null;
-		const onNodeView = Boolean(viewedNodeId);
 		if (onNodeView) {
 			import('libs/node_asset_bridge').then((assetBridge) => { assetBridge.start(viewedNodeId); }).catch((error) => {});
 		}
