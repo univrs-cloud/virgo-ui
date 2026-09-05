@@ -492,7 +492,7 @@ class WebrtcTransport {
 		});
 	}
 
-	async fetchAsset(path, { signal } = {}) {
+	async fetchAsset(path, { signal, acceptEncoding } = {}) {
 		signal?.throwIfAborted();
 		// Older nodes still use the HTTP fallback, avoiding an unbounded push stream.
 		if (!this.supportsAssets) {
@@ -543,7 +543,7 @@ class WebrtcTransport {
 			const aborted = () => { this.#abortAsset(requestId, 'Asset request cancelled'); };
 			request.cleanup = () => { signal?.removeEventListener('abort', aborted); };
 			signal?.addEventListener('abort', aborted, { once: true });
-			if (!this.#sendAssetFrame(ASSET_TAG.REQ, requestId, { path, flowControl: true })) {
+			if (!this.#sendAssetFrame(ASSET_TAG.REQ, requestId, { path, flowControl: true, acceptEncoding })) {
 				this.#assetRequests.delete(requestId);
 				request.cleanup();
 				clearTimeout(request.timer);

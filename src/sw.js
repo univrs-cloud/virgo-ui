@@ -60,6 +60,7 @@ const ASSET_UNREADY_TYPE = 'virgo:asset:unready';
 const ASSET_PROBE_TYPE = 'virgo:asset:probe';
 const ASSET_HEAD_TIMEOUT_MS = 5000;
 const ASSET_MAX_FRAME_BYTES = 64 * 1024;
+const ASSET_ACCEPT_ENCODING = (typeof DecompressionStream === 'function') ? 'gzip' : null;
 
 const readyClients = new Map();
 
@@ -81,6 +82,13 @@ const probeClient = (clientId) => {
 	self.clients.get(clientId)
 		.then((client) => { client?.postMessage({ type: ASSET_PROBE_TYPE }); })
 		.catch(() => {});
+};
+
+const decodeAssetBody = (stream, encoding) => {
+	if (encoding !== 'gzip') {
+		return stream;
+	}
+	return stream.pipeThrough(new DecompressionStream('gzip'));
 };
 
 const requestAssetFromPage = (client, nodeId, path) => {
@@ -191,7 +199,13 @@ const requestAssetFromPage = (client, nodeId, path) => {
 			}
 		};
 
-		client.postMessage({ type: ASSET_REQUEST_TYPE, nodeId, path, flowControl: true }, [channel.port2]);
+		client.postMessage({
+			type: ASSET_REQUEST_TYPE,
+			nodeId,
+			path,
+			flowControl: true,
+			acceptEncoding: ASSET_ACCEPT_ENCODING
+		}, [channel.port2]);
 	});
 };
 
@@ -211,7 +225,7 @@ const routeNodeAsset = async (event, nodeId, path) => {
 	if (headers['content-type']) {
 		responseHeaders.set('Content-Type', headers['content-type']);
 	}
-	return new Response(stream, { status, headers: responseHeaders });
+	return new Response(decodeAssetBody(stream, headers['content-encoding']), { status, headers: responseHeaders });
 };
 
 self.addEventListener('fetch', (event) => {
