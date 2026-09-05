@@ -240,6 +240,7 @@ main,
 	}
 	header {
 		nav {
+			z-index: 1029;
 			position: fixed;
 			top: 0;
 			width: 15rem;
@@ -248,10 +249,15 @@ main,
 				height: 100%;
 				padding: 3.5rem 0.75rem 1rem 0.75rem;
 			}
+			.account,
+			.account .dropdown {
+				width: 100%;
+			}
 			.account {
 				.dropdown-menu {
 					left: 0;
 					right: auto;
+					min-width: 100%;
 				}
 			}
 			.nav {
