@@ -58,8 +58,6 @@ const ASSET_REQUEST_TYPE = 'virgo:asset:request';
 const ASSET_READY_TYPE = 'virgo:asset:ready';
 const ASSET_UNREADY_TYPE = 'virgo:asset:unready';
 const ASSET_PROBE_TYPE = 'virgo:asset:probe';
-const ASSET_PING_TYPE = 'virgo:asset:ping';
-const ASSET_PONG_TYPE = 'virgo:asset:pong';
 const ASSET_HEAD_TIMEOUT_MS = 5000;
 const ASSET_MAX_FRAME_BYTES = 64 * 1024;
 const ASSET_MAX_BUFFERED_BYTES = 8 * 1024 * 1024;
@@ -70,10 +68,6 @@ const readyClients = new Map();
 self.addEventListener('message', (event) => {
 	const clientId = event.source?.id;
 	if (!clientId) {
-		return;
-	}
-	if (event.data?.type === ASSET_PING_TYPE) {
-		event.source?.postMessage({ type: ASSET_PONG_TYPE });
 		return;
 	}
 	if (event.data?.type === ASSET_READY_TYPE) {
