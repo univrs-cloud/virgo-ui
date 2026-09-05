@@ -23,7 +23,7 @@ const announceWhenReady = (nodeId) => {
 	}).catch(() => {});
 };
 
-const serve = async (port, { nodeId, path, flowControl }) => {
+const serve = async (port, { nodeId, path, flowControl, acceptEncoding }) => {
 	if (flowControl !== true) {
 		throw new Error('Asset bridge requires flow control');
 	}
@@ -79,7 +79,7 @@ const serve = async (port, { nodeId, path, flowControl }) => {
 	armTimeout();
 	try {
 		const transport = await pending;
-		const { status, headers, stream } = await transport.fetchAsset(path, { signal: abort.signal });
+		const { status, headers, stream } = await transport.fetchAsset(path, { signal: abort.signal, acceptEncoding });
 		reader = stream.getReader();
 		if (abort.signal.aborted) {
 			stop();
