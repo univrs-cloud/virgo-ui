@@ -62,6 +62,7 @@ const ASSET_PING_TYPE = 'virgo:asset:ping';
 const ASSET_PONG_TYPE = 'virgo:asset:pong';
 const ASSET_HEAD_TIMEOUT_MS = 5000;
 const ASSET_MAX_FRAME_BYTES = 64 * 1024;
+const ASSET_MAX_BUFFERED_BYTES = 8 * 1024 * 1024;
 const ASSET_ACCEPT_ENCODING = (typeof DecompressionStream === 'function') ? 'gzip' : null;
 
 const readyClients = new Map();
@@ -215,6 +216,24 @@ const requestAssetFromPage = (client, nodeId, path) => {
 	});
 };
 
+const bufferAssetBody = async (stream) => {
+	const reader = stream.getReader();
+	const parts = [];
+	let total = 0;
+	while (true) {
+		const { done, value } = await reader.read();
+		if (done) {
+			return new Blob(parts);
+		}
+		total += value.byteLength;
+		if (total > ASSET_MAX_BUFFERED_BYTES) {
+			reader.cancel().catch(() => {});
+			throw new Error('Asset exceeded the buffer limit');
+		}
+		parts.push(value);
+	}
+};
+
 const routeNodeAsset = async (event, nodeId, path) => {
 	const client = await self.clients.get(event.clientId);
 	if (!client) {
@@ -227,11 +246,12 @@ const routeNodeAsset = async (event, nodeId, path) => {
 		throw new Error(`Node answered ${status}`);
 	}
 
+	const body = await bufferAssetBody(decodeAssetBody(stream, headers['content-encoding']));
 	const responseHeaders = new Headers();
 	if (headers['content-type']) {
 		responseHeaders.set('Content-Type', headers['content-type']);
 	}
-	return new Response(decodeAssetBody(stream, headers['content-encoding']), { status, headers: responseHeaders });
+	return new Response(body, { status, headers: responseHeaders });
 };
 
 self.addEventListener('fetch', (event) => {
@@ -261,7 +281,8 @@ self.addEventListener('fetch', (event) => {
 	}
 
 	event.respondWith(
-		routeNodeAsset(event, match[1], `/${match[2]}${url.search}`).catch(() => {
+		routeNodeAsset(event, match[1], `/${match[2]}${url.search}`).catch((error) => {
+			console.warn('Node asset fell back to the network:', url.pathname, error?.message);
 			readyClients.delete(event.clientId);
 			return fetch(request);
 		})
