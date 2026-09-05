@@ -16,10 +16,8 @@ const announceWhenReady = (nodeId) => {
 	if (!pending) {
 		return;
 	}
-	pending.then((transport) => {
-		if (transport.supportsAssets) {
-			navigator.serviceWorker.controller?.postMessage({ type: READY_TYPE, nodeId });
-		}
+	pending.then(() => {
+		navigator.serviceWorker.controller?.postMessage({ type: READY_TYPE, nodeId });
 	}).catch(() => {});
 };
 
