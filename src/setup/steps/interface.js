@@ -212,8 +212,11 @@ const updateInterface = (event) => {
 		return data[row.querySelector('u-input').getAttribute('name')];
 	}));
 	_.each(dnsRows, (row) => { delete data[row.querySelector('u-input').getAttribute('name')]; });
-	// Nothing to apply when the interface already holds this configuration — move on without a job.
-	if (_.isEqual(data, currentConfiguration(networkService.getDefaultInterface()))) {
+	// Nothing to apply when the interface already holds this configuration — move on without a job. A
+	// virtual IP left out of the submission is left out of the comparison too, so a locked field never
+	// reads as a change.
+	const omitted = (_.has(data, 'virtualIp') ? [] : ['virtualIp']);
+	if (_.isEqual(_.omit(data, omitted), _.omit(currentConfiguration(networkService.getDefaultInterface()), omitted))) {
 		goNext();
 		return;
 	}
