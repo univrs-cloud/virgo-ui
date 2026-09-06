@@ -173,6 +173,54 @@ main,
 	}
 }
 
+.connecting {
+	display: none;
+	gap: 0.625rem;
+	font-size: 1.125rem;
+	color: var(--bs-blue-300);
+}
+.connecting-dots {
+	display: flex;
+	gap: 0.3125rem;
+	i {
+		width: 0.3125rem;
+		height: 0.3125rem;
+		border-radius: 50%;
+		background-color: var(--bs-primary);
+		animation: connecting-dot 1.6s ease-in-out infinite;
+	}
+	@for $dot from 1 through 3 {
+		&:nth-of-type(1) i:nth-child(#{$dot}) {
+			animation-delay: #{$dot * 0.14}s;
+		}
+		&:nth-of-type(2) i:nth-child(#{$dot}) {
+			animation-delay: #{($dot + 3) * 0.14}s;
+		}
+	}
+}
+@keyframes connecting-dot {
+	0%,
+	60%,
+	100% {
+		opacity: 0.2;
+		transform: scale(0.8);
+	}
+	25% {
+		opacity: 1;
+		transform: scale(1.15);
+	}
+}
+html:not(:has(head > base[href="/"])) {
+	main {
+		.booting {
+			display: none;
+		}
+		.connecting {
+			display: flex;
+		}
+	}
+}
+
 .eula {
 	// Everything around the scroll area (hero, card padding, button) adds up to ~219px.
 	max-height: calc(100dvh - 219px - var(--chrome));
