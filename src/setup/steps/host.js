@@ -9,6 +9,7 @@ const CHECK_DELAY_MS = 400;
 let isPrefilled = false;
 let availability = { key: '', status: 'idle' };
 let availabilityRequest = null;
+let pendingIdentifier = null;
 const hostTemplate = _.template(hostPartial);
 document.querySelector('main .wizard').insertAdjacentHTML('beforeend', hostTemplate());
 const step = document.querySelector('#host');
@@ -119,15 +120,19 @@ const goNext = () => {
 };
 
 const idle = () => {
+	pendingIdentifier = null;
 	submitButton.reset();
 	backButton.disabled = false;
 };
 
+/** The identifier the node actually answers to, matched against the one it was asked for. */
+const isIdentifierApplied = (system) => {
+	return Boolean(pendingIdentifier) && _.isEqual(currentIdentifier(system), pendingIdentifier);
+};
+
 // The job is what the form follows: while one is running the form is locked, and the step advances
-// when it completes — but only if it is the step on screen, since a job outlives the page that
-// started it. Only a job that has reported back concludes the step: an empty list is the gap between
-// asking for one and the node queueing it, and unlocking there would hand the form back mid-flight.
-// A failure leaves the user here; the job toaster carries the reason. The fields are seeded once,
+// when it finishes — but only if it is the step on screen, since a job outlives the page that started
+// it. A failure leaves the user here; the job toaster carries the reason. The fields are seeded once,
 // from the first delivery that carries the node's identifier; after that the form belongs to whoever
 // is typing in it.
 const render = (state) => {
@@ -136,9 +141,22 @@ const render = (state) => {
 	if (job && !isSettled) {
 		backButton.disabled = true;
 		submitButton.loading();
-	} else if (isSettled && submitButton.disabled) {
+		return;
+	}
+
+	if (submitButton.disabled) {
+		// The node answering to the identifier it was asked for is the outcome the job was reporting, and
+		// it outlives the report: renaming the host reconfigures the interface it is reached on, so the
+		// job can settle while nothing is listening. Every connection is told the current system, so that
+		// answer arrives whether the report did or not — which is why the step waits on it rather than on
+		// the job reporting completed. Only a failure concludes the step without it.
+		const isApplied = isIdentifierApplied(state.system);
+		if (job?.progress?.state !== 'failed' && !isApplied) {
+			return;
+		}
+
 		idle();
-		if (job.progress.state === 'completed' && !step.classList.contains('d-none')) {
+		if (isApplied && !step.classList.contains('d-none')) {
 			goNext();
 		}
 	}
@@ -169,6 +187,7 @@ const updateIdentifier = async (event) => {
 		return;
 	}
 
+	pendingIdentifier = data;
 	backButton.disabled = true;
 	submitButton.loading();
 	networkService.updateHostIdentifier(data);

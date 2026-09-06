@@ -20,6 +20,8 @@ const warningReason = step.querySelector('.certificate-reason');
 const CERTIFICATE_GRACE_MS = 60000;
 let waitStartedAt = null;
 let gaveUp = false;
+let graceTimeout = null;
+let lastState = null;
 
 const goNext = (event) => {
 	completeStep('apps');
@@ -38,9 +40,20 @@ const certificateReason = (certificate) => {
 	return `${certificate.fqdn} resolves, but no certificate has been issued yet. Check port forwarding and the node's logs.`;
 };
 
+// Waiting for a certificate is the one state the node has nothing new to say about, so the grace
+// period cannot be measured on the next delivery — there may not be one. It gets its own timer, which
+// re-renders the state it was given so the warning appears on time and the step stops being a dead end.
 const renderWaiting = (fqdn) => {
 	waitStartedAt = waitStartedAt || Date.now();
-	const expired = gaveUp || (Date.now() - waitStartedAt) >= CERTIFICATE_GRACE_MS;
+	const remaining = CERTIFICATE_GRACE_MS - (Date.now() - waitStartedAt);
+	const expired = gaveUp || remaining <= 0;
+	if (!expired && _.isNull(graceTimeout)) {
+		graceTimeout = setTimeout(() => {
+			graceTimeout = null;
+			render(lastState);
+		}, remaining);
+	}
+
 	checkingFqdn.textContent = fqdn || 'this node';
 	checkingRow.classList.toggle('d-none', expired);
 	checkingRow.classList.toggle('d-flex', !expired);
@@ -50,6 +63,10 @@ const renderWaiting = (fqdn) => {
 
 const renderCertificate = (certificate) => {
 	if (!_.isNil(certificate) && (!certificate.required || certificate.hasCertificate)) {
+		clearTimeout(graceTimeout);
+		graceTimeout = null;
+		waitStartedAt = null;
+		gaveUp = false;
 		checkingRow.classList.add('d-none');
 		warningRow.classList.add('d-none');
 		return true;
@@ -66,6 +83,7 @@ const renderCertificate = (certificate) => {
 // doing — and holds the wizard here, in both directions, until both apps are up: the password written
 // by the next step goes into a file Authelia has to have created.
 const render = (state) => {
+	lastState = state;
 	const apps = appsService.getCoreApps(state.configured, state.containers, state.jobs);
 	morphdom(
 		core,

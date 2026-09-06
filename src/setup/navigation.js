@@ -17,6 +17,10 @@ import * as storageService from 'setup/services/storage';
 import { STEPS, completeStepsBefore, stepPath } from 'setup/wizard';
 
 const container = document.querySelector('main');
+const loading = container.querySelector('.loading');
+const wizard = container.querySelector('.wizard');
+let isStarted = false;
+const bootSubscriptions = [];
 
 const showStep = (ctx) => {
 	_.each(container.querySelectorAll('.wizard > div'), (element) => { element.classList.add('d-none'); });
@@ -89,4 +93,37 @@ _.each(STEPS, ({ name, path }) => {
 page('*', (ctx) => {
 	page.redirect('/');
 });
-page.start();
+
+/** Every guard above turns someone away on what the node reports, and page.js decides the route once,
+ * on load. A guard reading a property that has not arrived cannot tell "there is no pool" from "no
+ * answer yet", so a refresh deep in the wizard would bounce back to a step that is already done. The
+ * wizard therefore stays behind the loading screen until each of them has an answer — a failed load
+ * included, since the node reports that as `false` and it is as much an answer as any other. */
+const isReported = () => {
+	return !_.isNil(networkService.getSystem())
+		&& !_.isNil(storageService.getStorage())
+		&& !_.isNil(fleetService.getConfiguration());
+};
+
+const start = () => {
+	if (isStarted) {
+		return;
+	}
+
+	isStarted = true;
+	_.each(bootSubscriptions, (unsubscribe) => { unsubscribe(); });
+	loading.remove();
+	container.removeAttribute('class');
+	wizard.classList.remove('d-none');
+	page.start();
+};
+
+const startWhenReported = () => {
+	if (isReported()) {
+		start();
+	}
+};
+
+_.each([networkService, storageService, fleetService], (service) => {
+	bootSubscriptions.push(service.subscribe([startWhenReported]));
+});
