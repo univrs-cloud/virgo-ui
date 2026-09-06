@@ -52,13 +52,15 @@ const idle = () => {
 	_.each(step.querySelectorAll('[data-action="back"]'), (button) => { button.disabled = false; });
 };
 
-// The job is what the form follows: while one is running the form is locked, and the step advances on
-// a completed job that left the node holding a token — but only if it is the step on screen, since a
-// job outlives the page that started it. Only a job that has reported back concludes the step: an
-// empty list is the gap between asking for one and the node queueing it, and unlocking there would
-// hand the form back mid-flight. Anything short of a registered node leaves the user here to try again;
-// the job toaster carries the reason. A node that already holds a token is tied to that account, so the
-// email is seeded once and can only be confirmed from then on.
+// The job is what the form follows: while one is running the form is locked, and the step advances once
+// the node holds a token — but only if it is the step on screen, since a job outlives the page that
+// started it. The token is the outcome the job was reporting and it outlives the report: every
+// connection is told the configuration it lives in, so it arrives whether the report did or not, and
+// the step waits on it rather than on the job reporting completed. An empty list on its own decides
+// nothing — that is also the gap between asking for a job and the node queueing it. Only a failure
+// concludes the step without a token, and leaves the user here to try again; the job toaster carries
+// the reason. A node that already holds a token is tied to that account, so the email is seeded once
+// and can only be confirmed from then on.
 const render = (state) => {
 	configuration = state.configuration;
 	const job = _.find(state.jobs, { name: fleetService.REGISTER_JOB });
@@ -66,11 +68,14 @@ const render = (state) => {
 	if (job && !isSettled) {
 		_.each(step.querySelectorAll('[data-action="back"]'), (button) => { button.disabled = true; });
 		submitButton.loading();
-	} else if (isSettled && submitButton.disabled) {
-		idle();
-		if (job.progress.state === 'completed' && fleetService.isRegistered(configuration) && !step.classList.contains('d-none')) {
-			isRegistering = false;
-			goNext();
+	} else if (submitButton.disabled) {
+		const isRegistered = fleetService.isRegistered(configuration);
+		if (job?.progress?.state === 'failed' || isRegistered) {
+			idle();
+			if (isRegistered && !step.classList.contains('d-none')) {
+				isRegistering = false;
+				goNext();
+			}
 		}
 	}
 

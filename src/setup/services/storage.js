@@ -55,6 +55,10 @@ const getUsableDrives = (drives) => {
 	return _.filter(drives, 'eui');
 };
 
+const getStorage = () => {
+	return Host.getStorage();
+};
+
 const getDrives = () => {
 	return Host.getDrives();
 };
@@ -80,6 +84,7 @@ export {
 	POOL_TYPE,
 	MINIMUM_DRIVES,
 	subscribe,
+	getStorage,
 	getPool,
 	getImportablePool,
 	getForeignPools,
