@@ -1,23 +1,23 @@
-<tr class="item" data-name="<%-bookmark.name%>">
+<tr class="item" data-name="<%-shortcut.name%>">
 	<td class="d-none d-md-table-cell" style="width: 1px;">
 		<div class="row-image">
-			<img src="<%-(_.includes(bookmark.icon, '/') ? bookmark.icon : `assets/img/bookmarks/${bookmark.icon}`)%>">
+			<img src="<%-(_.includes(shortcut.icon, '/') ? shortcut.icon : `assets/img/shortcuts/${shortcut.icon}`)%>">
 		</div>
 	</td>
 	<td style="min-width: 210px; max-width: 0;">
 		<div class="d-flex align-items-center mb-n1">
-			<div class="text-truncate"><%-bookmark.title%></div>
+			<div class="text-truncate"><%-shortcut.title%></div>
 		</div>
-		<%if (!_.isEmpty(bookmark.url)) {%>
-			<a href="<%-bookmark.url%>" target="<%-(bookmark?.target || bookmark.name)%>" class="d-inline-flex align-items-center link-underline link-underline-opacity-0 link-underline-opacity-75-hover max-w-100">
-				<small class="text-truncate min-w-0"><%-bookmark.url%></small><i class="icon-solid icon-arrow-up-right-from-square icon-fw icon-2xs ms-1 d-none d-sm-block"></i>
+		<%if (!_.isEmpty(shortcut.url)) {%>
+			<a href="<%-shortcut.url%>" target="<%-(shortcut?.target || shortcut.name)%>" class="d-inline-flex align-items-center link-underline link-underline-opacity-0 link-underline-opacity-75-hover max-w-100">
+				<small class="text-truncate min-w-0"><%-shortcut.url%></small><i class="icon-solid icon-arrow-up-right-from-square icon-fw icon-2xs ms-1 d-none d-sm-block"></i>
 			</a>
 		<%} else {%>
 			&mdash;
 		<%}%>
 	</td>
 	<td class="d-none d-md-table-cell">
-		<u-badge color="purple" pill><%-bookmark.category%></u-badge>
+		<u-badge color="purple" pill><%-shortcut.category%></u-badge>
 	</td>
 	<td class="text-center px-0">
 		<%if (!_.isEmpty(jobs)) {%>
@@ -27,7 +27,7 @@
 			<div class="dropdown">
 				<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
 				<div class="dropdown-menu">
-					<a href="#bookmark-update" class="dropdown-item" data-bs-toggle="modal"><i class="icon-regular icon-pen icon-fw me-1"></i>Edit</a>
+					<a href="#shortcut-update" class="dropdown-item" data-bs-toggle="modal"><i class="icon-regular icon-pen icon-fw me-1"></i>Edit</a>
 					<div class="dropdown-divider"></div>
 					<a href="#" class="dropdown-item text-danger confirm" data-action="delete"><i class="icon-regular icon-times icon-fw me-1"></i>Delete</a>
 				</div>

@@ -1,15 +1,15 @@
 import appsEmptyPartial from 'node/modules/dashboard/partials/apps_empty.html';
 import categoryPartial from 'node/modules/dashboard/partials/category.html';
 import appPartial from 'node/modules/dashboard/partials/app.html';
-import bookmarkPartial from 'node/modules/dashboard/partials/bookmark.html';
+import shortcutPartial from 'node/modules/dashboard/partials/shortcut.html';
 import * as appService from 'node/modules/dashboard/services/app';
 import Sortable from 'sortablejs';
 
 const appsEmptyTemplate = _.template(appsEmptyPartial);
 const categorySomething = _.template(categoryPartial);
 const appTemplate = _.template(appPartial);
-const bookmarkTemplate = _.template(bookmarkPartial);
-const container = document.querySelector('#apps-bookmars');
+const shortcutTemplate = _.template(shortcutPartial);
+const container = document.querySelector('#apps-shortcuts');
 let sortable = null;
 let cards = [];
 let hasDraggingStarted = false;
@@ -103,8 +103,8 @@ const render = (state) => {
 				if (entity.type === 'app') {
 					return appTemplate({ app: entity });
 				}
-				if (entity.type === 'bookmark') {
-					return bookmarkTemplate({ bookmark: entity });
+				if (entity.type === 'shortcut') {
+					return shortcutTemplate({ shortcut: entity });
 				}
 				return '';
 			}), '');

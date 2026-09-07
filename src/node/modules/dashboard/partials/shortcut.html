@@ -1,0 +1,17 @@
+<div class="col col-xl-4 col-lg-4 col-md-12 col-sm-12 col-6">
+	<div class="card rounded-4 border-0" data-id="<%-shortcut.id%>" data-type="shortcut">
+		<div class="card-body ps-0 py-1">
+			<div class="row g-0 align-items-center">
+				<div class="card-image card-spacer col-auto p-2">
+					<img src="<%-(_.includes(shortcut.icon, '/') ? shortcut.icon : `assets/img/shortcuts/${shortcut.icon}`)%>">
+				</div>
+				<div class="col flex-grow-1 text-truncate">
+					<%-shortcut.title%>
+				</div>
+			</div>
+		</div>
+		<%if (!_.isEmpty(shortcut.url)) {%>
+			<a href="<%-shortcut.url%>" target="<%-(shortcut?.target || shortcut.name)%>" class="stretched-link"></a>
+		<%}%>
+	</div>
+</div>
