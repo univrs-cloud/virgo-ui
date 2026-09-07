@@ -1,18 +1,20 @@
-import bookmarkModalPartial from 'node/modules/bookmarks/partials/modals/bookmark_update.html';
-import * as bookmarkService from 'node/modules/bookmarks/services/bookmark';
+import shortcutModalPartial from 'node/modules/shortcuts/partials/modals/shortcut_create.html';
+import * as shortcutService from 'node/modules/shortcuts/services/shortcut';
 import * as systemService from 'node/services/system';
-import * as iconPicker from 'node/modules/bookmarks/services/icon_picker';
+import * as iconPicker from 'node/modules/shortcuts/services/icon_picker';
 
-document.querySelector('body').insertAdjacentHTML('beforeend', bookmarkModalPartial);
+document.querySelector('body').insertAdjacentHTML('beforeend', shortcutModalPartial);
 
-const modal = document.querySelector('#bookmark-update');
+const modal = document.querySelector('#shortcut-create');
 const form = modal.querySelector('u-form');
+const defaultIconSrc = iconPicker.DEFAULT_ICON;
+const defaultIconUrl = new URL(defaultIconSrc, window.location.origin).href;
 const useProxyCheckbox = form.querySelector('.use-proxy');
 const urlContainer = form.querySelector('.url-container');
 const proxyContainer = form.querySelector('.proxy-container');
 const domainSuffix = form.querySelector('.domain-suffix');
-const iconBox = modal.querySelector('.bookmark-icon-box');
-const iconPopoverContent = modal.querySelector('.bookmark-icon-popover-content');
+const iconBox = modal.querySelector('.shortcut-icon-box');
+const iconPopoverContent = modal.querySelector('.shortcut-icon-popover-content');
 let iconPopoverOutsideClick = null;
 
 new bootstrap.Popover(iconBox, {
@@ -27,8 +29,8 @@ new bootstrap.Popover(iconBox, {
 });
 
 iconPicker.initIconSearch(iconBox, iconPopoverContent, {
-	getIconImgEl: () => form.querySelector('.bookmark-icon-img'),
-	getIconInputEl: () => form.querySelector('.bookmark-icon'),
+	getIconImgEl: () => form.querySelector('.shortcut-icon-img'),
+	getIconInputEl: () => form.querySelector('.shortcut-icon'),
 	onSelect: () => { bootstrap.Popover.getInstance(iconBox)?.hide(); }
 });
 
@@ -52,10 +54,9 @@ const toggleProxyMode = (useProxy) => {
 };
 
 const isSubdomainUnique = (subdomain) => {
-	const currentName = form.querySelector('.name').value;
-	const bookmarks = bookmarkService.getBookmarks();
-	const existingSubdomain = _.find(bookmarks, (bookmark) => {
-		return bookmark.traefik?.subdomain === subdomain && bookmark.name !== currentName;
+	const shortcuts = shortcutService.getShortcuts();
+	const existingSubdomain = _.find(shortcuts, (shortcut) => {
+		return shortcut.traefik?.subdomain === subdomain;
 	});
 	return !existingSubdomain;
 };
@@ -104,7 +105,7 @@ const updateValidation = (useProxy) => {
 	}
 };
 
-const updateBookmark = (event) => {
+const createShortcut = (event) => {
 	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
 	let data = form.getData();
 	const useProxy = (data.useProxy === 'true');
@@ -126,38 +127,19 @@ const updateBookmark = (event) => {
 	delete data.backendUrl;
 	delete data.requireAuth;
 	
-	bookmarkService.updateBookmark(data);
+	shortcutService.createShortcut(data);
 	bootstrap.Modal.getInstance(modal)?.hide();
-};
-
-const render = (event) => {
-	const name = event.relatedTarget.closest('.item').dataset.name;
-	const bookmark = _.find(bookmarkService.getBookmarks(), { name: name });
-	form.querySelector('.name').value = bookmark.name;
-	form.querySelector('.title').value = bookmark.title;
-	form.querySelector('.category').value = bookmark.category;
-	form.querySelector('.bookmark-icon-img').src = `assets/img/bookmarks/${bookmark.icon}`;
-	if (bookmark.traefik) {
-		useProxyCheckbox.checked = true;
-		form.querySelector('.subdomain').value = bookmark.traefik.subdomain;
-		form.querySelector('.backend-url').value = bookmark.traefik.backendUrl;
-		form.querySelector('.require-auth').checked = bookmark.traefik.isAuthRequired || false;
-		toggleProxyMode(true);
-	} else {
-		useProxyCheckbox.checked = false;
-		form.querySelector('.url').value = bookmark.url;
-		toggleProxyMode(false);
-	}
 };
 
 const restore = (event) => {
 	form.reset();
-	form.querySelector('.bookmark-icon-img').src = iconPicker.DEFAULT_ICON;
-	form.querySelector('.bookmark-icon').value = '';
+	form.querySelector('.shortcut-icon-img').src = defaultIconSrc;
+	form.querySelector('.shortcut-icon').value = defaultIconUrl;
 	toggleProxyMode(false);
 };
 
 initDomainSuffix();
+form.querySelector('.shortcut-icon').value = defaultIconUrl;
 updateValidation(false);
 
 iconBox.addEventListener('click', (event) => {
@@ -191,6 +173,5 @@ iconBox.addEventListener('hide.bs.popover', (event) => {
 useProxyCheckbox.addEventListener('checked-changed', (event) => {
 	toggleProxyMode(event.target.checked);
 });
-form.addEventListener('valid', updateBookmark);
-modal.addEventListener('show.bs.modal', render);
+form.addEventListener('valid', createShortcut);
 modal.addEventListener('hidden.bs.modal', restore);

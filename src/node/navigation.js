@@ -57,7 +57,7 @@ const routes = [
 	{ path: '/', module: 'dashboard' },
 	{ path: '/dashboard', module: 'dashboard' },
 	{ path: '/apps/:appName?', module: 'apps', middleware: [requireAuth, requiresAdmin] },
-	{ path: '/bookmarks', module: 'bookmarks', middleware: [requireAuth, requiresAdmin] },
+	{ path: '/shortcuts', module: 'shortcuts', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/folders', module: 'folders', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/time-machines', module: 'time-machines', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/users', module: 'users', middleware: [requireAuth, requiresAdmin] },
