@@ -1,12 +1,12 @@
-import modulePartial from 'node/modules/bookmarks/partials/index.html';
-import bookmarkPartial from 'node/modules/bookmarks/partials/bookmark.html';
-import * as bookmarkService from 'node/modules/bookmarks/services/bookmark';
+import modulePartial from 'node/modules/shortcuts/partials/index.html';
+import shortcutPartial from 'node/modules/shortcuts/partials/shortcut.html';
+import * as shortcutService from 'node/modules/shortcuts/services/shortcut';
 import { filterListByQuery } from 'utils/list_search';
 
 const moduleTemplate = _.template(modulePartial);
-const bookmarkTemplate = _.template(bookmarkPartial);
+const shortcutTemplate = _.template(shortcutPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
-const module = document.querySelector('#bookmarks');
+const module = document.querySelector('#shortcuts');
 const loading = module.querySelector('.loading');
 const container = module.querySelector('.container-fluid');
 const searchInput = module.querySelector('.search');
@@ -22,9 +22,9 @@ const search = (event) => {
 	clearTimeout(searchTimer);
 	searchTimer = setTimeout(() => {
 		searchValue = event.target.value;
-		const bookmarks = bookmarkService.getBookmarks();
-		const jobs = bookmarkService.getJobs();
-		render({ bookmarks, jobs });
+		const shortcuts = shortcutService.getShortcuts();
+		const jobs = shortcutService.getJobs();
+		render({ shortcuts, jobs });
 	}, 300);
 };
 
@@ -38,30 +38,30 @@ const order = (event) => {
 	tableOrder.direction = (cell.classList.contains('asc') ? 'desc' : 'asc');
 	_.each(table.querySelectorAll('thead th'), (cell) => { cell.classList.remove('asc', 'desc'); });
 	cell.classList.add(tableOrder.direction);
-	const bookmarks = bookmarkService.getBookmarks();
-	const jobs = bookmarkService.getJobs();
-	render({ bookmarks, jobs });
+	const shortcuts = shortcutService.getShortcuts();
+	const jobs = shortcutService.getJobs();
+	render({ shortcuts, jobs });
 };
 
 const render = (state) => {
-	if (_.isNull(state.bookmarks)) {
+	if (_.isNull(state.shortcuts)) {
 		return;
 	}
 	
-	let bookmarks = state.bookmarks;
-	bookmarks = filterListByQuery(bookmarks, searchValue, ['title', 'name', 'url', 'icon', 'category']);
-	bookmarks = _.orderBy(bookmarks,
+	let shortcuts = state.shortcuts;
+	shortcuts = filterListByQuery(shortcuts, searchValue, ['title', 'name', 'url', 'icon', 'category']);
+	shortcuts = _.orderBy(shortcuts,
 		[
-			(bookmark) => {
-				const value = _.get(bookmark, tableOrder.field);
+			(shortcut) => {
+				const value = _.get(shortcut, tableOrder.field);
 				return typeof value === 'number' ? value : String(value ?? '').toLowerCase();
 			}
 		],
 		[tableOrder.direction]
 	);
-	const rows = _.join(_.map(bookmarks, (bookmark) => {
-		const jobs = _.filter(state.jobs, (job) => { return job.data?.config?.title === bookmark.title; });
-		return bookmarkTemplate({ bookmark, jobs, prettyBytes });
+	const rows = _.join(_.map(shortcuts, (shortcut) => {
+		const jobs = _.filter(state.jobs, (job) => { return job.data?.config?.title === shortcut.title; });
+		return shortcutTemplate({ shortcut, jobs, prettyBytes });
 	}), '');
 	
 	morphdom(
@@ -77,8 +77,8 @@ const render = (state) => {
 searchInput.addEventListener('input', search);
 table.querySelector('thead').addEventListener('click', order);
 
-bookmarkService.subscribe([render]);
+shortcutService.subscribe([render]);
 
-import('node/modules/bookmarks/bookmark_create');
-import('node/modules/bookmarks/bookmark_update');
-import('node/modules/bookmarks/bookmark_delete');
+import('node/modules/shortcuts/shortcut_create');
+import('node/modules/shortcuts/shortcut_update');
+import('node/modules/shortcuts/shortcut_delete');

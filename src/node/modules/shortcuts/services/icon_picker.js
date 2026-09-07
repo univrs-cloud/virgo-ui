@@ -91,7 +91,7 @@ const renderResults = (results, resultsEl, onSelect) => {
 		const src = getIconUrl(item.assetId, item.base);
 		const button = document.createElement('button');
 		button.type = 'button';
-		button.className = 'bookmark-icon-result-item';
+		button.className = 'shortcut-icon-result-item';
 		button.setAttribute('data-id', item.assetId);
 		button.setAttribute('data-base', item.base);
 		const img = document.createElement('img');
@@ -121,7 +121,7 @@ export const initIconSearch = (iconBox, iconPopoverContent, { getIconImgEl, getI
 			return;
 		}
 		const searchEl = tip.querySelector('.icon-search');
-		const resultsEl = tip.querySelector('.bookmark-icon-results');
+		const resultsEl = tip.querySelector('.shortcut-icon-results');
 		if (!searchEl || !resultsEl) {
 			return;
 		}

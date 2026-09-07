@@ -3,7 +3,7 @@ const moduleLoaders = {
 	'dashboard': () => import('node/modules/dashboard'),
 	...(isAdmin && {
 		'apps': () => import('node/modules/apps'),
-		'bookmarks': () => import('node/modules/bookmarks'),
+		'shortcuts': () => import('node/modules/shortcuts'),
 		'folders': () => import('node/modules/folders'),
 		'time-machines': () => import('node/modules/time_machines'),
 		'users': () => import('node/modules/users'),

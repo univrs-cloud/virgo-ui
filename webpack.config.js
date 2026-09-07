@@ -79,7 +79,7 @@ module.exports = (env, argv) => {
 					changeOrigin: true
 				},
 				{
-					context: ['/assets/img/bookmarks'],
+					context: ['/assets/img/shortcuts'],
 					target: `https://${upstream}`,
 					secure: false,
 					changeOrigin: true

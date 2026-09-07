@@ -5,6 +5,6 @@ document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTe
 
 import('node/modules/dashboard/peer');
 import('node/modules/dashboard/resources_monitor');
-import('node/modules/dashboard/apps_bookmarks');
+import('node/modules/dashboard/apps_shortcuts');
 import('node/modules/dashboard/shares');
 import('node/modules/dashboard/weather');
