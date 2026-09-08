@@ -1,0 +1,197 @@
+<%const size = (pool.properties.size?.value || 0)%>
+<%const allocated = (pool.properties.allocated?.value || 0)%>
+<%const free = (pool.properties.free?.value || 0)%>
+<%const data = (pool.properties.usedbydatasets?.value || 0)%>
+<%const snapshots = (pool.properties.usedbysnapshots?.value || 0)%>
+<%const capacity = (pool.properties.capacity?.value || 0)%>
+<%const saved = (pool.properties.savedbycompression?.value || 0)%>
+<%const compressRatio = (pool.properties.compressratio?.value || 0)%>
+<%const health = (pool.properties.health?.value || '')%>
+<%const errorCount = (pool.errorCount || 0)%>
+<div class="item container-fluid" data-name="<%-pool.name%>">
+	<div class="card rounded-4 border-0 shadow">
+		<div class="card-body">
+			<div class="row g-0 align-items-center mt-n2 mb-2">
+				<div class="col-auto me-2">
+					<button class="compress btn btn-light btn-sm">
+						<i class="icon-light icon-arrow-left icon-fw"></i>
+					</button>
+				</div>
+				<div class="col-auto p-2 lh-1">
+					<i class="icon-duotone icon-solid icon-hard-drive icon-fw" style="font-size: 1.875rem; width: 2rem;"></i>
+				</div>
+				<div class="col ps-1 min-w-0">
+					<div class="text-truncate min-w-0 mb-n1"><%-pool.name%></div>
+					<small class="text-body-tertiary text-truncate d-block min-w-0"><%=_.pluralize('disk failure', faultTolerance, true)%> tolerated per group</small>
+				</div>
+				<div class="col-auto ps-3 ms-auto">
+					<div class="dropdown">
+						<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
+						<div class="dropdown-menu">
+							<button type="button" class="dropdown-item disabled">No actions</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="position-relative">
+				<div class="overflow-y-scroll pe-3 mx-0 me-n3">
+					<div class="card mb-2">
+						<div class="card-body py-2">
+							<div class="d-flex flex-column flex-md-row align-items-md-center gap-1 gap-md-3">
+								<small class="text-body-tertiary flex-shrink-0 text-truncate" style="width: 8.5rem;"><i class="icon-solid icon-heart-pulse icon-fw me-1"></i>Health</small>
+								<h5 class="m-0 flex-grow-1 <%={ green: 'text-green-300', yellow: 'text-yellow-500', red: 'text-red-300' }[stateColor(health)]%>"><%-health || '—'%></h5>
+								<%if (errorCount > 0) {%>
+									<u-badge color="red" class="flex-shrink-0" pill><small><%=_.pluralize('data error', errorCount, true)%></small></u-badge>
+								<%} else {%>
+									<u-badge color="green" class="flex-shrink-0" pill><small>No known data errors</small></u-badge>
+								<%}%>
+							</div>
+							<hr class="my-2 border-0 border-top opacity-50">
+							<div class="d-flex flex-column flex-md-row gap-1 gap-md-3">
+								<small class="text-body-tertiary flex-shrink-0 text-truncate" style="width: 8.5rem;"><i class="icon-solid icon-binary-circle-check icon-fw me-1"></i>Data integrity</small>
+								<div class="flex-grow-1 min-w-0">
+								<%const scan = pool.scanStats%>
+								<%const scanFunction = _.toUpper(scan?.function || 'NONE')%>
+								<%const scanState = _.toUpper(scan?.state || 'NONE')%>
+								<%const scanLabel = (scanFunction === 'RESILVER' ? 'Resilver' : 'Scrub')%>
+								<%const hasScan = (!!scan && scanFunction !== 'NONE' && scanState !== 'NONE')%>
+								<%if (!hasScan) {%>
+									<small class="text-body-tertiary">No scrub or resilver has ever run on this pool.</small>
+								<%} else if (scanState === 'SCANNING') {%>
+									<%const isPaused = (scan.scrubPause > 0)%>
+									<%const progress = (scan.toExamine > 0 ? _.min([(scan.issued / scan.toExamine) * 100, 100]) : 0)%>
+									<%const elapsed = _.max([moment().unix() - (scan.passStart || scan.startTime) - (scan.scrubSpentPaused || 0), 1])%>
+									<%const rate = _.max([(scan.issued || 0) - (scan.issuedBytesPerScan || 0), 0]) / elapsed%>
+									<%const remaining = ((rate > 0 && scan.toExamine > scan.issued) ? (scan.toExamine - scan.issued) / rate : null)%>
+									<div class="d-flex align-items-center justify-content-between">
+										<small class="text-body-tertiary"><%-scanLabel%> in progress</small>
+										<small class="fw-light"><%=progress.toFixed(2)%>%</small>
+									</div>
+									<u-progress shadow="false">
+										<u-progress-bar color="cyan" tint="300" width="<%=progress%>" striped="<%=(!isPaused)%>" animated="<%=(!isPaused)%>" warning-threshold="999" danger-threshold="999"></u-progress-bar>
+									</u-progress>
+									<small class="text-body-tertiary d-block mt-1">
+										<%if (isPaused) {%><strong>Paused</strong> since <%-moment.unix(scan.scrubPause).fromNow()%>. <%}%>
+										Started <%-moment.unix(scan.startTime).fromNow()%>.
+										Scanned <strong><%=prettyBytes(scan.examined || 0, { binary: true })%></strong> / <%=prettyBytes(scan.toExamine || 0, { binary: true })%>.
+										Repaired <strong><%=prettyBytes(scan.processed || 0, { binary: true })%></strong>, <%=_.pluralize('error', scan.errors || 0, true)%>.
+										<%if (!isPaused && rate > 0) {%>
+											Running at <strong><%=prettyBytes(rate, { binary: true })%>/s</strong><%if (!_.isNull(remaining)) {%>, <%-moment.duration(remaining, 'seconds').humanize()%> left<%}%>.
+										<%}%>
+									</small>
+								<%} else {%>
+									<%const duration = (scan.endTime > scan.startTime ? moment.duration(moment.unix(scan.endTime).diff(moment.unix(scan.startTime))).humanize() : null)%>
+									<small class="text-body-tertiary d-block">
+										<%=(scanState === 'CANCELED' ? 'Canceled' : 'Completed')%> <%-moment.unix(scan.endTime).fromNow()%>.
+										<%if (!_.isNull(duration)) {%>Took <%-duration%> to scan <strong><%=prettyBytes(scan.examined || 0, { binary: true })%></strong>.<%}%>
+										Repaired <strong><%=prettyBytes(scan.processed || 0, { binary: true })%></strong>, <%=_.pluralize('error', scan.errors || 0, true)%>.
+									</small>
+								<%}%>
+									</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="card mb-2">
+						<div class="card-body py-2">
+							<div class="d-flex align-items-center min-w-0 mb-2">
+								<i class="icon-light icon-chart-pie icon-fw text-body-tertiary me-2"></i>
+								<span>Usage</span>
+							</div>
+							<div class="row g-2 mb-3">
+								<div class="col-6 col-md-3">
+									<small class="text-body-tertiary d-block text-truncate"><i class="icon-solid icon-gauge icon-fw me-1"></i>Capacity</small>
+									<h5 class="m-0"><%=capacity.toFixed(2)%>%</h5>
+								</div>
+								<div class="col-6 col-md-3">
+									<small class="text-body-tertiary d-block text-truncate"><i class="icon-solid icon-database icon-fw me-1"></i>Used</small>
+									<h5 class="m-0"><%=prettyBytes(allocated, { binary: true })%></h5>
+								</div>
+								<div class="col-6 col-md-3">
+									<small class="text-body-tertiary d-block text-truncate"><i class="icon-solid icon-hard-drive icon-fw me-1"></i>Free</small>
+									<h5 class="m-0"><%=prettyBytes(free, { binary: true })%></h5>
+								</div>
+								<div class="col-6 col-md-3">
+									<small class="text-body-tertiary d-block text-truncate"><i class="icon-solid icon-compress icon-fw me-1"></i>Compression</small>
+									<h5 class="m-0"><%if (compressRatio > 0) {%><%=compressRatio.toFixed(2)%>x <small class="fw-normal text-body-tertiary">(<%=prettyBytes(saved, { binary: true })%> saved)</small><%} else {%>&mdash;<%}%></h5>
+								</div>
+							</div>
+							<u-progress shadow="false">
+								<u-progress-bar width="<%=(size > 0 ? data / size * 100 : 0)%>" warning-threshold="999" danger-threshold="999" tip="Data: <%=prettyBytes(data, { binary: true })%>"></u-progress-bar>
+								<u-progress-bar color="indigo" tint="100" width="<%=(size > 0 ? snapshots / size * 100 : 0)%>" warning-threshold="999" danger-threshold="999" tip="Snapshots: <%=prettyBytes(snapshots, { binary: true })%>"></u-progress-bar>
+							</u-progress>
+							<div class="row g-2 mt-2">
+								<div class="col-6 col-md-3">
+									<small class="text-body-tertiary d-block text-truncate"><i class="icon-solid icon-database icon-fw me-1 text-blue-500"></i>Data</small>
+									<span class="fw-light"><%=prettyBytes(data, { binary: true })%></span>
+								</div>
+								<div class="col-6 col-md-3">
+									<small class="text-body-tertiary d-block text-truncate"><i class="icon-solid icon-camera icon-fw me-1 text-indigo-500"></i>Snapshots (<%=_.size(pool.snapshots)%>)</small>
+									<span class="fw-light"><%=prettyBytes(snapshots, { binary: true })%></span>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="card mb-2">
+						<div class="card-body py-2">
+							<div class="d-flex align-items-center min-w-0">
+								<i class="icon-light icon-list-tree icon-fw text-body-tertiary me-2"></i>
+								<span>Topology</span>
+								<small class="text-body-tertiary ms-2">(<%=_.pluralize('group', _.size(groups), true)%>)</small>
+							</div>
+							<div class="vdev-tree d-flex flex-wrap justify-content-center gap-4 py-3">
+								<%_.each(groups, (group) => {%>
+									<%const isBareDisk = (group.vdev.vdevType === 'disk')%>
+									<%const groupLabel = (isBareDisk ? (group.vdev.class !== 'normal' ? group.vdev.class : null) : group.vdev.name)%>
+									<div class="text-center">
+										<%if (!_.isNull(groupLabel)) {%>
+											<div class="mb-2">
+												<u-badge color="<%=stateColor(group.vdev.state)%>" pill><small><%-groupLabel%></small></u-badge>
+											</div>
+										<%}%>
+										<div class="d-inline-block">
+											<%if (_.size(group.disks) > 1) {%>
+												<div class="vdev-bar"></div>
+											<%}%>
+											<div class="vdev-slots">
+											<%_.each(group.disks, ({ vdev, drive }) => {%>
+												<%const color = { green: 'text-blue-500', yellow: 'text-yellow-500', red: 'text-red-300' }[stateColor(vdev.state)]%>
+												<%const label = (drive?.name ? _.last(drive.name.split('/')) : `…${vdev.name.slice(-6)}`)%>
+												<%const tip = _.compact([prettyBytes(vdev.physSpace || vdev.repDevSize || 0, { binary: true }), (_.isNil(drive?.temperature) ? null : `${drive.temperature} °C`)]).join(' &middot; ')%>
+												<div class="vdev-slot">
+													<%if (_.size(group.disks) > 1) {%>
+														<div class="vdev-stem"></div>
+													<%}%>
+													<i class="vdev-disk icon-duotone icon-solid icon-hard-drive <%=color%>" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>"></i>
+													<small class="text-body-tertiary text-truncate w-100 mt-1"><%-label%></small>
+												</div>
+											<%})%>
+											</div>
+										</div>
+									</div>
+								<%})%>
+							</div>
+						</div>
+						<table class="table table-borderless table-hover align-middle m-0" style="border-collapse: separate; border-spacing: 0;">
+							<thead>
+								<tr>
+									<th style="padding-left: var(--bs-card-spacer-x);"><small class="text-body-tertiary fw-normal">Device</small></th>
+									<th class="text-end text-nowrap d-none d-md-table-cell" style="width: 110px; min-width: 110px;"><small class="text-body-tertiary fw-normal">Size</small></th>
+									<th class="text-end text-nowrap d-none d-md-table-cell" style="width: 110px; min-width: 110px;"><small class="text-body-tertiary fw-normal" data-bs-toggle="tooltip" data-bs-original-title="Read / write / checksum errors">Errors</small></th>
+									<th class="text-nowrap" style="width: 85px; min-width: 85px;"><small class="text-body-tertiary fw-normal">State</small></th>
+								</tr>
+							</thead>
+							<tbody class="vdev-rows">
+								<%_.each(vdevRows, ({ vdev, drive, depth, isLast }) => {%>
+									<%=poolVdevTemplate({ vdev, drive, depth, isLast, stateColor, prettyBytes })%>
+								<%})%>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

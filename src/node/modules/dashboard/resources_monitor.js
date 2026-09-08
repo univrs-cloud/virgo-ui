@@ -10,6 +10,19 @@ import resourceIndexerStatsPartial from 'node/modules/dashboard/partials/resourc
 import * as networkUsage from 'node/modules/dashboard/network_usage';
 import * as resourceMonitorService from 'node/modules/dashboard/services/resource_monitor';
 
+const poolStateColor = (state) => {
+	const value = _.toLower(state || '');
+	if (_.includes(['online', 'avail'], value)) {
+		return 'green';
+	}
+
+	if (_.includes(['degraded', 'inuse'], value)) {
+		return 'yellow';
+	}
+
+	return 'red';
+};
+
 const resourcesMonitorTemplate = _.template(resourcesMonitorPartial);
 const cpuTemplate = _.template(resourceCpuPartial);
 const memoryTemplate = _.template(resourceMemoryPartial);
@@ -28,7 +41,7 @@ const render = (state) => {
 			cpu: cpuTemplate({ state }),
 			memory: memoryTemplate({ state, prettyBytes }),
 			storageSystem: storageSystemTemplate({ state, prettyBytes }),
-			storageData: storageDataTemplate({ state, prettyBytes }),
+			storageData: storageDataTemplate({ state, poolStateColor, prettyBytes }),
 			network: networkTemplate({ state, prettyBytes }),
 			ups: upsTemplate({ state }),
 			time: timeTemplate({ state, prettyMilliseconds }),
