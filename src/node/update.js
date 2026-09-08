@@ -8,23 +8,23 @@ import * as account from 'node/account';
 import * as softwareService from 'node/services/software';
 import * as nodeService from 'node/services/node';
 import * as powerService from 'node/services/power';
+import * as updateMode from 'libs/update_mode';
 import { getNodeViewId, getNodeViewBase, initNodeView } from 'node/view';
+
+const UPDATE_PATH = '/system-update';
 
 let isScrollEventAttached = false;
 let shouldScroll = true;
+let isEntered = false;
+let header = null;
+let main = null;
+let container = null;
+let row = null;
 const headerTemplate = _.template(headerPartial);
 const navigationTemplate = _.template(navigationPartial);
 const nodePickerTemplate = _.template(nodePickerPartial);
 const updateTemplate = _.template(updatePartial);
 const updateProgressTemplate = _.template(updateProgressPartial);
-const header = document.querySelector('header');
-const main = document.querySelector('main');
-
-main.insertAdjacentHTML('afterend', updateTemplate());
-const container = document.querySelector('#update');
-const row = container.querySelector('.row');
-
-initNodeView();
 
 const complete = (event) => {
 	if (event.target.dataset.action !== 'complete') {
@@ -85,6 +85,10 @@ const render = (state) => {
 		return;
 	}
 
+	if (update === -1) {
+		return;
+	}
+
 	main.classList.add('d-none');
 	if (!_.isUndefined(update.state) || !_.isEmpty(update.state)) {
 		morphdom(
@@ -106,26 +110,54 @@ const render = (state) => {
 	}
 };
 
-morphdom(
-	header,
-	headerTemplate({ isUpdating: true })
-);
-renderNavigation();
-
-account.init();
-
-container.addEventListener('click', complete);
-container.addEventListener('click', reboot);
-
-page('*', (ctx) => {
-	if (ctx.path !== '/') {
-		page.redirect('/');
+const mount = () => {
+	header = document.querySelector('header');
+	main = document.querySelector('main');
+	if (_.isNull(document.querySelector('#update'))) {
+		main.insertAdjacentHTML('afterend', updateTemplate());
 	}
-});
-page.start();
+	container = document.querySelector('#update');
+	row = container.querySelector('.row');
 
-softwareService.subscribeToUpdate([render]);
+	main.classList.add('d-none');
+	morphdom(
+		header,
+		headerTemplate({ isUpdating: true })
+	);
+	renderNavigation();
 
-if (runtimeRole === 'fleet') {
-	nodeService.subscribe([renderNodePicker]);
-}
+	account.init();
+
+	container.addEventListener('click', complete);
+	container.addEventListener('click', reboot);
+};
+
+const enter = ({ startRouter = false } = {}) => {
+	if (isEntered) {
+		return;
+	}
+
+	isEntered = true;
+	updateMode.enter();
+	initNodeView();
+	mount();
+
+	if (startRouter) {
+		page('*', (ctx) => {
+			if (ctx.path.split('?')[0].split('#')[0] !== UPDATE_PATH) {
+				page.redirect(UPDATE_PATH);
+			}
+		});
+		page.start();
+	}
+
+	softwareService.subscribeToUpdate([render]);
+
+	if (runtimeRole === 'fleet') {
+		nodeService.subscribe([renderNodePicker]);
+	}
+};
+
+export {
+	enter
+};

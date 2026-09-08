@@ -1,6 +1,7 @@
 import { ObservableStore } from '@codewithdan/observable-store';
 import { ReduxDevToolsExtension } from '@codewithdan/observable-store-extensions';
 import RemoteNodeConnection from 'libs/remote_node_connection';
+import * as updateMode from 'libs/update_mode';
 
 const digestFilteredJobs = (jobs, jobFilter) => {
 	if (!jobFilter) {
@@ -59,8 +60,10 @@ class Store extends ObservableStore {
 			nodeId: nodeId && proxyable ? nodeId : null,
 			namespace: nodeId && proxyable ? `/${settings.namespace}` : null
 		});
+		this.namespace = settings.namespace;
 		this.propertySubscribers = [];
 		this.previousState = this.getState() || {};
+		updateMode.registerStore(this);
 
 		this.globalStateWithPropertyChanges.subscribe((stateChange) => {
 			if (stateChange === null) {
@@ -101,6 +104,14 @@ class Store extends ObservableStore {
 			});
 			this.previousState = newState;
 		});
+	}
+
+	setState(state, ...args) {
+		if (updateMode.blocksStateWrite(this.namespace, _.keys(state))) {
+			return this.getState();
+		}
+
+		return super.setState(state, ...args);
 	}
 
 	subscribeToProperties(propertyNames, callback, options = {}) {

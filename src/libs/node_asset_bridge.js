@@ -168,4 +168,4 @@ const start = (nodeId) => {
 		});
 };
 
-export { start, prepareTransport, REQUEST_TYPE, READY_TYPE, UNREADY_TYPE, PROBE_TYPE };
+export { start, prepareTransport };

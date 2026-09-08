@@ -1007,4 +1007,4 @@ const activeTransport = (nodeId) => {
 };
 
 export default { forNode, isAvailable, activeTransport, onTransportChange };
-export { forNode, isAvailable, activeTransport, onTransportChange, NamespaceChannel, CONNECT_TIMEOUT_MS };
+export { forNode, isAvailable, activeTransport, onTransportChange, CONNECT_TIMEOUT_MS };

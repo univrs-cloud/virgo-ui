@@ -198,7 +198,6 @@ const disable = async () => {
 export {
 	hasBiometrics,
 	isEnrolledOnThisDevice,
-	setEnrolledOnThisDevice,
 	enroll,
 	authenticate,
 	disable

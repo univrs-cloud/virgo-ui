@@ -154,4 +154,3 @@ class RemoteNodeConnection {
 }
 
 export default RemoteNodeConnection;
-export { UPGRADE_DEADLINE_MS };
