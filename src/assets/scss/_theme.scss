@@ -78,6 +78,12 @@ u-badge:hover .hover-reveal-text {
 	&.storage-scan-progress {
 		--bs-tooltip-max-width: 400px;
 	}
+	&.storage-device {
+		--bs-tooltip-max-width: 360px;
+		.tooltip-inner {
+			text-align: left;
+		}
+	}
 }
 
 .modal {
@@ -344,6 +350,7 @@ u-badge:hover .hover-reveal-text {
 	}
 }
 #apps,
+#storage,
 #system-services {
 	.details {
 		.overflow-y-scroll {
@@ -374,6 +381,7 @@ u-badge:hover .hover-reveal-text {
 	}
 }
 #apps,
+#storage,
 #system-services {
 	&:has(.details .item) > .row > .container-fluid > .card {
 		background-color: var(--bs-dark-bg-subtle);
@@ -455,6 +463,64 @@ u-badge:hover .hover-reveal-text {
 #app-center {
 	.modal-body {
 		height: 100dvh;
+	}
+}
+#storage {
+	--vdev-line-color: var(--bs-border-color);
+	.vdev-tree {
+		--vdev-slot-width: 4.25rem;
+		.vdev-bar {
+			width: calc(100% - var(--vdev-slot-width));
+			height: 0;
+			margin: 0 auto;
+			border-top: var(--bs-border-width) solid var(--vdev-line-color);
+		}
+		.vdev-slots {
+			display: flex;
+			justify-content: center;
+		}
+		.vdev-slot {
+			width: var(--vdev-slot-width);
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			min-width: 0;
+		}
+		.vdev-stem {
+			width: 0;
+			height: map-get($spacers, 2);
+			border-left: var(--bs-border-width) solid var(--vdev-line-color);
+		}
+		.vdev-disk {
+			font-size: 1.75rem;
+			line-height: 1;
+		}
+	}
+	.vdev-rows {
+		--vdev-elbow-width: 0.9rem;
+		--vdev-icon-radius: 0.6rem;
+		tr.vdev > td:first-child {
+			position: relative;
+		}
+		tr.vdev:not([data-depth="0"]) > td:first-child::before {
+			content: '';
+			position: absolute;
+			left: var(--vdev-elbow-x);
+			top: 0;
+			height: 50%;
+			width: var(--vdev-elbow-width);
+			border-left: var(--bs-border-width) solid var(--vdev-line-color);
+			border-bottom: var(--bs-border-width) solid var(--vdev-line-color);
+			border-bottom-left-radius: 0.35rem;
+		}
+		tr.vdev.vdev-line > td:first-child::after {
+			content: '';
+			position: absolute;
+			left: var(--vdev-line-x);
+			top: var(--vdev-line-top);
+			bottom: 0;
+			border-left: var(--bs-border-width) solid var(--vdev-line-color);
+		}
 	}
 }
 
