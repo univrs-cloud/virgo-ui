@@ -1,0 +1,49 @@
+<%const isDisk = (vdev.vdevType === 'disk')%>
+<%const badgeColor = stateColor(vdev.state)%>
+<%const errors = (vdev.readErrors || 0) + (vdev.writeErrors || 0) + (vdev.checksumErrors || 0)%>
+<%const size = (isDisk ? (vdev.physSpace || vdev.repDevSize) : vdev.totalSpace)%>
+<%const hasChildren = !_.isEmpty(vdev.vdevs)%>
+<%const drawsLine = (hasChildren || (!isLast && depth > 0))%>
+<%const lineDepth = (hasChildren ? depth : depth - 1)%>
+<tr class="vdev<%=(drawsLine ? ' vdev-line' : '')%>" data-guid="<%-vdev.guid%>" data-depth="<%-depth%>">
+	<td style="--vdev-elbow-x: calc(var(--bs-card-spacer-x) + <%=(depth - 1) * 1.5%>rem + 0.6rem); --vdev-line-x: calc(var(--bs-card-spacer-x) + <%=lineDepth * 1.5%>rem + 0.6rem); --vdev-line-top: <%=(hasChildren ? 'calc(50% + var(--vdev-icon-radius))' : '0')%>; padding-left: calc(var(--bs-card-spacer-x) + <%=depth * 1.5%>rem); min-width: 210px; max-width: 0;">
+		<%const tip = _.join(_.compact([
+			(drive?.model ? `Model: ${_.escape(drive.model)}` : null),
+			(drive?.serialNumber ? `Serial: ${_.escape(drive.serialNumber)}` : null),
+			`Disk ID: ${_.escape(vdev.name)}`
+		]), '<br>')%>
+		<div class="d-flex align-items-center min-w-0">
+			<i class="icon-light <%=(isDisk ? 'icon-hard-drive' : 'icon-layer-group')%> icon-fw text-body-tertiary me-2 flex-shrink-0"></i>
+			<div class="text-truncate min-w-0"<%if (isDisk) {%> data-bs-toggle="tooltip" data-bs-custom-class="storage-device" data-bs-original-title="<%=tip%>"<%}%>><%-(isDisk ? (drive?.name ? _.last(drive.name.split('/')) : vdev.name) : vdev.name)%></div>
+			<%if (isDisk && !_.isNil(drive?.temperature)) {%>
+				<%let tempColor = 'gray'%>
+				<%if (drive.temperature >= drive.temperatureWarningThreshold && drive.temperature < drive.temperatureCriticalThreshold) {%>
+					<%tempColor = 'yellow'%>
+				<%}%>
+				<%if (drive.temperature >= drive.temperatureCriticalThreshold) {%>
+					<%tempColor = 'red'%>
+				<%}%>
+				<u-badge color="<%=tempColor%>" tint="200" class="ms-2 flex-shrink-0" tip="Warning at <%-drive.temperatureWarningThreshold%> °C, critical at <%-drive.temperatureCriticalThreshold%> °C" pill>
+					<i class="icon-light icon-temperature-half icon-fw me-1"></i><%-drive.temperature%> °C
+				</u-badge>
+			<%}%>
+			<%if (vdev.class && vdev.class !== 'normal') {%>
+				<u-badge color="purple" class="ms-2 flex-shrink-0" pill><small><%-vdev.class%></small></u-badge>
+			<%}%>
+		</div>
+	</td>
+	<td class="text-end text-nowrap d-none d-md-table-cell">
+		<small class="fw-light text-body-secondary"><%=prettyBytes(size || 0, { binary: true })%></small>
+	</td>
+	<td class="text-end text-nowrap d-none d-md-table-cell">
+		<small class="fw-light <%=(errors > 0 ? 'text-red-300' : 'text-body-secondary')%>" data-bs-toggle="tooltip" data-bs-original-title="<%=`${vdev.readErrors || 0} read, ${vdev.writeErrors || 0} write, ${vdev.checksumErrors || 0} checksum`%>">
+			<%-vdev.readErrors || 0%> / <%-vdev.writeErrors || 0%> / <%-vdev.checksumErrors || 0%>
+		</small>
+		<%if (vdev.slowIos > 0) {%>
+			<u-badge color="orange" tint="100" class="ms-1" tip="Slow I/O operations" pill><small><%-vdev.slowIos%></small></u-badge>
+		<%}%>
+	</td>
+	<td class="text-nowrap">
+		<u-badge color="<%=badgeColor%>" pill><small><%-vdev.state%></small></u-badge>
+	</td>
+</tr>

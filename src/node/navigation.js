@@ -109,7 +109,7 @@ const routes = [
 	{ path: '/folders', module: 'folders', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/time-machines', module: 'time-machines', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/users', module: 'users', middleware: [requireAuth, requiresAdmin] },
-	{ path: '/storage', module: 'storage', middleware: [requireAuth, requiresAdmin] },
+	{ path: '/storage/:poolName?', module: 'storage', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/network', module: 'network', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/settings', module: 'settings', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/system-services/:serviceUnit?', module: 'system-services', middleware: [requireAuth, requiresAdmin] },
