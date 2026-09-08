@@ -79,10 +79,14 @@ const vdevFaultTolerance = (vdev) => {
 	return _.toInteger(_.replace(vdev.name, /^raidz(\d).*$/, '$1'));
 };
 
+const findDrive = (name) => {
+	return _.find(drives, (drive) => { return _.includes(drive.ids, name); });
+};
+
 const flattenVdevs = (vdevs, depth = 0) => {
 	const siblings = _.values(vdevs || {});
 	return _.flatMap(siblings, (vdev, index) => {
-		const drive = (vdev.vdevType === 'disk' ? _.find(drives, { eui: vdev.name }) : null);
+		const drive = (vdev.vdevType === 'disk' ? findDrive(vdev.name) : null);
 		const isLast = (index === siblings.length - 1);
 		return [{ vdev, drive, depth, isLast }, ...flattenVdevs(vdev.vdevs, depth + 1)];
 	});
@@ -102,7 +106,7 @@ const renderPoolDetails = (name) => {
 	const vdevRows = flattenVdevs(rootVdev?.vdevs);
 	const groups = _.map(_.values(rootVdev?.vdevs || {}), (vdev) => {
 		const disks = _.filter(flattenVdevs(vdev.vdevs), ({ vdev }) => { return vdev.vdevType === 'disk'; });
-		return { vdev, disks: (_.isEmpty(disks) ? [{ vdev, drive: _.find(drives, { eui: vdev.name }) }] : disks) };
+		return { vdev, disks: (_.isEmpty(disks) ? [{ vdev, drive: findDrive(vdev.name) }] : disks) };
 	});
 
 	const faultTolerance = (_.isEmpty(groups) ? 0 : _.min(_.map(groups, ({ vdev }) => { return vdevFaultTolerance(vdev); })));
