@@ -14,12 +14,19 @@ const isFleetPath = (path) => {
 	return path === FLEET_PATH_PREFIX || path.startsWith(`${FLEET_PATH_PREFIX}/`);
 };
 
+let isInitialized = false;
+
 const initNodeView = () => {
+	if (isInitialized) {
+		return;
+	}
+
 	const base = getNodeViewBase();
 	if (!base) {
 		return;
 	}
 
+	isInitialized = true;
 	page.base(base);
 
 	document.addEventListener('click', (event) => {

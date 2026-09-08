@@ -96,8 +96,3 @@ class DataChannelSendQueue {
 }
 
 export default DataChannelSendQueue;
-export {
-	DEFAULT_HIGH_WATER_MARK,
-	DEFAULT_LOW_WATER_MARK,
-	DEFAULT_MAX_BUFFERED_BYTES
-};

@@ -34,7 +34,6 @@ const update = (event) => {
 	event.preventDefault();
 	event.target.disabled = true;
 	softwareService.update();
-	location.reload();
 };
 
 const render = (state) => {

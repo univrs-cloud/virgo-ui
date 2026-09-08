@@ -1,6 +1,11 @@
 import page from 'page';
 import { loadModule } from 'node/modules';
 import { initNodeView } from 'node/view';
+import * as softwareService from 'node/services/software';
+import * as updateMode from 'libs/update_mode';
+
+const UPDATE_PATH = '/system-update';
+let hasEnteredUpdate = false;
 
 const header = document.querySelector('header');
 const offcanvas = document.querySelector('.offcanvas');
@@ -41,6 +46,49 @@ const requireAuth = (ctx, next) => {
 	next();
 };
 
+const routePath = (ctx) => {
+	return ctx.path.split('?')[0].split('#')[0];
+};
+
+const requiresNoUpdate = (ctx, next) => {
+	if (updateMode.isActive() && routePath(ctx) !== UPDATE_PATH) {
+		page.redirect(UPDATE_PATH);
+		return;
+	}
+
+	next();
+};
+
+const showUpdate = async () => {
+	const update = softwareService.getUpdate();
+	if (update === -1 || _.isNull(update)) {
+		page.redirect('/');
+		return;
+	}
+
+	try {
+		const updateView = await import(/* webpackPrefetch: true */ 'node/update');
+		updateView.enter();
+	} catch (error) {
+		hasEnteredUpdate = false;
+		notifier.add({ title: 'Could not open the update progress view.', type: 'error', duration: 0 });
+		console.error('Error loading the update progress view:', error);
+	}
+};
+
+const enterUpdate = (state) => {
+	if (!isAdmin || state.update === -1 || _.isNull(state.update)) {
+		return;
+	}
+
+	if (hasEnteredUpdate) {
+		return;
+	}
+
+	hasEnteredUpdate = true;
+	page(UPDATE_PATH);
+};
+
 const requiresAdmin = (ctx, next) => {
 	if (!isAdmin) {
 		page.redirect('/');
@@ -73,6 +121,9 @@ const routes = [
 // Catch all route, must be last
 routes.push({ path: '*', module: 'not-found' });
 
+page('*', requiresNoUpdate);
+page(UPDATE_PATH, requireAuth, requiresAdmin, showUpdate);
+
 _.each(routes, ({ path, module, middleware = [] }) => {
 	page(path, ...middleware, async (ctx) => {
 		ctx.module = module;
@@ -82,3 +133,5 @@ _.each(routes, ({ path, module, middleware = [] }) => {
 });
 
 page.start();
+
+softwareService.subscribeToUpdate([enterUpdate]);

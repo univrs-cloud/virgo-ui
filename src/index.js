@@ -47,14 +47,18 @@ const render = async (state) => {
 
 		await import('node/login');
 	} else if (isAdmin && !_.isNull(state.update)) {
-		await import('node/update');
+		const updateView = await import('node/update');
+		updateView.enter({ startRouter: true });
+	} else if (state.update?.state === 'running') {
+		await import('node/maintenance');
 	} else {
 		try {
 			await Promise.all([
 				import('node/jobs'),
 				import('node/header'),
 				import('node/main'),
-				import('node/power')
+				import('node/power'),
+				...(isAdmin ? [] : [import('node/maintenance')])
 			]);
 			const { modulesLoaded } = await import('node/modules');
 			await modulesLoaded;

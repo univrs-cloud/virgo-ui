@@ -17,6 +17,11 @@ const render = (state) => {
 			location.replace('/');
 			return;
 		}
+
+		if (!isAdmin) {
+			return;
+		}
+
 		wasRebooting = true;
 		document.body.classList.add('reboot');
 		container.querySelector('.rebooting').classList.remove('d-none');

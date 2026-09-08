@@ -30,7 +30,8 @@ body {
 		}
 	}
 	&.reboot,
-	&.powered-off {
+	&.powered-off,
+	&.maintenance {
 		header,
 		main {
 			display: none !important;

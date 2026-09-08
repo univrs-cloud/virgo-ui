@@ -270,6 +270,8 @@ const destroy = () => {
 	data = [[], [], []];
 };
 
+document.addEventListener('update-mode', destroy);
+
 export {
 	render,
 	destroy
