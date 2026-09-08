@@ -94,7 +94,7 @@
 						<div class="col col-6 col-md-3">
 							<div class="card mb-2">
 								<div class="card-body py-1">
-									<small class="text-body-tertiary pb-1"><i class="icon-solid icon-camera icon-fw me-1"></i>Snapshots (<%=_.size(app.snapshots)%>)</small>
+									<small class="text-body-tertiary pb-1"><i class="icon-solid icon-clock-rotate-left icon-fw me-1"></i>Snapshots (<%=_.size(app.snapshots)%>)</small>
 									<h5><%=prettyBytes(app.resourceMetrics?.storage?.snapshots || 0, { binary: true })%></h5>
 								</div>
 							</div>
@@ -299,7 +299,7 @@
 						<div class="card-body py-1">
 							<div class="d-flex align-items-center justify-content-between gap-2">
 								<div class="d-flex align-items-center min-w-0">
-									<i class="icon-light icon-camera icon-fw text-body-tertiary me-2"></i>
+									<i class="icon-light icon-clock-rotate-left icon-fw text-body-tertiary me-2"></i>
 									<span>Snapshots</span>
 									<small class="text-body-tertiary ms-2">(<%=_.size(app.snapshots)%>)</small>
 								</div>
