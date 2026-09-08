@@ -18,7 +18,7 @@
 					</button>
 				</div>
 				<div class="col-auto p-2 lh-1">
-					<i class="icon-duotone icon-solid icon-hard-drive icon-fw" style="font-size: 1.875rem; width: 2rem;"></i>
+					<i class="icon-duotone icon-solid icon-database icon-fw" style="font-size: 1.875rem; width: 2rem;"></i>
 				</div>
 				<div class="col ps-1 min-w-0">
 					<div class="text-truncate min-w-0 mb-n1"><%-pool.name%></div>
@@ -41,11 +41,6 @@
 							<div class="d-flex flex-column flex-md-row align-items-md-center gap-1 gap-md-3">
 								<small class="text-body-tertiary flex-shrink-0 text-truncate" style="width: 8.5rem;"><i class="icon-solid icon-heart-pulse icon-fw me-1"></i>Health</small>
 								<h5 class="m-0 flex-grow-1 <%={ green: 'text-green-300', yellow: 'text-yellow-500', red: 'text-red-300' }[stateColor(health)]%>"><%-health || '—'%></h5>
-								<%if (errorCount > 0) {%>
-									<u-badge color="red" class="flex-shrink-0" pill><small><%=_.pluralize('data error', errorCount, true)%></small></u-badge>
-								<%} else {%>
-									<u-badge color="green" class="flex-shrink-0" pill><small>No known data errors</small></u-badge>
-								<%}%>
 							</div>
 							<hr class="my-2 border-0 border-top opacity-50">
 							<div class="d-flex flex-column flex-md-row gap-1 gap-md-3">
@@ -88,7 +83,12 @@
 										Repaired <strong><%=prettyBytes(scan.processed || 0, { binary: true })%></strong>, <%=_.pluralize('error', scan.errors || 0, true)%>.
 									</small>
 								<%}%>
-									</div>
+								</div>
+								<%if (errorCount > 0) {%>
+									<u-badge color="red" class="flex-shrink-0 align-self-start" pill><small><%=_.pluralize('data error', errorCount, true)%></small></u-badge>
+								<%} else {%>
+									<u-badge color="green" class="flex-shrink-0 align-self-start" pill><small>No known data errors</small></u-badge>
+								<%}%>
 							</div>
 						</div>
 					</div>
@@ -101,20 +101,20 @@
 							</div>
 							<div class="row g-2 mb-3">
 								<div class="col-6 col-md-3">
-									<small class="text-body-tertiary d-block text-truncate"><i class="icon-solid icon-gauge icon-fw me-1"></i>Capacity</small>
-									<h5 class="m-0"><%=capacity.toFixed(2)%>%</h5>
+									<small class="text-body-tertiary d-block text-truncate"><i class="icon-solid icon-circle icon-fw me-1"></i>Capacity</small>
+									<h5 class="m-0"><%=prettyBytes(size, { binary: true })%></h5>
 								</div>
 								<div class="col-6 col-md-3">
-									<small class="text-body-tertiary d-block text-truncate"><i class="icon-solid icon-database icon-fw me-1"></i>Used</small>
-									<h5 class="m-0"><%=prettyBytes(allocated, { binary: true })%></h5>
+									<small class="text-body-tertiary d-block text-truncate"><i class="icon-solid icon-circle-three-quarters-stroke icon-fw me-1"></i>Used</small>
+									<h5 class="m-0"><%=prettyBytes(allocated, { binary: true })%> <small class="fs-6 fw-light text-body-tertiary">(<%=capacity.toFixed(2)%>%)</small></h5>
 								</div>
 								<div class="col-6 col-md-3">
-									<small class="text-body-tertiary d-block text-truncate"><i class="icon-solid icon-hard-drive icon-fw me-1"></i>Free</small>
+									<small class="text-body-tertiary d-block text-truncate"><i class="icon-solid icon-circle-quarter-stroke icon-flip-horizontal icon-fw me-1"></i>Free</small>
 									<h5 class="m-0"><%=prettyBytes(free, { binary: true })%></h5>
 								</div>
 								<div class="col-6 col-md-3">
 									<small class="text-body-tertiary d-block text-truncate"><i class="icon-solid icon-compress icon-fw me-1"></i>Compression</small>
-									<h5 class="m-0"><%if (compressRatio > 0) {%><%=compressRatio.toFixed(2)%>x <small class="fw-normal text-body-tertiary">(<%=prettyBytes(saved, { binary: true })%> saved)</small><%} else {%>&mdash;<%}%></h5>
+									<h5 class="m-0"><%if (compressRatio > 0) {%><%=compressRatio.toFixed(2)%>x <small class="fs-6 fw-light text-body-tertiary">(<%=prettyBytes(saved, { binary: true })%> saved)</small><%} else {%>&mdash;<%}%></h5>
 								</div>
 							</div>
 							<u-progress shadow="false">
@@ -147,7 +147,7 @@
 									<%const groupLabel = (isBareDisk ? (group.vdev.class !== 'normal' ? group.vdev.class : null) : group.vdev.name)%>
 									<div class="text-center">
 										<%if (!_.isNull(groupLabel)) {%>
-											<div class="mb-2">
+											<div>
 												<u-badge color="<%=stateColor(group.vdev.state)%>" pill><small><%-groupLabel%></small></u-badge>
 											</div>
 										<%}%>
