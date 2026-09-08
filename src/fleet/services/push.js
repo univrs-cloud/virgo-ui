@@ -163,9 +163,8 @@ const init = async () => {
 };
 
 export {
-	isSupported,
+	init,
 	getPermission,
 	allow,
-	disable,
-	init
+	disable
 };

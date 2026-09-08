@@ -1,9 +1,9 @@
 import accountPartial from 'node/partials/account.html';
-import * as dockerService from 'node/services/docker';
+import * as softwareService from 'node/services/software';
 import * as sessionService from 'node/services/session';
 import * as fleetAuthService from 'libs/services/fleet_auth';
 
-let unsubscribe;
+let isInitialized = false;
 const accountTemplate = _.template(accountPartial);
 
 // The node ends its own sessions now that it starts them: the browser is reloaded rather than routed,
@@ -28,25 +28,30 @@ const signOut = async (event) => {
 	window.location.reload();
 };
 
-const render = (state) => {
-	if (_.isNull(state.containers)) {
+const paint = (update) => {
+	if (update === -1) {
 		return;
 	}
 
-	unsubscribe?.();
-	unsubscribe = null;
-
-	const isUpdating = !_.isNull(state.update);
+	const isUpdating = !_.isNull(update);
 	const newAccount = `<div>${accountTemplate({ account, isUpdating, runtimeRole })}</div>`;
 	_.each(document.querySelectorAll('header .account'), (element) => {
 		morphdom(element, newAccount, { childrenOnly: true });
 	});
 };
 
-const init = () => {
-	document.body.addEventListener('click', signOut);
+const render = (state) => {
+	paint(state.update);
+};
 
-	unsubscribe = dockerService.subscribe([render]);
+const init = () => {
+	if (!isInitialized) {
+		isInitialized = true;
+		document.body.addEventListener('click', signOut);
+		softwareService.subscribeToUpdate([render]);
+	}
+
+	paint(softwareService.getUpdate());
 };
 
 export {
