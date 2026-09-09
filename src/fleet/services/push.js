@@ -156,7 +156,9 @@ const init = async () => {
 	}
 
 	if (Notification.permission === 'granted') {
-		await subscribeThisDevice().catch(() => {});
+		try {
+			await subscribeThisDevice();
+		} catch { }
 	} else if (Notification.permission === 'default') {
 		showAllowToast();
 	}

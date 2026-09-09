@@ -23,29 +23,43 @@ const announceUnready = () => {
 	navigator.serviceWorker.controller?.postMessage({ type: UNREADY_TYPE });
 };
 
-const announceWhenReady = (nodeId) => {
+const announceWhenReady = async (nodeId) => {
 	const pending = activeTransport(nodeId);
 	if (!pending) {
 		return;
 	}
-	pending.then(() => { announceReady(nodeId); }).catch(() => {});
+	try {
+		await pending;
+		announceReady(nodeId);
+	} catch {
+		return;
+	}
 };
 
-const prepareTransport = (nodeId, timeoutMs = TRANSPORT_WAIT_MS) => {
+const prepareTransport = async (nodeId, timeoutMs = TRANSPORT_WAIT_MS) => {
 	if (!nodeId || !isAvailable()) {
-		return Promise.resolve(false);
+		return false;
 	}
 
 	let timer = null;
-	const attempt = forNode(nodeId).then(() => {
-		announceReady(nodeId);
-		return true;
-	}).catch(() => { return false; });
+	const attempt = (async () => {
+		try {
+			await forNode(nodeId);
+			announceReady(nodeId);
+			return true;
+		} catch {
+			return false;
+		}
+	})();
 	const deadline = new Promise((resolve) => {
 		timer = setTimeout(() => { resolve(false); }, timeoutMs);
 	});
 
-	return Promise.race([attempt, deadline]).finally(() => { clearTimeout(timer); });
+	try {
+		return await Promise.race([attempt, deadline]);
+	} finally {
+		clearTimeout(timer);
+	}
 };
 
 const serve = async (port, { nodeId, path, flowControl, acceptEncoding }) => {
@@ -74,7 +88,7 @@ const serve = async (port, { nodeId, path, flowControl, acceptEncoding }) => {
 			stop();
 		}, 30000);
 	};
-	port.onmessage = ({ data }) => {
+	port.onmessage = async ({ data }) => {
 		if (data?.type === 'abort') {
 			stop();
 			return;
@@ -84,7 +98,8 @@ const serve = async (port, { nodeId, path, flowControl, acceptEncoding }) => {
 		}
 		reading = true;
 		armTimeout();
-		reader.read().then(({ done, value }) => {
+		try {
+			const { done, value } = await reader.read();
 			if (abort.signal.aborted) { return; }
 			if (done) {
 				port.postMessage({ type: 'end' });
@@ -94,12 +109,14 @@ const serve = async (port, { nodeId, path, flowControl, acceptEncoding }) => {
 			const bytes = transferableBytes(value);
 			port.postMessage({ type: 'chunk', bytes }, [bytes]);
 			armTimeout();
-		}).catch((error) => {
+		} catch (error) {
 			if (!abort.signal.aborted) {
 				port.postMessage({ type: 'error', message: error.message });
 				stop();
 			}
-		}).finally(() => { reading = false; });
+		} finally {
+			reading = false;
+		}
 	};
 	armTimeout();
 	try {
@@ -115,6 +132,16 @@ const serve = async (port, { nodeId, path, flowControl, acceptEncoding }) => {
 	} catch (error) {
 		clearTimeout(timer);
 		throw error;
+	}
+};
+
+const registerWorker = async (nodeId) => {
+	try {
+		const registration = await navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' });
+		registration.update().catch(() => {});
+		announceWhenReady(nodeId);
+	} catch (error) {
+		console.error('Error registering the asset service worker:', error);
 	}
 };
 
@@ -135,7 +162,7 @@ const start = (nodeId) => {
 		announceUnready();
 	});
 
-	navigator.serviceWorker.addEventListener('message', (event) => {
+	navigator.serviceWorker.addEventListener('message', async (event) => {
 		if (event.data?.type === PROBE_TYPE) {
 			announceWhenReady(nodeId);
 			return;
@@ -147,25 +174,20 @@ const start = (nodeId) => {
 		if (!port) {
 			return;
 		}
-		serve(port, event.data).catch((error) => {
+		try {
+			await serve(port, event.data);
+		} catch (error) {
 			try {
 				port.postMessage({ type: 'error', message: error?.message || 'Asset fetch failed' });
 				port.close();
 			} catch (ignored) {
 				return;
 			}
-		});
+		}
 	});
 
 	navigator.serviceWorker.addEventListener('controllerchange', () => { announceWhenReady(nodeId); });
-	navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' })
-		.then((registration) => {
-			registration.update().catch(() => {});
-			announceWhenReady(nodeId);
-		})
-		.catch((error) => {
-			console.error('Error registering the asset service worker:', error);
-		});
+	registerWorker(nodeId);
 };
 
 export { start, prepareTransport };
