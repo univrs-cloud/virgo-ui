@@ -20,7 +20,8 @@
 		"npm": ">=11.6.2"
 	},
 	"cpu": [
-		"arm64"
+		"arm64",
+		"x64"
 	],
 	"dependencies": {
 		"@codewithdan/observable-store": "^3.0.0",
