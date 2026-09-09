@@ -11,7 +11,11 @@ const send = async (method, url, data) => {
 		headers: { 'Content-Type': 'application/json' },
 		body: data === undefined ? undefined : JSON.stringify(data)
 	});
-	return response.json().catch(() => ({}));
+	try {
+		return await response.json();
+	} catch {
+		return {};
+	}
 };
 
 // Plain JSON reads, which carry no ack envelope of their own: null when the read fails.
@@ -20,7 +24,11 @@ const get = async (url) => {
 	if (!response.ok) {
 		return null;
 	}
-	return response.json().catch(() => null);
+	try {
+		return await response.json();
+	} catch {
+		return null;
+	}
 };
 
 // HEAD carries no body, so there is nothing to parse: callers get the status and headers to probe
