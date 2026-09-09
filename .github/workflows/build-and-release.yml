@@ -11,8 +11,16 @@ on:
         required: true
 
 jobs:
-  build-and-release:
-    runs-on: ubuntu-24.04-arm
+  build:
+    strategy:
+      matrix:
+        include:
+          - runner: ubuntu-24.04-arm
+            architecture: arm64
+          - runner: ubuntu-24.04
+            architecture: amd64
+
+    runs-on: ${{ matrix.runner }}
 
     steps:
       - uses: actions/checkout@v6
@@ -26,15 +34,29 @@ jobs:
       - run: npm run build
 
       - run: npm run deb
+        env:
+          DEB_ARCH: ${{ matrix.architecture }}
 
       - uses: actions/upload-artifact@v7
         with:
-          name: deb-package
+          name: deb-package-${{ matrix.architecture }}
           path: ./*.deb
+
+  release:
+    needs: build
+
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/download-artifact@v7
+        with:
+          pattern: deb-package-*
+          merge-multiple: true
+          path: deb
 
       - uses: softprops/action-gh-release@v2
         with:
-          files: ./*.deb
+          files: deb/*.deb
           tag_name: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.tag || github.ref_name }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
