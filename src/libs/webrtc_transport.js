@@ -381,10 +381,14 @@ class WebrtcTransport {
 			}
 		};
 
-		this.#signal.on('webrtc:answer', ({ sessionId, sdp } = {}) => {
+		this.#signal.on('webrtc:answer', async ({ sessionId, sdp } = {}) => {
 			if (sessionId === this.#sessionId && this.#pc && !this.#pc.currentRemoteDescription) {
 				this.#state = 'ANSWERED';
-				this.#applyAnswer(sdp).catch(() => { this.#lose(); });
+				try {
+					await this.#applyAnswer(sdp);
+				} catch {
+					this.#lose();
+				}
 			}
 		});
 		this.#signal.on('webrtc:candidate', ({ sessionId, candidate } = {}) => {
@@ -966,9 +970,9 @@ class WebrtcTransport {
 	}
 }
 
-const forNode = (nodeId) => {
+const forNode = async (nodeId) => {
 	if (!nodeId || !isAvailable()) {
-		return Promise.reject(new Error('WebRTC is unavailable'));
+		throw new Error('WebRTC is unavailable');
 	}
 
 	const now = Date.now();
@@ -981,20 +985,23 @@ const forNode = (nodeId) => {
 	if (cooldown) {
 		const error = new Error('WebRTC recently failed for this node');
 		error.retryAfterMs = cooldown - now;
-		return Promise.reject(error);
+		throw error;
 	}
 
 	let pending = transports.get(nodeId);
 	if (!pending) {
 		const transport = new WebrtcTransport(nodeId);
-		pending = transport.start().then((started) => {
-			notifyTransport(nodeId, true);
-			return started;
-		}).catch((error) => {
-			transport.close({ failed: true });
-			error.retryAfterMs = RETRY_COOLDOWN_MS;
-			throw error;
-		});
+		pending = (async () => {
+			try {
+				const started = await transport.start();
+				notifyTransport(nodeId, true);
+				return started;
+			} catch (error) {
+				transport.close({ failed: true });
+				error.retryAfterMs = RETRY_COOLDOWN_MS;
+				throw error;
+			}
+		})();
 		transports.set(nodeId, pending);
 	}
 

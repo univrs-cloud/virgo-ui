@@ -95,23 +95,23 @@ const checkAvailability = _.debounce(() => {
 
 	availability = { key, status: 'checking' };
 	renderAvailability();
-	availabilityRequest = networkService.checkDomainAvailability(data.hostname)
-		.then((response) => {
+	availabilityRequest = (async () => {
+		try {
+			const response = await networkService.checkDomainAvailability(data.hostname);
 			if (availability.key !== key) {
 				return;
 			}
 
 			availability = { key, status: (response?.status === 'succeeded' ? (response.available ? 'available' : 'taken') : 'unknown') };
-		})
-		.catch(() => {
+		} catch {
 			if (availability.key === key) {
 				availability = { key, status: 'unknown' };
 			}
-		})
-		.finally(() => {
+		} finally {
 			availabilityRequest = null;
 			renderAvailability();
-		});
+		}
+	})();
 }, CHECK_DELAY_MS);
 
 const goNext = () => {

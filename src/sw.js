@@ -39,17 +39,16 @@ self.addEventListener('notificationclick', (event) => {
 	const nodeId = event.notification.data?.nodeId;
 	const target = nodeId ? `/nodes/${nodeId}/` : '/';
 	// Focus an existing window (navigating it to the node) rather than opening a duplicate.
-	event.waitUntil(
-		self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clients) => {
-			for (const client of clients) {
-				if ('focus' in client) {
-					client.navigate(target);
-					return client.focus();
-				}
+	event.waitUntil((async () => {
+		const clients = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+		for (const client of clients) {
+			if ('focus' in client) {
+				client.navigate(target);
+				return client.focus();
 			}
-			return self.clients.openWindow(target);
-		})
-	);
+		}
+		return self.clients.openWindow(target);
+	})());
 });
 
 const NODE_ASSET_PATTERN = /^\/nodes\/([^/]+)\/(.+)$/;
@@ -79,10 +78,13 @@ self.addEventListener('message', (event) => {
 	}
 });
 
-const probeClient = (clientId) => {
-	self.clients.get(clientId)
-		.then((client) => { client?.postMessage({ type: ASSET_PROBE_TYPE }); })
-		.catch(() => {});
+const probeClient = async (clientId) => {
+	try {
+		const client = await self.clients.get(clientId);
+		client?.postMessage({ type: ASSET_PROBE_TYPE });
+	} catch (ignored) {
+		return;
+	}
 };
 
 const decodeAssetBody = (stream, encoding) => {
@@ -274,11 +276,13 @@ self.addEventListener('fetch', (event) => {
 		return;
 	}
 
-	event.respondWith(
-		routeNodeAsset(event, match[1], `/${match[2]}${url.search}`).catch((error) => {
+	event.respondWith((async () => {
+		try {
+			return await routeNodeAsset(event, match[1], `/${match[2]}${url.search}`);
+		} catch (error) {
 			console.warn('Node asset fell back to the network:', url.pathname, error?.message);
 			readyClients.delete(event.clientId);
 			return fetch(request);
-		})
-	);
+		}
+	})());
 });
