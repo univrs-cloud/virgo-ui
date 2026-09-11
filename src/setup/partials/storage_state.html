@@ -56,15 +56,7 @@
 			</dd>
 		</dl>
 	<%} else {%>
-		<p>No existing pool was found, so a new pool named <strong><%-poolName%></strong> will be created from these drives.</p>
 		<dl class="m-0">
-			<dt class="fw-lighter"><small>Drives</small></dt>
-			<dd>
-				<%_.each(drives, (drive) => {%>
-					<div><%-(drive.model || drive.name)%> @ <%=prettyBytes(drive.size || 0, { binary: true })%></div>
-					<%if (drive.serialNumber) {%><small class="d-block text-body-tertiary mt-n1">SN: <%-drive.serialNumber%></small><%}%>
-				<%})%>
-			</dd>
 			<%=topologiesPartial({ topologies, selectedType, drives, prettyBytes })%>
 		</dl>
 		<%if (!_.isEmpty(foreignPools)) {%>
