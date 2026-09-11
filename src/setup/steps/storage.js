@@ -1,11 +1,15 @@
 import page from 'page';
 import storagePartial from 'setup/partials/storage.html';
 import statePartial from 'setup/partials/storage_state.html';
+import topologiesPartial from 'setup/partials/storage_topologies.html';
 import * as storageService from 'setup/services/storage';
 import { completeStep, nextStepPath, previousStepPath } from 'setup/wizard';
 
 const storageTemplate = _.template(storagePartial);
 const stateTemplate = _.template(statePartial);
+const topologiesTemplate = _.template(topologiesPartial);
+// The layout the user picked, kept across renders because the drive list re-renders under it.
+let selectedType = null;
 document.querySelector('main .wizard').insertAdjacentHTML('beforeend', storageTemplate());
 const step = document.querySelector('#storage');
 const fetching = step.querySelector('.fetching');
@@ -67,12 +71,20 @@ const render = (state) => {
 
 	const importablePool = storageService.getImportablePool(state.importablePools);
 	const usableDrives = storageService.getUsableDrives(state.drives);
+	const topologies = storageService.getTopologies(state.topologies);
+	if (!_.find(topologies, { type: selectedType })) {
+		selectedType = _.get(_.first(topologies), 'type', null);
+	}
+
 	const template = stateTemplate({
 		pool,
 		importablePools: state.importablePools,
 		importablePool,
 		foreignPools: storageService.getForeignPools(state.importablePools),
 		drives: usableDrives,
+		topologies,
+		selectedType,
+		topologiesPartial: topologiesTemplate,
 		poolName: storageService.POOL_NAME,
 		minimumDrives: storageService.MINIMUM_DRIVES,
 		prettyBytes
@@ -84,8 +96,8 @@ const render = (state) => {
 	);
 
 	// A pool that is already imported leaves nothing to do; otherwise it is adopt-or-create, and
-	// creating needs the drives the mirror is made of.
-	const canCreate = (_.isUndefined(pool) && _.isUndefined(importablePool) && _.size(usableDrives) >= storageService.MINIMUM_DRIVES);
+	// creating needs a layout the drives can actually be built into.
+	const canCreate = (_.isUndefined(pool) && _.isUndefined(importablePool) && Boolean(selectedType));
 	continueButton.classList.toggle('d-none', _.isUndefined(pool));
 	importButton.classList.toggle('d-none', !_.isUndefined(pool) || _.isUndefined(importablePool));
 	createButton.classList.toggle('d-none', !canCreate);
@@ -105,9 +117,20 @@ const importPool = (event) => {
 	storageService.importPool({ name: storageService.POOL_NAME });
 };
 
+const selectTopology = (event) => {
+	const input = event.target.closest('input[name="topology"]');
+	if (input) {
+		selectedType = input.value;
+	}
+};
+
 const createPool = async (event) => {
+	if (!selectedType) {
+		return;
+	}
+
 	const drives = storageService.getUsableDrives(storageService.getDrives());
-	const names = _.map(drives, (drive) => { return `${drive.model} (SN: ${drive.serialNumber})`; }).join('<br>');
+	const names = _.map(drives, (drive) => { return `${drive.model || drive.name} (SN: ${drive.serialNumber || '—'})`; }).join('<br>');
 	if (!await confirm(`Everything on these drives will be erased:<br><br>${names}<br><br>This cannot be undone.`, { buttons: [{ text: 'Erase and create pool', class: 'btn-danger' }] })) {
 		return;
 	}
@@ -115,8 +138,8 @@ const createPool = async (event) => {
 	start(createButton);
 	storageService.createPool({
 		name: storageService.POOL_NAME,
-		type: storageService.POOL_TYPE,
-		drives: _.map(drives, 'eui')
+		type: selectedType,
+		drives: _.map(drives, 'id')
 	});
 };
 
@@ -132,6 +155,7 @@ const goBack = (event) => {
 	page(previousStepPath('storage'));
 };
 
+summary.addEventListener('change', selectTopology);
 rescanLink.addEventListener('click', scanAgain);
 importButton.addEventListener('click', importPool);
 createButton.addEventListener('click', createPool);

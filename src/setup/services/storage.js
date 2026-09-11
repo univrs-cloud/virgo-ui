@@ -3,8 +3,6 @@ import Job from 'stores/job';
 import { createSubscription, storeAttach } from 'libs/services/module_store_subscription';
 
 const POOL_NAME = 'messier';
-// Setup only ever builds the two-drive mirror the node ships with; the API accepts other layouts.
-const POOL_TYPE = 'mirror';
 const MINIMUM_DRIVES = 2;
 const IMPORT_JOB = 'host:storage:pool:import';
 const CREATE_JOB = 'host:storage:pool:create';
@@ -17,7 +15,7 @@ const { subscribe } = createSubscription({
 	stores: [
 		{
 			store: Host,
-			propertyNames: ['storage', 'drives', 'importable']
+			propertyNames: ['storage', 'drives', 'topologies', 'importable']
 		},
 		{
 			store: Job,
@@ -28,8 +26,8 @@ const { subscribe } = createSubscription({
 		jobs: isPoolJob
 	},
 	attachStore: storeAttach.beforeCallbacks,
-	mapState: ({ storage, drives, importable, jobs }) => {
-		return { storage, drives, importablePools: importable, jobs };
+	mapState: ({ storage, drives, topologies, importable, jobs }) => {
+		return { storage, drives, topologies, importablePools: importable, jobs };
 	}
 });
 
@@ -49,10 +47,16 @@ const getForeignPools = (importablePools) => {
 	return _.reject(_.filter(importablePools, _.isObject), { name: POOL_NAME });
 };
 
-/** Drives a pool can be built from: the node has to be able to name one by its stable id before it
- * can be handed to zpool. */
+/** Drives a pool can be built from: the node has to be able to name one before it can be handed to
+ * zpool, and the drive list already excludes the disk the system runs from. */
 const getUsableDrives = (drives) => {
-	return _.filter(drives, 'eui');
+	return _.filter(drives, 'id');
+};
+
+/** The layouts the node says these drives can be built into, one per redundancy type. Empty with
+ * drives present means they are not all the same size. */
+const getTopologies = (topologies = Host.getTopologies()) => {
+	return (topologies || []);
 };
 
 const getStorage = () => {
@@ -81,7 +85,6 @@ const createPool = (data) => {
 
 export {
 	POOL_NAME,
-	POOL_TYPE,
 	MINIMUM_DRIVES,
 	subscribe,
 	getStorage,
@@ -89,6 +92,7 @@ export {
 	getImportablePool,
 	getForeignPools,
 	getUsableDrives,
+	getTopologies,
 	getDrives,
 	getImportablePools,
 	fetchImportablePools,

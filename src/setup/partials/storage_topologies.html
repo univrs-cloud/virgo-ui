@@ -1,0 +1,26 @@
+<%const LABELS = { mirror: 'Mirror', raidz1: 'RAID-Z1', raidz2: 'RAID-Z2', raidz3: 'RAID-Z3' };%>
+<dt class="fw-lighter"><small>Structure</small></dt>
+<dd class="m-0">
+	<%_.each(topologies, (topology, index) => {%>
+		<%const id = `topology-${topology.type}`%>
+		<label class="topology d-flex align-items-center gap-3 border rounded-3 p-3 mb-2 <%=(topology.type === selectedType ? 'border-primary' : '')%>" for="<%-id%>">
+			<input type="radio" class="form-check-input m-0 flex-shrink-0" name="topology" id="<%-id%>" value="<%-topology.type%>" <%=(topology.type === selectedType ? 'checked' : '')%>>
+			<span class="flex-grow-1">
+				<span class="d-block"><%-LABELS[topology.type]%></span>
+				<small class="d-block text-body-tertiary">
+					<%=prettyBytes(topology.usableBytes, { binary: true })%> usable ·
+					survives <%=topology.tolerance%> drive <%=(topology.tolerance === 1 ? 'failure' : 'failures')%><%=(topology.vdevs > 1 ? ' per group' : '')%>
+				</small>
+			</span>
+			<span class="d-flex gap-2 flex-shrink-0">
+				<%_.times(topology.vdevs, () => {%>
+					<span class="vdev d-flex gap-1 px-1">
+						<%_.times(topology.width, () => {%>
+							<i class="icon-duotone icon-solid icon-hard-drive text-primary"></i>
+						<%})%>
+					</span>
+				<%})%>
+			</span>
+		</label>
+	<%})%>
+</dd>
