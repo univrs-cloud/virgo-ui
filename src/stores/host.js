@@ -21,6 +21,7 @@ class Host extends Store {
 			importable: null,
 			snapshots: null,
 			drives: null,
+			topologies: null,
 			services: null,
 			ups: null,
 			time: null
@@ -106,6 +107,10 @@ class Host extends Store {
 
 		this.socket.on('host:drives', (drives) => {
 			this.setState({ drives }, 'get_drives');
+		});
+
+		this.socket.on('host:storage:topologies', (topologies) => {
+			this.setState({ topologies }, 'get_topologies');
 		});
 
 		this.socket.on('host:storage', (storage) => {
@@ -240,6 +245,10 @@ class Host extends Store {
 
 	getDrives() {
 		return this.getStateProperty('drives');
+	}
+
+	getTopologies() {
+		return this.getStateProperty('topologies');
 	}
 
 	getStorage() {

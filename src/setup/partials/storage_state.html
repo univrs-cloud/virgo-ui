@@ -33,30 +33,48 @@
 <%} else {%>
 	<%if (_.isEmpty(drives)) {%>
 		<p class="text-danger m-0">No drives were detected, so a pool cannot be created.</p>
-	<%} else {%>
-		<p>No existing pool was found, so a new mirrored pool named <strong><%-poolName%></strong> will be created from these drives.</p>
+	<%} else if (_.size(drives) < minimumDrives) {%>
+		<p class="text-danger">A pool needs at least <%=minimumDrives%> drives, and only one was detected.</p>
 		<dl class="m-0">
 			<dt class="fw-lighter"><small>Drives</small></dt>
-			<dd class="<%=(_.size(drives) < minimumDrives ? '' : 'm-0')%>">
+			<dd class="m-0">
 				<%_.each(drives, (drive) => {%>
-					<div><%-drive.model%> @ <%=prettyBytes(drive.capacity?.bytes || 0, { binary: true })%></div>
-					<small class="d-block text-body-tertiary mt-n1">SN: <%-drive.serialNumber%></small>
+					<div><%-(drive.model || drive.name)%> @ <%=prettyBytes(drive.size || 0, { binary: true })%></div>
+					<%if (drive.serialNumber) {%><small class="d-block text-body-tertiary mt-n1">SN: <%-drive.serialNumber%></small><%}%>
 				<%})%>
 			</dd>
-			<%if (_.size(drives) < minimumDrives) {%>
-				<dd class="text-danger m-0">A mirrored pool needs at least <%=minimumDrives%> drives, and only <%=_.size(drives)%> was detected.</dd>
-			<%}%>
+		</dl>
+	<%} else if (_.isEmpty(topologies)) {%>
+		<p class="text-danger">These drives are not all the same size, so no pool structure can be offered. Use drives of one size, and remove any that should not be part of the pool.</p>
+		<dl class="m-0">
+			<dt class="fw-lighter"><small>Drives</small></dt>
+			<dd class="m-0">
+				<%_.each(drives, (drive) => {%>
+					<div><%-(drive.model || drive.name)%> @ <strong><%=prettyBytes(drive.size || 0, { binary: true })%></strong></div>
+					<%if (drive.serialNumber) {%><small class="d-block text-body-tertiary mt-n1">SN: <%-drive.serialNumber%></small><%}%>
+				<%})%>
+			</dd>
+		</dl>
+	<%} else {%>
+		<p>No existing pool was found, so a new pool named <strong><%-poolName%></strong> will be created from these drives.</p>
+		<dl class="m-0">
+			<dt class="fw-lighter"><small>Drives</small></dt>
+			<dd>
+				<%_.each(drives, (drive) => {%>
+					<div><%-(drive.model || drive.name)%> @ <%=prettyBytes(drive.size || 0, { binary: true })%></div>
+					<%if (drive.serialNumber) {%><small class="d-block text-body-tertiary mt-n1">SN: <%-drive.serialNumber%></small><%}%>
+				<%})%>
+			</dd>
+			<%-topologiesPartial({ topologies, selectedType, prettyBytes })%>
 		</dl>
 		<%if (!_.isEmpty(foreignPools)) {%>
 			<div class="alert alert-warning mt-3 mb-0">
 				These drives already carry <%-_.map(foreignPools, 'name').join(', ')%>, which is not this node's pool. Creating a new pool destroys it.
 			</div>
 		<%}%>
-		<%if (_.size(drives) >= minimumDrives) {%>
-			<div class="alert alert-danger mt-3 mb-0">
-				<i class="icon-duotone icon-solid icon-triangle-exclamation icon-fw me-1"></i>
-				Everything currently on these drives will be erased.
-			</div>
-		<%}%>
+		<div class="alert alert-danger mt-3 mb-0">
+			<i class="icon-duotone icon-solid icon-triangle-exclamation icon-fw me-1"></i>
+			Everything currently on these drives will be erased.
+		</div>
 	<%}%>
 <%}%>
