@@ -136,7 +136,7 @@ const createPool = async (event) => {
 
 	const drives = storageService.getUsableDrives(storageService.getDrives());
 	const names = _.map(drives, (drive) => { return `${drive.model || drive.name} (SN: ${drive.serialNumber || '—'})`; }).join('<br>');
-	if (!await confirm(`Everything on these drives will be erased:<br><br>${names}<br><br>This cannot be undone.`, { buttons: [{ text: 'Erase and create', class: 'btn-danger' }] })) {
+	if (!await confirm(`Everything on these drives will be erased:<br><br>${names}<br><br>This cannot be undone, and the layout cannot be changed once the pool exists.`, { buttons: [{ text: 'Format and proceed', class: 'btn-danger' }], acknowledge: 'I understand and want to proceed' })) {
 		return;
 	}
 
