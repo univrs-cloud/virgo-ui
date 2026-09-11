@@ -65,7 +65,7 @@
 					<%if (drive.serialNumber) {%><small class="d-block text-body-tertiary mt-n1">SN: <%-drive.serialNumber%></small><%}%>
 				<%})%>
 			</dd>
-			<%-topologiesPartial({ topologies, selectedType, prettyBytes })%>
+			<%=topologiesPartial({ topologies, selectedType, drives, prettyBytes })%>
 		</dl>
 		<%if (!_.isEmpty(foreignPools)) {%>
 			<div class="alert alert-warning mt-3 mb-0">
