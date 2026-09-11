@@ -1,9 +1,9 @@
 <%if (!_.isUndefined(pool)) {%>
 	<p>This node's <strong><%-pool.name%></strong> storage pool is imported and in use.</p>
 	<dl class="m-0">
-		<dt class="fw-lighter"><small>Health</small></dt>
+		<dt class="fw-lighter"><small><i class="icon-light icon-heart-pulse icon-fw me-1"></i>Health</small></dt>
 		<dd class="<%=(pool.properties?.health?.value === 'ONLINE' ? '' : 'text-warning')%>"><%-(pool.properties?.health?.value || '—')%></dd>
-		<dt class="fw-lighter"><small>Capacity</small></dt>
+		<dt class="fw-lighter"><small><i class="icon-light icon-chart-pie icon-fw me-1"></i>Capacity</small></dt>
 		<dd<%=(_.isEmpty(poolGroups) ? ' class="m-0"' : '')%>>
 			<%=prettyBytes(pool.properties?.free?.value || 0, { binary: true })%> free
 			<small class="text-body-tertiary">of <%=prettyBytes(pool.properties?.size?.value || 0, { binary: true })%></small>
@@ -17,10 +17,10 @@
 <%} else if (!_.isUndefined(importablePool)) {%>
 	<p>An existing <strong><%-importablePool.name%></strong> pool was found on this node's drives. Importing keeps everything it holds.</p>
 	<dl class="m-0">
-		<dt class="fw-lighter"><small>State</small></dt>
+		<dt class="fw-lighter"><small><i class="icon-light icon-heart-pulse icon-fw me-1"></i>State</small></dt>
 		<dd class="<%=(importablePool.state === 'ONLINE' ? '' : 'text-warning')%>"><%-importablePool.state%></dd>
 		<%if (importablePool.status) {%>
-			<dt class="fw-lighter"><small>Status</small></dt>
+			<dt class="fw-lighter"><small><i class="icon-light icon-circle-info icon-fw me-1"></i>Status</small></dt>
 			<dd class="text-warning"><%-importablePool.status%></dd>
 		<%}%>
 		<%if (!_.isEmpty(importableGroups)) {%>
@@ -33,7 +33,7 @@
 	<%} else if (_.size(drives) < minimumDrives) {%>
 		<p class="text-danger">A pool needs at least <%=minimumDrives%> drives, and only one was detected.</p>
 		<dl class="m-0">
-			<dt class="fw-lighter"><small>Drives</small></dt>
+			<dt class="fw-lighter"><small><i class="icon-light icon-hard-drive icon-fw me-1"></i>Drives</small></dt>
 			<dd class="m-0">
 				<%_.each(drives, (drive) => {%>
 					<div><%-(drive.model || drive.name)%> @ <%=prettyBytes(drive.size || 0, { binary: true })%></div>
@@ -44,7 +44,7 @@
 	<%} else if (_.isEmpty(topologies)) {%>
 		<p class="text-danger">These drives are not all the same size, so no pool structure can be offered. Use drives of one size, and remove any that should not be part of the pool.</p>
 		<dl class="m-0">
-			<dt class="fw-lighter"><small>Drives</small></dt>
+			<dt class="fw-lighter"><small><i class="icon-light icon-hard-drive icon-fw me-1"></i>Drives</small></dt>
 			<dd class="m-0">
 				<%_.each(drives, (drive) => {%>
 					<div><%-(drive.model || drive.name)%> @ <strong><%=prettyBytes(drive.size || 0, { binary: true })%></strong></div>
