@@ -59,6 +59,25 @@ const getTopologies = (topologies = Host.getTopologies()) => {
 	return (topologies || []);
 };
 
+const flattenVdevs = (vdevs) => {
+	return _.flatMap(_.values(vdevs || {}), (vdev) => { return [vdev, ...flattenVdevs(vdev.vdevs)]; });
+};
+
+/** The pool's top-level vdevs with the drives under each, shaped for the topology diagram. A vdev with
+ * no children is a bare drive standing in for its own group. */
+const getPoolGroups = (pool, drives = Host.getDrives()) => {
+	const rootVdev = pool?.vdevs?.[pool?.name];
+	return _.map(_.values(rootVdev?.vdevs || {}), (vdev) => {
+		const disks = _.filter(flattenVdevs(vdev.vdevs), { vdevType: 'disk' });
+		return {
+			name: vdev.name,
+			disks: _.map((_.isEmpty(disks) ? [vdev] : disks), (disk) => {
+				return { name: disk.name, drive: _.find(drives, (drive) => { return _.includes(drive.ids, disk.name); }) };
+			})
+		};
+	});
+};
+
 const getStorage = () => {
 	return Host.getStorage();
 };
@@ -93,6 +112,7 @@ export {
 	getForeignPools,
 	getUsableDrives,
 	getTopologies,
+	getPoolGroups,
 	getDrives,
 	getImportablePools,
 	fetchImportablePools,
