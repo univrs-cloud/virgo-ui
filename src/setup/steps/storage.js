@@ -2,12 +2,14 @@ import page from 'page';
 import storagePartial from 'setup/partials/storage.html';
 import statePartial from 'setup/partials/storage_state.html';
 import topologiesPartial from 'setup/partials/storage_topologies.html';
+import poolTopologyPartial from 'setup/partials/storage_pool_topology.html';
 import * as storageService from 'setup/services/storage';
 import { completeStep, nextStepPath, previousStepPath } from 'setup/wizard';
 
 const storageTemplate = _.template(storagePartial);
 const stateTemplate = _.template(statePartial);
 const topologiesTemplate = _.template(topologiesPartial);
+const poolTopologyTemplate = _.template(poolTopologyPartial);
 // The layout the user picked, kept across renders because the drive list re-renders under it.
 let selectedType = null;
 document.querySelector('main .wizard').insertAdjacentHTML('beforeend', storageTemplate());
@@ -85,6 +87,8 @@ const render = (state) => {
 		topologies,
 		selectedType,
 		topologiesPartial: topologiesTemplate,
+		poolGroups: storageService.getPoolGroups(pool, state.drives),
+		poolTopologyPartial: poolTopologyTemplate,
 		poolName: storageService.POOL_NAME,
 		minimumDrives: storageService.MINIMUM_DRIVES,
 		prettyBytes
