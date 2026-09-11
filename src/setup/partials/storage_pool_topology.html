@@ -1,0 +1,29 @@
+<dt class="fw-lighter"><small>Topology</small></dt>
+<dd class="vdev-tree m-0">
+	<span class="d-flex flex-wrap justify-content-center gap-3">
+		<%_.each(groups, (group) => {%>
+			<span class="text-center">
+				<span class="d-block">
+					<u-badge color="gray" pill><small><%-group.name%></small></u-badge>
+				</span>
+				<span class="d-inline-block">
+					<%if (_.size(group.disks) > 1) {%>
+						<span class="vdev-bar d-block"></span>
+					<%}%>
+					<span class="vdev-slots">
+						<%_.each(group.disks, (disk) => {%>
+							<%const tip = _.compact([disk.drive?.model, disk.drive?.serialNumber, disk.name]).join(' &middot; ')%>
+							<span class="vdev-slot">
+								<%if (_.size(group.disks) > 1) {%>
+									<span class="vdev-stem d-block"></span>
+								<%}%>
+								<i class="vdev-disk icon-duotone icon-solid icon-hard-drive text-blue-500" data-bs-toggle="tooltip" title="<%=tip%>"></i>
+								<small class="text-body-tertiary text-truncate w-100 mt-1"><%-(disk.drive?.name || `…${disk.name.slice(-6)}`)%></small>
+							</span>
+						<%})%>
+					</span>
+				</span>
+			</span>
+		<%})%>
+	</span>
+</dd>

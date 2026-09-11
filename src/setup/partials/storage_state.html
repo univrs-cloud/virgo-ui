@@ -4,10 +4,13 @@
 		<dt class="fw-lighter"><small>Health</small></dt>
 		<dd class="<%=(pool.properties?.health?.value === 'ONLINE' ? '' : 'text-warning')%>"><%-(pool.properties?.health?.value || '—')%></dd>
 		<dt class="fw-lighter"><small>Capacity</small></dt>
-		<dd class="m-0">
+		<dd<%=(_.isEmpty(poolGroups) ? ' class="m-0"' : '')%>>
 			<%=prettyBytes(pool.properties?.free?.value || 0, { binary: true })%> free
 			<small class="text-body-tertiary">of <%=prettyBytes(pool.properties?.size?.value || 0, { binary: true })%></small>
 		</dd>
+		<%if (!_.isEmpty(poolGroups)) {%>
+			<%=poolTopologyPartial({ groups: poolGroups })%>
+		<%}%>
 	</dl>
 <%} else if (importablePools === false) {%>
 	<p class="text-danger m-0">The drives could not be scanned for existing pools. Check that the drives are attached, then scan again.</p>
@@ -20,7 +23,7 @@
 			<dt class="fw-lighter"><small>Status</small></dt>
 			<dd class="text-warning"><%-importablePool.status%></dd>
 		<%}%>
-		<dt class="fw-lighter"><small>Structure</small></dt>
+		<dt class="fw-lighter"><small>Topology</small></dt>
 		<dd class="m-0">
 			<%_.each(importablePool.vdevs, (vdev) => {%>
 				<div><%-vdev.name%> <small class="text-body-tertiary"><%-vdev.state%></small></div>
