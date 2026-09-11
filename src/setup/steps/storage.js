@@ -12,6 +12,8 @@ const topologiesTemplate = _.template(topologiesPartial);
 const poolTopologyTemplate = _.template(poolTopologyPartial);
 // The layout the user picked, kept across renders because the drive list re-renders under it.
 let selectedType = null;
+// Picking a layout changes the summary under it, and no store update follows a click.
+let lastState = null;
 document.querySelector('main .wizard').insertAdjacentHTML('beforeend', storageTemplate());
 const step = document.querySelector('#storage');
 const fetching = step.querySelector('.fetching');
@@ -42,6 +44,7 @@ const idle = () => {
 // has not reported yet and the step keeps waiting. A submission owns the view until its job settles,
 // so the summary is left alone while one is in flight.
 const render = (state) => {
+	lastState = state;
 	const pool = storageService.getPool(state.storage);
 	const job = _.first(state.jobs);
 	const isSettled = _.includes(['completed', 'failed'], job?.progress?.state);
@@ -126,6 +129,7 @@ const selectTopology = (event) => {
 	const input = event.target.closest('input[name="topology"]');
 	if (input) {
 		selectedType = input.value;
+		render(lastState);
 	}
 };
 
@@ -135,8 +139,11 @@ const createPool = async (event) => {
 	}
 
 	const drives = storageService.getUsableDrives(storageService.getDrives());
-	const names = _.map(drives, (drive) => { return `${drive.model || drive.name} (SN: ${drive.serialNumber || '—'})`; }).join('<br>');
-	if (!await confirm(`Everything on these drives will be erased:<br><br>${names}<br><br>This cannot be undone, and the layout cannot be changed once the pool exists.`, { buttons: [{ text: 'Format and proceed', class: 'btn-danger' }], acknowledge: 'I understand and want to proceed' })) {
+	const message = `All data on the selected drives will be erased during formatting. This action cannot be undone. The selected RAID type cannot be changed after setup.`;
+	if (!await confirm(message, {
+		buttons: [{ text: 'Format and proceed', class: 'btn-danger' }],
+		acknowledge: 'I understand and want to proceed'
+	})) {
 		return;
 	}
 
