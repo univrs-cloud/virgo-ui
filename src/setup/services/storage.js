@@ -78,6 +78,35 @@ const getPoolGroups = (pool, drives = Host.getDrives()) => {
 	});
 };
 
+const stateColor = (state) => {
+	const value = _.toLower(state || '');
+	if (_.includes(['online', 'avail'], value)) {
+		return null;
+	}
+
+	return (_.includes(['degraded', 'inuse'], value) ? 'text-yellow-500' : 'text-red-300');
+};
+
+/** The same shape as getPoolGroups, from the flat vdev list a scan reports for a pool that is not
+ * imported yet. */
+const getImportableGroups = (importablePool, drives = Host.getDrives()) => {
+	return _.map(importablePool?.vdevs, (vdev) => {
+		const devices = (_.isEmpty(vdev.devices) ? [vdev] : vdev.devices);
+		return {
+			name: vdev.name,
+			color: (stateColor(vdev.state) ? 'yellow' : 'gray'),
+			disks: _.map(devices, (device) => {
+				return {
+					name: device.name,
+					state: device.state,
+					color: stateColor(device.state),
+					drive: _.find(drives, (drive) => { return _.includes(drive.ids, device.name); })
+				};
+			})
+		};
+	});
+};
+
 const getStorage = () => {
 	return Host.getStorage();
 };
@@ -113,6 +142,7 @@ export {
 	getUsableDrives,
 	getTopologies,
 	getPoolGroups,
+	getImportableGroups,
 	getDrives,
 	getImportablePools,
 	fetchImportablePools,
