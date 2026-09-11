@@ -43,4 +43,18 @@
 			</span>
 		</label>
 	<%})%>
+	<%const selected = _.find(topologies, { type: selectedType })%>
+	<%if (selected) {%>
+		<%const totalBytes = _.sumBy(drives, 'size')%>
+		<%const usablePercent = _.round((totalBytes > 0 ? (selected.usableBytes / totalBytes) * 100 : 0), 2)%>
+		<%const protectionDrives = selected.vdevs * selected.parity%>
+		<u-progress class="mt-3" shadow="false">
+			<u-progress-bar color="blue" tint="500" width="<%=usablePercent%>" warning-threshold="999" danger-threshold="999" tip="Capacity: <%=prettyBytes(selected.usableBytes, { binary: true })%>"></u-progress-bar>
+			<u-progress-bar color="pink" tint="400" width="<%=(100 - usablePercent)%>" warning-threshold="999" danger-threshold="999" tip="Protection: <%=_.pluralize('drive', protectionDrives, true)%>"></u-progress-bar>
+		</u-progress>
+		<div class="d-flex flex-wrap gap-3 mt-2">
+			<small class="text-body-secondary"><i class="icon-solid icon-circle text-blue-500 me-1" style="font-size: 0.5rem; vertical-align: middle;"></i>Capacity: <%=prettyBytes(selected.usableBytes, { binary: true })%></small>
+			<small class="text-body-secondary"><i class="icon-solid icon-circle text-pink-400 me-1" style="font-size: 0.5rem; vertical-align: middle;"></i>Protection: <%=_.pluralize('drive', protectionDrives, true)%></small>
+		</div>
+	<%}%>
 </dd>
