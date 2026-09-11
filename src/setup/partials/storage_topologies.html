@@ -5,8 +5,8 @@
 		<%const id = `topology-${topology.type}`%>
 		<%const groups = _.chunk(drives, topology.width)%>
 		<label class="topology d-block border rounded-3 p-3 mb-2 <%=(topology.type === selectedType ? 'border-primary' : '')%>" for="<%-id%>">
-			<span class="d-flex align-items-center gap-3">
-				<input type="radio" class="form-check-input m-0 flex-shrink-0" name="topology" id="<%-id%>" value="<%-topology.type%>" <%=(topology.type === selectedType ? 'checked' : '')%>>
+			<span class="d-flex align-items-start gap-3">
+				<input type="radio" class="form-check-input m-0 mt-1 flex-shrink-0" name="topology" id="<%-id%>" value="<%-topology.type%>" <%=(topology.type === selectedType ? 'checked' : '')%>>
 				<span class="flex-grow-1">
 					<span class="d-block"><%-LABELS[topology.type]%></span>
 					<small class="d-block text-body-tertiary">
