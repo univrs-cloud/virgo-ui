@@ -88,6 +88,7 @@ const render = (state) => {
 		selectedType,
 		topologiesPartial: topologiesTemplate,
 		poolGroups: storageService.getPoolGroups(pool, state.drives),
+		importableGroups: storageService.getImportableGroups(importablePool, state.drives),
 		poolTopologyPartial: poolTopologyTemplate,
 		poolName: storageService.POOL_NAME,
 		minimumDrives: storageService.MINIMUM_DRIVES,

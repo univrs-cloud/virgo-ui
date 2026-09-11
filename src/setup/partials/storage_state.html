@@ -23,15 +23,9 @@
 			<dt class="fw-lighter"><small>Status</small></dt>
 			<dd class="text-warning"><%-importablePool.status%></dd>
 		<%}%>
-		<dt class="fw-lighter"><small>Topology</small></dt>
-		<dd class="m-0">
-			<%_.each(importablePool.vdevs, (vdev) => {%>
-				<div><%-vdev.name%> <small class="text-body-tertiary"><%-vdev.state%></small></div>
-				<%_.each(vdev.devices, (device) => {%>
-					<div class="ms-3"><%-device.name%> <small class="text-body-tertiary"><%-device.state%></small></div>
-				<%})%>
-			<%})%>
-		</dd>
+		<%if (!_.isEmpty(importableGroups)) {%>
+			<%=poolTopologyPartial({ groups: importableGroups })%>
+		<%}%>
 	</dl>
 <%} else {%>
 	<%if (_.isEmpty(drives)) {%>
