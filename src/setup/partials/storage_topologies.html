@@ -1,23 +1,43 @@
 <%const LABELS = { mirror: 'Mirror', raidz1: 'RAID-Z1', raidz2: 'RAID-Z2', raidz3: 'RAID-Z3' };%>
 <dt class="fw-lighter"><small>Structure</small></dt>
-<dd class="m-0">
-	<%_.each(topologies, (topology, index) => {%>
+<dd class="vdev-tree m-0">
+	<%_.each(topologies, (topology) => {%>
 		<%const id = `topology-${topology.type}`%>
-		<label class="topology d-flex align-items-center gap-3 border rounded-3 p-3 mb-2 <%=(topology.type === selectedType ? 'border-primary' : '')%>" for="<%-id%>">
-			<input type="radio" class="form-check-input m-0 flex-shrink-0" name="topology" id="<%-id%>" value="<%-topology.type%>" <%=(topology.type === selectedType ? 'checked' : '')%>>
-			<span class="flex-grow-1">
-				<span class="d-block"><%-LABELS[topology.type]%></span>
-				<small class="d-block text-body-tertiary">
-					<%=prettyBytes(topology.usableBytes, { binary: true })%> usable ·
-					survives <%=topology.tolerance%> drive <%=(topology.tolerance === 1 ? 'failure' : 'failures')%><%=(topology.vdevs > 1 ? ' per group' : '')%>
-				</small>
+		<%const groups = _.chunk(drives, topology.width)%>
+		<label class="topology d-block border rounded-3 p-3 mb-2 <%=(topology.type === selectedType ? 'border-primary' : '')%>" for="<%-id%>">
+			<span class="d-flex align-items-center gap-3">
+				<input type="radio" class="form-check-input m-0 flex-shrink-0" name="topology" id="<%-id%>" value="<%-topology.type%>" <%=(topology.type === selectedType ? 'checked' : '')%>>
+				<span class="flex-grow-1">
+					<span class="d-block"><%-LABELS[topology.type]%></span>
+					<small class="d-block text-body-tertiary">
+						<%=prettyBytes(topology.usableBytes, { binary: true })%> usable &middot;
+						survives <%-topology.tolerance%> drive <%-(topology.tolerance === 1 ? 'failure' : 'failures')%><%-(topology.vdevs > 1 ? ' per group' : '')%>
+					</small>
+				</span>
 			</span>
-			<span class="d-flex gap-2 flex-shrink-0">
-				<%_.times(topology.vdevs, () => {%>
-					<span class="vdev d-flex gap-1 px-1">
-						<%_.times(topology.width, () => {%>
-							<i class="icon-duotone icon-solid icon-hard-drive text-primary"></i>
-						<%})%>
+			<span class="d-flex flex-wrap justify-content-center gap-3 mt-3">
+				<%_.each(groups, (group, index) => {%>
+					<span class="text-center">
+						<span class="d-block">
+							<u-badge color="gray" pill><small><%-topology.type%>-<%-index%></small></u-badge>
+						</span>
+						<span class="d-inline-block">
+							<%if (topology.width > 1) {%>
+								<span class="vdev-bar d-block"></span>
+							<%}%>
+							<span class="vdev-slots">
+								<%_.each(group, (drive) => {%>
+									<%const tip = _.compact([prettyBytes(drive.size || 0, { binary: true }), drive.model, drive.serialNumber]).join(' &middot; ')%>
+									<span class="vdev-slot">
+										<%if (topology.width > 1) {%>
+											<span class="vdev-stem d-block"></span>
+										<%}%>
+										<i class="vdev-disk icon-duotone icon-solid icon-hard-drive text-blue-500" data-bs-toggle="tooltip" title="<%=tip%>"></i>
+										<small class="text-body-tertiary text-truncate w-100 mt-1"><%-drive.name%></small>
+									</span>
+								<%})%>
+							</span>
+						</span>
 					</span>
 				<%})%>
 			</span>
