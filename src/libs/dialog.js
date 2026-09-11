@@ -11,9 +11,15 @@
 		}
 	});
 
-	const createModal = (title, content, buttons, focusIndex = 0, escValue = null) => {
+	const createModal = (title, content, buttons, focusIndex = 0, escValue = null, acknowledge = null) => {
 		return new Promise((resolve) => {
 			const modalId = `dialog-${Math.random().toString(36).slice(2)}`;
+			const acknowledgeHtml = (acknowledge ? `
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" id="${modalId}-acknowledge">
+									<label class="form-check-label" for="${modalId}-acknowledge">${acknowledge}</label>
+								</div>
+			` : '');
 			const modalHtml = `
 				<div id="${modalId}" class="modal fade" tabindex="-1">
 					<div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
@@ -22,7 +28,8 @@
 								<h5 class="modal-title">${title}</h5>
 							</div>
 							<div class="modal-body">
-								<p>${content}</p>
+								<p${acknowledge ? '' : ' class="m-0"'}>${content}</p>
+								${acknowledgeHtml}
 							</div>
 							<div class="modal-footer">
 								${_.join(
@@ -39,6 +46,14 @@
 
 			document.body.insertAdjacentHTML('beforeend', modalHtml);
 			const modalElement = document.getElementById(modalId);
+			const acknowledgeInput = modalElement.querySelector('.form-check-input');
+			const confirmButton = modalElement.querySelector('.modal-footer .btn[data-index="0"]');
+			if (acknowledgeInput && confirmButton) {
+				confirmButton.disabled = true;
+				acknowledgeInput.addEventListener('change', () => {
+					confirmButton.disabled = !acknowledgeInput.checked;
+				});
+			}
 
 			// Show the modal
 			const bootstrapModal = new bootstrap.Modal(modalElement, { keyboard: true });
@@ -81,7 +96,7 @@
 			return { ...defaultBtn, ...override };
 		});
 		const focus = options.focus ?? 1;
-		const result = await createModal('Confirmation', text, buttons, focus, false);
+		const result = await createModal('Confirmation', text, buttons, focus, false, options.acknowledge ?? null);
 		try {
 			return JSON.parse(result);
 		} catch (error) {
