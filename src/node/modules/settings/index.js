@@ -20,7 +20,7 @@ const render = (state) => {
 	if (_.isNull(state.configuration)) {
 		return;
 	}
-	
+
 	morphdom(
 		row,
 		`<div>

@@ -22,7 +22,7 @@ let appShell = null;
 const ensureAppShell = () => {
 	if (!appShell) {
 		appShell = (async () => {
-			await Promise.all([import('fleet/header'), import('fleet/main')]);
+			await Promise.all([import('fleet/header'), import('fleet/main'), import('fleet/connection')]);
 			const registry = await import('fleet');
 			await registry.modulesLoaded;
 			loadModule = registry.loadModule;

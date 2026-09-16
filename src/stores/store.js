@@ -53,7 +53,7 @@ class Store extends ObservableStore {
 		this.socket = new RemoteNodeConnection(namespace, {
 			path: '/api',
 			reconnection: true,
-			reconnectionAttempts: 120,
+			reconnectionAttempts: Infinity,
 			reconnectionDelay: 1000,
 			reconnectionDelayMax: 5000
 		}, {
@@ -64,6 +64,16 @@ class Store extends ObservableStore {
 		this.propertySubscribers = [];
 		this.previousState = this.getState() || {};
 		updateMode.registerStore(this);
+
+		this.setState({ connected: false }, 'socket_init');
+
+		this.socket.on('connect', () => {
+			this.setState({ connected: true }, 'socket_connect');
+		});
+
+		this.socket.on('disconnect', () => {
+			this.setState({ connected: false }, 'socket_disconnect');
+		});
 
 		this.globalStateWithPropertyChanges.subscribe((stateChange) => {
 			if (stateChange === null) {

@@ -18,10 +18,6 @@ class FleetUser extends Store {
 
 		this.setState(initialState, 'socket_connect');
 
-		this.socket.on('disconnect', () => {
-			this.setState(initialState, 'socket_disconnect');
-		});
-
 		// Pushed on connect and again after any revoke, so a session ended from another tab or
 		// device disappears here without a reload.
 		this.socket.on('user:sessions', (sessions) => {
