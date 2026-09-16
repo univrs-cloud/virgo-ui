@@ -8,8 +8,11 @@ const MAX_DNS_SERVERS = 3;
 // browser cannot ask: the node answers on its own certificate, and one issued for an address this
 // browser has never visited fails every probe until someone accepts it.
 const APPLY_DELAY = 8000;
+const APPLIED_FIELDS = ['ipAddress', 'netmask', 'gateway', 'dnsServers'];
 
 let isPrefilled = false;
+let pendingConfiguration = null;
+let pendingUrl = null;
 const interfaceTemplate = _.template(interfacePartial);
 document.querySelector('main .wizard').insertAdjacentHTML('beforeend', interfaceTemplate());
 const step = document.querySelector('#interface');
@@ -81,15 +84,27 @@ const goNext = () => {
 	page(nextStepPath('interface'));
 };
 
-// The locked form is this step's state: while it is locked the node is being reconfigured and the
-// browser is on its way to the address it will answer on.
+// The locked form is this step's state: while it is locked the node is being reconfigured, and either
+// the browser is on its way to the address it will answer on or it is waiting where it is.
 const isApplying = () => {
 	return submitButton.disabled;
 };
 
 const restore = () => {
+	pendingConfiguration = null;
+	pendingUrl = null;
 	submitButton.reset();
 	backButton.disabled = false;
+};
+
+const isConfigurationApplied = (system) => {
+	if (!pendingConfiguration) {
+		return false;
+	}
+
+	const fields = (_.has(pendingConfiguration, 'virtualIp') ? [...APPLIED_FIELDS, 'virtualIp'] : APPLIED_FIELDS);
+	const current = currentConfiguration(networkService.getDefaultInterface(system));
+	return _.isEqual(_.pick(current, fields), _.pick(pendingConfiguration, fields));
 };
 
 // Reconfiguring the connection drops this browser's link to the node — on a new address the old
@@ -97,6 +112,14 @@ const restore = () => {
 const stepUrl = (ipAddress) => {
 	const port = (location.port ? `:${location.port}` : '');
 	return `${location.protocol}//${ipAddress}${port}${nextStepPath('interface')}`;
+};
+
+const followUrl = (current, ipAddress) => {
+	if (location.hostname !== current.ipAddress || ipAddress === current.ipAddress) {
+		return null;
+	}
+
+	return stepUrl(ipAddress);
 };
 
 const sleep = (delay) => {
@@ -109,7 +132,7 @@ const sleep = (delay) => {
  * and the browser asks about the certificate the way it did for the address being left behind. */
 const followNode = async (url) => {
 	await sleep(APPLY_DELAY);
-	if (!isApplying()) {
+	if (pendingUrl !== url) {
 		return;
 	}
 
@@ -117,9 +140,9 @@ const followNode = async (url) => {
 };
 
 // A failed job means the node stayed where it is, so there is nothing left to wait for. Success is
-// not handled here: the browser has to reach the node at its new address to know it arrived. The
-// fields are seeded once, from the first delivery that carries the interface; after that the form
-// belongs to whoever is typing in it.
+// only concluded here for a browser that stays on its origin — one that has to follow the node has no
+// connection left to hear it on, and leaves on the timer instead. The fields are seeded once, from the
+// first delivery that carries the interface; after that the form belongs to whoever is typing in it.
 /** Editable while holding the virtual IP, or while nothing else on the network has one. Otherwise the
  * address the other node carries is shown but locked — the operator's route is to adopt, not to
  * configure a second address here. The API enforces the same rule.
@@ -174,8 +197,16 @@ const applyVirtualIp = () => {
 
 const render = (state) => {
 	applyVirtualIp();
-	if (_.find(state.jobs, { name: networkService.INTERFACE_JOB })?.progress?.state === 'failed' && isApplying()) {
-		restore();
+	if (isApplying()) {
+		const jobState = _.find(state.jobs, { name: networkService.INTERFACE_JOB })?.progress?.state;
+		if (jobState === 'failed') {
+			restore();
+		} else if (!pendingUrl && (jobState === 'completed' || isConfigurationApplied(state.system))) {
+			restore();
+			if (!step.classList.contains('d-none')) {
+				goNext();
+			}
+		}
 	}
 
 	const networkInterface = networkService.getDefaultInterface(state.system);
@@ -216,15 +247,20 @@ const updateInterface = (event) => {
 	// virtual IP left out of the submission is left out of the comparison too, so a locked field never
 	// reads as a change.
 	const omitted = (_.has(data, 'virtualIp') ? [] : ['virtualIp']);
-	if (_.isEqual(_.omit(data, omitted), _.omit(currentConfiguration(networkService.getDefaultInterface()), omitted))) {
+	const current = currentConfiguration(networkService.getDefaultInterface());
+	if (_.isEqual(_.omit(data, omitted), _.omit(current, omitted))) {
 		goNext();
 		return;
 	}
 
+	pendingConfiguration = data;
+	pendingUrl = followUrl(current, data.ipAddress);
 	backButton.disabled = true;
 	submitButton.loading();
 	networkService.updateInterface(data);
-	followNode(stepUrl(data.ipAddress));
+	if (pendingUrl) {
+		followNode(pendingUrl);
+	}
 };
 
 const goBack = (event) => {

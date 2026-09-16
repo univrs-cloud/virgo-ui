@@ -5,11 +5,14 @@ import { completeStep, nextStepPath, previousStepPath } from 'setup/wizard';
 
 const HOSTNAME_PATTERN = /^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$/i;
 const FLEET_ZONE = 'univrs.cloud';
+const MDNS_DOMAIN = 'local';
 const CHECK_DELAY_MS = 400;
+const APPLY_DELAY = 8000;
 let isPrefilled = false;
 let availability = { key: '', status: 'idle' };
 let availabilityRequest = null;
 let pendingIdentifier = null;
+let pendingUrl = null;
 const hostTemplate = _.template(hostPartial);
 document.querySelector('main .wizard').insertAdjacentHTML('beforeend', hostTemplate());
 const step = document.querySelector('#host');
@@ -121,8 +124,45 @@ const goNext = () => {
 
 const idle = () => {
 	pendingIdentifier = null;
+	pendingUrl = null;
 	submitButton.reset();
 	backButton.disabled = false;
+};
+
+const followName = (current, identifier) => {
+	const host = _.toLower(location.hostname);
+	if (host === _.toLower(`${current.hostname}.${MDNS_DOMAIN}`)) {
+		return `${identifier.hostname}.${MDNS_DOMAIN}`;
+	}
+
+	if (host === _.toLower(`${current.hostname}.${current.domainName}`)) {
+		return `${identifier.hostname}.${identifier.domainName}`;
+	}
+
+	return null;
+};
+
+const followUrl = (current, identifier) => {
+	const name = followName(current, identifier);
+	if (!name || _.toLower(name) === _.toLower(location.hostname)) {
+		return null;
+	}
+
+	const port = (location.port ? `:${location.port}` : '');
+	return `${location.protocol}//${name}${port}${nextStepPath('host')}`;
+};
+
+const sleep = (delay) => {
+	return new Promise((resolve) => { setTimeout(resolve, delay); });
+};
+
+const followNode = async (url) => {
+	await sleep(APPLY_DELAY);
+	if (pendingUrl !== url) {
+		return;
+	}
+
+	location.replace(url);
 };
 
 /** The identifier the node actually answers to, matched against the one it was asked for. */
@@ -155,10 +195,18 @@ const render = (state) => {
 			return;
 		}
 
+		const url = pendingUrl;
 		idle();
-		if (isApplied && !step.classList.contains('d-none')) {
-			goNext();
+		if (!isApplied || step.classList.contains('d-none')) {
+			return;
 		}
+
+		if (url) {
+			location.replace(url);
+			return;
+		}
+
+		goNext();
 	}
 
 	if (isPrefilled || _.isEmpty(state.system?.osInfo)) {
@@ -188,9 +236,13 @@ const updateIdentifier = async (event) => {
 	}
 
 	pendingIdentifier = data;
+	pendingUrl = followUrl(currentIdentifier(networkService.getSystem()), data);
 	backButton.disabled = true;
 	submitButton.loading();
 	networkService.updateHostIdentifier(data);
+	if (pendingUrl) {
+		followNode(pendingUrl);
+	}
 };
 
 const goBack = (event) => {
