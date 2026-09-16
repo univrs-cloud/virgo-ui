@@ -70,13 +70,13 @@ export class Toast extends LitElement {
 
 	render() {
 		return html`
-			<div class="toast ${classMap({ [`bd-${this.#getColorClass()}-500`]: true })} border-0 position-relative overflow-hidden" @click=${this.#onActionClick}>
+			<div class="toast ${classMap({ [this.#getBackgroundClass()]: true })} border-0 position-relative overflow-hidden" @click=${this.#onActionClick}>
 				<div class="d-flex">
 					<div class="toast-body w-100">
 						<strong>${unsafeHTML(this.title)}</strong>
 						${unsafeHTML(this.message)}
 					</div>
-					${this.dismissible ? html`<button type="button" class="btn-close btn-close-white me-2 m-auto" @click=${() => { this.hide(); }}></button>` : ''}
+					${this.dismissible ? html`<button type="button" class="btn-close ${this.type === 'neutral' ? '' : 'btn-close-white'} me-2 m-auto" @click=${() => { this.hide(); }}></button>` : ''}
 				</div>
 			</div>
 		`;
@@ -140,14 +140,15 @@ export class Toast extends LitElement {
 		}
 	}
 
-	#getColorClass() {
-		const colors = {
-			success: 'green',
-			error: 'red',
-			warning: 'orange',
-			info: 'blue',
+	#getBackgroundClass() {
+		const backgrounds = {
+			success: 'bd-green-500',
+			error: 'bd-red-500',
+			warning: 'bd-orange-500',
+			info: 'bd-blue-500',
+			neutral: 'bd-gray-100',
 		};
-		return colors[this.type] || 'blue';
+		return backgrounds[this.type] || 'bd-blue-500';
 	}
 
 	#startAutoHide() {

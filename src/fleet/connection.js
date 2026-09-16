@@ -12,7 +12,7 @@ const show = () => {
 	showTimer = null;
 	toast = notifier.add({
 		title: 'Connection lost. Trying to reconnect...',
-		type: 'warning',
+		type: 'neutral',
 		duration: 0,
 		dismissible: false,
 		callbacks: {
