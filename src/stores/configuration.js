@@ -11,10 +11,6 @@ class Configuration extends Store {
 
 		this.setState(initialState, 'socket_connect');
 
-		this.socket.on('disconnect', () => {
-			this.setState(initialState, 'socket_disconnect');
-		});
-
 		this.socket.on('configuration', (configuration) => {
 			this.setState({ configuration }, 'get_configuration');
 		});

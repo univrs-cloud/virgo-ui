@@ -11,10 +11,6 @@ class Node extends Store {
 
         this.setState(initialState, 'socket_connect');
 
-        this.socket.on('disconnect', () => {
-			this.setState(initialState, 'socket_disconnect');
-		});
-
         this.socket.on('node:inventory', (nodes) => {
 			this.setState({ nodes }, 'get_nodes');
 		});

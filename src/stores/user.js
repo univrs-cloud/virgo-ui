@@ -11,10 +11,6 @@ class User extends Store {
 		
 		this.setState(initialState, 'socket_connect');
 
-		this.socket.on('disconnect', () => {
-			this.setState(initialState, 'socket_disconnect');
-		});
-
 		this.socket.on('users', (users) => {
 			this.setState({ users }, 'get_users');
 		});

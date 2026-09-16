@@ -12,10 +12,6 @@ class Indexer extends Store {
 
 		this.setState(initialState, 'socket_connect');
 
-		this.socket.on('disconnect', () => {
-			this.setState({ indexerStats: null, indexerDatasets: null }, 'socket_disconnect');
-		});
-
 		this.socket.on('indexer:datasets', (indexerDatasets) => {
 			this.setState({ indexerDatasets }, 'get_indexer_datasets');
 		});

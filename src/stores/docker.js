@@ -15,10 +15,6 @@ class Docker extends Store {
 
 		this.setState(initialState, 'socket_connect');
 
-		this.socket.on('disconnect', () => {
-			this.setState(initialState, 'socket_disconnect');
-		});
-
 		this.socket.on('app:configured', (configured) => {
 			this.setState({ configured }, 'set_configured');
 		});
