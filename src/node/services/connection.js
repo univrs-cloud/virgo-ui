@@ -5,7 +5,7 @@ const { subscribe } = createSubscription({
 	stores: [
 		{
 			store: Host,
-			propertyNames: ['connected']
+			propertyNames: ['connected', 'reboot', 'shutdown']
 		}
 	],
 	attachStore: storeAttach.afterCallbacks,
