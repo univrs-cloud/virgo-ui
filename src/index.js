@@ -55,6 +55,7 @@ const render = async (state) => {
 		try {
 			await Promise.all([
 				import('node/jobs'),
+				import('node/connection'),
 				import('node/header'),
 				import('node/main'),
 				import('node/power'),

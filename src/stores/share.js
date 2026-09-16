@@ -11,10 +11,6 @@ class Share extends Store {
 
 		this.setState(initialState, 'socket_connect');
 
-		this.socket.on('disconnect', () => {
-			this.setState(initialState, 'socket_disconnect');
-		});
-
 		this.socket.on('shares', (shares) => {
 			this.setState({ shares }, 'get_shares');
 		});

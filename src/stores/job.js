@@ -11,10 +11,6 @@ class Job extends Store {
 
 		this.setState(initialState, 'socket_connect');
 
-		this.socket.on('disconnect', () => {
-			this.setState(initialState, 'socket_disconnect');
-		});
-
 		this.socket.on('jobs', (jobs) => {
 			this.setState({ jobs }, 'set_jobs');
 		});
