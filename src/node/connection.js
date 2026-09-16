@@ -13,7 +13,7 @@ const show = () => {
 	showTimer = null;
 	toast = notifier.add({
 		title: 'Connection lost. Trying to reconnect...',
-		type: 'warning',
+		type: 'neutral',
 		duration: 0,
 		dismissible: false,
 		callbacks: {
@@ -37,6 +37,11 @@ const hide = () => {
 };
 
 const render = (state) => {
+	if (state.reboot || state.shutdown) {
+		hide();
+		return;
+	}
+
 	if (state.connected) {
 		wasConnected = true;
 		hide();
