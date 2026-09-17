@@ -44,6 +44,10 @@
 					<i class="icon-light icon-temperature-half icon-fw me-1"></i><%-drive.temperature%> °C
 				</u-badge>
 			<%}%>
+			<%const healthColorName = (isDisk ? healthColor(drive?.health) : null)%>
+			<%if (healthColorName) {%>
+				<i class="icon-solid icon-triangle-exclamation icon-fw text-<%-healthColorName%>-300 ms-2 flex-shrink-0" data-bs-toggle="tooltip" data-bs-custom-class="storage-device" data-bs-original-title="<%=driveHealthTip(drive)%>"></i>
+			<%}%>
 			<%if (vdev.class && vdev.class !== 'normal') {%>
 				<u-badge color="purple" class="ms-2 flex-shrink-0" pill><small><%-vdev.class%></small></u-badge>
 			<%}%>

@@ -165,9 +165,13 @@
 											<%}%>
 											<div class="vdev-slots">
 											<%_.each(group.disks, ({ vdev, drive }) => {%>
-												<%const diskColor = { green: 'text-blue-500', yellow: 'text-yellow-500', red: 'text-red-300' }[stateColor(vdev.state)]%>
+												<%const diskHealthColor = healthColor(drive?.health)%>
+												<%const diskColor = (diskHealthColor ? `text-${diskHealthColor}-300` : { green: 'text-blue-500', yellow: 'text-yellow-500', red: 'text-red-300' }[stateColor(vdev.state)])%>
 												<%const diskLabel = (drive?.name ? _.last(drive.name.split('/')) : `…${vdev.name.slice(-6)}`)%>
-												<%const diskTip = _.compact([prettyBytes(vdev.physSpace || vdev.repDevSize || 0, { binary: true }), (_.isNil(drive?.temperature) ? null : `${drive.temperature} °C`)]).join(' &middot; ')%>
+												<%const diskTip = _.compact([
+													_.compact([prettyBytes(vdev.physSpace || vdev.repDevSize || 0, { binary: true }), (_.isNil(drive?.temperature) ? null : `${drive.temperature} °C`)]).join(' &middot; '),
+													(drive?.health?.message ? _.escape(drive.health.message) : null)
+												]).join('<br>')%>
 												<div class="vdev-slot">
 													<%if (isStriped) {%>
 														<div class="vdev-stem"></div>
@@ -193,7 +197,7 @@
 							</thead>
 							<tbody class="vdev-rows">
 								<%_.each(vdevRows, ({ vdev, drive, depth, isLast }) => {%>
-									<%=poolVdevTemplate({ vdev, drive, depth, isLast, stateColor, prettyBytes })%>
+									<%=poolVdevTemplate({ vdev, drive, depth, isLast, stateColor, healthColor, driveHealthTip, prettyBytes })%>
 								<%})%>
 							</tbody>
 						</table>
