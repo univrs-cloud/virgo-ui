@@ -194,6 +194,13 @@ const updateIndexer = async (event) => {
 	appService.updateIndexerConfig(data);
 };
 
+const filterJobsByApp = (jobs, app) => {
+	const containerIds = _.map(app.projectContainers, 'id');
+	const appJobs = _.filter(jobs, (job) => { return job.data?.config?.name === app.name; });
+	const serviceJobs = _.filter(jobs, (job) => { return _.includes(containerIds, job.data?.config?.id); });
+	return { jobs: _.concat(appJobs, serviceJobs), appJobs, serviceJobs };
+};
+
 const renderAppDetails = (name) => {
 	if (!name) {
 		return;
@@ -204,11 +211,11 @@ const renderAppDetails = (name) => {
 		return;
 	}
 
-	const jobs = _.filter(appService.getJobs(), (job) => { return job.data?.config?.name === app.name; });
+	const { jobs, appJobs, serviceJobs } = filterJobsByApp(appService.getJobs(), app);
 	const networkMaxBytesPerSec = appService.getDefaultNetworkInterfaceSpeed();
 	morphdom(
 		details,
-		`<div>${appDetailsTemplate({ app, jobs, appActionsTemplate, prettyBytes, moment, networkMaxBytesPerSec })}</div>`,
+		`<div>${appDetailsTemplate({ app, jobs, appJobs, serviceJobs, appActionsTemplate, prettyBytes, moment, networkMaxBytesPerSec })}</div>`,
 		{
 			childrenOnly: true,
 			onBeforeElUpdated: (fromEl, toEl) => {
@@ -253,7 +260,7 @@ const render = (state) => {
 		[tableOrder.direction]
 	);
 	const rows = _.join(_.map(apps, (app) => {
-		const jobs = _.filter(state.jobs, (job) => { return job.data?.config?.name === app.name; });
+		const { jobs } = filterJobsByApp(state.jobs, app);
 		return appTemplate({ app, jobs, appActionsTemplate, prettyBytes });
 	}), '');
 	
