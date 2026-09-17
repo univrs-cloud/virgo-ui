@@ -105,6 +105,7 @@
 						<div class="row g-2">
 							<%_.each(app.projectContainers, (container, index) => {%>
 								<%const resourceMetrics = _.find((app.resourceMetrics?.containers || []), { id: container.id })%>
+								<%const containerJobs = _.filter(serviceJobs, (job) => { return job.data?.config?.id === container.id; });%>
 								<div class="col-12">
 									<div class="service card mb-2 h-100" data-id="<%-container.id%>">
 										<div class="card-body py-1">
@@ -266,7 +267,7 @@
 															</a>
 														<%}%>
 														<div class="ms-auto">
-															<%if (!_.isEmpty(jobs)) {%>
+															<%if (!_.isEmpty(appJobs) || !_.isEmpty(containerJobs)) {%>
 																<i class="icon-solid icon-gear icon-fw icon-spin"></i>
 															<%} else {%>
 																<div class="dropdown">
