@@ -1,7 +1,7 @@
 {
 	"name": "virgo-ui",
 	"version": "2.18.66",
-	"description": "virgo UI",
+	"description": "virgoOS UI",
 	"author": "univrs",
 	"license": "UNLICENSED",
 	"scripts": {
