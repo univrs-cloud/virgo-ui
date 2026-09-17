@@ -19,7 +19,7 @@ const render = (state) => {
 		system: state.system,
 		networkInterface: _.find(state.system?.networkInterfaces, { default: true }),
 		memory: state.memory,
-		drives: state.drives,
+		drives: _.reject(state.drives, 'system'),
 		VERSION: VERSION,
 		prettyBytes
 	});

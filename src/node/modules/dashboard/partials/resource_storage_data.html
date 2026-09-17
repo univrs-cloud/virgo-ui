@@ -22,7 +22,7 @@
 			<small class="d-none">Free: <%=prettyBytes(pool.properties.free.value || 0, { binary: true })%></small>
 		</div>
 		<div class="mt-1">
-			<%_.each(state.drives, (drive) => {%>
+			<%_.each(_.reject(state.drives, 'system'), (drive) => {%>
 				<%let color = 'gray'%>
 				<%if (drive.temperature >= drive.temperatureWarningThreshold && drive.temperature < drive.temperatureCriticalThreshold) {%>
 					<%color = 'yellow'%>
@@ -30,7 +30,15 @@
 				<%if (drive.temperature >= drive.temperatureCriticalThreshold) {%>
 					<%color = 'red'%>
 				<%}%>
-				<u-badge color="<%=color%>" tint="200" class="me-1" tip="<%-_.last(drive.name.split('/'))%>" pill>
+				<%if (drive.health?.status === 'warning' && color !== 'red') {%>
+					<%color = 'orange'%>
+				<%}%>
+				<%if (drive.health?.status === 'critical') {%>
+					<%color = 'red'%>
+				<%}%>
+				<%const driveName = _.escape(_.last(drive.name.split('/')))%>
+				<%const driveTip = (drive.health?.message ? `${driveName}: ${_.escape(drive.health.message)}` : driveName)%>
+				<u-badge color="<%=color%>" tint="200" class="me-1" tip="<%=driveTip%>" pill>
 					<i class="icon-regular icon-hard-drive icon-fw me-1 text-gray-700"></i><%-drive.temperature%> °C
 				</u-badge>
 			<%})%>
