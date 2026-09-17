@@ -1,29 +1,22 @@
-<%if (state.ups === 'remote i/o error' || state.ups?.batteryCharge === false) {%>
-	<li class="list-group-item ups py-3">
-		<h6 class="d-flex align-items-center text-body-emphasis mb-0">
-			<i class="icon-regular icon-car-battery icon-fw me-1 text-gray-500"></i>UPS
-			<small class="ms-2 fw-light text-body-tertiary"><%=(state.ups === 'remote i/o error' ? "can't connect" : 'not found')%></small>
-		</h6>
-	</li>
-	<%return%>
-<%}%>
+<%
+	const unreachable = (state.ups?.error === 'unreachable');
+	const missing = (state.ups?.batteryCharge === false);
+	const failed = (!missing && !unreachable && !!state.ups?.error);
+	const mode = (unreachable ? 'unreachable' : (missing ? 'missing' : (failed ? 'failed' : (state.ups === null ? 'loading' : 'reading'))));
+	const fault = (mode === 'unreachable' ? "can't connect" : (mode === 'missing' ? 'not found' : (state.ups?.message || 'error')));
+%>
 <li class="list-group-item ups py-3">
 	<h6 class="d-flex align-items-center text-body-emphasis mb-0">
 		<i class="icon-regular icon-car-battery icon-fw me-1 text-gray-500"></i>UPS
-		<%if (state.ups !== null && state.ups !== false) {%>
-			<%if (state.ups?.powerSource === 'grid') {%>
-				<u-badge color="green" class="ms-1" pill>GRID</u-badge>
-			<%}%>
-			<%if (state.ups?.powerSource === 'battery') {%>
-				<u-badge color="orange" class="ms-1" pill>BATTERY</u-badge>
-			<%}%>
+		<%if (mode === 'unreachable' || mode === 'missing' || mode === 'failed') {%>
+			<small class="ms-2 fw-light <%=(mode === 'failed' ? 'text-orange-700' : 'text-body-tertiary')%>"><%-fault%></small>
+		<%} else if (mode === 'reading' && state.ups.powerSource) {%>
+			<u-badge color="<%=(state.ups.powerSource === 'battery' ? 'orange' : 'green')%>" class="ms-1" pill><%=state.ups.powerSource.toUpperCase()%></u-badge>
 		<%}%>
 	</h6>
-	<%if (state.ups === null) {%>
+	<%if (mode === 'loading') {%>
 		<div class="spinner-border spinner-border-sm text-gray-600"></div>
-	<%} else if (state.ups === false) {%>
-		<span class="text-red-300">Error fetching data</span>
-	<%} else {%>
+	<%} else if (mode === 'reading') {%>
 		<div class="text-end mt-n3 mb-1">
 			<small class="fw-light text-body-tertiary"><%=state.ups?.capacity?.toFixed(0)%>%</small>
 			<u-progress>
