@@ -50,7 +50,7 @@ const getForeignPools = (importablePools) => {
 /** Drives a pool can be built from: the node has to be able to name one before it can be handed to
  * zpool, and the drive list already excludes the disk the system runs from. */
 const getUsableDrives = (drives) => {
-	return _.filter(drives, 'id');
+	return _.filter(drives, (drive) => { return Boolean(drive.id) && !drive.system; });
 };
 
 /** The layouts the node says these drives can be built into, one per redundancy type. Empty with

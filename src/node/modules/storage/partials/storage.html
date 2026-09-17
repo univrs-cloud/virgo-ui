@@ -9,6 +9,10 @@
 					<%-pool.name%>
 				<%}%>
 			</div>
+			<%const driveHealth = poolHealth(pool)%>
+			<%if (driveHealth) {%>
+				<i class="icon-solid icon-triangle-exclamation icon-fw text-<%-driveHealth.color%>-300 ms-1 flex-shrink-0" data-bs-toggle="tooltip" data-bs-custom-class="storage-device" data-bs-original-title="<%=driveHealth.tip%>"></i>
+			<%}%>
 			<%const rootVdev = pool.vdevs?.[pool.name]%>
 			<%const childVdevs = (rootVdev?.vdevs ? Object.values(rootVdev.vdevs) : [])%>
 			<%const firstVdev = childVdevs[0]%>

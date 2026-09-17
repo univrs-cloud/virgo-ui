@@ -71,6 +71,27 @@ const stateColor = (state) => {
 	return 'red';
 };
 
+const healthColor = (health) => {
+	if (health?.status === 'critical') {
+		return 'red';
+	}
+
+	if (health?.status === 'warning') {
+		return 'orange';
+	}
+
+	return null;
+};
+
+const driveHealthTip = (drive) => {
+	const name = (drive?.name ? _.last(drive.name.split('/')) : null);
+	if (!name) {
+		return null;
+	}
+
+	return (drive.health?.message ? `${_.escape(name)}: ${_.escape(drive.health.message)}` : _.escape(name));
+};
+
 const vdevFaultTolerance = (vdev) => {
 	if (vdev.vdevType === 'mirror') {
 		return _.max([_.size(vdev.vdevs) - 1, 0]);
@@ -90,6 +111,21 @@ const flattenVdevs = (vdevs, depth = 0) => {
 		const isLast = (index === siblings.length - 1);
 		return [{ vdev, drive, depth, isLast }, ...flattenVdevs(vdev.vdevs, depth + 1)];
 	});
+};
+
+const poolHealth = (pool) => {
+	const members = (pool.name === 'system'
+		? _.filter(drives, 'system')
+		: _.compact(_.map(_.filter(flattenVdevs(pool.vdevs?.[pool.name]?.vdevs), ({ vdev }) => { return vdev.vdevType === 'disk'; }), 'drive')));
+	const unhealthy = _.filter(members, (drive) => { return Boolean(healthColor(drive.health)); });
+	if (_.isEmpty(unhealthy)) {
+		return null;
+	}
+
+	return {
+		color: (_.some(unhealthy, (drive) => { return drive.health.status === 'critical'; }) ? 'red' : 'orange'),
+		tip: _.join(_.map(unhealthy, driveHealthTip), '<br>')
+	};
 };
 
 const renderPoolDetails = (name) => {
@@ -113,7 +149,7 @@ const renderPoolDetails = (name) => {
 
 	morphdom(
 		details,
-		`<div>${poolDetailsTemplate({ pool, drives, groups, vdevRows, faultTolerance, poolVdevTemplate, stateColor, prettyBytes, moment })}</div>`,
+		`<div>${poolDetailsTemplate({ pool, groups, vdevRows, faultTolerance, poolVdevTemplate, stateColor, healthColor, driveHealthTip, prettyBytes, moment })}</div>`,
 		{ childrenOnly: true }
 	);
 };
@@ -141,7 +177,7 @@ const render = (state) => {
 	});
 
 	const rows = _.join(_.map(filterListByQuery(pools, searchValue, ['name', 'poolGuid', 'type']), (pool) => {
-		return storageTemplate({ drives, pool, stateColor, prettyBytes, moment });
+		return storageTemplate({ pool, stateColor, poolHealth, prettyBytes, moment });
 	}), '');
 
 	morphdom(
