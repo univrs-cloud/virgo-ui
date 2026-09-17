@@ -2,7 +2,7 @@
 	<li class="list-group-item ups py-3">
 		<h6 class="d-flex align-items-center text-body-emphasis mb-0">
 			<i class="icon-regular icon-car-battery icon-fw me-1 text-gray-500"></i>UPS
-			<small class="ms-2 fw-light text-body-tertiary">not found</small>
+			<small class="ms-2 fw-light text-body-tertiary"><%=(state.ups === 'remote i/o error' ? "can't connect" : 'not found')%></small>
 		</h6>
 	</li>
 	<%return%>
