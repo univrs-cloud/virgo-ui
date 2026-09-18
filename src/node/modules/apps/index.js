@@ -105,16 +105,12 @@ const performAppAction = async (event) => {
 		return;
 	}
 
-	if (
-		!event.target.closest('a')?.classList?.contains('dropdown-item') ||
-		event.target.closest('a')?.dataset.action === undefined ||
-		event.target.closest('a')?.dataset.action === 'update'
-	) {
+	const button = event.target.closest('a[data-action]');
+	if (!button || button.classList.contains('disabled') || button.dataset.action === 'update') {
 		return;
 	}
 
 	event.preventDefault();
-	const button = event.target;
 	const row = button.closest('.item');
 	const app = _.find(appService.getApps(), { name: row.dataset.name });
 	
@@ -138,12 +134,12 @@ const performServiceAction = async (event) => {
 		return;
 	}
 
-	if (!event.target.closest('a')?.classList.contains('dropdown-item')) {
+	const button = event.target.closest('a[data-action]');
+	if (!button || button.classList.contains('disabled')) {
 		return;
 	}
 
 	event.preventDefault();
-	const button = event.target;
 	const row = button.closest('.service');
 	const service = _.find(_.flatMap(appService.getApps(), 'projectContainers'), { id: row.dataset.id });
 
@@ -159,6 +155,20 @@ const performServiceAction = async (event) => {
 		action: button.dataset.action
 	};
 	appService.performServiceAction(data);
+};
+
+const toggleStateTooltip = (event) => {
+	if (!event.target.classList?.contains('state-icon')) {
+		return;
+	}
+
+	const dot = event.target.querySelector('.state-dot');
+	const tooltip = bootstrap.Tooltip.getOrCreateInstance(dot, { selector: false, trigger: 'manual' });
+	if (event.type === 'mouseenter') {
+		tooltip.show();
+	} else {
+		tooltip.hide();
+	}
 };
 
 const updateIndexer = async (event) => {
@@ -297,6 +307,8 @@ module.addEventListener('click', update);
 module.addEventListener('click', performAppAction);
 module.addEventListener('click', performServiceAction);
 module.addEventListener('switch-changed', updateIndexer);
+module.addEventListener('mouseenter', toggleStateTooltip, true);
+module.addEventListener('mouseleave', toggleStateTooltip, true);
 searchInput.addEventListener('input', search);
 table.querySelector('thead').addEventListener('click', order);
 table.querySelector('tbody').addEventListener('click', expand);

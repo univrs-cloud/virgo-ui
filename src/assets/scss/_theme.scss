@@ -238,6 +238,14 @@ u-badge:hover .hover-reveal-text {
 		height: calc(100dvh - 32px - var(--chrome));
 	}
 }
+.btn.actions-toggle {
+	--bs-btn-bg: var(--bs-gray-200);
+	--bs-btn-disabled-bg: var(--bs-gray-200);
+}
+.btn.actions-button {
+	--bs-btn-hover-bg: var(--bs-secondary-bg);
+	--bs-btn-active-bg: var(--bs-secondary-bg);
+}
 #weather {
 	.weather-icon {
 		position: relative;
@@ -499,10 +507,10 @@ u-badge:hover .hover-reveal-text {
 	.vdev-rows {
 		--vdev-elbow-width: 0.9rem;
 		--vdev-icon-radius: 0.6rem;
-		tr.vdev > td:first-child {
+		.vdev {
 			position: relative;
 		}
-		tr.vdev:not([data-depth="0"]) > td:first-child::before {
+		.vdev:not([data-depth="0"])::before {
 			content: '';
 			position: absolute;
 			left: var(--vdev-elbow-x);
@@ -513,7 +521,7 @@ u-badge:hover .hover-reveal-text {
 			border-bottom: var(--bs-border-width) solid var(--vdev-line-color);
 			border-bottom-left-radius: 0.35rem;
 		}
-		tr.vdev.vdev-line > td:first-child::after {
+		.vdev.vdev-line::after {
 			content: '';
 			position: absolute;
 			left: var(--vdev-line-x);

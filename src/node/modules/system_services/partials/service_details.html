@@ -26,7 +26,8 @@
 					<small class="text-body-secondary text-truncate d-block min-w-0"><%-service.description || '—'%></small>
 				</div>
 				<div class="col-auto ps-3 ms-auto">
-					<%=serviceActionsTemplate({ service, jobs })%>
+					<div class="d-none d-md-block"><%=serviceActionsTemplate({ service, jobs, inline: true })%></div>
+					<div class="d-md-none"><%=serviceActionsTemplate({ service, jobs, inline: false })%></div>
 				</div>
 			</div>
 
@@ -84,8 +85,8 @@
 
 					<div class="services pe-3 me-n3">
 						<div class="d-flex align-items-center gap-2 mt-2">
-							<a href="#" class="logs btn btn-outline-secondary btn-sm px-1 py-0" data-unit="<%-service.unit%>">
-								<i class="icon-light icon-memo icon-fw me-1"></i>Logs
+							<a href="#" class="logs btn btn-light btn-sm" data-unit="<%-service.unit%>">
+								<i class="icon-solid icon-memo icon-fw text-body-emphasis me-1"></i>Logs
 							</a>
 						</div>
 					</div>

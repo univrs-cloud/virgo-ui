@@ -109,15 +109,12 @@ const compress = (event) => {
 };
 
 const performServiceAction = async (event) => {
-	if (
-		!event.target.closest('a')?.classList?.contains('dropdown-item') ||
-		event.target.closest('a')?.dataset.action === undefined
-	) {
+	const button = event.target.closest('a[data-action]');
+	if (!button || button.classList.contains('disabled')) {
 		return;
 	}
 
 	event.preventDefault();
-	const button = event.target.closest('a');
 	const row = button.closest('.item');
 	const service = _.find(services, { unit: row.dataset.unit });
 
