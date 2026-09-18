@@ -149,34 +149,38 @@
 							</div>
 							<div class="vdev-tree d-flex flex-wrap justify-content-center gap-4 py-3">
 								<%_.each(groups, (group) => {%>
-									<%const isBareDisk = (group.vdev.vdevType === 'disk')%>
-									<%const groupLabel = (isBareDisk ? (group.vdev.class !== 'normal' ? group.vdev.class : null) : group.vdev.name)%>
 									<%const groupColor = stateColor(group.vdev.state)%>
-									<%const isStriped = (_.size(group.disks) > 1)%>
 									<div class="text-center">
-										<%if (!_.isNull(groupLabel)) {%>
-											<div>
-												<u-badge color="<%-groupColor%>" pill><small><%-groupLabel%></small></u-badge>
-											</div>
-										<%}%>
+										<div>
+											<u-badge color="<%-groupColor%>" pill><small><%-group.sectionLabel%></small></u-badge>
+										</div>
 										<div class="d-inline-block">
-											<%if (isStriped) {%>
-												<div class="vdev-bar"></div>
-											<%}%>
+											<div class="vdev-bar"></div>
 											<div class="vdev-slots">
-											<%_.each(group.disks, ({ vdev, drive }) => {%>
+											<%_.each(group.disks, ({ vdev, drive, role, pair, activity, usedIn }) => {%>
 												<%const diskHealthColor = healthColor(drive?.health)%>
-												<%const diskColor = (diskHealthColor ? `text-${diskHealthColor}-300` : { green: 'text-blue-500', yellow: 'text-yellow-500', red: 'text-red-300' }[stateColor(vdev.state)])%>
+												<%const diskColor = (activity ? 'text-blue-300' : (diskHealthColor ? `text-${diskHealthColor}-300` : { green: 'text-blue-500', yellow: 'text-yellow-500', red: 'text-red-300' }[stateColor(vdev.state)]))%>
 												<%const diskLabel = (drive?.name ? _.last(drive.name.split('/')) : `…${vdev.name.slice(-6)}`)%>
+												<%const diskSize = (vdev.physSpace || vdev.repDevSize)%>
 												<%const diskTip = _.compact([
-													_.compact([prettyBytes(vdev.physSpace || vdev.repDevSize || 0, { binary: true }), (_.isNil(drive?.temperature) ? null : `${drive.temperature} °C`)]).join(' &middot; '),
+													(activity || (role === 'old' ? (pair === 'spare' ? 'Covered by spare' : 'Being replaced') : null)),
+													(usedIn ? `In use in ${_.escape(usedIn)}` : null),
+													(diskSize ? prettyBytes(diskSize, { binary: true }) : null),
 													(drive?.health?.message ? _.escape(drive.health.message) : null)
 												]).join('<br>')%>
-												<div class="vdev-slot">
-													<%if (isStriped) {%>
-														<div class="vdev-stem"></div>
-													<%}%>
-													<i class="vdev-disk icon-duotone icon-solid icon-hard-drive <%-diskColor%>" data-bs-toggle="tooltip" data-bs-original-title="<%=diskTip%>"></i>
+												<div class="vdev-slot <%=(role === 'old' ? 'opacity-50' : '')%>">
+													<div class="vdev-stem"></div>
+													<div class="position-relative d-flex justify-content-center w-100">
+														<%if (role === 'new') {%>
+															<i class="icon-solid icon-arrow-right icon-xs icon-width-auto lh-1 text-body-tertiary position-absolute top-50 start-0 translate-middle"></i>
+														<%}%>
+														<span class="position-relative d-inline-flex">
+															<i class="vdev-disk icon-duotone icon-solid icon-hard-drive <%-diskColor%> <%=(activity === 'Awaiting resilver' || !activity ? '' : 'icon-fade')%>"<%=(diskTip ? ` data-bs-toggle="tooltip" data-bs-original-title="${diskTip}"` : '')%>></i>
+															<%if (usedIn) {%>
+																<i class="icon-solid icon-link icon-2xs icon-width-auto lh-1 text-blue-500 position-absolute top-0 start-100 translate-middle"></i>
+															<%}%>
+														</span>
+													</div>
 													<small class="text-body-tertiary text-truncate w-100 mt-1"><%-diskLabel%></small>
 												</div>
 											<%})%>
@@ -186,21 +190,20 @@
 								<%})%>
 							</div>
 						</div>
-						<table class="table table-borderless table-hover align-middle m-0" style="border-collapse: separate; border-spacing: 0;">
-							<thead>
-								<tr>
-									<th style="padding-left: var(--bs-card-spacer-x);"><small class="text-body-tertiary fw-normal">Device</small></th>
-									<th class="text-end text-nowrap d-none d-md-table-cell" style="width: 110px; min-width: 110px;"><small class="text-body-tertiary fw-normal">Size</small></th>
-									<th class="text-end text-nowrap d-none d-md-table-cell" style="width: 110px; min-width: 110px;"><small class="text-body-tertiary fw-normal" data-bs-toggle="tooltip" data-bs-original-title="Read / write / checksum errors">Errors</small></th>
-									<th class="text-nowrap" style="width: 85px; min-width: 85px;"><small class="text-body-tertiary fw-normal">State</small></th>
-								</tr>
-							</thead>
-							<tbody class="vdev-rows">
-								<%_.each(vdevRows, ({ vdev, drive, depth, isLast }) => {%>
-									<%=poolVdevTemplate({ vdev, drive, depth, isLast, stateColor, healthColor, driveHealthTip, prettyBytes })%>
+						<div class="details-toggle d-inline-flex align-items-center cursor-pointer ps-3 pb-2" data-bs-toggle="collapse" data-bs-target="#vdev-details-<%-_.kebabCase(pool.name)%>" aria-expanded="false" aria-controls="vdev-details-<%-_.kebabCase(pool.name)%>">
+							<small class="text-body-tertiary">Details</small>
+							<i class="icon-solid icon-chevron-down icon-fw icon-xs text-secondary ms-1"></i>
+						</div>
+						<div class="vdev-rows collapse pb-2" id="vdev-details-<%-_.kebabCase(pool.name)%>">
+							<%_.each(vdevSections, (section) => {%>
+								<%if (section.label) {%>
+									<small class="d-block text-body-tertiary ps-3 mt-2"><%-section.label%></small>
+								<%}%>
+								<%_.each(section.rows, ({ vdev, drive, depth, isLast, role, pair, activity }) => {%>
+									<%=poolVdevTemplate({ vdev, drive, depth, isLast, role, pair, activity, stateColor, healthColor, driveHealthTip, prettyBytes })%>
 								<%})%>
-							</tbody>
-						</table>
+							<%})%>
+						</div>
 					</div>
 				</div>
 			</div>

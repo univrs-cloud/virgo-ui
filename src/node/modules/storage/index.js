@@ -60,11 +60,11 @@ const compress = (event) => {
 
 const stateColor = (state) => {
 	const value = _.toLower(state || '');
-	if (_.includes(['online', 'avail'], value)) {
+	if (_.includes(['online', 'avail', 'inuse'], value)) {
 		return 'green';
 	}
 
-	if (_.includes(['degraded', 'inuse'], value)) {
+	if (value === 'degraded') {
 		return 'yellow';
 	}
 
@@ -104,13 +104,50 @@ const findDrive = (name) => {
 	return _.find(drives, (drive) => { return _.includes(drive.ids, name); });
 };
 
-const flattenVdevs = (vdevs, depth = 0) => {
+const POOL_SECTION_LABELS = {
+	logs: 'Write log',
+	special: 'Metadata',
+	dedup: 'Dedup metadata',
+	l2cache: 'Read cache',
+	spares: 'Spares'
+};
+
+const STATE_SEVERITY = { green: 0, yellow: 1, red: 2 };
+
+const replaceRole = (parent, index, count) => {
+	if (!_.includes(['replacing', 'spare'], parent?.vdevType)) {
+		return null;
+	}
+
+	if (index === 0) {
+		return 'old';
+	}
+
+	return (index === count - 1 ? 'new' : null);
+};
+
+const flattenVdevs = (vdevs, depth = 0, parent = null) => {
 	const siblings = _.values(vdevs || {});
 	return _.flatMap(siblings, (vdev, index) => {
 		const drive = (vdev.vdevType === 'disk' ? findDrive(vdev.name) : null);
 		const isLast = (index === siblings.length - 1);
-		return [{ vdev, drive, depth, isLast }, ...flattenVdevs(vdev.vdevs, depth + 1)];
+		const role = replaceRole(parent, index, siblings.length);
+		const pair = (role ? parent.vdevType : null);
+		return [{ vdev, drive, depth, isLast, role, pair }, ...flattenVdevs(vdev.vdevs, depth + 1, vdev)];
 	});
+};
+
+const vdevActivity = (vdev, scan) => {
+	const isScanning = (_.toUpper(scan?.state) === 'SCANNING');
+	if (!isScanning || !_.isEmpty(vdev.vdevs) || _.toUpper(vdev.state) !== 'ONLINE') {
+		return null;
+	}
+
+	if (vdev.scanProcessed > 0) {
+		return (_.toUpper(scan.function) === 'RESILVER' ? 'Resilvering' : 'Repairing');
+	}
+
+	return (vdev.resilverDeferred ? 'Awaiting resilver' : null);
 };
 
 const poolHealth = (pool) => {
@@ -139,18 +176,62 @@ const renderPoolDetails = (name) => {
 	}
 
 	const rootVdev = pool.vdevs?.[pool.name];
-	const vdevRows = flattenVdevs(rootVdev?.vdevs);
-	const groups = _.map(_.values(rootVdev?.vdevs || {}), (vdev) => {
-		const disks = _.filter(flattenVdevs(vdev.vdevs), ({ vdev }) => { return vdev.vdevType === 'disk'; });
-		return { vdev, disks: (_.isEmpty(disks) ? [{ vdev, drive: findDrive(vdev.name) }] : disks) };
+	const sections = _.filter([
+		{ key: 'data', label: 'Data', vdevs: rootVdev?.vdevs },
+		..._.map(_.filter(_.keys(pool), (key) => { return _.has(POOL_SECTION_LABELS, key); }), (key) => { return { key, label: POOL_SECTION_LABELS[key], vdevs: pool[key] }; })
+	], (section) => { return !_.isEmpty(section.vdevs); });
+	const withActivity = (row) => { return { ...row, activity: vdevActivity(row.vdev, pool.scanStats) }; };
+	const vdevSections = _.map(sections, (section) => { return { label: section.label, rows: _.map(flattenVdevs(section.vdevs), withActivity) }; });
+	const spareUse = {};
+	_.each(_.reject(sections, { key: 'spares' }), (section) => {
+		_.each(_.values(section.vdevs), (top) => {
+			_.each(flattenVdevs(top.vdevs, 0, top), ({ vdev, role, pair }) => {
+				if (pair === 'spare' && role === 'new') {
+					spareUse[vdev.name] = top.name;
+				}
+			});
+		});
+	});
+	const groupDisks = (vdev) => {
+		const disks = _.map(_.filter(flattenVdevs(vdev.vdevs, 0, vdev), ({ vdev }) => { return vdev.vdevType === 'disk'; }), withActivity);
+		return (_.isEmpty(disks) ? [withActivity({ vdev, drive: findDrive(vdev.name), role: null })] : disks);
+	};
+	const spareDisks = (vdev) => {
+		return _.map(groupDisks(vdev), (disk) => { return { ...disk, usedIn: (spareUse[disk.vdev.name] || null) }; });
+	};
+	const groups = _.flatMap(sections, (section) => {
+		const vdevs = _.values(section.vdevs);
+		if (section.key === 'data') {
+			return _.map(vdevs, (vdev) => { return { vdev, isData: true, sectionLabel: (vdev.vdevType === 'disk' ? section.label : `${section.label} · ${vdev.name}`), disks: groupDisks(vdev) }; });
+		}
+
+		const bare = _.filter(vdevs, { vdevType: 'disk' });
+		const worst = _.maxBy(bare, (vdev) => { return STATE_SEVERITY[stateColor(vdev.state)]; });
+		const bareGroup = { vdev: { name: section.label, vdevType: 'section', state: worst?.state }, sectionLabel: section.label, disks: _.flatMap(bare, (section.key === 'spares' ? spareDisks : groupDisks)) };
+		return _.compact(_.map(vdevs, (vdev) => {
+			if (vdev.vdevType !== 'disk') {
+				return { vdev, sectionLabel: `${section.label} · ${vdev.name}`, disks: groupDisks(vdev) };
+			}
+
+			return (vdev === bare[0] ? bareGroup : null);
+		}));
 	});
 
-	const faultTolerance = (_.isEmpty(groups) ? 0 : _.min(_.map(groups, ({ vdev }) => { return vdevFaultTolerance(vdev); })));
+	const dataGroups = _.filter(groups, 'isData');
+	const faultTolerance = (_.isEmpty(dataGroups) ? 0 : _.min(_.map(dataGroups, ({ vdev }) => { return vdevFaultTolerance(vdev); })));
 
 	morphdom(
 		details,
-		`<div>${poolDetailsTemplate({ pool, groups, vdevRows, faultTolerance, poolVdevTemplate, stateColor, healthColor, driveHealthTip, prettyBytes, moment })}</div>`,
-		{ childrenOnly: true }
+		`<div>${poolDetailsTemplate({ pool, groups, vdevSections, faultTolerance, poolVdevTemplate, stateColor, healthColor, driveHealthTip, prettyBytes, moment })}</div>`,
+		{
+			childrenOnly: true,
+			onBeforeElUpdated: (fromEl, toEl) => {
+				if (fromEl.classList.contains('details-toggle') || fromEl.classList.contains('collapse') || fromEl.classList.contains('collapsing')) {
+					morphdom(fromEl, toEl, { childrenOnly: true });
+					return false;
+				}
+			}
+		}
 	);
 };
 
@@ -207,8 +288,24 @@ const handleRoute = (ctx) => {
 	details.classList.add('d-block');
 };
 
+const toggleStateTooltip = (event) => {
+	if (!event.target.classList?.contains('state-icon')) {
+		return;
+	}
+
+	const dot = event.target.querySelector('.state-dot');
+	const tooltip = bootstrap.Tooltip.getOrCreateInstance(dot, { selector: false, trigger: 'manual' });
+	if (event.type === 'mouseenter') {
+		tooltip.show();
+	} else {
+		tooltip.hide();
+	}
+};
+
 module.onRoute = handleRoute;
 module.addEventListener('click', compress);
+module.addEventListener('mouseenter', toggleStateTooltip, true);
+module.addEventListener('mouseleave', toggleStateTooltip, true);
 searchInput.addEventListener('input', search);
 table.querySelector('tbody').addEventListener('click', expand);
 

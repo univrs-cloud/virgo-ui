@@ -9,20 +9,19 @@
 <%const writeErrors = (vdev.writeErrors || 0)%>
 <%const checksumErrors = (vdev.checksumErrors || 0)%>
 <%const errors = readErrors + writeErrors + checksumErrors%>
-<%const errorsClass = (errors > 0 ? 'text-red-300' : 'text-body-secondary')%>
 <%const errorsTip = `${readErrors} read, ${writeErrors} write, ${checksumErrors} checksum`%>
-<%const elbowX = `calc(var(--bs-card-spacer-x) + ${(depth - 1) * 1.5}rem + 0.6rem)`%>
-<%const lineX = `calc(var(--bs-card-spacer-x) + ${(hasChildren ? depth : depth - 1) * 1.5}rem + 0.6rem)`%>
+<%const elbowX = `calc(var(--bs-card-spacer-x) + ${(depth - 1) * 1.5}rem + 0.5rem)`%>
+<%const lineX = `calc(var(--bs-card-spacer-x) + ${(hasChildren ? depth : depth - 1) * 1.5}rem + 0.5rem)`%>
 <%const lineTop = (hasChildren ? 'calc(50% + var(--vdev-icon-radius))' : '0')%>
 <%const indent = `calc(var(--bs-card-spacer-x) + ${depth * 1.5}rem)`%>
-<%const rowStyle = `--vdev-elbow-x: ${elbowX}; --vdev-line-x: ${lineX}; --vdev-line-top: ${lineTop}; padding-left: ${indent}; min-width: 210px; max-width: 0;`%>
+<%const rowStyle = `--vdev-elbow-x: ${elbowX}; --vdev-line-x: ${lineX}; --vdev-line-top: ${lineTop}; padding-left: ${indent};`%>
 <%
-	const tip = _.join(_.compact([
-		(drive?.model ? `Model: ${_.escape(drive.model)}` : null),
-		(drive?.serialNumber ? `Serial: ${_.escape(drive.serialNumber)}` : null),
-		`ID: ${_.escape(vdev.name)}`
-	]), '<br>');
-	const labelAttributes = (isDisk ? ` data-bs-toggle="tooltip" data-bs-custom-class="storage-device" data-bs-original-title="${tip}"` : '');
+	const infoItem = (label, value) => { return `<div class='mt-1'><div class='small opacity-75'>${label}</div><div>${_.escape(value)}</div></div>`; };
+	const tip = `<div class='text-start'>${_.join(_.compact([
+		(drive?.model ? infoItem('Model', drive.model) : null),
+		(drive?.serialNumber ? infoItem('Serial', drive.serialNumber) : null),
+		infoItem('ID', vdev.name)
+	]), '')}</div>`;
 %>
 <%
 	let temperatureColor = 'gray';
@@ -34,37 +33,36 @@
 		temperatureColor = 'red';
 	}
 %>
-<tr class="<%-rowClass%>" data-guid="<%-vdev.guid%>" data-depth="<%-depth%>">
-	<td style="<%=rowStyle%>">
-		<div class="d-flex align-items-center min-w-0">
-			<i class="icon-light <%-icon%> icon-fw text-body-tertiary me-2 flex-shrink-0"></i>
-			<div class="text-truncate min-w-0"<%=labelAttributes%>><%-label%></div>
-			<%if (isDisk && !_.isNil(drive?.temperature)) {%>
-				<u-badge color="<%-temperatureColor%>" tint="200" class="ms-2 flex-shrink-0" tip="Warning at <%-drive.temperatureWarningThreshold%> °C, critical at <%-drive.temperatureCriticalThreshold%> °C" pill>
-					<i class="icon-light icon-temperature-half icon-fw me-1"></i><%-drive.temperature%> °C
-				</u-badge>
-			<%}%>
-			<%const healthColorName = (isDisk ? healthColor(drive?.health) : null)%>
-			<%if (healthColorName) {%>
-				<i class="icon-solid icon-triangle-exclamation icon-fw text-<%-healthColorName%>-300 ms-2 flex-shrink-0" data-bs-toggle="tooltip" data-bs-custom-class="storage-device" data-bs-original-title="<%=driveHealthTip(drive)%>"></i>
-			<%}%>
-			<%if (vdev.class && vdev.class !== 'normal') {%>
-				<u-badge color="purple" class="ms-2 flex-shrink-0" pill><small><%-vdev.class%></small></u-badge>
-			<%}%>
-		</div>
-	</td>
-	<td class="text-end text-nowrap d-none d-md-table-cell">
-		<small class="fw-light text-body-secondary"><%=prettyBytes(size || 0, { binary: true })%></small>
-	</td>
-	<td class="text-end text-nowrap d-none d-md-table-cell">
-		<small class="fw-light <%-errorsClass%>" data-bs-toggle="tooltip" data-bs-original-title="<%-errorsTip%>">
-			<%-readErrors%> / <%-writeErrors%> / <%-checksumErrors%>
-		</small>
-		<%if (vdev.slowIos > 0) {%>
-			<u-badge color="orange" tint="100" class="ms-1" tip="Slow I/O operations" pill><small><%-vdev.slowIos%></small></u-badge>
+<div class="<%-rowClass%> py-2 pe-3" data-guid="<%-vdev.guid%>" data-depth="<%-depth%>" style="<%=rowStyle%>">
+	<div class="d-flex align-items-center numeric-tabular min-w-0 <%=(role === 'old' ? 'opacity-50' : '')%>">
+		<span class="state-icon position-relative d-inline-flex me-2 flex-shrink-0">
+			<i class="icon-light <%-icon%> icon-width-auto text-body-tertiary"></i>
+			<i class="state-dot icon-solid icon-circle icon-2xs icon-width-auto lh-1 position-absolute top-0 start-100 translate-middle text-<%-badgeColor%>-300" data-bs-original-title="<%-_.upperFirst(_.toLower(vdev.state))%>"></i>
+		</span>
+		<div class="text-truncate min-w-0"><%-label%></div>
+		<%if (activity) {%>
+			<i class="icon-solid icon-arrows-rotate icon-xs icon-fw lh-1 text-blue-400 ms-2 flex-shrink-0 <%=(activity === 'Awaiting resilver' ? '' : 'icon-spin')%>" data-bs-toggle="tooltip" data-bs-original-title="<%-activity%>"></i>
 		<%}%>
-	</td>
-	<td class="text-nowrap">
-		<u-badge color="<%-badgeColor%>" pill><small><%-vdev.state%></small></u-badge>
-	</td>
-</tr>
+		<%if (size) {%>
+			<u-badge color="gray" tint="200" class="ms-2 flex-shrink-0" pill><small><%=prettyBytes(size, { binary: true })%></small></u-badge>
+		<%}%>
+		<%if (errors > 0) {%>
+			<u-badge color="red" tint="100" class="ms-2 flex-shrink-0" tip="Errors: <%-errorsTip%>" pill><small><%-readErrors%> / <%-writeErrors%> / <%-checksumErrors%></small></u-badge>
+		<%}%>
+		<%if (vdev.slowIos > 0) {%>
+			<u-badge color="orange" tint="100" class="ms-2 flex-shrink-0" tip="Slow I/O operations" pill><small><%-vdev.slowIos%></small></u-badge>
+		<%}%>
+		<%if (isDisk && !_.isNil(drive?.temperature)) {%>
+			<u-badge color="<%-temperatureColor%>" tint="200" class="ms-2 flex-shrink-0" tip="Warning at <%-drive.temperatureWarningThreshold%> °C, critical at <%-drive.temperatureCriticalThreshold%> °C" pill>
+				<small><%-drive.temperature%> °C</small>
+			</u-badge>
+		<%}%>
+		<%const healthColorName = (isDisk ? healthColor(drive?.health) : null)%>
+		<%if (healthColorName) {%>
+			<i class="icon-solid icon-triangle-exclamation icon-fw text-<%-healthColorName%>-300 ms-2 flex-shrink-0" data-bs-toggle="tooltip" data-bs-custom-class="storage-device" data-bs-original-title="<%=driveHealthTip(drive)%>"></i>
+		<%}%>
+		<%if (isDisk && (drive?.model || drive?.serialNumber)) {%>
+			<i class="icon-light icon-circle-info icon-xs icon-fw lh-1 text-body-tertiary ms-2 flex-shrink-0" data-bs-toggle="tooltip" data-bs-custom-class="storage-device" data-bs-original-title="<%=tip%>"></i>
+		<%}%>
+	</div>
+</div>
