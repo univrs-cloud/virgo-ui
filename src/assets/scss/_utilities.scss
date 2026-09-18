@@ -23,3 +23,24 @@ $utilities: map-merge(
 		)
 	)
 );
+
+$utilities: map-merge(
+	$utilities,
+	(
+		'gradient': map-merge(
+			map-get($utilities, 'gradient'),
+			(values: map-merge(map-get(map-get($utilities, 'gradient'), 'values'), (gradient-top: linear-gradient(180deg, rgba($black, .05), rgba($black, 0) 2.5rem))))
+		)
+	)
+);
+
+$utilities: map-merge(
+	$utilities,
+	(
+		'font-variant-numeric': (
+			property: font-variant-numeric,
+			class: numeric,
+			values: (tabular: tabular-nums)
+		)
+	)
+);

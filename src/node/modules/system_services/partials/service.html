@@ -35,7 +35,7 @@
 		<u-badge color="<%=stateBadgeColor%>" tint="<%=stateBadgeTint%>" pill><%-service.sub%></u-badge>
 	</td>
 	<td class="text-center px-0">
-		<%=serviceActionsTemplate({ service, jobs })%>
+		<%=serviceActionsTemplate({ service, jobs, inline: false })%>
 	</td>
 	<td class="text-end pe-0">
 		<i class="icon-light icon-angle-right icon-fw text-body-tertiary"></i>

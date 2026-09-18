@@ -1,21 +1,41 @@
 <%if (!_.isEmpty(jobs)) {%>
 	<i class="icon-solid icon-gear icon-fw icon-spin"></i>
 <%} else {%>
-	<div class="dropdown">
-		<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
+	<%const isActive = _.includes(['success', 'warning'], app.state);%>
+	<%if (inline) {%>
+		<div class="d-inline-flex align-items-center">
+			<div class="d-inline-flex align-items-center bg-body-secondary bg-opacity-25 border border-light border-opacity-10 rounded-1 pe-3">
+				<%const canStop = (app.canBeRemoved && isActive);%>
+				<a href="#" class="actions-button btn btn-sm border-0 <%=(app.state === 'success' ? 'disabled' : '')%>" data-action="start" data-bs-toggle="tooltip" data-bs-original-title="Start"><i class="icon-solid icon-play icon-fw <%=(app.state === 'success' ? 'text-gray-500' : 'text-green-400')%>"></i></a>
+				<a href="#" class="actions-button btn btn-sm border-0 <%=(isActive ? 'confirm' : 'disabled')%>" data-action="restart" data-bs-toggle="tooltip" data-bs-original-title="Restart"><i class="icon-solid icon-arrow-rotate-left icon-fw <%=(isActive ? 'text-body-emphasis' : 'text-gray-500')%>"></i></a>
+				<a href="#" class="actions-button btn btn-sm border-0 <%=(canStop ? 'confirm' : 'disabled')%>" data-action="stop" data-bs-toggle="tooltip" data-bs-original-title="Stop"><i class="icon-solid icon-stop icon-fw <%=(canStop ? 'text-red-400' : 'text-gray-500')%>"></i></a>
+			</div>
+	<%}%>
+	<div class="<%=(inline ? 'dropdown position-relative z-1 ms-n3' : 'dropdown')%>">
+		<%if (inline) {%>
+			<span data-bs-toggle="dropdown" class="actions-toggle dropdown-toggle caret-off btn btn-sm border border-light border-opacity-10 rounded-1 px-2 py-1"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
+		<%} else {%>
+			<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
+		<%}%>
 		<div class="dropdown-menu">
 			<%if (app.hasUpdates) {%>
 				<a href="#" class="dropdown-item" data-action="update"><i class="icon-regular icon-download icon-fw me-1"></i>Update</a>
 				<div class="dropdown-divider"></div>
 			<%}%>
-			<a href="#" class="dropdown-item <%=(app.state === 'success' ? 'disabled' : '')%>" data-action="start"><i class="icon-regular icon-play icon-fw me-1"></i>Start</a>
-			<div class="dropdown-divider"></div>
-			<a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'confirm' : 'disabled')%>" data-action="restart"><i class="icon-regular icon-arrow-rotate-left icon-fw me-1"></i>Restart</a>
-			<%if (app.canBeRemoved) {%>
-				<a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger confirm' : 'disabled')%>" data-action="stop"><i class="icon-regular icon-stop icon-fw me-1"></i>Stop</a>
-				<a href="#" class="dropdown-item <%=(_.includes(['success', 'warning'], app.state) ? 'text-danger confirm' : 'disabled')%>" data-action="kill"><i class="icon-regular icon-skull icon-fw me-1"></i>Kill</a>
+			<%if (!inline) {%>
+				<a href="#" class="dropdown-item <%=(app.state === 'success' ? 'disabled' : '')%>" data-action="start"><i class="icon-regular icon-play icon-fw me-1"></i>Start</a>
+				<div class="dropdown-divider"></div>
+				<a href="#" class="dropdown-item <%=(isActive ? 'confirm' : 'disabled')%>" data-action="restart"><i class="icon-regular icon-arrow-rotate-left icon-fw me-1"></i>Restart</a>
 			<%}%>
-			<div class="dropdown-divider"></div>
+			<%if (app.canBeRemoved) {%>
+				<%if (!inline) {%>
+					<a href="#" class="dropdown-item <%=(isActive ? 'text-danger confirm' : 'disabled')%>" data-action="stop"><i class="icon-regular icon-stop icon-fw me-1"></i>Stop</a>
+				<%}%>
+				<a href="#" class="dropdown-item <%=(isActive ? 'text-danger confirm' : 'disabled')%>" data-action="kill"><i class="icon-regular icon-skull icon-fw me-1"></i>Kill</a>
+				<div class="dropdown-divider"></div>
+			<%} else if (!inline) {%>
+				<div class="dropdown-divider"></div>
+			<%}%>
 			<a href="#" class="dropdown-item text-danger confirm" data-action="recreate"><i class="icon-regular icon-arrows-rotate icon-fw me-1"></i>Recreate</a>
 			<%if (app.canBeRemoved) {%>
 				<div class="dropdown-divider"></div>
@@ -23,4 +43,7 @@
 			<%}%>
 		</div>
 	</div>
+	<%if (inline) {%>
+		</div>
+	<%}%>
 <%}%>

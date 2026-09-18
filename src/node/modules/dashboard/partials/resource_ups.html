@@ -8,7 +8,9 @@
 <li class="list-group-item ups py-3">
 	<h6 class="d-flex align-items-center text-body-emphasis mb-0">
 		<i class="icon-regular icon-car-battery icon-fw me-1 text-gray-500"></i>UPS
-		<%if (mode === 'unreachable' || mode === 'missing' || mode === 'failed') {%>
+		<%if (mode === 'missing') {%>
+			<u-badge color="red" tint="100" class="ms-1" pill><%-fault%></u-badge>
+		<%} else if (mode === 'unreachable' || mode === 'failed') {%>
 			<small class="ms-2 fw-light <%=(mode === 'failed' ? 'text-orange-700' : 'text-body-tertiary')%>"><%-fault%></small>
 		<%} else if (mode === 'reading' && state.ups.powerSource) {%>
 			<u-badge color="<%=(state.ups.powerSource === 'battery' ? 'orange' : 'green')%>" class="ms-1" pill><%=state.ups.powerSource.toUpperCase()%></u-badge>

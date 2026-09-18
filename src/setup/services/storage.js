@@ -59,52 +59,151 @@ const getTopologies = (topologies = Host.getTopologies()) => {
 	return (topologies || []);
 };
 
-const flattenVdevs = (vdevs) => {
-	return _.flatMap(_.values(vdevs || {}), (vdev) => { return [vdev, ...flattenVdevs(vdev.vdevs)]; });
+const POOL_SECTION_LABELS = {
+	logs: 'Write log',
+	special: 'Metadata',
+	dedup: 'Dedup metadata',
+	l2cache: 'Read cache',
+	spares: 'Spares'
 };
+const STATE_SEVERITY = { green: 0, yellow: 1, red: 2 };
 
-/** The pool's top-level vdevs with the drives under each, shaped for the topology diagram. A vdev with
- * no children is a bare drive standing in for its own group. */
-const getPoolGroups = (pool, drives = Host.getDrives()) => {
-	const rootVdev = pool?.vdevs?.[pool?.name];
-	return _.map(_.values(rootVdev?.vdevs || {}), (vdev) => {
-		const disks = _.filter(flattenVdevs(vdev.vdevs), { vdevType: 'disk' });
-		return {
-			name: vdev.name,
-			disks: _.map((_.isEmpty(disks) ? [vdev] : disks), (disk) => {
-				return { name: disk.name, drive: _.find(drives, (drive) => { return _.includes(drive.ids, disk.name); }) };
-			})
-		};
-	});
-};
-
-const stateColor = (state) => {
+const poolStateColor = (state) => {
 	const value = _.toLower(state || '');
-	if (_.includes(['online', 'avail'], value)) {
+	if (!value) {
 		return null;
 	}
 
-	return (_.includes(['degraded', 'inuse'], value) ? 'text-yellow-500' : 'text-red-300');
+	if (_.includes(['online', 'avail', 'inuse'], value)) {
+		return 'green';
+	}
+
+	return (value === 'degraded' ? 'yellow' : 'red');
 };
 
-/** The same shape as getPoolGroups, from the flat vdev list a scan reports for a pool that is not
- * imported yet. */
-const getImportableGroups = (importablePool, drives = Host.getDrives()) => {
-	return _.map(importablePool?.vdevs, (vdev) => {
-		const devices = (_.isEmpty(vdev.devices) ? [vdev] : vdev.devices);
-		return {
-			name: vdev.name,
-			color: (stateColor(vdev.state) ? 'yellow' : 'gray'),
-			disks: _.map(devices, (device) => {
-				return {
-					name: device.name,
-					state: device.state,
-					color: stateColor(device.state),
-					drive: _.find(drives, (drive) => { return _.includes(drive.ids, device.name); })
-				};
-			})
-		};
+const healthColor = (health) => {
+	if (health?.status === 'critical') {
+		return 'red';
+	}
+
+	return (health?.status === 'warning' ? 'orange' : null);
+};
+
+const replaceRole = (parent, index, count) => {
+	if (!_.includes(['replacing', 'spare'], parent?.vdevType)) {
+		return null;
+	}
+
+	if (index === 0) {
+		return 'old';
+	}
+
+	return (index === count - 1 ? 'new' : null);
+};
+
+const flattenVdevs = (vdevs, parent = null) => {
+	const siblings = _.values(vdevs || {});
+	return _.flatMap(siblings, (vdev, index) => {
+		const role = replaceRole(parent, index, siblings.length);
+		return [{ vdev, role, pair: (role ? parent.vdevType : null) }, ...flattenVdevs(vdev.vdevs, vdev)];
 	});
+};
+
+const vdevActivity = (vdev, scan) => {
+	if (_.toUpper(scan?.state) !== 'SCANNING' || !_.isEmpty(vdev.vdevs) || _.toUpper(vdev.state) !== 'ONLINE') {
+		return null;
+	}
+
+	if (vdev.scanProcessed > 0) {
+		return (_.toUpper(scan.function) === 'RESILVER' ? 'Resilvering' : 'Repairing');
+	}
+
+	return (vdev.resilverDeferred ? 'Awaiting resilver' : null);
+};
+
+const diskColor = (vdev, drive, activity) => {
+	if (activity) {
+		return 'text-blue-300';
+	}
+
+	const health = healthColor(drive?.health);
+	if (health) {
+		return `text-${health}-300`;
+	}
+
+	return { green: 'text-blue-500', yellow: 'text-yellow-500', red: 'text-red-300' }[poolStateColor(vdev.state)];
+};
+
+/** The pool's groups in the order zpool reports them, shaped for the topology diagram: every data
+ * vdev on its own, each mirrored log, metadata or dedup vdev on its own, and a section's single drives
+ * together. A spare covering a drive is marked where it is listed among the spares. */
+const getPoolGroups = (pool, drives = Host.getDrives()) => {
+	const rootVdev = pool?.vdevs?.[pool?.name];
+	const findDrive = (name) => { return _.find(drives, (drive) => { return _.includes(drive.ids, name); }); };
+	const sections = _.filter([
+		{ key: 'data', label: 'Data', vdevs: rootVdev?.vdevs },
+		..._.map(_.filter(_.keys(pool || {}), (key) => { return _.has(POOL_SECTION_LABELS, key); }), (key) => { return { key, label: POOL_SECTION_LABELS[key], vdevs: pool[key] }; })
+	], (section) => { return !_.isEmpty(section.vdevs); });
+	const spareUse = {};
+	_.each(_.reject(sections, { key: 'spares' }), (section) => {
+		_.each(_.values(section.vdevs), (top) => {
+			_.each(flattenVdevs(top.vdevs, top), ({ vdev, role, pair }) => {
+				if (pair === 'spare' && role === 'new') {
+					spareUse[vdev.name] = top.name;
+				}
+			});
+		});
+	});
+	const toDisk = ({ vdev, role, pair }, isSpare) => {
+		const drive = findDrive(vdev.name);
+		const activity = vdevActivity(vdev, pool.scanStats);
+		const usedIn = (isSpare ? (spareUse[vdev.name] || null) : null);
+		const size = (vdev.physSpace || vdev.repDevSize);
+		const tip = _.compact([
+			(activity || (role === 'old' ? (pair === 'spare' ? 'Covered by spare' : 'Being replaced') : null)),
+			(usedIn ? `In use in ${_.escape(usedIn)}` : null),
+			(size ? prettyBytes(size, { binary: true }) : null),
+			(drive?.health?.message ? _.escape(drive.health.message) : null)
+		]).join('<br>');
+		return {
+			label: (drive?.name ? _.last(drive.name.split('/')) : `…${vdev.name.slice(-6)}`),
+			color: diskColor(vdev, drive, activity),
+			isFading: Boolean(activity && activity !== 'Awaiting resilver'),
+			role,
+			usedIn,
+			tip
+		};
+	};
+	const groupDisks = (vdev, isSpare = false) => {
+		const disks = _.filter(flattenVdevs(vdev.vdevs, vdev), ({ vdev }) => { return vdev.vdevType === 'disk'; });
+		return _.map((_.isEmpty(disks) ? [{ vdev, role: null, pair: null }] : disks), (disk) => { return toDisk(disk, isSpare); });
+	};
+
+	return _.flatMap(sections, (section) => {
+		const vdevs = _.values(section.vdevs);
+		if (section.key === 'data') {
+			return _.map(vdevs, (vdev) => {
+				return { name: (vdev.vdevType === 'disk' ? section.label : `${section.label} · ${vdev.name}`), color: poolStateColor(vdev.state), disks: groupDisks(vdev) };
+			});
+		}
+
+		const bare = _.filter(vdevs, { vdevType: 'disk' });
+		const worst = _.maxBy(bare, (vdev) => { return STATE_SEVERITY[poolStateColor(vdev.state)]; });
+		const bareGroup = { name: section.label, color: poolStateColor(worst?.state), disks: _.flatMap(bare, (vdev) => { return groupDisks(vdev, section.key === 'spares'); }) };
+		return _.compact(_.map(vdevs, (vdev) => {
+			if (vdev.vdevType !== 'disk') {
+				return { name: `${section.label} · ${vdev.name}`, color: poolStateColor(vdev.state), disks: groupDisks(vdev) };
+			}
+
+			return (vdev === bare[0] ? bareGroup : null);
+		}));
+	});
+};
+
+/** An importable pool arrives in the same shape as an imported one, so it is drawn the same way;
+ * cache and spare devices carry no state until the pool is imported. */
+const getImportableGroups = (importablePool, drives = Host.getDrives()) => {
+	return (importablePool ? getPoolGroups(importablePool, drives) : []);
 };
 
 const getStorage = () => {
