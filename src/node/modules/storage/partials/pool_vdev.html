@@ -41,7 +41,7 @@
 		</span>
 		<div class="text-truncate min-w-0"><%-label%></div>
 		<%if (activity) {%>
-			<i class="icon-solid icon-arrows-rotate icon-xs icon-fw lh-1 text-blue-400 ms-2 flex-shrink-0 <%=(activity === 'Awaiting resilver' ? '' : 'icon-spin')%>" data-bs-toggle="tooltip" data-bs-original-title="<%-activity%>"></i>
+			<i class="icon-solid icon-arrows-rotate icon-xs icon-fw lh-1 text-blue-400 ms-2 flex-shrink-0 <%=(activity === 'awaiting' ? '' : 'icon-spin')%>" data-bs-toggle="tooltip" data-bs-original-title="<%-{ resilvering: 'Resilvering', repairing: 'Repairing', awaiting: 'Awaiting resilver' }[activity]%>"></i>
 		<%}%>
 		<%if (size) {%>
 			<u-badge color="gray" tint="200" class="ms-2 flex-shrink-0" pill><small><%=prettyBytes(size, { binary: true })%></small></u-badge>

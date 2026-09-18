@@ -1,3 +1,4 @@
+<%const SECTION_LABELS = { data: 'Data', logs: 'Write log', special: 'Metadata', dedup: 'Dedup metadata', l2cache: 'Read cache', spares: 'Spares' };%>
 <%const size = (pool.properties.size?.value || 0)%>
 <%const allocated = (pool.properties.allocated?.value || 0)%>
 <%const free = (pool.properties.free?.value || 0)%>
@@ -152,7 +153,7 @@
 									<%const groupColor = stateColor(group.vdev.state)%>
 									<div class="text-center">
 										<div>
-											<u-badge color="<%-groupColor%>" pill><small><%-group.sectionLabel%></small></u-badge>
+											<u-badge color="<%-groupColor%>" pill><small><%-_.compact([SECTION_LABELS[group.section], group.name]).join(' · ')%></small></u-badge>
 										</div>
 										<div class="d-inline-block">
 											<div class="vdev-bar"></div>
@@ -162,12 +163,7 @@
 												<%const diskColor = (activity ? 'text-blue-300' : (diskHealthColor ? `text-${diskHealthColor}-300` : { green: 'text-blue-500', yellow: 'text-yellow-500', red: 'text-red-300' }[stateColor(vdev.state)]))%>
 												<%const diskLabel = (drive?.name ? _.last(drive.name.split('/')) : `…${vdev.name.slice(-6)}`)%>
 												<%const diskSize = (vdev.physSpace || vdev.repDevSize)%>
-												<%const diskTip = _.compact([
-													(activity || (role === 'old' ? (pair === 'spare' ? 'Covered by spare' : 'Being replaced') : null)),
-													(usedIn ? `In use in ${_.escape(usedIn)}` : null),
-													(diskSize ? prettyBytes(diskSize, { binary: true }) : null),
-													(drive?.health?.message ? _.escape(drive.health.message) : null)
-												]).join('<br>')%>
+												<%const diskTip = (diskSize ? prettyBytes(diskSize, { binary: true }) : '')%>
 												<div class="vdev-slot <%=(role === 'old' ? 'opacity-50' : '')%>">
 													<div class="vdev-stem"></div>
 													<div class="position-relative d-flex justify-content-center w-100">
@@ -175,7 +171,7 @@
 															<i class="icon-solid icon-arrow-right icon-xs icon-width-auto lh-1 text-body-tertiary position-absolute top-50 start-0 translate-middle"></i>
 														<%}%>
 														<span class="position-relative d-inline-flex">
-															<i class="vdev-disk icon-duotone icon-solid icon-hard-drive <%-diskColor%> <%=(activity === 'Awaiting resilver' || !activity ? '' : 'icon-fade')%>"<%=(diskTip ? ` data-bs-toggle="tooltip" data-bs-original-title="${diskTip}"` : '')%>></i>
+															<i class="vdev-disk icon-duotone icon-solid icon-hard-drive <%-diskColor%> <%=(activity && activity !== 'awaiting' ? 'icon-fade' : '')%>"<%=(diskTip ? ` data-bs-toggle="tooltip" data-bs-original-title="${diskTip}"` : '')%>></i>
 															<%if (usedIn) {%>
 																<i class="icon-solid icon-link icon-2xs icon-width-auto lh-1 text-blue-500 position-absolute top-0 start-100 translate-middle"></i>
 															<%}%>
@@ -196,9 +192,7 @@
 						</div>
 						<div class="vdev-rows collapse pb-2" id="vdev-details-<%-_.kebabCase(pool.name)%>">
 							<%_.each(vdevSections, (section) => {%>
-								<%if (section.label) {%>
-									<small class="d-block text-body-tertiary ps-3 mt-2"><%-section.label%></small>
-								<%}%>
+								<small class="d-block text-body-tertiary ps-3 mt-2"><%-SECTION_LABELS[section.key]%></small>
 								<%_.each(section.rows, ({ vdev, drive, depth, isLast, role, pair, activity }) => {%>
 									<%=poolVdevTemplate({ vdev, drive, depth, isLast, role, pair, activity, stateColor, healthColor, driveHealthTip, prettyBytes })%>
 								<%})%>

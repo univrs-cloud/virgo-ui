@@ -104,13 +104,7 @@ const findDrive = (name) => {
 	return _.find(drives, (drive) => { return _.includes(drive.ids, name); });
 };
 
-const POOL_SECTION_LABELS = {
-	logs: 'Write log',
-	special: 'Metadata',
-	dedup: 'Dedup metadata',
-	l2cache: 'Read cache',
-	spares: 'Spares'
-};
+const POOL_SECTIONS = ['dedup', 'special', 'logs', 'l2cache', 'spares'];
 
 const STATE_SEVERITY = { green: 0, yellow: 1, red: 2 };
 
@@ -144,16 +138,17 @@ const vdevActivity = (vdev, scan) => {
 	}
 
 	if (vdev.scanProcessed > 0) {
-		return (_.toUpper(scan.function) === 'RESILVER' ? 'Resilvering' : 'Repairing');
+		return (_.toUpper(scan.function) === 'RESILVER' ? 'resilvering' : 'repairing');
 	}
 
-	return (vdev.resilverDeferred ? 'Awaiting resilver' : null);
+	return (vdev.resilverDeferred ? 'awaiting' : null);
 };
 
 const poolHealth = (pool) => {
+	const sectionVdevs = [pool.vdevs?.[pool.name]?.vdevs, ..._.map(POOL_SECTIONS, (key) => { return pool[key]; })];
 	const members = (pool.name === 'system'
 		? _.filter(drives, 'system')
-		: _.compact(_.map(_.filter(flattenVdevs(pool.vdevs?.[pool.name]?.vdevs), ({ vdev }) => { return vdev.vdevType === 'disk'; }), 'drive')));
+		: _.uniqBy(_.compact(_.map(_.filter(_.flatMap(sectionVdevs, (vdevs) => { return flattenVdevs(vdevs); }), ({ vdev }) => { return vdev.vdevType === 'disk'; }), 'drive')), 'name'));
 	const unhealthy = _.filter(members, (drive) => { return Boolean(healthColor(drive.health)); });
 	if (_.isEmpty(unhealthy)) {
 		return null;
@@ -177,11 +172,11 @@ const renderPoolDetails = (name) => {
 
 	const rootVdev = pool.vdevs?.[pool.name];
 	const sections = _.filter([
-		{ key: 'data', label: 'Data', vdevs: rootVdev?.vdevs },
-		..._.map(_.filter(_.keys(pool), (key) => { return _.has(POOL_SECTION_LABELS, key); }), (key) => { return { key, label: POOL_SECTION_LABELS[key], vdevs: pool[key] }; })
+		{ key: 'data', vdevs: rootVdev?.vdevs },
+		..._.map(_.filter(_.keys(pool), (key) => { return _.includes(POOL_SECTIONS, key); }), (key) => { return { key, vdevs: pool[key] }; })
 	], (section) => { return !_.isEmpty(section.vdevs); });
 	const withActivity = (row) => { return { ...row, activity: vdevActivity(row.vdev, pool.scanStats) }; };
-	const vdevSections = _.map(sections, (section) => { return { label: section.label, rows: _.map(flattenVdevs(section.vdevs), withActivity) }; });
+	const vdevSections = _.map(sections, (section) => { return { key: section.key, rows: _.map(flattenVdevs(section.vdevs), withActivity) }; });
 	const spareUse = {};
 	_.each(_.reject(sections, { key: 'spares' }), (section) => {
 		_.each(_.values(section.vdevs), (top) => {
@@ -202,15 +197,15 @@ const renderPoolDetails = (name) => {
 	const groups = _.flatMap(sections, (section) => {
 		const vdevs = _.values(section.vdevs);
 		if (section.key === 'data') {
-			return _.map(vdevs, (vdev) => { return { vdev, isData: true, sectionLabel: (vdev.vdevType === 'disk' ? section.label : `${section.label} · ${vdev.name}`), disks: groupDisks(vdev) }; });
+			return _.map(vdevs, (vdev) => { return { vdev, isData: true, section: section.key, name: (vdev.vdevType === 'disk' ? null : vdev.name), disks: groupDisks(vdev) }; });
 		}
 
 		const bare = _.filter(vdevs, { vdevType: 'disk' });
 		const worst = _.maxBy(bare, (vdev) => { return STATE_SEVERITY[stateColor(vdev.state)]; });
-		const bareGroup = { vdev: { name: section.label, vdevType: 'section', state: worst?.state }, sectionLabel: section.label, disks: _.flatMap(bare, (section.key === 'spares' ? spareDisks : groupDisks)) };
+		const bareGroup = { vdev: { name: section.key, vdevType: 'section', state: worst?.state }, section: section.key, name: null, disks: _.flatMap(bare, (section.key === 'spares' ? spareDisks : groupDisks)) };
 		return _.compact(_.map(vdevs, (vdev) => {
 			if (vdev.vdevType !== 'disk') {
-				return { vdev, sectionLabel: `${section.label} · ${vdev.name}`, disks: groupDisks(vdev) };
+				return { vdev, section: section.key, name: vdev.name, disks: groupDisks(vdev) };
 			}
 
 			return (vdev === bare[0] ? bareGroup : null);

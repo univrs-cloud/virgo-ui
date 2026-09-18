@@ -1,15 +1,61 @@
+<%
+	const SECTION_LABELS = { data: 'Data', logs: 'Write log', special: 'Metadata', dedup: 'Dedup metadata', l2cache: 'Read cache', spares: 'Spares' };
+	const ACTIVITY_LABELS = { resilvering: 'Resilvering', repairing: 'Repairing', awaiting: 'Awaiting resilver' };
+	const stateColor = (state) => {
+		const value = _.toLower(state || '');
+		if (!value) {
+			return 'gray';
+		}
+
+		if (_.includes(['online', 'avail', 'inuse'], value)) {
+			return 'green';
+		}
+
+		return (value === 'degraded' ? 'yellow' : 'red');
+	};
+	const diskColor = (disk) => {
+		if (disk.activity) {
+			return 'text-blue-300';
+		}
+
+		if (disk.drive?.health?.status === 'critical') {
+			return 'text-red-300';
+		}
+
+		if (disk.drive?.health?.status === 'warning') {
+			return 'text-orange-300';
+		}
+
+		return { green: 'text-blue-500', yellow: 'text-yellow-500', red: 'text-red-300' }[stateColor(disk.state)] || 'text-blue-500';
+	};
+	const infoItem = (label, value) => { return `<div class='mt-1'><div class='small opacity-75'>${label}</div><div>${_.escape(value)}</div></div>`; };
+	const diskTip = (disk) => {
+		const size = (disk.size || disk.drive?.size);
+		const items = _.compact([
+			(disk.drive?.model ? infoItem('Model', disk.drive.model) : null),
+			(disk.drive?.serialNumber ? infoItem('Serial', disk.drive.serialNumber) : null),
+			(size ? infoItem('Size', prettyBytes(size, { binary: true })) : null),
+			(disk.activity ? infoItem('Activity', ACTIVITY_LABELS[disk.activity]) : null),
+			(disk.role === 'old' ? infoItem('Status', (disk.pair === 'spare' ? 'Covered by spare' : 'Being replaced')) : null),
+			(disk.usedIn ? infoItem('In use in', disk.usedIn) : null),
+			(disk.drive?.health?.message ? infoItem('Health', disk.drive.health.message) : null)
+		]);
+		return (_.isEmpty(items) ? '' : `<div class='text-start'>${items.join('')}</div>`);
+	};
+%>
 <dt class="fw-lighter"><small><i class="icon-light icon-list-tree icon-fw me-1"></i>Topology <span class="text-body-tertiary">(<%=_.pluralize('group', _.size(groups), true)%>)</span></small></dt>
 <dd class="vdev-tree m-0">
 	<span class="d-flex flex-wrap justify-content-center gap-3">
 		<%_.each(groups, (group) => {%>
 			<span class="text-center">
 				<span class="d-block">
-					<u-badge color="<%-(group.color || 'gray')%>" pill><small><%-group.name%></small></u-badge>
+					<u-badge color="<%-stateColor(group.state)%>" pill><small><%-_.compact([SECTION_LABELS[group.section], group.name]).join(' · ')%></small></u-badge>
 				</span>
 				<span class="d-inline-block">
 					<span class="vdev-bar d-block"></span>
 					<span class="vdev-slots">
 						<%_.each(group.disks, (disk) => {%>
+							<%const tip = diskTip(disk)%>
 							<span class="vdev-slot <%=(disk.role === 'old' ? 'opacity-50' : '')%>">
 								<span class="vdev-stem d-block"></span>
 								<span class="position-relative d-flex justify-content-center w-100">
@@ -17,13 +63,13 @@
 										<i class="icon-solid icon-arrow-right icon-xs icon-width-auto lh-1 text-body-tertiary position-absolute top-50 start-0 translate-middle"></i>
 									<%}%>
 									<span class="position-relative d-inline-flex">
-										<i class="vdev-disk icon-duotone icon-solid icon-hard-drive <%-(disk.color || 'text-blue-500')%> <%=(disk.isFading ? 'icon-fade' : '')%>"<%=(disk.tip ? ` data-bs-toggle="tooltip" data-bs-original-title="${disk.tip}"` : '')%>></i>
+										<i class="vdev-disk icon-duotone icon-solid icon-hard-drive <%-diskColor(disk)%> <%=(disk.activity && disk.activity !== 'awaiting' ? 'icon-fade' : '')%>"<%=(tip ? ` data-bs-toggle="tooltip" data-bs-custom-class="storage-device" data-bs-original-title="${tip}"` : '')%>></i>
 										<%if (disk.usedIn) {%>
 											<i class="icon-solid icon-link icon-2xs icon-width-auto lh-1 text-blue-500 position-absolute top-0 start-100 translate-middle"></i>
 										<%}%>
 									</span>
 								</span>
-								<small class="text-body-tertiary text-truncate w-100 mt-1"><%-disk.label%></small>
+								<small class="text-body-tertiary text-truncate w-100 mt-1"><%-(disk.drive?.name ? _.last(disk.drive.name.split('/')) : `…${disk.name.slice(-6)}`)%></small>
 							</span>
 						<%})%>
 					</span>

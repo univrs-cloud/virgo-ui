@@ -475,6 +475,9 @@ u-badge:hover .hover-reveal-text {
 }
 #storage {
 	--vdev-line-color: var(--bs-border-color);
+	.details-toggle[aria-expanded="true"] .icon-solid {
+		transform: rotate(180deg);
+	}
 	.vdev-tree {
 		--vdev-slot-width: 4.25rem;
 		.vdev-bar {
