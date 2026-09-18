@@ -1,4 +1,5 @@
 <%const LABELS = { raidz1: 'Basic Protection (RAID-Z1)', raidz2: 'Advanced Protection (RAID-Z2)', raidz3: 'Ultimate Protection (RAID-Z3)', mirror: 'Low Latency (Mirror)' };%>
+<%const infoItem = (label, value) => { return `<div class='mt-1'><div class='small opacity-75'>${label}</div><div>${_.escape(value)}</div></div>`; };%>
 <dt class="fw-lighter"><small><i class="icon-light icon-list-tree icon-fw me-1"></i>Topology</small></dt>
 <dd class="vdev-tree m-0">
 	<%_.each(topologies, (topology) => {%>
@@ -27,12 +28,12 @@
 							<%}%>
 							<span class="vdev-slots">
 								<%_.each(group, (drive) => {%>
-									<%const tip = _.compact([prettyBytes(drive.size || 0, { binary: true }), drive.model, drive.serialNumber]).join(' &middot; ')%>
+									<%const tipItems = _.compact([(drive.model ? infoItem('Model', drive.model) : null), (drive.serialNumber ? infoItem('Serial', drive.serialNumber) : null), (drive.size ? infoItem('Size', prettyBytes(drive.size, { binary: true })) : null)])%>
 									<span class="vdev-slot">
 										<%if (topology.width > 1) {%>
 											<span class="vdev-stem d-block"></span>
 										<%}%>
-										<i class="vdev-disk icon-duotone icon-solid icon-hard-drive text-blue-500" data-bs-toggle="tooltip" title="<%=tip%>"></i>
+										<i class="vdev-disk icon-duotone icon-solid icon-hard-drive text-blue-500"<%=(_.isEmpty(tipItems) ? '' : ` data-bs-toggle="tooltip" data-bs-custom-class="storage-device" data-bs-original-title="<div class='text-start'>${tipItems.join('')}</div>"`)%>></i>
 										<small class="text-body-tertiary text-truncate w-100 mt-1"><%-drive.name%></small>
 									</span>
 								<%})%>
