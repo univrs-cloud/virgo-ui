@@ -93,7 +93,6 @@ const render = (state) => {
 		poolGroups: storageService.getPoolGroups(pool, state.drives),
 		importableGroups: storageService.getImportableGroups(importablePool, state.drives),
 		poolTopologyPartial: poolTopologyTemplate,
-		poolName: storageService.POOL_NAME,
 		minimumDrives: storageService.MINIMUM_DRIVES,
 		prettyBytes
 	});
@@ -122,7 +121,7 @@ const start = (button) => {
 
 const importPool = (event) => {
 	start(importButton);
-	storageService.importPool({ name: storageService.POOL_NAME });
+	storageService.importPool();
 };
 
 const selectTopology = (event) => {
@@ -149,7 +148,6 @@ const createPool = async (event) => {
 
 	start(createButton);
 	storageService.createPool({
-		name: storageService.POOL_NAME,
 		type: selectedType,
 		drives: _.map(drives, 'id')
 	});

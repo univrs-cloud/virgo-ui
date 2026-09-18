@@ -175,8 +175,8 @@ class Host extends Store {
 		this.socket.emit('host:storage:importable:fetch');
 	}
 
-	importPool(data) {
-		this.socket.emit('host:storage:pool:import', data);
+	importPool() {
+		this.socket.emit('host:storage:pool:import');
 	}
 
 	createPool(data) {
