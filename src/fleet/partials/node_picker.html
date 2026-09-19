@@ -7,24 +7,41 @@
 	<div class="btn-group align-items-center w-100 mb-4">
 		<span data-bs-toggle="dropdown" class="dropdown-toggle d-flex justify-content-between align-items-center btn btn-secondary bd-white shadow-sm w-100 text-start"><%-currentNodeLabel%></span>
 		<a href="/" rel="external" class="btn btn-sm text-white p-0 m-0 ms-2"><i class="icon-solid icon-sm icon-cog"></i></a>
+		<%
+			const clusters = _.groupBy(_.filter(nodes, 'clusterId'), 'clusterId');
+			const standalone = _.filter(nodes, (node) => { return !node.clusterId; });
+			const groups = [
+				..._.map(_.values(clusters), (members) => { return { label: 'Cluster', members }; }),
+				...(_.isEmpty(standalone) ? [] : [{ label: 'Standalone', members: standalone }])
+			];
+			const showLabels = !_.isEmpty(clusters);
+		%>
 		<div class="dropdown-menu w-100">
-			<%_.each(nodes, (node) => {%>
-				<%if (node.nodeId === currentNodeId) {%>
-					<div class="dropdown-item d-flex align-items-center pe-none">
-						<i class="icon-solid icon-dot me-1 <%-node.online ? 'text-green-400' : 'text-red-500'%>"></i>
-						<%-node.name || node.nodeId%>
-					</div>
-				<%} else if (node.online) {%>
-					<a href="/nodes/<%-node.nodeId%>" rel="external" class="dropdown-item d-flex align-items-center">
-						<i class="icon-solid icon-dot text-green-400 me-1"></i>
-						<%-node.name || node.nodeId%>
-					</a>
-				<%} else {%>
-					<div class="dropdown-item d-flex align-items-center disabled text-body-tertiary">
-						<i class="icon-solid icon-dot text-red-500 me-1"></i>
-						<%-node.name || node.nodeId%>
-					</div>
+			<%_.each(groups, (group, index) => {%>
+				<%if (showLabels) {%>
+					<%if (index > 0) {%>
+						<hr class="dropdown-divider">
+					<%}%>
+					<h6 class="dropdown-header"><%-group.label%> &middot; <%=_.pluralize('node', group.members.length, true)%></h6>
 				<%}%>
+				<%_.each(group.members, (node) => {%>
+					<%if (node.nodeId === currentNodeId) {%>
+						<div class="dropdown-item d-flex align-items-center pe-none">
+							<i class="icon-solid icon-dot me-1 <%-node.online ? 'text-green-400' : 'text-red-500'%>"></i>
+							<%-node.name || node.nodeId%>
+						</div>
+					<%} else if (node.online) {%>
+						<a href="/nodes/<%-node.nodeId%>" rel="external" class="dropdown-item d-flex align-items-center">
+							<i class="icon-solid icon-dot text-green-400 me-1"></i>
+							<%-node.name || node.nodeId%>
+						</a>
+					<%} else {%>
+						<div class="dropdown-item d-flex align-items-center disabled text-body-tertiary">
+							<i class="icon-solid icon-dot text-red-500 me-1"></i>
+							<%-node.name || node.nodeId%>
+						</div>
+					<%}%>
+				<%})%>
 			<%})%>
 		</div>
 	</div>
