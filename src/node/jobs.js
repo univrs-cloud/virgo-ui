@@ -11,11 +11,15 @@ const render = (state) => {
 			return;
 		}
 		
+		if (!_.isObject(job.progress)) {
+			return;
+		}
+
 		if (acknowledgedJobIds.has(job.id)) {
 			return;
 		}
 		
-		if (job.progress.state !== 'active') {
+		if (_.includes(['completed', 'failed'], job.progress.state)) {
 			acknowledgedJobIds.add(job.id);
 		}
 
