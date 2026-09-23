@@ -25,6 +25,12 @@ module.exports = (env, argv) => {
 		}
 	}
 
+	const proxyDefaults = {
+		target: `https://${upstream}`,
+		secure: false,
+		changeOrigin: true
+	};
+
 	return {
 		devtool: (argv.mode === 'production' ? 'source-map' : 'eval'),
 		devServer: {
@@ -52,38 +58,11 @@ module.exports = (env, argv) => {
 				publicPath: '/'
 			},
 			proxy: [
-				{
-					context: ['/api'],
-					target: `https://${upstream}`,
-					secure: false,
-					changeOrigin: true,
-					ws: true
-				},
-				{
-					context: ['/auth'],
-					target: `https://${upstream}`,
-					secure: false,
-					changeOrigin: true,
-					ws: true
-				},
-				{
-					context: ['/session'],
-					target: `https://${upstream}`,
-					secure: false,
-					changeOrigin: true
-				},
-				{
-					context: ['/assets/img/apps'],
-					target: `https://${upstream}`,
-					secure: false,
-					changeOrigin: true
-				},
-				{
-					context: ['/assets/img/shortcuts'],
-					target: `https://${upstream}`,
-					secure: false,
-					changeOrigin: true
-				}
+				{ context: ['/api'], ...proxyDefaults, ws: true },
+				{ context: ['/auth'], ...proxyDefaults, ws: true },
+				{ context: ['/session'], ...proxyDefaults },
+				{ context: ['/assets/img/apps'], ...proxyDefaults },
+				{ context: ['/assets/img/shortcuts'], ...proxyDefaults }
 			]
 		},
 		entry: {
