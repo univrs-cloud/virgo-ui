@@ -18,7 +18,7 @@
 		<div class="dropdown-menu dropdown-menu-end" style="max-width: min(18rem, calc(100vw - 1.5rem));">
 			<h6 class="dropdown-header">Logged in as</h6>
 			<p class="text-truncate fw-medium px-2 pb-2 mt-n1 mb-0" title="<%-account.name || account.email || '—'%>"><%-account.name || account.email || '—'%></p>
-			<%if (!isUpdating) {%>
+			<%if (!isUpdating || runtimeRole === 'fleet') {%>
 				<div class="dropdown-divider"></div>
 				<a href="/users/profile" class="dropdown-item" <%=(runtimeRole === 'fleet' ? 'rel="external"' : '')%>>Your profile</a>
 			<%}%>
