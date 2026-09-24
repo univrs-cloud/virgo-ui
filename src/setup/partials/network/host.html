@@ -15,9 +15,15 @@
 							<i class="icon-duotone icon-solid icon-globe icon-fw me-2"></i>
 							<small>Once setup completes this node will be reachable at <span class="url text-body"></span></small>
 						</div>
-						<div class="dns-record d-flex align-items-center mt-1">
-							<i class="icon-duotone icon-solid icon-list-tree icon-fw me-2"></i>
-							<small>On your router or DNS server, point A records for <span class="fqdn text-body"></span> and <span class="fqdn-wildcard text-body"></span> to <span class="address text-body"></span></small>
+						<div class="dns-record d-flex align-items-start mt-1">
+							<i class="icon-duotone icon-solid icon-list-tree icon-fw me-2 mt-1"></i>
+							<small>
+								On your router or DNS server, create these A records:
+								<ul class="mb-0 ps-3">
+									<li><span class="fqdn font-monospace text-body bg-body-secondary rounded px-1"></span> pointing to <span class="address font-monospace text-body bg-body-secondary rounded px-1"></span></li>
+									<li><span class="fqdn-wildcard font-monospace text-body bg-body-secondary rounded px-1"></span> pointing to <span class="address font-monospace text-body bg-body-secondary rounded px-1"></span></li>
+								</ul>
+							</small>
 						</div>
 						<div class="dns-managed d-none align-items-center mt-1">
 							<i class="icon-duotone icon-solid icon-list-tree icon-fw me-2"></i>
