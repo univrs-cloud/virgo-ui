@@ -41,12 +41,6 @@ const isAfter = (name, step) => {
 	return _.findIndex(STEPS, { name }) > _.findIndex(STEPS, { name: step });
 };
 
-// The node reports its address as dynamic for as long as it holds a lease. An interface it has not
-// described yet counts as static: the guard turns people away on an answer, never on the absence of one.
-const hasStaticAddress = () => {
-	return _.find(networkService.getDefaultInterface()?.addrInfo, { family: 'inet' })?.dynamic !== true;
-};
-
 // The pool everything after the storage step is written to.
 const hasStoragePool = () => {
 	return !_.isUndefined(storageService.getPool());
@@ -63,7 +57,7 @@ const hasCoreAppsRunning = () => {
 
 _.each(STEPS, ({ name, path }) => {
 	page(path, (ctx) => {
-		if (isAfter(name, 'interface') && !hasStaticAddress()) {
+		if (isAfter(name, 'interface') && !networkService.hasStaticAddress()) {
 			page.redirect(stepPath('interface'));
 			return;
 		}
