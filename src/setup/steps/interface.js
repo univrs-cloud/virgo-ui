@@ -11,6 +11,7 @@ const APPLY_DELAY = 8000;
 const APPLIED_FIELDS = ['ipAddress', 'netmask', 'gateway', 'dnsServers'];
 
 let isPrefilled = false;
+let isApplied = false;
 let pendingConfiguration = null;
 let pendingUrl = null;
 const interfaceTemplate = _.template(interfacePartial);
@@ -70,7 +71,7 @@ const currentConfiguration = (networkInterface) => {
 	const address = _.find(_.reject(networkInterface?.addrInfo, { local: virtualIp }), { family: 'inet' });
 	return {
 		name: networkInterface?.ifname || '',
-		method: (networkInterface?.dhcp ? 'auto' : 'manual'),
+		method: (address?.dynamic ? 'auto' : 'manual'),
 		ipAddress: address?.local || '',
 		netmask: _.toString(address?.prefixlen || ''),
 		gateway: networkInterface?.gateway || '',
@@ -91,6 +92,7 @@ const isApplying = () => {
 };
 
 const restore = () => {
+	isApplied = false;
 	pendingConfiguration = null;
 	pendingUrl = null;
 	submitButton.reset();
@@ -201,10 +203,13 @@ const render = (state) => {
 		const jobState = _.find(state.jobs, { name: networkService.INTERFACE_JOB })?.progress?.state;
 		if (jobState === 'failed') {
 			restore();
-		} else if (!pendingUrl && (jobState === 'completed' || isConfigurationApplied(state.system))) {
-			restore();
-			if (!step.classList.contains('d-none')) {
-				goNext();
+		} else if (!pendingUrl) {
+			isApplied = (isApplied || jobState === 'completed' || isConfigurationApplied(state.system));
+			if (isApplied && networkService.hasStaticAddress(state.system)) {
+				restore();
+				if (!step.classList.contains('d-none')) {
+					goNext();
+				}
 			}
 		}
 	}
