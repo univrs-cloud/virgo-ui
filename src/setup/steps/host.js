@@ -24,7 +24,7 @@ const access = step.querySelector('.access');
 const accessUrl = access.querySelector('.url');
 const accessFqdn = access.querySelector('.fqdn');
 const accessFqdnWildcard = access.querySelector('.fqdn-wildcard');
-const accessAddress = access.querySelector('.address');
+const accessAddresses = access.querySelectorAll('.address');
 const dnsRecord = access.querySelector('.dns-record');
 const dnsManaged = access.querySelector('.dns-managed');
 const dnsManagedFqdn = access.querySelector('.fqdn-managed');
@@ -66,7 +66,7 @@ const renderAccess = () => {
 	accessUrl.textContent = `https://${fqdn}`;
 	accessFqdn.textContent = fqdn;
 	accessFqdnWildcard.textContent = `*.${fqdn}`;
-	accessAddress.textContent = (networkService.getDefaultInterfaceAddress() || `this node's address`);
+	_.each(accessAddresses, (accessAddress) => { accessAddress.textContent = (networkService.getDefaultInterfaceAddress() || `this node's address`); });
 	dnsManagedFqdn.textContent = fqdn;
 	access.classList.toggle('d-none', !isValidIdentifier(hostname, domainName));
 	renderAvailability();
