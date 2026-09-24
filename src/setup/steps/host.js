@@ -38,7 +38,11 @@ const AVAILABILITY_ICONS = {
 const AVAILABILITY_COLOURS = {
 	available: 'var(--bs-green)',
 	taken: 'var(--bs-red)',
-	unknown: 'var(--bs-yellow)'
+	unknown: 'var(--bs-red)'
+};
+const AVAILABILITY_ERRORS = {
+	taken: 'This name is already taken',
+	unknown: `Can't reach the fleet to check this name`
 };
 
 const currentIdentifier = (system) => {
@@ -69,6 +73,10 @@ const isFleetZone = (domainName) => {
 	return String(domainName || '').trim().toLowerCase() === FLEET_ZONE;
 };
 
+const isFleetSubZone = (domainName) => {
+	return _.endsWith(String(domainName || '').trim().toLowerCase(), `.${FLEET_ZONE}`);
+};
+
 const renderAvailability = () => {
 	const managed = isFleetZone(form.getData().domainName);
 	dnsRecord.classList.toggle('d-none', managed);
@@ -79,10 +87,8 @@ const renderAvailability = () => {
 	availabilityRow.classList.toggle('d-flex', managed && availability.status !== 'idle');
 	availabilityMessage.textContent = {
 		checking: 'Checking availability...',
-		available: 'This name is available',
-		taken: 'This name is already taken',
-		unknown: 'Could not reach the fleet to check this name'
-	}[availability.status] || '';
+		available: 'This name is available'
+	}[availability.status] || AVAILABILITY_ERRORS[availability.status] || '';
 	availabilityIcon.className = `availability-icon ${AVAILABILITY_ICONS[availability.status] || AVAILABILITY_ICONS.checking}`;
 	availabilityIcon.style.setProperty('--icon-secondary-color', AVAILABILITY_COLOURS[availability.status] || '');
 };
@@ -219,17 +225,23 @@ const render = (state) => {
 	isPrefilled = true;
 };
 
-const updateIdentifier = async (event) => {
+const confirmAvailability = async (data) => {
+	checkAvailability.flush();
 	if (availabilityRequest) {
 		await availabilityRequest;
 	}
 
-	if (availability.status === 'taken') {
+	return (availability.key === `${data.hostname}.${data.domainName}`.toLowerCase() && availability.status === 'available');
+};
+
+const updateIdentifier = async (event) => {
+	const data = form.getData();
+	if (isFleetZone(data.domainName) && !await confirmAvailability(data)) {
+		form.validateField('.hostname');
 		return;
 	}
 
 	// Nothing to apply when the identifier is already what the form holds — move on without a job.
-	const data = form.getData();
 	if (_.isEqual(data, currentIdentifier(networkService.getSystem()))) {
 		goNext();
 		return;
@@ -260,7 +272,11 @@ form.validation = [
 						return 'Letters, digits and hyphens only';
 					}
 
-					return (availability.status === 'taken' ? 'This name is already taken' : true);
+					if (!isFleetZone(form.getData().domainName)) {
+						return true;
+					}
+
+					return (AVAILABILITY_ERRORS[availability.status] || true);
 				},
 				message: 'Letters, digits and hyphens only'
 			}
@@ -271,7 +287,13 @@ form.validation = [
 		rules: {
 			isEmpty: `Can't be empty`,
 			// Single-label domains ("lan", "local") are common on home networks, so no TLD is required.
-			isFQDN: { require_tld: false, message: 'Must be a valid domain name' }
+			isFQDN: { require_tld: false, message: 'Must be a valid domain name' },
+			custom: {
+				validate: (value) => {
+					return (isFleetSubZone(value) ? `Use ${FLEET_ZONE} itself, without a sub-domain` : true);
+				},
+				message: 'Must be a valid domain name'
+			}
 		}
 	}
 ];

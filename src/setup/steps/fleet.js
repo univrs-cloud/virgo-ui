@@ -18,13 +18,19 @@ const registered = step.querySelector('.registered');
 const status = registered.querySelector('.status');
 const reRegisterLink = registered.querySelector('.re-register');
 const fleetLink = step.querySelector('.fleet-link span');
+const optional = form.querySelector('.optional');
+const skipButton = form.querySelector('[data-action="skip"]');
 const submitButton = form.querySelector('[type="submit"]');
+const navigationButtons = step.querySelectorAll('[data-action="back"], [data-action="skip"]');
 
 // Registration state and connection health both come off the same configuration, so this runs on
 // every delivery — a node that reconnects (or drops) while the step is open says so straight away.
 const renderStatus = () => {
 	const registeredNode = fleetService.isRegistered(configuration);
 	const needsRegistration = (!registeredNode || isRegistering);
+	const canSkip = (!registeredNode && fleetService.isRegistrationOptional());
+	optional.classList.toggle('d-none', !canSkip);
+	skipButton.classList.toggle('d-none', !canSkip);
 	form.classList.toggle('d-none', !needsRegistration);
 	registered.classList.toggle('d-none', needsRegistration);
 	fleetLink.textContent = (registeredNode ? 'View fleet' : 'Create account');
@@ -49,7 +55,7 @@ const goNext = () => {
 
 const idle = () => {
 	submitButton.reset();
-	_.each(step.querySelectorAll('[data-action="back"]'), (button) => { button.disabled = false; });
+	_.each(navigationButtons, (button) => { button.disabled = false; });
 };
 
 // The job is what the form follows: while one is running the form is locked, and the step advances once
@@ -66,7 +72,7 @@ const render = (state) => {
 	const job = _.find(state.jobs, { name: fleetService.REGISTER_JOB });
 	const isSettled = _.includes(['completed', 'failed'], job?.progress?.state);
 	if (job && !isSettled) {
-		_.each(step.querySelectorAll('[data-action="back"]'), (button) => { button.disabled = true; });
+		_.each(navigationButtons, (button) => { button.disabled = true; });
 		submitButton.loading();
 	} else if (submitButton.disabled) {
 		const isRegistered = fleetService.isRegistered(configuration);
@@ -92,7 +98,7 @@ const render = (state) => {
 
 const registerFleet = (event) => {
 	// Leaving mid-registration would hand the next step a node whose enrolment is still in flight.
-	_.each(step.querySelectorAll('[data-action="back"]'), (button) => { button.disabled = true; });
+	_.each(navigationButtons, (button) => { button.disabled = true; });
 	submitButton.loading();
 	const data = form.getData();
 	fleetService.updateFleet(data);
@@ -126,6 +132,7 @@ form.validation = [
 ];
 form.addEventListener('valid', registerFleet);
 reRegisterLink.addEventListener('click', showRegistrationForm);
+skipButton.addEventListener('click', goNext);
 registered.querySelector('[data-action="continue"]').addEventListener('click', goNext);
 _.each(step.querySelectorAll('[data-action="back"]'), (button) => { button.addEventListener('click', goBack); });
 

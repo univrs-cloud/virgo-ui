@@ -12,12 +12,13 @@
 				</a>
 				<h5 class="card-title">Registration</h5>
 				<u-form class="registration">
-					<p class="state text-body-secondary">This node is not registered with a fleet yet.</p>
+					<p class="state text-body-secondary">This node is not registered with a fleet yet. <span class="optional d-none">Registration is optional on your own domain; you can do it later from Settings.</span></p>
 					<u-input name="email" label="Fleet account email" class="email" autocomplete="off"></u-input>
 					<u-input type="password" name="password" label="Fleet account password" class="password" autocomplete="off"></u-input>
 					<div class="d-flex align-items-center justify-content-between">
 						<div class="d-flex gap-2 ms-auto">
 							<u-button variant="secondary" data-action="back" outline>Back</u-button>
+							<u-button variant="secondary" data-action="skip" class="skip d-none" outline>Skip</u-button>
 							<u-button type="submit" variant="primary" loading-text="Registering...">Register</u-button>
 						</div>
 					</div>
