@@ -42,6 +42,12 @@ const getDefaultInterface = (system = getSystem()) => {
 	return _.find(system?.networkInterfaces, { default: true });
 };
 
+/** The node reports its address as dynamic for as long as it holds a lease. An interface it has not
+ * described yet counts as static: the answer is what turns anyone away, never the absence of one. */
+const hasStaticAddress = (system = getSystem()) => {
+	return _.find(getDefaultInterface(system)?.addrInfo, { family: 'inet' })?.dynamic !== true;
+};
+
 /** hostname.domain — the name the node answers to once setup is finished. */
 const getFqdn = (system = getSystem()) => {
 	return system?.osInfo?.fqdn || '';
@@ -92,6 +98,7 @@ export {
 	subscribe,
 	getSystem,
 	getDefaultInterface,
+	hasStaticAddress,
 	getFqdn,
 	getDefaultInterfaceAddress,
 	getPortForwardAddress,
