@@ -1,4 +1,5 @@
 import page from 'page';
+import validator from 'validator';
 import hostPartial from 'setup/partials/network/host.html';
 import * as networkService from 'setup/services/network';
 import { completeStep, nextStepPath, previousStepPath } from 'setup/wizard';
@@ -67,7 +68,7 @@ const renderAccess = () => {
 	accessFqdnWildcard.textContent = `*.${fqdn}`;
 	accessAddress.textContent = (networkService.getDefaultInterfaceAddress() || `this node's address`);
 	dnsManagedFqdn.textContent = fqdn;
-	access.classList.toggle('d-none', _.isEmpty(hostname) || _.isEmpty(domainName));
+	access.classList.toggle('d-none', !isValidIdentifier(hostname, domainName));
 	renderAvailability();
 };
 
@@ -77,6 +78,10 @@ const isFleetZone = (domainName) => {
 
 const isFleetSubZone = (domainName) => {
 	return _.endsWith(String(domainName || '').trim().toLowerCase(), `.${FLEET_ZONE}`);
+};
+
+const isValidIdentifier = (hostname, domainName) => {
+	return (HOSTNAME_PATTERN.test(hostname || '') && validator.isFQDN(domainName || '', { require_tld: false }) && !isFleetSubZone(domainName));
 };
 
 const renderAvailability = () => {

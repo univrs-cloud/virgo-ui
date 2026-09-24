@@ -1,6 +1,5 @@
 import passwordModalPartial from 'node/modules/users/profile/partials/modals/password.html';
 import * as userService from 'node/modules/users/services/user';
-import { isEmpty } from 'validator';
 
 document.querySelector('body').insertAdjacentHTML('beforeend', passwordModalPartial);
 
