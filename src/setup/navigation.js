@@ -34,9 +34,11 @@ const showStep = (ctx) => {
 // by clicking forward, by refreshing, or by typing the address. A leased address would move under the
 // node, so nothing past the interface step runs until it is static. Everything past storage is kept on
 // the pool — the password reaches Authelia's file, registration writes to the database — so those
-// steps stay out of reach until there is one. Registration is not optional either, so nothing past
-// the fleet step runs until the node holds a token. Past the apps step the same holds for the apps
-// themselves: listed in the registry is not enough, they have to be running.
+// steps stay out of reach until there is one. Registration is the node's own domain name: a fleet name
+// has to be enrolled, so nothing past the fleet step runs until the node holds a token, while a node
+// named elsewhere is offered the skip and this has to let through whoever takes it. Past the apps step
+// the same holds for the apps themselves: listed in the registry is not enough, they have to be
+// running.
 const isAfter = (name, step) => {
 	return _.findIndex(STEPS, { name }) > _.findIndex(STEPS, { name: step });
 };
@@ -47,7 +49,7 @@ const hasStoragePool = () => {
 };
 
 const hasFleetRegistration = () => {
-	return fleetService.isRegistered();
+	return fleetService.isRegistered() || fleetService.isRegistrationOptional();
 };
 
 // Both apps the node cannot be signed in to without, up rather than merely listed.
