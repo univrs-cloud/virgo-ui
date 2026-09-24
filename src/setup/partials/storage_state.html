@@ -9,7 +9,7 @@
 			<small class="text-body-tertiary">of <%=prettyBytes(pool.properties?.size?.value || 0, { binary: true })%></small>
 		</dd>
 		<%if (!_.isEmpty(poolGroups)) {%>
-			<%=poolTopologyPartial({ groups: poolGroups })%>
+			<%=poolTopologyPartial({ groups: poolGroups, prettyBytes })%>
 		<%}%>
 	</dl>
 <%} else if (importablePools === false) {%>
@@ -24,7 +24,7 @@
 			<dd class="text-warning"><%-importablePool.status%></dd>
 		<%}%>
 		<%if (!_.isEmpty(importableGroups)) {%>
-			<%=poolTopologyPartial({ groups: importableGroups })%>
+			<%=poolTopologyPartial({ groups: importableGroups, prettyBytes })%>
 		<%}%>
 	</dl>
 <%} else {%>
