@@ -22,6 +22,7 @@ const submitButton = step.querySelector('[type="submit"]');
 const access = step.querySelector('.access');
 const accessUrl = access.querySelector('.url');
 const accessFqdn = access.querySelector('.fqdn');
+const accessFqdnWildcard = access.querySelector('.fqdn-wildcard');
 const accessAddress = access.querySelector('.address');
 const dnsRecord = access.querySelector('.dns-record');
 const dnsManaged = access.querySelector('.dns-managed');
@@ -63,6 +64,7 @@ const renderAccess = () => {
 	const fqdn = `${hostname}.${domainName}`;
 	accessUrl.textContent = `https://${fqdn}`;
 	accessFqdn.textContent = fqdn;
+	accessFqdnWildcard.textContent = `*.${fqdn}`;
 	accessAddress.textContent = (networkService.getDefaultInterfaceAddress() || `this node's address`);
 	dnsManagedFqdn.textContent = fqdn;
 	access.classList.toggle('d-none', _.isEmpty(hostname) || _.isEmpty(domainName));
