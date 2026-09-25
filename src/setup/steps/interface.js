@@ -180,7 +180,7 @@ const isVirtualIpRequired = () => {
 const lockedTip = (peer) => {
 	const holder = (peer.name || peer.address);
 	if (peer.standby) {
-		return `${holder ? `Held by <strong>${holder}</strong>` : 'Held by the other node'}. Both nodes share one virtual IP; it can be moved here from the dashboard once setup is finished.`;
+		return `${holder ? `Held by <strong>${holder}</strong>` : 'Held by another node'}. All nodes share one virtual IP; it can be moved here from the dashboard once setup is finished.`;
 	}
 
 	return `Already in use by <strong>${holder}</strong>. Finish setup, then adopt that node from the dashboard to share its virtual IP.`;
