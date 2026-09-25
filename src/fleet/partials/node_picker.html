@@ -8,13 +8,17 @@
 		<span data-bs-toggle="dropdown" class="dropdown-toggle d-flex justify-content-between align-items-center btn btn-secondary bd-white shadow-sm w-100 min-w-0 text-start"><span class="text-truncate min-w-0"><%-currentNodeLabel%></span></span>
 		<a href="/" rel="external" class="btn btn-sm text-white p-0 m-0 ms-2"><i class="icon-solid icon-sm icon-cog"></i></a>
 		<%
-			const clusters = _.groupBy(_.filter(nodes, 'clusterId'), 'clusterId');
-			const standalone = _.filter(nodes, (node) => { return !node.clusterId; });
+			const hasCluster = (node) => { return _.split(node.domainName || '', '.').length >= 3; };
+			const named = _.groupBy(_.filter(nodes, hasCluster), (node) => { return _.toLower(node.domainName); });
+			const unnamed = _.reject(nodes, hasCluster);
+			const clusters = _.groupBy(_.filter(unnamed, 'clusterId'), 'clusterId');
+			const standalone = _.filter(unnamed, (node) => { return !node.clusterId; });
 			const groups = [
+				..._.map(_.sortBy(_.keys(named)), (domainName) => { return { label: domainName, members: _.sortBy(named[domainName], (node) => { return _.toLower(node.name); }) }; }),
 				..._.map(_.values(clusters), (members) => { return { label: 'Cluster', members }; }),
 				...(_.isEmpty(standalone) ? [] : [{ label: 'Standalone', members: standalone }])
 			];
-			const showLabels = !_.isEmpty(clusters);
+			const showLabels = (!_.isEmpty(named) || !_.isEmpty(clusters));
 		%>
 		<div class="dropdown-menu w-100">
 			<%_.each(groups, (group, index) => {%>

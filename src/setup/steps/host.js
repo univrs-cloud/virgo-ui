@@ -5,6 +5,7 @@ import * as networkService from 'setup/services/network';
 import { completeStep, nextStepPath, previousStepPath } from 'setup/wizard';
 
 const HOSTNAME_PATTERN = /^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$/i;
+const RESERVED_NODE_NAMES = ['analytics', 'auth', 'autoconfig', 'autodiscover', 'dockhand', 'euro-office', 'gitea', 'mail', 'nextcloud', 'pihole', 'rspamd', 'talk', 'terminal', 'torrent', 'traefik', 'vpn'];
 const FLEET_ZONE = 'univrs.cloud';
 const MDNS_DOMAIN = 'local';
 const CHECK_DELAY_MS = 400;
@@ -22,8 +23,9 @@ const backButton = step.querySelector('[data-action="back"]');
 const submitButton = step.querySelector('[type="submit"]');
 const access = step.querySelector('.access');
 const accessUrl = access.querySelector('.url');
-const accessFqdn = access.querySelector('.fqdn');
-const accessFqdnWildcard = access.querySelector('.fqdn-wildcard');
+const accessClusterWildcard = access.querySelector('.cluster-wildcard');
+const accessNodeName = access.querySelector('.node-name');
+const accessNodeWildcard = access.querySelector('.node-wildcard');
 const accessAddresses = access.querySelectorAll('.address');
 const dnsRecord = access.querySelector('.dns-record');
 const dnsManaged = access.querySelector('.dns-managed');
@@ -54,21 +56,34 @@ const currentIdentifier = (system) => {
 	};
 };
 
+const splitDomainName = (domainName) => {
+	const labels = _.split(domainName || '', '.');
+	if (labels.length < 3) {
+		return { cluster: '', domainName: domainName || '' };
+	}
+
+	return { cluster: _.head(labels), domainName: _.join(_.tail(labels), '.') };
+};
+
+const toIdentifier = (data) => {
+	return { hostname: data.hostname, domainName: `${data.cluster}.${data.domainName}` };
+};
+
 // The hostname and domain are what the node answers to once setup finishes, and nothing resolves that
 // name until someone says so — so both the resulting address and the record that has to exist for it
 // are spelled out while it is still being typed. Seeding the fields fires `value-changed` too, so
 // this covers the prefilled values without render having to call it.
 const renderAccess = () => {
 	const data = form.getData();
-	const hostname = data.hostname;
-	const domainName = data.domainName;
-	const fqdn = `${hostname}.${domainName}`;
+	const clusterDomain = `${data.cluster}.${data.domainName}`;
+	const fqdn = `${data.hostname}.${clusterDomain}`;
 	accessUrl.textContent = `https://${fqdn}`;
-	accessFqdn.textContent = fqdn;
-	accessFqdnWildcard.textContent = `*.${fqdn}`;
-	_.each(accessAddresses, (accessAddress) => { accessAddress.textContent = (networkService.getDefaultInterfaceAddress() || `this node's address`); });
+	accessClusterWildcard.textContent = `*.${clusterDomain}`;
+	accessNodeName.textContent = fqdn;
+	accessNodeWildcard.textContent = `*.${fqdn}`;
+	_.each(accessAddresses, (accessAddress) => { accessAddress.textContent = (networkService.getPortForwardAddress(networkService.getSystem()) || `this node's address`); });
 	dnsManagedFqdn.textContent = fqdn;
-	access.classList.toggle('d-none', !isValidIdentifier(hostname, domainName));
+	access.classList.toggle('d-none', !isValidIdentifier(data));
 	renderAvailability();
 };
 
@@ -80,8 +95,8 @@ const isFleetSubZone = (domainName) => {
 	return _.endsWith(String(domainName || '').trim().toLowerCase(), `.${FLEET_ZONE}`);
 };
 
-const isValidIdentifier = (hostname, domainName) => {
-	return (HOSTNAME_PATTERN.test(hostname || '') && validator.isFQDN(domainName || '', { require_tld: false }) && !isFleetSubZone(domainName));
+const isValidIdentifier = (data) => {
+	return (HOSTNAME_PATTERN.test(data.hostname || '') && !_.includes(RESERVED_NODE_NAMES, _.toLower(data.hostname)) && HOSTNAME_PATTERN.test(data.cluster || '') && validator.isFQDN(data.domainName || '') && !isFleetSubZone(data.domainName));
 };
 
 const renderAvailability = () => {
@@ -102,8 +117,8 @@ const renderAvailability = () => {
 
 const checkAvailability = _.debounce(() => {
 	const data = form.getData();
-	const key = `${data.hostname}.${data.domainName}`.toLowerCase();
-	if (!isFleetZone(data.domainName) || !HOSTNAME_PATTERN.test(data.hostname || '')) {
+	const key = `${data.cluster}.${data.domainName}`.toLowerCase();
+	if (!isFleetZone(data.domainName) || !HOSTNAME_PATTERN.test(data.cluster || '')) {
 		availability = { key: '', status: 'idle' };
 		renderAvailability();
 		return;
@@ -113,7 +128,7 @@ const checkAvailability = _.debounce(() => {
 	renderAvailability();
 	availabilityRequest = (async () => {
 		try {
-			const response = await networkService.checkDomainAvailability(data.hostname);
+			const response = await networkService.checkDomainAvailability(data.cluster);
 			if (availability.key !== key) {
 				return;
 			}
@@ -227,8 +242,10 @@ const render = (state) => {
 	}
 
 	const identifier = currentIdentifier(state.system);
+	const { cluster, domainName } = splitDomainName(identifier.domainName);
 	form.querySelector('.hostname').value = identifier.hostname;
-	form.querySelector('.domain-name').value = identifier.domainName;
+	form.querySelector('.cluster').value = cluster;
+	form.querySelector('.domain-name').value = domainName;
 	isPrefilled = true;
 };
 
@@ -238,24 +255,25 @@ const confirmAvailability = async (data) => {
 		await availabilityRequest;
 	}
 
-	return (availability.key === `${data.hostname}.${data.domainName}`.toLowerCase() && availability.status === 'available');
+	return (availability.key === `${data.cluster}.${data.domainName}`.toLowerCase() && availability.status === 'available');
 };
 
 const updateIdentifier = async (event) => {
 	const data = form.getData();
 	if (isFleetZone(data.domainName) && !await confirmAvailability(data)) {
-		form.validateField('.hostname');
+		form.validateField('.cluster');
 		return;
 	}
 
+	const identifier = toIdentifier(data);
 	// Nothing to apply when the identifier is already what the form holds — move on without a job.
-	if (_.isEqual(data, currentIdentifier(networkService.getSystem()))) {
+	if (_.isEqual(identifier, currentIdentifier(networkService.getSystem()))) {
 		goNext();
 		return;
 	}
 
-	pendingIdentifier = data;
-	pendingUrl = followUrl(currentIdentifier(networkService.getSystem()), data);
+	pendingIdentifier = identifier;
+	pendingUrl = followUrl(currentIdentifier(networkService.getSystem()), identifier);
 	backButton.disabled = true;
 	submitButton.loading();
 	networkService.updateHostIdentifier(data);
@@ -279,6 +297,22 @@ form.validation = [
 						return 'Letters, digits and hyphens only';
 					}
 
+					return (!_.includes(RESERVED_NODE_NAMES, _.toLower(value)) || 'Used by an app, choose another hostname');
+				},
+				message: 'Letters, digits and hyphens only'
+			}
+		}
+	},
+	{
+		selector: '.cluster',
+		rules: {
+			isEmpty: `Can't be empty`,
+			custom: {
+				validate: (value) => {
+					if (!HOSTNAME_PATTERN.test(value)) {
+						return 'Letters, digits and hyphens only';
+					}
+
 					if (!isFleetZone(form.getData().domainName)) {
 						return true;
 					}
@@ -293,8 +327,7 @@ form.validation = [
 		selector: '.domain-name',
 		rules: {
 			isEmpty: `Can't be empty`,
-			// Single-label domains ("lan", "local") are common on home networks, so no TLD is required.
-			isFQDN: { require_tld: false, message: 'Must be a valid domain name' },
+			isFQDN: { message: 'Must be a domain with a TLD, like example.com' },
 			custom: {
 				validate: (value) => {
 					return (isFleetSubZone(value) ? `Use ${FLEET_ZONE} itself, without a sub-domain` : true);

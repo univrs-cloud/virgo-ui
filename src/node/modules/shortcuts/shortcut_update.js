@@ -32,12 +32,12 @@ iconPicker.initIconSearch(iconBox, iconPopoverContent, {
 	onSelect: () => { bootstrap.Popover.getInstance(iconBox)?.hide(); }
 });
 
-const getFQDN = () => {
-	return systemService.getFQDN();
+const getDomainName = () => {
+	return systemService.getDomainName();
 };
 
 const initDomainSuffix = () => {
-	domainSuffix.textContent = `.${getFQDN()}`;
+	domainSuffix.textContent = `.${getDomainName()}`;
 };
 
 const toggleProxyMode = (useProxy) => {
@@ -110,8 +110,7 @@ const updateShortcut = (event) => {
 	const useProxy = (data.useProxy === 'true');
 	
 	if (useProxy) {
-		const fqdn = getFQDN();
-		data.url = `https://${data.subdomain}.${fqdn}`;
+		data.url = `https://${data.subdomain}.${getDomainName()}`;
 		data.traefik = {
 			subdomain: data.subdomain,
 			backendUrl: data.backendUrl,

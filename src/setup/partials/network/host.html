@@ -9,6 +9,7 @@
 				<div class="card-body">
 					<h5 class="card-title">Host</h5>
 					<u-input name="hostname" label="Hostname" class="hostname" autocomplete="off"></u-input>
+					<u-input name="cluster" label="Cluster" class="cluster" autocomplete="off"></u-input>
 					<u-input name="domainName" label="Domain name" class="domain-name" autocomplete="off"></u-input>
 					<div class="access d-none text-body-secondary mb-3">
 						<div class="d-flex align-items-center">
@@ -18,10 +19,14 @@
 						<div class="dns-record d-flex align-items-start mt-1">
 							<i class="icon-duotone icon-solid icon-list-tree icon-fw me-2 mt-1"></i>
 							<small>
-								On your router or DNS server, create these A records:
+								On your router or DNS server, create this A record:
 								<ul class="mb-0 ps-3">
-									<li><span class="fqdn font-monospace bd-purple-100 rounded px-1"></span> pointing to <span class="address font-monospace bd-purple-100 rounded px-1"></span></li>
-									<li><span class="fqdn-wildcard font-monospace bd-purple-100 rounded px-1"></span> pointing to <span class="address font-monospace bd-purple-100 rounded px-1"></span></li>
+									<li><span class="cluster-wildcard font-monospace bd-purple-100 rounded px-1"></span> pointing to <span class="address font-monospace bd-purple-100 rounded px-1"></span></li>
+								</ul>
+								<div class="mt-1">If your DNS server doesn't support wildcards across levels, also add:</div>
+								<ul class="mb-0 ps-3">
+									<li><span class="node-name font-monospace bd-purple-100 rounded px-1"></span> pointing to <span class="address font-monospace bd-purple-100 rounded px-1"></span></li>
+									<li><span class="node-wildcard font-monospace bd-purple-100 rounded px-1"></span> pointing to <span class="address font-monospace bd-purple-100 rounded px-1"></span></li>
 								</ul>
 							</small>
 						</div>
