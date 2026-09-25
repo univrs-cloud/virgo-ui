@@ -57,6 +57,10 @@ const getDomainName = () => {
 	return _.replace(getFQDN(), `${Host.getSystem().osInfo?.hostname}.`, '');
 };
 
+const getCertresolver = () => {
+	return Host.getCertificate()?.resolver;
+};
+
 const getTemplates = () => {
 	return Docker.getTemplates();
 };
@@ -70,6 +74,7 @@ export {
 	getJobs,
 	getFQDN,
 	getDomainName,
+	getCertresolver,
 	getTemplates,
 	install
 };
