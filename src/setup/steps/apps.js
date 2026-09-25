@@ -80,7 +80,7 @@ const renderCertificate = (certificate) => {
 };
 
 // The node installs these on its own once the pool is ready, so this step only reports what it is
-// doing — and holds the wizard here, in both directions, until both apps are up: the password written
+// doing — and holds the wizard here, in both directions, until every app is up: the password written
 // by the next step goes into a file Authelia has to have created.
 const render = (state) => {
 	lastState = state;
