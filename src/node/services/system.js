@@ -23,8 +23,13 @@ const getFQDN = () => {
 	return system?.osInfo?.fqdn || '';
 };
 
+const getDomainName = () => {
+	return _.replace(getFQDN(), `${getSystem()?.osInfo?.hostname}.`, '');
+};
+
 export {
 	subscribe,
 	getSystem,
-	getFQDN
+	getFQDN,
+	getDomainName
 };

@@ -9,13 +9,16 @@ const form = main.querySelector('u-form');
 const submitButton = form.querySelector('[type="submit"]');
 
 /** Where to go once the session exists. A gated app sends its own address along, and it is followed
- * only when it belongs to this node: the session covers the node and the apps beneath its name, and
- * anything else arrived in the query string from somewhere we have no business returning to. */
+ * only when it belongs to this node or its cluster: the session covers the node, the apps beneath its
+ * name and, on a cluster name, the apps beneath the cluster; anything else arrived in the query string
+ * from somewhere we have no business returning to. */
 const target = () => {
 	try {
 		const url = new URL(new URLSearchParams(location.search).get('rd'));
-		const isThisNode = (url.hostname === location.hostname || _.endsWith(url.hostname, `.${location.hostname}`));
-		if (url.protocol === 'https:' && isThisNode) {
+		const labels = _.split(location.hostname, '.');
+		const scope = (labels.length >= 4 ? _.join(_.tail(labels), '.') : location.hostname);
+		const isThisCluster = (url.hostname === scope || _.endsWith(url.hostname, `.${scope}`));
+		if (url.protocol === 'https:' && isThisCluster) {
 			return url.href;
 		}
 	} catch (error) {
