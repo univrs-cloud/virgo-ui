@@ -14,7 +14,10 @@
 
 					<dt class="fw-lighter"><small>Status</small></dt>
 					<dd>
-						<u-switch class="fleet-switch" on-label="Enabled" <%=(fleet?.enabled ? 'checked' : '')%>></u-switch>
+						<u-switch class="fleet-switch" on-label="Enabled" <%=(fleet?.enabled ? 'checked' : '')%> <%=(fleet?.enabled && fleetRequired ? 'disabled' : '')%>></u-switch>
+						<%if (fleet?.enabled && fleetRequired) {%>
+							<small class="d-block text-body-tertiary">Required while the domain is on univrs.cloud</small>
+						<%}%>
 					</dd>
 					<%if (fleet?.enabled) {%>
 						<dt class="fw-lighter"><small>Connection</small></dt>

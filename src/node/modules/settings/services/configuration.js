@@ -1,9 +1,16 @@
 import Job from 'stores/job';
+import Host from 'stores/host';
 import Configuration from 'stores/configuration';
 import { createSubscription, storeAttach } from 'libs/services/module_store_subscription';
 
+const FLEET_ZONE = 'univrs.cloud';
+
 function isSettingsJob() {
 	return false;
+}
+
+function isFleetDomain(fqdn) {
+	return _.endsWith(String(fqdn || '').toLowerCase(), `.${FLEET_ZONE}`);
 }
 
 const { subscribe } = createSubscription({
@@ -11,6 +18,10 @@ const { subscribe } = createSubscription({
 		{
 			store: Job,
 			propertyNames: ['jobs']
+		},
+		{
+			store: Host,
+			propertyNames: ['system']
 		},
 		{
 			store: Configuration,
@@ -22,7 +33,10 @@ const { subscribe } = createSubscription({
 	},
 	attachStore: storeAttach.beforeCallbacks,
 	mapState: (properties) => {
-		return properties;
+		return {
+			...properties,
+			fleetRequired: isFleetDomain(properties?.system?.osInfo?.fqdn)
+		};
 	}
 });
 
