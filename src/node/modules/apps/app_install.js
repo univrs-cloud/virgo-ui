@@ -17,9 +17,11 @@ const selectTemplate = _.template(selectPartial);
 document.querySelector('body').insertAdjacentHTML('beforeend', appModalPartial);
 
 const FLEET_ZONE = 'univrs.cloud';
+const CORE_APPS = ['wetty', 'authelia', 'traefik'];
 const modal = document.querySelector('#app-install');
 const form = modal.querySelector('u-form');
 let app;
+let appDomain = '';
 let certResolverEnv = null;
 
 const isFleetDomain = (domain) => {
@@ -32,7 +34,7 @@ const renderCertResolver = (domain) => {
 		return;
 	}
 
-	slot.innerHTML = (String(domain || '').toLowerCase() === appCenterService.getFQDN())
+	slot.innerHTML = (String(domain || '').toLowerCase() === appDomain)
 		? inputHiddenTemplate({ env: { ...certResolverEnv, default: '' } })
 		: inputRadioTemplate({ env: certResolverEnv });
 };
@@ -56,6 +58,8 @@ const render = (event) => {
 	form.querySelector('.note').textContent = app.note || '';
 	form.querySelector('.note').classList[app.note ? 'remove' : 'add']('d-none');
 	const fqdn = appCenterService.getFQDN();
+	const domainName = appCenterService.getDomainName();
+	appDomain = (_.includes(CORE_APPS, app.name) ? fqdn : domainName);
 	_.each(app.env, (env) => {
 		if (env?.type === 'hidden') {
 			form.querySelector('.inputs').innerHTML += inputHiddenTemplate({ env });
@@ -64,10 +68,10 @@ const render = (event) => {
 
 		if (env?.type === 'text') {
 			if (env.name.toLowerCase() === 'domain') {
-				env.default = fqdn;
+				env.default = appDomain;
 			}
 			if (env.name.toLowerCase() === 'nextcloud_trusted_domains') {
-				env.default = `${fqdn} auth.${fqdn} nextcloud.${fqdn} onlyoffice.${fqdn} talk.${fqdn}`;
+				env.default = `${domainName} auth.${fqdn} nextcloud.${domainName} onlyoffice.${domainName} talk.${domainName}`;
 			}
 			form.querySelector('.inputs').innerHTML += inputTextTemplate({ env, prefix: env?.prefix, suffix: env?.suffix });
 			return;
@@ -100,7 +104,7 @@ const render = (event) => {
 		}
 	});
 	const domainInput = form.querySelector('u-input[name="DOMAIN"]');
-	renderCertResolver(domainInput ? domainInput.value : fqdn);
+	renderCertResolver(domainInput ? domainInput.value : appDomain);
 	domainInput?.addEventListener('value-changed', () => { renderCertResolver(domainInput.value); });
 	form.validation = [
 		{
@@ -116,9 +120,9 @@ const render = (event) => {
 				custom: {
 					validate: (value) => {
 						const domain = String(value || '').toLowerCase();
-						return !isFleetDomain(domain) || domain === fqdn;
+						return !isFleetDomain(domain) || domain === appDomain;
 					},
-					message: `Can only be ${fqdn}`
+					message: `Can only be ${appDomain}`
 				}
 			}
 		}
@@ -127,6 +131,7 @@ const render = (event) => {
 
 const restore = (event) => {
 	app = null;
+	appDomain = '';
 	certResolverEnv = null;
 	_.each(form.querySelectorAll('.modal-title, .description, .note, .inputs'), (node) => { node.innerHTML = ''; });
 	form.querySelector('.note').classList.add('d-none');

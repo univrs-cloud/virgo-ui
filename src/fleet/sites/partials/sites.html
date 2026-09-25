@@ -66,13 +66,17 @@
 			// caller's own inventory server-side. Every card keeps the same fixed size regardless of
 			// group - each cluster gets its own labeled group, standalone nodes get one more, and a rule
 			// separates consecutive groups. Only worth labeling at all once a cluster exists.
-			const clusters = _.groupBy(_.filter(nodes, 'clusterId'), 'clusterId');
-			const standalone = _.filter(nodes, (node) => { return !node.clusterId; });
+			const hasCluster = (node) => { return _.split(node.domainName || '', '.').length >= 3; };
+			const named = _.groupBy(_.filter(nodes, hasCluster), (node) => { return _.toLower(node.domainName); });
+			const unnamed = _.reject(nodes, hasCluster);
+			const clusters = _.groupBy(_.filter(unnamed, 'clusterId'), 'clusterId');
+			const standalone = _.filter(unnamed, (node) => { return !node.clusterId; });
 			const groups = [
+				..._.map(_.sortBy(_.keys(named)), (domainName) => { return { label: domainName, members: _.sortBy(named[domainName], (node) => { return _.toLower(node.name); }) }; }),
 				..._.map(_.values(clusters), (members) => { return { label: 'Cluster', members }; }),
 				...(_.isEmpty(standalone) ? [] : [{ label: 'Standalone', members: standalone }])
 			];
-			const showLabels = !_.isEmpty(clusters);
+			const showLabels = (!_.isEmpty(named) || !_.isEmpty(clusters));
 		%>
 		<%_.each(groups, (group, index) => {%>
 			<%if (showLabels) {%>

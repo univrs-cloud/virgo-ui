@@ -53,6 +53,10 @@ const getFQDN = () => {
 	return system.osInfo?.fqdn || '';
 };
 
+const getDomainName = () => {
+	return _.replace(getFQDN(), `${Host.getSystem().osInfo?.hostname}.`, '');
+};
+
 const getTemplates = () => {
 	return Docker.getTemplates();
 };
@@ -65,6 +69,7 @@ export {
 	subscribe,
 	getJobs,
 	getFQDN,
+	getDomainName,
 	getTemplates,
 	install
 };
