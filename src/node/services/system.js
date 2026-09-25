@@ -23,6 +23,10 @@ const getFQDN = () => {
 	return system?.osInfo?.fqdn || '';
 };
 
+const getNodeNames = () => {
+	return _.map(_.compact([getSystem()?.osInfo?.hostname, ..._.map(Host.getPeers() || [], 'name')]), _.toLower);
+};
+
 const getDomainName = () => {
 	return _.replace(getFQDN(), `${getSystem()?.osInfo?.hostname}.`, '');
 };
@@ -31,5 +35,6 @@ export {
 	subscribe,
 	getSystem,
 	getFQDN,
-	getDomainName
+	getDomainName,
+	getNodeNames
 };

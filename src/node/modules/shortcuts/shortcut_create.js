@@ -75,7 +75,13 @@ const updateValidation = (useProxy) => {
 				rules: {
 					isEmpty: `Can't be empty`,
 					custom: {
-						validate: (value) => isSubdomainUnique(value),
+						validate: (value) => {
+							if (_.includes(systemService.getNodeNames(), _.toLower(value))) {
+								return `That's a node's name, choose another subdomain`;
+							}
+
+							return isSubdomainUnique(value);
+						},
 						message: `This subdomain is already in use`
 					}
 				}
