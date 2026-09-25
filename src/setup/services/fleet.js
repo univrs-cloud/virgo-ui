@@ -41,7 +41,8 @@ const isRegistered = (configuration = Configuration.getConfiguration()) => {
 
 const isRegistrationOptional = (system = Host.getSystem()) => {
 	const domainName = _.replace(system?.osInfo?.fqdn || '', `${system?.osInfo?.hostname}.`, '');
-	return !_.isEmpty(domainName) && _.toLower(domainName) !== FLEET_ZONE;
+	const domain = _.toLower(domainName);
+	return (!_.isEmpty(domain) && domain !== FLEET_ZONE && !_.endsWith(domain, `.${FLEET_ZONE}`));
 };
 
 const updateFleet = (data) => {
