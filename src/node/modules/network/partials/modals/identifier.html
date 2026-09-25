@@ -9,6 +9,10 @@
 					<u-input name="hostname" label="Hostname" class="hostname"></u-input>
 					<u-input name="cluster" label="Cluster" class="cluster"></u-input>
 					<u-input name="domainName" label="Domain name" class="domain-name"></u-input>
+					<div class="d-flex align-items-start text-body-secondary">
+						<i class="icon-solid icon-triangle-exclamation icon-fw text-yellow-500 me-2 mt-1"></i>
+						<small>Changing these doesn't reconfigure installed apps. Traefik, Authelia and Terminal need their <span class="font-monospace">DOMAIN</span> updated by hand.</small>
+					</div>
 				</div>
 				<div class="modal-footer">
 					<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="modal" outline>Cancel</u-button>
