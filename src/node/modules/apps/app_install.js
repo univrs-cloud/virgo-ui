@@ -34,7 +34,7 @@ const renderCertResolver = (domain) => {
 		return;
 	}
 
-	slot.innerHTML = (String(domain || '').toLowerCase() === appDomain)
+	slot.innerHTML = (String(domain || '').toLowerCase() === appDomain && isFleetDomain(domain))
 		? inputHiddenTemplate({ env: { ...certResolverEnv, default: '' } })
 		: inputRadioTemplate({ env: certResolverEnv });
 };
