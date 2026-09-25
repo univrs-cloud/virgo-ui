@@ -20,23 +20,43 @@ const splitDomainName = (domainName) => {
 	return { cluster: _.head(labels), domainName: _.join(_.tail(labels), '.') };
 };
 
+const currentIdentifier = () => {
+	const system = networkService.getSystem();
+	return { hostname: system?.osInfo?.hostname, ...splitDomainName(_.replace(system?.osInfo?.fqdn, `${system?.osInfo?.hostname}.`, '')) };
+};
+
+const lockedCluster = () => {
+	const { cluster, domainName } = currentIdentifier();
+	return (cluster && !_.isEmpty(networkService.getPeers()) ? { cluster, domainName } : null);
+};
+
+const getFormData = () => {
+	return { ...form.getData(), ...(lockedCluster() || {}) };
+};
+
 const updateIdentifier = (event) => {
 	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
-	const data = form.getData();
-	networkService.updateHostIdentifier(data);
+	networkService.updateHostIdentifier(getFormData());
 	bootstrap.Modal.getInstance(modal)?.hide();
 };
 
 const render = (event) => {
-	const system = networkService.getSystem();
-	const { cluster, domainName } = splitDomainName(_.replace(system?.osInfo?.fqdn, `${system?.osInfo?.hostname}.`, ''));
-	form.querySelector('.hostname').value = system?.osInfo?.hostname;
-	form.querySelector('.cluster').value = cluster;
+	const { hostname, cluster, domainName } = currentIdentifier();
+	const locked = Boolean(lockedCluster());
+	const clusterInput = form.querySelector('.cluster');
+	form.querySelector('.hostname').value = hostname;
+	clusterInput.value = cluster;
 	form.querySelector('.domain-name').value = domainName;
+	clusterInput.disabled = locked;
+	form.querySelector('.domain-name').disabled = locked;
+	clusterInput.tip = (locked ? `Shared with <strong>${_.join(_.map(networkService.getPeers(), (peer) => { return peer.name || peer.address; }), ', ')}</strong>. Remove the adopted nodes to change the cluster.` : '');
 };
 
 const restore = (event) => {
 	form.reset();
+	form.querySelector('.cluster').disabled = false;
+	form.querySelector('.domain-name').disabled = false;
+	form.querySelector('.cluster').tip = '';
 };
 
 form.validation = [
@@ -66,7 +86,7 @@ form.validation = [
 						return 'Letters, digits and hyphens only';
 					}
 
-					const isFleetZone = (_.toLower(_.trim(form.getData().domainName)) === FLEET_ZONE);
+					const isFleetZone = (_.toLower(_.trim(getFormData().domainName)) === FLEET_ZONE);
 					return (!isFleetZone || !_.includes(RESERVED_CLUSTER_NAMES, _.toLower(value)) || `${value}.${FLEET_ZONE} is already taken`);
 				},
 				message: 'Letters, digits and hyphens only'
