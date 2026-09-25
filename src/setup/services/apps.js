@@ -5,6 +5,7 @@ import { createSubscription, storeAttach } from 'libs/services/module_store_subs
 
 // The node installs these itself once the pool is ready; this step only watches them arrive.
 const CORE_APPS = [
+	{ name: 'wetty', title: 'Terminal', description: 'Opens a shell on this node from the browser' },
 	{ name: 'authelia', title: 'Authelia', description: 'Owns the accounts everything else signs in with' },
 	{ name: 'traefik', title: 'Traefik', description: 'Answers on this node\'s name and routes to its apps' }
 ];
@@ -37,7 +38,7 @@ const { subscribe } = createSubscription({
 	}
 });
 
-/** Both stacks start with a one-shot container that exits once it has done its work, so what says an
+/** A stack may start with a one-shot container that exits once it has done its work, so what says an
  * app is up is its own service: the one named after it. */
 const isAppRunning = (name, containers) => {
 	const container = _.find(containers, (container) => {
@@ -48,7 +49,7 @@ const isAppRunning = (name, containers) => {
 
 /** What the node reports about one core app: the job while it is being installed, its entry in the app
  * registry, and its containers. A registry row only says the app was installed at some point, so it
- * counts as running once its container is up as well. An imported pool lists both apps from the start
+ * counts as running once its container is up as well. An imported pool lists them from the start
  * and they are installed again over it, so a running job outranks the registry — otherwise the work
  * would look done while it is still downloading. */
 const getInstall = (name, configured, containers, jobs) => {
