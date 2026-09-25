@@ -16,9 +16,13 @@ const remove = async (event) => {
 	const node = _.find(nodeService.getNodes() ?? [], { nodeId });
 	const name = node?.name ?? nodeId;
 
+	const releasesDomain = Boolean(node?.fqdn) && !node?.online;
+	const message = (releasesDomain
+		? `${name} is offline. Removing it releases ${node.fqdn}, so anyone can claim it. If the node comes back online, its certificates stop renewing until it is registered with the fleet again from its settings.`
+		: `Are you sure you want to remove ${name} from inventory?`);
 	if (
 		button.classList.contains('confirm') &&
-		!await confirm(`Are you sure you want to remove ${name} from inventory?`, { buttons: [{ text: 'Remove', class: 'btn-danger' }] })
+		!await confirm(message, { buttons: [{ text: 'Remove', class: 'btn-danger' }], acknowledge: (releasesDomain ? `I understand ${node.fqdn} will be released` : null) })
 	) {
 		return;
 	}

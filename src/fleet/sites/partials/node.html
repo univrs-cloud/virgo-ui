@@ -81,9 +81,17 @@
 							</a>
 							<div class="dropdown-divider"></div>
 						<%}%>
-						<a href="#" class="dropdown-item text-danger confirm" data-action="remove" data-node-id="<%-node.nodeId%>">
-							<i class="icon-regular icon-xmark icon-fw me-1"></i>Remove from inventory
-						</a>
+						<%if (node.isOwner && node.onFleetZone) {%>
+							<span class="d-block" data-bs-toggle="tooltip" data-bs-original-title="Move this node off univrs.cloud before removing it, its certificates depend on the fleet">
+								<a href="#" class="dropdown-item disabled">
+									<i class="icon-regular icon-xmark icon-fw me-1"></i>Remove from inventory
+								</a>
+							</span>
+						<%} else {%>
+							<a href="#" class="dropdown-item text-danger confirm" data-action="remove" data-node-id="<%-node.nodeId%>">
+								<i class="icon-regular icon-xmark icon-fw me-1"></i>Remove from inventory
+							</a>
+						<%}%>
 					</div>
 				</div>
 			</div>
