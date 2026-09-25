@@ -65,6 +65,36 @@ const splitDomainName = (domainName) => {
 	return { cluster: _.head(labels), domainName: _.join(_.tail(labels), '.') };
 };
 
+const lockedCluster = () => {
+	const clustered = _.filter(networkService.getDiscovered(), 'cluster');
+	return (_.find(clustered, 'holdsVirtualIp') || _.first(clustered) || null);
+};
+
+const getFormData = () => {
+	const peer = lockedCluster();
+	return { ...form.getData(), ...(peer ? splitDomainName(peer.cluster) : {}) };
+};
+
+const applyClusterLock = () => {
+	const peer = lockedCluster();
+	const clusterInput = form.querySelector('.cluster');
+	const domainInput = form.querySelector('.domain-name');
+	if (peer) {
+		const { cluster, domainName } = splitDomainName(peer.cluster);
+		if (clusterInput.value !== cluster) {
+			clusterInput.value = cluster;
+		}
+
+		if (domainInput.value !== domainName) {
+			domainInput.value = domainName;
+		}
+	}
+
+	clusterInput.disabled = Boolean(peer);
+	domainInput.disabled = Boolean(peer);
+	clusterInput.tip = (peer ? `Shared with <strong>${peer.name || peer.address}</strong>. A node set up on this network joins its cluster.` : '');
+};
+
 const toIdentifier = (data) => {
 	return { hostname: data.hostname, domainName: `${data.cluster}.${data.domainName}` };
 };
@@ -74,7 +104,7 @@ const toIdentifier = (data) => {
 // are spelled out while it is still being typed. Seeding the fields fires `value-changed` too, so
 // this covers the prefilled values without render having to call it.
 const renderAccess = () => {
-	const data = form.getData();
+	const data = getFormData();
 	const clusterDomain = `${data.cluster}.${data.domainName}`;
 	const fqdn = `${data.hostname}.${clusterDomain}`;
 	accessUrl.textContent = `https://${fqdn}`;
@@ -100,7 +130,7 @@ const isValidIdentifier = (data) => {
 };
 
 const renderAvailability = () => {
-	const managed = isFleetZone(form.getData().domainName);
+	const managed = isFleetZone(getFormData().domainName);
 	dnsRecord.classList.toggle('d-none', managed);
 	dnsRecord.classList.toggle('d-flex', !managed);
 	dnsManaged.classList.toggle('d-none', !managed);
@@ -116,7 +146,7 @@ const renderAvailability = () => {
 };
 
 const checkAvailability = _.debounce(() => {
-	const data = form.getData();
+	const data = getFormData();
 	const key = `${data.cluster}.${data.domainName}`.toLowerCase();
 	if (!isFleetZone(data.domainName) || !HOSTNAME_PATTERN.test(data.cluster || '')) {
 		availability = { key: '', status: 'idle' };
@@ -237,16 +267,16 @@ const render = (state) => {
 		goNext();
 	}
 
-	if (isPrefilled || _.isEmpty(state.system?.osInfo)) {
-		return;
+	if (!isPrefilled && !_.isEmpty(state.system?.osInfo)) {
+		const identifier = currentIdentifier(state.system);
+		const { cluster, domainName } = splitDomainName(identifier.domainName);
+		form.querySelector('.hostname').value = identifier.hostname;
+		form.querySelector('.cluster').value = cluster;
+		form.querySelector('.domain-name').value = domainName;
+		isPrefilled = true;
 	}
 
-	const identifier = currentIdentifier(state.system);
-	const { cluster, domainName } = splitDomainName(identifier.domainName);
-	form.querySelector('.hostname').value = identifier.hostname;
-	form.querySelector('.cluster').value = cluster;
-	form.querySelector('.domain-name').value = domainName;
-	isPrefilled = true;
+	applyClusterLock();
 };
 
 const confirmAvailability = async (data) => {
@@ -259,7 +289,7 @@ const confirmAvailability = async (data) => {
 };
 
 const updateIdentifier = async (event) => {
-	const data = form.getData();
+	const data = getFormData();
 	if (isFleetZone(data.domainName) && !await confirmAvailability(data)) {
 		form.validateField('.cluster');
 		return;
@@ -313,7 +343,7 @@ form.validation = [
 						return 'Letters, digits and hyphens only';
 					}
 
-					if (!isFleetZone(form.getData().domainName)) {
+					if (!isFleetZone(getFormData().domainName)) {
 						return true;
 					}
 
