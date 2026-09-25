@@ -23,9 +23,12 @@ const form = modal.querySelector('u-form');
 let app;
 let appDomain = '';
 let certResolverEnv = null;
+let nodeResolver = null;
+let certResolverChoice = null;
+let isCertResolverHidden = null;
 
 const isFleetDomain = (domain) => {
-	return _.endsWith(String(domain || '').toLowerCase(), `.${FLEET_ZONE}`);
+	return _.endsWith(domain?.toLowerCase(), `.${FLEET_ZONE}`);
 };
 
 const renderCertResolver = (domain) => {
@@ -34,9 +37,24 @@ const renderCertResolver = (domain) => {
 		return;
 	}
 
-	slot.innerHTML = (String(domain || '').toLowerCase() === appDomain && isFleetDomain(domain))
-		? inputHiddenTemplate({ env: { ...certResolverEnv, default: '' } })
-		: inputRadioTemplate({ env: certResolverEnv });
+	const isHidden = (domain?.toLowerCase() === appDomain && isFleetDomain(domain));
+	if (isHidden === isCertResolverHidden) {
+		return;
+	}
+
+	isCertResolverHidden = isHidden;
+	if (isHidden) {
+		slot.innerHTML = inputHiddenTemplate({ env: { ...certResolverEnv, default: '' } });
+		return;
+	}
+
+	const selected = (certResolverChoice ?? nodeResolver);
+	const resolver = selected?.toLowerCase();
+	const isKnown = !_.isNil(selected) && _.some(certResolverEnv.select, (option) => { return String(option.value).toLowerCase() === resolver; });
+	const select = (isKnown
+		? _.map(certResolverEnv.select, (option) => { return { ...option, default: String(option.value).toLowerCase() === resolver }; })
+		: certResolverEnv.select);
+	slot.innerHTML = inputRadioTemplate({ env: { ...certResolverEnv, select } });
 };
 
 const install = (event) => {
@@ -60,6 +78,7 @@ const render = (event) => {
 	const fqdn = appCenterService.getFQDN();
 	const domainName = appCenterService.getDomainName();
 	appDomain = (_.includes(CORE_APPS, app.name) ? fqdn : domainName);
+	nodeResolver = appCenterService.getCertresolver();
 	_.each(app.env, (env) => {
 		if (env?.type === 'hidden') {
 			form.querySelector('.inputs').innerHTML += inputHiddenTemplate({ env });
@@ -106,6 +125,7 @@ const render = (event) => {
 	const domainInput = form.querySelector('u-input[name="DOMAIN"]');
 	renderCertResolver(domainInput ? domainInput.value : appDomain);
 	domainInput?.addEventListener('value-changed', () => { renderCertResolver(domainInput.value); });
+	form.querySelector('.certresolver')?.addEventListener('change', (event) => { certResolverChoice = event.target.value; });
 	form.validation = [
 		{
 			selector: 'u-input:not([type="hidden"]), u-select, u-textarea',
@@ -119,7 +139,7 @@ const render = (event) => {
 				isFQDN: { require_tld: false, message: 'Must be a valid domain name' },
 				custom: {
 					validate: (value) => {
-						const domain = String(value || '').toLowerCase();
+						const domain = value?.toLowerCase();
 						return !isFleetDomain(domain) || domain === appDomain;
 					},
 					message: `Can only be ${appDomain}`
@@ -133,6 +153,9 @@ const restore = (event) => {
 	app = null;
 	appDomain = '';
 	certResolverEnv = null;
+	nodeResolver = null;
+	certResolverChoice = null;
+	isCertResolverHidden = null;
 	_.each(form.querySelectorAll('.modal-title, .description, .note, .inputs'), (node) => { node.innerHTML = ''; });
 	form.querySelector('.note').classList.add('d-none');
 	form.validation = [];
