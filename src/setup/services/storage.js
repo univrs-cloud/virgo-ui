@@ -54,7 +54,7 @@ const getUsableDrives = (drives) => {
 };
 
 /** The layouts the node says these drives can be built into, one per redundancy type. Empty with
- * drives present means they are not all the same size. */
+ * drives present means their sizes differ too much. */
 const getTopologies = (topologies = Host.getTopologies()) => {
 	return (topologies || []);
 };
