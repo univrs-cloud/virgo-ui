@@ -42,7 +42,7 @@
 			</dd>
 		</dl>
 	<%} else if (_.isEmpty(topologies)) {%>
-		<p class="text-danger">These drives are not all the same size, so no pool structure can be offered. Use drives of one size, and remove any that should not be part of the pool.</p>
+		<p class="text-danger">These drives differ too much in size, so no pool structure can be offered. Use drives within 10% of each other in size, and remove any that should not be part of the pool.</p>
 		<dl class="m-0">
 			<dt class="fw-lighter"><small><i class="icon-light icon-hard-drive icon-fw me-1"></i>Drives</small></dt>
 			<dd class="m-0">
