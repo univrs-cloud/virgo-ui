@@ -1,0 +1,12 @@
+<%
+	const groupLabels = { sub: 'State', unitFileState: 'Automatic startup' };
+%>
+<%_.each(groups, (group) => {%>
+	<%if (!_.isEmpty(group.selected)) {%>
+		<u-badge tip="<%-(group.selected.length > 2 ? group.selected.join(', ') : '')%>" pill>
+			<%=groupLabels[group.key]%>: <%-(group.selected.length > 2 ? `${group.selected.length} selected` : group.selected.join(', '))%>
+			<button type="button" class="btn-close ms-1" data-filter-key="<%-group.key%>" aria-label="Remove"></button>
+		</u-badge>
+	<%}%>
+<%})%>
+<button type="button" class="btn btn-link btn-sm p-0" data-action="clear-filters">Clear all</button>

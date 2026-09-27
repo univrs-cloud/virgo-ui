@@ -1,0 +1,17 @@
+<%
+	const groupLabels = { sub: 'State', unitFileState: 'Automatic startup' };
+%>
+<%_.each(groups, (group) => {%>
+	<li><h6 class="dropdown-header"><%=groupLabels[group.key]%></h6></li>
+	<li class="text-nowrap px-2">
+		<%_.each(group.options, (option) => {%>
+			<div class="form-check">
+				<input type="checkbox" id="system-services-filter-<%-group.key%>-<%-option.value%>" class="form-check-input" data-filter-key="<%-group.key%>" value="<%-option.value%>" <%=(option.selected ? 'checked' : '')%>>
+				<label for="system-services-filter-<%-group.key%>-<%-option.value%>" class="form-check-label d-flex justify-content-between gap-4 <%=(option.count === 0 ? 'text-body-tertiary' : '')%>">
+					<span><%-option.value%></span>
+					<span class="text-body-tertiary"><%=option.count%></span>
+				</label>
+			</div>
+		<%})%>
+	</li>
+<%})%>
