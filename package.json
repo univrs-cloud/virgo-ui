@@ -11,7 +11,6 @@
 		"serve": "webpack serve --mode development --env=upstream=$npm_config_upstream"
 	},
 	"node_deb": {
-		"architecture": "arm64",
 		"init": "none",
 		"install_dir": "/var/www"
 	},
