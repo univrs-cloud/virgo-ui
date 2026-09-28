@@ -96,11 +96,6 @@ const runtime = async (state) => {
 			}
 		}
 		if (!onNodeView) {
-			if (process.env.NODE_ENV === 'production') {
-				try {
-					await import('fleet/services/analytics');
-				} catch { }
-			}
 			// Every fleet screen (auth, MFA, app) is page-routed; the router's guards redirect based
 			// on isAuthenticated + account.mfa and lazily build the app shell for satisfied routes.
 			try {
