@@ -328,69 +328,222 @@
 								<u-switch class="indexer-switch me-n3 flex-shrink-0" on-label="Indexer" <%=(app.indexer ? 'checked' : '')%>></u-switch>
 							</div>
 						</div>
-						<table class="table table-borderless table-hover align-middle m-0" style="border-collapse: separate; border-spacing: 0;">
-							<colgroup>
-								<col>
-								<col style="width: 100px; min-width: 100px;">
-								<col style="width: 30px; min-width: 30px;">
-							</colgroup>
+						<%
+							const snapshotTierOrder = ['frequently', 'hourly', 'daily', 'monthly', 'yearly'];
+							const snapshotTierColors = { frequently: 'blue-200', hourly: 'blue-300', daily: 'blue-500', monthly: 'indigo-500', yearly: 'indigo-700' };
+							const snapshotTierHours = { frequently: 0.25, hourly: 1, daily: 24, monthly: 730.5, yearly: 8766 };
+							const snapshotNow = moment();
+							const snapshotEntries = _.filter(_.map(app.snapshots, (snapshot) => {
+								const segments = snapshot.snapshotName.split('_');
+								const createdMoment = moment.utc(segments.slice(1, -1).join(' '), 'YYYY-MM-DD HH:mm:ss', true).local();
+								return {
+									key: segments.slice(1, -1).join('_'),
+									tier: _.toLower(_.last(segments)),
+									createdMoment,
+									age: Math.max(snapshotNow.diff(createdMoment, 'hours', true), 0),
+									size: snapshot.properties?.used?.value || 0
+								};
+							}), (entry) => { return entry.createdMoment.isValid() && _.includes(snapshotTierOrder, entry.tier); });
+							const snapshotPoints = _.orderBy(_.map(_.groupBy(snapshotEntries, 'key'), (entries, key) => {
+								return {
+									key,
+									createdMoment: entries[0].createdMoment,
+									age: entries[0].age,
+									tiers: _.intersection(snapshotTierOrder, _.map(entries, 'tier')),
+									freed: _.sumBy(entries, 'size'),
+									count: _.size(entries)
+								};
+							}), (point) => { return point.createdMoment.valueOf(); }, ['desc']);
+						%>
+						<%if (!_.isEmpty(snapshotPoints)) {%>
 							<%
-								// Group snapshots by type
-								const groupedSnapshots = _.groupBy(app.snapshots, (snapshot) => {
-									const segments = snapshot.snapshotName.split('_');
-									return _.toLower(_.last(segments));
+								const snapshotTiers = _.filter(snapshotTierOrder, (tier) => { return _.some(snapshotEntries, { tier }); });
+								const snapshotMaxSize = _.max(_.map(snapshotEntries, 'size')) || 0;
+								const snapshotRadius = (size, min, max) => { return (snapshotMaxSize > 0 ? min + Math.sqrt(size / snapshotMaxSize) * (max - min) : min); };
+								const selectedPoint = _.find(snapshotPoints, { key: selectedSnapshot }) || _.first(snapshotPoints);
+								const selectedIndex = _.indexOf(snapshotPoints, selectedPoint);
+								const snapshotSpan = (hours) => {
+									if (hours < 48) {
+										return `${Math.round(hours)}h`;
+									}
+									if (hours < 1461) {
+										return `${Math.round(hours / 24)}d`;
+									}
+									if (hours < 8766) {
+										return `${Math.round(hours / 730.5)}mo`;
+									}
+									return `${Math.round(hours / 8766)}y`;
+								};
+								const snapshotSegments = _.map(_.filter(_.reduce(snapshotTiers, (segments, tier) => {
+									const start = _.last(segments)?.end || 0;
+									return [...segments, { start, end: Math.max(start, _.max(_.map(_.filter(snapshotEntries, { tier }), 'age'))) }];
+								}, []), (segment) => { return segment.end > segment.start; }), (segment, index, segments) => {
+									return { ...segment, from: index / segments.length, to: (index + 1) / segments.length };
 								});
-
-								// Define custom order for snapshot types
-								const typeOrder = ['frequently', 'hourly', 'daily', 'monthly', 'yearly'];
-
-								// Sort groups by custom order
-								const sortedGroups = _.sortBy(_.keys(groupedSnapshots), (type) => {
-									const index = _.indexOf(typeOrder, type);
-									return index === -1 ? 999 : index;
+								const snapshotPosition = (age) => {
+									const segment = _.find(snapshotSegments, (candidate) => { return age <= candidate.end; }) || _.last(snapshotSegments);
+									if (!segment) {
+										return 0;
+									}
+									return segment.from + _.clamp((age - segment.start) / (segment.end - segment.start), 0, 1) * (segment.to - segment.from);
+								};
+								const snapshotTicks = _.map(snapshotSegments, (segment, index) => { return [segment.end, snapshotSpan(segment.end), index === snapshotSegments.length - 1]; });
+								const snapshotLabel = (point) => {
+									const createdMoment = point.createdMoment;
+									const coarsest = _.last(point.tiers);
+									if (createdMoment.isSame(snapshotNow, 'day')) {
+										return `Today ${createdMoment.format('HH:mm')}`;
+									}
+									if (createdMoment.isSame(snapshotNow.clone().subtract(1, 'day'), 'day')) {
+										return `Yesterday ${createdMoment.format('HH:mm')}`;
+									}
+									if (_.includes(['monthly', 'yearly'], coarsest) && createdMoment.clone().utc().date() === 1 && createdMoment.clone().utc().hour() === 0) {
+										return createdMoment.format('MMMM YYYY');
+									}
+									if (_.includes(['frequently', 'hourly'], coarsest)) {
+										return createdMoment.format('ddd D MMM, HH:mm');
+									}
+									if (coarsest === 'daily') {
+										return createdMoment.format(createdMoment.isSame(snapshotNow, 'year') ? 'ddd D MMM' : 'ddd D MMM YYYY');
+									}
+									return createdMoment.format('D MMM YYYY, HH:mm');
+								};
+								const snapshotTip = (point) => {
+									return `<div class='text-start'><div class='fw-semibold'>${snapshotLabel(point)}</div><div>${point.createdMoment.format('YYYY-MM-DD HH:mm:ss')} · ${point.createdMoment.fromNow()}</div><div>${_.map(point.tiers, _.startCase).join(' + ')} · ${prettyBytes(point.freed, { binary: true })}</div></div>`;
+								};
+								const orbitCenter = 200;
+								const orbitStep = (snapshotTiers.length > 1 ? Math.min(40, 120 / (snapshotTiers.length - 1)) : 0);
+								const orbits = _.map(snapshotTiers, (tier, index) => {
+									const tierEntries = _.filter(snapshotEntries, { tier });
+									return {
+										tier,
+										radius: 64 + (snapshotTiers.length - 1 - index) * orbitStep,
+										window: Math.max(tierEntries.length * snapshotTierHours[tier], _.max(_.map(tierEntries, 'age')) * 1.02),
+										entries: _.orderBy(tierEntries, ['size'], ['desc']),
+										oldest: _.maxBy(tierEntries, 'age')
+									};
 								});
+								const orbitPoint = (orbit, age) => {
+									const angle = (-84 + Math.min(age / orbit.window, 1) * 348) * Math.PI / 180;
+									return { x: orbitCenter + orbit.radius * Math.cos(angle), y: orbitCenter + orbit.radius * Math.sin(angle) };
+								};
 							%>
-							<%_.each(sortedGroups, (type) => {%>
+							<div class="card-body border-top pb-0">
+								<u-input type="search" label="Search files in snapshots" class="snapshot-search" <%=(app.indexer ? '' : 'disabled tip="Turn on the Indexer to search files"')%>></u-input>
 								<%
-									const typeSnapshots = _.orderBy(groupedSnapshots[type], (snapshot) => {
-										const segments = snapshot.snapshotName.split('_');
-										const m = moment(segments.slice(1, -1).join(' '), 'YYYY-MM-DD HH:mm:ss', true);
-										return m.isValid() ? m.toDate() : new Date(0);
-									}, ['desc']);
-									const groupId = `snapshot-group-${type}-${_.kebabCase(app.name)}`;
+									const snapshotFilterGroups = [
+										{ key: 'type', label: 'Type', options: [['', 'Any type'], ['file', 'Files'], ['dir', 'Folders']] },
+										{ key: 'modified', label: 'Modified', options: [['', 'Any time'], ['1d', 'Last 24 hours'], ['7d', 'Last 7 days'], ['30d', 'Last 30 days'], ['365d', 'Last year']] },
+										{ key: 'size', label: 'Size', options: [['', 'Any size'], ['small', 'Under 1 MiB'], ['medium', '1 MiB – 100 MiB'], ['large', '100 MiB – 1 GiB'], ['huge', 'Over 1 GiB']] }
+									];
 								%>
-								<tbody>
-									<tr class="group-toggle cursor-pointer" data-bs-toggle="collapse" data-bs-target="#<%-groupId%>" aria-expanded="false" aria-controls="<%-groupId%>">
-										<td style="padding-left: calc(var(--bs-card-spacer-x) + 1.25em + 0.5rem);"><%=_.startCase(type)%> <small class="text-body-tertiary">(<%=typeSnapshots.length%>)</small></td>
-										<td></td>
-										<td class="text-center px-0">
-											<i class="icon-solid icon-chevron-down icon-fw icon-xs text-secondary"></i>
-										</td>
-									</tr>
-								</tbody>
-								<tbody class="collapse" id="<%-groupId%>">
-									<%_.each(typeSnapshots, (snapshot) => {%>
+								<div class="d-flex flex-wrap align-items-center gap-2 mt-n3 mb-3">
+									<%_.each(snapshotFilterGroups, (group) => {%>
 										<%
-											const segments = snapshot.snapshotName.split('_');
-											const createdMoment = moment(segments.slice(1, -1).join(' '), 'YYYY-MM-DD HH:mm:ss', true);
-											const createdAt = createdMoment.isValid() ? createdMoment.format('YYYY-MM-DD HH:mm') : snapshot.snapshotName;
+											const current = snapshotFilter[group.key] || '';
+											const currentOption = _.find(group.options, ([value]) => { return value === current; });
 										%>
-										<tr>
-											<td class="font-monospace" style="padding-left: calc(var(--bs-card-spacer-x) + 1.25em + 0.5rem);"><small class="text-body-secondary"><%-createdAt%></small></td>
-											<td class="text-end"><small class="fw-light"><%=prettyBytes(snapshot.properties?.used?.value || 0, { binary: true })%></small></td>
-											<td class="px-0">
-												<div class="dropdown">
-													<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
-													<div class="dropdown-menu">
-														<button type="button" class="dropdown-item disabled">No actions</button>
-													</div>
-												</div>
-											</td>
-										</tr>
+										<div class="dropdown">
+											<button type="button" class="btn btn-sm rounded-pill dropdown-toggle <%=(current ? 'btn-primary' : 'btn-light')%>" data-bs-toggle="dropdown" <%=(app.indexer ? '' : 'disabled')%>><%=(current ? currentOption[1] : group.label)%></button>
+											<div class="dropdown-menu">
+												<%_.each(group.options, ([value, label]) => {%>
+													<button type="button" class="dropdown-item <%=(value === current ? 'active' : '')%>" data-snapshot-filter="<%-group.key%>" data-value="<%-value%>"><%=label%></button>
+												<%})%>
+											</div>
+										</div>
 									<%})%>
-								</tbody>
-							<%})%>
-						</table>
+									<%if (_.some(_.values(snapshotFilter))) {%>
+										<button type="button" class="btn btn-link btn-sm text-decoration-none" data-snapshot-filter="clear">Clear filters</button>
+									<%}%>
+								</div>
+							</div>
+							<div class="card-body border-top">
+								<div class="d-flex flex-wrap align-items-end justify-content-between gap-3">
+									<div class="min-w-0">
+										<div class="d-flex flex-wrap align-items-center gap-2 small text-body-tertiary">
+											<span><%=selectedPoint.createdMoment.fromNow()%></span>
+											<span class="font-monospace"><%=selectedPoint.createdMoment.format('YYYY-MM-DD HH:mm:ss')%></span>
+											<span><%=prettyBytes(selectedPoint.freed, { binary: true })%></span>
+											<%_.each(selectedPoint.tiers, (tier) => {%>
+												<span class="badge rounded-pill border fw-normal text-<%-snapshotTierColors[tier]%> border-<%-snapshotTierColors[tier]%>"><%=_.startCase(tier)%></span>
+											<%})%>
+										</div>
+										<div class="fs-4 fw-light"><%=snapshotLabel(selectedPoint)%></div>
+									</div>
+									<div class="btn-group btn-group-sm">
+										<button type="button" class="snapshot-action btn btn-light" disabled><i class="icon-regular icon-folder-open icon-fw me-1"></i>Recover files</button>
+										<button type="button" class="snapshot-action btn btn-light" disabled><i class="icon-regular icon-clock-rotate-left icon-fw me-1"></i>Roll back</button>
+										<button type="button" class="snapshot-delete btn btn-light text-danger" disabled data-date="<%-selectedPoint.createdMoment.format('D MMM YYYY, HH:mm')%>" data-tiers="<%-_.map(selectedPoint.tiers, _.startCase).join(', ')%>" data-count="<%=selectedPoint.count%>" data-freed="<%=selectedPoint.freed%>"><i class="icon-regular icon-trash-can icon-fw me-1"></i>Delete</button>
+									</div>
+								</div>
+							</div>
+							<div class="card-body border-top d-none d-md-block">
+								<small class="d-block text-body-tertiary text-uppercase mb-2">Timeline</small>
+								<div class="position-relative" style="height: 26px;">
+									<%_.each(_.initial(snapshotTicks), ([hours]) => {%>
+										<span class="position-absolute top-0 bottom-0 border-start" style="left: calc(0.5rem + (100% - 1rem) * <%=snapshotPosition(hours)%>);"></span>
+									<%})%>
+									<%_.each(_.orderBy(snapshotPoints, ['freed'], ['desc']), (point) => {%>
+										<%
+											const color = snapshotTierColors[_.last(point.tiers)];
+											const diameter = snapshotRadius(point.freed, 3, 9) * 2;
+										%>
+										<span class="position-absolute top-50 translate-middle rounded-circle cursor-pointer <%=(point.freed > 0 ? `bg-${color}` : `bg-body border border-2 border-${color}`)%>" style="left: calc(0.5rem + (100% - 1rem) * <%=snapshotPosition(point.age)%>); width: clamp(6px, <%=(diameter / 6).toFixed(2)%>vw, <%=diameter%>px); aspect-ratio: 1; <%=(point === selectedPoint ? 'outline: 2px solid var(--bs-emphasis-color); outline-offset: 1px;' : '')%>" data-snapshot="<%-point.key%>" data-bs-toggle="tooltip" data-bs-original-title="<%-snapshotTip(point)%>"></span>
+									<%})%>
+								</div>
+								<input type="range" class="snapshot-scrubber form-range" min="0" max="1000" value="<%=Math.round(snapshotPosition(selectedPoint.age) * 1000)%>" aria-label="Restore point" aria-valuetext="<%-snapshotLabel(selectedPoint)%>" data-selected="<%-selectedPoint.key%>" data-keys="<%-_.map(snapshotPoints, 'key').join(',')%>" data-positions="<%-_.map(snapshotPoints, (point) => { return snapshotPosition(point.age).toFixed(4); }).join(',')%>">
+								<div class="position-relative small text-body-tertiary" style="height: 1.25rem;">
+									<%_.each(snapshotTicks, ([hours, label, last]) => {%>
+										<span class="position-absolute <%=(last ? 'end-0' : 'translate-middle-x')%>" style="<%=(last ? '' : `left: calc(0.5rem + (100% - 1rem) * ${snapshotPosition(hours)});`)%>"><%=label%></span>
+									<%})%>
+									<span class="position-absolute start-0 fw-semibold text-body-secondary">Now</span>
+								</div>
+							</div>
+							<div class="card-body border-top d-md-none">
+								<small class="d-block text-body-tertiary text-uppercase mb-2">Orbits</small>
+								<svg class="d-block mx-auto" viewBox="0 0 400 400" style="width: 100%; max-width: 360px;" role="img" aria-label="Snapshot orbits">
+									<%_.each(orbits, (orbit) => {%>
+										<circle cx="<%=orbitCenter%>" cy="<%=orbitCenter%>" r="<%=orbit.radius%>" fill="none" style="stroke: var(--bs-border-color);"/>
+										<text x="<%=orbitCenter - 6%>" y="<%=orbitCenter - orbit.radius + 4%>" text-anchor="end" font-size="10" class="text-body-tertiary" fill="currentColor"><%=snapshotSpan(orbit.window)%></text>
+									<%})%>
+									<line x1="<%=orbitCenter%>" x2="<%=orbitCenter%>" y1="<%=orbitCenter - _.first(orbits).radius - 12%>" y2="<%=orbitCenter - 40%>" style="stroke: var(--bs-border-color);"/>
+									<text x="<%=orbitCenter + 5%>" y="<%=orbitCenter - _.first(orbits).radius - 8%>" font-size="10" font-weight="600" class="text-body-secondary" fill="currentColor">Now</text>
+									<circle cx="<%=orbitCenter%>" cy="<%=orbitCenter%>" r="30" class="text-primary" fill="currentColor" fill-opacity="0.1"/>
+									<image href="<%-(_.includes(app.icon, '/') ? app.icon : `assets/img/apps/${app.icon}`)%>" x="<%=orbitCenter - 18%>" y="<%=orbitCenter - 18%>" width="36" height="36"/>
+									<%_.each(orbits, (orbit) => {%>
+										<%_.each(orbit.entries, (entry) => {%>
+											<%
+												const position = orbitPoint(orbit, entry.age);
+												const point = _.find(snapshotPoints, { key: entry.key });
+											%>
+											<circle cx="<%=position.x%>" cy="<%=position.y%>" r="<%=snapshotRadius(entry.size, 3.5, 15) + (point === selectedPoint ? 1.5 : 0)%>" class="cursor-pointer text-<%-snapshotTierColors[entry.tier]%>" style="fill: <%=(entry.size > 0 ? 'currentColor' : 'var(--bs-body-bg)')%>; stroke: <%=(point === selectedPoint ? 'var(--bs-emphasis-color)' : (entry.size > 0 ? 'var(--bs-body-bg)' : 'currentColor'))%>; stroke-width: <%=(point === selectedPoint ? 2 : (entry.size > 0 ? 1.2 : 1.5))%>;" data-snapshot="<%-entry.key%>" data-bs-toggle="tooltip" data-bs-original-title="<%-snapshotTip(point)%>"/>
+										<%})%>
+									<%})%>
+								</svg>
+							</div>
+							<div class="card-body pt-0">
+								<div class="d-flex align-items-center justify-content-between small text-body-tertiary">
+									<button type="button" class="btn btn-light btn-sm" data-snapshot="<%-snapshotPoints[Math.max(selectedIndex - 1, 0)].key%>"><i class="icon-solid icon-chevron-left icon-fw"></i>Newer</button>
+									<span>Restore point <%=selectedIndex + 1%> of <%=_.size(snapshotPoints)%></span>
+									<button type="button" class="btn btn-light btn-sm" data-snapshot="<%-snapshotPoints[Math.min(selectedIndex + 1, snapshotPoints.length - 1)].key%>">Older<i class="icon-solid icon-chevron-right icon-fw"></i></button>
+								</div>
+							</div>
+							<div class="card-body border-top">
+								<div class="row g-3">
+									<div class="col-12 col-md">
+										<small class="text-body-tertiary">Restore points</small>
+										<h5 class="mb-0"><%=_.size(snapshotPoints)%></h5>
+									</div>
+									<%_.each(orbits, (orbit) => {%>
+										<div class="col-6 col-md">
+											<small class="text-body-tertiary"><i class="icon-solid icon-circle icon-fw icon-xs me-1 text-<%-snapshotTierColors[orbit.tier]%>"></i><%=_.startCase(orbit.tier)%></small>
+											<h5 class="mb-0"><%=_.size(orbit.entries)%></h5>
+											<small class="text-body-secondary">since <%=orbit.oldest.createdMoment.format('D MMM YYYY')%></small>
+										</div>
+									<%})%>
+								</div>
+							</div>
+						<%}%>
 					</div>
 				</div>
 			</div>
