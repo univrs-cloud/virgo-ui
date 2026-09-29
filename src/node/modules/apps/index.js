@@ -25,6 +25,8 @@ let tableOrder = {
 	direction: 'asc'
 };
 let apps = [];
+const snapshotSelections = {};
+const snapshotFilters = {};
 
 const search = (event) => {
 	clearTimeout(searchTimer);
@@ -204,6 +206,80 @@ const updateIndexer = async (event) => {
 	appService.updateIndexerConfig(data);
 };
 
+const selectSnapshot = (event) => {
+	const target = event.target.closest('[data-snapshot]');
+	const name = target?.closest('.item')?.dataset?.name;
+	if (!name) {
+		return;
+	}
+
+	snapshotSelections[name] = target.dataset.snapshot;
+	renderAppDetails(name);
+};
+
+const scrubSnapshot = (event) => {
+	if (!event.target.classList.contains('snapshot-scrubber')) {
+		return;
+	}
+
+	const name = event.target.closest('.item')?.dataset?.name;
+	if (!name) {
+		return;
+	}
+
+	const keys = event.target.dataset.keys.split(',');
+	const positions = _.map(event.target.dataset.positions.split(','), Number);
+	const value = event.target.value / 1000;
+	const index = _.minBy(_.range(keys.length), (i) => { return Math.abs(positions[i] - value); });
+	snapshotSelections[name] = keys[index];
+	renderAppDetails(name);
+};
+
+const stepSnapshot = (event) => {
+	if (!event.target.classList.contains('snapshot-scrubber')) {
+		return;
+	}
+
+	const step = { ArrowLeft: -1, ArrowUp: -1, ArrowRight: 1, ArrowDown: 1, Home: -Infinity, End: Infinity }[event.key];
+	const name = event.target.closest('.item')?.dataset?.name;
+	if (!step || !name) {
+		return;
+	}
+
+	event.preventDefault();
+	const keys = event.target.dataset.keys.split(',');
+	const index = _.clamp(_.indexOf(keys, event.target.dataset.selected) + step, 0, keys.length - 1);
+	snapshotSelections[name] = keys[index];
+	renderAppDetails(name);
+};
+
+const filterSnapshots = (event) => {
+	const option = event.target.closest('[data-snapshot-filter]');
+	const name = option?.closest('.item')?.dataset?.name;
+	if (!name) {
+		return;
+	}
+
+	const { snapshotFilter, value } = option.dataset;
+	snapshotFilters[name] = (snapshotFilter === 'clear' ? {} : { ...snapshotFilters[name], [snapshotFilter]: value });
+	renderAppDetails(name);
+};
+
+const deleteSnapshot = async (event) => {
+	const button = event.target.closest('.snapshot-delete');
+	if (!button) {
+		return;
+	}
+
+	const { date, tiers } = button.dataset;
+	const count = Number(button.dataset.count);
+	const freed = prettyBytes(Number(button.dataset.freed), { binary: true });
+	const text = (count > 1
+		? `Are you sure you want to delete the restore point from ${date}? It is kept by ${count} snapshots (${tiers}), and all of them will be deleted.<br><br>Files that exist only in these snapshots will be permanently lost. This frees up at least ${freed}.`
+		: `Are you sure you want to delete the ${_.toLower(tiers)} snapshot from ${date}?<br><br>Files that exist only in this snapshot will be permanently lost. This frees up ${freed}.`);
+	await confirm(text, { buttons: [{ text: 'Yes, delete', class: 'btn-danger' }] });
+};
+
 const filterJobsByApp = (jobs, app) => {
 	const containerIds = _.map(app.projectContainers, 'id');
 	const appJobs = _.filter(jobs, (job) => { return job.data?.config?.name === app.name; });
@@ -225,21 +301,11 @@ const renderAppDetails = (name) => {
 	const networkMaxBytesPerSec = appService.getDefaultNetworkInterfaceSpeed();
 	morphdom(
 		details,
-		`<div>${appDetailsTemplate({ app, jobs, appJobs, serviceJobs, appActionsTemplate, prettyBytes, moment, networkMaxBytesPerSec })}</div>`,
+		`<div>${appDetailsTemplate({ app, jobs, appJobs, serviceJobs, appActionsTemplate, prettyBytes, moment, networkMaxBytesPerSec, selectedSnapshot: snapshotSelections[name], snapshotFilter: snapshotFilters[name] || {} })}</div>`,
 		{
 			childrenOnly: true,
 			onBeforeElUpdated: (fromEl, toEl) => {
 				if (fromEl.classList.contains('logs-container') || fromEl.classList.contains('terminal-container')) {
-					return false;
-				}
-
-				if (fromEl.classList.contains('group-toggle')) {
-					morphdom(fromEl, toEl, { childrenOnly: true });
-					return false;
-				}
-
-				if (fromEl.tagName === 'TBODY' && (fromEl.classList.contains('collapse') || fromEl.classList.contains('collapsing'))) {
-					morphdom(fromEl, toEl, { childrenOnly: true });
 					return false;
 				}
 			}
@@ -297,6 +363,8 @@ const handleRoute = (ctx) => {
 		return;
 	}
 
+	delete snapshotSelections[name];
+	delete snapshotFilters[name];
 	renderAppDetails(name);
 	details.classList.add('d-block');
 };
@@ -306,6 +374,11 @@ module.addEventListener('click', compress);
 module.addEventListener('click', update);
 module.addEventListener('click', performAppAction);
 module.addEventListener('click', performServiceAction);
+module.addEventListener('click', selectSnapshot);
+module.addEventListener('click', deleteSnapshot);
+module.addEventListener('click', filterSnapshots);
+module.addEventListener('input', scrubSnapshot);
+module.addEventListener('keydown', stepSnapshot);
 module.addEventListener('switch-changed', updateIndexer);
 module.addEventListener('mouseenter', toggleStateTooltip, true);
 module.addEventListener('mouseleave', toggleStateTooltip, true);
