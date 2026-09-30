@@ -446,7 +446,7 @@
 													%>
 													<div class="dropdown">
 														<span class="d-flex <%=(app.indexer && !snapshotSearching ? '' : 'opacity-50 pe-none')%>" data-bs-toggle="dropdown">
-															<u-badge color="gray" tint="300" class="cursor-pointer">
+															<u-badge color="<%=(current ? 'blue' : 'gray')%>" tint="<%=(current ? '500' : '300')%>" class="cursor-pointer">
 																<%=(current ? currentOption[1] : group.label)%>
 																<i class="icon-solid icon-chevron-down icon-xs ms-1"></i>
 															</u-badge>
