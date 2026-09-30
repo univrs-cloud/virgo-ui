@@ -1,0 +1,31 @@
+<%
+	const filterGroups = [
+		{ key: 'category', label: 'Category', options: [['', 'Any category'], ..._.map(categories, (category) => { return [category, category]; })] },
+		{ key: 'status', label: 'Status', options: [['', 'Any status'], ['running', 'Running'], ['partial', 'Partly running'], ['stopped', 'Stopped']] },
+		{ key: 'updates', label: 'Updates', options: [['', 'Any'], ['available', 'Updates available'], ['current', 'Up to date']] }
+	];
+%>
+<div class="d-flex flex-wrap align-items-center gap-2">
+	<%_.each(filterGroups, (group) => {%>
+		<%
+			const current = filters[group.key] || '';
+			const currentOption = _.find(group.options, ([value]) => { return _.toLower(value) === _.toLower(current); });
+		%>
+		<div class="dropdown">
+			<span class="d-flex" data-bs-toggle="dropdown">
+				<u-badge color="<%=(current ? 'blue' : 'gray')%>" tint="<%=(current ? '500' : '300')%>" class="cursor-pointer">
+					<%-(current ? (currentOption?.[1] || current) : group.label)%>
+					<i class="icon-solid icon-chevron-down icon-xs ms-1"></i>
+				</u-badge>
+			</span>
+			<div class="dropdown-menu dropdown-menu-start shadow">
+				<%_.each(group.options, ([value, label]) => {%>
+					<button type="button" class="dropdown-item <%=(_.toLower(value) === _.toLower(current) ? 'active' : '')%>" data-app-filter="<%-group.key%>" data-value="<%-value%>"><%-label%></button>
+				<%})%>
+			</div>
+		</div>
+	<%})%>
+	<%if (_.some(_.values(filters))) {%>
+		<button type="button" class="btn btn-link btn-sm text-decoration-none" data-app-filter="clear">Clear filters</button>
+	<%}%>
+</div>

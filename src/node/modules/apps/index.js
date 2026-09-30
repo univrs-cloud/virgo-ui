@@ -3,6 +3,7 @@ import modulePartial from 'node/modules/apps/partials/index.html';
 import appPartial from 'node/modules/apps/partials/app.html';
 import appActionsPartial from 'node/modules/apps/partials/app_actions.html';
 import appDetailsPartial from 'node/modules/apps/partials/app_details.html';
+import filtersPartial from 'node/modules/apps/partials/filters.html';
 import * as appService from 'node/modules/apps/services/app';
 import { filterListByQuery } from 'utils/list_search';
 
@@ -10,16 +11,19 @@ const moduleTemplate = _.template(modulePartial);
 const appTemplate = _.template(appPartial);
 const appActionsTemplate = _.template(appActionsPartial);
 const appDetailsTemplate = _.template(appDetailsPartial);
+const filtersTemplate = _.template(filtersPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
 const module = document.querySelector('#apps');
 const loading = module.querySelector('.loading');
 const container = module.querySelector('.container-fluid');
 const details = container.querySelector('.details');
 const searchInput = module.querySelector('.search');
+const appFilters = module.querySelector('.app-filters');
 const table = container.querySelector('.table');
 let routeAppName = null;
 let searchTimer;
 let searchValue = '';
+let filterValues = {};
 let tableOrder = {
 	field: 'title',
 	direction: 'asc'
@@ -39,6 +43,17 @@ const search = (event) => {
 		const jobs = appService.getJobs();
 		render({ apps, jobs });
 	}, 300);
+};
+
+const filterApps = (event) => {
+	const option = event.target.closest('[data-app-filter]');
+	if (!option) {
+		return;
+	}
+
+	const { appFilter, value } = option.dataset;
+	filterValues = (appFilter === 'clear' ? {} : { ...filterValues, [appFilter]: value });
+	render({ apps: appService.getApps(), jobs: appService.getJobs() });
 };
 
 const order = (event) => {
@@ -438,8 +453,28 @@ const render = (state) => {
 		return;
 	}
 	
+	const categories = _.sortBy(_.uniqBy(_.compact(_.map(state.apps, 'category')), _.toLower), _.toLower);
+	morphdom(
+		appFilters,
+		`<div>${filtersTemplate({ categories, filters: filterValues })}</div>`,
+		{ childrenOnly: true }
+	);
+
 	apps = state.apps;
 	apps = filterListByQuery(apps, searchValue, ['title', 'name', 'icon', 'urls']);
+	const statusStates = { running: 'success', partial: 'warning', stopped: 'danger' };
+	apps = _.filter(apps, (app) => {
+		if (filterValues.category && _.toLower(app.category) !== _.toLower(filterValues.category)) {
+			return false;
+		}
+		if (filterValues.status && app.state !== statusStates[filterValues.status]) {
+			return false;
+		}
+		if (filterValues.updates && app.hasUpdates !== (filterValues.updates === 'available')) {
+			return false;
+		}
+		return true;
+	});
 	apps = _.orderBy(apps,
 		[
 			(app) => {
@@ -501,6 +536,7 @@ module.addEventListener('switch-changed', updateIndexer);
 module.addEventListener('mouseenter', toggleStateTooltip, true);
 module.addEventListener('mouseleave', toggleStateTooltip, true);
 searchInput.addEventListener('input', search);
+appFilters.addEventListener('click', filterApps);
 table.querySelector('thead').addEventListener('click', order);
 table.querySelector('tbody').addEventListener('click', expand);
 

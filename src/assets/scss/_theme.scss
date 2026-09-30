@@ -476,11 +476,11 @@ u-badge:hover .hover-reveal-text {
 		height: 100dvh;
 	}
 }
+.details-toggle[aria-expanded="true"] .icon-solid {
+	transform: rotate(180deg);
+}
 #storage {
 	--vdev-line-color: var(--bs-border-color);
-	.details-toggle[aria-expanded="true"] .icon-solid {
-		transform: rotate(180deg);
-	}
 	.vdev-tree {
 		--vdev-slot-width: 4.25rem;
 		.vdev-bar {
