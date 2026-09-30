@@ -478,13 +478,30 @@
 										const resultPoint = (snapshotName) => {
 											return _.find(snapshotPoints, { key: snapshotName.split('_').slice(1, -1).join('_') });
 										};
-										const resultGroups = _.sortBy(_.map(_.groupBy(snapshotResults.results, (result) => { return result.path.slice(0, result.path.lastIndexOf('/')) || '/'; }), (items, folder) => {
-											return {
-												folder,
-												deleted: _.size(_.filter(items, 'deleted')),
-												items: _.orderBy(items, [(item) => { return (item.deleted ? 0 : 1); }, (item) => { return _.toLower(item.path); }])
-											};
-										}), 'folder');
+										const resultTree = { children: {} };
+										_.each(snapshotResults.results, (result) => {
+											const node = _.reduce(_.compact(result.path.split('/')), (parent, segment) => {
+												parent.children[segment] = parent.children[segment] || { name: segment, children: {} };
+												return parent.children[segment];
+											}, resultTree);
+											node.item = result;
+										});
+										const resultRows = [];
+										const walkResults = (parent, depth) => {
+											const children = _.orderBy(_.values(parent.children), [(node) => { return (node.item?.deleted ? 0 : 1); }, (node) => { return _.toLower(node.name); }]);
+											_.each(children, (child, index) => {
+												let node = child;
+												let name = child.name;
+												while (!node.item && _.size(node.children) === 1 && !_.isEmpty(_.head(_.values(node.children)).children)) {
+													node = _.head(_.values(node.children));
+													name = `${name}/${node.name}`;
+												}
+												resultRows.push({ node, name, depth, isLast: (index === children.length - 1), hasChildren: !_.isEmpty(node.children) });
+												walkResults(node, depth + 1);
+												resultRows.push({ close: true });
+											});
+										};
+										walkResults(resultTree, 0);
 										const resultIcons = { file: 'icon-file', dir: 'icon-folder', link: 'icon-link' };
 									%>
 									<div class="card-body border-top">
@@ -498,53 +515,56 @@
 										<%if (_.isEmpty(snapshotResults.results) && !snapshotResults.message) {%>
 											<div class="small text-body-secondary">No files match.</div>
 										<%}%>
-										<div class="d-flex flex-column gap-2">
-											<%_.each(resultGroups, (group) => {%>
-												<div class="tree-rows">
-													<small class="tree-row tree-line d-flex align-items-center gap-2 text-body-tertiary min-w-0 py-1" data-depth="0" style="--tree-line-x: 0.55rem; --tree-line-top: calc(50% + var(--tree-icon-radius));">
-														<i class="icon-light icon-folder-open icon-fw"></i>
-														<span class="text-truncate"><%-group.folder%></span>
-														<span class="text-nowrap">· <%=_.size(group.items)%><%=(group.deleted ? ` · ${group.deleted} deleted` : '')%></span>
-													</small>
-													<%_.each(group.items, (item, index) => {%>
-														<%const isLast = (index === group.items.length - 1);%>
-														<div class="tree-row py-1 <%=(isLast ? '' : 'tree-line')%>" data-depth="1" style="--tree-elbow-x: 0.55rem; --tree-elbow-height: 1rem; --tree-line-x: 0.55rem; --tree-line-top: 0; padding-left: 1.5rem;">
-															<div class="d-flex align-items-center gap-2 min-w-0">
-																<i class="icon-light <%-resultIcons[item.type] || 'icon-file'%> icon-fw text-body-tertiary"></i>
-																<span class="text-truncate <%=(item.deleted ? 'text-body-secondary' : '')%>"><%-item.path.slice(item.path.lastIndexOf('/') + 1)%></span>
-																<%if (item.deleted) {%>
-																	<span class="badge rounded-pill border fw-normal text-red-500 border-red-500">Deleted</span>
+										<div class="tree-rows">
+											<%_.each(resultRows, (row) => {%>
+												<%if (row.close) {%>
+													</div>
+												<%} else {%>
+													<%const item = row.node.item;%>
+													<div class="tree-row <%=(row.depth && !row.isLast ? 'tree-line' : '')%>" data-depth="<%=row.depth%>" style="--tree-elbow-x: 0.55rem; --tree-elbow-height: 1rem; --tree-line-x: 0.55rem; --tree-line-top: 0; <%=(row.depth ? 'padding-left: 1.5rem;' : '')%>">
+														<div class="tree-row py-1 <%=(row.hasChildren ? 'tree-line' : '')%>" data-depth="0" style="--tree-line-x: 0.55rem; --tree-line-top: calc(1rem + var(--tree-icon-radius));">
+															<%if (item) {%>
+																<div class="d-flex align-items-center gap-2 min-w-0">
+																	<i class="icon-light <%-resultIcons[item.type] || 'icon-file'%> icon-fw text-body-tertiary"></i>
+																	<span class="text-truncate <%=(item.deleted ? 'text-body-secondary' : '')%>"><%-row.name%></span>
+																	<%if (item.deleted) {%>
+																		<span class="badge rounded-pill border fw-normal text-red-500 border-red-500">Deleted</span>
+																	<%}%>
+																</div>
+																<%if (!_.isEmpty(item.versions)) {%>
+																	<%
+																		const versionEntries = _.concat(
+																			_.map(item.versions, (version, index) => {
+																				const label = version.change || (index ? 'changed' : 'first seen');
+																				return { snapshot: version.snapshot, label: (item.deleted && version.snapshot === item.lastSeenSnap ? `${label} · last seen` : label), size: version.size };
+																			}),
+																			(item.deleted && item.lastSeenSnap && !_.some(item.versions, { snapshot: item.lastSeenSnap }) ? [{ snapshot: item.lastSeenSnap, label: 'last seen' }] : [])
+																		);
+																	%>
+																	<small class="d-flex flex-column text-body-tertiary ps-4">
+																		<%_.each(versionEntries, (version) => {%>
+																			<%const versionPoint = resultPoint(version.snapshot);%>
+																			<span class="text-nowrap">
+																				<%if (versionPoint) {%>
+																					<button type="button" class="btn btn-link btn-sm p-0 align-baseline text-decoration-none" data-snapshot="<%-versionPoint.key%>"><%=snapshotLabel(versionPoint)%></button>
+																				<%} else {%>
+																					<%-version.snapshot%>
+																				<%}%>
+																				<%=` · ${version.label}`%><%=(item.type === 'dir' || _.isUndefined(version.size) ? '' : ` · ${prettyBytes(version.size || 0, { binary: true })}`)%>
+																			</span>
+																		<%})%>
+																	</small>
+																<%} else {%>
+																	<small class="d-block text-body-tertiary ps-4">Live · no versions</small>
 																<%}%>
-															</div>
-															<%if (!_.isEmpty(item.versions)) {%>
-																<%
-																	const versionEntries = _.concat(
-																		_.map(item.versions, (version, index) => {
-																			const label = version.change || (index ? 'changed' : 'first seen');
-																			return { snapshot: version.snapshot, label: (item.deleted && version.snapshot === item.lastSeenSnap ? `${label} · last seen` : label), size: version.size };
-																		}),
-																		(item.deleted && item.lastSeenSnap && !_.some(item.versions, { snapshot: item.lastSeenSnap }) ? [{ snapshot: item.lastSeenSnap, label: 'last seen' }] : [])
-																	);
-																%>
-																<small class="d-flex flex-column text-body-tertiary ps-4">
-																	<%_.each(versionEntries, (version) => {%>
-																		<%const versionPoint = resultPoint(version.snapshot);%>
-																		<span class="text-nowrap">
-																			<%if (versionPoint) {%>
-																				<button type="button" class="btn btn-link btn-sm p-0 align-baseline text-decoration-none" data-snapshot="<%-versionPoint.key%>"><%=snapshotLabel(versionPoint)%></button>
-																			<%} else {%>
-																				<%-version.snapshot%>
-																			<%}%>
-																			<%=` · ${version.label}`%><%=(item.type === 'dir' || _.isUndefined(version.size) ? '' : ` · ${prettyBytes(version.size || 0, { binary: true })}`)%>
-																		</span>
-																	<%})%>
-																</small>
 															<%} else {%>
-																<small class="d-block text-body-tertiary ps-4">Live · no versions</small>
+																<div class="d-flex align-items-center gap-2 min-w-0 text-body-tertiary">
+																	<i class="icon-light icon-folder-open icon-fw"></i>
+																	<span class="text-truncate"><%-row.name%></span>
+																</div>
 															<%}%>
 														</div>
-													<%})%>
-												</div>
+												<%}%>
 											<%})%>
 										</div>
 										<%if (snapshotResults.hasMore) {%>
