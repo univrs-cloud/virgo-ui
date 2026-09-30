@@ -28,6 +28,10 @@ class Indexer extends Store {
 	updateDatasets(data) {
 		this.socket.emit('indexer:dataset:config:update', data);
 	}
+
+	search(query) {
+		return this.socket.timeout(30000).emitWithAck('indexer:search', query);
+	}
 }
 
 export default new Indexer();
