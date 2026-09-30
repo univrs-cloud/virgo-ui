@@ -35,6 +35,11 @@
 				</div>
 			</div>
 
+			<div class="nav nav-pills bg-gray-200 mb-2" style="--bs-nav-pills-link-active-bg: var(--bs-body-bg); --bs-nav-pills-link-active-color: var(--bs-body-color);">
+				<button type="button" class="nav-link px-2 py-1 <%=(appTab === 'snapshots' ? '' : 'active shadow-sm')%>" data-app-tab="services"><i class="icon-light icon-cube icon-fw me-1"></i>Services <small class="opacity-75">(<%=_.size(app.projectContainers)%>)</small></button>
+				<button type="button" class="nav-link px-2 py-1 <%=(appTab === 'snapshots' ? 'active shadow-sm' : '')%>" data-app-tab="snapshots"><i class="icon-light icon-clock-rotate-left icon-fw me-1"></i>Snapshots <small class="opacity-75">(<%=_.size(app.snapshots)%>)</small></button>
+			</div>
+
 			<div class="position-relative">
 				<div class="logs-container bd-black rounded-3 shadow-sm d-none">
 					<div class="service d-flex align-items-center justify-content-between border-bottom border-dark px-2 py-1">
@@ -67,483 +72,569 @@
 				</div>
 
 				<div class="overflow-y-scroll pe-3 mx-0 me-n3">
-					<div class="row g-2">
-						<div class="col col-6 col-md-3">
-							<div class="card mb-2">
-								<div class="card-body py-1">
-									<small class="text-body-tertiary pb-1"><i class="icon-solid icon-microchip icon-fw me-1"></i>CPU</small>
-									<h5><%-app.resourceMetrics?.cpu?.percent?.toFixed(2)%>%</h5>
-								</div>
-							</div>
-						</div>
-						<div class="col col-6 col-md-3">
-							<div class="card mb-2">
-								<div class="card-body py-1">
-									<small class="text-body-tertiary pb-1"><i class="icon-solid icon-memory icon-fw me-1"></i>RAM</small>
-									<h5><%-app.resourceMetrics?.memory?.percent?.toFixed(2)%>%</h5>
-								</div>
-							</div>
-						</div>
-						<div class="col col-6 col-md-3">
-							<div class="card mb-2">
-								<div class="card-body py-1">
-									<small class="text-body-tertiary pb-1"><i class="icon-solid icon-database icon-fw me-1"></i>Data</small>
-									<h5><%=prettyBytes(app.resourceMetrics?.storage?.dataset || 0, { binary: true })%></h5>
-								</div>
-							</div>
-						</div>
-						<div class="col col-6 col-md-3">
-							<div class="card mb-2">
-								<div class="card-body py-1">
-									<small class="text-body-tertiary pb-1"><i class="icon-solid icon-clock-rotate-left icon-fw me-1"></i>Snapshots</small>
-									<h5><%=prettyBytes(app.resourceMetrics?.storage?.snapshots || 0, { binary: true })%></h5>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="services pe-3 me-n3">
+					<div class="<%=(appTab === 'snapshots' ? 'd-none' : '')%>">
 						<div class="row g-2">
-							<%_.each(app.projectContainers, (container, index) => {%>
-								<%const resourceMetrics = _.find((app.resourceMetrics?.containers || []), { id: container.id })%>
-								<%const containerJobs = _.filter(serviceJobs, (job) => { return job.data?.config?.id === container.id; });%>
-								<div class="col-12">
-									<div class="service card bg-gradient-top mb-2 h-100" data-id="<%-container.id%>">
-										<div class="card-body py-1">
-											<div class="row g-2 align-items-center">
-												<div class="col-12">
-													<%const stateColor = (container.state === 'running' ? 'text-green-300' : (_.includes(['restarting', 'paused'], container.state) ? 'text-orange-300' : (_.includes(['exited', 'dead'], container.state) ? 'text-red-300' : 'text-gray-400')));%>
-													<div class="d-flex align-items-center justify-content-between w-100">
-														<div class="d-flex align-items-center min-w-0">
-															<span class="state-icon position-relative d-inline-flex me-2">
-																<i class="icon-light icon-cube icon-width-auto text-body-tertiary"></i>
-																<i class="state-dot icon-solid icon-circle icon-2xs icon-width-auto lh-1 position-absolute top-0 start-100 translate-middle <%=stateColor%>" data-bs-original-title="<%-_.upperFirst(container.state)%>"></i>
-															</span>
-															<div class="text-truncate min-w-0"><%-container.labels?.comDockerComposeService%>
-																<%if (container.state !== 'running') {%>
-																	<small class="text-body-tertiary">(<%-container.state%>)</small>
-																<%}%>
-																<%if (container.hasUpdates) {%>
-																	<u-badge color="green" class="ms-1" tip="Updates available" pill>
-																		<i class="icon-solid icon-download icon-fw"></i>
-																	</u-badge>
-																<%}%>
+							<div class="col col-6 col-md-3">
+								<div class="card mb-2">
+									<div class="card-body py-1">
+										<small class="text-body-tertiary pb-1"><i class="icon-solid icon-microchip icon-fw me-1"></i>CPU</small>
+										<h5><%-app.resourceMetrics?.cpu?.percent?.toFixed(2)%>%</h5>
+									</div>
+								</div>
+							</div>
+							<div class="col col-6 col-md-3">
+								<div class="card mb-2">
+									<div class="card-body py-1">
+										<small class="text-body-tertiary pb-1"><i class="icon-solid icon-memory icon-fw me-1"></i>RAM</small>
+										<h5><%-app.resourceMetrics?.memory?.percent?.toFixed(2)%>%</h5>
+									</div>
+								</div>
+							</div>
+							<div class="col col-6 col-md-3">
+								<div class="card mb-2">
+									<div class="card-body py-1">
+										<small class="text-body-tertiary pb-1"><i class="icon-solid icon-database icon-fw me-1"></i>Data</small>
+										<h5><%=prettyBytes(app.resourceMetrics?.storage?.dataset || 0, { binary: true })%></h5>
+									</div>
+								</div>
+							</div>
+							<div class="col col-6 col-md-3">
+								<div class="card mb-2">
+									<div class="card-body py-1">
+										<small class="text-body-tertiary pb-1"><i class="icon-solid icon-clock-rotate-left icon-fw me-1"></i>Snapshots</small>
+										<h5><%=prettyBytes(app.resourceMetrics?.storage?.snapshots || 0, { binary: true })%></h5>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="services pe-3 me-n3">
+							<div class="row g-2">
+								<%_.each(app.projectContainers, (container, index) => {%>
+									<%const resourceMetrics = _.find((app.resourceMetrics?.containers || []), { id: container.id })%>
+									<%const containerJobs = _.filter(serviceJobs, (job) => { return job.data?.config?.id === container.id; });%>
+									<div class="col-12">
+										<div class="service card bg-gradient-top mb-2 h-100" data-id="<%-container.id%>">
+											<div class="card-body py-1">
+												<div class="row g-2 align-items-center">
+													<div class="col-12">
+														<%const stateColor = (container.state === 'running' ? 'text-green-300' : (_.includes(['restarting', 'paused'], container.state) ? 'text-orange-300' : (_.includes(['exited', 'dead'], container.state) ? 'text-red-300' : 'text-gray-400')));%>
+														<div class="d-flex align-items-center justify-content-between w-100">
+															<div class="d-flex align-items-center min-w-0">
+																<span class="state-icon position-relative d-inline-flex me-2">
+																	<i class="icon-light icon-cube icon-width-auto text-body-tertiary"></i>
+																	<i class="state-dot icon-solid icon-circle icon-2xs icon-width-auto lh-1 position-absolute top-0 start-100 translate-middle <%=stateColor%>" data-bs-original-title="<%-_.upperFirst(container.state)%>"></i>
+																</span>
+																<div class="text-truncate min-w-0"><%-container.labels?.comDockerComposeService%>
+																	<%if (container.state !== 'running') {%>
+																		<small class="text-body-tertiary">(<%-container.state%>)</small>
+																	<%}%>
+																	<%if (container.hasUpdates) {%>
+																		<u-badge color="green" class="ms-1" tip="Updates available" pill>
+																			<i class="icon-solid icon-download icon-fw"></i>
+																		</u-badge>
+																	<%}%>
+																</div>
 															</div>
 														</div>
 													</div>
-												</div>
 
-												<div class="col-12">
-													<div class="d-flex flex-wrap align-items-center gap-1">
-														<u-badge color="blue" tint="100" pill><i class="icon-light icon-layer-group icon-fw me-1"></i><%-container.image%></u-badge>
-														<%if (!_.isEmpty(container.mounts)) {%>
-															<%const mountLines = _.map(_.sortBy(container.mounts, 'destination'), (mount) => {
-																const source = (mount.type === 'volume' ? mount.name : mount.source);
-																const readOnly = (mount.rw === false ? ' <span class=\'opacity-75\'>&middot; read-only</span>' : '');
-																return `<div class='mt-1'><div>${_.escape(mount.destination)}${readOnly}</div><div class='small opacity-75'>${_.escape(source)}</div></div>`;
-															});%>
-															<u-badge color="orange" tint="100" tip="<div class='text-start'><div class='fw-semibold'><%=_.pluralize('volume', _.size(container.mounts), true)%> mounted</div><%=mountLines.join('')%></div>" pill>
-																<i class="icon-light icon-hard-drive icon-fw me-1"></i><%=_.size(container.mounts)%>
-															</u-badge>
-														<%}%>
-														<%if (container.hostConfig?.networkMode !== 'host') {%>
-															<%_.each(container.networkSettings?.networks, (network, networkName) => {%>
-																<%if (network.ipAddress) {%>
-																	<%const isExternal = !!network.gateway;%>
-																	<u-badge color="<%=(isExternal ? 'purple' : 'gray')%>" tint="<%=(isExternal ? 100 : 200)%>" tip="<%-networkName%>: <%-network.ipAddress%> &middot; <%=(isExternal ? 'external' : 'internal')%>" pill>
-																		<i class="icon-light icon-network-wired icon-fw me-1"></i><%-network.ipAddress%>
-																	</u-badge>
-																<%}%>
-															<%})%>
-															<%if (container.state === 'running') {%>
-																<%const publishedPorts = _.uniqBy(_.filter(container.ports, (p) => p.publicPort), (p) => `${p.publicPort}:${p.privatePort}:${p.type}`);%>
-																<%_.each(_.orderBy(publishedPorts, ['privatePort'], ['asc']), (port, index) => {%>
-																	<u-badge color="gray" tint="200" tip="<%=`${port.publicPort} &rlarr; ${port.privatePort} (${port.type})`%>" pill>:<%=port.publicPort%></u-badge>
-																<%})%>
+													<div class="col-12">
+														<div class="d-flex flex-wrap align-items-center gap-1">
+															<u-badge color="blue" tint="100" pill><i class="icon-light icon-layer-group icon-fw me-1"></i><%-container.image%></u-badge>
+															<%if (!_.isEmpty(container.mounts)) {%>
+																<%const mountLines = _.map(_.sortBy(container.mounts, 'destination'), (mount) => {
+																	const source = (mount.type === 'volume' ? mount.name : mount.source);
+																	const readOnly = (mount.rw === false ? ' <span class=\'opacity-75\'>&middot; read-only</span>' : '');
+																	return `<div class='mt-1'><div>${_.escape(mount.destination)}${readOnly}</div><div class='small opacity-75'>${_.escape(source)}</div></div>`;
+																});%>
+																<u-badge color="orange" tint="100" tip="<div class='text-start'><div class='fw-semibold'><%=_.pluralize('volume', _.size(container.mounts), true)%> mounted</div><%=mountLines.join('')%></div>" pill>
+																	<i class="icon-light icon-hard-drive icon-fw me-1"></i><%=_.size(container.mounts)%>
+																</u-badge>
 															<%}%>
-														<%} else {%>
-															<%const hostIp = container.networkSettings?.networks?.host?.ipAddress;%>
-															<%const hostTip = (!hostIp || hostIp === '127.0.0.1' || hostIp.startsWith('127.') || hostIp === '::1') ? 'host: no IP' : `host: ${hostIp}`;%>
-															<u-badge color="purple" tint="100" tip="<%-hostTip%>" pill>
-																<i class="icon-light icon-network-wired icon-fw me-1"></i>1
-															</u-badge>
-														<%}%>
-													</div>
-												</div>
-
-												<%if (_.includes(['running', 'restarting'], container.state)) {%>
-													<div class="col-12 pt-2">
-														<div class="row g-2">
-															<div class="col-6 col-md-3 col-lg-2">
-																<div class="d-flex align-items-center justify-content-between">
-																	<small class="text-body-tertiary"><i class="icon-solid icon-microchip icon-fw me-1"></i>CPU</small>
-																	<%if (!resourceMetrics) {%>
-																		<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
-																	<%} else {%>
-																		<small class="fw-light"><%-resourceMetrics?.cpu?.percent.toFixed(2)%>%</small>
+															<%if (container.hostConfig?.networkMode !== 'host') {%>
+																<%_.each(container.networkSettings?.networks, (network, networkName) => {%>
+																	<%if (network.ipAddress) {%>
+																		<%const isExternal = !!network.gateway;%>
+																		<u-badge color="<%=(isExternal ? 'purple' : 'gray')%>" tint="<%=(isExternal ? 100 : 200)%>" tip="<%-networkName%>: <%-network.ipAddress%> &middot; <%=(isExternal ? 'external' : 'internal')%>" pill>
+																			<i class="icon-light icon-network-wired icon-fw me-1"></i><%-network.ipAddress%>
+																		</u-badge>
 																	<%}%>
-																</div>
-																<%if (resourceMetrics) {%>
-																	<u-progress shadow="false" class="d-block">
-																		<u-progress-bar width="<%-resourceMetrics?.cpu?.percent%>"></u-progress-bar>
-																	</u-progress>
+																<%})%>
+																<%if (container.state === 'running') {%>
+																	<%const publishedPorts = _.uniqBy(_.filter(container.ports, (p) => p.publicPort), (p) => `${p.publicPort}:${p.privatePort}:${p.type}`);%>
+																	<%_.each(_.orderBy(publishedPorts, ['privatePort'], ['asc']), (port, index) => {%>
+																		<u-badge color="gray" tint="200" tip="<%=`${port.publicPort} &rlarr; ${port.privatePort} (${port.type})`%>" pill>:<%=port.publicPort%></u-badge>
+																	<%})%>
 																<%}%>
-															</div>
-
-															<div class="col-6 col-md-3 col-lg-2">
-																<div class="d-flex align-items-center justify-content-between">
-																	<small class="text-body-tertiary"><i class="icon-solid icon-memory icon-fw me-1"></i>RAM</small>
-																	<%if (!resourceMetrics) {%>
-																		<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
-																	<%} else {%>
-																		<small class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(resourceMetrics?.memory?.usage || 0, { binary: true })%>"><%=resourceMetrics?.memory?.percent.toFixed(2)%>%</small>
-																	<%}%>
-																</div>
-																<%if (resourceMetrics) {%>
-																	<u-progress shadow="false" class="d-block">
-																		<u-progress-bar width="<%-resourceMetrics?.memory?.percent%>"></u-progress-bar>
-																	</u-progress>
-																<%}%>
-															</div>
-															<div class="col-6 col-md-3 col-lg-2">
-																<div class="d-flex align-items-center justify-content-between">
-																	<small class="text-body-tertiary"><i class="icon-solid icon-arrow-down icon-fw me-1 text-blue-500"></i>RX</small>
-																	<%if (!resourceMetrics) {%>
-																		<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
-																	<%} else {%>
-																		<%
-																			const rxIsRate = !_.isNil(resourceMetrics?.network?.rx_sec);
-																			const rxValue = resourceMetrics?.network?.rx_sec ?? resourceMetrics?.network?.rx ?? 0;
-																		%>
-																		<small class="fw-light"><%=prettyBytes(rxValue, { binary: true })%><%=(rxIsRate ? '/s' : '')%></small>
-																	<%}%>
-																</div>
-																<%if (resourceMetrics) {%>
-																	<%
-																		const rxValue = resourceMetrics?.network?.rx_sec ?? resourceMetrics?.network?.rx ?? 0;
-																		const rxPercent = networkMaxBytesPerSec > 0 ? _.min([(rxValue / networkMaxBytesPerSec) * 100, 100]) : 0;
-																	%>
-																	<u-progress shadow="false" class="d-block">
-																		<u-progress-bar width="<%=rxPercent%>"></u-progress-bar>
-																	</u-progress>
-																<%}%>
-															</div>
-
-															<div class="col-6 col-md-3 col-lg-2">
-																<div class="d-flex align-items-center justify-content-between">
-																	<small class="text-body-tertiary"><i class="icon-solid icon-arrow-up icon-fw me-1 text-purple-500"></i>TX</small>
-																	<%if (!resourceMetrics) {%>
-																		<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
-																	<%} else {%>
-																		<%
-																			const txIsRate = !_.isNil(resourceMetrics?.network?.tx_sec);
-																			const txValue = resourceMetrics?.network?.tx_sec ?? resourceMetrics?.network?.tx ?? 0;
-																		%>
-																		<small class="fw-light"><%=prettyBytes(txValue, { binary: true })%><%=(txIsRate ? '/s' : '')%></small>
-																	<%}%>
-																</div>
-																<%if (resourceMetrics) {%>
-																	<%
-																		const txValue = resourceMetrics?.network?.tx_sec ?? resourceMetrics?.network?.tx ?? 0;
-																		const txPercent = networkMaxBytesPerSec > 0 ? _.min([(txValue / networkMaxBytesPerSec) * 100, 100]) : 0;
-																	%>
-																	<u-progress shadow="false" class="d-block">
-																		<u-progress-bar width="<%=txPercent%>"></u-progress-bar>
-																	</u-progress>
-																<%}%>
-															</div>
+															<%} else {%>
+																<%const hostIp = container.networkSettings?.networks?.host?.ipAddress;%>
+																<%const hostTip = (!hostIp || hostIp === '127.0.0.1' || hostIp.startsWith('127.') || hostIp === '::1') ? 'host: no IP' : `host: ${hostIp}`;%>
+																<u-badge color="purple" tint="100" tip="<%-hostTip%>" pill>
+																	<i class="icon-light icon-network-wired icon-fw me-1"></i>1
+																</u-badge>
+															<%}%>
 														</div>
 													</div>
-												<%}%>
 
-												<div class="col-12">
-													<hr class="my-1 border-0 border-top opacity-50">
-												</div>
-
-												<div class="col-12">
-													<div class="d-flex align-items-center gap-2">
-														<a href="#" class="logs btn btn-light btn-sm" data-id="<%-container.id%>">
-															<i class="icon-solid icon-memo icon-fw text-body-emphasis me-1"></i>Logs
-														</a>
-														<a href="#" class="terminal btn btn-light btn-sm <%=(container.state === 'running' ? '' : 'disabled')%>" data-id="<%-container.id%>">
-															<i class="icon-solid icon-terminal icon-fw me-1 <%=(container.state === 'running' ? 'text-body-emphasis' : 'text-gray-500')%>"></i>Terminal
-														</a>
-														<div class="d-flex align-items-center gap-2 ms-auto">
-															<%if (!_.isEmpty(appJobs) || !_.isEmpty(containerJobs)) {%>
-																<i class="icon-solid icon-gear icon-fw icon-spin"></i>
-															<%} else {%>
-																<%const isStopped = _.includes(['created', 'exited'], container.state);%>
-																<%const isRunning = _.includes(['running', 'paused'], container.state);%>
-																<%const isActive = _.includes(['running', 'paused', 'restarting'], container.state);%>
-																<div class="dropdown d-md-none">
-																	<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
-																	<div class="dropdown-menu">
-																		<%if (app.canBeRemoved || isStopped) {%>
-																			<a href="#" class="dropdown-item <%=(isStopped ? '' : 'disabled')%>" data-action="start"><i class="icon-regular icon-play icon-fw me-1"></i>Start</a>
-																			<div class="dropdown-divider"></div>
-																		<%}%>
-																		<a href="#" class="dropdown-item <%=(isRunning ? 'confirm' : 'disabled')%>" data-action="restart"><i class="icon-regular icon-arrow-rotate-left icon-fw me-1"></i>Restart</a>
-																		<%if (app.canBeRemoved) {%>
-																			<a href="#" class="dropdown-item <%=(isActive ? 'text-danger confirm' : 'disabled')%>" data-action="stop"><i class="icon-regular icon-stop icon-fw me-1"></i>Stop</a>
-																			<a href="#" class="dropdown-item <%=(isActive ? 'text-danger confirm' : 'disabled')%>" data-action="kill"><i class="icon-regular icon-skull icon-fw me-1"></i>Kill</a>
+													<%if (_.includes(['running', 'restarting'], container.state)) {%>
+														<div class="col-12 pt-2">
+															<div class="row g-2">
+																<div class="col-6 col-md-3 col-lg-2">
+																	<div class="d-flex align-items-center justify-content-between">
+																		<small class="text-body-tertiary"><i class="icon-solid icon-microchip icon-fw me-1"></i>CPU</small>
+																		<%if (!resourceMetrics) {%>
+																			<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
+																		<%} else {%>
+																			<small class="fw-light"><%-resourceMetrics?.cpu?.percent.toFixed(2)%>%</small>
 																		<%}%>
 																	</div>
+																	<%if (resourceMetrics) {%>
+																		<u-progress shadow="false" class="d-block">
+																			<u-progress-bar width="<%-resourceMetrics?.cpu?.percent%>"></u-progress-bar>
+																		</u-progress>
+																	<%}%>
 																</div>
-																<div class="d-none d-md-block">
-																	<div class="d-inline-flex align-items-center">
-																		<%const canStop = (app.canBeRemoved && isActive);%>
-																		<div class="d-inline-flex align-items-center bg-body-secondary bg-opacity-25 border border-light border-opacity-10 rounded-1 pe-3">
-																			<a href="#" class="actions-button btn btn-sm border-0 <%=(isStopped ? '' : 'disabled')%>" data-action="start" data-bs-toggle="tooltip" data-bs-original-title="Start"><i class="icon-solid icon-play icon-fw <%=(isStopped ? 'text-green-400' : 'text-gray-500')%>"></i></a>
-																			<a href="#" class="actions-button btn btn-sm border-0 <%=(isRunning ? 'confirm' : 'disabled')%>" data-action="restart" data-bs-toggle="tooltip" data-bs-original-title="Restart"><i class="icon-solid icon-arrow-rotate-left icon-fw <%=(isRunning ? 'text-body-emphasis' : 'text-gray-500')%>"></i></a>
-																			<a href="#" class="actions-button btn btn-sm border-0 <%=(canStop ? 'confirm' : 'disabled')%>" data-action="stop" data-bs-toggle="tooltip" data-bs-original-title="Stop"><i class="icon-solid icon-stop icon-fw <%=(canStop ? 'text-red-400' : 'text-gray-500')%>"></i></a>
+
+																<div class="col-6 col-md-3 col-lg-2">
+																	<div class="d-flex align-items-center justify-content-between">
+																		<small class="text-body-tertiary"><i class="icon-solid icon-memory icon-fw me-1"></i>RAM</small>
+																		<%if (!resourceMetrics) {%>
+																			<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
+																		<%} else {%>
+																			<small class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(resourceMetrics?.memory?.usage || 0, { binary: true })%>"><%=resourceMetrics?.memory?.percent.toFixed(2)%>%</small>
+																		<%}%>
+																	</div>
+																	<%if (resourceMetrics) {%>
+																		<u-progress shadow="false" class="d-block">
+																			<u-progress-bar width="<%-resourceMetrics?.memory?.percent%>"></u-progress-bar>
+																		</u-progress>
+																	<%}%>
+																</div>
+																<div class="col-6 col-md-3 col-lg-2">
+																	<div class="d-flex align-items-center justify-content-between">
+																		<small class="text-body-tertiary"><i class="icon-solid icon-arrow-down icon-fw me-1 text-blue-500"></i>RX</small>
+																		<%if (!resourceMetrics) {%>
+																			<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
+																		<%} else {%>
+																			<%
+																				const rxIsRate = !_.isNil(resourceMetrics?.network?.rx_sec);
+																				const rxValue = resourceMetrics?.network?.rx_sec ?? resourceMetrics?.network?.rx ?? 0;
+																			%>
+																			<small class="fw-light"><%=prettyBytes(rxValue, { binary: true })%><%=(rxIsRate ? '/s' : '')%></small>
+																		<%}%>
+																	</div>
+																	<%if (resourceMetrics) {%>
+																		<%
+																			const rxValue = resourceMetrics?.network?.rx_sec ?? resourceMetrics?.network?.rx ?? 0;
+																			const rxPercent = networkMaxBytesPerSec > 0 ? _.min([(rxValue / networkMaxBytesPerSec) * 100, 100]) : 0;
+																		%>
+																		<u-progress shadow="false" class="d-block">
+																			<u-progress-bar width="<%=rxPercent%>"></u-progress-bar>
+																		</u-progress>
+																	<%}%>
+																</div>
+
+																<div class="col-6 col-md-3 col-lg-2">
+																	<div class="d-flex align-items-center justify-content-between">
+																		<small class="text-body-tertiary"><i class="icon-solid icon-arrow-up icon-fw me-1 text-purple-500"></i>TX</small>
+																		<%if (!resourceMetrics) {%>
+																			<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
+																		<%} else {%>
+																			<%
+																				const txIsRate = !_.isNil(resourceMetrics?.network?.tx_sec);
+																				const txValue = resourceMetrics?.network?.tx_sec ?? resourceMetrics?.network?.tx ?? 0;
+																			%>
+																			<small class="fw-light"><%=prettyBytes(txValue, { binary: true })%><%=(txIsRate ? '/s' : '')%></small>
+																		<%}%>
+																	</div>
+																	<%if (resourceMetrics) {%>
+																		<%
+																			const txValue = resourceMetrics?.network?.tx_sec ?? resourceMetrics?.network?.tx ?? 0;
+																			const txPercent = networkMaxBytesPerSec > 0 ? _.min([(txValue / networkMaxBytesPerSec) * 100, 100]) : 0;
+																		%>
+																		<u-progress shadow="false" class="d-block">
+																			<u-progress-bar width="<%=txPercent%>"></u-progress-bar>
+																		</u-progress>
+																	<%}%>
+																</div>
+															</div>
+														</div>
+													<%}%>
+
+													<div class="col-12">
+														<hr class="my-1 border-0 border-top opacity-50">
+													</div>
+
+													<div class="col-12">
+														<div class="d-flex align-items-center gap-2">
+															<a href="#" class="logs btn btn-light btn-sm" data-id="<%-container.id%>">
+																<i class="icon-solid icon-memo icon-fw text-body-emphasis me-1"></i>Logs
+															</a>
+															<a href="#" class="terminal btn btn-light btn-sm <%=(container.state === 'running' ? '' : 'disabled')%>" data-id="<%-container.id%>">
+																<i class="icon-solid icon-terminal icon-fw me-1 <%=(container.state === 'running' ? 'text-body-emphasis' : 'text-gray-500')%>"></i>Terminal
+															</a>
+															<div class="d-flex align-items-center gap-2 ms-auto">
+																<%if (!_.isEmpty(appJobs) || !_.isEmpty(containerJobs)) {%>
+																	<i class="icon-solid icon-gear icon-fw icon-spin"></i>
+																<%} else {%>
+																	<%const isStopped = _.includes(['created', 'exited'], container.state);%>
+																	<%const isRunning = _.includes(['running', 'paused'], container.state);%>
+																	<%const isActive = _.includes(['running', 'paused', 'restarting'], container.state);%>
+																	<div class="dropdown d-md-none">
+																		<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
+																		<div class="dropdown-menu">
+																			<%if (app.canBeRemoved || isStopped) {%>
+																				<a href="#" class="dropdown-item <%=(isStopped ? '' : 'disabled')%>" data-action="start"><i class="icon-regular icon-play icon-fw me-1"></i>Start</a>
+																				<div class="dropdown-divider"></div>
+																			<%}%>
+																			<a href="#" class="dropdown-item <%=(isRunning ? 'confirm' : 'disabled')%>" data-action="restart"><i class="icon-regular icon-arrow-rotate-left icon-fw me-1"></i>Restart</a>
+																			<%if (app.canBeRemoved) {%>
+																				<a href="#" class="dropdown-item <%=(isActive ? 'text-danger confirm' : 'disabled')%>" data-action="stop"><i class="icon-regular icon-stop icon-fw me-1"></i>Stop</a>
+																				<a href="#" class="dropdown-item <%=(isActive ? 'text-danger confirm' : 'disabled')%>" data-action="kill"><i class="icon-regular icon-skull icon-fw me-1"></i>Kill</a>
+																			<%}%>
 																		</div>
-																		<div class="dropdown position-relative z-1 ms-n3">
-																			<span data-bs-toggle="dropdown" class="actions-toggle dropdown-toggle caret-off btn btn-sm border border-light border-opacity-10 rounded-1 px-2 py-1 <%=(canStop ? '' : 'disabled')%>"><i class="icon-solid icon-ellipsis-vertical icon-fw <%=(canStop ? 'text-secondary' : 'text-gray-500')%>"></i></span>
-																			<div class="dropdown-menu">
-																				<a href="#" class="dropdown-item text-danger confirm" data-action="kill"><i class="icon-regular icon-skull icon-fw me-1"></i>Kill</a>
+																	</div>
+																	<div class="d-none d-md-block">
+																		<div class="d-inline-flex align-items-center">
+																			<%const canStop = (app.canBeRemoved && isActive);%>
+																			<div class="d-inline-flex align-items-center bg-body-secondary bg-opacity-25 border border-light border-opacity-10 rounded-1 pe-3">
+																				<a href="#" class="actions-button btn btn-sm border-0 <%=(isStopped ? '' : 'disabled')%>" data-action="start" data-bs-toggle="tooltip" data-bs-original-title="Start"><i class="icon-solid icon-play icon-fw <%=(isStopped ? 'text-green-400' : 'text-gray-500')%>"></i></a>
+																				<a href="#" class="actions-button btn btn-sm border-0 <%=(isRunning ? 'confirm' : 'disabled')%>" data-action="restart" data-bs-toggle="tooltip" data-bs-original-title="Restart"><i class="icon-solid icon-arrow-rotate-left icon-fw <%=(isRunning ? 'text-body-emphasis' : 'text-gray-500')%>"></i></a>
+																				<a href="#" class="actions-button btn btn-sm border-0 <%=(canStop ? 'confirm' : 'disabled')%>" data-action="stop" data-bs-toggle="tooltip" data-bs-original-title="Stop"><i class="icon-solid icon-stop icon-fw <%=(canStop ? 'text-red-400' : 'text-gray-500')%>"></i></a>
+																			</div>
+																			<div class="dropdown position-relative z-1 ms-n3">
+																				<span data-bs-toggle="dropdown" class="actions-toggle dropdown-toggle caret-off btn btn-sm border border-light border-opacity-10 rounded-1 px-2 py-1 <%=(canStop ? '' : 'disabled')%>"><i class="icon-solid icon-ellipsis-vertical icon-fw <%=(canStop ? 'text-secondary' : 'text-gray-500')%>"></i></span>
+																				<div class="dropdown-menu">
+																					<a href="#" class="dropdown-item text-danger confirm" data-action="kill"><i class="icon-regular icon-skull icon-fw me-1"></i>Kill</a>
+																				</div>
 																			</div>
 																		</div>
 																	</div>
-																</div>
-															<%}%>
+																<%}%>
+															</div>
 														</div>
 													</div>
 												</div>
 											</div>
 										</div>
 									</div>
-								</div>
-							<%})%>
+								<%})%>
+							</div>
 						</div>
 					</div>
-
-					<div class="snapshots card mb-2 mt-3">
-						<div class="card-body py-1">
-							<div class="d-flex align-items-center justify-content-between gap-2">
-								<div class="d-flex align-items-center min-w-0">
-									<i class="icon-light icon-clock-rotate-left icon-fw text-body-tertiary me-2"></i>
-									<span>Snapshots</span>
-									<small class="text-body-tertiary ms-2">(<%=_.size(app.snapshots)%>)</small>
-								</div>
-								<u-switch class="indexer-switch me-n3 flex-shrink-0" on-label="Indexer" <%=(app.indexer ? 'checked' : '')%>></u-switch>
-							</div>
-						</div>
-						<%
-							const snapshotTierOrder = ['frequently', 'hourly', 'daily', 'monthly', 'yearly'];
-							const snapshotTierColors = { frequently: 'blue-200', hourly: 'blue-300', daily: 'blue-500', monthly: 'indigo-500', yearly: 'indigo-700' };
-							const snapshotTierHours = { frequently: 0.25, hourly: 1, daily: 24, monthly: 730.5, yearly: 8766 };
-							const snapshotNow = moment();
-							const snapshotEntries = _.filter(_.map(app.snapshots, (snapshot) => {
-								const segments = snapshot.snapshotName.split('_');
-								const createdMoment = moment.utc(segments.slice(1, -1).join(' '), 'YYYY-MM-DD HH:mm:ss', true).local();
-								return {
-									key: segments.slice(1, -1).join('_'),
-									tier: _.toLower(_.last(segments)),
-									createdMoment,
-									age: Math.max(snapshotNow.diff(createdMoment, 'hours', true), 0),
-									size: snapshot.properties?.used?.value || 0
-								};
-							}), (entry) => { return entry.createdMoment.isValid() && _.includes(snapshotTierOrder, entry.tier); });
-							const snapshotPoints = _.orderBy(_.map(_.groupBy(snapshotEntries, 'key'), (entries, key) => {
-								return {
-									key,
-									createdMoment: entries[0].createdMoment,
-									age: entries[0].age,
-									tiers: _.intersection(snapshotTierOrder, _.map(entries, 'tier')),
-									freed: _.sumBy(entries, 'size'),
-									count: _.size(entries)
-								};
-							}), (point) => { return point.createdMoment.valueOf(); }, ['desc']);
-						%>
-						<%if (!_.isEmpty(snapshotPoints)) {%>
+					<div class="<%=(appTab === 'snapshots' ? '' : 'd-none')%>">
+						<div class="snapshots card mb-2">
 							<%
-								const snapshotTiers = _.filter(snapshotTierOrder, (tier) => { return _.some(snapshotEntries, { tier }); });
-								const snapshotMaxSize = _.max(_.map(snapshotEntries, 'size')) || 0;
-								const snapshotRadius = (size, min, max) => { return (snapshotMaxSize > 0 ? min + Math.sqrt(size / snapshotMaxSize) * (max - min) : min); };
-								const selectedPoint = _.find(snapshotPoints, { key: selectedSnapshot }) || _.first(snapshotPoints);
-								const selectedIndex = _.indexOf(snapshotPoints, selectedPoint);
-								const snapshotSpan = (hours) => {
-									if (hours < 48) {
-										return `${Math.round(hours)}h`;
-									}
-									if (hours < 1461) {
-										return `${Math.round(hours / 24)}d`;
-									}
-									if (hours < 8766) {
-										return `${Math.round(hours / 730.5)}mo`;
-									}
-									return `${Math.round(hours / 8766)}y`;
-								};
-								const snapshotSegments = _.map(_.filter(_.reduce(snapshotTiers, (segments, tier) => {
-									const start = _.last(segments)?.end || 0;
-									return [...segments, { start, end: Math.max(start, _.max(_.map(_.filter(snapshotEntries, { tier }), 'age'))) }];
-								}, []), (segment) => { return segment.end > segment.start; }), (segment, index, segments) => {
-									return { ...segment, from: index / segments.length, to: (index + 1) / segments.length };
-								});
-								const snapshotPosition = (age) => {
-									const segment = _.find(snapshotSegments, (candidate) => { return age <= candidate.end; }) || _.last(snapshotSegments);
-									if (!segment) {
-										return 0;
-									}
-									return segment.from + _.clamp((age - segment.start) / (segment.end - segment.start), 0, 1) * (segment.to - segment.from);
-								};
-								const snapshotTicks = _.map(snapshotSegments, (segment, index) => { return [segment.end, snapshotSpan(segment.end), index === snapshotSegments.length - 1]; });
-								const snapshotLabel = (point) => {
-									const createdMoment = point.createdMoment;
-									const coarsest = _.last(point.tiers);
-									if (createdMoment.isSame(snapshotNow, 'day')) {
-										return `Today ${createdMoment.format('HH:mm')}`;
-									}
-									if (createdMoment.isSame(snapshotNow.clone().subtract(1, 'day'), 'day')) {
-										return `Yesterday ${createdMoment.format('HH:mm')}`;
-									}
-									if (_.includes(['monthly', 'yearly'], coarsest) && createdMoment.clone().utc().date() === 1 && createdMoment.clone().utc().hour() === 0) {
-										return createdMoment.format('MMMM YYYY');
-									}
-									if (_.includes(['frequently', 'hourly'], coarsest)) {
-										return createdMoment.format('ddd D MMM, HH:mm');
-									}
-									if (coarsest === 'daily') {
-										return createdMoment.format(createdMoment.isSame(snapshotNow, 'year') ? 'ddd D MMM' : 'ddd D MMM YYYY');
-									}
-									return createdMoment.format('D MMM YYYY, HH:mm');
-								};
-								const snapshotTip = (point) => {
-									return `<div class='text-start'><div class='fw-semibold'>${snapshotLabel(point)}</div><div>${point.createdMoment.format('YYYY-MM-DD HH:mm:ss')} · ${point.createdMoment.fromNow()}</div><div>${_.map(point.tiers, _.startCase).join(' + ')} · ${prettyBytes(point.freed, { binary: true })}</div></div>`;
-								};
-								const orbitCenter = 200;
-								const orbitStep = (snapshotTiers.length > 1 ? Math.min(40, 120 / (snapshotTiers.length - 1)) : 0);
-								const orbits = _.map(snapshotTiers, (tier, index) => {
-									const tierEntries = _.filter(snapshotEntries, { tier });
+								const snapshotTierOrder = ['frequently', 'hourly', 'daily', 'monthly', 'yearly'];
+								const snapshotTierColors = { frequently: 'blue-200', hourly: 'blue-300', daily: 'blue-500', monthly: 'indigo-500', yearly: 'indigo-700' };
+								const snapshotTierHours = { frequently: 0.25, hourly: 1, daily: 24, monthly: 730.5, yearly: 8766 };
+								const snapshotNow = moment();
+								const snapshotEntries = _.filter(_.map(app.snapshots, (snapshot) => {
+									const segments = snapshot.snapshotName.split('_');
+									const createdMoment = moment.utc(segments.slice(1, -1).join(' '), 'YYYY-MM-DD HH:mm:ss', true).local();
 									return {
-										tier,
-										radius: 64 + (snapshotTiers.length - 1 - index) * orbitStep,
-										window: Math.max(tierEntries.length * snapshotTierHours[tier], _.max(_.map(tierEntries, 'age')) * 1.02),
-										entries: _.orderBy(tierEntries, ['size'], ['desc']),
-										oldest: _.maxBy(tierEntries, 'age')
+										key: segments.slice(1, -1).join('_'),
+										tier: _.toLower(_.last(segments)),
+										createdMoment,
+										age: Math.max(snapshotNow.diff(createdMoment, 'hours', true), 0),
+										size: snapshot.properties?.used?.value || 0
 									};
-								});
-								const orbitPoint = (orbit, age) => {
-									const angle = (-84 + Math.min(age / orbit.window, 1) * 348) * Math.PI / 180;
-									return { x: orbitCenter + orbit.radius * Math.cos(angle), y: orbitCenter + orbit.radius * Math.sin(angle) };
-								};
+								}), (entry) => { return entry.createdMoment.isValid() && _.includes(snapshotTierOrder, entry.tier); });
+								const snapshotPoints = _.orderBy(_.map(_.groupBy(snapshotEntries, 'key'), (entries, key) => {
+									return {
+										key,
+										createdMoment: entries[0].createdMoment,
+										age: entries[0].age,
+										tiers: _.intersection(snapshotTierOrder, _.map(entries, 'tier')),
+										freed: _.sumBy(entries, 'size'),
+										count: _.size(entries)
+									};
+								}), (point) => { return point.createdMoment.valueOf(); }, ['desc']);
 							%>
-							<div class="card-body border-top pb-0">
-								<u-input type="search" label="Search files in snapshots" class="snapshot-search" <%=(app.indexer ? '' : 'disabled tip="Turn on the Indexer to search files"')%>></u-input>
+							<%if (!_.isEmpty(snapshotPoints)) {%>
 								<%
-									const snapshotFilterGroups = [
-										{ key: 'type', label: 'Type', options: [['', 'Any type'], ['file', 'Files'], ['dir', 'Folders']] },
-										{ key: 'modified', label: 'Modified', options: [['', 'Any time'], ['1d', 'Last 24 hours'], ['7d', 'Last 7 days'], ['30d', 'Last 30 days'], ['365d', 'Last year']] },
-										{ key: 'size', label: 'Size', options: [['', 'Any size'], ['small', 'Under 1 MiB'], ['medium', '1 MiB – 100 MiB'], ['large', '100 MiB – 1 GiB'], ['huge', 'Over 1 GiB']] }
-									];
+									const snapshotTiers = _.filter(snapshotTierOrder, (tier) => { return _.some(snapshotEntries, { tier }); });
+									const snapshotMaxSize = _.max(_.map(snapshotEntries, 'size')) || 0;
+									const snapshotRadius = (size, min, max) => { return (snapshotMaxSize > 0 ? min + Math.sqrt(size / snapshotMaxSize) * (max - min) : min); };
+									const selectedPoint = _.find(snapshotPoints, { key: selectedSnapshot }) || _.first(snapshotPoints);
+									const selectedIndex = _.indexOf(snapshotPoints, selectedPoint);
+									const snapshotSpan = (hours) => {
+										if (hours < 48) {
+											return `${Math.round(hours)}h`;
+										}
+										if (hours < 1461) {
+											return `${Math.round(hours / 24)}d`;
+										}
+										if (hours < 8766) {
+											return `${Math.round(hours / 730.5)}mo`;
+										}
+										return `${Math.round(hours / 8766)}y`;
+									};
+									const snapshotSegments = _.map(_.filter(_.reduce(snapshotTiers, (segments, tier) => {
+										const start = _.last(segments)?.end || 0;
+										return [...segments, { start, end: Math.max(start, _.max(_.map(_.filter(snapshotEntries, { tier }), 'age'))) }];
+									}, []), (segment) => { return segment.end > segment.start; }), (segment, index, segments) => {
+										return { ...segment, from: index / segments.length, to: (index + 1) / segments.length };
+									});
+									const snapshotPosition = (age) => {
+										const segment = _.find(snapshotSegments, (candidate) => { return age <= candidate.end; }) || _.last(snapshotSegments);
+										if (!segment) {
+											return 0;
+										}
+										return segment.from + _.clamp((age - segment.start) / (segment.end - segment.start), 0, 1) * (segment.to - segment.from);
+									};
+									const snapshotTicks = _.map(snapshotSegments, (segment, index) => { return [segment.end, snapshotSpan(segment.end), index === snapshotSegments.length - 1]; });
+									const snapshotLabel = (point) => {
+										const createdMoment = point.createdMoment;
+										const coarsest = _.last(point.tiers);
+										if (createdMoment.isSame(snapshotNow, 'day')) {
+											return `Today ${createdMoment.format('HH:mm')}`;
+										}
+										if (createdMoment.isSame(snapshotNow.clone().subtract(1, 'day'), 'day')) {
+											return `Yesterday ${createdMoment.format('HH:mm')}`;
+										}
+										if (_.includes(['monthly', 'yearly'], coarsest) && createdMoment.clone().utc().date() === 1 && createdMoment.clone().utc().hour() === 0) {
+											return createdMoment.format('MMMM YYYY');
+										}
+										if (_.includes(['frequently', 'hourly'], coarsest)) {
+											return createdMoment.format('ddd D MMM, HH:mm');
+										}
+										if (coarsest === 'daily') {
+											return createdMoment.format(createdMoment.isSame(snapshotNow, 'year') ? 'ddd D MMM' : 'ddd D MMM YYYY');
+										}
+										return createdMoment.format('D MMM YYYY, HH:mm');
+									};
+									const snapshotTip = (point) => {
+										return `<div class='text-start'><div class='fw-semibold'>${snapshotLabel(point)}</div><div>${point.createdMoment.format('YYYY-MM-DD HH:mm:ss')} · ${point.createdMoment.fromNow()}</div><div>${_.map(point.tiers, _.startCase).join(' + ')} · ${prettyBytes(point.freed, { binary: true })}</div></div>`;
+									};
+									const orbitCenter = 200;
+									const orbitStep = (snapshotTiers.length > 1 ? Math.min(40, 120 / (snapshotTiers.length - 1)) : 0);
+									const orbits = _.map(snapshotTiers, (tier, index) => {
+										const tierEntries = _.filter(snapshotEntries, { tier });
+										return {
+											tier,
+											radius: 64 + (snapshotTiers.length - 1 - index) * orbitStep,
+											window: Math.max(tierEntries.length * snapshotTierHours[tier], _.max(_.map(tierEntries, 'age')) * 1.02),
+											entries: _.orderBy(tierEntries, ['size'], ['desc']),
+											oldest: _.maxBy(tierEntries, 'age')
+										};
+									});
+									const orbitPoint = (orbit, age) => {
+										const angle = (-84 + Math.min(age / orbit.window, 1) * 348) * Math.PI / 180;
+										return { x: orbitCenter + orbit.radius * Math.cos(angle), y: orbitCenter + orbit.radius * Math.sin(angle) };
+									};
 								%>
-								<div class="d-flex flex-wrap align-items-center gap-2 mt-n3 mb-3">
-									<%_.each(snapshotFilterGroups, (group) => {%>
+								<div class="card-body pb-0">
+									<div class="row g-2 align-items-center">
+										<div class="col-12 col-md-5 col-xl-4">
+											<u-input type="search" label="Search files in snapshots" class="snapshot-search" <%=(app.indexer ? (snapshotSearching ? 'disabled' : '') : 'disabled tip="Turn on the Indexer to search files"')%>></u-input>
+										</div>
 										<%
-											const current = snapshotFilter[group.key] || '';
-											const currentOption = _.find(group.options, ([value]) => { return value === current; });
+											const snapshotFilterGroups = [
+												{ key: 'type', label: 'Type', options: [['', 'Any type'], ['file', 'Files'], ['dir', 'Folders']] },
+												{ key: 'modified', label: 'Modified', options: [['', 'Any time'], ['1d', 'Last 24 hours'], ['7d', 'Last 7 days'], ['30d', 'Last 30 days'], ['365d', 'Last year']] },
+												{ key: 'size', label: 'Size', options: [['', 'Any size'], ['small', 'Under 1 MiB'], ['medium', '1 MiB – 100 MiB'], ['large', '100 MiB – 1 GiB'], ['huge', 'Over 1 GiB']] }
+											];
 										%>
-										<div class="dropdown">
-											<button type="button" class="btn btn-sm rounded-pill dropdown-toggle <%=(current ? 'btn-primary' : 'btn-light')%>" data-bs-toggle="dropdown" <%=(app.indexer ? '' : 'disabled')%>><%=(current ? currentOption[1] : group.label)%></button>
-											<div class="dropdown-menu">
-												<%_.each(group.options, ([value, label]) => {%>
-													<button type="button" class="dropdown-item <%=(value === current ? 'active' : '')%>" data-snapshot-filter="<%-group.key%>" data-value="<%-value%>"><%=label%></button>
+										<div class="col-auto">
+											<div class="d-flex flex-wrap align-items-center gap-2 mb-4">
+												<%_.each(snapshotFilterGroups, (group) => {%>
+													<%
+														const current = snapshotFilter[group.key] || '';
+														const currentOption = _.find(group.options, ([value]) => { return value === current; });
+													%>
+													<div class="dropdown">
+														<button type="button" class="btn btn-sm rounded-pill dropdown-toggle <%=(current ? 'btn-primary' : 'btn-light')%>" data-bs-toggle="dropdown" <%=(app.indexer && !snapshotSearching ? '' : 'disabled')%>><%=(current ? currentOption[1] : group.label)%></button>
+														<div class="dropdown-menu">
+															<%_.each(group.options, ([value, label]) => {%>
+																<button type="button" class="dropdown-item <%=(value === current ? 'active' : '')%>" data-snapshot-filter="<%-group.key%>" data-value="<%-value%>"><%=label%></button>
+															<%})%>
+														</div>
+													</div>
 												<%})%>
+												<%if (_.some(_.values(snapshotFilter))) {%>
+													<button type="button" class="btn btn-link btn-sm text-decoration-none" data-snapshot-filter="clear" <%=(snapshotSearching ? 'disabled' : '')%>>Clear filters</button>
+												<%}%>
+												<%if (snapshotSearching) {%>
+													<div class="spinner-border spinner-border-sm text-gray-600" role="status"></div>
+												<%}%>
 											</div>
 										</div>
-									<%})%>
-									<%if (_.some(_.values(snapshotFilter))) {%>
-										<button type="button" class="btn btn-link btn-sm text-decoration-none" data-snapshot-filter="clear">Clear filters</button>
-									<%}%>
+										<div class="col-auto ms-auto">
+											<div class="mb-4">
+												<u-switch class="indexer-switch me-n3" on-label="Indexer" <%=(app.indexer ? 'checked' : '')%>></u-switch>
+											</div>
+										</div>
+									</div>
 								</div>
-							</div>
-							<div class="card-body border-top">
-								<div class="d-flex flex-wrap align-items-end justify-content-between gap-3">
-									<div class="min-w-0">
-										<div class="d-flex flex-wrap align-items-center gap-2 small text-body-tertiary">
-											<span><%=selectedPoint.createdMoment.fromNow()%></span>
-											<span class="font-monospace"><%=selectedPoint.createdMoment.format('YYYY-MM-DD HH:mm:ss')%></span>
-											<span><%=prettyBytes(selectedPoint.freed, { binary: true })%></span>
-											<%_.each(selectedPoint.tiers, (tier) => {%>
-												<span class="badge rounded-pill border fw-normal text-<%-snapshotTierColors[tier]%> border-<%-snapshotTierColors[tier]%>"><%=_.startCase(tier)%></span>
+								<%if (snapshotResults) {%>
+									<%
+										const resultPoint = (snapshotName) => {
+											return _.find(snapshotPoints, { key: snapshotName.split('_').slice(1, -1).join('_') });
+										};
+										const resultGroups = _.sortBy(_.map(_.groupBy(snapshotResults.results, (result) => { return result.path.slice(0, result.path.lastIndexOf('/')) || '/'; }), (items, folder) => {
+											return {
+												folder,
+												deleted: _.size(_.filter(items, 'deleted')),
+												items: _.orderBy(items, [(item) => { return (item.deleted ? 0 : 1); }, (item) => { return _.toLower(item.path); }])
+											};
+										}), 'folder');
+										const resultIcons = { file: 'icon-file', dir: 'icon-folder', link: 'icon-link' };
+									%>
+									<div class="card-body border-top">
+										<div class="d-flex align-items-center justify-content-between gap-2 mb-2">
+											<small class="text-body-tertiary"><%=_.size(snapshotResults.results)%><%=(snapshotResults.hasMore ? '+' : '')%> <%=(_.size(snapshotResults.results) === 1 && !snapshotResults.hasMore ? 'match' : 'matches')%> for “<%-snapshotResults.query.term%>”</small>
+											<button type="button" class="snapshot-search-clear btn btn-link btn-sm text-decoration-none" <%=(snapshotSearching ? 'disabled' : '')%>>Clear</button>
+										</div>
+										<%if (snapshotResults.message) {%>
+											<div class="small text-danger mb-2"><%-snapshotResults.message%></div>
+										<%}%>
+										<%if (_.isEmpty(snapshotResults.results) && !snapshotResults.message) {%>
+											<div class="small text-body-secondary">No files match.</div>
+										<%}%>
+										<div class="d-flex flex-column gap-2">
+											<%_.each(resultGroups, (group) => {%>
+												<div class="tree-rows">
+													<small class="tree-row tree-line d-flex align-items-center gap-2 text-body-tertiary min-w-0 py-1" data-depth="0" style="--tree-line-x: 0.55rem; --tree-line-top: calc(50% + var(--tree-icon-radius));">
+														<i class="icon-light icon-folder-open icon-fw"></i>
+														<span class="text-truncate"><%-group.folder%></span>
+														<span class="text-nowrap">· <%=_.size(group.items)%><%=(group.deleted ? ` · ${group.deleted} deleted` : '')%></span>
+													</small>
+													<%_.each(group.items, (item, index) => {%>
+														<%const isLast = (index === group.items.length - 1);%>
+														<div class="tree-row py-1 <%=(isLast ? '' : 'tree-line')%>" data-depth="1" style="--tree-elbow-x: 0.55rem; --tree-elbow-height: 1rem; --tree-line-x: 0.55rem; --tree-line-top: 0; padding-left: 1.5rem;">
+															<div class="d-flex align-items-center gap-2 min-w-0">
+																<i class="icon-light <%-resultIcons[item.type] || 'icon-file'%> icon-fw text-body-tertiary"></i>
+																<span class="text-truncate <%=(item.deleted ? 'text-body-secondary' : '')%>"><%-item.path.slice(item.path.lastIndexOf('/') + 1)%></span>
+																<%if (item.deleted) {%>
+																	<span class="badge rounded-pill border fw-normal text-red-500 border-red-500">Deleted</span>
+																<%}%>
+															</div>
+															<%if (!_.isEmpty(item.versions)) {%>
+																<%
+																	const versionEntries = _.concat(
+																		_.map(item.versions, (version, index) => {
+																			const label = version.change || (index ? 'changed' : 'first seen');
+																			return { snapshot: version.snapshot, label: (item.deleted && version.snapshot === item.lastSeenSnap ? `${label} · last seen` : label), size: version.size };
+																		}),
+																		(item.deleted && item.lastSeenSnap && !_.some(item.versions, { snapshot: item.lastSeenSnap }) ? [{ snapshot: item.lastSeenSnap, label: 'last seen' }] : [])
+																	);
+																%>
+																<small class="d-flex flex-column text-body-tertiary ps-4">
+																	<%_.each(versionEntries, (version) => {%>
+																		<%const versionPoint = resultPoint(version.snapshot);%>
+																		<span class="text-nowrap">
+																			<%if (versionPoint) {%>
+																				<button type="button" class="btn btn-link btn-sm p-0 align-baseline text-decoration-none" data-snapshot="<%-versionPoint.key%>"><%=snapshotLabel(versionPoint)%></button>
+																			<%} else {%>
+																				<%-version.snapshot%>
+																			<%}%>
+																			<%=` · ${version.label}`%><%=(item.type === 'dir' || _.isUndefined(version.size) ? '' : ` · ${prettyBytes(version.size || 0, { binary: true })}`)%>
+																		</span>
+																	<%})%>
+																</small>
+															<%} else {%>
+																<small class="d-block text-body-tertiary ps-4">Live · no versions</small>
+															<%}%>
+														</div>
+													<%})%>
+												</div>
 											<%})%>
 										</div>
-										<div class="fs-4 fw-light"><%=snapshotLabel(selectedPoint)%></div>
+										<%if (snapshotResults.hasMore) {%>
+											<button type="button" class="snapshot-search-more btn btn-light btn-sm mt-3" <%=(snapshotSearching ? 'disabled' : '')%>>Load more</button>
+										<%}%>
 									</div>
-									<div class="btn-group btn-group-sm">
-										<button type="button" class="snapshot-action btn btn-light" disabled><i class="icon-regular icon-folder-open icon-fw me-1"></i>Recover files</button>
-										<button type="button" class="snapshot-action btn btn-light" disabled><i class="icon-regular icon-clock-rotate-left icon-fw me-1"></i>Roll back</button>
-										<button type="button" class="snapshot-delete btn btn-light text-danger" disabled data-date="<%-selectedPoint.createdMoment.format('D MMM YYYY, HH:mm')%>" data-tiers="<%-_.map(selectedPoint.tiers, _.startCase).join(', ')%>" data-count="<%=selectedPoint.count%>" data-freed="<%=selectedPoint.freed%>"><i class="icon-regular icon-trash-can icon-fw me-1"></i>Delete</button>
-									</div>
-								</div>
-							</div>
-							<div class="card-body border-top d-none d-md-block">
-								<small class="d-block text-body-tertiary text-uppercase mb-2">Timeline</small>
-								<div class="position-relative" style="height: 26px;">
-									<%_.each(_.initial(snapshotTicks), ([hours]) => {%>
-										<span class="position-absolute top-0 bottom-0 border-start" style="left: calc(0.5rem + (100% - 1rem) * <%=snapshotPosition(hours)%>);"></span>
-									<%})%>
-									<%_.each(_.orderBy(snapshotPoints, ['freed'], ['desc']), (point) => {%>
-										<%
-											const color = snapshotTierColors[_.last(point.tiers)];
-											const diameter = snapshotRadius(point.freed, 3, 9) * 2;
-										%>
-										<span class="position-absolute top-50 translate-middle rounded-circle cursor-pointer <%=(point.freed > 0 ? `bg-${color}` : `bg-body border border-2 border-${color}`)%>" style="left: calc(0.5rem + (100% - 1rem) * <%=snapshotPosition(point.age)%>); width: clamp(6px, <%=(diameter / 6).toFixed(2)%>vw, <%=diameter%>px); aspect-ratio: 1; <%=(point === selectedPoint ? 'outline: 2px solid var(--bs-emphasis-color); outline-offset: 1px;' : '')%>" data-snapshot="<%-point.key%>" data-bs-toggle="tooltip" data-bs-original-title="<%-snapshotTip(point)%>"></span>
-									<%})%>
-								</div>
-								<input type="range" class="snapshot-scrubber form-range" min="0" max="1000" value="<%=Math.round(snapshotPosition(selectedPoint.age) * 1000)%>" aria-label="Restore point" aria-valuetext="<%-snapshotLabel(selectedPoint)%>" data-selected="<%-selectedPoint.key%>" data-keys="<%-_.map(snapshotPoints, 'key').join(',')%>" data-positions="<%-_.map(snapshotPoints, (point) => { return snapshotPosition(point.age).toFixed(4); }).join(',')%>">
-								<div class="position-relative small text-body-tertiary" style="height: 1.25rem;">
-									<%_.each(snapshotTicks, ([hours, label, last]) => {%>
-										<span class="position-absolute <%=(last ? 'end-0' : 'translate-middle-x')%>" style="<%=(last ? '' : `left: calc(0.5rem + (100% - 1rem) * ${snapshotPosition(hours)});`)%>"><%=label%></span>
-									<%})%>
-									<span class="position-absolute start-0 fw-semibold text-body-secondary">Now</span>
-								</div>
-							</div>
-							<div class="card-body border-top d-md-none">
-								<small class="d-block text-body-tertiary text-uppercase mb-2">Orbits</small>
-								<svg class="d-block mx-auto" viewBox="0 0 400 400" style="width: 100%; max-width: 360px;" role="img" aria-label="Snapshot orbits">
-									<%_.each(orbits, (orbit) => {%>
-										<circle cx="<%=orbitCenter%>" cy="<%=orbitCenter%>" r="<%=orbit.radius%>" fill="none" style="stroke: var(--bs-border-color);"/>
-										<text x="<%=orbitCenter - 6%>" y="<%=orbitCenter - orbit.radius + 4%>" text-anchor="end" font-size="10" class="text-body-tertiary" fill="currentColor"><%=snapshotSpan(orbit.window)%></text>
-									<%})%>
-									<line x1="<%=orbitCenter%>" x2="<%=orbitCenter%>" y1="<%=orbitCenter - _.first(orbits).radius - 12%>" y2="<%=orbitCenter - 40%>" style="stroke: var(--bs-border-color);"/>
-									<text x="<%=orbitCenter + 5%>" y="<%=orbitCenter - _.first(orbits).radius - 8%>" font-size="10" font-weight="600" class="text-body-secondary" fill="currentColor">Now</text>
-									<circle cx="<%=orbitCenter%>" cy="<%=orbitCenter%>" r="30" class="text-primary" fill="currentColor" fill-opacity="0.1"/>
-									<image href="<%-(_.includes(app.icon, '/') ? app.icon : `assets/img/apps/${app.icon}`)%>" x="<%=orbitCenter - 18%>" y="<%=orbitCenter - 18%>" width="36" height="36"/>
-									<%_.each(orbits, (orbit) => {%>
-										<%_.each(orbit.entries, (entry) => {%>
-											<%
-												const position = orbitPoint(orbit, entry.age);
-												const point = _.find(snapshotPoints, { key: entry.key });
-											%>
-											<circle cx="<%=position.x%>" cy="<%=position.y%>" r="<%=snapshotRadius(entry.size, 3.5, 15) + (point === selectedPoint ? 1.5 : 0)%>" class="cursor-pointer text-<%-snapshotTierColors[entry.tier]%>" style="fill: <%=(entry.size > 0 ? 'currentColor' : 'var(--bs-body-bg)')%>; stroke: <%=(point === selectedPoint ? 'var(--bs-emphasis-color)' : (entry.size > 0 ? 'var(--bs-body-bg)' : 'currentColor'))%>; stroke-width: <%=(point === selectedPoint ? 2 : (entry.size > 0 ? 1.2 : 1.5))%>;" data-snapshot="<%-entry.key%>" data-bs-toggle="tooltip" data-bs-original-title="<%-snapshotTip(point)%>"/>
-										<%})%>
-									<%})%>
-								</svg>
-							</div>
-							<div class="card-body pt-0">
-								<div class="d-flex align-items-center justify-content-between small text-body-tertiary">
-									<button type="button" class="btn btn-light btn-sm" data-snapshot="<%-snapshotPoints[Math.max(selectedIndex - 1, 0)].key%>"><i class="icon-solid icon-chevron-left icon-fw"></i>Newer</button>
-									<span>Restore point <%=selectedIndex + 1%> of <%=_.size(snapshotPoints)%></span>
-									<button type="button" class="btn btn-light btn-sm" data-snapshot="<%-snapshotPoints[Math.min(selectedIndex + 1, snapshotPoints.length - 1)].key%>">Older<i class="icon-solid icon-chevron-right icon-fw"></i></button>
-								</div>
-							</div>
-							<div class="card-body border-top">
-								<div class="row g-3">
-									<div class="col-12 col-md">
-										<small class="text-body-tertiary">Restore points</small>
-										<h5 class="mb-0"><%=_.size(snapshotPoints)%></h5>
-									</div>
-									<%_.each(orbits, (orbit) => {%>
-										<div class="col-6 col-md">
-											<small class="text-body-tertiary"><i class="icon-solid icon-circle icon-fw icon-xs me-1 text-<%-snapshotTierColors[orbit.tier]%>"></i><%=_.startCase(orbit.tier)%></small>
-											<h5 class="mb-0"><%=_.size(orbit.entries)%></h5>
-											<small class="text-body-secondary">since <%=orbit.oldest.createdMoment.format('D MMM YYYY')%></small>
+								<%}%>
+								<div class="card-body border-top">
+									<div class="d-flex flex-wrap align-items-end justify-content-between gap-3">
+										<div class="min-w-0">
+											<div class="d-flex flex-wrap align-items-center gap-2 small text-body-tertiary">
+												<span><%=selectedPoint.createdMoment.fromNow()%></span>
+												<span class="font-monospace"><%=selectedPoint.createdMoment.format('YYYY-MM-DD HH:mm:ss')%></span>
+												<span><%=prettyBytes(selectedPoint.freed, { binary: true })%></span>
+												<%_.each(selectedPoint.tiers, (tier) => {%>
+													<span class="badge rounded-pill border fw-normal text-<%-snapshotTierColors[tier]%> border-<%-snapshotTierColors[tier]%>"><%=_.startCase(tier)%></span>
+												<%})%>
+											</div>
+											<div class="fs-4 fw-light"><%=snapshotLabel(selectedPoint)%></div>
 										</div>
-									<%})%>
+										<div class="btn-group btn-group-sm">
+											<button type="button" class="snapshot-action btn btn-light" disabled><i class="icon-regular icon-folder-open icon-fw me-1"></i>Recover files</button>
+											<button type="button" class="snapshot-action btn btn-light" disabled><i class="icon-regular icon-clock-rotate-left icon-fw me-1"></i>Roll back</button>
+											<button type="button" class="snapshot-delete btn btn-light text-danger" disabled data-date="<%-selectedPoint.createdMoment.format('D MMM YYYY, HH:mm')%>" data-tiers="<%-_.map(selectedPoint.tiers, _.startCase).join(', ')%>" data-count="<%=selectedPoint.count%>" data-freed="<%=selectedPoint.freed%>"><i class="icon-regular icon-trash-can icon-fw me-1"></i>Delete</button>
+										</div>
+									</div>
 								</div>
-							</div>
-						<%}%>
+								<div class="card-body border-top d-none d-md-block">
+									<small class="d-block text-body-tertiary text-uppercase mb-2">Timeline</small>
+									<div class="position-relative" style="height: 26px;">
+										<%_.each(_.initial(snapshotTicks), ([hours]) => {%>
+											<span class="position-absolute top-0 bottom-0 border-start" style="left: calc(0.5rem + (100% - 1rem) * <%=snapshotPosition(hours)%>);"></span>
+										<%})%>
+										<%_.each(_.orderBy(snapshotPoints, ['freed'], ['desc']), (point) => {%>
+											<%
+												const color = snapshotTierColors[_.last(point.tiers)];
+												const diameter = snapshotRadius(point.freed, 3, 9) * 2;
+											%>
+											<span class="position-absolute top-50 translate-middle rounded-circle cursor-pointer <%=(point.freed > 0 ? `bg-${color}` : `bg-body border border-2 border-${color}`)%>" style="left: calc(0.5rem + (100% - 1rem) * <%=snapshotPosition(point.age)%>); width: clamp(6px, <%=(diameter / 6).toFixed(2)%>vw, <%=diameter%>px); aspect-ratio: 1; <%=(point === selectedPoint ? 'outline: 2px solid var(--bs-emphasis-color); outline-offset: 1px;' : '')%>" data-snapshot="<%-point.key%>" data-bs-toggle="tooltip" data-bs-original-title="<%-snapshotTip(point)%>"></span>
+										<%})%>
+									</div>
+									<input type="range" class="snapshot-scrubber form-range" min="0" max="1000" value="<%=Math.round(snapshotPosition(selectedPoint.age) * 1000)%>" aria-label="Restore point" aria-valuetext="<%-snapshotLabel(selectedPoint)%>" data-selected="<%-selectedPoint.key%>" data-keys="<%-_.map(snapshotPoints, 'key').join(',')%>" data-positions="<%-_.map(snapshotPoints, (point) => { return snapshotPosition(point.age).toFixed(4); }).join(',')%>">
+									<div class="position-relative small text-body-tertiary" style="height: 1.25rem;">
+										<%_.each(snapshotTicks, ([hours, label, last]) => {%>
+											<span class="position-absolute <%=(last ? 'end-0' : 'translate-middle-x')%>" style="<%=(last ? '' : `left: calc(0.5rem + (100% - 1rem) * ${snapshotPosition(hours)});`)%>"><%=label%></span>
+										<%})%>
+										<span class="position-absolute start-0 fw-semibold text-body-secondary">Now</span>
+									</div>
+								</div>
+								<div class="card-body border-top d-md-none">
+									<small class="d-block text-body-tertiary text-uppercase mb-2">Orbits</small>
+									<svg class="d-block mx-auto" viewBox="0 0 400 400" style="width: 100%; max-width: 360px;" role="img" aria-label="Snapshot orbits">
+										<%_.each(orbits, (orbit) => {%>
+											<circle cx="<%=orbitCenter%>" cy="<%=orbitCenter%>" r="<%=orbit.radius%>" fill="none" style="stroke: var(--bs-border-color);"/>
+											<text x="<%=orbitCenter - 6%>" y="<%=orbitCenter - orbit.radius + 4%>" text-anchor="end" font-size="10" class="text-body-tertiary" fill="currentColor"><%=snapshotSpan(orbit.window)%></text>
+										<%})%>
+										<line x1="<%=orbitCenter%>" x2="<%=orbitCenter%>" y1="<%=orbitCenter - _.first(orbits).radius - 12%>" y2="<%=orbitCenter - 40%>" style="stroke: var(--bs-border-color);"/>
+										<text x="<%=orbitCenter + 5%>" y="<%=orbitCenter - _.first(orbits).radius - 8%>" font-size="10" font-weight="600" class="text-body-secondary" fill="currentColor">Now</text>
+										<circle cx="<%=orbitCenter%>" cy="<%=orbitCenter%>" r="30" class="text-primary" fill="currentColor" fill-opacity="0.1"/>
+										<image href="<%-(_.includes(app.icon, '/') ? app.icon : `assets/img/apps/${app.icon}`)%>" x="<%=orbitCenter - 18%>" y="<%=orbitCenter - 18%>" width="36" height="36"/>
+										<%_.each(orbits, (orbit) => {%>
+											<%_.each(orbit.entries, (entry) => {%>
+												<%
+													const position = orbitPoint(orbit, entry.age);
+													const point = _.find(snapshotPoints, { key: entry.key });
+												%>
+												<circle cx="<%=position.x%>" cy="<%=position.y%>" r="<%=snapshotRadius(entry.size, 3.5, 15) + (point === selectedPoint ? 1.5 : 0)%>" class="cursor-pointer text-<%-snapshotTierColors[entry.tier]%>" style="fill: <%=(entry.size > 0 ? 'currentColor' : 'var(--bs-body-bg)')%>; stroke: <%=(point === selectedPoint ? 'var(--bs-emphasis-color)' : (entry.size > 0 ? 'var(--bs-body-bg)' : 'currentColor'))%>; stroke-width: <%=(point === selectedPoint ? 2 : (entry.size > 0 ? 1.2 : 1.5))%>;" data-snapshot="<%-entry.key%>" data-bs-toggle="tooltip" data-bs-original-title="<%-snapshotTip(point)%>"/>
+											<%})%>
+										<%})%>
+									</svg>
+								</div>
+								<div class="card-body pt-0">
+									<div class="d-flex align-items-center justify-content-between small text-body-tertiary">
+										<button type="button" class="btn btn-light btn-sm" data-snapshot="<%-snapshotPoints[Math.max(selectedIndex - 1, 0)].key%>"><i class="icon-solid icon-chevron-left icon-fw"></i>Newer</button>
+										<span>Restore point <%=selectedIndex + 1%> of <%=_.size(snapshotPoints)%></span>
+										<button type="button" class="btn btn-light btn-sm" data-snapshot="<%-snapshotPoints[Math.min(selectedIndex + 1, snapshotPoints.length - 1)].key%>">Older<i class="icon-solid icon-chevron-right icon-fw"></i></button>
+									</div>
+								</div>
+								<div class="card-body border-top">
+									<div class="row g-3">
+										<div class="col-12 col-md">
+											<small class="text-body-tertiary">Restore points</small>
+											<h5 class="mb-0"><%=_.size(snapshotPoints)%></h5>
+										</div>
+										<%_.each(orbits, (orbit) => {%>
+											<div class="col-6 col-md">
+												<small class="text-body-tertiary"><i class="icon-solid icon-circle icon-fw icon-xs me-1 text-<%-snapshotTierColors[orbit.tier]%>"></i><%=_.startCase(orbit.tier)%></small>
+												<h5 class="mb-0"><%=_.size(orbit.entries)%></h5>
+												<small class="text-body-secondary">since <%=orbit.oldest.createdMoment.format('D MMM YYYY')%></small>
+											</div>
+										<%})%>
+									</div>
+								</div>
+							<%}%>
+						</div>
 					</div>
 				</div>
 			</div>

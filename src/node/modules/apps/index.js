@@ -27,6 +27,9 @@ let tableOrder = {
 let apps = [];
 const snapshotSelections = {};
 const snapshotFilters = {};
+const snapshotSearches = {};
+const appTabs = {};
+const snapshotResults = {};
 
 const search = (event) => {
 	clearTimeout(searchTimer);
@@ -206,6 +209,17 @@ const updateIndexer = async (event) => {
 	appService.updateIndexerConfig(data);
 };
 
+const selectTab = (event) => {
+	const button = event.target.closest('[data-app-tab]');
+	const name = button?.closest('.item')?.dataset?.name;
+	if (!name) {
+		return;
+	}
+
+	appTabs[name] = button.dataset.appTab;
+	renderAppDetails(name);
+};
+
 const selectSnapshot = (event) => {
 	const target = event.target.closest('[data-snapshot]');
 	const name = target?.closest('.item')?.dataset?.name;
@@ -265,6 +279,89 @@ const filterSnapshots = (event) => {
 	renderAppDetails(name);
 };
 
+const searchSnapshots = async (event) => {
+	if (!event.target.classList?.contains('snapshot-search') || _.toLower(event.key) !== 'enter') {
+		return;
+	}
+
+	const name = event.target.closest('.item')?.dataset?.name;
+	const app = _.find(appService.getApps() || [], { name });
+	const term = _.trim(event.target.value);
+	if (!app?.dataset || !term || snapshotSearches[name]) {
+		return;
+	}
+
+	const filter = snapshotFilters[name] || {};
+	const sizes = {
+		small: { maxSize: 1048575 },
+		medium: { minSize: 1048576, maxSize: 104857599 },
+		large: { minSize: 104857600, maxSize: 1073741823 },
+		huge: { minSize: 1073741824 }
+	};
+	const days = { '1d': 1, '7d': 7, '30d': 30, '365d': 365 };
+	const query = { dataset: app.dataset, term, ...sizes[filter.size] };
+	if (filter.type) {
+		query.type = filter.type;
+	}
+	if (days[filter.modified]) {
+		query.since = moment().subtract(days[filter.modified], 'days').toISOString();
+	}
+
+	await runSnapshotSearch(name, query, false);
+};
+
+const loadMoreSnapshots = async (event) => {
+	const button = event.target.closest('.snapshot-search-more');
+	const name = button?.closest('.item')?.dataset?.name;
+	const current = snapshotResults[name];
+	if (!current || snapshotSearches[name]) {
+		return;
+	}
+
+	await runSnapshotSearch(name, { ...current.query, offset: _.size(current.results) }, true);
+};
+
+const clearSnapshotSearch = (event) => {
+	const button = event.target.closest('.snapshot-search-clear');
+	const name = button?.closest('.item')?.dataset?.name;
+	if (!name) {
+		return;
+	}
+
+	delete snapshotResults[name];
+	renderAppDetails(name);
+};
+
+const runSnapshotSearch = async (name, query, append) => {
+	const previous = (append ? snapshotResults[name] : null);
+	snapshotSearches[name] = true;
+	renderAppDetails(name);
+	let result;
+	try {
+		const response = await appService.searchSnapshots(query);
+		if (response?.status === 'succeeded') {
+			result = { query, results: [...(previous?.results || []), ...response.results], hasMore: response.hasMore };
+		} else {
+			result = { query, results: previous?.results || [], hasMore: previous?.hasMore || false, message: response?.message || 'Search failed.' };
+		}
+	} catch (error) {
+		result = { query, results: previous?.results || [], hasMore: previous?.hasMore || false, message: error.message };
+	}
+
+	if (_.toLower(routeAppName) !== _.toLower(name)) {
+		return;
+	}
+
+	snapshotResults[name] = result;
+	delete snapshotSearches[name];
+	renderAppDetails(name);
+	if (!append) {
+		const input = details.querySelector(`.item[data-name="${name}"] .snapshot-search`);
+		await input?.updateComplete;
+		input?.focus();
+	}
+};
+
 const deleteSnapshot = async (event) => {
 	const button = event.target.closest('.snapshot-delete');
 	if (!button) {
@@ -301,7 +398,7 @@ const renderAppDetails = (name) => {
 	const networkMaxBytesPerSec = appService.getDefaultNetworkInterfaceSpeed();
 	morphdom(
 		details,
-		`<div>${appDetailsTemplate({ app, jobs, appJobs, serviceJobs, appActionsTemplate, prettyBytes, moment, networkMaxBytesPerSec, selectedSnapshot: snapshotSelections[name], snapshotFilter: snapshotFilters[name] || {} })}</div>`,
+		`<div>${appDetailsTemplate({ app, jobs, appJobs, serviceJobs, appActionsTemplate, prettyBytes, moment, networkMaxBytesPerSec, selectedSnapshot: snapshotSelections[name], snapshotFilter: snapshotFilters[name] || {}, snapshotSearching: Boolean(snapshotSearches[name]), appTab: appTabs[name] || 'services', snapshotResults: snapshotResults[name] || null })}</div>`,
 		{
 			childrenOnly: true,
 			onBeforeElUpdated: (fromEl, toEl) => {
@@ -311,6 +408,16 @@ const renderAppDetails = (name) => {
 			}
 		}
 	);
+};
+
+const clearAppState = (name) => {
+	_.each([snapshotSelections, snapshotFilters, snapshotSearches, appTabs, snapshotResults], (state) => {
+		_.each(_.keys(state), (key) => {
+			if (_.isUndefined(name) || _.toLower(key) === _.toLower(name)) {
+				delete state[key];
+			}
+		});
+	});
 };
 
 const hideAppDetails = () => {
@@ -359,12 +466,12 @@ const handleRoute = (ctx) => {
 	const name = ctx?.params?.appName;
 	routeAppName = (_.isEmpty(name) ? null : name);
 	if (_.isEmpty(name)) {
+		clearAppState();
 		hideAppDetails();
 		return;
 	}
 
-	delete snapshotSelections[name];
-	delete snapshotFilters[name];
+	clearAppState(name);
 	renderAppDetails(name);
 	details.classList.add('d-block');
 };
@@ -374,11 +481,15 @@ module.addEventListener('click', compress);
 module.addEventListener('click', update);
 module.addEventListener('click', performAppAction);
 module.addEventListener('click', performServiceAction);
+module.addEventListener('click', selectTab);
+module.addEventListener('click', loadMoreSnapshots);
+module.addEventListener('click', clearSnapshotSearch);
 module.addEventListener('click', selectSnapshot);
 module.addEventListener('click', deleteSnapshot);
 module.addEventListener('click', filterSnapshots);
 module.addEventListener('input', scrubSnapshot);
 module.addEventListener('keydown', stepSnapshot);
+module.addEventListener('keydown', searchSnapshots);
 module.addEventListener('switch-changed', updateIndexer);
 module.addEventListener('mouseenter', toggleStateTooltip, true);
 module.addEventListener('mouseleave', toggleStateTooltip, true);

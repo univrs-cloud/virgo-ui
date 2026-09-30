@@ -371,6 +371,9 @@ u-badge:hover .hover-reveal-text {
 		}
 	}
 }
+#apps .details .overflow-y-scroll {
+	height: calc(100dvh - 199px - var(--chrome));
+}
 #apps,
 #shortcuts,
 #system-services {
@@ -507,31 +510,32 @@ u-badge:hover .hover-reveal-text {
 			line-height: 1;
 		}
 	}
-	.vdev-rows {
-		--vdev-elbow-width: 0.9rem;
-		--vdev-icon-radius: 0.6rem;
-		.vdev {
-			position: relative;
-		}
-		.vdev:not([data-depth="0"])::before {
-			content: '';
-			position: absolute;
-			left: var(--vdev-elbow-x);
-			top: 0;
-			height: 50%;
-			width: var(--vdev-elbow-width);
-			border-left: var(--bs-border-width) solid var(--vdev-line-color);
-			border-bottom: var(--bs-border-width) solid var(--vdev-line-color);
-			border-bottom-left-radius: 0.35rem;
-		}
-		.vdev.vdev-line::after {
-			content: '';
-			position: absolute;
-			left: var(--vdev-line-x);
-			top: var(--vdev-line-top);
-			bottom: 0;
-			border-left: var(--bs-border-width) solid var(--vdev-line-color);
-		}
+}
+.tree-rows {
+	--tree-line-color: var(--bs-border-color);
+	--tree-elbow-width: 0.9rem;
+	--tree-icon-radius: 0.6rem;
+	.tree-row {
+		position: relative;
+	}
+	.tree-row:not([data-depth="0"])::before {
+		content: '';
+		position: absolute;
+		left: var(--tree-elbow-x);
+		top: 0;
+		height: var(--tree-elbow-height, 50%);
+		width: var(--tree-elbow-width);
+		border-left: var(--bs-border-width) solid var(--tree-line-color);
+		border-bottom: var(--bs-border-width) solid var(--tree-line-color);
+		border-bottom-left-radius: 0.35rem;
+	}
+	.tree-row.tree-line::after {
+		content: '';
+		position: absolute;
+		left: var(--tree-line-x);
+		top: var(--tree-line-top);
+		bottom: 0;
+		border-left: var(--bs-border-width) solid var(--tree-line-color);
 	}
 }
 

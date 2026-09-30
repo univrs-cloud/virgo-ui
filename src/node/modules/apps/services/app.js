@@ -123,6 +123,10 @@ const updateIndexerConfig = (data) => {
 	Indexer.updateDatasets(data);
 };
 
+const searchSnapshots = (query) => {
+	return Indexer.search(query);
+};
+
 export {
 	subscribe,
 	getSocket,
@@ -133,5 +137,6 @@ export {
 	update,
 	performAppAction,
 	performServiceAction,
-	updateIndexerConfig
+	updateIndexerConfig,
+	searchSnapshots
 };

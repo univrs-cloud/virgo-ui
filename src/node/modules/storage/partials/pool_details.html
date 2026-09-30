@@ -190,7 +190,7 @@
 							<small class="text-body-tertiary">Details</small>
 							<i class="icon-solid icon-chevron-down icon-fw icon-xs text-secondary ms-1"></i>
 						</div>
-						<div class="vdev-rows collapse pb-2" id="vdev-details-<%-_.kebabCase(pool.name)%>">
+						<div class="tree-rows collapse pb-2" id="vdev-details-<%-_.kebabCase(pool.name)%>">
 							<%_.each(vdevSections, (section) => {%>
 								<small class="d-block text-body-tertiary ps-3 mt-2"><%-SECTION_LABELS[section.key]%></small>
 								<%_.each(section.rows, ({ vdev, drive, depth, isLast, role, pair, activity }) => {%>
