@@ -24,9 +24,9 @@ const render = (state) => {
 	morphdom(
 		row,
 		`<div>
+			${fleetTemplate({ fleet: state.configuration?.fleet || null, fleetRequired: state.fleetRequired })}
 			${notificationsTemplate({ smtp: state.configuration?.smtp || null })}
 			${locationTemplate({ location: state.configuration?.location || null })}
-			${fleetTemplate({ fleet: state.configuration?.fleet || null, fleetRequired: state.fleetRequired })}
 			${powerTemplate()}
 		</div>`,
 		{ childrenOnly: true }

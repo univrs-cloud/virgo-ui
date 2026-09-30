@@ -120,8 +120,8 @@
 									<h5 class="m-0"><%=prettyBytes(free, { binary: true })%></h5>
 								</div>
 								<div class="col-6 col-md-3">
-									<small class="text-body-tertiary d-block text-truncate"><i class="icon-solid icon-compress icon-fw me-1"></i>Compression</small>
-									<h5 class="m-0"><%if (compressRatio > 0) {%><%=compressRatio.toFixed(2)%>x <small class="fs-6 fw-light text-body-tertiary">(<%=prettyBytes(saved, { binary: true })%> saved)</small><%} else {%>&mdash;<%}%></h5>
+									<small class="text-body-tertiary d-block text-truncate"><i class="icon-solid icon-compress icon-fw me-1"></i>Space saved</small>
+									<h5 class="m-0"><%if (compressRatio > 0) {%><%=prettyBytes(saved, { binary: true })%> <small class="fs-6 fw-light text-body-tertiary">(<%=compressRatio.toFixed(2)%>x compression)</small><%} else {%>&mdash;<%}%></h5>
 								</div>
 							</div>
 							<u-progress shadow="false">
