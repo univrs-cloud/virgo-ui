@@ -53,6 +53,11 @@ const render = (state) => {
 					return false;
 				}
 
+				if (fromEl.classList.contains('details-toggle') || fromEl.classList.contains('collapse') || fromEl.classList.contains('collapsing')) {
+					morphdom(fromEl, toEl, { childrenOnly: true });
+					return false;
+				}
+
 				return true;
 			}
 		}
