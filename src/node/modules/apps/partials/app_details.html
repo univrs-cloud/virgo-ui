@@ -433,7 +433,7 @@
 										<%
 											const snapshotFilterGroups = [
 												{ key: 'type', label: 'Type', options: [['', 'Any type'], ['file', 'Files'], ['dir', 'Folders']] },
-												{ key: 'state', label: 'State', options: [['', 'Any state'], ['live', 'Live'], ['modified', 'Modified'], ['renamed', 'Renamed'], ['unchanged', 'Unchanged'], ['deleted', 'Deleted']] },
+												{ key: 'state', label: 'State', options: [['', 'Any state'], ['live', 'Live'], ['modified', 'Modified'], ['renamed', 'Renamed or moved'], ['unchanged', 'Unchanged'], ['deleted', 'Deleted']] },
 												{ key: 'modified', label: 'Modified', options: [['', 'Any time'], ['1d', 'Last 24 hours'], ['7d', 'Last 7 days'], ['30d', 'Last 30 days'], ['365d', 'Last year']] },
 												{ key: 'size', label: 'Size', options: [['', 'Any size'], ['small', 'Under 1 MiB'], ['medium', '1 MiB – 100 MiB'], ['large', '100 MiB – 1 GiB'], ['huge', 'Over 1 GiB']] }
 											];
@@ -540,10 +540,19 @@
 																					_.map(item.versions, (version, index) => {
 																						const from = version.renamedFrom;
 																						const fromFolder = (from ? from.slice(0, from.lastIndexOf('/')) : null);
+																						const fromName = (from ? from.slice(from.lastIndexOf('/') + 1) : null);
+																						const sameFolder = (fromFolder === item.path.slice(0, item.path.lastIndexOf('/')));
+																						const sameName = (fromName === item.path.slice(item.path.lastIndexOf('/') + 1));
+																						let renamedFrom = from;
+																						if (from && sameFolder) {
+																							renamedFrom = fromName;
+																						} else if (from && sameName) {
+																							renamedFrom = fromFolder || '/';
+																						}
 																						return {
 																							snapshot: version.snapshot,
-																							label: version.change || (index ? 'changed' : 'added'),
-																							renamedFrom: (from && fromFolder === item.path.slice(0, item.path.lastIndexOf('/')) ? from.slice(from.lastIndexOf('/') + 1) : from),
+																							label: (from && !sameFolder ? 'moved' : (version.change || (index ? 'changed' : 'added'))),
+																							renamedFrom,
 																							lastSeen: (item.deleted && version.snapshot === item.lastSeenSnap),
 																							size: version.size
 																						};
