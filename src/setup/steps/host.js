@@ -99,6 +99,10 @@ const toIdentifier = (data) => {
 	return { hostname: data.hostname, domainName: `${data.cluster}.${data.domainName}` };
 };
 
+const renderAddresses = (system) => {
+	_.each(accessAddresses, (accessAddress) => { accessAddress.textContent = (networkService.getPortForwardAddress(system) || `this node's address`); });
+};
+
 // The hostname and domain are what the node answers to once setup finishes, and nothing resolves that
 // name until someone says so — so both the resulting address and the record that has to exist for it
 // are spelled out while it is still being typed. Seeding the fields fires `value-changed` too, so
@@ -111,7 +115,7 @@ const renderAccess = () => {
 	accessClusterWildcard.textContent = `*.${clusterDomain}`;
 	accessNodeName.textContent = fqdn;
 	accessNodeWildcard.textContent = `*.${fqdn}`;
-	_.each(accessAddresses, (accessAddress) => { accessAddress.textContent = (networkService.getPortForwardAddress(networkService.getSystem()) || `this node's address`); });
+	renderAddresses(networkService.getSystem());
 	dnsManagedFqdn.textContent = fqdn;
 	access.classList.toggle('d-none', !isValidIdentifier(data));
 	renderAvailability();
@@ -234,6 +238,7 @@ const isIdentifierApplied = (system) => {
 // from the first delivery that carries the node's identifier; after that the form belongs to whoever
 // is typing in it.
 const render = (state) => {
+	renderAddresses(state.system);
 	const job = _.find(state.jobs, { name: networkService.IDENTIFIER_JOB });
 	const isSettled = _.includes(['completed', 'failed'], job?.progress?.state);
 	if (job && !isSettled) {
