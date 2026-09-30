@@ -433,6 +433,7 @@
 										<%
 											const snapshotFilterGroups = [
 												{ key: 'type', label: 'Type', options: [['', 'Any type'], ['file', 'Files'], ['dir', 'Folders']] },
+												{ key: 'state', label: 'State', options: [['', 'Any state'], ['live', 'Live'], ['modified', 'Modified'], ['renamed', 'Renamed'], ['unchanged', 'Unchanged'], ['deleted', 'Deleted']] },
 												{ key: 'modified', label: 'Modified', options: [['', 'Any time'], ['1d', 'Last 24 hours'], ['7d', 'Last 7 days'], ['30d', 'Last 30 days'], ['365d', 'Last year']] },
 												{ key: 'size', label: 'Size', options: [['', 'Any size'], ['small', 'Under 1 MiB'], ['medium', '1 MiB – 100 MiB'], ['large', '100 MiB – 1 GiB'], ['huge', 'Over 1 GiB']] }
 											];
@@ -537,7 +538,7 @@
 																			<%
 																				const versionEntries = _.concat(
 																					_.map(item.versions, (version, index) => {
-																						const label = version.change || (index ? 'changed' : 'first seen');
+																						const label = version.change || (index ? 'changed' : 'added');
 																						return { snapshot: version.snapshot, label: (item.deleted && version.snapshot === item.lastSeenSnap ? `${label} · last seen` : label), size: version.size };
 																					}),
 																					(item.deleted && item.lastSeenSnap && !_.some(item.versions, { snapshot: item.lastSeenSnap }) ? [{ snapshot: item.lastSeenSnap, label: 'last seen' }] : [])

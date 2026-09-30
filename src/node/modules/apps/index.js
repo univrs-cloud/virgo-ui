@@ -324,6 +324,9 @@ const submitSnapshotSearch = async (name, value) => {
 	if (filter.type) {
 		query.type = filter.type;
 	}
+	if (filter.state) {
+		query.state = filter.state;
+	}
 	if (days[filter.modified]) {
 		query.since = moment().subtract(days[filter.modified], 'days').toISOString();
 	}
