@@ -267,7 +267,7 @@ const stepSnapshot = (event) => {
 	renderAppDetails(name);
 };
 
-const filterSnapshots = (event) => {
+const filterSnapshots = async (event) => {
 	const option = event.target.closest('[data-snapshot-filter]');
 	const name = option?.closest('.item')?.dataset?.name;
 	if (!name) {
@@ -275,8 +275,11 @@ const filterSnapshots = (event) => {
 	}
 
 	const { snapshotFilter, value } = option.dataset;
+	const term = option.closest('.item').querySelector('.snapshot-search')?.value;
 	snapshotFilters[name] = (snapshotFilter === 'clear' ? {} : { ...snapshotFilters[name], [snapshotFilter]: value });
-	renderAppDetails(name);
+	if (!await submitSnapshotSearch(name, term)) {
+		renderAppDetails(name);
+	}
 };
 
 const searchSnapshots = async (event) => {
@@ -284,11 +287,14 @@ const searchSnapshots = async (event) => {
 		return;
 	}
 
-	const name = event.target.closest('.item')?.dataset?.name;
+	await submitSnapshotSearch(event.target.closest('.item')?.dataset?.name, event.target.value);
+};
+
+const submitSnapshotSearch = async (name, value) => {
 	const app = _.find(appService.getApps() || [], { name });
-	const term = _.trim(event.target.value);
+	const term = _.trim(value);
 	if (!app?.dataset || !term || snapshotSearches[name]) {
-		return;
+		return false;
 	}
 
 	const filter = snapshotFilters[name] || {};
@@ -308,6 +314,7 @@ const searchSnapshots = async (event) => {
 	}
 
 	await runSnapshotSearch(name, query, false);
+	return true;
 };
 
 const loadMoreSnapshots = async (event) => {

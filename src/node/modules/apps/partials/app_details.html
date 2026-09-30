@@ -445,8 +445,13 @@
 														const currentOption = _.find(group.options, ([value]) => { return value === current; });
 													%>
 													<div class="dropdown">
-														<button type="button" class="btn btn-sm rounded-pill dropdown-toggle <%=(current ? 'btn-primary' : 'btn-light')%>" data-bs-toggle="dropdown" <%=(app.indexer && !snapshotSearching ? '' : 'disabled')%>><%=(current ? currentOption[1] : group.label)%></button>
-														<div class="dropdown-menu">
+														<span class="d-flex <%=(app.indexer && !snapshotSearching ? '' : 'opacity-50 pe-none')%>" data-bs-toggle="dropdown">
+															<u-badge color="gray" tint="300" class="cursor-pointer">
+																<%=(current ? currentOption[1] : group.label)%>
+																<i class="icon-solid icon-chevron-down icon-xs ms-1"></i>
+															</u-badge>
+														</span>
+														<div class="dropdown-menu dropdown-menu-start shadow">
 															<%_.each(group.options, ([value, label]) => {%>
 																<button type="button" class="dropdown-item <%=(value === current ? 'active' : '')%>" data-snapshot-filter="<%-group.key%>" data-value="<%-value%>"><%=label%></button>
 															<%})%>
@@ -462,7 +467,7 @@
 											</div>
 										</div>
 										<div class="col-auto ms-auto">
-											<div class="mb-4">
+											<div class="d-flex mb-4">
 												<u-switch class="indexer-switch me-n3" on-label="Indexer" <%=(app.indexer ? 'checked' : '')%>></u-switch>
 											</div>
 										</div>
