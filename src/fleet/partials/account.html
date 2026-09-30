@@ -13,7 +13,16 @@
 		<h6 class="dropdown-header">Logged in as</h6>
 		<p class="text-truncate fw-medium px-2 pb-2 mt-n1 mb-0" title="<%-account.name || '—'%>"><%-account.name || '—'%></p>
 		<div class="dropdown-divider"></div>
-		<a href="/users/profile" class="dropdown-item">Your profile</a>
+		<a href="/users/profile" class="dropdown-item">
+			<i class="icon-duotone icon-solid icon-id-card icon-fw me-2"></i>
+			Your profile
+		</a>
+		<div class="dropdown-divider"></div>
+		<a href="https://docs.univrs.cloud" target="_blank" rel="noopener noreferrer" class="dropdown-item">
+			<i class="icon-duotone icon-solid icon-book-open icon-fw me-2"></i>
+			Documentation
+			<i class="icon-solid icon-sm icon-arrow-up-right-from-square ms-2"></i>
+		</a>
 		<div class="dropdown-divider"></div>
 		<a href="#" class="sign-out dropdown-item">
 			Sign out
