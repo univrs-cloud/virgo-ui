@@ -34,9 +34,23 @@ const morphdom = (fromNode, toNode, options) => {
 				}
 			}
 
-			if ((fromEl.classList.contains('dropdown-toggle') || fromEl.classList.contains('dropdown-menu')) && fromEl.classList.contains('show')) {
+			if (!fromEl.classList.contains('show')) {
+				return;
+			}
+
+			if (fromEl.classList.contains('dropdown-menu')) {
 				morphdom(fromEl, toEl, { childrenOnly: true });
 				return false;
+			}
+
+			if (fromEl.classList.contains('dropdown-toggle') || fromEl.matches('[data-bs-toggle="dropdown"]')) {
+				if (toEl.classList.contains('disabled') || toEl.hasAttribute('disabled')) {
+					bootstrap.Dropdown.getInstance(fromEl)?.hide();
+					return;
+				}
+
+				toEl.classList.add('show');
+				toEl.setAttribute('aria-expanded', 'true');
 			}
 		},
 		onBeforeNodeDiscarded: (node) => {
