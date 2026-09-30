@@ -524,39 +524,43 @@
 													<div class="tree-row <%=(row.depth && !row.isLast ? 'tree-line' : '')%>" data-depth="<%=row.depth%>" style="--tree-elbow-x: 0.55rem; --tree-elbow-height: 1rem; --tree-line-x: 0.55rem; --tree-line-top: 0; <%=(row.depth ? 'padding-left: 1.5rem;' : '')%>">
 														<div class="tree-row py-1 <%=(row.hasChildren ? 'tree-line' : '')%>" data-depth="0" style="--tree-line-x: 0.55rem; --tree-line-top: calc(1rem + var(--tree-icon-radius));">
 															<%if (item) {%>
-																<div class="d-flex align-items-center gap-2 min-w-0">
-																	<i class="icon-light <%-resultIcons[item.type] || 'icon-file'%> icon-fw text-body-tertiary"></i>
-																	<span class="text-truncate <%=(item.deleted ? 'text-body-secondary' : '')%>"><%-row.name%></span>
-																	<%if (item.deleted) {%>
-																		<span class="badge rounded-pill border fw-normal text-red-500 border-red-500">Deleted</span>
-																	<%}%>
+																<div class="d-flex gap-2 min-w-0">
+																	<i class="icon-light <%-resultIcons[item.type] || 'icon-file'%> icon-fw lh-base text-body-tertiary"></i>
+																	<div class="min-w-0">
+																		<div class="d-flex align-items-center gap-2 min-w-0">
+																			<span class="text-truncate <%=(item.deleted ? 'text-body-secondary' : '')%>"><%-row.name%></span>
+																			<%if (item.deleted) {%>
+																				<span class="badge rounded-pill border fw-normal text-red-500 border-red-500">Deleted</span>
+																			<%}%>
+																		</div>
+																		<%if (!_.isEmpty(item.versions)) {%>
+																			<%
+																				const versionEntries = _.concat(
+																					_.map(item.versions, (version, index) => {
+																						const label = version.change || (index ? 'changed' : 'first seen');
+																						return { snapshot: version.snapshot, label: (item.deleted && version.snapshot === item.lastSeenSnap ? `${label} · last seen` : label), size: version.size };
+																					}),
+																					(item.deleted && item.lastSeenSnap && !_.some(item.versions, { snapshot: item.lastSeenSnap }) ? [{ snapshot: item.lastSeenSnap, label: 'last seen' }] : [])
+																				);
+																			%>
+																			<small class="d-flex flex-column text-body-tertiary">
+																				<%_.each(versionEntries, (version) => {%>
+																					<%const versionPoint = resultPoint(version.snapshot);%>
+																					<span class="text-nowrap">
+																						<%if (versionPoint) {%>
+																							<button type="button" class="btn btn-link btn-sm p-0 align-baseline text-decoration-none" data-snapshot="<%-versionPoint.key%>"><%=snapshotLabel(versionPoint)%></button>
+																						<%} else {%>
+																							<%-version.snapshot%>
+																						<%}%>
+																						<%=` · ${version.label}`%><%=(item.type === 'dir' || _.isUndefined(version.size) ? '' : ` · ${prettyBytes(version.size || 0, { binary: true })}`)%>
+																					</span>
+																				<%})%>
+																			</small>
+																		<%} else {%>
+																			<small class="d-block text-body-tertiary">Live · no versions</small>
+																		<%}%>
+																	</div>
 																</div>
-																<%if (!_.isEmpty(item.versions)) {%>
-																	<%
-																		const versionEntries = _.concat(
-																			_.map(item.versions, (version, index) => {
-																				const label = version.change || (index ? 'changed' : 'first seen');
-																				return { snapshot: version.snapshot, label: (item.deleted && version.snapshot === item.lastSeenSnap ? `${label} · last seen` : label), size: version.size };
-																			}),
-																			(item.deleted && item.lastSeenSnap && !_.some(item.versions, { snapshot: item.lastSeenSnap }) ? [{ snapshot: item.lastSeenSnap, label: 'last seen' }] : [])
-																		);
-																	%>
-																	<small class="d-flex flex-column text-body-tertiary ps-4">
-																		<%_.each(versionEntries, (version) => {%>
-																			<%const versionPoint = resultPoint(version.snapshot);%>
-																			<span class="text-nowrap">
-																				<%if (versionPoint) {%>
-																					<button type="button" class="btn btn-link btn-sm p-0 align-baseline text-decoration-none" data-snapshot="<%-versionPoint.key%>"><%=snapshotLabel(versionPoint)%></button>
-																				<%} else {%>
-																					<%-version.snapshot%>
-																				<%}%>
-																				<%=` · ${version.label}`%><%=(item.type === 'dir' || _.isUndefined(version.size) ? '' : ` · ${prettyBytes(version.size || 0, { binary: true })}`)%>
-																			</span>
-																		<%})%>
-																	</small>
-																<%} else {%>
-																	<small class="d-block text-body-tertiary ps-4">Live · no versions</small>
-																<%}%>
 															<%} else {%>
 																<div class="d-flex align-items-center gap-2 min-w-0 text-body-tertiary">
 																	<i class="icon-light icon-folder-open icon-fw"></i>
