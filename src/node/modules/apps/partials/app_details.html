@@ -538,8 +538,15 @@
 																			<%
 																				const versionEntries = _.concat(
 																					_.map(item.versions, (version, index) => {
-																						const label = version.change || (index ? 'changed' : 'added');
-																						return { snapshot: version.snapshot, label: (item.deleted && version.snapshot === item.lastSeenSnap ? `${label} · last seen` : label), size: version.size };
+																						const from = version.renamedFrom;
+																						const fromFolder = (from ? from.slice(0, from.lastIndexOf('/')) : null);
+																						return {
+																							snapshot: version.snapshot,
+																							label: version.change || (index ? 'changed' : 'added'),
+																							renamedFrom: (from && fromFolder === item.path.slice(0, item.path.lastIndexOf('/')) ? from.slice(from.lastIndexOf('/') + 1) : from),
+																							lastSeen: (item.deleted && version.snapshot === item.lastSeenSnap),
+																							size: version.size
+																						};
 																					}),
 																					(item.deleted && item.lastSeenSnap && !_.some(item.versions, { snapshot: item.lastSeenSnap }) ? [{ snapshot: item.lastSeenSnap, label: 'last seen' }] : [])
 																				);
@@ -547,13 +554,13 @@
 																			<small class="d-flex flex-column text-body-tertiary">
 																				<%_.each(versionEntries, (version) => {%>
 																					<%const versionPoint = resultPoint(version.snapshot);%>
-																					<span class="text-nowrap">
+																					<span class="<%=(version.renamedFrom ? 'text-break' : 'text-nowrap')%>">
 																						<%if (versionPoint) {%>
 																							<button type="button" class="btn btn-link btn-sm p-0 align-baseline text-decoration-none" data-snapshot="<%-versionPoint.key%>"><%=snapshotLabel(versionPoint)%></button>
 																						<%} else {%>
 																							<%-version.snapshot%>
 																						<%}%>
-																						<%=` · ${version.label}`%><%=(item.type === 'dir' || _.isUndefined(version.size) ? '' : ` · ${prettyBytes(version.size || 0, { binary: true })}`)%>
+																						<%=` · ${version.label}`%><%if (version.renamedFrom) {%> from <span class="text-body-secondary"><%-version.renamedFrom%></span><%}%><%=(version.lastSeen ? ' · last seen' : '')%><%=(item.type === 'dir' || _.isUndefined(version.size) ? '' : ` · ${prettyBytes(version.size || 0, { binary: true })}`)%>
 																					</span>
 																				<%})%>
 																			</small>
