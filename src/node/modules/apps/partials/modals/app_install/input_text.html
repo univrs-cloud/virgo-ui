@@ -1,6 +1,11 @@
 <u-input <%if (!env.readonly) {%>name="<%-env.name%>"<%}%> value="<%-env?.default || ''%>" label="<%-env.label%>" tip="<%-env.description%>" <%if (env.readonly) {%>disabled<%}%>>
-	<%if (prefix) {%>
-		<span slot="prefix" class="mb-n3"><%-prefix%></span>
+	<%if (prefix || isGated) {%>
+		<span slot="prefix" class="d-flex align-items-center mb-n3">
+			<%if (isGated) {%>
+				<u-badge color="green" tint="600" class="me-1" tip="Private access required. The domain can't be changed." pill><i class="icon-duotone icon-solid icon-key-skeleton"></i></u-badge>
+			<%}%>
+			<%-prefix%>
+		</span>
 	<%}%>
 	<%if (suffix) {%>
 		<span slot="suffix" class="mb-n3"><%-suffix%></span>
