@@ -431,10 +431,13 @@ u-badge:hover .hover-reveal-text {
 		}
 	}
 	.logs-container {
+		display: flex;
+		flex-direction: column;
 		ul {
+			flex: 1;
+			min-height: 0;
 			list-style: none;
 			overflow-y: scroll;
-			height: calc(100dvh - 208px - var(--chrome) - map-get($spacers, 2));
 			background-color: var(--bs-black);
 			padding: 0 map-get($spacers, 3) 0 0;
 			margin: map-get($spacers, 2) map-get($spacers, 1) map-get($spacers, 2) map-get($spacers, 3);
