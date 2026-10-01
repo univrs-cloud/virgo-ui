@@ -1,4 +1,4 @@
-<u-input name="<%-env.name%>" value="<%-env?.default || ''%>" label="<%-env.label%>" tip="<%-env.description%>">
+<u-input <%if (!env.readonly) {%>name="<%-env.name%>"<%}%> value="<%-env?.default || ''%>" label="<%-env.label%>" tip="<%-env.description%>" <%if (env.readonly) {%>disabled<%}%>>
 	<%if (prefix) {%>
 		<span slot="prefix" class="mb-n3"><%-prefix%></span>
 	<%}%>
@@ -6,3 +6,6 @@
 		<span slot="suffix" class="mb-n3"><%-suffix%></span>
 	<%}%>
 </u-input>
+<%if (env.readonly) {%>
+	<input type="hidden" name="<%-env.name%>" value="<%-env?.default || ''%>">
+<%}%>
