@@ -23,7 +23,7 @@ const table = container.querySelector('.table');
 let routeAppName = null;
 let searchTimer;
 let searchValue = '';
-let filterValues = {};
+let filterValues = appService.getFilters();
 let tableOrder = {
 	field: 'title',
 	direction: 'asc'
@@ -53,6 +53,7 @@ const filterApps = (event) => {
 
 	const { appFilter, value } = option.dataset;
 	filterValues = (appFilter === 'clear' ? {} : { ...filterValues, [appFilter]: value });
+	appService.setFilters(filterValues);
 	render({ apps: appService.getApps(), jobs: appService.getJobs() });
 };
 

@@ -5,6 +5,7 @@ import Indexer from 'stores/indexer';
 import { createSubscription, storeAttach } from 'libs/services/module_store_subscription';
 
 const DEFAULT_NETWORK_INTERFACE_SPEED_BPS = 1_000_000_000;
+const FILTERS_KEY = 'apps:filters';
 
 const { subscribe } = createSubscription({
 	stores: [
@@ -127,6 +128,24 @@ const searchSnapshots = (query) => {
 	return Indexer.search(query);
 };
 
+const getFilters = () => {
+	let stored = null;
+	try {
+		stored = JSON.parse(localStorage.getItem(FILTERS_KEY));
+	} catch (error) {
+		stored = null;
+	}
+	return _.pickBy(_.pick(stored, ['category', 'status', 'updates']), _.isString);
+};
+
+const setFilters = (filters) => {
+	try {
+		localStorage.setItem(FILTERS_KEY, JSON.stringify(filters));
+	} catch (error) {
+		return;
+	}
+};
+
 export {
 	subscribe,
 	getSocket,
@@ -138,5 +157,7 @@ export {
 	performAppAction,
 	performServiceAction,
 	updateIndexerConfig,
-	searchSnapshots
+	searchSnapshots,
+	getFilters,
+	setFilters
 };
