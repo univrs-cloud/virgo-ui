@@ -5,6 +5,7 @@ import appActionsPartial from 'node/modules/apps/partials/app_actions.html';
 import appDetailsPartial from 'node/modules/apps/partials/app_details.html';
 import filtersPartial from 'node/modules/apps/partials/filters.html';
 import * as appService from 'node/modules/apps/services/app';
+import { getNodeViewBase } from 'node/view';
 import { filterListByQuery } from 'utils/list_search';
 
 const moduleTemplate = _.template(modulePartial);
@@ -424,7 +425,7 @@ const renderAppDetails = (name) => {
 	const networkMaxBytesPerSec = appService.getDefaultNetworkInterfaceSpeed();
 	morphdom(
 		details,
-		`<div>${appDetailsTemplate({ app, jobs, appJobs, serviceJobs, appActionsTemplate, prettyBytes, moment, networkMaxBytesPerSec, selectedSnapshot: snapshotSelections[name], snapshotFilter: snapshotFilters[name] || {}, snapshotSearching: Boolean(snapshotSearches[name]), appTab: appTabs[name] || 'services', snapshotResults: snapshotResults[name] || null })}</div>`,
+		`<div>${appDetailsTemplate({ app, jobs, appJobs, serviceJobs, appActionsTemplate, prettyBytes, moment, networkMaxBytesPerSec, selectedSnapshot: snapshotSelections[name], snapshotFilter: snapshotFilters[name] || {}, snapshotSearching: Boolean(snapshotSearches[name]), appTab: appTabs[name] || 'services', snapshotResults: snapshotResults[name] || null, canDownloadSnapshotFiles: !getNodeViewBase() })}</div>`,
 		{
 			childrenOnly: true,
 			onBeforeElUpdated: (fromEl, toEl) => {

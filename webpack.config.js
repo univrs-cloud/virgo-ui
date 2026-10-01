@@ -61,6 +61,7 @@ module.exports = (env, argv) => {
 				{ context: ['/api'], ...proxyDefaults, ws: true },
 				{ context: ['/auth'], ...proxyDefaults, ws: true },
 				{ context: ['/session'], ...proxyDefaults },
+				{ context: ['/snapshots'], ...proxyDefaults },
 				{ context: ['/assets/img/apps'], ...proxyDefaults },
 				{ context: ['/assets/img/shortcuts'], ...proxyDefaults }
 			]
