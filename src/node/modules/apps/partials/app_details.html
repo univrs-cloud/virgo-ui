@@ -481,8 +481,10 @@
 										};
 										const resultTree = { children: {} };
 										_.each(snapshotResults.results, (result) => {
+											let nodePath = '';
 											const node = _.reduce(_.compact(result.path.split('/')), (parent, segment) => {
-												parent.children[segment] = parent.children[segment] || { name: segment, children: {} };
+												nodePath = `${nodePath}/${segment}`;
+												parent.children[segment] = parent.children[segment] || { name: segment, path: nodePath, mountpoint: result.mountpoint, children: {} };
 												return parent.children[segment];
 											}, resultTree);
 											node.item = result;
@@ -503,6 +505,32 @@
 											});
 										};
 										walkResults(resultTree, 0);
+										const nodeDownloads = (node, folder) => {
+											const item = node.item;
+											const suffix = (item ? item.path.slice(folder.path.length) : '');
+											const versions = _.filter(item?.versions, (version) => {
+												return version.snapshotPath && _.endsWith(version.snapshotPath, suffix) && !_.endsWith(version.snapshotPath.slice(0, -suffix.length), `/.zfs/snapshot/${version.snapshot}`);
+											});
+											return _.concat(
+												_.map(versions, (version) => {
+													return { snapshot: version.snapshot, path: version.snapshotPath.slice(0, -suffix.length) };
+												}),
+												(item?.deleted && item.lastSeenSnap ? [{ snapshot: item.lastSeenSnap, path: `${folder.mountpoint}/.zfs/snapshot/${item.lastSeenSnap}${folder.path}` }] : []),
+												_.flatMap(_.values(node.children), (child) => { return nodeDownloads(child, folder); })
+											);
+										};
+										const folderDownloads = (folder) => {
+											const downloads = _.uniqBy(_.map(nodeDownloads(folder, folder), (download) => {
+												return { ...download, key: download.snapshot.split('_').slice(1, -1).join('_') };
+											}), 'key');
+											return _.map(_.orderBy(downloads, ['key'], ['asc']), ({ snapshot, path }) => {
+												const point = resultPoint(snapshot);
+												return {
+													label: (point ? point.createdMoment.format('D MMM YYYY, HH:mm') : snapshot),
+													path
+												};
+											});
+										};
 										const resultIcons = { file: 'icon-file', dir: 'icon-folder', link: 'icon-link' };
 									%>
 									<div class="card-body border-top">
@@ -554,6 +582,7 @@
 																							label: (from && !sameFolder ? 'moved' : (version.change || (index ? 'changed' : 'added'))),
 																							renamedFrom,
 																							lastSeen: (item.deleted && version.snapshot === item.lastSeenSnap),
+																							snapshotPath: version.snapshotPath,
 																							size: version.size
 																						};
 																					}),
@@ -565,11 +594,14 @@
 																					<%const versionPoint = resultPoint(version.snapshot);%>
 																					<span class="<%=(version.renamedFrom ? 'text-break' : 'text-nowrap')%>">
 																						<%if (versionPoint) {%>
-																							<button type="button" class="btn btn-link btn-sm p-0 align-baseline text-decoration-none" data-snapshot="<%-versionPoint.key%>"><%=snapshotLabel(versionPoint)%></button>
+																							<button type="button" class="btn btn-link btn-sm p-0 align-baseline text-decoration-none" data-snapshot="<%-versionPoint.key%>"><%=versionPoint.createdMoment.format('D MMM YYYY, HH:mm')%></button>
 																						<%} else {%>
 																							<%-version.snapshot%>
 																						<%}%>
 																						<%=` · ${version.label}`%><%if (version.renamedFrom) {%> from <span class="text-body-secondary"><%-version.renamedFrom%></span><%}%><%=(version.lastSeen ? ' · last seen' : '')%><%=(item.type === 'dir' || _.isUndefined(version.size) ? '' : ` · ${prettyBytes(version.size || 0, { binary: true })}`)%>
+																						<%if (canDownloadSnapshotFiles && _.includes(['file', 'dir'], item.type) && version.snapshotPath) {%>
+																							<a href="/snapshots/download?path=<%=encodeURIComponent(version.snapshotPath)%>" class="ms-1 text-decoration-none" download data-bs-toggle="tooltip" data-bs-original-title="Download"><i class="icon-solid icon-download"></i></a>
+																						<%}%>
 																					</span>
 																				<%})%>
 																			</small>
@@ -582,6 +614,18 @@
 																<div class="d-flex align-items-center gap-2 min-w-0 text-body-tertiary">
 																	<i class="icon-light icon-folder-open icon-fw"></i>
 																	<span class="text-truncate"><%-row.name%></span>
+																	<%const downloads = (canDownloadSnapshotFiles && row.node.mountpoint ? folderDownloads(row.node) : []);%>
+																	<%if (!_.isEmpty(downloads)) {%>
+																		<div class="dropdown">
+																			<span class="small link-primary cursor-pointer" data-bs-toggle="dropdown"><i class="icon-solid icon-download"></i></span>
+																			<div class="dropdown-menu shadow overflow-y-auto" style="max-height: 16rem;">
+																				<h6 class="dropdown-header">Download as of<i class="icon-solid icon-triangle-exclamation icon-fw text-orange-500 ms-1" data-bs-toggle="tooltip" data-bs-original-title="Downloads the entire folder as it was at that date, not just the files shown in the results."></i></h6>
+																				<%_.each(downloads, (entry) => {%>
+																					<a href="/snapshots/download?path=<%=encodeURIComponent(entry.path)%>" class="dropdown-item" download><%-entry.label%></a>
+																				<%})%>
+																			</div>
+																		</div>
+																	<%}%>
 																</div>
 															<%}%>
 														</div>
