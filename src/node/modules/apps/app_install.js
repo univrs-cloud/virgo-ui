@@ -31,6 +31,19 @@ const isFleetDomain = (domain) => {
 	return _.endsWith(domain?.toLowerCase(), `.${FLEET_ZONE}`);
 };
 
+const isGated = (env) => {
+	const policy = env.auth?.policy?.toLowerCase();
+	if (_.isNil(policy) || policy === 'none') {
+		return false;
+	}
+
+	if (policy === 'optional') {
+		return env.auth.default === true;
+	}
+
+	return true;
+};
+
 const renderCertResolver = (domain) => {
 	const slot = form.querySelector('.certresolver');
 	if (!slot || !certResolverEnv) {
@@ -78,7 +91,6 @@ const render = (event) => {
 	const fqdn = appCenterService.getFQDN();
 	const domainName = appCenterService.getDomainName();
 	appDomain = (_.includes(CORE_APPS, app.name) ? fqdn : domainName);
-	const isAuthEnabled = app.auth?.defaultEnabled === true;
 	nodeResolver = appCenterService.getCertresolver();
 	_.each(app.env, (env) => {
 		if (env?.type === 'hidden') {
@@ -89,15 +101,15 @@ const render = (event) => {
 		if (env?.type === 'text') {
 			env = {
 				...env,
-				readonly: env.readonly === true || (isAuthEnabled && env.name === app.auth?.envName)
+				readonly: env.readonly === true || isGated(env)
 			};
-			if (env.name.toLowerCase() === 'domain') {
+			if (env.name.toLowerCase() === 'domain' || isGated(env)) {
 				env.default = appDomain;
 			}
 			if (env.name.toLowerCase() === 'nextcloud_trusted_domains') {
 				env.default = `${domainName} auth.${fqdn} nextcloud.${domainName} onlyoffice.${domainName} talk.${domainName}`;
 			}
-			form.querySelector('.inputs').innerHTML += inputTextTemplate({ env, prefix: env?.prefix, suffix: env?.suffix });
+			form.querySelector('.inputs').innerHTML += inputTextTemplate({ env, prefix: env?.prefix, suffix: env?.suffix, isGated: isGated(env) });
 			return;
 		}
 
@@ -127,7 +139,7 @@ const render = (event) => {
 			return;
 		}
 	});
-	const domainInput = form.querySelector('u-input[name="DOMAIN"]');
+	const domainInput = form.querySelector('[name="DOMAIN"]');
 	renderCertResolver(domainInput ? domainInput.value : appDomain);
 	domainInput?.addEventListener('value-changed', () => { renderCertResolver(domainInput.value); });
 	form.querySelector('.certresolver')?.addEventListener('change', (event) => { certResolverChoice = event.target.value; });
