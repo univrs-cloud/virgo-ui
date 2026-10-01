@@ -356,6 +356,8 @@ const clearSnapshotSearch = (event) => {
 	}
 
 	delete snapshotResults[name];
+	delete snapshotFilters[name];
+	button.closest('.item').querySelector('.snapshot-search').value = '';
 	renderAppDetails(name);
 };
 
@@ -387,21 +389,6 @@ const runSnapshotSearch = async (name, query, append) => {
 		await input?.updateComplete;
 		input?.focus();
 	}
-};
-
-const deleteSnapshot = async (event) => {
-	const button = event.target.closest('.snapshot-delete');
-	if (!button) {
-		return;
-	}
-
-	const { date, tiers } = button.dataset;
-	const count = Number(button.dataset.count);
-	const freed = prettyBytes(Number(button.dataset.freed), { binary: true });
-	const text = (count > 1
-		? `Are you sure you want to delete the restore point from ${date}? It is kept by ${count} snapshots (${tiers}), and all of them will be deleted.<br><br>Files that exist only in these snapshots will be permanently lost. This frees up at least ${freed}.`
-		: `Are you sure you want to delete the ${_.toLower(tiers)} snapshot from ${date}?<br><br>Files that exist only in this snapshot will be permanently lost. This frees up ${freed}.`);
-	await confirm(text, { buttons: [{ text: 'Yes, delete', class: 'btn-danger' }] });
 };
 
 const filterJobsByApp = (jobs, app) => {
@@ -532,7 +519,6 @@ module.addEventListener('click', selectTab);
 module.addEventListener('click', loadMoreSnapshots);
 module.addEventListener('click', clearSnapshotSearch);
 module.addEventListener('click', selectSnapshot);
-module.addEventListener('click', deleteSnapshot);
 module.addEventListener('click', filterSnapshots);
 module.addEventListener('input', scrubSnapshot);
 module.addEventListener('keydown', stepSnapshot);
