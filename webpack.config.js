@@ -111,7 +111,7 @@ module.exports = (env, argv) => {
 				filename: 'manifest.json',
 				icons: [
 					{
-						src: path.resolve(__dirname, './src/assets/img/virgo.png'),
+						src: path.resolve(__dirname, './src/assets/img/univrs.png'),
 						destination: 'assets/icons/',
 						sizes: [36, 48, 72, 96, 144, 192, 512]
 					}
