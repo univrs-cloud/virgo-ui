@@ -1,7 +1,9 @@
 <div class="dropdown mb-4">
-	<u-button variant="tertiary" class="dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside" outline>
-		Filter
-		<u-badge class="filter-count ms-2 d-none" pill></u-badge>
-	</u-button>
+	<span class="d-flex" data-bs-toggle="dropdown" data-bs-auto-close="outside">
+		<u-badge color="gray" tint="300" class="filter-toggle cursor-pointer">
+			Filter
+			<i class="icon-solid icon-chevron-down icon-xs ms-1"></i>
+		</u-badge>
+	</span>
 	<ul class="dropdown-menu filter-menu"></ul>
 </div>

@@ -23,19 +23,20 @@ const container = module.querySelector('.container-fluid');
 const details = container.querySelector('.details');
 const searchInput = module.querySelector('.search');
 const filterMenu = module.querySelector('.filter-menu');
-const filterCount = module.querySelector('.filter-count');
+const filterBadge =module.querySelector('.filter-toggle');
 const filterPills = module.querySelector('.filter-pills');
 const filterTypeNav = module.querySelector('.filter-type');
 const table = container.querySelector('.table');
 let routeServiceUnit = null;
 let searchTimer;
 let searchValue = '';
-let filterType = '';
+const storedFilters = serviceService.getFilters();
+let filterType = storedFilters.type;
 const filterGroups = [
 	{ key: 'sub', order: ['running', 'dead', 'exited', 'failed', 'listening', 'waiting', 'active', 'elapsed'] },
 	{ key: 'unitFileState', order: ['enabled', 'disabled', 'static', 'enabled-runtime', 'indirect', 'generated', 'masked', 'unknown'] }
 ];
-let filters = { sub: [], unitFileState: [] };
+let filters = { sub: storedFilters.sub, unitFileState: storedFilters.unitFileState };
 let tableOrder = {
 	field: 'memory.percent',
 	direction: 'desc'
@@ -67,6 +68,7 @@ const toggleFilter = (event) => {
 
 	const key = input.dataset.filterKey;
 	filters[key] = (input.checked ? _.union(filters[key], [input.value]) : _.without(filters[key], input.value));
+	serviceService.setFilters({ type: filterType, ...filters });
 	const services = serviceService.getServices();
 	const jobs = serviceService.getJobs();
 	render({ services, jobs });
@@ -84,6 +86,7 @@ const selectType = (event) => {
 	const jobs = serviceService.getJobs();
 	const typedServices = _.filter(services, matchesType);
 	filters = _.mapValues(filters, (values, key) => { return _.intersection(values, _.map(typedServices, (service) => { return filterValue(service, key); })); });
+	serviceService.setFilters({ type: filterType, ...filters });
 	render({ services, jobs });
 };
 
@@ -98,6 +101,7 @@ const removeFilter = (event) => {
 	} else {
 		filters[button.dataset.filterKey] = [];
 	}
+	serviceService.setFilters({ type: filterType, ...filters });
 	const services = serviceService.getServices();
 	const jobs = serviceService.getJobs();
 	render({ services, jobs });
@@ -135,8 +139,8 @@ const renderFilters = (allServices, searchedServices) => {
 	morphdom(filterMenu, `<ul>${filterOptionsTemplate({ groups })}</ul>`, { childrenOnly: true });
 	morphdom(filterPills, `<div>${(selectedCount > 0 ? filterPillsTemplate({ groups }) : '')}</div>`, { childrenOnly: true });
 	filterPills.classList.toggle('d-md-flex', selectedCount > 0);
-	filterCount.textContent = selectedCount;
-	filterCount.classList.toggle('d-none', selectedCount === 0);
+	filterBadge.color = (selectedCount > 0 ? 'blue' : 'gray');
+	filterBadge.tint = (selectedCount > 0 ? '500' : '300');
 };
 
 const order = (event) => {
@@ -289,6 +293,8 @@ const handleRoute = (ctx) => {
 	renderServiceDetails(unit);
 	details.classList.add('d-block');
 };
+
+_.each(filterTypeNav.querySelectorAll('.nav-link'), (link) => { link.classList.toggle('active', link.dataset.filterType === filterType); });
 
 module.onRoute = handleRoute;
 module.addEventListener('click', compress);
