@@ -8,13 +8,21 @@
 		<div class="d-flex align-items-center mb-n1">
 			<div class="text-truncate"><%-shortcut.title%></div>
 		</div>
-		<%if (!_.isEmpty(shortcut.url)) {%>
-			<a href="<%-shortcut.url%>" target="<%-(shortcut?.target || shortcut.name)%>" class="d-inline-flex align-items-center link-underline link-underline-opacity-0 link-underline-opacity-75-hover max-w-100">
-				<small class="text-truncate min-w-0"><%-shortcut.url%></small><i class="icon-solid icon-arrow-up-right-from-square icon-fw icon-2xs ms-1 d-none d-sm-block"></i>
-			</a>
-		<%} else {%>
-			&mdash;
-		<%}%>
+		<div class="d-flex align-items-center">
+			<%if (!_.isEmpty(shortcut.url)) {%>
+				<a href="<%-shortcut.url%>" target="<%-(shortcut?.target || shortcut.name)%>" class="d-inline-flex align-items-center link-underline link-underline-opacity-0 link-underline-opacity-75-hover min-w-0">
+					<small class="text-truncate min-w-0"><%-shortcut.url%></small><i class="icon-solid icon-arrow-up-right-from-square icon-fw icon-2xs ms-1 d-none d-sm-block"></i>
+				</a>
+			<%} else {%>
+				&mdash;
+			<%}%>
+			<%if (shortcut.traefik) {%>
+				<u-badge color="blue" tint="600" class="ms-2 flex-shrink-0" tip="Proxied" pill><i class="icon-duotone icon-solid icon-direction-left-right"></i></u-badge>
+				<%if (shortcut.traefik.isAuthRequired) {%>
+					<u-badge color="green" tint="600" class="ms-1 flex-shrink-0" tip="Private access enabled" pill><i class="icon-duotone icon-solid icon-key-skeleton"></i></u-badge>
+				<%}%>
+			<%}%>
+		</div>
 	</td>
 	<td class="d-none d-md-table-cell">
 		<u-badge color="purple" pill><%-shortcut.category%></u-badge>
