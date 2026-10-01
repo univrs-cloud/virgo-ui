@@ -78,6 +78,7 @@ const render = (event) => {
 	const fqdn = appCenterService.getFQDN();
 	const domainName = appCenterService.getDomainName();
 	appDomain = (_.includes(CORE_APPS, app.name) ? fqdn : domainName);
+	const isAuthEnabled = app.auth?.defaultEnabled === true;
 	nodeResolver = appCenterService.getCertresolver();
 	_.each(app.env, (env) => {
 		if (env?.type === 'hidden') {
@@ -86,6 +87,10 @@ const render = (event) => {
 		}
 
 		if (env?.type === 'text') {
+			env = {
+				...env,
+				readonly: env.readonly === true || (isAuthEnabled && env.name === app.auth?.envName)
+			};
 			if (env.name.toLowerCase() === 'domain') {
 				env.default = appDomain;
 			}
