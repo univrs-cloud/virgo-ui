@@ -195,39 +195,6 @@ const toggleStateTooltip = (event) => {
 	}
 };
 
-const updateIndexer = async (event) => {
-	if (!event.target.classList.contains('indexer-switch')) {
-		return;
-	}
-
-	const name = event.target.closest('.item')?.dataset?.name;
-	if (!name) {
-		return;
-	}
-
-	const app = _.find(appService.getApps() || [], { name });
-	if (!app?.dataset) {
-		return;
-	}
-
-	const dataset = app.dataset;
-	const optedIn = event.target.checked;
-
-	if (!optedIn) {
-		if (!await confirm('Turn off snapshot indexing for this app? You can turn it back on later.', { buttons: [{ text: 'Turn off', class: 'btn-danger' }] })) {
-			event.target.checked = app.indexer;
-			return;
-		}
-	}
-
-	const data = {
-		name,
-		dataset,
-		optedIn
-	};
-	appService.updateIndexerConfig(data);
-};
-
 const selectTab = (event) => {
 	const button = event.target.closest('[data-app-tab]');
 	const name = button?.closest('.item')?.dataset?.name;
@@ -310,9 +277,8 @@ const searchSnapshots = async (event) => {
 };
 
 const submitSnapshotSearch = async (name, value) => {
-	const app = _.find(appService.getApps() || [], { name });
 	const term = _.trim(value);
-	if (!app?.dataset || !term || snapshotSearches[name]) {
+	if (!term || snapshotSearches[name]) {
 		return false;
 	}
 
@@ -324,7 +290,7 @@ const submitSnapshotSearch = async (name, value) => {
 		huge: { minSize: 1073741824 }
 	};
 	const days = { '1d': 1, '7d': 7, '30d': 30, '365d': 365 };
-	const query = { dataset: app.dataset, term, ...sizes[filter.size] };
+	const query = { term, ...sizes[filter.size] };
 	if (filter.type) {
 		query.type = filter.type;
 	}
@@ -525,7 +491,6 @@ module.addEventListener('click', filterSnapshots);
 module.addEventListener('input', scrubSnapshot);
 module.addEventListener('keydown', stepSnapshot);
 module.addEventListener('keydown', searchSnapshots);
-module.addEventListener('switch-changed', updateIndexer);
 module.addEventListener('mouseenter', toggleStateTooltip, true);
 module.addEventListener('mouseleave', toggleStateTooltip, true);
 searchInput.addEventListener('input', search);
