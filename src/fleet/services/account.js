@@ -1,11 +1,13 @@
-// The global `account` (window.account) is decoded from the display-only `account` cookie at
+// The global `account` (window.account) is decoded from the display-only account cookie at
 // bootstrap. This service keeps it in sync after a change and notifies the UI (header dropdown,
 // profile) so they can re-render from the updated value instead of doing a full page reload.
 // Fields like name, email and pushEnabled all ride along the same way.
 
 const decode = () => {
 	try {
-		const encoded = document.cookie.match('(^|;)\\s*account\\s*=\\s*([^;]+)')?.pop();
+		const encoded = _.find(_.map(location.hostname.toLowerCase().split('.'), (label) => {
+			return document.cookie.match('(^|;)\\s*account_' + label + '\\s*=\\s*([^;]+)')?.pop();
+		}));
 		return JSON.parse(atob(encoded));
 	} catch (error) {
 		return {};

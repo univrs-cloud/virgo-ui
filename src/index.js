@@ -7,7 +7,9 @@ import * as runtimeService from 'libs/services/runtime';
 import { forNode, isAvailable } from 'libs/webrtc_transport';
 
 try {
-	let encodedAccount = (document.cookie.match('(^|;)\\s*' + 'account' + '\\s*=\\s*([^;]+)')?.pop());
+	let encodedAccount = _.find(_.map(location.hostname.toLowerCase().split('.'), (label) => {
+		return document.cookie.match('(^|;)\\s*account_' + label + '\\s*=\\s*([^;]+)')?.pop();
+	}));
 	let decodedAccountJson = atob(encodedAccount);
 	window.account = JSON.parse(decodedAccountJson);
 } catch (error) {
