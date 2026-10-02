@@ -20,10 +20,6 @@ const { subscribe } = createSubscription({
 		{
 			store: Host,
 			propertyNames: ['snapshots']
-		},
-		{
-			store: Indexer,
-			propertyNames: ['indexerDatasets']
 		}
 	],
 	filters: {
@@ -32,7 +28,7 @@ const { subscribe } = createSubscription({
 	attachStore: storeAttach.beforeCallbacks,
 	mapState: (properties) => {
 		return {
-			apps: composeApps(properties?.configured, properties?.containers, properties?.appsResourceMetrics, properties?.imageUpdates, properties?.snapshots, properties?.indexerDatasets),
+			apps: composeApps(properties?.configured, properties?.containers, properties?.appsResourceMetrics, properties?.imageUpdates, properties?.snapshots),
 			jobs: properties?.jobs || []
 		};
 	}
@@ -42,7 +38,7 @@ function isAppsJob(job) {
 	return _.startsWith(job?.name, 'app');
 }
 
-function composeApps(configured, containers, appsResourceMetrics, imageUpdates, snapshots, indexerDatasets) {
+function composeApps(configured, containers, appsResourceMetrics, imageUpdates, snapshots) {
 	if (_.isNull(configured) || _.isNull(containers)) {
 		return null;
 	}
@@ -83,7 +79,6 @@ function composeApps(configured, containers, appsResourceMetrics, imageUpdates, 
 			entity.snapshots = _.filter(_.values(snapshots), (snapshot) => {
 				return snapshot.dataset === entity.dataset;
 			});
-			entity.indexer = _.isArray(indexerDatasets) && _.includes(indexerDatasets, entity.dataset);
 			return entity;
 		});
 }
@@ -97,7 +92,7 @@ const getJobs = () => {
 };
 
 const getApps = () => {
-	return composeApps(Docker.getConfigured(), Docker.getContainers(), Docker.getAppsResourceMetrics(), Docker.getImageUpdates(), Host.getSnapshots(), Indexer.getDatasets());
+	return composeApps(Docker.getConfigured(), Docker.getContainers(), Docker.getAppsResourceMetrics(), Docker.getImageUpdates(), Host.getSnapshots());
 };
 
 const getDefaultNetworkInterface = () => {
@@ -118,10 +113,6 @@ const performAppAction = (data) => {
 
 const performServiceAction = (data) => {
 	Docker.performServiceAction(data);
-};
-
-const updateIndexerConfig = (data) => {
-	Indexer.updateDatasets(data);
 };
 
 const searchSnapshots = (query) => {
@@ -156,7 +147,6 @@ export {
 	update,
 	performAppAction,
 	performServiceAction,
-	updateIndexerConfig,
 	searchSnapshots,
 	getFilters,
 	setFilters
