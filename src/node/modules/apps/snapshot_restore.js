@@ -19,7 +19,7 @@ const conflictModal = document.querySelector('#snapshot-restore-conflict');
 let state = null;
 
 const initialState = (file) => {
-	return { file, isLoading: true, folders: [], selected: null, draft: null, notice: null, error: null, busy: null, inspection: null };
+	return { file, isLoading: true, isShown: false, folders: [], selected: null, draft: null, notice: null, error: null, busy: null, inspection: null };
 };
 
 const renderContent = (element, html) => {
@@ -41,6 +41,21 @@ const render = () => {
 	renderContent(modal, contentTemplate({ state, isCreating, folderTemplate }));
 	if (state.inspection) {
 		renderContent(conflictModal, conflictTemplate({ state, destination, prettyBytes, moment }));
+	}
+};
+
+const revealSelected = () => {
+	const row = modal.querySelector('.tree-selected > .tree-row');
+	const body = modal.querySelector('.modal-body');
+	if (!row || !body) {
+		return;
+	}
+
+	const top = body.getBoundingClientRect().top + (modal.querySelector('.modal-header')?.offsetHeight || 0);
+	const bottom = body.getBoundingClientRect().bottom - (modal.querySelector('.modal-footer')?.offsetHeight || 0);
+	const rect = row.getBoundingClientRect();
+	if (rect.top < top || rect.bottom > bottom) {
+		row.scrollIntoView({ block: 'center', behavior: 'smooth' });
 	}
 };
 
@@ -95,6 +110,7 @@ const revealOriginalFolder = async (session) => {
 	const original = session.file.folder;
 	const root = _.find(session.folders, (folder) => { return original === folder.path || _.startsWith(original, `${folder.path}/`); });
 	if (!root) {
+		session.notice = 'The folder this file was in is not available. Choose where to restore the file.';
 		return;
 	}
 
@@ -124,6 +140,7 @@ const open = async (event) => {
 	}
 
 	event.preventDefault();
+	bootstrap.Tooltip.getInstance(link)?.hide();
 	const relPath = SNAPSHOT_PATH_PATTERN.exec(link.dataset.path)?.[1];
 	if (!relPath) {
 		return;
@@ -153,6 +170,9 @@ const open = async (event) => {
 
 	session.isLoading = false;
 	render();
+	if (session.isShown) {
+		revealSelected();
+	}
 };
 
 const toggleFolder = async (event) => {
@@ -405,6 +425,17 @@ const closeConflict = () => {
 	render();
 };
 
+const reveal = () => {
+	if (!state) {
+		return;
+	}
+
+	state.isShown = true;
+	if (!state.isLoading) {
+		revealSelected();
+	}
+};
+
 const restore = () => {
 	state = null;
 	bootstrap.Modal.getInstance(conflictModal)?.hide();
@@ -421,4 +452,5 @@ modal.addEventListener('keydown', keyDraft, true);
 modal.addEventListener('click', submit);
 conflictModal.addEventListener('click', confirmConflict);
 conflictModal.addEventListener('hidden.bs.modal', closeConflict);
+modal.addEventListener('shown.bs.modal', reveal);
 modal.addEventListener('hidden.bs.modal', restore);
