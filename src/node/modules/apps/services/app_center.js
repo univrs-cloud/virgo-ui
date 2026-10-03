@@ -11,7 +11,7 @@ const { subscribe } = createSubscription({
 		},
 		{
 			store: Docker,
-			propertyNames: ['containers', 'templates']
+			propertyNames: ['configured', 'containers', 'templates']
 		}
 	],
 	filters: {
@@ -35,17 +35,34 @@ function isInstallable(template) {
 }
 
 function mapTemplates(properties) {
-	let templates = _.orderBy(
-		_.filter(properties?.templates, isInstallable),
+	const templates = _.filter(properties?.templates, isInstallable);
+	const cards = _.flatMap(templates, (template) => {
+		if (template.multiple !== true) {
+			template.isInstalled = (_.find(properties?.containers, (container) => {
+				return template.name === container.labels?.comDockerComposeProject;
+			}) !== undefined);
+			template.instances = 0;
+			return [template];
+		}
+
+		const instances = _.filter(properties?.configured, (app) => {
+			const name = app.name?.toLowerCase();
+			return app.type === 'app' && _.startsWith(name, `${template.name.toLowerCase()}-`) && !_.some(templates, (other) => { return other.name.toLowerCase() === name; });
+		});
+		template.isInstalled = false;
+		template.instances = _.size(instances);
+		return [
+			template,
+			..._.map(instances, (app) => {
+				return { ...template, name: app.name, title: app.title || template.title, isInstalled: true };
+			})
+		];
+	});
+	return _.orderBy(
+		cards,
 		[(entity) => { return entity.title.toLowerCase(); }],
 		['asc']
 	);
-	return _.map(templates, (template) => {
-		template.isInstalled = (template.multiple !== true && _.find(properties?.containers, (container) => {
-			return template.name === container.labels?.comDockerComposeProject;
-		}) !== undefined);
-		return template;
-	});
 }
 
 const getJobs = () => {
