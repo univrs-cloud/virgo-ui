@@ -30,14 +30,18 @@ function isAppInstallJob(job) {
 	return _.startsWith(job?.name, 'app:install');
 }
 
+function isInstallable(template) {
+	return template.multiple !== true || _.some(template.env, (env) => { return env?.name?.toLowerCase() === 'instance'; });
+}
+
 function mapTemplates(properties) {
 	let templates = _.orderBy(
-		properties?.templates,
+		_.filter(properties?.templates, isInstallable),
 		[(entity) => { return entity.title.toLowerCase(); }],
 		['asc']
 	);
 	return _.map(templates, (template) => {
-		template.isInstalled = (_.find(properties?.containers, (container) => {
+		template.isInstalled = (template.multiple !== true && _.find(properties?.containers, (container) => {
 			return template.name === container.labels?.comDockerComposeProject;
 		}) !== undefined);
 		return template;
@@ -65,6 +69,10 @@ const getTemplates = () => {
 	return Docker.getTemplates();
 };
 
+const getApps = () => {
+	return _.filter(Docker.getConfigured(), { type: 'app' });
+};
+
 const install = (data) => {
 	Docker.install(data);
 };
@@ -76,5 +84,6 @@ export {
 	getDomainName,
 	getCertresolver,
 	getTemplates,
+	getApps,
 	install
 };
