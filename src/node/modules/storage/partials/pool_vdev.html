@@ -1,7 +1,6 @@
 <%const isDisk = (vdev.vdevType === 'disk')%>
 <%const hasChildren = !_.isEmpty(vdev.vdevs)%>
 <%const badgeColor = stateColor(vdev.state)%>
-<%const rowClass = (hasChildren || (!isLast && depth > 0) ? 'tree-row tree-line' : 'tree-row')%>
 <%const icon = (isDisk ? 'icon-hard-drive' : 'icon-layer')%>
 <%const label = (isDisk && drive?.name ? _.last(drive.name.split('/')) : vdev.name)%>
 <%const size = (isDisk ? (vdev.physSpace || vdev.repDevSize) : vdev.totalSpace)%>
@@ -10,11 +9,6 @@
 <%const checksumErrors = (vdev.checksumErrors || 0)%>
 <%const errors = readErrors + writeErrors + checksumErrors%>
 <%const errorsTip = `${readErrors} read, ${writeErrors} write, ${checksumErrors} checksum`%>
-<%const elbowX = `calc(var(--bs-card-spacer-x) + ${(depth - 1) * 1.5}rem + 0.5rem)`%>
-<%const lineX = `calc(var(--bs-card-spacer-x) + ${(hasChildren ? depth : depth - 1) * 1.5}rem + 0.5rem)`%>
-<%const lineTop = (hasChildren ? 'calc(50% + var(--tree-icon-radius))' : '0')%>
-<%const indent = `calc(var(--bs-card-spacer-x) + ${depth * 1.5}rem)`%>
-<%const rowStyle = `--tree-elbow-x: ${elbowX}; --tree-line-x: ${lineX}; --tree-line-top: ${lineTop}; padding-left: ${indent};`%>
 <%
 	const infoItem = (label, value) => { return `<div class='mt-1'><div class='small opacity-75'>${label}</div><div>${_.escape(value)}</div></div>`; };
 	const tip = `<div class='text-start'>${_.join(_.compact([
@@ -33,7 +27,8 @@
 		temperatureColor = 'red';
 	}
 %>
-<div class="<%-rowClass%> py-2 pe-3" data-guid="<%-vdev.guid%>" data-depth="<%-depth%>" style="<%=rowStyle%>">
+<div class="tree-row <%=(depth > 0 && !isLast ? 'tree-line' : '')%>" data-guid="<%-vdev.guid%>" data-depth="<%-depth%>" style="--tree-elbow-x: 0.5rem; --tree-elbow-height: 1.25rem; --tree-line-x: 0.5rem; --tree-line-top: 0; padding-left: <%=(depth > 0 ? '1.5rem' : 'var(--bs-card-spacer-x)')%>;">
+<div class="tree-row py-2 pe-3 <%=(hasChildren ? 'tree-line' : '')%>" data-depth="0" style="--tree-line-x: 0.5rem; --tree-line-top: calc(50% + var(--tree-icon-radius));">
 	<div class="d-flex align-items-center numeric-tabular min-w-0 <%=(role === 'old' ? 'opacity-50' : '')%>">
 		<span class="state-icon position-relative d-inline-flex me-2 flex-shrink-0">
 			<i class="icon-light <%-icon%> icon-width-auto text-body-tertiary"></i>

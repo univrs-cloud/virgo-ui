@@ -516,6 +516,8 @@ u-badge:hover .hover-reveal-text {
 }
 .tree-rows {
 	--tree-line-color: var(--bs-border-color);
+	--tree-path-color: var(--bs-secondary-color);
+	--tree-selected-color: var(--bs-primary);
 	--tree-elbow-width: 0.9rem;
 	--tree-icon-radius: 0.6rem;
 	.tree-row {
@@ -539,6 +541,18 @@ u-badge:hover .hover-reveal-text {
 		top: var(--tree-line-top);
 		bottom: 0;
 		border-left: var(--bs-border-width) solid var(--tree-line-color);
+	}
+	.tree-row.tree-selected::before,
+	.tree-row:has(.tree-selected)::before,
+	.tree-row.tree-line:has(~ .tree-selected)::after,
+	.tree-row.tree-line:has(~ .tree-row .tree-selected)::after {
+		border-color: var(--tree-selected-color);
+		z-index: 1;
+	}
+	.tree-row:hover::before,
+	.tree-row.tree-line:has(~ .tree-row:hover)::after {
+		border-color: var(--tree-path-color);
+		z-index: 2;
 	}
 }
 

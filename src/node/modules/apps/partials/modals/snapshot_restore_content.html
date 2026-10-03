@@ -1,0 +1,42 @@
+<div class="modal-content">
+	<div class="modal-header">
+		<h5 class="modal-title">Restore file</h5>
+	</div>
+	<div class="modal-body">
+		<div class="mb-3">
+			<div class="text-break"><%-state.file.name%></div>
+			<small class="text-body-tertiary">From <%-state.file.date%></small>
+		</div>
+		<%if (state.error && !state.inspection) {%>
+			<div class="small text-danger mb-3"><%-state.error%></div>
+		<%}%>
+		<%if (state.isLoading) {%>
+			<div class="d-flex justify-content-center align-items-center gap-2 py-2">
+				<div class="spinner-border spinner-border-sm text-gray-600"></div>
+				<span class="text-body-tertiary">Loading folders...</span>
+			</div>
+		<%} else {%>
+			<label class="form-label">Restore to</label>
+			<%if (state.notice) {%>
+				<div class="small text-body-secondary mb-2"><%-state.notice%></div>
+			<%}%>
+			<%if (_.isEmpty(state.folders)) {%>
+				<div class="small text-body-tertiary">No folders to restore to.</div>
+			<%}%>
+			<div class="restore-folders tree-rows">
+				<%_.each(state.folders, (folder) => {%>
+					<%=folderTemplate({ folder, selected: state.selected, isBusy: Boolean(state.busy), draft: state.draft, depth: 0, isLast: true, folderTemplate })%>
+				<%})%>
+			</div>
+			<%if (isCreating) {%>
+				<div class="small text-body-secondary mt-2">New folders are created when you restore.</div>
+			<%}%>
+		<%}%>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-outline-secondary ms-auto" data-bs-dismiss="modal" <%=(state.busy ? 'disabled' : '')%>>Cancel</button>
+		<button type="button" class="restore-submit btn btn-primary" <%=(state.busy || state.isLoading || !state.selected ? 'disabled' : '')%>>
+			<%if (state.busy && !state.inspection) {%><span class="spinner-border spinner-border-sm me-1"></span><%}%><%=(state.busy === 'restoring' ? 'Restoring...' : (state.busy === 'checking' ? 'Checking...' : 'Restore'))%>
+		</button>
+	</div>
+</div>
