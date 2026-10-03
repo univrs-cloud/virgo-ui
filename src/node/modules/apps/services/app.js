@@ -119,6 +119,18 @@ const searchSnapshots = (query) => {
 	return Indexer.search(query);
 };
 
+const getRestoreFolders = (path) => {
+	return Indexer.getRestoreFolders(path);
+};
+
+const inspectRestore = (config) => {
+	return Indexer.inspectRestore(config);
+};
+
+const restoreSnapshotFile = (config) => {
+	return Indexer.restore(config);
+};
+
 const getFilters = () => {
 	let stored = null;
 	try {
@@ -148,6 +160,9 @@ export {
 	performAppAction,
 	performServiceAction,
 	searchSnapshots,
+	getRestoreFolders,
+	inspectRestore,
+	restoreSnapshotFile,
 	getFilters,
 	setFilters
 };

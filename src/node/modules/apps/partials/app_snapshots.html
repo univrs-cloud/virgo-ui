@@ -348,7 +348,7 @@
 																		<a href="/snapshots/download?path=<%=encodeURIComponent(version.snapshotPath)%>" class="ms-1 text-decoration-none" download data-bs-toggle="tooltip" data-bs-original-title="Download"><i class="icon-solid icon-download"></i></a>
 																	<%}%>
 																	<%if (item.type === 'file' && version.snapshotPath && !isResultPruned(version.snapshot)) {%>
-																		<span class="ms-1 text-body-tertiary opacity-50" data-bs-toggle="tooltip" data-bs-original-title="Restore (coming soon)"><i class="icon-solid icon-clock-rotate-left"></i></span>
+																		<a href="#" class="snapshot-restore ms-1 text-decoration-none" data-bs-toggle="tooltip" data-bs-original-title="Restore" data-path="<%-version.snapshotPath%>" data-date="<%-(versionPoint ? versionPoint.createdMoment.format('D MMM YYYY, HH:mm') : resultDate(version.snapshot))%>"><i class="icon-solid icon-clock-rotate-left"></i></a>
 																	<%}%>
 																</span>
 															<%})%>

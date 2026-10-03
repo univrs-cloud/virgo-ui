@@ -131,6 +131,21 @@ const flattenVdevs = (vdevs, depth = 0, parent = null) => {
 	});
 };
 
+const nestVdevRows = (rows) => {
+	const nested = [];
+	const open = [];
+	_.each(rows, (row) => {
+		while (!_.isEmpty(open) && _.last(open) >= row.depth) {
+			open.pop();
+			nested.push({ close: true });
+		}
+		nested.push(row);
+		open.push(row.depth);
+	});
+	_.each(open, () => { nested.push({ close: true }); });
+	return nested;
+};
+
 const vdevActivity = (vdev, scan) => {
 	const isScanning = (_.toUpper(scan?.state) === 'SCANNING');
 	if (!isScanning || !_.isEmpty(vdev.vdevs) || _.toUpper(vdev.state) !== 'ONLINE') {
@@ -176,7 +191,7 @@ const renderPoolDetails = (name) => {
 		..._.map(_.filter(_.keys(pool), (key) => { return _.includes(POOL_SECTIONS, key); }), (key) => { return { key, vdevs: pool[key] }; })
 	], (section) => { return !_.isEmpty(section.vdevs); });
 	const withActivity = (row) => { return { ...row, activity: vdevActivity(row.vdev, pool.scanStats) }; };
-	const vdevSections = _.map(sections, (section) => { return { key: section.key, rows: _.map(flattenVdevs(section.vdevs), withActivity) }; });
+	const vdevSections = _.map(sections, (section) => { return { key: section.key, rows: nestVdevRows(_.map(flattenVdevs(section.vdevs), withActivity)) }; });
 	const spareUse = {};
 	_.each(_.reject(sections, { key: 'spares' }), (section) => {
 		_.each(_.values(section.vdevs), (top) => {

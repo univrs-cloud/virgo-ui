@@ -1,0 +1,47 @@
+<%
+	const isDrafting = Boolean(folder.isOpen && draft && draft.parent === folder.path);
+	const hasRows = Boolean(folder.isOpen && (isDrafting || !_.isEmpty(folder.children)));
+%>
+<div class="restore-folder tree-row <%=(depth && !isLast ? 'tree-line' : '')%> <%=(folder.path === selected ? 'tree-selected' : '')%>" data-path="<%-folder.path%>" data-depth="<%=depth%>" style="--tree-elbow-x: 1rem; --tree-elbow-width: 1.1rem; --tree-elbow-height: 1rem; --tree-line-x: 1rem; --tree-line-top: 0; <%=(depth ? 'padding-left: 1.5rem;' : '')%>">
+	<div class="tree-row d-flex align-items-center gap-1 ps-2 <%=(hasRows ? 'tree-line' : '')%>" data-depth="0" style="--tree-line-x: 1rem; --tree-line-top: 1.45rem;">
+		<%if (folder.isLoading) {%>
+			<span class="d-flex justify-content-center" style="width: 0.9375rem;"><span class="spinner-border spinner-border-sm text-gray-600"></span></span>
+		<%} else {%>
+			<a href="#" class="folder-toggle text-body-tertiary text-decoration-none <%=(isBusy ? 'pe-none' : '')%>"><i class="icon-solid <%=(folder.isOpen ? 'icon-chevron-down' : 'icon-chevron-right')%> icon-fw icon-xs"></i></a>
+		<%}%>
+		<div class="d-flex align-items-center gap-1 flex-grow-1 min-w-0 rounded px-2 py-1 <%=(folder.path === selected ? 'bg-primary-subtle' : '')%>">
+			<a href="#" class="folder-select d-flex align-items-center gap-2 flex-grow-1 min-w-0 text-body text-decoration-none <%=(isBusy ? 'pe-none' : '')%>">
+				<i class="icon-light <%=(folder.isOpen ? 'icon-folder-open' : 'icon-folder')%> icon-fw text-body-tertiary"></i>
+				<span class="text-truncate"><%-folder.name%></span>
+				<%if (folder.isVirtual) {%>
+					<small class="text-body-tertiary flex-shrink-0">New</small>
+				<%}%>
+			</a>
+			<a href="#" class="folder-add text-body-tertiary text-decoration-none <%=(isBusy ? 'pe-none' : '')%>" data-bs-toggle="tooltip" data-bs-original-title="New folder"><i class="icon-light icon-folder-plus icon-fw"></i></a>
+			<%if (folder.isVirtual) {%>
+				<a href="#" class="folder-remove text-body-tertiary text-decoration-none <%=(isBusy ? 'pe-none' : '')%>" data-bs-toggle="tooltip" data-bs-original-title="Remove"><i class="icon-solid icon-xmark icon-fw"></i></a>
+			<%}%>
+		</div>
+	</div>
+	<%if (folder.isOpen && folder.children) {%>
+		<%if (isDrafting) {%>
+			<div class="restore-draft tree-row <%=(_.isEmpty(folder.children) ? '' : 'tree-line')%>" data-depth="<%=depth + 1%>" style="--tree-elbow-x: 1rem; --tree-elbow-width: 1.1rem; --tree-elbow-height: 1.25rem; --tree-line-x: 1rem; --tree-line-top: 0; padding-left: 1.5rem;">
+				<div class="d-flex align-items-center gap-2 px-2 py-1">
+					<i class="icon-light icon-folder-plus icon-fw text-body-tertiary"></i>
+					<input type="text" class="folder-name form-control form-control-sm" placeholder="Folder name" value="<%-draft.name%>">
+					<button type="button" class="draft-add btn btn-primary btn-sm">Add</button>
+					<button type="button" class="draft-cancel btn btn-outline-secondary btn-sm">Cancel</button>
+				</div>
+				<%if (draft.error) {%>
+					<small class="d-block text-danger px-2 pb-1"><%-draft.error%></small>
+				<%}%>
+			</div>
+		<%}%>
+		<%if (!hasRows) {%>
+			<small class="d-block text-body-tertiary py-1" style="padding-left: 2rem;">No folders</small>
+		<%}%>
+		<%_.each(folder.children, (child, index) => {%>
+			<%=folderTemplate({ folder: child, selected, isBusy, draft, depth: depth + 1, isLast: (index === folder.children.length - 1), folderTemplate })%>
+		<%})%>
+	<%}%>
+</div>
