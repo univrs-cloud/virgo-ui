@@ -162,6 +162,19 @@ const render = (event) => {
 					message: `Can only be ${appDomain}`
 				}
 			}
+		},
+		{
+			selector: 'u-input[name="INSTANCE" i]',
+			rules: {
+				isAlphanumeric: 'Can only contain letters and numbers',
+				custom: {
+					validate: (value) => {
+						const name = `${app.name}-${value}`.toLowerCase();
+						return !_.some(appCenterService.getApps(), (installedApp) => { return installedApp.name.toLowerCase() === name; });
+					},
+					message: 'Already exists'
+				}
+			}
 		}
 	];
 };
