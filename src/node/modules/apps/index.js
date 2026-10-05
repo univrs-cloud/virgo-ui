@@ -141,8 +141,13 @@ const performAppAction = async (event) => {
 	const actionMessage = (button.dataset.action === 'uninstall' ? '<br><br>Data will <strong>NOT</strong> be deleted.' : '');
 	if (
 		button.classList.contains('confirm') &&
-		!await confirm(`Are you sure you want to ${button.dataset.action} the app ${app.title}?${actionMessage}`, { buttons: [{ text: _.upperFirst(button.dataset.action), class: (button.classList.contains('confirm') ? 'btn-danger' : 'btn-primary') }] })
+		!await confirm(`Are you sure you want to ${button.dataset.action} the ${(app.isUnmanaged && !app.isStack ? 'container' : 'app')} ${app.title}?${actionMessage}`, { buttons: [{ text: _.upperFirst(button.dataset.action), class: (button.classList.contains('confirm') ? 'btn-danger' : 'btn-primary') }] })
 	) {
+		return;
+	}
+
+	if (app.isUnmanaged && !app.isStack) {
+		appService.performServiceAction({ id: app.projectContainers[0].id, action: button.dataset.action });
 		return;
 	}
 
@@ -169,7 +174,7 @@ const performServiceAction = async (event) => {
 
 	if (
 		button.classList.contains('confirm') &&
-		!await confirm(`Are you sure you want to ${button.dataset.action} the service ${service.labels?.comDockerComposeService}?`, { buttons: [{ text: _.upperFirst(button.dataset.action), class: (button.classList.contains('confirm') ? 'btn-danger' : 'btn-primary') }] })
+		!await confirm(`Are you sure you want to ${button.dataset.action} the service ${service.labels?.comDockerComposeService || _.trimStart(_.first(service.names), '/')}?`, { buttons: [{ text: _.upperFirst(button.dataset.action), class: (button.classList.contains('confirm') ? 'btn-danger' : 'btn-primary') }] })
 	) {
 		return;
 	}
@@ -454,6 +459,10 @@ const render = (state) => {
 		`<tbody>${rows}</tbody>`,
 		{ childrenOnly: true }
 	);
+
+	if (routeAppName && !_.some(state.apps, (app) => { return _.toLower(app.name) === _.toLower(routeAppName); })) {
+		page('/apps');
+	}
 
 	const detailsAppName = routeAppName || container.querySelector('.details .item')?.dataset.name;
 	if (detailsAppName) {

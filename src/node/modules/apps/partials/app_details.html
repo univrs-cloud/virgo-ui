@@ -8,11 +8,18 @@
 					</button>
 				</div>
 				<div class="card-image card-spacer col-auto p-2">
-					<img src="<%-(_.includes(app.icon, '/') ? app.icon : `assets/img/apps/${app.icon}`)%>">
+					<%if (app.isUnmanaged) {%>
+						<i class="icon-light icon-layer-group icon-fw text-body-secondary"></i>
+					<%} else {%>
+						<img src="<%-(_.includes(app.icon, '/') ? app.icon : `assets/img/apps/${app.icon}`)%>">
+					<%}%>
 				</div>
 				<div class="col ps-1 min-w-0">
 					<div class="d-flex align-items-center mb-n1 min-w-0">
 						<div class="text-truncate min-w-0"><%-app.title%></div>
+						<%if (app.isUnmanaged) {%>
+							<u-badge color="gray" tint="300" class="ms-2" pill>Unmanaged</u-badge>
+						<%}%>
 						<%if (app.hasUpdates) {%>
 							<u-badge color="green" class="ms-2" tip="Updates available" pill>
 								<i class="icon-solid icon-download icon-fw"></i>
@@ -37,7 +44,12 @@
 
 			<div class="nav nav-pills bg-gray-200 mb-2" style="--bs-nav-pills-link-active-bg: var(--bs-body-bg); --bs-nav-pills-link-active-color: var(--bs-body-color);">
 				<button type="button" class="nav-link px-2 py-1 <%=(appTab === 'snapshots' ? '' : 'active shadow-sm')%>" data-app-tab="services"><i class="icon-light icon-cube icon-fw me-1"></i>Services <small class="opacity-75">(<%=_.size(app.projectContainers)%>)</small></button>
-				<button type="button" class="nav-link px-2 py-1 <%=(appTab === 'snapshots' ? 'active shadow-sm' : '')%>" data-app-tab="snapshots"><i class="icon-light icon-clock-rotate-left icon-fw me-1"></i>Snapshots <small class="opacity-75">(<%=_.size(app.snapshots)%>)</small></button>
+				<%if (!app.isUnmanaged) {%>
+					<button type="button" class="nav-link px-2 py-1 <%=(appTab === 'snapshots' ? 'active shadow-sm' : '')%>" data-app-tab="snapshots"><i class="icon-light icon-clock-rotate-left icon-fw me-1"></i>Snapshots <small class="opacity-75">(<%=_.size(app.snapshots)%>)</small></button>
+				<%}%>
+				<%if (app.composeFile) {%>
+					<small class="text-body-secondary text-truncate align-self-center ms-auto px-2"><%-app.composeFile%></small>
+				<%}%>
 			</div>
 
 			<div class="position-relative">
@@ -125,7 +137,7 @@
 																	<i class="icon-light icon-cube icon-width-auto text-body-tertiary"></i>
 																	<i class="state-dot icon-solid icon-circle icon-2xs icon-width-auto lh-1 position-absolute top-0 start-100 translate-middle <%=stateColor%>" data-bs-original-title="<%-_.upperFirst(container.state)%>"></i>
 																</span>
-																<div class="text-truncate min-w-0"><%-container.labels?.comDockerComposeService%>
+																<div class="text-truncate min-w-0"><%-(container.labels?.comDockerComposeService || app.title)%>
 																	<%if (container.state !== 'running') {%>
 																		<small class="text-body-tertiary">(<%-container.state%>)</small>
 																	<%}%>

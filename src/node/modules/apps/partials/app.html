@@ -2,12 +2,19 @@
 <tr class="item cursor-pointer" data-name="<%-app.name%>">
 	<td class="d-none d-md-table-cell" style="width: 1px;">
 		<div class="row-image">
-			<img src="<%-(_.includes(app.icon, '/') ? app.icon : `assets/img/apps/${app.icon}`)%>">
+			<%if (app.isUnmanaged) {%>
+				<i class="icon-light icon-layer-group icon-fw text-body-secondary"></i>
+			<%} else {%>
+				<img src="<%-(_.includes(app.icon, '/') ? app.icon : `assets/img/apps/${app.icon}`)%>">
+			<%}%>
 		</div>
 	</td>
 	<td style="min-width: 210px; max-width: 0;">
 		<div class="d-flex align-items-center mb-n1">
 			<div class="text-truncate"><%-app.title%></div>
+			<%if (app.isUnmanaged) {%>
+				<u-badge color="gray" tint="300" class="ms-2" pill>Unmanaged</u-badge>
+			<%}%>
 			<%if (app.hasUpdates) {%>
 				<u-badge color="green" class="ms-2" tip="Updates available" pill>
 					<i class="icon-solid icon-download icon-fw"></i>

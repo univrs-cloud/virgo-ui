@@ -51,6 +51,28 @@ function composeDashboardApps(properties) {
 		}
 		return entity;
 	});
+	if (isAdmin) {
+		apps = _.concat(apps, _.map(Docker.groupUnmanagedContainers(properties?.configured, properties?.containers), ({ name, title, containers }) => {
+			const activeCount = _.size(_.filter(containers, (container) => { return _.includes(['running', 'restarting'], container.state); }));
+			let state = 'warning';
+			if (activeCount === _.size(containers)) {
+				state = 'success';
+			} else if (activeCount === 0) {
+				state = 'danger';
+			}
+			return {
+				type: 'app',
+				name,
+				title,
+				icon: null,
+				category: 'Unmanaged',
+				isUnmanaged: true,
+				projectContainers: containers,
+				state,
+				urls: Docker.composeUrlFromLabels(containers)
+			};
+		}));
+	}
 	apps = _.groupBy(apps, 'category');
 	const orderedCategoryNames = _.sortBy(_.keys(apps), [
 		(categoryName) => {
