@@ -164,6 +164,14 @@ const searchSnapshots = (query) => {
 	return Indexer.search(query);
 };
 
+const browseSnapshot = (config) => {
+	return Indexer.browse(config);
+};
+
+const browseSnapshotChanges = (config) => {
+	return Indexer.browseChanges(config);
+};
+
 const getRestoreFolders = (path) => {
 	return Indexer.getRestoreFolders(path);
 };
@@ -174,6 +182,10 @@ const inspectRestore = (config) => {
 
 const restoreSnapshotFile = (config) => {
 	return Indexer.restore(config);
+};
+
+const restoreSnapshotSelection = (config) => {
+	return Indexer.restoreSelection(config);
 };
 
 const getFilters = () => {
@@ -205,9 +217,12 @@ export {
 	performAppAction,
 	performServiceAction,
 	searchSnapshots,
+	browseSnapshot,
+	browseSnapshotChanges,
 	getRestoreFolders,
 	inspectRestore,
 	restoreSnapshotFile,
+	restoreSnapshotSelection,
 	getFilters,
 	setFilters
 };

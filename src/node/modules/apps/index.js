@@ -514,3 +514,4 @@ import('node/modules/apps/terminal');
 import('node/modules/apps/app_center');
 import('node/modules/apps/app_install');
 import('node/modules/apps/snapshot_restore');
+import('node/modules/apps/snapshot_browse');

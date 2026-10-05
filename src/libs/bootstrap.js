@@ -46,6 +46,10 @@ bootstrap.Modal.addScrollbar = (modal) => {
 	}
 
 	const wheelHandler = (event) => {
+		if (event.target.closest('.dropdown-menu')) {
+			return;
+		}
+
 		event.preventDefault();
 		modalBody.scrollTop += event.deltaY;
 		updateScrollbar();
