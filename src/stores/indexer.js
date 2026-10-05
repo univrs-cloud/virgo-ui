@@ -11,6 +11,14 @@ class Indexer extends Store {
 		return this.socket.timeout(30000).emitWithAck('indexer:search', query);
 	}
 
+	browse(config) {
+		return this.socket.timeout(30000).emitWithAck('indexer:browse', config);
+	}
+
+	browseChanges(config) {
+		return this.socket.timeout(30000).emitWithAck('indexer:browse:changes', config);
+	}
+
 	getRestoreFolders(path) {
 		return this.socket.timeout(30000).emitWithAck('indexer:restore:folders', { path });
 	}
@@ -21,6 +29,10 @@ class Indexer extends Store {
 
 	restore(config) {
 		return this.socket.timeout(30000).emitWithAck('indexer:restore', config);
+	}
+
+	restoreSelection(config) {
+		return this.socket.timeout(30000).emitWithAck('indexer:restore:selection', config);
 	}
 }
 

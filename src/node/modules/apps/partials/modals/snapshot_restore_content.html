@@ -1,12 +1,20 @@
 <div class="modal-content">
 	<div class="modal-header">
-		<h5 class="modal-title">Restore file</h5>
+		<h5 class="modal-title"><%=(state.selection ? 'Restore files' : 'Restore file')%></h5>
 	</div>
 	<div class="modal-body">
-		<div class="mb-3">
-			<div class="text-break"><%-state.file.name%></div>
-			<small class="text-body-tertiary">From <%-state.file.date%></small>
-		</div>
+		<%if (state.selection) {%>
+			<div class="mb-3">
+				<div><%=state.selection.count%> <%=(state.selection.count === 1 ? 'item' : 'items')%></div>
+				<small class="d-block text-body-tertiary">From <%-state.selection.date%></small>
+				<small class="d-block text-body-secondary mt-2">Everything is placed in a new folder named Restore, with the date, inside the folder you choose.</small>
+			</div>
+		<%} else {%>
+			<div class="mb-3">
+				<div class="text-break"><%-state.file.name%></div>
+				<small class="text-body-tertiary">From <%-state.file.date%></small>
+			</div>
+		<%}%>
 		<%if (state.error && !state.inspection) {%>
 			<div class="small text-danger mb-3"><%-state.error%></div>
 		<%}%>

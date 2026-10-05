@@ -16,10 +16,11 @@ document.querySelector('body').insertAdjacentHTML('beforeend', modalPartial);
 const module = document.querySelector('#apps');
 const modal = document.querySelector('#snapshot-restore');
 const conflictModal = document.querySelector('#snapshot-restore-conflict');
+const browserModal = () => { return document.querySelector('#snapshot-browser'); };
 let state = null;
 
-const initialState = (file) => {
-	return { file, isLoading: true, isShown: false, folders: [], selected: null, draft: null, notice: null, error: null, busy: null, inspection: null };
+const initialState = (file, selection = null) => {
+	return { file, selection, isLoading: true, isShown: false, folders: [], selected: null, draft: null, notice: null, error: null, busy: null, inspection: null };
 };
 
 const renderContent = (element, html) => {
@@ -173,6 +174,51 @@ const open = async (event) => {
 	if (session.isShown) {
 		revealSelected();
 	}
+};
+
+const openSelection = async (event) => {
+	const session = initialState(null, event.detail);
+	state = session;
+	document.body.append(modal, conflictModal);
+	render();
+	bootstrap.Modal.getOrCreateInstance(modal).show();
+	try {
+		session.folders = await loadFolders();
+	} catch (error) {
+		session.error = error.message;
+	}
+	if (state !== session) {
+		return;
+	}
+
+	session.isLoading = false;
+	render();
+};
+
+const restoreSelection = async (session) => {
+	session.busy = 'restoring';
+	session.draft = null;
+	session.error = null;
+	render();
+	let response;
+	try {
+		response = await appService.restoreSnapshotSelection({ snapshot: session.selection.snapshot, items: session.selection.items, excluded: session.selection.excluded, destination: session.selected });
+	} catch (error) {
+		response = { status: 'failed', message: error.message };
+	}
+	if (state !== session) {
+		return;
+	}
+
+	if (response?.status !== 'succeeded') {
+		session.busy = null;
+		session.error = response?.message || 'Could not restore the files.';
+		render();
+		return;
+	}
+
+	bootstrap.Modal.getInstance(modal)?.hide();
+	bootstrap.Modal.getInstance(browserModal())?.hide();
 };
 
 const toggleFolder = async (event) => {
@@ -370,6 +416,11 @@ const submit = async (event) => {
 	}
 
 	const session = state;
+	if (session.selection) {
+		await restoreSelection(session);
+		return;
+	}
+
 	session.busy = 'checking';
 	session.draft = null;
 	session.error = null;
@@ -439,9 +490,13 @@ const reveal = () => {
 const restore = () => {
 	state = null;
 	bootstrap.Modal.getInstance(conflictModal)?.hide();
+	if (browserModal()?.classList.contains('show')) {
+		document.body.classList.add('modal-open');
+	}
 };
 
 module.addEventListener('click', open);
+module.addEventListener('snapshot-restore-selection', openSelection);
 modal.addEventListener('click', toggleFolder);
 modal.addEventListener('click', selectFolder);
 modal.addEventListener('click', addFolder);
