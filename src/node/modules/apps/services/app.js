@@ -28,7 +28,7 @@ const { subscribe } = createSubscription({
 	attachStore: storeAttach.beforeCallbacks,
 	mapState: (properties) => {
 		return {
-			apps: composeApps(properties?.configured, properties?.containers, properties?.appsResourceMetrics, properties?.imageUpdates, properties?.snapshots),
+			apps: composeAllApps(properties?.configured, properties?.containers, properties?.appsResourceMetrics, properties?.imageUpdates, properties?.snapshots),
 			jobs: properties?.jobs || []
 		};
 	}
@@ -83,6 +83,51 @@ function composeApps(configured, containers, appsResourceMetrics, imageUpdates, 
 		});
 }
 
+function composeUnmanaged(configured, containers, appsResourceMetrics, imageUpdates) {
+	if (_.isNull(configured) || _.isNull(containers)) {
+		return null;
+	}
+
+	return _.map(Docker.groupUnmanagedContainers(configured, containers), ({ name, title, isStack, containers: groupContainers }) => {
+		const projectContainers = _.map(groupContainers, (container) => {
+			container.hasUpdates = _.some(imageUpdates, { containerId: container.id });
+			return container;
+		});
+		const activeCount = _.size(_.filter(projectContainers, (container) => { return _.includes(['running', 'restarting'], container.state); }));
+		let state = 'warning';
+		if (activeCount === _.size(projectContainers)) {
+			state = 'success';
+		} else if (activeCount === 0) {
+			state = 'danger';
+		}
+		return {
+			name,
+			title,
+			icon: null,
+			category: 'Unmanaged',
+			isUnmanaged: true,
+			isStack,
+			composeFile: projectContainers[0].labels?.comDockerComposeProjectConfigFiles || null,
+			canBeRemoved: true,
+			projectContainers,
+			hasUpdates: _.some(projectContainers, 'hasUpdates'),
+			state,
+			urls: Docker.composeUrlFromLabels(projectContainers),
+			resourceMetrics: _.find(appsResourceMetrics, { name }),
+			snapshots: []
+		};
+	});
+}
+
+function composeAllApps(configured, containers, appsResourceMetrics, imageUpdates, snapshots) {
+	const apps = composeApps(configured, containers, appsResourceMetrics, imageUpdates, snapshots);
+	if (_.isNull(apps)) {
+		return null;
+	}
+
+	return _.concat(apps, composeUnmanaged(configured, containers, appsResourceMetrics, imageUpdates));
+}
+
 const getSocket = () => {
 	return Docker.socket;
 };
@@ -92,7 +137,7 @@ const getJobs = () => {
 };
 
 const getApps = () => {
-	return composeApps(Docker.getConfigured(), Docker.getContainers(), Docker.getAppsResourceMetrics(), Docker.getImageUpdates(), Host.getSnapshots());
+	return composeAllApps(Docker.getConfigured(), Docker.getContainers(), Docker.getAppsResourceMetrics(), Docker.getImageUpdates(), Host.getSnapshots());
 };
 
 const getDefaultNetworkInterface = () => {

@@ -76,6 +76,29 @@ class Docker extends Store {
 		this.socket.emit('app:order', data);
 	}
 
+	groupUnmanagedContainers(configured, containers) {
+		const appNames = _.map(_.filter(configured, { type: 'app' }), (entity) => { return _.toLower(entity.name); });
+		const unmanagedContainers = _.reject(containers, (container) => {
+			return _.includes(appNames, _.toLower(container.labels?.comDockerComposeProject));
+		});
+		return _.orderBy(
+			_.map(
+				_.groupBy(unmanagedContainers, (container) => { return container.labels?.comDockerComposeProject || container.id; }),
+				(groupContainers) => {
+					const project = groupContainers[0].labels?.comDockerComposeProject || null;
+					return {
+						name: project || groupContainers[0].id,
+						title: project || _.trimStart(_.first(groupContainers[0].names), '/'),
+						isStack: Boolean(project),
+						containers: _.orderBy(groupContainers, ['labels.comDockerComposeService'], ['asc'])
+					};
+				}
+			),
+			[(group) => { return _.toLower(group.title); }],
+			['asc']
+		);
+	}
+
 	composeUrlFromLabels(projectContainers) {
 		if (!projectContainers || projectContainers.length === 0) {
 			return [];

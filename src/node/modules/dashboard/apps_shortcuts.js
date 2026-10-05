@@ -108,7 +108,7 @@ const render = (state) => {
 				}
 				return '';
 			}), '');
-			return categorySomething({ name: categoryName }).replace(rowSlot, `<div class="row">${cardsHtml}</div>`);
+			return categorySomething({ name: categoryName, isOrderable: !_.some(categoryApps, 'isUnmanaged') }).replace(rowSlot, `<div class="row">${cardsHtml}</div>`);
 		}), '');
 	}
 	

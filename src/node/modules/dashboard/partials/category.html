@@ -1,9 +1,11 @@
 <div class="group">
 	<div class="d-flex align-items-center pb-2">
 		<u-badge color="gray" tint="300" pill><%-name%></u-badge>
-		<a href="#" class="order">
-			<i class="icon-solid icon-bars-staggered text-gray-500"></i>
-		</a>
+		<%if (isOrderable) {%>
+			<a href="#" class="order">
+				<i class="icon-solid icon-bars-staggered text-gray-500"></i>
+			</a>
+		<%}%>
 	</div>
 	<div class="row"></div>
 </div>

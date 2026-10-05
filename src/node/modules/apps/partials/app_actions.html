@@ -18,7 +18,7 @@
 			<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
 		<%}%>
 		<div class="dropdown-menu">
-			<%if (app.hasUpdates) {%>
+			<%if (app.hasUpdates && !app.isUnmanaged) {%>
 				<a href="#" class="dropdown-item" data-action="update"><i class="icon-regular icon-download icon-fw me-1"></i>Update</a>
 				<div class="dropdown-divider"></div>
 			<%}%>
@@ -32,14 +32,22 @@
 					<a href="#" class="dropdown-item <%=(isActive ? 'text-danger confirm' : 'disabled')%>" data-action="stop"><i class="icon-regular icon-stop icon-fw me-1"></i>Stop</a>
 				<%}%>
 				<a href="#" class="dropdown-item <%=(isActive ? 'text-danger confirm' : 'disabled')%>" data-action="kill"><i class="icon-regular icon-skull icon-fw me-1"></i>Kill</a>
-				<div class="dropdown-divider"></div>
+				<%if (!app.isUnmanaged) {%>
+					<div class="dropdown-divider"></div>
+				<%}%>
 			<%} else if (!inline) {%>
 				<div class="dropdown-divider"></div>
 			<%}%>
-			<a href="#" class="dropdown-item text-danger confirm" data-action="recreate"><i class="icon-regular icon-arrows-rotate icon-fw me-1"></i>Recreate</a>
-			<%if (app.canBeRemoved) {%>
+			<%if (app.isUnmanaged && !app.isStack) {%>
 				<div class="dropdown-divider"></div>
-				<a href="#" class="dropdown-item text-danger confirm" data-action="uninstall"><i class="icon-regular icon-times icon-fw me-1"></i>Uninstall</a>
+				<a href="#" class="dropdown-item text-danger confirm" data-action="remove"><i class="icon-regular icon-times icon-fw me-1"></i>Remove</a>
+			<%}%>
+			<%if (!app.isUnmanaged) {%>
+				<a href="#" class="dropdown-item text-danger confirm" data-action="recreate"><i class="icon-regular icon-arrows-rotate icon-fw me-1"></i>Recreate</a>
+				<%if (app.canBeRemoved) {%>
+					<div class="dropdown-divider"></div>
+					<a href="#" class="dropdown-item text-danger confirm" data-action="uninstall"><i class="icon-regular icon-times icon-fw me-1"></i>Uninstall</a>
+				<%}%>
 			<%}%>
 		</div>
 	</div>
