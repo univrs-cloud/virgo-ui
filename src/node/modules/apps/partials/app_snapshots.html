@@ -111,7 +111,7 @@
 					<%if (_.toLower(app.name) === 'nextcloud') {%>
 						<button type="button" class="snapshot-browse btn btn-light" data-browse-snapshot="<%-selectedPoint.snapshot%>" data-browse-date="<%-selectedPoint.createdMoment.format('D MMM YYYY, HH:mm')%>"><i class="icon-regular icon-folder-open icon-fw me-1"></i>Browse files</button>
 					<%} else {%>
-						<button type="button" class="snapshot-action btn btn-light" disabled><i class="icon-regular icon-folder-open icon-fw me-1"></i>Browse files</button>
+						<button type="button" class="snapshot-action btn btn-light" disabled><i class="icon-regular icon-clock-rotate-left icon-fw me-1"></i>Roll back</button>
 					<%}%>
 				</div>
 			</div>
