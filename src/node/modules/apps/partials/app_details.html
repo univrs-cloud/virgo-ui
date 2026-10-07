@@ -42,17 +42,17 @@
 				</div>
 			</div>
 
-			<div class="nav nav-pills bg-gray-200 mb-2" style="--bs-nav-pills-link-active-bg: var(--bs-body-bg); --bs-nav-pills-link-active-color: var(--bs-body-color);">
-				<button type="button" class="nav-link px-2 py-1 <%=(appTab === 'snapshots' ? '' : 'active shadow-sm')%>" data-app-tab="services"><i class="icon-light icon-cube icon-fw me-1"></i>Services <small class="opacity-75">(<%=_.size(app.projectContainers)%>)</small></button>
-				<%if (!app.isUnmanaged) {%>
-					<button type="button" class="nav-link px-2 py-1 <%=(appTab === 'snapshots' ? 'active shadow-sm' : '')%>" data-app-tab="snapshots"><i class="icon-light icon-clock-rotate-left icon-fw me-1"></i>Snapshots <small class="opacity-75">(<%=_.size(app.snapshots)%>)</small></button>
-				<%}%>
-				<%if (app.composeFile) {%>
-					<small class="text-body-secondary text-truncate align-self-center ms-auto px-2"><%-app.composeFile%></small>
-				<%}%>
-			</div>
-
 			<div class="position-relative">
+				<div class="nav nav-pills bg-gray-200 mb-2" style="--bs-nav-pills-link-active-bg: var(--bs-body-bg); --bs-nav-pills-link-active-color: var(--bs-body-color);">
+					<button type="button" class="nav-link px-2 py-1 <%=(appTab === 'snapshots' ? '' : 'active shadow-sm')%>" data-app-tab="services"><i class="icon-light icon-cube icon-fw me-1"></i>Services <small class="opacity-75">(<%=_.size(app.projectContainers)%>)</small></button>
+					<%if (!app.isUnmanaged) {%>
+						<button type="button" class="nav-link px-2 py-1 <%=(appTab === 'snapshots' ? 'active shadow-sm' : '')%>" data-app-tab="snapshots"><i class="icon-light icon-clock-rotate-left icon-fw me-1"></i>Snapshots <small class="opacity-75">(<%=_.size(app.snapshots)%>)</small></button>
+					<%}%>
+					<%if (app.composeFile) {%>
+						<small class="text-body-secondary text-truncate align-self-center ms-auto px-2"><%-app.composeFile%></small>
+					<%}%>
+				</div>
+
 				<div class="logs-container bd-black rounded-3 shadow-sm d-none">
 					<div class="service d-flex align-items-center justify-content-between border-bottom border-dark px-2 py-1">
 						<div class="d-flex align-items-center">
