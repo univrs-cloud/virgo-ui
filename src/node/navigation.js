@@ -16,6 +16,8 @@ initNodeView();
 const showPage = (ctx) => {
 	const module = ctx.module || 'dashboard';
 
+	window.windowManager?.background();
+	_.each(document.querySelectorAll('header .navbar .nav'), (nav) => { nav.dataset.module = module; });
 	_.each(document.querySelectorAll(':is(header, .offcanvas) .nav-link.active'), (element) => { element.classList.remove('active'); });
 	_.each(document.querySelectorAll(`:is(header, .offcanvas) .nav-link[href="/${module}"]`), (element) => { element.classList.add('active'); });
 	

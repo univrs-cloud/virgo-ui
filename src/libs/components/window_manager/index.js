@@ -2,6 +2,8 @@ import { LitElement, html, css } from 'lit';
 
 const CASCADE_STEP = 24;
 const CASCADE_COUNT = 8;
+const FLOATING_SHARE = 0.85;
+const LOADING_TIMEOUT = 20000;
 
 export class WindowManager extends LitElement {
 	static styles = [css`
@@ -52,11 +54,12 @@ export class WindowManager extends LitElement {
 
 		this.#layout();
 		const item = document.createElement('u-window');
-		const width = options.width ?? 800;
-		const height = options.height ?? 600;
+		const width = Math.min(options.width ?? 800, Math.round(this.clientWidth * FLOATING_SHARE));
+		const height = Math.min(options.height ?? 600, Math.round(this.clientHeight * FLOATING_SHARE));
 		const offset = (this.windows.length % CASCADE_COUNT) * CASCADE_STEP;
 		item.id = `window-${++this.#counter}`;
 		item.label = options.label ?? '';
+		item.maximized = options.maximized ?? true;
 		item.width = width;
 		item.height = height;
 		item.x = Math.max(0, Math.round((this.clientWidth - width) / 2)) + offset;
@@ -66,12 +69,23 @@ export class WindowManager extends LitElement {
 			frame.className = 'flex-grow-1 w-100 border-0';
 			frame.allow = 'clipboard-read; clipboard-write; fullscreen';
 			frame.src = options.url;
+			frame.addEventListener('load', () => { item.loading = false; }, { once: true });
+			setTimeout(() => { item.loading = false; }, LOADING_TIMEOUT);
+			item.loading = true;
 			item.dataset.url = url;
 			item.append(frame);
 		}
 		this.append(item);
 		item.fit();
 		return item;
+	}
+
+	background() {
+		this.windows.forEach((item) => {
+			if (item.maximized && !item.minimized) {
+				item.minimize();
+			}
+		});
 	}
 
 	closeAll() {
