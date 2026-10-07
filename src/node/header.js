@@ -1,5 +1,6 @@
 import headerPartial from 'node/partials/header.html';
 import navigationPartial from 'node/partials/navigation.html';
+import navigationWindowsPartial from 'node/partials/navigation_windows.html';
 import nodePickerPartial from 'fleet/partials/node_picker.html';
 import * as account from 'node/account';
 import * as softwareService from 'node/services/software';
@@ -9,8 +10,10 @@ import { getNodeViewId } from 'node/view';
 
 const headerTemplate = _.template(headerPartial);
 const navigationTemplate = _.template(navigationPartial);
+const navigationWindowsTemplate = _.template(navigationWindowsPartial);
 const nodePickerTemplate = _.template(nodePickerPartial);
 const header = document.querySelector('header');
+const windowManager = document.querySelector('u-window-manager');
 
 const renderNavigation = async (state) => {
 	if (!state.updates) {
@@ -24,10 +27,39 @@ const renderNavigation = async (state) => {
 			newNav,
 			{
 				childrenOnly: true,
-				onBeforeElUpdated: (fromEl) => !fromEl.classList?.contains('nodes')
+				onBeforeElUpdated: (fromEl) => !fromEl.classList?.contains('nodes') && !fromEl.classList?.contains('windows')
 			}
 		);
 	});
+	renderWindows();
+};
+
+const renderWindows = () => {
+	const windows = `<div>${navigationWindowsTemplate({ windows: windowManager.windows })}</div>`;
+	_.each(document.querySelectorAll('header .navbar .nav .windows'), (container) => {
+		morphdom(container, windows, { childrenOnly: true });
+	});
+};
+
+const handleWindowClick = (event) => {
+	const link = event.target.closest('.nav-window');
+	if (_.isNull(link)) {
+		return;
+	}
+
+	event.preventDefault();
+	const item = document.getElementById(link.dataset.windowId);
+	if (event.target.closest('.close-window')) {
+		item?.close();
+		return;
+	}
+
+	if (item?.active && !item.minimized) {
+		item.minimize();
+		return;
+	}
+
+	item?.restore();
 };
 
 const renderNodePicker = (state) => {
@@ -53,6 +85,10 @@ morphdom(
 renderNavigation({ updates: [] });
 
 account.init();
+
+header.addEventListener('click', handleWindowClick);
+windowManager.addEventListener('windows-change', renderWindows);
+document.addEventListener('update-mode', () => { windowManager.closeAll(); });
 
 softwareService.subscribeToUpdates([renderNavigation]);
 

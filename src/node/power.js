@@ -18,6 +18,7 @@ const render = (state) => {
 			return;
 		}
 
+		window.windowManager.closeAll();
 		if (!isAdmin) {
 			return;
 		}
@@ -36,6 +37,7 @@ const render = (state) => {
 			location.replace('/');
 			return;
 		}
+		window.windowManager.closeAll();
 		container.querySelector('.powered-off').classList.remove('d-none');
 		document.body.classList.add('powered-off');
 		container.classList.remove('d-none');

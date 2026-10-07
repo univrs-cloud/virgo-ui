@@ -20,6 +20,24 @@
 						<%}%>
 					</div>
 				</div>
+				<%if (isAdmin && runtimeRole?.toLowerCase() !== 'fleet' && app.canEmbed === true && _.includes(['success', 'warning'], app.state) && !_.isEmpty(windowUrls)) {%>
+					<div class="col-auto d-none d-lg-block">
+						<%if (_.size(windowUrls) === 1) {%>
+							<a href="#" class="open-window btn btn-sm position-relative z-2" data-url="<%-windowUrls[0]%>" data-label="<%-app.title%>">
+								<i class="icon-regular icon-window icon-fw text-secondary"></i>
+							</a>
+						<%} else {%>
+							<div class="dropdown">
+								<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm position-relative z-2"><i class="icon-regular icon-window icon-fw text-secondary"></i></span>
+								<div class="dropdown-menu dropdown-menu-end">
+									<%_.each(windowUrls, (url) => {%>
+										<a href="#" class="open-window dropdown-item" data-url="<%-url%>" data-label="<%-_.replace(url, /^https?:\/\//, '')%>"><%-_.replace(url, /^https?:\/\//, '')%></a>
+									<%})%>
+								</div>
+							</div>
+						<%}%>
+					</div>
+				<%}%>
 			</div>
 		</div>
 		<%if (_.includes(['success', 'warning'], app.state) && !_.isEmpty(app.urls)) {%>
