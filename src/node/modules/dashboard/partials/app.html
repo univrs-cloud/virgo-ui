@@ -20,7 +20,7 @@
 						<%}%>
 					</div>
 				</div>
-				<%if (isAdmin && runtimeRole?.toLowerCase() !== 'fleet' && app.canEmbed === true && _.includes(['success', 'warning'], app.state) && !_.isEmpty(windowUrls)) {%>
+				<%if (isAuthenticated && runtimeRole?.toLowerCase() !== 'fleet' && app.canEmbed === true && _.includes(['success', 'warning'], app.state) && !_.isEmpty(windowUrls)) {%>
 					<div class="col-auto d-none d-lg-block">
 						<%if (_.size(windowUrls) === 1) {%>
 							<a href="#" class="open-window btn btn-sm position-relative z-2" data-url="<%-windowUrls[0]%>" data-label="<%-app.title%>">

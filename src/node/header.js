@@ -39,6 +39,26 @@ const renderWindows = () => {
 	_.each(document.querySelectorAll('header .navbar .nav .windows'), (container) => {
 		morphdom(container, windows, { childrenOnly: true });
 	});
+	syncActivePage();
+};
+
+const syncActivePage = () => {
+	const isWindowPage = _.some(windowManager.windows, (item) => { return item.maximized && !item.minimized; });
+	_.each(document.querySelectorAll('header .navbar .nav'), (nav) => {
+		if (!nav.dataset.module) {
+			return;
+		}
+
+		_.each(nav.querySelectorAll('.nav-link:not(.nav-window)'), (link) => {
+			link.classList.toggle('active', !isWindowPage && link.getAttribute('href')?.toLowerCase() === `/${nav.dataset.module}`.toLowerCase());
+		});
+	});
+};
+
+const handlePageClick = (event) => {
+	if (event.target.closest('.nav-link:not(.nav-window)')) {
+		windowManager.background();
+	}
 };
 
 const handleWindowClick = (event) => {
@@ -54,7 +74,15 @@ const handleWindowClick = (event) => {
 		return;
 	}
 
-	if (item?.active && !item.minimized) {
+	if (event.target.closest('.unmaximize-window')) {
+		if (item) {
+			item.maximized = false;
+			item.restore();
+		}
+		return;
+	}
+
+	if ((item?.active || item?.maximized) && !item.minimized) {
 		item.minimize();
 		return;
 	}
@@ -87,6 +115,7 @@ renderNavigation({ updates: [] });
 account.init();
 
 header.addEventListener('click', handleWindowClick);
+header.addEventListener('click', handlePageClick);
 windowManager.addEventListener('windows-change', renderWindows);
 document.addEventListener('update-mode', () => { windowManager.closeAll(); });
 

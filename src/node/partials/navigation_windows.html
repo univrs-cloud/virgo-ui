@@ -1,9 +1,12 @@
 <%_.each(windows, (item) => {%>
-	<a href="#" class="nav-window nav-item nav-link d-flex align-items-center py-1 text-white <%=(item.minimized ? 'text-opacity-50 fst-italic' : (item.active ? '' : 'text-opacity-75'))%>" data-window-id="<%-item.id%>">
-		<span class="text-truncate me-auto">
-			<i class="icon-duotone icon-solid icon-grid-round-2-plus icon-fw me-2 invisible"></i>
-			<small><%-item.label%></small>
-		</span>
-		<i class="close-window icon-solid icon-times icon-xs icon-fw"></i>
-	</a>
+	<div class="d-flex align-items-center">
+		<i class="icon-duotone icon-solid icon-grid-round-2-plus icon-fw ms-2 me-1 invisible"></i>
+		<a href="#" class="nav-window nav-item nav-link d-flex align-items-center flex-grow-1 min-w-0 py-1 text-white <%=(item.maximized ? (item.minimized ? 'text-opacity-75' : 'active') : (item.minimized ? 'text-opacity-50 fst-italic' : (item.active ? '' : 'text-opacity-75')))%>" data-window-id="<%-item.id%>">
+			<small class="text-truncate me-auto"><%-item.label%></small>
+			<%if (item.maximized) {%>
+				<i class="unmaximize-window icon-regular icon-clone icon-xs icon-fw p-1 me-2"></i>
+			<%}%>
+			<i class="close-window icon-solid icon-times icon-xs icon-fw p-1"></i>
+		</a>
+	</div>
 <%});%>

@@ -35,7 +35,8 @@ export class FloatingWindow extends LitElement {
 		height: { type: Number },
 		maximized: { type: Boolean, reflect: true },
 		minimized: { type: Boolean, reflect: true },
-		active: { type: Boolean, reflect: true }
+		active: { type: Boolean, reflect: true },
+		loading: { type: Boolean }
 	};
 
 	static #stack = [];
@@ -62,6 +63,7 @@ export class FloatingWindow extends LitElement {
 		this.maximized = false;
 		this.minimized = false;
 		this.active = false;
+		this.loading = false;
 		this.addEventListener('pointerdown', () => { this.raise(); }, { capture: true });
 	}
 
@@ -83,7 +85,7 @@ export class FloatingWindow extends LitElement {
 		if (changed.has('minimized')) {
 			FloatingWindow.#restack();
 		}
-		if (changed.has('minimized') || changed.has('label') || changed.has('active')) {
+		if (changed.has('minimized') || changed.has('maximized') || changed.has('label') || changed.has('active')) {
 			this.dispatchEvent(new CustomEvent('window-change', { bubbles: true, composed: true }));
 		}
 	}
@@ -92,6 +94,13 @@ export class FloatingWindow extends LitElement {
 		if (FloatingWindow.#stack.at(-1) !== this) {
 			FloatingWindow.#stack = FloatingWindow.#stack.filter((item) => { return item !== this; });
 			FloatingWindow.#stack.push(this);
+		}
+		if (this.maximized) {
+			FloatingWindow.#stack.forEach((item) => {
+				if (item !== this && item.maximized) {
+					item.minimized = true;
+				}
+			});
 		}
 		FloatingWindow.#restack();
 	}
@@ -119,6 +128,7 @@ export class FloatingWindow extends LitElement {
 
 	toggleMaximize() {
 		this.maximized = !this.maximized;
+		this.raise();
 	}
 
 	close() {
@@ -128,17 +138,25 @@ export class FloatingWindow extends LitElement {
 
 	render() {
 		return html`
-			<div class="card h-100 overflow-hidden ${classMap({ 'rounded-4': !this.maximized, 'rounded-0': this.maximized, 'border-0': this.maximized, 'shadow': this.active, 'shadow-sm': !this.active })}">
-				<div class="titlebar card-header d-flex align-items-center border-0 py-1 ps-3 pe-1 user-select-none" @pointerdown=${this.#onTitlePointerDown} @dblclick=${this.#onTitleDoubleClick}>
-					<small class="fw-bold text-truncate me-auto ${classMap({ 'text-dark': !this.active, 'text-opacity-50': !this.active })}">${this.label}</small>
-					<div class="btn-group btn-group-sm">
-						<button type="button" class="btn border-0" @click=${() => { this.minimize(); }}><i class="icon-solid icon-minus icon-fw"></i></button>
-						<button type="button" class="btn border-0" @click=${() => { this.toggleMaximize(); }}><i class="icon-regular ${this.maximized ? 'icon-clone' : 'icon-square'} icon-fw"></i></button>
-						<button type="button" class="btn border-0" @click=${() => { this.close(); }}><i class="icon-solid icon-times icon-fw"></i></button>
+			<div class="card h-100 overflow-hidden ${classMap({ 'rounded-4': !this.maximized, 'rounded-0': this.maximized, 'border-0': this.maximized, 'shadow': this.active && !this.maximized, 'shadow-sm': !this.active && !this.maximized })}">
+				${this.maximized ? '' : html`
+					<div class="titlebar card-header d-flex align-items-center border-0 py-1 ps-3 pe-1 user-select-none" @pointerdown=${this.#onTitlePointerDown} @dblclick=${this.#onTitleDoubleClick}>
+						<small class="fw-bold text-truncate me-auto ${classMap({ 'text-dark': !this.active, 'text-opacity-50': !this.active })}">${this.label}</small>
+						<div class="btn-group btn-group-sm">
+							<button type="button" class="btn border-0" @click=${() => { this.minimize(); }}><i class="icon-solid icon-minus icon-fw"></i></button>
+							<button type="button" class="btn border-0" @click=${() => { this.toggleMaximize(); }}><i class="icon-regular icon-square icon-fw"></i></button>
+							<button type="button" class="btn border-0" @click=${() => { this.close(); }}><i class="icon-solid icon-times icon-fw"></i></button>
+						</div>
 					</div>
-				</div>
-				<div class="card-body d-flex flex-column overflow-auto p-0">
+				`}
+				<div class="card-body position-relative d-flex flex-column overflow-auto p-0">
 					<slot></slot>
+					${this.loading ? html`
+						<div class="position-absolute top-0 start-0 d-flex justify-content-center align-items-center w-100 h-100 bg-body">
+							<div class="spinner-border spinner-border-sm me-1"></div>
+							Loading...
+						</div>
+					` : ''}
 				</div>
 			</div>
 			${this.maximized ? '' : EDGES.map((edge) => { return html`<div class="handle" data-edge=${edge} @pointerdown=${this.#onHandlePointerDown}></div>`; })}
