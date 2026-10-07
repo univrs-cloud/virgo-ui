@@ -6,7 +6,6 @@ const socket = appService.getSocket();
 const module = document.querySelector('#apps');
 let containerId = null;
 let serviceName = '';
-let containerName = '';
 let logsContainer = null;
 let logs = null;
 let isScrollEventAttached = false;
@@ -29,7 +28,6 @@ const render = (event) => {
 			return false;
 		}
 	});
-	containerName = _.replace(service?.names[0], /^\//, '');
 	serviceName = service?.labels?.comDockerComposeService || service?.name || 'unknown';
 	const app = link.closest('.item');
 	logsContainer = app.querySelector('.logs-container');
@@ -61,7 +59,6 @@ const restore = () => {
 	logs = null;
 	containerId = null;
 	serviceName = '';
-	containerName = '';
 	logsContainer = null;
 	isScrollEventAttached = false;
 };
@@ -89,9 +86,12 @@ const setStatus = (label, isLive = false) => {
 	liveIndicator.innerHTML = `<i class="icon-solid icon-tower-broadcast icon-fw me-1"></i>${label}`;
 };
 
-const appendLine = (html) => {
+const appendLine = (html, level = '') => {
 	const li = document.createElement('li');
 	li.innerHTML = html;
+	if (level) {
+		li.classList.add(`log-${level}`);
+	}
 	logs.appendChild(li);
 	if (shouldScroll) {
 		logs.scrollTop = logs.scrollHeight;
@@ -114,18 +114,28 @@ const shouldScrollEvent = (event) => {
 	shouldScroll = (Math.abs(logs.scrollHeight - logs.scrollTop - logs.clientHeight) < 1);
 }
 
-const formatLogLine = (containerName, data) => {
+const formatLogLine = (data) => {
 	const dataStr = String(data || '').trim();
+	const [, timestamp = '', content = ''] = dataStr.match(/^(\d{4}-\d{2}-\d{2}T\S+)(?:\s(.*))?$/s) || ['', '', dataStr];
 	// Color code log levels and status codes
-	let formatted = escapeHtml(dataStr);
+	let formatted = escapeHtml(content);
 	formatted = colorizeLogLevels(formatted);
 	formatted = colorizeStatusCodes(formatted);
-	// Prepend container name if available
-	if (containerName) {
-		return `<span class="log-container-name text-blue-400">[${escapeHtml(containerName)}]</span><span class="log-content">${formatted}</span>`;
+	if (timestamp) {
+		return `<span class="log-timestamp">${escapeHtml(timestamp)}</span><span class="log-content">${formatted}</span>`;
 	}
-	
+
 	return `<span class="log-content">${formatted}</span>`;
+}
+
+const resolveLogLevel = (text) => {
+	const match = text.match(/(?:^|[\s\[])(error|fatal|panic|critical|emerg|warn|warning)[:\]]|\blevel"?[=:]\s*"?(error|fatal|panic|critical|emerg|warn|warning)\b/i);
+	const level = _.toLower(match?.[1] || match?.[2] || '');
+	if (!level) {
+		return '';
+	}
+
+	return _.startsWith(level, 'warn') ? 'warning' : 'error';
 }
 
 const colorizeLogLevels = (text) => {
@@ -168,7 +178,8 @@ socket.on('docker:container:logs:output', (data) => {
 		return;
 	}
 
-	appendLine(formatLogLine(containerName, String(data || '')));
+	const line = String(data || '');
+	appendLine(formatLogLine(line), resolveLogLevel(line));
 });
 socket.on('docker:container:logs:error', (error) => {
 	if (!resolveLogs()) {

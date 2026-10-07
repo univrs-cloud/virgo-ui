@@ -1,8 +1,22 @@
 import * as appService from 'node/modules/apps/services/app';
 import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
+import { SearchAddon } from '@xterm/addon-search';
+import { WebLinksAddon } from '@xterm/addon-web-links';
 
 const DISCONNECTED_LABEL = 'Disconnected <a href="#" class="reconnect-terminal link-underline link-underline-opacity-0 link-underline-opacity-75-hover ms-1">Connect</a>';
+const SEARCH_OPTIONS = {
+	decorations: {
+		matchBackground: '#664d03',
+		matchOverviewRuler: '#664d03',
+		activeMatchBackground: '#fd7e14',
+		activeMatchColorOverviewRuler: '#fd7e14'
+	}
+};
+const SEARCH_THEME = {
+	selectionInactiveBackground: '#fd7e14',
+	selectionForeground: '#000000'
+};
 
 const socket = appService.getSocket();
 const module = document.querySelector('#apps');
@@ -10,6 +24,7 @@ let containerId = null;
 let terminalContainer = null;
 let terminal = null;
 let fitAddon = null;
+let searchAddon = null;
 
 const render = (event) => {
 	if (!event.target.closest('a')?.classList.contains('terminal')) {
@@ -51,11 +66,108 @@ const resize = (event) => {
 	}
 };
 
+const openSearch = (event) => {
+	if (!terminal || terminalContainer.offsetParent === null || !(event.ctrlKey || event.metaKey) || _.toLower(event.key) !== 'f') {
+		return;
+	}
+
+	event.preventDefault();
+	event.stopPropagation();
+	terminal.options.theme = SEARCH_THEME;
+	const search = terminalContainer.querySelector('.search');
+	search.classList.remove('d-none');
+	const input = search.querySelector('input');
+	input.focus();
+	input.select();
+};
+
+const closeSearch = () => {
+	const search = terminalContainer?.querySelector('.search');
+	if (!search) {
+		return;
+	}
+
+	search.classList.add('d-none');
+	search.querySelector('input').value = '';
+	search.querySelector('.results').textContent = '';
+	searchAddon?.clearDecorations();
+	if (terminal) {
+		terminal.options.theme = {};
+		terminal.focus();
+	}
+};
+
+const find = (isPrevious = false, isIncremental = false) => {
+	const search = terminalContainer?.querySelector('.search');
+	if (!searchAddon || !search) {
+		return;
+	}
+
+	const term = search.querySelector('input').value;
+	if (!term) {
+		searchAddon.clearDecorations();
+		search.querySelector('.results').textContent = '';
+		return;
+	}
+
+	if (isPrevious) {
+		searchAddon.findPrevious(term, SEARCH_OPTIONS);
+	} else {
+		searchAddon.findNext(term, { ...SEARCH_OPTIONS, incremental: isIncremental });
+	}
+};
+
+const typeSearch = (event) => {
+	if (!event.target.closest('.terminal-container .search')) {
+		return;
+	}
+
+	find(false, true);
+};
+
+const stepSearch = (event) => {
+	if (!event.target.closest('.terminal-container .search')) {
+		return;
+	}
+
+	const key = _.toLower(event.key);
+	if (key === 'escape') {
+		event.preventDefault();
+		closeSearch();
+	} else if (key === 'enter') {
+		event.preventDefault();
+		find(event.shiftKey);
+	}
+};
+
+const clickSearch = (event) => {
+	const button = event.target.closest('.terminal-container .search button');
+	if (!button) {
+		return;
+	}
+
+	if (button.classList.contains('close-search')) {
+		closeSearch();
+	} else {
+		find(button.classList.contains('previous'));
+	}
+};
+
+const setSearchResults = ({ resultIndex, resultCount }) => {
+	const results = terminalContainer?.querySelector('.search .results');
+	if (!results) {
+		return;
+	}
+
+	results.textContent = !resultCount ? 'No results' : resultIndex < 0 ? `${resultCount} results` : `${resultIndex + 1} of ${resultCount}`;
+};
+
 const restore = () => {
 	if (!terminalContainer) {
 		return;
 	}
 
+	closeSearch();
 	terminalContainer.classList.add('d-none');
 	socket.emit('docker:container:terminal:disconnect');
 	if (terminal) {
@@ -63,6 +175,7 @@ const restore = () => {
 	}
 	terminal = null;
 	fitAddon = null;
+	searchAddon = null;
 	terminalContainer = null;
 	containerId = null;
 };
@@ -99,15 +212,20 @@ const reconnect = (event) => {
 socket.on('docker:container:terminal:connected', () => {
 	if (!terminal) {
 		fitAddon = new FitAddon();
+		searchAddon = new SearchAddon();
 		terminal = new Terminal({
 			fontSize: 12,
 			screenKeys: true,
 			useStyle: true,
 			cursorBlink: true,
 			cursorStyle: 'bar',
-			allowTransparency: true
+			allowTransparency: true,
+			allowProposedApi: true
 		});
 		terminal.loadAddon(fitAddon);
+		terminal.loadAddon(searchAddon);
+		terminal.loadAddon(new WebLinksAddon());
+		searchAddon.onDidChangeResults(setSearchResults);
 		const wrapper = terminalContainer.querySelector('.wrapper');
 		wrapper.innerHTML = '';
 		terminal.open(wrapper);
@@ -158,5 +276,9 @@ socket.on('disconnect', () => {
 module.addEventListener('click', render);
 module.addEventListener('click', closeTerminal);
 module.addEventListener('click', reconnect);
+module.addEventListener('click', clickSearch);
+module.addEventListener('input', typeSearch);
+module.addEventListener('keydown', stepSearch);
 module.addEventListener('details:hide', restore);
 window.addEventListener('resize', resize);
+document.addEventListener('keydown', openSearch, true);

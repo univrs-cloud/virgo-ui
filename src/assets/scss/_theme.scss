@@ -436,6 +436,7 @@ u-badge:hover .hover-reveal-text {
 	.terminal-container {
 		.wrapper {
 			height: calc(100% - 40px);
+			isolation: isolate;
 			padding: map-get($spacers, 2) map-get($spacers, 1) map-get($spacers, 2) map-get($spacers, 3);
 		}
 	}
@@ -459,12 +460,25 @@ u-badge:hover .hover-reveal-text {
 			display: flex;
 			gap: 0.5em;
 			align-items: flex-start;
+			border-left: 3px solid transparent;
+			padding-left: map-get($spacers, 2);
+			&.log-warning {
+				border-left-color: $orange-500;
+				background-color: rgba($orange-500, 0.15);
+			}
+			&.log-error {
+				border-left-color: $red-500;
+				background-color: rgba($red-500, 0.2);
+			}
 			&:hover {
 				color: var(--bs-black);
 				background-color: var(--bs-gray-100);
+				.log-timestamp {
+					color: var(--bs-gray-700);
+				}
 			}
-			.log-container-name {
-				font-weight: 500;
+			.log-timestamp {
+				color: var(--bs-gray-500);
 				flex-shrink: 0;
 				white-space: nowrap;
 				// The prefix eats most of the width on narrow screens, leaving the message unreadable.

@@ -76,9 +76,12 @@ const setStatus = (label, isLive = false) => {
 	liveIndicator.innerHTML = `<i class="icon-solid icon-tower-broadcast icon-fw me-1"></i>${label}`;
 };
 
-const appendLine = (html) => {
+const appendLine = (html, level = '') => {
 	const li = document.createElement('li');
 	li.innerHTML = html;
+	if (level) {
+		li.classList.add(`log-${level}`);
+	}
 	logs.appendChild(li);
 	if (shouldScroll) {
 		logs.scrollTop = logs.scrollHeight;
@@ -103,10 +106,25 @@ const shouldScrollEvent = () => {
 
 const formatLogLine = (data) => {
 	const dataStr = String(data || '').trim();
-	let formatted = escapeHtml(dataStr);
+	const [, timestamp = '', content = ''] = dataStr.match(/^([a-z]{3}\s+\d{1,2} \d{2}:\d{2}:\d{2}\.\d+)(?:\s(.*))?$/is) || ['', '', dataStr];
+	let formatted = escapeHtml(content);
 	formatted = colorizeLogLevels(formatted);
 	formatted = colorizeStatusCodes(formatted);
+	if (timestamp) {
+		return `<span class="log-timestamp">${escapeHtml(timestamp)}</span><span class="log-content">${formatted}</span>`;
+	}
+
 	return `<span class="log-content">${formatted}</span>`;
+};
+
+const resolveLogLevel = (text) => {
+	const match = text.match(/(?:^|[\s\[])(error|fatal|panic|critical|emerg|warn|warning)[:\]]|\blevel"?[=:]\s*"?(error|fatal|panic|critical|emerg|warn|warning)\b/i);
+	const level = _.toLower(match?.[1] || match?.[2] || '');
+	if (!level) {
+		return '';
+	}
+
+	return _.startsWith(level, 'warn') ? 'warning' : 'error';
 };
 
 const colorizeLogLevels = (text) => {
@@ -150,7 +168,8 @@ socket.on('host:service:logs:output', (data) => {
 		return;
 	}
 
-	appendLine(formatLogLine(String(data || '')));
+	const line = String(data || '');
+	appendLine(formatLogLine(line), resolveLogLevel(line));
 });
 
 socket.on('host:service:logs:error', (error) => {
