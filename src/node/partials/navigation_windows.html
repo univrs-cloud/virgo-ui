@@ -1,0 +1,9 @@
+<%_.each(windows, (item) => {%>
+	<a href="#" class="nav-window nav-item nav-link d-flex align-items-center py-1 text-white <%=(item.minimized ? 'text-opacity-50 fst-italic' : (item.active ? '' : 'text-opacity-75'))%>" data-window-id="<%-item.id%>">
+		<span class="text-truncate me-auto">
+			<i class="icon-duotone icon-solid icon-grid-round-2-plus icon-fw me-2 invisible"></i>
+			<small><%-item.label%></small>
+		</span>
+		<i class="close-window icon-solid icon-times icon-xs icon-fw"></i>
+	</a>
+<%});%>

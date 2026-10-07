@@ -9,3 +9,5 @@ export { Checkbox } from './checkbox';
 export { Switch } from './switch';
 export { Badge } from './badge';
 export { Progress, ProgressBar } from './progress';
+export { FloatingWindow } from './window_manager/window';
+export { WindowManager } from './window_manager';

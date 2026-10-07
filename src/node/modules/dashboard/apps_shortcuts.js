@@ -83,6 +83,23 @@ const saveReorder = (cards) => {
 	appService.setOrder(data);
 };
 
+const withoutAliases = (urls) => {
+	const hosts = _.map(urls, (url) => { return new URL(url).host.toLowerCase(); });
+	return _.uniq(_.filter(urls, (url, index) => {
+		return !(_.startsWith(hosts[index], 'www.') && _.includes(hosts, hosts[index].slice(4)));
+	}));
+};
+
+const openWindow = (event) => {
+	const link = event.target.closest('.open-window');
+	if (_.isNull(link)) {
+		return;
+	}
+
+	event.preventDefault();
+	window.windowManager.open({ label: link.dataset.label, url: link.dataset.url, width: 1366, height: 768 });
+};
+
 const render = (state) => {
 	if (_.isNull(state.apps)) {
 		return;
@@ -101,7 +118,7 @@ const render = (state) => {
 			const ordered = _.orderBy(categoryApps, ['order'], ['asc']);
 			const cardsHtml = _.join(_.map(ordered, (entity) => {
 				if (entity.type === 'app') {
-					return appTemplate({ app: entity });
+					return appTemplate({ app: entity, windowUrls: withoutAliases(entity.urls) });
 				}
 				if (entity.type === 'shortcut') {
 					return shortcutTemplate({ shortcut: entity });
@@ -121,11 +138,15 @@ const render = (state) => {
 				if (fromEl.classList.contains('order')) {
 					return false;
 				}
+				if (fromEl.classList.contains('dropdown') && fromEl.querySelector('.show')) {
+					return false;
+				}
 			}
 		}
 	);
 };
 
 container.addEventListener('click', toggleOrder);
+container.addEventListener('click', openWindow);
 
 appService.subscribe([render]);
