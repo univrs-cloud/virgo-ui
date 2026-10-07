@@ -348,6 +348,15 @@ u-badge:hover .hover-reveal-text {
 	.overflow-y-scroll {
 		height: calc(100dvh - 170px - var(--chrome));
 	}
+	> .row > .container-fluid > .card > .card-body {
+		display: flex;
+		flex-direction: column;
+		height: calc(100dvh - 72px - var(--chrome));
+		> .overflow-y-scroll {
+			flex: 1;
+			min-height: 0;
+		}
+	}
 	.table {
 		tbody {
 			td {
@@ -399,8 +408,8 @@ u-badge:hover .hover-reveal-text {
 		margin-top: map-get($spacers, 2) * -1;
 		margin-left: map-get($spacers, 4);
 		margin-right: map-get($spacers, 4);
-		.overflow-y-scroll {
-			height: calc(100dvh - 162px - var(--chrome));
+		> .card-body {
+			height: calc(100dvh - 64px - var(--chrome));
 		}
 	}
 	.details {
