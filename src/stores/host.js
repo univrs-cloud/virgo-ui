@@ -41,11 +41,12 @@ class Host extends Store {
 		});
 
 		this.socket.on('host:updates', (updates) => {
-			// updates = [{ package: 'package 1', version: { installed: '1.0.0', updatableTo: '2.0.0' } }];
+			// updates = [{ package: 'samba', version: { installed: '1.0.0', updatableTo: '2.0.0' } }, { package: 'zfs-linux', version: { installed: '2.3.0', updatableTo: '2.4.4' } }];
 			this.setState({ updates }, 'get_updates');
 		});
 
 		this.socket.on('host:update', (update) => {
+			// update = { state: 'running', steps: ['Reading package lists...', 'Building dependency tree...', 'Reading state information...', 'Calculating upgrade...', '0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.'], progress: { stage: 'install', percent: 45 } };
 			this.setState({ update }, 'get_update');
 		});
 

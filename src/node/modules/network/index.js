@@ -1,3 +1,4 @@
+import copy from 'copy-to-clipboard';
 import modulePartial from 'node/modules/network/partials/index.html';
 import networkPartial from 'node/modules/network/partials/network.html';
 import trustedProxyPartial from 'node/modules/network/partials/trusted_proxy.html';
@@ -41,6 +42,27 @@ const render = (state) => {
 	loading.classList.add('d-none');
 	container.classList.remove('d-none');
 };
+
+const copyToClipboard = (event) => {
+	if (event.target.closest('a')?.dataset.action !== 'copy-to-clipboard') {
+		return;
+	}
+
+	event.preventDefault();
+	const button = event.target.closest('a');
+	const text = button.nextElementSibling.textContent;
+	if (copy(text)) {
+		const tooltip = bootstrap.Tooltip.getInstance(button);
+		const originalTitle = button.dataset.bsOriginalTitle;
+		tooltip.setContent({ '.tooltip-inner': 'Copied!' });
+		setTimeout(() => {
+			tooltip.hide();
+			tooltip.setContent({ '.tooltip-inner': originalTitle });
+		}, 1000);
+	}
+};
+
+module.addEventListener('click', copyToClipboard);
 
 networkService.subscribe([render]);
 

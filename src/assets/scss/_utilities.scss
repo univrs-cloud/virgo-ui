@@ -44,3 +44,14 @@ $utilities: map-merge(
 		)
 	)
 );
+
+$utilities: map-merge(
+	$utilities,
+	(
+		'size': (
+			property: width height,
+			class: size,
+			values: (5: map-get($spacers, 5))
+		)
+	)
+);
