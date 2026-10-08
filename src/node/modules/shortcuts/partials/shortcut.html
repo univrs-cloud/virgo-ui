@@ -10,7 +10,7 @@
 		</div>
 		<div class="d-flex align-items-center">
 			<%if (!_.isEmpty(shortcut.url)) {%>
-				<a href="<%-shortcut.url%>" target="<%-(shortcut?.target || shortcut.name)%>" class="d-inline-flex align-items-center link-underline link-underline-opacity-0 link-underline-opacity-75-hover min-w-0">
+				<a href="<%-shortcut.url%>" target="<%-(shortcut?.target || shortcut.name)%>" referrerpolicy="no-referrer" class="d-inline-flex align-items-center link-underline link-underline-opacity-0 link-underline-opacity-75-hover min-w-0">
 					<small class="text-truncate min-w-0"><%-shortcut.url%></small><i class="icon-solid icon-arrow-up-right-from-square icon-fw icon-2xs ms-1 d-none d-sm-block"></i>
 				</a>
 			<%} else {%>
