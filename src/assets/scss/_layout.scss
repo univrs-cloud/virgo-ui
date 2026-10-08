@@ -351,6 +351,11 @@ html:not(:has(head > base[href="/"])) {
 			}
 			.nav-pills {
 				--bs-nav-link-padding-y: 0.375rem;
+				margin-top: -1rem;
+				margin-right: -0.75rem;
+				margin-left: -0.75rem;
+				padding-right: 0.75rem;
+				padding-left: 0.75rem;
 				&::before,
 				&::after {
 					content: "";
@@ -358,13 +363,15 @@ html:not(:has(head > base[href="/"])) {
 					position: sticky;
 					display: block;
 					height: 0.75rem;
+					margin-right: -0.75rem;
+					margin-left: -0.75rem;
 					opacity: 0;
 					pointer-events: none;
 					transition: opacity 0.15s;
 				}
 				&::before {
 					top: 0;
-					margin-bottom: -0.75rem;
+					margin-bottom: 0.25rem;
 					background: radial-gradient(farthest-side at 50% 0, rgba(0, 0, 0, 0.3), transparent);
 				}
 				&::after {
@@ -379,6 +386,13 @@ html:not(:has(head > base[href="/"])) {
 			}
 			.nav {
 				width: 100%;
+				&.nav-pills {
+					width: calc(100% + 1.5rem);
+				}
+				.nav-link + .nav-link,
+				.windows > div {
+					margin-top: 1px;
+				}
 				.nav-link {
 					&.active {
 						box-shadow: var(--bs-box-shadow-sm);
@@ -495,8 +509,24 @@ html:not(:has(head > base[href="/"])) {
 			}
 			.windows {
 				.unmaximize-window,
-				.close-window {
+				.close-window:not(.rail-only) {
 					display: none;
+				}
+				.nav-window .close-window.rail-only {
+					display: inline-block;
+					position: absolute;
+					top: 2px;
+					left: 0;
+					line-height: 1;
+					transform: translate(-50%, -50%);
+					opacity: 0;
+					visibility: hidden;
+					transition: opacity 0.15s ease, visibility 0s linear 0.15s;
+				}
+				.nav-window:hover .close-window.rail-only {
+					opacity: 1;
+					visibility: visible;
+					transition-delay: 0.5s;
 				}
 			}
 			.nodes {
