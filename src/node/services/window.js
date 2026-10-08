@@ -1,3 +1,5 @@
+import * as updateMode from 'libs/update_mode';
+
 const WINDOWS_KEY = 'windows:open';
 const windowManager = document.querySelector('u-window-manager');
 let callbacks = [];
@@ -78,7 +80,7 @@ const background = () => {
 };
 
 const save = (windows) => {
-	if (!windowManager.available) {
+	if (!windowManager.available || updateMode.isActive()) {
 		return;
 	}
 
