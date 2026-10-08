@@ -15,7 +15,7 @@ export class WindowManager extends LitElement {
 
 	constructor() {
 		super();
-		this.addEventListener('window-change', this.#notify);
+		this.addEventListener('window-change', this.#onWindowChange);
 
 		window.windowManager = this;
 	}
@@ -59,23 +59,20 @@ export class WindowManager extends LitElement {
 		const offset = (this.windows.length % CASCADE_COUNT) * CASCADE_STEP;
 		item.id = `window-${++this.#counter}`;
 		item.label = options.label ?? '';
+		item.icon = options.icon ?? '';
+		item.type = options.type ?? '';
 		item.maximized = options.maximized ?? true;
+		item.minimized = options.minimized ?? false;
 		item.width = width;
 		item.height = height;
 		item.x = Math.max(0, Math.round((this.clientWidth - width) / 2)) + offset;
 		item.y = Math.max(0, Math.round((this.clientHeight - height) / 2)) + offset;
 		if (options.url) {
-			const frame = document.createElement('iframe');
-			frame.className = 'flex-grow-1 w-100 border-0';
-			frame.allow = 'clipboard-read; clipboard-write; fullscreen';
-			frame.src = options.url;
-			frame.addEventListener('load', () => { item.loading = false; }, { once: true });
-			setTimeout(() => { item.loading = false; }, LOADING_TIMEOUT);
-			item.loading = true;
 			item.dataset.url = url;
-			item.append(frame);
+			item.dataset.src = options.url;
 		}
 		this.append(item);
+		this.#load(item);
 		item.fit();
 		return item;
 	}
@@ -96,6 +93,21 @@ export class WindowManager extends LitElement {
 		return html`<slot @slotchange=${this.#notify}></slot>`;
 	}
 
+	#load(item) {
+		if (item.minimized || !item.dataset.src || item.querySelector(':scope > iframe')) {
+			return;
+		}
+
+		const frame = document.createElement('iframe');
+		frame.className = 'flex-grow-1 w-100 border-0';
+		frame.allow = 'clipboard-read; clipboard-write; fullscreen';
+		frame.src = item.dataset.src;
+		frame.addEventListener('load', () => { item.loading = false; }, { once: true });
+		setTimeout(() => { item.loading = false; }, LOADING_TIMEOUT);
+		item.loading = true;
+		item.append(frame);
+	}
+
 	#layout = () => {
 		this.style.left = `${document.querySelector('main')?.getBoundingClientRect().left ?? 0}px`;
 		if (this.available) {
@@ -105,6 +117,12 @@ export class WindowManager extends LitElement {
 
 	#onBlur = () => {
 		setTimeout(() => { document.activeElement?.closest?.('u-window')?.raise(); });
+	};
+
+	#onWindowChange = (event) => {
+		this.#layout();
+		this.#load(event.target);
+		this.#notify();
 	};
 
 	#notify = () => {

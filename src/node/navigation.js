@@ -2,6 +2,7 @@ import page from 'page';
 import { loadModule } from 'node/modules';
 import { initNodeView } from 'node/view';
 import * as softwareService from 'node/services/software';
+import * as windowService from 'node/services/window';
 import * as updateMode from 'libs/update_mode';
 
 const UPDATE_PATH = '/system-update';
@@ -16,7 +17,7 @@ initNodeView();
 const showPage = (ctx) => {
 	const module = ctx.module || 'dashboard';
 
-	window.windowManager?.background();
+	windowService.background();
 	_.each(document.querySelectorAll('header .navbar .nav'), (nav) => { nav.dataset.module = module; });
 	_.each(document.querySelectorAll(':is(header, .offcanvas) .nav-link.active'), (element) => { element.classList.remove('active'); });
 	_.each(document.querySelectorAll(`:is(header, .offcanvas) .nav-link[href="/${module}"]`), (element) => { element.classList.add('active'); });

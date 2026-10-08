@@ -52,8 +52,13 @@ header {
 		.nav-pills {
 			--bs-nav-link-padding-x: 0.5rem;
 			display: block;
-			overflow: auto;
-			height: calc(100dvh - 165px);
+			overflow: hidden auto;
+			flex: 1 1 0;
+			min-height: 0;
+			scrollbar-width: none;
+			&::-webkit-scrollbar {
+				display: none;
+			}
 		}
 		.navbar-glass {
 			min-height: 3.5rem;
@@ -92,6 +97,27 @@ header,
 .offcanvas {
 	.nav-title {
 		color: $gray-300;
+	}
+	.rail-only {
+		display: none;
+	}
+	.window-icon {
+		width: 1.25rem;
+		height: 1.25rem;
+		img {
+			object-fit: contain;
+			width: 1rem;
+			height: 1rem;
+		}
+	}
+	.nav-window {
+		min-height: calc(1.5em + 2 * var(--bs-nav-link-padding-y));
+	}
+	.nav-window:not(.active):not(:hover) {
+		.unmaximize-window,
+		.close-window {
+			display: none;
+		}
 	}
 	.nav-link {
 		font-weight: 400;
@@ -282,8 +308,12 @@ html:not(:has(head > base[href="/"])) {
 
 @media (min-width: 576px) {
 	body {
+		--menu-width: 15rem;
 		margin-top: 3.5rem;
 		margin-bottom: 0;
+		&.menu-collapsed {
+			--menu-width: 3.75rem;
+		}
 		// Sidebar shells put their top bar over the sidebar, so nothing has to clear it.
 		&:has(header nav) {
 			--chrome: 0px;
@@ -295,7 +325,7 @@ html:not(:has(head > base[href="/"])) {
 			z-index: 1029;
 			position: fixed;
 			top: 0;
-			width: 15rem;
+			width: var(--menu-width);
 			height: 100dvh;
 			.navbar {
 				height: 100%;
@@ -310,6 +340,36 @@ html:not(:has(head > base[href="/"])) {
 					left: 0;
 					right: auto;
 					min-width: 100%;
+				}
+			}
+			.account-toggle {
+				padding-left: 0.125rem !important;
+			}
+			.nav-pills {
+				&::before,
+				&::after {
+					content: "";
+					z-index: 1;
+					position: sticky;
+					display: block;
+					height: 0.75rem;
+					opacity: 0;
+					pointer-events: none;
+					transition: opacity 0.15s;
+				}
+				&::before {
+					top: 0;
+					margin-bottom: -0.75rem;
+					background: radial-gradient(farthest-side at 50% 0, rgba(0, 0, 0, 0.3), transparent);
+				}
+				&::after {
+					bottom: 0;
+					margin-top: -0.75rem;
+					background: radial-gradient(farthest-side at 50% 100%, rgba(0, 0, 0, 0.3), transparent);
+				}
+				&.has-scroll-above::before,
+				&.has-scroll-below::after {
+					opacity: 1;
 				}
 			}
 			.nav {
@@ -377,7 +437,7 @@ html:not(:has(head > base[href="/"])) {
 		}
 		&:has(nav) .navbar.navbar-position {
 			right: auto;
-			width: 15rem;
+			width: var(--menu-width);
 		}
 		// Setup, and the auth screens that leave the header empty, have no sidebar to make room for.
 		&:not(:has(nav)) ~ main {
@@ -391,6 +451,79 @@ html:not(:has(head > base[href="/"])) {
 	}
 	main,
 	#update {
-		margin-left: 15rem;
+		margin-left: var(--menu-width);
+	}
+	.menu-collapsed header:has(nav) {
+		.navbar.navbar-position {
+			z-index: 1042;
+			.navbar-brand span {
+				display: none;
+			}
+		}
+		nav {
+			z-index: 1041;
+			.nav-label,
+			.nav-title small {
+				display: none;
+			}
+			.rail-only {
+				display: inline-block;
+			}
+			.nav-title {
+				border-top: var(--bs-border-width) solid var(--bs-secondary-border-subtle);
+				margin-top: map-get($spacers, 2) !important;
+				margin-bottom: map-get($spacers, 2);
+				opacity: 0.25;
+			}
+			.nav-link {
+				position: relative;
+				u-badge {
+					position: absolute;
+					top: 0.125rem;
+					right: 0.125rem;
+					transform: scale(0.7);
+					transform-origin: top right;
+				}
+			}
+			.windows {
+				.unmaximize-window,
+				.close-window {
+					display: none;
+				}
+			}
+			.nodes {
+				.nav-title,
+				.btn-group > a,
+				.dropdown-toggle > span {
+					display: none;
+				}
+				.dropdown-toggle {
+					justify-content: center !important;
+					padding-right: 0;
+					padding-left: 0;
+					&::after {
+						display: none;
+					}
+				}
+				.dropdown-menu {
+					position: fixed;
+					top: 4.5rem;
+					left: 3.25rem;
+					width: auto !important;
+				}
+			}
+			.account-toggle {
+				gap: 0 !important;
+				padding-right: 0.125rem !important;
+				> span {
+					overflow: hidden;
+					flex-grow: 0 !important;
+					width: 0;
+				}
+				> i {
+					display: none !important;
+				}
+			}
+		}
 	}
 }

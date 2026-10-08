@@ -3,6 +3,7 @@ import categoryPartial from 'node/modules/dashboard/partials/category.html';
 import appPartial from 'node/modules/dashboard/partials/app.html';
 import shortcutPartial from 'node/modules/dashboard/partials/shortcut.html';
 import * as appService from 'node/modules/dashboard/services/app';
+import * as windowService from 'node/services/window';
 import Sortable from 'sortablejs';
 
 const appsEmptyTemplate = _.template(appsEmptyPartial);
@@ -97,7 +98,7 @@ const openWindow = (event) => {
 	}
 
 	event.preventDefault();
-	window.windowManager.open({ label: link.dataset.label, url: link.dataset.url, width: 1366, height: 768 });
+	windowService.open({ label: link.dataset.label, icon: link.dataset.icon, type: link.closest('.card').dataset.type, url: link.dataset.url, width: 1366, height: 768 });
 };
 
 const render = (state) => {

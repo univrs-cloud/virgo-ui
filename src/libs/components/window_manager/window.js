@@ -13,6 +13,7 @@ export class FloatingWindow extends LitElement {
 		:host([interacting]) ::slotted(*) { pointer-events: none; }
 		.card-body { min-height: 0; }
 		.titlebar, .handle { touch-action: none; }
+		.titlebar { cursor: move; }
 		.handle { position: absolute; }
 		.handle[data-edge="n"], .handle[data-edge="s"] { left: 10px; right: 10px; height: 8px; cursor: ns-resize; }
 		.handle[data-edge="e"], .handle[data-edge="w"] { top: 10px; bottom: 10px; width: 8px; cursor: ew-resize; }
@@ -29,6 +30,8 @@ export class FloatingWindow extends LitElement {
 
 	static properties = {
 		label: { type: String },
+		icon: { type: String },
+		type: { type: String },
 		x: { type: Number },
 		y: { type: Number },
 		width: { type: Number },
@@ -56,6 +59,8 @@ export class FloatingWindow extends LitElement {
 	constructor() {
 		super();
 		this.label = '';
+		this.icon = '';
+		this.type = '';
 		this.x = 0;
 		this.y = 0;
 		this.width = 800;

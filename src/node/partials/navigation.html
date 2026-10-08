@@ -1,59 +1,59 @@
 <div class="nodes"></div>
 <a href="/dashboard" class="nav-item nav-link <%=((active === '/' || active === '/dashboard') && 'active')%>">
-	<i class="icon-duotone icon-solid icon-objects-column icon-fw me-2"></i>
-	Dashboard
+	<i class="icon-duotone icon-solid icon-objects-column icon-fw"></i>
+	<span class="nav-label ms-2">Dashboard</span>
 </a>
 <div class="windows"></div>
 <%if (isAdmin) {%>
 	<div class="nav-title ps-sm-2 mt-2 mt-sm-3"><small>Resources</small></div>
 	<a href="/apps" class="nav-item nav-link <%=(active === '/apps' && 'active')%>">
-		<i class="icon-duotone icon-solid icon-grid-round-2-plus icon-fw me-2" style="transform: rotate(180deg);"></i>
-		Apps
+		<i class="icon-duotone icon-solid icon-grid-round-2-plus icon-fw" style="transform: rotate(180deg);"></i>
+		<span class="nav-label ms-2">Apps</span>
 	</a>
 	<a href="/shortcuts" class="nav-item nav-link <%=(active === '/shortcuts' && 'active')%>">
-		<i class="icon-duotone icon-solid icon-square-arrow-up-right icon-fw me-2"></i>
-		Shortcuts
+		<i class="icon-duotone icon-solid icon-square-arrow-up-right icon-fw"></i>
+		<span class="nav-label ms-2">Shortcuts</span>
 	</a>
 	<a href="/folders" class="nav-item nav-link <%=(active === '/folders' && 'active')%>">
-		<i class="icon-duotone icon-solid icon-folder-closed icon-fw me-2"></i>
-		Folders
+		<i class="icon-duotone icon-solid icon-folder-closed icon-fw"></i>
+		<span class="nav-label ms-2">Folders</span>
 	</a>
 	<a href="/time-machines" class="nav-item nav-link <%=(active === '/time-machines' && 'active')%>">
-		<i class="icon-duotone icon-solid icon-clock-rotate-left icon-fw me-2" style="--icon-primary-opacity: 0.4; --icon-secondary-opacity: 1;"></i>
-		Time machines
+		<i class="icon-duotone icon-solid icon-clock-rotate-left icon-fw" style="--icon-primary-opacity: 0.4; --icon-secondary-opacity: 1;"></i>
+		<span class="nav-label ms-2">Time machines</span>
 	</a>
 	<div class="nav-title ps-sm-2 mt-2 mt-sm-3"><small>System</small></div>
 	<a href="/storage" class="nav-item nav-link <%=(active === '/storage' && 'active')%>">
-		<i class="icon-duotone icon-solid icon-hard-drive icon-fw me-2"></i>
-		Storage
+		<i class="icon-duotone icon-solid icon-hard-drive icon-fw"></i>
+		<span class="nav-label ms-2">Storage</span>
 	</a>
 	<a href="/users" class="nav-item nav-link <%=(active === '/users' && 'active')%>">
-		<i class="icon-duotone icon-solid icon-user icon-fw me-2"></i>
-		Users
+		<i class="icon-duotone icon-solid icon-user icon-fw"></i>
+		<span class="nav-label ms-2">Users</span>
 	</a>
 	<a href="/system-services" class="nav-item nav-link <%=(active === '/system-services' && 'active')%>">
-		<i class="icon-duotone icon-solid icon-cube icon-fw me-2"></i>
-		Services
+		<i class="icon-duotone icon-solid icon-cube icon-fw"></i>
+		<span class="nav-label ms-2">Services</span>
 	</a>
 	<a href="/network" class="nav-item nav-link <%=(active === '/network' && 'active')%>">
-		<i class="icon-duotone icon-solid icon-network-wired icon-fw me-2"></i>
-		Network
+		<i class="icon-duotone icon-solid icon-network-wired icon-fw"></i>
+		<span class="nav-label ms-2">Network</span>
 	</a>
 	<a href="/settings" class="nav-item nav-link <%=(active === '/settings' && 'active')%>">
-		<i class="icon-duotone icon-solid icon-sliders-up icon-fw me-2"></i>
-		Settings
+		<i class="icon-duotone icon-solid icon-sliders-up icon-fw"></i>
+		<span class="nav-label ms-2">Settings</span>
 	</a>
 	<a href="/system-updates" class="nav-item nav-link d-flex align-items-center <%=(active === '/system-updates' && 'active')%>">
 		<span>
-			<i class="icon-duotone icon-solid icon-download icon-fw me-2"></i>
-			Updates
+			<i class="icon-duotone icon-solid icon-download icon-fw"></i>
+			<span class="nav-label ms-2">Updates</span>
 		</span>
 		<%if (typeof updates !== 'undefined' && !_.isEmpty(updates)) {%>
 			<u-badge color="white" class="ms-md-auto ms-auto" pill><small><%=_.size(updates)%></small></u-badge>
 		<%}%>
 	</a>
 	<a href="/about" class="nav-item nav-link <%=(active === '/about' && 'active')%>">
-		<i class="icon-duotone icon-solid icon-fingerprint icon-fw me-2"></i>
-		About
+		<i class="icon-duotone icon-solid icon-fingerprint icon-fw"></i>
+		<span class="nav-label ms-2">About</span>
 	</a>
 <%}%>
