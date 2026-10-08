@@ -2,12 +2,12 @@ import { LitElement, html, css } from 'lit';
 
 const CASCADE_STEP = 24;
 const CASCADE_COUNT = 8;
-const FLOATING_SHARE = 0.85;
+const DEFAULT_SHARE = 0.45;
 const LOADING_TIMEOUT = 20000;
 
 export class WindowManager extends LitElement {
 	static styles = [css`
-		:host { position: fixed; inset: 0; z-index: 1040; display: block; pointer-events: none; }
+		:host { position: fixed; inset: 0; z-index: 1040; display: block; overflow: clip; pointer-events: none; }
 		@media (max-width: 991.98px) { :host { display: none; } }
 	`];
 
@@ -54,8 +54,8 @@ export class WindowManager extends LitElement {
 
 		this.#layout();
 		const item = document.createElement('u-window');
-		const width = Math.min(options.width ?? 800, Math.round(this.clientWidth * FLOATING_SHARE));
-		const height = Math.min(options.height ?? 600, Math.round(this.clientHeight * FLOATING_SHARE));
+		const width = options.width ?? Math.round(this.clientWidth * DEFAULT_SHARE);
+		const height = options.height ?? Math.round(this.clientHeight * DEFAULT_SHARE);
 		const offset = (this.windows.length % CASCADE_COUNT) * CASCADE_STEP;
 		item.id = `window-${++this.#counter}`;
 		item.label = options.label ?? '';
@@ -65,6 +65,7 @@ export class WindowManager extends LitElement {
 		item.minimized = options.minimized ?? false;
 		item.width = width;
 		item.height = height;
+		item.snap = options.snap ?? '';
 		item.x = Math.max(0, Math.round((this.clientWidth - width) / 2)) + offset;
 		item.y = Math.max(0, Math.round((this.clientHeight - height) / 2)) + offset;
 		if (options.url) {

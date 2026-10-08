@@ -5,15 +5,49 @@ import { sheet } from '../styles.js';
 const MIN_WIDTH = 320;
 const MIN_HEIGHT = 200;
 const EDGES = ['n', 'e', 's', 'w', 'ne', 'se', 'sw', 'nw'];
+const SNAP_EDGE = 16;
+const SNAP_CORNER_SHARE = 0.25;
+
+const getSnapRect = (zone, bounds) => {
+	const halfWidth = Math.round(bounds.clientWidth / 2);
+	const halfHeight = Math.round(bounds.clientHeight / 2);
+	return {
+		x: (zone.includes('e') ? halfWidth : 0),
+		y: (zone.includes('s') ? halfHeight : 0),
+		width: (zone.includes('e') ? bounds.clientWidth - halfWidth : (zone.includes('w') ? halfWidth : bounds.clientWidth)),
+		height: (zone.includes('s') ? bounds.clientHeight - halfHeight : (zone.includes('n') ? halfHeight : bounds.clientHeight))
+	};
+};
+
+const getSnapZone = (event, bounds) => {
+	const rect = bounds.getBoundingClientRect();
+	const x = event.clientX - rect.left;
+	const y = event.clientY - rect.top;
+	const isNear = (distance) => { return x <= distance || x >= rect.width - distance || y <= distance || y >= rect.height - distance; };
+	if (!isNear(SNAP_EDGE)) {
+		return '';
+	}
+
+	const cornerWidth = rect.width * SNAP_CORNER_SHARE;
+	const cornerHeight = rect.height * SNAP_CORNER_SHARE;
+	const vertical = (y <= cornerHeight ? 'n' : (y >= rect.height - cornerHeight ? 's' : ''));
+	const horizontal = (x <= cornerWidth ? 'w' : (x >= rect.width - cornerWidth ? 'e' : ''));
+	return `${vertical}${horizontal}`;
+};
 
 export class FloatingWindow extends LitElement {
 	static styles = [sheet, css`
 		:host { position: absolute; top: 0; left: 0; display: block; pointer-events: auto; }
 		:host([minimized]) { display: none; }
 		:host([interacting]) ::slotted(*) { pointer-events: none; }
+		:host([dragging]) .card { background-color: transparent; }
+		:host([dragging]) .titlebar { background: linear-gradient(var(--bs-card-cap-bg), var(--bs-card-cap-bg)), var(--bs-card-bg); }
+		:host([dragging]) .card-body { opacity: 0.75; }
+		:host(:not([maximized])) ::slotted(iframe) { border-radius: 0 0 calc(var(--bs-border-radius-xl) - var(--bs-border-width)) calc(var(--bs-border-radius-xl) - var(--bs-border-width)); }
 		.card-body { min-height: 0; }
 		.titlebar, .handle { touch-action: none; }
 		.titlebar { cursor: move; }
+		.snap-preview { z-index: -1; }
 		.handle { position: absolute; }
 		.handle[data-edge="n"], .handle[data-edge="s"] { left: 10px; right: 10px; height: 8px; cursor: ns-resize; }
 		.handle[data-edge="e"], .handle[data-edge="w"] { top: 10px; bottom: 10px; width: 8px; cursor: ew-resize; }
@@ -36,6 +70,8 @@ export class FloatingWindow extends LitElement {
 		y: { type: Number },
 		width: { type: Number },
 		height: { type: Number },
+		snap: { type: String },
+		snapZone: { state: true },
 		maximized: { type: Boolean, reflect: true },
 		minimized: { type: Boolean, reflect: true },
 		active: { type: Boolean, reflect: true },
@@ -43,6 +79,8 @@ export class FloatingWindow extends LitElement {
 	};
 
 	static #stack = [];
+
+	#unsnapped = null;
 
 	static #restack() {
 		const top = [...FloatingWindow.#stack].reverse().find((item) => { return !item.minimized; });
@@ -65,6 +103,8 @@ export class FloatingWindow extends LitElement {
 		this.y = 0;
 		this.width = 800;
 		this.height = 600;
+		this.snap = '';
+		this.snapZone = '';
 		this.maximized = false;
 		this.minimized = false;
 		this.active = false;
@@ -90,7 +130,7 @@ export class FloatingWindow extends LitElement {
 		if (changed.has('minimized')) {
 			FloatingWindow.#restack();
 		}
-		if (changed.has('minimized') || changed.has('maximized') || changed.has('label') || changed.has('active')) {
+		if (changed.has('minimized') || changed.has('maximized') || changed.has('snap') || changed.has('label') || changed.has('active')) {
 			this.dispatchEvent(new CustomEvent('window-change', { bubbles: true, composed: true }));
 		}
 	}
@@ -113,6 +153,11 @@ export class FloatingWindow extends LitElement {
 	fit() {
 		const bounds = this.parentElement;
 		if (!bounds) {
+			return;
+		}
+
+		if (this.snap) {
+			Object.assign(this, getSnapRect(this.snap, bounds));
 			return;
 		}
 
@@ -164,23 +209,40 @@ export class FloatingWindow extends LitElement {
 					` : ''}
 				</div>
 			</div>
+			${this.snapZone ? this.#renderSnapPreview() : ''}
 			${this.maximized ? '' : EDGES.map((edge) => { return html`<div class="handle" data-edge=${edge} @pointerdown=${this.#onHandlePointerDown}></div>`; })}
 		`;
 	}
 
-	#track(event, onMove) {
+	#renderSnapPreview() {
+		const rect = getSnapRect(this.snapZone, this.parentElement);
+		return html`<div class="snap-preview position-absolute pe-none rounded-4 border border-primary bg-primary bg-opacity-10" style="left: ${rect.x - this.x}px; top: ${rect.y - this.y}px; width: ${rect.width}px; height: ${rect.height}px;"></div>`;
+	}
+
+	#unsnap(start) {
+		const size = this.#unsnapped ?? { width: start.width, height: start.height };
+		const left = this.parentElement.getBoundingClientRect().left;
+		const ratio = (start.pointerX - left - start.x) / start.width;
+		start.x = Math.round(start.pointerX - left - ratio * size.width);
+		this.width = size.width;
+		this.height = size.height;
+		this.snap = '';
+	}
+
+	#track(event, onMove, onStop) {
 		const target = event.currentTarget;
 		const start = { pointerX: event.clientX, pointerY: event.clientY, x: this.x, y: this.y, width: this.width, height: this.height };
 		const controller = new AbortController();
 		const { signal } = controller;
-		const stop = () => {
+		const stop = (end) => {
 			controller.abort();
 			FloatingWindow.#setInteracting(false);
+			onStop?.(end);
 		};
 		event.preventDefault();
 		target.setPointerCapture(event.pointerId);
 		FloatingWindow.#setInteracting(true);
-		target.addEventListener('pointermove', (move) => { onMove(move.clientX - start.pointerX, move.clientY - start.pointerY, start); }, { signal });
+		target.addEventListener('pointermove', (move) => { onMove(move.clientX - start.pointerX, move.clientY - start.pointerY, start, move); }, { signal });
 		target.addEventListener('pointerup', stop, { signal });
 		target.addEventListener('pointercancel', stop, { signal });
 		target.addEventListener('lostpointercapture', stop, { signal });
@@ -192,9 +254,23 @@ export class FloatingWindow extends LitElement {
 		}
 
 		const bounds = this.parentElement;
-		this.#track(event, (dx, dy, start) => {
-			this.x = Math.max(0, Math.min(start.x + dx, bounds.clientWidth - this.width));
-			this.y = Math.max(0, Math.min(start.y + dy, bounds.clientHeight - this.height));
+		this.#track(event, (dx, dy, start, move) => {
+			if (this.snap) {
+				this.#unsnap(start);
+			}
+			this.toggleAttribute('dragging', true);
+			this.x = start.x + dx;
+			this.y = start.y + dy;
+			this.snapZone = getSnapZone(move, bounds);
+		}, (end) => {
+			const zone = this.snapZone;
+			this.snapZone = '';
+			this.toggleAttribute('dragging', false);
+			if (zone !== '' && end.type === 'pointerup') {
+				this.#unsnapped = { width: this.width, height: this.height };
+				this.snap = zone;
+			}
+			this.fit();
 		});
 	};
 
@@ -214,6 +290,7 @@ export class FloatingWindow extends LitElement {
 		const edge = event.currentTarget.dataset.edge;
 		const bounds = this.parentElement;
 		this.#track(event, (dx, dy, start) => {
+			this.snap = '';
 			if (edge.includes('e')) {
 				this.width = Math.max(MIN_WIDTH, Math.min(start.width + dx, bounds.clientWidth - start.x));
 			}
