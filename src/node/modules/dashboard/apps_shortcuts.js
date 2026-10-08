@@ -98,7 +98,7 @@ const openWindow = (event) => {
 	}
 
 	event.preventDefault();
-	windowService.open({ label: link.dataset.label, icon: link.dataset.icon, type: link.closest('.card').dataset.type, url: link.dataset.url, width: 1366, height: 768 });
+	windowService.open({ label: link.dataset.label, icon: link.dataset.icon, type: link.closest('.card').dataset.type, url: link.dataset.url });
 };
 
 const render = (state) => {

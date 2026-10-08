@@ -21,7 +21,8 @@ const getWindows = () => {
 			minimized: item.minimized,
 			active: item.active,
 			width: item.width,
-			height: item.height
+			height: item.height,
+			snap: item.snap
 		};
 	});
 };
@@ -84,7 +85,7 @@ const save = (windows) => {
 		return;
 	}
 
-	const stored = _.map(_.filter(windows, 'url'), (item) => { return _.pick(item, ['label', 'icon', 'type', 'url', 'maximized', 'width', 'height']); });
+	const stored = _.map(_.filter(windows, 'url'), (item) => { return _.pick(item, ['label', 'icon', 'type', 'url', 'maximized', 'width', 'height', 'snap']); });
 	try {
 		localStorage.setItem(WINDOWS_KEY, JSON.stringify(stored));
 	} catch (error) {
@@ -104,7 +105,7 @@ const restore = () => {
 		stored = null;
 	}
 	_.each(_.filter(stored, (item) => { return _.isString(item?.url); }), (item) => {
-		windowManager.open({ ..._.pick(item, ['label', 'icon', 'type', 'url', 'maximized', 'width', 'height']), minimized: true });
+		windowManager.open({ ..._.pick(item, ['label', 'icon', 'type', 'url', 'maximized', 'width', 'height', 'snap']), minimized: true });
 	});
 };
 
