@@ -10,7 +10,7 @@
 				</div>
 				<%if (isAuthenticated && runtimeRole?.toLowerCase() !== 'fleet' && shortcut.traefik && !_.isEmpty(shortcut.url)) {%>
 					<div class="col-auto d-none d-lg-block">
-						<a href="#" class="open-window btn btn-sm position-relative z-2" data-url="<%-shortcut.url%>" data-label="<%-shortcut.title%>">
+						<a href="#" class="open-window btn btn-sm position-relative z-2" data-url="<%-shortcut.url%>" data-label="<%-shortcut.title%>" data-icon="<%-shortcut.icon%>">
 							<i class="icon-regular icon-window icon-fw text-secondary"></i>
 						</a>
 					</div>

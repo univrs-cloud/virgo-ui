@@ -1,6 +1,7 @@
 import 'assets/scss/index.scss';
 import 'libs/lodash';
 import 'libs/bootstrap';
+import 'libs/primary_menu';
 import 'libs/dialog';
 import 'libs/components';
 import * as runtimeService from 'libs/services/runtime';

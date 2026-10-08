@@ -5,7 +5,9 @@ import nodePickerPartial from 'fleet/partials/node_picker.html';
 import * as account from 'node/account';
 import * as softwareService from 'node/services/software';
 import * as nodeService from 'node/services/node';
+import * as windowService from 'node/services/window';
 import page from 'page';
+import Sortable from 'sortablejs';
 import { getNodeViewId } from 'node/view';
 
 const headerTemplate = _.template(headerPartial);
@@ -13,7 +15,6 @@ const navigationTemplate = _.template(navigationPartial);
 const navigationWindowsTemplate = _.template(navigationWindowsPartial);
 const nodePickerTemplate = _.template(nodePickerPartial);
 const header = document.querySelector('header');
-const windowManager = document.querySelector('u-window-manager');
 
 const renderNavigation = async (state) => {
 	if (!state.updates) {
@@ -35,7 +36,7 @@ const renderNavigation = async (state) => {
 };
 
 const renderWindows = () => {
-	const windows = `<div>${navigationWindowsTemplate({ windows: windowManager.windows })}</div>`;
+	const windows = `<div>${navigationWindowsTemplate({ windows: windowService.getWindows() })}</div>`;
 	_.each(document.querySelectorAll('header .navbar .nav .windows'), (container) => {
 		morphdom(container, windows, { childrenOnly: true });
 	});
@@ -43,7 +44,7 @@ const renderWindows = () => {
 };
 
 const syncActivePage = () => {
-	const isWindowPage = _.some(windowManager.windows, (item) => { return item.maximized && !item.minimized; });
+	const isWindowPage = _.some(windowService.getWindows(), (item) => { return item.maximized && !item.minimized; });
 	_.each(document.querySelectorAll('header .navbar .nav'), (nav) => {
 		if (!nav.dataset.module) {
 			return;
@@ -57,7 +58,7 @@ const syncActivePage = () => {
 
 const handlePageClick = (event) => {
 	if (event.target.closest('.nav-link:not(.nav-window)')) {
-		windowManager.background();
+		windowService.background();
 	}
 };
 
@@ -68,26 +69,22 @@ const handleWindowClick = (event) => {
 	}
 
 	event.preventDefault();
-	const item = document.getElementById(link.dataset.windowId);
 	if (event.target.closest('.close-window')) {
-		item?.close();
+		windowService.close(link.dataset.windowId);
 		return;
 	}
 
 	if (event.target.closest('.unmaximize-window')) {
-		if (item) {
-			item.maximized = false;
-			item.restore();
-		}
+		windowService.unmaximize(link.dataset.windowId);
 		return;
 	}
 
-	if ((item?.active || item?.maximized) && !item.minimized) {
-		item.minimize();
-		return;
-	}
+	windowService.toggle(link.dataset.windowId);
+};
 
-	item?.restore();
+const reorderWindows = (event) => {
+	event.item.style.opacity = '1';
+	windowService.setOrder(_.map(event.to.querySelectorAll('.nav-window'), (link) => { return link.dataset.windowId; }));
 };
 
 const renderNodePicker = (state) => {
@@ -116,10 +113,17 @@ account.init();
 
 header.addEventListener('click', handleWindowClick);
 header.addEventListener('click', handlePageClick);
-windowManager.addEventListener('windows-change', renderWindows);
-document.addEventListener('update-mode', () => { windowManager.closeAll(); });
+document.addEventListener('update-mode', () => { windowService.closeAll(); });
 
 softwareService.subscribeToUpdates([renderNavigation]);
+windowService.subscribe([renderWindows]);
+new Sortable(header.querySelector('.navbar .nav .windows'), {
+	animation: 150,
+	onStart: (event) => {
+		event.item.style.opacity = '0.5';
+	},
+	onEnd: reorderWindows
+});
 
 if (runtimeRole === 'fleet') {
 	nodeService.subscribe([renderNodePicker]);

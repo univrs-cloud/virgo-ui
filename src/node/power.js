@@ -1,4 +1,5 @@
 import * as powerService from 'node/services/power';
+import * as windowService from 'node/services/window';
 
 const container = document.querySelector('#power');
 let wasRebooting = false;
@@ -18,7 +19,7 @@ const render = (state) => {
 			return;
 		}
 
-		window.windowManager.closeAll();
+		windowService.closeAll();
 		if (!isAdmin) {
 			return;
 		}
@@ -37,7 +38,7 @@ const render = (state) => {
 			location.replace('/');
 			return;
 		}
-		window.windowManager.closeAll();
+		windowService.closeAll();
 		container.querySelector('.powered-off').classList.remove('d-none');
 		document.body.classList.add('powered-off');
 		container.classList.remove('d-none');
