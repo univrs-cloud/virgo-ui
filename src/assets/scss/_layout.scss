@@ -104,6 +104,10 @@ header,
 	.window-icon {
 		width: 1.25rem;
 		height: 1.25rem;
+		@supports (corner-shape: squircle) {
+			border-radius: 50% !important;
+			corner-shape: squircle;
+		}
 		img {
 			object-fit: contain;
 			width: 1rem;
