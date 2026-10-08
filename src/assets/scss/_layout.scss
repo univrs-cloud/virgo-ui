@@ -438,6 +438,9 @@ html:not(:has(head > base[href="/"])) {
 		&:has(nav) .navbar.navbar-position {
 			right: auto;
 			width: var(--menu-width);
+			.navbar-brand {
+				margin-left: -0.375rem;
+			}
 		}
 		// Setup, and the auth screens that leave the header empty, have no sidebar to make room for.
 		&:not(:has(nav)) ~ main {
