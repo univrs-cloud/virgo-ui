@@ -502,7 +502,7 @@ html:not(:has(head > base[href="/"])) {
 				u-badge {
 					position: absolute;
 					top: 0;
-					right: 0;
+					right: -0.45rem;
 					transform: scale(0.7);
 					transform-origin: top right;
 				}
