@@ -346,6 +346,7 @@ html:not(:has(head > base[href="/"])) {
 				padding-left: 0.125rem !important;
 			}
 			.nav-pills {
+				--bs-nav-link-padding-y: 0.375rem;
 				&::before,
 				&::after {
 					content: "";
