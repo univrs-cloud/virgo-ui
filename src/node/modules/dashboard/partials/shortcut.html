@@ -18,7 +18,7 @@
 			</div>
 		</div>
 		<%if (!_.isEmpty(shortcut.url)) {%>
-			<a href="<%-shortcut.url%>" target="<%-(shortcut?.target || shortcut.name)%>" class="stretched-link"></a>
+			<a href="<%-shortcut.url%>" target="<%-(shortcut?.target || shortcut.name)%>" referrerpolicy="no-referrer" class="stretched-link"></a>
 		<%}%>
 	</div>
 </div>
