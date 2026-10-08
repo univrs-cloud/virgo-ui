@@ -1,20 +1,45 @@
 <div class="col col-12">
-	<div class="card rounded-4 border-0 mb-0">
-		<div class="card-body">
-			<div class="dropdown float-end mt-n1">
-				<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
-				<div class="dropdown-menu">
-					<a href="#profile-edit" class="dropdown-item" data-bs-toggle="modal"><i class="icon-regular icon-pen icon-fw me-1"></i>Edit profile</a>
-					<a href="#profile-password" class="dropdown-item" data-bs-toggle="modal"><i class="icon-regular icon-key icon-fw me-1"></i>Change password</a>
+	<div class="row gx-4 gy-2">
+		<div class="col-12 col-lg-4 col-xxl-3">
+			<h6 class="m-0">Account</h6>
+			<p class="text-body-secondary small mt-1 mb-0">Your name and email address on this node.</p>
+		</div>
+		<div class="col-12 col-lg-8 col-xxl-9">
+			<div class="card rounded-4 border-0 mb-0">
+				<div class="card-body">
+					<div class="d-flex align-items-center gap-3">
+						<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-circle bg-blue-100 text-blue-500 fs-5 text-uppercase align-self-start"><%-_.head(user.fullname || user.username)%></div>
+						<div class="min-w-0 me-auto">
+							<div class="fs-5 lh-1 text-break"><%-user.fullname || user.username%></div>
+							<div class="d-flex flex-wrap gap-2" style="margin-top: 0.3125rem;">
+								<u-badge color="gray" tint="200" pill><small><span class="fw-lighter me-1">Username</span><%-user.username%></small></u-badge>
+								<u-badge color="gray" tint="200" pill><small><span class="fw-lighter me-1">Email address</span><%-user.email || '—'%></small></u-badge>
+							</div>
+						</div>
+						<a href="#profile-edit" class="btn btn-link text-nowrap align-self-start border-0 px-0 py-2 mt-1" data-bs-toggle="modal"><i class="icon-regular icon-pen icon-fw me-1"></i>Edit</a>
+					</div>
 				</div>
 			</div>
-			<h5 class="card-title d-flex align-items-center"><%-user.fullname || user.username%></h5>
-			<dl class="m-0">
-				<dt class="fw-lighter"><small>Username</small></dt>
-				<dd><%-user.username%></dd>
-				<dt class="fw-lighter"><small>Email address</small></dt>
-				<dd class="m-0"><%-user.email || '—'%></dd>
-			</dl>
+		</div>
+	</div>
+</div>
+
+<div class="col col-12">
+	<div class="row gx-4 gy-2">
+		<div class="col-12 col-lg-4 col-xxl-3">
+			<h6 class="m-0">Password</h6>
+			<p class="text-body-secondary small mt-1 mb-0">The password you log in with.</p>
+		</div>
+		<div class="col-12 col-lg-8 col-xxl-9">
+			<div class="card rounded-4 border-0 mb-0">
+				<div class="card-body">
+					<div class="d-flex align-items-center gap-3">
+						<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-3 bg-blue-100 text-blue-500 align-self-start"><i class="icon-duotone icon-solid icon-key"></i></div>
+						<div class="min-w-0 me-auto">Password</div>
+						<a href="#profile-password" class="btn btn-link text-nowrap align-self-start border-0 px-0 py-2 mt-1" data-bs-toggle="modal"><i class="icon-regular icon-pen icon-fw me-1"></i>Change</a>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

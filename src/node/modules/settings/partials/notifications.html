@@ -1,43 +1,60 @@
 <div class="col col-12">
-	<div class="card rounded-4 border-0 mb-0">
-		<div class="card-body">
-			<a href="#smtp" class="btn btn-link p-0 float-end" data-bs-toggle="modal"><i class="icon-regular icon-pen icon-fw me-1"></i>Edit</a>
-			<h5 class="card-title d-flex align-items-center">Notifications</h5>
-			<%if (_.isNull(smtp)) {%>
-				Not configured
-			<%} else {%>
-				<dl class="m-0">
-					<h6>SMTP server</h6>
-					<dt class="fw-lighter"><small>Encryption</small></dt>
-					<dd><%=(smtp?.encryption?.toLowerCase() === 'ssl' ? 'SSL' : 'None/StartTLS')%></dd>
-					<dt class="fw-lighter"><small>SMTP server</small></dt>
-					<dd><%-smtp?.address%></dd>
-					<dt class="fw-lighter"><small>Port</small></dt>
-					<dd><%-smtp?.port%></dd>
-					<dt class="fw-lighter"><small>SMTP username</small></dt>
-					<dd><%-smtp?.username%></dd>
-					<dt class="fw-lighter"><small>Sender email address</small></dt>
-					<dd><%-smtp?.sender%></dd>
-
-					<hr class="border-secondary-subtle my-4">
-
-					<h6>Recipients</h6>
-					<dd class="m-0">
-						<div class="recipients">
-							<%if (!smtp?.recipients) {%>
-								<span class="text-danger">No recipient configured</span>
-							<%} else {%>
-								<%_.each(smtp?.recipients, (recipient) => {%>
-									<div class="d-flex align-items-center">
-										<i class="icon-light icon-user me-2"></i>
-										<div><%-recipient%></div>
-									</div>
-								<%})%>
-							<%}%>
+	<div class="row gx-4 gy-2">
+		<div class="col-12 col-lg-4 col-xxl-3">
+			<h6 class="m-0">Notifications</h6>
+			<p class="text-body-secondary small mt-1 mb-0">The mail server the node sends its emails through, and who receives them.</p>
+		</div>
+		<div class="col-12 col-lg-8 col-xxl-9">
+			<div class="card rounded-4 border-0 mb-0">
+				<div class="card-body">
+					<%if (_.isNull(smtp)) {%>
+						<div class="d-flex align-items-center gap-3">
+							<div class="me-auto">Not configured</div>
+							<a href="#smtp" class="btn btn-link text-nowrap p-0" data-bs-toggle="modal"><i class="icon-regular icon-pen icon-fw me-1"></i>Edit</a>
 						</div>
-					</dd>
-				</dl>
-			<%}%>
+					<%} else {%>
+						<div class="d-flex align-items-center gap-3 mb-2">
+							<h6 class="me-auto mb-0">SMTP server</h6>
+							<a href="#smtp" class="btn btn-link text-nowrap p-0" data-bs-toggle="modal"><i class="icon-regular icon-pen icon-fw me-1"></i>Edit</a>
+						</div>
+						<dl class="row row-cols-1 row-cols-sm-2 row-cols-xl-3 g-3 mb-0">
+							<div class="col min-w-0">
+								<dt class="fw-lighter lh-1"><small>SMTP server</small></dt>
+								<dd class="m-0 text-break"><%-smtp?.address%></dd>
+							</div>
+							<div class="col min-w-0">
+								<dt class="fw-lighter lh-1"><small>Port</small></dt>
+								<dd class="m-0"><%-smtp?.port%></dd>
+							</div>
+							<div class="col min-w-0">
+								<dt class="fw-lighter lh-1"><small>Encryption</small></dt>
+								<dd class="m-0"><%=(smtp?.encryption?.toLowerCase() === 'ssl' ? 'SSL' : 'None/StartTLS')%></dd>
+							</div>
+							<div class="col min-w-0">
+								<dt class="fw-lighter lh-1"><small>SMTP username</small></dt>
+								<dd class="m-0 text-break"><%-smtp?.username%></dd>
+							</div>
+							<div class="col min-w-0">
+								<dt class="fw-lighter lh-1"><small>Sender email address</small></dt>
+								<dd class="m-0 text-break"><%-smtp?.sender%></dd>
+							</div>
+						</dl>
+
+						<hr class="border-secondary-subtle my-4">
+
+						<h6>Recipients</h6>
+						<%if (!smtp?.recipients) {%>
+							<span class="text-danger">No recipient configured</span>
+						<%} else {%>
+							<div class="d-flex flex-wrap gap-2">
+								<%_.each(smtp?.recipients, (recipient) => {%>
+									<u-badge color="gray" tint="200" pill><i class="icon-light icon-user me-1"></i><%-recipient%></u-badge>
+								<%})%>
+							</div>
+						<%}%>
+					<%}%>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

@@ -1,9 +1,31 @@
 <div class="col col-12">
-	<div class="card rounded-4 border-0 mb-0">
-		<div class="card-body">
-			<h5 class="card-title">Power</h5>
-			<u-button variant="danger" size="sm" data-action="reboot">Reboot</u-button>
-			<u-button variant="danger" size="sm" class="d-none" data-action="shut-down">Shut down</u-button>
+	<div class="row gx-4 gy-2">
+		<div class="col-12 col-lg-4 col-xxl-3">
+			<h6 class="m-0">Power</h6>
+			<p class="text-body-secondary small mt-1 mb-0">Restart or shut down the node.</p>
+		</div>
+		<div class="col-12 col-lg-8 col-xxl-9">
+			<div class="card rounded-4 border-0 mb-0">
+				<div class="card-body">
+					<div class="d-flex align-items-center gap-3">
+						<div class="min-w-0 me-auto">
+							<div>Reboot</div>
+							<small class="d-block text-body-tertiary">The node and its apps are unavailable until it is back.</small>
+						</div>
+						<u-button variant="danger" size="sm" class="flex-shrink-0" data-action="reboot">Reboot</u-button>
+					</div>
+
+					<hr class="border-secondary-subtle my-3">
+
+					<div class="d-flex align-items-center gap-3">
+						<div class="min-w-0 me-auto">
+							<div>Shut down</div>
+							<small class="d-block text-body-tertiary">The node stays off until you power it on again.</small>
+						</div>
+						<u-button variant="danger" size="sm" class="flex-shrink-0" data-action="shut-down">Shut down</u-button>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

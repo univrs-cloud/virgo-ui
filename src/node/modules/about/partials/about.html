@@ -1,42 +1,125 @@
 <div class="col col-12">
-	<div class="card rounded-4 border-0 mb-0">
-		<div class="card-body">
-			<h5 class="card-title d-flex align-items-center">Software</h5>
-			<dl class="m-0">
-				<dt class="fw-lighter"><small>UI version</small></dt>
-				<dd><%-VERSION%></dd>
-				<dt class="fw-lighter"><small>API version</small></dt>
-				<dd><%-system?.api?.version%></dd>
-				<dt class="fw-lighter"><small>ZFS version</small></dt>
-				<dd><%-system?.zfs?.version%></dd>
-				<dt class="fw-lighter"><small>Kernel version</small></dt>
-				<dd class="m-0"><%-system?.osInfo?.kernel%></dd>
-			</dl>
+	<div class="row gx-4 gy-2">
+		<div class="col-12 col-lg-4 col-xxl-3">
+			<h6 class="m-0">Software</h6>
+			<p class="text-body-secondary small mt-1 mb-0">The versions running on this node.</p>
+		</div>
+		<div class="col-12 col-lg-8 col-xxl-9">
+			<div class="card rounded-4 border-0 mb-0">
+				<div class="card-body">
+					<dl class="row row-cols-2 row-cols-xl-4 g-3 mb-0">
+						<div class="col min-w-0">
+							<dt class="fw-lighter lh-1"><small>UI version</small></dt>
+							<dd class="m-0 fs-5 text-break"><%-VERSION%></dd>
+						</div>
+						<div class="col min-w-0">
+							<dt class="fw-lighter lh-1"><small>API version</small></dt>
+							<dd class="m-0 fs-5 text-break"><%-system?.api?.version%></dd>
+						</div>
+						<div class="col min-w-0">
+							<dt class="fw-lighter lh-1"><small>ZFS version</small></dt>
+							<dd class="m-0 fs-5 text-break"><%-system?.zfs?.version%></dd>
+						</div>
+						<div class="col min-w-0">
+							<dt class="fw-lighter lh-1"><small>Kernel version</small></dt>
+							<dd class="m-0 fs-5 text-break"><%-system?.osInfo?.kernel%></dd>
+						</div>
+					</dl>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
 
 <div class="col col-12">
-	<div class="card rounded-4 border-0 mb-0">
-		<div class="card-body">
-			<h5 class="card-title d-flex align-items-center">Hardware</h5>
-			<dl class="m-0">
-				<dt class="fw-lighter"><small>Serial number</small></dt>
-				<dd><%-system?.serial%></dd>
-				<dt class="fw-lighter"><small>CPU</small></dt>
-				<dd><%-system?.cpu?.cores%>x <%-system?.cpu?.vendor%> <%-system?.cpu?.family%> @ <%-system?.cpu?.speedMax%> GHz</dd>
-				<dt class="fw-lighter"><small>RAM</small></dt>
-				<dd><%=prettyBytes(memory.total || 0, { binary: true })%></dd>
-				<dt class="fw-lighter"><small>Network</small></dt>
-				<dd><%=prettyBytes((networkInterface?.speed || 0) * 1000 * 1000, { bits: true })%>/s <small class="text-body-tertiary">(MAC: <%-networkInterface?.address%>)</small></dd>
-				<dt class="fw-lighter"><small>Drives</small></dt>
-				<dd class="m-0">
-					<%_.each(drives, (drive) => {%>
-						<div><%-drive.model%> @ <%=prettyBytes(drive.capacity.bytes || 0, { binary: true })%></div>
-						<small class="d-block text-body-tertiary mt-n1">SN: <%-drive.serialNumber%></small>
-					<%})%>
-				</dd>
-			</dl>
+	<div class="row gx-4 gy-2">
+		<div class="col-12 col-lg-4 col-xxl-3">
+			<h6 class="m-0">Hardware</h6>
+			<p class="text-body-secondary small mt-1 mb-0">What this node is built from.</p>
+		</div>
+		<div class="col-12 col-lg-8 col-xxl-9">
+			<div class="card rounded-4 border-0 mb-0">
+				<div class="card-body">
+					<div class="row row-cols-1 row-cols-sm-2 g-3">
+						<div class="col min-w-0">
+							<div class="d-flex align-items-center gap-3">
+								<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-3 bg-blue-100 text-blue-500"><i class="icon-duotone icon-solid icon-fingerprint"></i></div>
+								<div class="min-w-0">
+									<small class="d-block fw-lighter lh-1">Serial number</small>
+									<div class="d-flex align-items-center">
+										<div class="text-truncate"><%-system?.serial%></div>
+										<a href="#" class="link-secondary flex-shrink-0 ms-2" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-original-title="Copy serial number"><i class="icon-regular icon-copy icon-sm"></i></a>
+										<span class="copy d-none"><%-system?.serial%></span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col min-w-0">
+							<div class="d-flex align-items-center gap-3">
+								<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-3 bg-blue-100 text-blue-500"><i class="icon-duotone icon-solid icon-microchip"></i></div>
+								<div class="min-w-0">
+									<small class="d-block fw-lighter lh-1">CPU</small>
+									<div><%-system?.cpu?.cores%>x <%-system?.cpu?.vendor%> <%-system?.cpu?.family%> @ <%-system?.cpu?.speedMax%> GHz</div>
+								</div>
+							</div>
+						</div>
+						<div class="col min-w-0">
+							<div class="d-flex align-items-center gap-3">
+								<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-3 bg-blue-100 text-blue-500"><i class="icon-duotone icon-solid icon-memory"></i></div>
+								<div class="min-w-0">
+									<small class="d-block fw-lighter lh-1">RAM</small>
+									<div><%=prettyBytes(memory.total || 0, { binary: true })%></div>
+								</div>
+							</div>
+						</div>
+						<div class="col min-w-0">
+							<div class="d-flex align-items-center gap-3">
+								<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-3 bg-blue-100 text-blue-500"><i class="icon-duotone icon-solid icon-ethernet"></i></div>
+								<div class="min-w-0">
+									<small class="d-block fw-lighter lh-1">Network</small>
+									<div><%=prettyBytes((networkInterface?.speed || 0) * 1000 * 1000, { bits: true })%>/s <small class="text-body-tertiary">(MAC: <%-networkInterface?.address%>)</small></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="col col-12">
+	<div class="row gx-4 gy-2">
+		<div class="col-12 col-lg-4 col-xxl-3">
+			<h6 class="m-0">Drives</h6>
+			<p class="text-body-secondary small mt-1 mb-0">The storage drives installed in this node.</p>
+		</div>
+		<div class="col-12 col-lg-8 col-xxl-9">
+			<div class="card rounded-4 border-0 mb-0">
+				<div class="card-body">
+					<div class="row row-cols-1 row-cols-sm-2 g-3">
+						<%_.each(drives, (drive) => {%>
+							<div class="col min-w-0">
+								<div class="d-flex align-items-center gap-3">
+									<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-3 bg-blue-100 text-blue-500"><i class="icon-duotone icon-solid icon-hard-drive"></i></div>
+									<div class="min-w-0">
+										<div class="d-flex align-items-center">
+											<div class="text-truncate"><%-drive.model%> @ <%=prettyBytes(drive.capacity.bytes || 0, { binary: true })%></div>
+											<a href="#" class="link-secondary flex-shrink-0 ms-2" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-original-title="Copy model"><i class="icon-regular icon-copy icon-sm"></i></a>
+											<span class="copy d-none"><%-drive.model%></span>
+										</div>
+										<div class="d-flex align-items-center">
+											<small class="text-body-tertiary text-truncate">SN: <%-drive.serialNumber%></small>
+											<a href="#" class="link-secondary flex-shrink-0 ms-2" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-original-title="Copy serial number"><i class="icon-regular icon-copy icon-sm"></i></a>
+											<span class="copy d-none"><%-drive.serialNumber%></span>
+										</div>
+									</div>
+								</div>
+							</div>
+						<%})%>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

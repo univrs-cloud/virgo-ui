@@ -1,21 +1,50 @@
 <div class="col-12 position-relative mb-3">
-	<h5 class="d-flex align-items-center m-0">
-		<%if (update.state === 'succeeded') {%>
-			<i class="icon-duotone icon-solid icon-circle-check icon-fw me-2" style="--icon-secondary-color: var(--bs-green);"></i>
-			Update succeeded
-		<%} else if (update.state === 'failed') {%>
-			<i class="icon-duotone icon-solid icon-circle-xmark icon-fw me-2" style="--icon-secondary-color: var(--bs-red);"></i>
-			Something went wrong, could not update
-		<%} else {%>
-			<div class="spinner-border spinner-border-sm me-2"></div>
-			Updating...
-		<%}%>
+	<h5 class="m-0">
+		<i class="icon-duotone icon-solid icon-download icon-fw me-1"></i>
+		Updates
 	</h5>
 </div>
-<div class="steps text-secondary">
+<div class="steps col-12">
 	<div class="card rounded-4 border-0">
-		<div class="card-body">
-			<ul>
+		<div class="card-body d-flex flex-column">
+			<div class="d-flex align-items-center gap-3">
+				<%if (update.state === 'succeeded') {%>
+					<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-3 bg-green-100 text-green-500"><i class="icon-solid icon-check"></i></div>
+				<%} else if (update.state === 'failed') {%>
+					<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-3 bg-red-100 text-red-500"><i class="icon-solid icon-xmark"></i></div>
+				<%} else {%>
+					<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-3 bg-blue-100 text-blue-500"><div class="spinner-border spinner-border-sm"></div></div>
+				<%}%>
+				<div class="min-w-0 flex-fill">
+					<%if (update.state === 'succeeded') {%>
+						<div class="fs-5 lh-sm">Update succeeded</div>
+						<%if (update.isRebootRequired) {%>
+							<small class="d-block text-body-tertiary lh-sm">A reboot is necessary to make recent changes take effect.</small>
+						<%}%>
+					<%} else if (update.state === 'failed') {%>
+						<div class="fs-5 lh-sm">Something went wrong, could not update</div>
+					<%} else if (update.progress) {%>
+						<div class="d-flex align-items-center justify-content-between mb-1">
+							<span class="fs-5 lh-sm"><%=(update.progress.stage === 'download' ? 'Downloading' : 'Installing')%></span>
+							<span class="text-body-tertiary"><%=update.progress.percent%>%</span>
+						</div>
+						<u-progress>
+							<u-progress-bar color="<%=(update.progress.stage === 'download' ? 'cyan' : 'blue')%>" tint="300" width="<%=update.progress.percent%>" striped animated warning-threshold="101" danger-threshold="101"></u-progress-bar>
+						</u-progress>
+					<%} else {%>
+						<div class="fs-5 lh-sm">Updating...</div>
+					<%}%>
+				</div>
+				<%if (update.isRebootRequired) {%>
+					<u-button variant="danger" class="flex-shrink-0 <%=(!_.includes(['succeeded', 'failed'], update.state) ? 'd-none' : '')%>" data-action="reboot">Reboot</u-button>
+				<%} else {%>
+					<u-button variant="primary" class="flex-shrink-0 <%=(!_.includes(['succeeded', 'failed'], update.state) ? 'd-none' : '')%>" data-action="complete">Continue</u-button>
+				<%}%>
+			</div>
+
+			<hr class="border-secondary-subtle flex-shrink-0 my-3">
+
+			<ul class="list-unstyled overflow-y-scroll flex-fill font-monospace small text-secondary pe-3 me-n3 mb-0">
 				<%_.each(update.steps, (step) => {%>
 					<%if (_.includes(step, '\r')) {%>
 						<%step = _.last(_.initial(_.split(step, '\r')))%>
@@ -24,31 +53,7 @@
 						<li><%-step%></li>
 					<%}%>
 				<%})%>
-				<%if (update.state === 'succeeded') {%>
-					<li class="text-success">Update succeeded</li>
-				<%}%>
-				<%if (update.state === 'failed') {%>
-					<li class="text-danger">Something went wrong, could not update.</li>
-				<%}%>
 			</ul>
-			<div class="d-flex align-items-center mt-4" style="min-height: 2.375rem;">
-				<%if (update.state === 'running' && update.progress) {%>
-					<div class="flex-fill">
-						<div class="d-flex justify-content-between mb-1">
-							<span><%=(update.progress.stage === 'download' ? 'Downloading' : 'Installing')%></span>
-							<span><%=update.progress.percent%>%</span>
-						</div>
-						<u-progress>
-							<u-progress-bar color="<%=(update.progress.stage === 'download' ? 'cyan' : 'blue')%>" tint="300" width="<%=update.progress.percent%>" striped animated warning-threshold="101" danger-threshold="101"></u-progress-bar>
-						</u-progress>
-					</div>
-				<%}%>
-				<%if (update.isRebootRequired) {%>
-					<u-button variant="danger" class="ms-auto <%=(!_.includes(['succeeded', 'failed'], update.state) ? 'd-none' : '')%>" data-action="reboot">Reboot</u-button>
-				<%} else {%>
-					<u-button variant="primary" class="ms-auto <%=(!_.includes(['succeeded', 'failed'], update.state) ? 'd-none' : '')%>" data-action="complete">Continue</u-button>
-				<%}%>
-			</div>
 		</div>
 	</div>
 </div>
