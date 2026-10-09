@@ -7,7 +7,7 @@ const modal = document.querySelector('#fleet-user-password');
 const form = modal.querySelector('u-form');
 
 const changePassword = async () => {
-	const buttons = form.querySelectorAll('.modal-footer u-button');
+	const buttons = form.querySelectorAll('.dialog-footer u-button');
 	_.each(buttons, (button) => { button.disabled = true; });
 	const { currentPassword, password } = form.getData();
 	try {
@@ -68,5 +68,5 @@ form.validation = [
 	}
 ];
 form.addEventListener('valid', changePassword);
-modal.addEventListener('show.bs.modal', render);
-modal.addEventListener('hidden.bs.modal', restore);
+modal.addEventListener('show.bs.dialog', render);
+modal.addEventListener('hidden.bs.dialog', restore);

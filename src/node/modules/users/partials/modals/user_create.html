@@ -1,27 +1,23 @@
-<div id="user-create" class="modal fade">
+<dialog id="user-create" class="dialog dialog-scrollable">
 	<u-form>
-		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">New user</h5>
-				</div>
-				<div class="modal-body">
-					<u-input name="fullname" label="Name" class="fullname"></u-input>
-					<u-input type="email" name="email" label="Email address" class="email"></u-input>
+		<div class="dialog-header">
+			<h1 class="dialog-title">New user</h1>
+		</div>
+		<div class="dialog-body">
+			<u-input name="fullname" label="Name" class="fullname"></u-input>
+			<u-input type="email" name="email" label="Email address" class="email"></u-input>
 
-					<div class="mb-2">&nbsp;</div>
+			<div class="mb-3">&nbsp;</div>
 
-					<u-input name="username" label="Username" class="username"></u-input>
-					<u-input type="password" name="password" label="Password" class="password" autocomplete="off"></u-input>
-					<u-input type="password" name="passwordCheck" label="Confirm password" class="password-check" autocomplete="off"></u-input>
+			<u-input name="username" label="Username" class="username"></u-input>
+			<u-input type="password" name="password" label="Password" class="password" autocomplete="off"></u-input>
+			<u-input type="password" name="passwordCheck" label="Confirm password" class="password-check" autocomplete="off"></u-input>
 
-					<u-checkbox name="role" on-value="admin" off-value="" label="Has administrator role?"></u-checkbox>
-				</div>
-				<div class="modal-footer">
-					<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="modal" outline>Cancel</u-button>
-					<u-button type="submit" variant="primary">Create</u-button>
-				</div>
-			</div>
+			<u-checkbox name="role" on-value="admin" off-value="" label="Has administrator role?"></u-checkbox>
+		</div>
+		<div class="dialog-footer">
+			<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="dialog" outline>Cancel</u-button>
+			<u-button type="submit" variant="primary">Create</u-button>
 		</div>
 	</u-form>
-</div>
+</dialog>

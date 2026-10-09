@@ -1,18 +1,14 @@
-<div id="trusted-proxy-add" class="modal fade">
+<dialog id="trusted-proxy-add" class="dialog dialog-sm dialog-scrollable">
 	<u-form>
-		<div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">Add trusted proxy</h5>
-				</div>
-				<div class="modal-body">
-					<u-input name="address" label="Address" class="address" placeholder="IP, CIDR, or hostname"></u-input>
-				</div>
-				<div class="modal-footer">
-					<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="modal" outline>Cancel</u-button>
-					<u-button type="submit" variant="primary">Add</u-button>
-				</div>
-			</div>
+		<div class="dialog-header">
+			<h1 class="dialog-title">Add trusted proxy</h1>
+		</div>
+		<div class="dialog-body">
+			<u-input name="address" label="Address" class="address" placeholder="IP, CIDR, or hostname"></u-input>
+		</div>
+		<div class="dialog-footer">
+			<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="dialog" outline>Cancel</u-button>
+			<u-button type="submit" variant="primary">Add</u-button>
 		</div>
 	</u-form>
-</div>
+</dialog>

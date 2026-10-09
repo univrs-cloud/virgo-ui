@@ -12,7 +12,7 @@ const lockUser = async (event) => {
 	const row = button.closest('.item');
 	const user = _.find(userService.getUsers(), { uid: Number(row.dataset.uid) });
 	
-	if (!await confirm(`Are you sure you want to lock the user ${user.username}?`, { buttons: [{ text: 'Lock', class: 'btn-danger' }] })) {
+	if (!await confirm(`Are you sure you want to lock the user ${user.username}?`, { buttons: [{ text: 'Lock', class: 'btn-solid theme-danger' }] })) {
 		return;
 	}
 

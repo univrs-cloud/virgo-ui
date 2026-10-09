@@ -1,53 +1,37 @@
 (() => {
-	document.body.addEventListener('show.bs.modal', (event) => {
-		const modal = event.target;
-		const bootstrapModalBackdropZIndex = 1055;
-		const modalZIndex = _.size(document.body.querySelectorAll('.modal.show')) + bootstrapModalBackdropZIndex + 1;
-		modal.style.zIndex = modalZIndex;
-	});
-	document.body.addEventListener('hidden.bs.modal', (event) => {
-		if (!_.isNull(document.body.querySelector('.modal.show'))) {
-			document.body.classList.add('modal-open');
-		}
-	});
-
 	const createModal = (title, content, buttons, focusIndex = 0, escValue = null, acknowledge = null) => {
 		return new Promise((resolve) => {
 			const modalId = `dialog-${Math.random().toString(36).slice(2)}`;
 			const acknowledgeHtml = (acknowledge ? `
-								<div class="form-check">
-									<input class="form-check-input" type="checkbox" id="${modalId}-acknowledge">
-									<label class="form-check-label" for="${modalId}-acknowledge">${acknowledge}</label>
+								<div class="form-field">
+									<input class="check" type="checkbox" id="${modalId}-acknowledge">
+									<label for="${modalId}-acknowledge">${acknowledge}</label>
 								</div>
 			` : '');
 			const modalHtml = `
-				<div id="${modalId}" class="modal fade" tabindex="-1">
-					<div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title">${title}</h5>
-							</div>
-							<div class="modal-body">
-								<p${acknowledge ? '' : ' class="m-0"'}>${content}</p>
-								${acknowledgeHtml}
-							</div>
-							<div class="modal-footer">
-								${_.join(
-									_.map(_.reverse(buttons), (button, index, array) => {
-										const reversedIndex = (array.length - 1) - index;
-										return `<button type="button" class="btn ${button.class}" data-value="${button.value}" data-index="${reversedIndex}">${button.text}</button>`;
-									})
-								, '')}
-							</div>
-						</div>
+				<dialog id="${modalId}" class="dialog dialog-sm dialog-scrollable" tabindex="-1" data-bs-keyboard="true">
+					<div class="dialog-header">
+						<h1 class="dialog-title">${title}</h1>
 					</div>
-				</div>
+					<div class="dialog-body">
+						<p${acknowledge ? '' : ' class="m-0"'}>${content}</p>
+						${acknowledgeHtml}
+					</div>
+					<div class="dialog-footer">
+						${_.join(
+							_.map(_.reverse(buttons), (button, index, array) => {
+								const reversedIndex = (array.length - 1) - index;
+								return `<button type="button" class="${button.class}" data-value="${button.value}" data-index="${reversedIndex}">${button.text}</button>`;
+							})
+						, '')}
+					</div>
+				</dialog>
 			`;
 
 			document.body.insertAdjacentHTML('beforeend', modalHtml);
 			const modalElement = document.getElementById(modalId);
-			const acknowledgeInput = modalElement.querySelector('.form-check-input');
-			const confirmButton = modalElement.querySelector('.modal-footer .btn[data-index="0"]');
+			const acknowledgeInput = modalElement.querySelector('.check');
+			const confirmButton = modalElement.querySelector('.dialog-footer button[data-index="0"]');
 			if (acknowledgeInput && confirmButton) {
 				confirmButton.disabled = true;
 				acknowledgeInput.addEventListener('change', () => {
@@ -56,11 +40,11 @@
 			}
 
 			// Show the modal
-			const bootstrapModal = new bootstrap.Modal(modalElement, { keyboard: true });
+			const bootstrapModal = new bootstrap.Dialog(modalElement, { keyboard: true });
 			bootstrapModal.show();
 
 			// Handle button clicks
-			modalElement.querySelectorAll('.modal-footer .btn').forEach((button) => {
+			modalElement.querySelectorAll('.dialog-footer button').forEach((button) => {
 				button.addEventListener('click', (event) => {
 					const value = event.target.dataset.value;
 					resolve(value);
@@ -69,27 +53,27 @@
 			});
 
 			// Handle Esc key
-			modalElement.addEventListener('hidden.bs.modal', () => {
+			modalElement.addEventListener('hidden.bs.dialog', () => {
 				resolve(escValue);
 				modalElement.remove();
 			});
 
 			// Set focus on the specified button
-			bootstrapModal._element.addEventListener('shown.bs.modal', (event) => {
-				modalElement.querySelector(`.modal-footer .btn[data-index="${focusIndex}"]`)?.focus();
+			bootstrapModal._element.addEventListener('shown.bs.dialog', (event) => {
+				modalElement.querySelector(`.dialog-footer button[data-index="${focusIndex}"]`)?.focus();
 			});
 		});
 	}
 
 	window.alert = async (text) => {
-		const buttons = [{ text: 'OK', class: 'btn-primary', value: true }];
+		const buttons = [{ text: 'OK', class: 'btn-solid theme-primary', value: true }];
 		await createModal('Alert', text, buttons);
 	};
 
 	window.confirm = async (text, options = {}) => {
 		const defaultButtons = [
-			{ text: 'OK', class: 'btn-primary', value: true },
-			{ text: 'Cancel', class: 'btn-outline-secondary d-flex ms-auto', value: false }
+			{ text: 'OK', class: 'btn-solid theme-primary', value: true },
+			{ text: 'Cancel', class: 'btn-outline theme-secondary d-flex ms-auto', value: false }
 		];
 		const buttons = _.map(defaultButtons, (defaultBtn, index) => {
 			const override = options.buttons?.[index] ?? {};

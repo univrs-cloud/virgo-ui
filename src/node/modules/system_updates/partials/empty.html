@@ -1,20 +1,20 @@
-<div class="col col-12 mb-3">
-	<div class="row gx-4 gy-2">
-		<div class="col-12 col-lg-4 col-xxl-3">
-			<h6 class="m-0">virgoOS</h6>
-			<p class="text-body-secondary small mt-1 mb-0">The node checks for updates every day at midnight.</p>
+<div class="col col-12 mb-5">
+	<div class="row gx-7 gy-3">
+		<div class="col-12 lg:col-4 2xl:col-3">
+			<h5 class="m-0">virgoOS</h5>
+			<p class="fg-emphasis-secondary small mt-1 mb-0">The node checks for updates every day at midnight.</p>
 		</div>
-		<div class="col-12 col-lg-8 col-xxl-9">
-			<div class="card rounded-4 border-0 mb-0">
+		<div class="col-12 lg:col-8 2xl:col-9">
+			<div class="card border-0 mb-0">
 				<div class="card-body">
-					<div class="d-flex align-items-center gap-3">
-						<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-3 bg-green-100 text-green-500 align-self-start"><i class="icon-solid icon-check"></i></div>
+					<div class="d-flex align-items-center gap-5">
+						<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-5 bg-green-100 fg-green-500 align-self-start"><i class="icon-solid icon-check"></i></div>
 						<div class="min-w-0 me-auto">
-							<div class="fs-5 lh-sm">Up to date</div>
-							<small class="d-block text-body-tertiary lh-sm">No updates available</small>
+							<div class="fs-lg lh-xs">Up to date</div>
+							<small class="d-block fg-4 lh-xs">No updates available</small>
 						</div>
-						<a href="#" class="check-updates btn btn-link text-nowrap align-self-start border-0 px-0 py-2 mt-1 <%=(checkUpdates ? 'disabled' : '')%>">
-							<i class="icon-solid icon-arrows-rotate icon-fw <%=(checkUpdates ? 'icon-spin' : '')%>"></i><span class="d-none d-md-inline ms-1"><%=(checkUpdates ? 'Checking for updates...' : 'Check for new updates')%></span>
+						<a href="#" class="check-updates btn-link d-inline-block text-nowrap align-self-start border-0 px-0 py-3 mt-1 <%=(checkUpdates ? 'disabled' : '')%> min-h-0">
+							<i class="icon-solid icon-arrows-rotate icon-fw <%=(checkUpdates ? 'icon-spin' : '')%>"></i><span class="d-none md:d-inline ms-1"><%=(checkUpdates ? 'Checking for updates...' : 'Check for new updates')%></span>
 						</a>
 					</div>
 				</div>

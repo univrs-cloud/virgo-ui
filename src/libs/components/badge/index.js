@@ -39,7 +39,7 @@ export class Badge extends LitElement {
 	firstUpdated() {
 		const badge = this.renderRoot.querySelector('.badge');
 		if (badge) {
-			this.#tooltip = new bootstrap.Tooltip(badge);
+			this.#tooltip = new bootstrap.Tooltip(badge, { container: this.closest('dialog') ?? 'body' });
 		}
 	}
 
@@ -48,7 +48,7 @@ export class Badge extends LitElement {
 		const classes = {
 			[`bd-${this.color}${hasTint ? `-${this.tint}` : ''}`]: true,
 			'rounded-pill': this.pill,
-			'border border-light': this.border
+			'border border-white': this.border
 		};
 		return html`
 			<div

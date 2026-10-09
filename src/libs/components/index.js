@@ -3,6 +3,7 @@ export { Notifier } from './notifier';
 export { Form } from './form';
 export { Button } from './button';
 export { Input } from './input';
+export { Otp } from './otp';
 export { Select } from './select';
 export { Textarea } from './textarea';
 export { Checkbox } from './checkbox';

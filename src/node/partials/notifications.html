@@ -1,30 +1,30 @@
 <div id="notifications">
 	<%if (isAuthenticated) {%>
-		<div class="dropdown dropup d-flex align-items-center me-3" style="height: 40px;">
-			<a class="dropdown-toggle icon-dott caret-off cursor-pointer" data-bs-toggle="dropdown">
+		<div class="dropdown d-flex align-items-center me-5" style="height: 40px;">
+			<a class="icon-dott cursor-pointer" data-bs-toggle="menu" data-bs-placement="top-end">
 				<i class="icon-duotone icon-solid icon-bell"></i>
 			</a>
-			<div class="dropdown-menu dropdown-menu-end" style="width: 300px;">
-				<h6 class="dropdown-header d-flex">
+			<div class="menu" style="width: 300px;">
+				<h6 class="menu-header d-flex">
 					<span>Notifications</span>
-					<a href="#" class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover ms-auto <%=(_.isEmpty(notifications) ? 'd-none' : '')%>">Mark all as read</a>
+					<a href="#" class="underline-offset-2 hover:underline-offset-3 underline-0 hover:underline-80 ms-auto <%=(_.isEmpty(notifications) ? 'd-none' : '')%>">Mark all as read</a>
 				</h6>
 				<%if (_.isEmpty(notifications)) {%>
-					<p class="text-body-tertiary text-center p-4 mb-0">No notifications</p>
+					<p class="fg-4 text-center p-7 mb-0">No notifications</p>
 				<%} else {%>
 					<%_.each(notifications, (notification, index) => {%>
 						<%let color = 'blue'%>
 						<%if (notification.type === 'warning') {%>
 							<%color = 'yellow'%>
 						<%}%>
-						<div class="toast show bd-<%=color%>-100 shadow-none border-0 <%=(index < _.size(notifications) - 1 ? 'mb-2' : '')%>">
+						<div class="toast show bd-<%=color%>-100 shadow-none border-0 <%=(index < _.size(notifications) - 1 ? 'mb-3' : '')%>">
 							<div class="d-flex">
 								<div class="toast-body">
 									<strong><%-notification.title%></strong>
 									<div class="fw-light"><small><%-notification.message%></small></div>
 									<div><small><%=moment(notification.createdOn).fromNow()%></small></div>
 								</div>
-								<button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"></button>
+								<button type="button" class="btn-close me-3 m-auto" data-bs-dismiss="toast"></button>
 							</div>
 						</div>
 					<%})%>

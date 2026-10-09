@@ -9,7 +9,7 @@ const header = document.querySelector('header');
 
 const renderNavigation = () => {
 	const newNav = `<div>${navigationTemplate({ active: page.current })}</div>`;
-	_.each(document.querySelectorAll('header .navbar .nav, .offcanvas .navbar-nav'), (nav) => {
+	_.each(document.querySelectorAll('header .navbar .nav, .drawer .navbar-nav'), (nav) => {
 		morphdom(
 			nav,
 			newNav,

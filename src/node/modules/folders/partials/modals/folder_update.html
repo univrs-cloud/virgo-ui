@@ -1,34 +1,30 @@
-<div id="folder-update" class="modal fade">
+<dialog id="folder-update" class="dialog dialog-scrollable">
 	<u-form>
 		<u-input type="hidden" name="name" class="name"></u-input>
-		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">Edit folder</h5>
-				</div>
-				<div class="modal-body">
-					<div class="alert alert-light">
-						<dl class="m-0">
-							<dt class="fw-light text-body-tertiary"><small>Name</small></dt>
-							<dd class="comment m-0"></dd>
-							<dt class="fw-light text-body-tertiary mt-2"><small>Path</small></dt>
-							<dd class="path m-0"></dd>
-						</dl>
-					</div>
-					<div class="mb-3">
-						<label class="form-label">Authorized users</label>
-						<div class="valid-users d-flex flex-column gap-1"></div>
-						<div class="form-text">Leave all unchecked for guest access</div>
-					</div>
-					<u-input name="refquota" label="Capacity" class="refquota">
-						<span slot="suffix" class="mb-n3">GiB</span>
-					</u-input>
-				</div>
-				<div class="modal-footer">
-					<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="modal" outline>Cancel</u-button>
-					<u-button type="submit" variant="primary">Update</u-button>
-				</div>
+		<div class="dialog-header">
+			<h1 class="dialog-title">Edit folder</h1>
+		</div>
+		<div class="dialog-body">
+			<div class="alert theme-secondary mb-5">
+				<dl class="m-0">
+					<dt class="fw-light fg-4"><small>Name</small></dt>
+					<dd class="comment m-0"></dd>
+					<dt class="fw-light fg-4 mt-3"><small>Path</small></dt>
+					<dd class="path m-0"></dd>
+				</dl>
 			</div>
+			<div class="mb-5">
+				<label class="form-label">Authorized users</label>
+				<div class="valid-users d-flex flex-column gap-1"></div>
+				<div class="form-text">Leave all unchecked for guest access</div>
+			</div>
+			<u-input name="refquota" label="Capacity" class="refquota">
+				<span slot="suffix">GiB</span>
+			</u-input>
+		</div>
+		<div class="dialog-footer">
+			<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="dialog" outline>Cancel</u-button>
+			<u-button type="submit" variant="primary">Update</u-button>
 		</div>
 	</u-form>
-</div>
+</dialog>

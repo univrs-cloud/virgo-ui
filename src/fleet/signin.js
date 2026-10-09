@@ -65,7 +65,7 @@ const mountBiometrics = async (main) => {
 	// button: it's a best-effort localStorage write that a privacy setting can silently refuse, and
 	// a forgotten breadcrumb must never hide a credential the device still holds.
 	if (!webauthnService.isEnrolledOnThisDevice()) {
-		hint.textContent = 'Tap above if you have set up biometrics here, or sign in below.';
+		hint.textContent = 'Tap above if you have set up biometrics here.';
 		return false;
 	}
 

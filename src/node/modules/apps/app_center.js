@@ -7,7 +7,7 @@ document.querySelector('body').insertAdjacentHTML('beforeend', appCenterModalPar
 let unsubscribe;
 const itemTemplate = _.template(itemPartial);
 const modal = document.querySelector('#app-center');
-const modalBody = modal.querySelector('.modal-body');
+const modalBody = modal.querySelector('.dialog-body');
 const loading = modalBody.querySelector('.loading');
 const container = modalBody.querySelector('.tab-content');
 const rowExplore = container.querySelector('#app-center-explore .row');
@@ -19,7 +19,7 @@ const openInstallModal = (event) => {
 	}
 
 	event.preventDefault();
-	const modal = bootstrap.Modal.getOrCreateInstance(event.target.dataset.bsTarget);
+	const modal = bootstrap.Dialog.getOrCreateInstance(event.target.dataset.bsTarget);
 	modal.show(event.target);
 };
 
@@ -58,14 +58,14 @@ const render = (state) => {
 };
 
 modal.addEventListener('click', openInstallModal);
-modal.addEventListener('show.bs.modal', () => {
+modal.addEventListener('show.bs.dialog', () => {
 	unsubscribe = appCenterService.subscribe([render]);
 });
-modal.addEventListener('hide.bs.modal', () => {
+modal.addEventListener('hide.bs.dialog', () => {
 	unsubscribe?.();
 	unsubscribe = null;
 });
-modal.addEventListener('hidden.bs.modal', () => {
+modal.addEventListener('hidden.bs.dialog', () => {
 	rowExplore.innerHTML = '';
 	rowInstalled.innerHTML = '';
 	container.classList.add('d-none');

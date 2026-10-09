@@ -34,15 +34,15 @@ const availabilityRow = access.querySelector('.availability');
 const availabilityMessage = access.querySelector('.availability-message');
 const availabilityIcon = access.querySelector('.availability-icon');
 const AVAILABILITY_ICONS = {
-	checking: 'icon-solid icon-spinner-third icon-fw icon-spin me-2',
-	available: 'icon-duotone icon-solid icon-circle-check icon-fw me-2',
-	taken: 'icon-duotone icon-solid icon-circle-xmark icon-fw me-2',
-	unknown: 'icon-duotone icon-solid icon-triangle-exclamation icon-fw me-2'
+	checking: 'icon-solid icon-spinner-third icon-fw icon-spin me-3',
+	available: 'icon-duotone icon-solid icon-circle-check icon-fw me-3',
+	taken: 'icon-duotone icon-solid icon-circle-xmark icon-fw me-3',
+	unknown: 'icon-duotone icon-solid icon-triangle-exclamation icon-fw me-3'
 };
 const AVAILABILITY_COLOURS = {
-	available: 'var(--bs-green)',
-	taken: 'var(--bs-red)',
-	unknown: 'var(--bs-red)'
+	available: 'var(--green-500)',
+	taken: 'var(--red-500)',
+	unknown: 'var(--red-500)'
 };
 const AVAILABILITY_ERRORS = {
 	taken: 'This name is already taken',

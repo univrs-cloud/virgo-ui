@@ -13,11 +13,10 @@
 	const cardStateClass = !node.online ? 'border border-white' : (hasCriticalPool ? 'border border-red-300' : (hasDegradedPool ? 'border border-orange-300' : 'border border-white'));
 	// Offline has no pools so it stays a neutral gray Offline.
 	const statusColor = !node.online ? 'gray' : (hasCriticalPool ? 'red' : (hasDegradedPool ? 'orange' : 'green'));
-	const statusTint = !node.online ? 300 : 100;
 	const statusLabel = !node.online ? 'Offline' : (hasCriticalPool ? 'Faulted' : (hasDegradedPool ? 'Degraded' : 'Online'));
 	const isRebuilding = node.online && hasResilveringPool && !hasUnhealthyNonResilver;
 	const statusTip = (node.online && hasCriticalPool) ? 'Online · storage faulted' : ((node.online && hasDegradedPool) ? 'Online · storage degraded' : '');
-	const statusDotColor = !node.online ? 'text-gray-400' : (hasCriticalPool ? 'text-red-300' : (hasDegradedPool ? 'text-orange-300' : 'text-green-300'));
+	const statusDotColor = !node.online ? 'fg-gray-400' : (hasCriticalPool ? 'fg-red-300' : (hasDegradedPool ? 'fg-orange-300' : 'fg-green-300'));
 	const statusDotTip = statusTip || statusLabel;
 	// UPS reads the same host:ups shape the node dashboard uses: a status object, or one carrying an error when the reading is unusable. Nodes older than that shape send the bare 'remote i/o error' string.
 	const ups = (node.online && _.isObject(node.ups) && !node.ups.error && node.ups.batteryCharge !== false) ? node.ups : null;
@@ -46,7 +45,7 @@
 		}
 
 		if (node.ups === 'remote i/o error' || node.ups?.error === 'unreachable') {
-			return { color: 'gray', tint: 300, icon: 'icon-car-battery', animation: '', label: "Can't connect", tip: "Can't connect to the UPS service on this node" };
+			return { color: 'gray', tint: 100, icon: 'icon-car-battery', animation: '', label: "Can't connect", tip: "Can't connect to the UPS service on this node" };
 		}
 
 		if (node.ups?.error) {
@@ -56,51 +55,51 @@
 		return null;
 	})();
 %>
-<div class="col-12 col-sm-6 col-xl-3">
-	<div class="card rounded-4 <%=cardStateClass%>">
-		<div class="card-body py-2 px-3">
+<div class="col-12 sm:col-6 xl:col-3">
+	<div class="card <%=cardStateClass%>">
+		<div class="card-body py-3 px-5">
 			<div class="d-flex align-items-center justify-content-between">
-				<div class="flex-grow-1 me-2 min-w-0">
-					<h6 class="mb-0 d-flex align-items-center">
+				<div class="flex-grow-1 me-3 min-w-0">
+					<h5 class="mb-0 d-flex align-items-center">
 						<i class="icon-solid icon-circle icon-fw z-2 position-relative me-1 <%=statusDotColor%>" data-bs-toggle="tooltip" data-bs-original-title="<%-statusDotTip%>"></i>
 						<%if (node.online) {%>
-							<a href="/nodes/<%-node.nodeId%>" rel="external" class="stretched-link text-decoration-none text-body text-truncate min-w-0"><%-node.name%></a>
+							<a href="/nodes/<%-node.nodeId%>" rel="external" class="stretched-link text-decoration-none fg-body text-truncate min-w-0"><%-node.name%></a>
 						<%} else {%>
-							<span class="text-body text-truncate min-w-0"><%-node.name%></span>
+							<span class="fg-body text-truncate min-w-0"><%-node.name%></span>
 						<%}%>
-					</h6>
+					</h5>
 				</div>
 				<div class="dropdown">
-					<span class="dropdown-toggle caret-off btn btn-sm z-1 position-relative" data-bs-toggle="dropdown">
-						<i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i>
+					<span class="btn-icon btn-text theme-secondary btn-sm z-1 position-relative" data-bs-toggle="menu" data-bs-placement="bottom-end">
+						<i class="icon-solid icon-ellipsis-vertical icon-fw fg-secondary"></i>
 					</span>
-					<div class="dropdown-menu dropdown-menu-end">
+					<div class="menu">
 						<%if (node.isOwner) {%>
-							<a href="#admin-add" class="dropdown-item" data-bs-toggle="modal" data-node-id="<%-node.nodeId%>">
-								<i class="icon-regular icon-user-plus icon-fw me-1"></i>Add admin
+							<a href="#admin-add" class="menu-item" data-bs-toggle="dialog" data-node-id="<%-node.nodeId%>">
+								<i class="icon-regular icon-user-plus icon-fw"></i>Add admin
 							</a>
-							<div class="dropdown-divider"></div>
+							<div class="menu-divider"></div>
 						<%}%>
 						<%if (node.isOwner && node.onFleetZone) {%>
 							<span class="d-block" data-bs-toggle="tooltip" data-bs-original-title="Move this node off univrs.cloud before removing it, its certificates depend on the fleet">
-								<a href="#" class="dropdown-item disabled">
-									<i class="icon-regular icon-xmark icon-fw me-1"></i>Remove from inventory
+								<a href="#" class="menu-item disabled">
+									<i class="icon-regular icon-xmark icon-fw"></i>Remove from inventory
 								</a>
 							</span>
 						<%} else {%>
-							<a href="#" class="dropdown-item text-danger confirm" data-action="remove" data-node-id="<%-node.nodeId%>">
-								<i class="icon-regular icon-xmark icon-fw me-1"></i>Remove from inventory
+							<a href="#" class="menu-item fg-danger confirm" data-action="remove" data-node-id="<%-node.nodeId%>">
+								<i class="icon-regular icon-xmark icon-fw"></i>Remove from inventory
 							</a>
 						<%}%>
 					</div>
 				</div>
 			</div>
 
-			<div class="d-flex align-items-center mt-2 pt-1 mb-3">
+			<div class="d-flex align-items-center mt-3 pt-1 mb-5">
 				<%if (isRebuilding) {%>
-					<u-badge color="<%=statusColor%>" tint="<%=statusTint%>" class="z-1 position-relative me-1" pill>
+					<u-badge color="<%=statusColor%>" tint="100" class="z-1 position-relative me-1" pill>
 						Rebuilding <%=resilverPercent != null ? `${resilverPercent}%` : ''%>
-						<i class="icon-solid icon-triangle-exclamation text-orange-700 ms-1" data-bs-toggle="tooltip" data-bs-original-title="Reduced redundancy until the rebuild completes"></i>
+						<i class="icon-solid icon-triangle-exclamation fg-orange-700 ms-1" data-bs-toggle="tooltip" data-bs-original-title="Reduced redundancy until the rebuild completes"></i>
 					</u-badge>
 				<%}%>
 				<%if (upsBadge) {%>
@@ -132,7 +131,7 @@
 					</a>
 				<%}%>
 				<%if (!node.update && !_.isEmpty(node.updates?.system)) {%>
-					<a href="#node-system-updates" data-bs-toggle="modal" data-node-id="<%-node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
+					<a href="#node-system-updates" data-bs-toggle="dialog" data-node-id="<%-node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
 						<u-badge color="blue" pill tip="<%=_.pluralize('system update', _.size(node.updates.system), true)%>">
 							<i class="icon-solid icon-download"></i>
 						</u-badge>
@@ -144,7 +143,7 @@
 							return _.some(node.appUpdateJobs, (job) => { return job.data?.config?.name === app.name; });
 						});
 					%>
-					<a href="#node-app-updates" data-bs-toggle="modal" data-node-id="<%-node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
+					<a href="#node-app-updates" data-bs-toggle="dialog" data-node-id="<%-node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
 						<%if (!_.isEmpty(updating)) {%>
 							<u-badge color="blue" pill tip="Updating <%-_.join(_.map(updating, (app) => { return app.title; }), ', ')%>">
 								<i class="icon-solid icon-gear icon-spin me-1"></i><%=_.size(updating)%>
@@ -158,33 +157,33 @@
 				<%}%>
 				<%if (node.isOwner && (!_.isEmpty(node.admins) || !_.isEmpty(node.groups))) {%>
 					<div class="dropdown invited">
-						<span class="d-flex z-1 position-relative" data-bs-toggle="dropdown">
-							<u-badge color="gray" tint="300" class="cursor-pointer">
+						<span class="d-flex z-1 position-relative" data-bs-toggle="menu">
+							<u-badge color="gray" tint="100" class="cursor-pointer">
 								<%=_.size(node.admins) + _.size(node.groups)%> invited
 								<i class="icon-solid icon-chevron-down icon-xs ms-1"></i>
 							</u-badge>
 						</span>
-						<div class="dropdown-menu dropdown-menu-start shadow">
+						<div class="menu shadow shadow-opacity-100">
 							<%_.each(node.admins, (admin) => {%>
-								<div class="dropdown-item d-flex align-items-center">
-									<i class="icon-regular icon-user icon-fw me-2"></i>
-									<div class="lh-1 me-3">
+								<div class="menu-item d-flex align-items-center">
+									<i class="icon-regular icon-user icon-fw me-3"></i>
+									<div class="lh-1 me-5">
 										<div><%-admin.name%></div>
-										<small class="text-body-secondary"><%-admin.email%></small>
+										<small class="fg-emphasis-secondary"><%-admin.email%></small>
 									</div>
-									<a href="#" class="text-danger ms-auto confirm" data-action="revoke" data-node-id="<%-node.nodeId%>" data-email="<%-admin.email%>" data-bs-toggle="tooltip" data-bs-original-title="Revoke access">
+									<a href="#" class="fg-danger ms-auto confirm" data-action="revoke" data-node-id="<%-node.nodeId%>" data-email="<%-admin.email%>" data-bs-toggle="tooltip" data-bs-original-title="Revoke access">
 										<i class="icon-solid icon-circle-xmark"></i>
 									</a>
 								</div>
 							<%})%>
 							<%_.each(node.groups, (group) => {%>
-								<div class="dropdown-item d-flex align-items-center">
-									<i class="icon-regular icon-users icon-fw me-2"></i>
-									<div class="lh-1 me-3">
+								<div class="menu-item d-flex align-items-center">
+									<i class="icon-regular icon-users icon-fw me-3"></i>
+									<div class="lh-1 me-5">
 										<div><%-group.name%></div>
-										<small class="text-body-secondary">Group</small>
+										<small class="fg-emphasis-secondary">Group</small>
 									</div>
-									<a href="#" class="text-danger ms-auto confirm" data-action="revoke-group" data-node-id="<%-node.nodeId%>" data-group-id="<%-group.id%>" data-group-name="<%-group.name%>" data-bs-toggle="tooltip" data-bs-original-title="Revoke group access">
+									<a href="#" class="fg-danger ms-auto confirm" data-action="revoke-group" data-node-id="<%-node.nodeId%>" data-group-id="<%-group.id%>" data-group-name="<%-group.name%>" data-bs-toggle="tooltip" data-bs-original-title="Revoke group access">
 										<i class="icon-solid icon-circle-xmark"></i>
 									</a>
 								</div>
@@ -194,25 +193,25 @@
 				<%}%>
 			</div>
 			<%if (!node.online && node.lastSeenAt) {%>
-				<div class="text-body-tertiary mt-3" style="font-size: 0.75rem;">
+				<div class="fg-4 mt-5" style="font-size: 0.75rem;">
 					Last seen <%=moment(node.lastSeenAt).fromNow()%>, on <%=moment(node.lastSeenAt).format('MMMM D, YYYY [at] HH:mm')%>.
 				</div>
 			<%}%>
 			<%if (node.online && !_.isEmpty(pools)) {%>
-				<div class="storage position-relative z-1 mt-3">
+				<div class="storage position-relative z-1 mt-5">
 					<%_.each(pools, (pool) => {%>
 						<%
 							const properties = pool.properties || {};
 							const scan = pool.scanStats;
 							const scanState = scan?.state?.toLowerCase();
 							const health = properties.health?.value?.toLowerCase();
-							const healthColor = (health === 'online' ? 'text-green-300' : (health === 'degraded' ? 'text-orange-300' : 'text-red-300'));
+							const healthColor = (health === 'online' ? 'fg-green-300' : (health === 'degraded' ? 'fg-orange-300' : 'fg-red-300'));
 							const healthLabel = properties.health?.value || 'Unknown';
 							const usageTip = `${prettyBytes(properties.allocated?.value || 0, { binary: true })} of ${prettyBytes(properties.size?.value || 0, { binary: true })} used`;
 						%>
-						<div class="d-flex align-items-center border border-gray-400 bd-gray-100 shadow-sm px-2 py-1 rounded-4" style="font-size: 0.75rem;">
+						<div class="d-flex align-items-center border border-gray-400 bd-gray-100 shadow-sm px-3 py-1 rounded-9" style="font-size: 0.75rem;">
 							<i class="icon-solid icon-circle icon-fw me-1 <%=healthColor%>" data-bs-toggle="tooltip" data-bs-original-title="<%-healthLabel%>"></i>
-							<span class="text-body-secondary me-2"><%-pool.name%></span>
+							<span class="fg-emphasis-secondary me-3"><%-pool.name%></span>
 							<%if (scanState === 'scanning') {%>
 								<%
 									const isPaused = (scan.scrubPause > 0);
@@ -221,33 +220,33 @@
 									const issued = `${prettyBytes(scan.issued || 0, { binary: true })} / ${total}`;
 									const tip = (isPaused ? `<strong>Data integrity check is paused</strong> since ${moment.unix(scan.scrubPause).fromNow()}.<br>` : ``) + `Data integrity check started ${moment.unix(scan.startTime).fromNow()}.<br>Scanned ${scanned}.<br>Issued ${issued}.<br>Repaired <strong>${prettyBytes(scan.processed || 0, { binary: true })}</strong>, ${scan.errors || 0} errors.`;
 								%>
-								<i class="icon-solid <%=(isPaused ? 'icon-pause text-body-tertiary' : 'icon-arrows-rotate icon-spin text-cyan-600')%> me-2" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
+								<i class="icon-solid <%=(isPaused ? 'icon-pause fg-4' : 'icon-arrows-rotate icon-spin fg-cyan-600')%> me-3" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
 							<%} else if (scanState === 'finished') {%>
 								<%
 									const duration = moment.duration(moment.unix(scan.endTime).diff(moment.unix(scan.startTime))).humanize();
 									const tip = `Data integrity check completed ${moment.unix(scan.endTime).fromNow()}.<br>Took ${duration} to scan <strong>${prettyBytes(scan.toExamine || 0, { binary: true })}</strong>.<br>Repaired <strong>${prettyBytes(scan.processed || 0, { binary: true })}</strong>, ${scan.errors || 0} errors.`;
 								%>
 								<%if (scan.errors > 0) {%>
-									<i class="icon-solid icon-triangle-exclamation icon-fw text-red-300 me-2" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
+									<i class="icon-solid icon-triangle-exclamation icon-fw fg-red-300 me-3" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
 								<%} else {%>
-									<i class="icon-solid icon-binary-circle-check icon-fw text-green-300 me-2" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
+									<i class="icon-solid icon-binary-circle-check icon-fw fg-green-300 me-3" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
 								<%}%>
 							<%} else {%>
-								<i class="icon-solid icon-binary-circle-check icon-fw text-gray-500 me-2" data-bs-toggle="tooltip" data-bs-original-title="Data integrity check has not run yet"></i>
+								<i class="icon-solid icon-binary-circle-check icon-fw fg-gray-300 me-3" data-bs-toggle="tooltip" data-bs-original-title="Data integrity check has not run yet"></i>
 							<%}%>
-							<div class="flex-grow-1 me-2" data-bs-toggle="tooltip" data-bs-original-title="<%=usageTip%>">
+							<div class="flex-grow-1 me-3" data-bs-toggle="tooltip" data-bs-original-title="<%=usageTip%>">
 								<u-progress shadow="false">
 									<u-progress-bar width="<%=pool.properties.capacity.value ?? 0%>"></u-progress-bar>
 								</u-progress>
 							</div>
-							<span class="text-body-tertiary text-end" style="min-width: 2.25rem; font-variant-numeric: tabular-nums;"><%=pool.properties.capacity.value?.toFixed(0)%>%</span>
+							<span class="fg-4 text-end" style="min-width: 2.25rem; font-variant-numeric: tabular-nums;"><%=pool.properties.capacity.value?.toFixed(0)%>%</span>
 						</div>
 					<%})%>
 				</div>
 			<%}%>
 		</div>
 		<%if (!node.isOwner) {%>
-			<u-badge color="gray" tint="300" class="indicator" style="top: auto; bottom: -1rem;" pill>Invited</u-badge>
+			<u-badge color="gray" tint="100" class="indicator" style="top: auto; bottom: -1rem;" pill>Invited</u-badge>
 		<%}%>
 	</div>
 </div>

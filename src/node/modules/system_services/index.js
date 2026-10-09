@@ -138,9 +138,8 @@ const renderFilters = (allServices, searchedServices) => {
 
 	morphdom(filterMenu, `<ul>${filterOptionsTemplate({ groups })}</ul>`, { childrenOnly: true });
 	morphdom(filterPills, `<div>${(selectedCount > 0 ? filterPillsTemplate({ groups }) : '')}</div>`, { childrenOnly: true });
-	filterPills.classList.toggle('d-md-flex', selectedCount > 0);
-	filterBadge.color = (selectedCount > 0 ? 'blue' : 'gray');
-	filterBadge.tint = (selectedCount > 0 ? '500' : '300');
+	filterPills.classList.toggle('md:d-flex', selectedCount > 0);
+	filterBadge.classList.toggle('active', selectedCount > 0);
 };
 
 const order = (event) => {
@@ -201,7 +200,7 @@ const performServiceAction = async (event) => {
 	const actionLabel = _.upperFirst(button.dataset.action.replace('-', ' & '));
 	if (
 		button.classList.contains('confirm') &&
-		!await confirm(`Are you sure you want to ${actionLabel.toLowerCase()} the service ${service.unit}?`, { buttons: [{ text: actionLabel, class: (button.classList.contains('confirm') ? 'btn-danger' : 'btn-primary') }] })
+		!await confirm(`Are you sure you want to ${actionLabel.toLowerCase()} the service ${service.unit}?`, { buttons: [{ text: actionLabel, class: (button.classList.contains('confirm') ? 'btn-solid theme-danger' : 'btn-solid theme-primary') }] })
 	) {
 		return;
 	}

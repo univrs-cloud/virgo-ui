@@ -9,8 +9,8 @@ const UPDATE_PATH = '/system-update';
 let hasEnteredUpdate = false;
 
 const header = document.querySelector('header');
-const offcanvas = document.querySelector('.offcanvas');
-const offcanvasInstance = bootstrap.Offcanvas.getOrCreateInstance(offcanvas);
+const drawer = document.querySelector('.drawer');
+const drawerInstance = bootstrap.Drawer.getOrCreateInstance(drawer);
 
 initNodeView();
 
@@ -19,8 +19,8 @@ const showPage = (ctx) => {
 
 	windowService.background();
 	_.each(document.querySelectorAll('header .navbar .nav'), (nav) => { nav.dataset.module = module; });
-	_.each(document.querySelectorAll(':is(header, .offcanvas) .nav-link.active'), (element) => { element.classList.remove('active'); });
-	_.each(document.querySelectorAll(`:is(header, .offcanvas) .nav-link[href="/${module}"]`), (element) => { element.classList.add('active'); });
+	_.each(document.querySelectorAll(':is(header, .drawer) .nav-link.active'), (element) => { element.classList.remove('active'); });
+	_.each(document.querySelectorAll(`:is(header, .drawer) .nav-link[href="/${module}"]`), (element) => { element.classList.add('active'); });
 	
 	_.each(document.querySelectorAll('.modules > div'), (element) => { element.classList.add('d-none') });
 	
@@ -35,8 +35,8 @@ const navigate = (event) => {
 		return;
 	}
 
-	if (!_.isNull(navLink.closest('.offcanvas'))) {
-		offcanvasInstance?.hide();
+	if (!_.isNull(navLink.closest('.drawer'))) {
+		drawerInstance?.hide();
 	}
 };
 
@@ -102,7 +102,7 @@ const requiresAdmin = (ctx, next) => {
 };
 
 header.addEventListener('click', navigate);
-offcanvas.addEventListener('click', navigate);
+drawer.addEventListener('click', navigate);
 
 const routes = [
 	{ path: '/', module: 'dashboard' },

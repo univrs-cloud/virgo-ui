@@ -38,14 +38,14 @@ const morphdom = (fromNode, toNode, options) => {
 				return;
 			}
 
-			if (fromEl.classList.contains('dropdown-menu')) {
+			if (fromEl.classList.contains('menu')) {
 				morphdom(fromEl, toEl, { childrenOnly: true });
 				return false;
 			}
 
-			if (fromEl.classList.contains('dropdown-toggle') || fromEl.matches('[data-bs-toggle="dropdown"]')) {
+			if (fromEl.matches('[data-bs-toggle="menu"]')) {
 				if (toEl.classList.contains('disabled') || toEl.hasAttribute('disabled')) {
-					bootstrap.Dropdown.getInstance(fromEl)?.hide();
+					bootstrap.Menu.getInstance(fromEl)?.hide();
 					return;
 				}
 

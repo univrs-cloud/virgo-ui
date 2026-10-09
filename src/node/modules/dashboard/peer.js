@@ -42,7 +42,7 @@ const performActions = (event) => {
 	const actions = {
 		adopt: () => { peerService.adoptPeer({ peerId }); },
 		remove: async () => {
-			if (await confirm(`This node will no longer be adopted. The virtual IP is not affected.`, { buttons: [{ text: 'Remove node', class: 'btn-danger' }] })) {
+			if (await confirm(`This node will no longer be adopted. The virtual IP is not affected.`, { buttons: [{ text: 'Remove node', class: 'btn-solid theme-danger' }] })) {
 				peerService.removePeer({ peerId });
 			}
 		},

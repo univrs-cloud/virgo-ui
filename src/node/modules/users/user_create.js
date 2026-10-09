@@ -7,10 +7,10 @@ const modal = document.querySelector('#user-create');
 const form = modal.querySelector('u-form');
 
 const createUser = (event) => {
-	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
+	_.each(form.querySelectorAll('.dialog-footer u-button'), (button) => { button.disabled = true; });
 	const data = form.getData();
 	userService.createUser(data);
-	bootstrap.Modal.getInstance(modal)?.hide();
+	bootstrap.Dialog.getInstance(modal)?.hide();
 };
 
 const restore = (event) => {
@@ -83,4 +83,4 @@ form.validation = [
 	}
 ];
 form.addEventListener('valid', createUser);
-modal.addEventListener('hidden.bs.modal', restore);
+modal.addEventListener('hidden.bs.dialog', restore);

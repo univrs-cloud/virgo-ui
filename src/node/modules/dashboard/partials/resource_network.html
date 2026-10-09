@@ -1,26 +1,26 @@
-<li class="list-group-item network py-3">
-	<h6 class="text-body-emphasis mb-0">
-		<i class="icon-regular icon-network-wired icon-fw me-1 text-gray-500"></i>Network
-		<small class="text-body-secondary"> &middot; <%-state.networkStats?.iface%> &middot; <%=prettyBytes((_.find(state.system?.networkInterfaces, { default: true })?.speed || 0)  * 1000 * 1000, { bits: true })%>/s</small>
-	</h6>
+<li class="list-group-item network py-5">
+	<h5 class="fg-black mb-0">
+		<i class="icon-regular icon-network-wired icon-fw me-1 fg-gray-300"></i>Network
+		<small class="fg-emphasis-secondary"> &middot; <%-state.networkStats?.iface%> &middot; <%=prettyBytes((_.find(state.system?.networkInterfaces, { default: true })?.speed || 0)  * 1000 * 1000, { bits: true })%>/s</small>
+	</h5>
 	<%if (state.networkStats === null) {%>
-		<div class="spinner-border spinner-border-sm text-gray-600"></div>
+		<div class="spinner-border spinner-sm fg-gray-600"></div>
 	<%} else if (state.networkStats === false) {%>
-		<span class="text-red-300">Error fetching data</span>
+		<span class="fg-red-300">Error fetching data</span>
 	<%} else {%>
 		<div class="network-chart" style="width: 100%; height: 100px;"></div>
-		<div class="lh-1 text-body-tertiary text-end mt-1">
+		<div class="lh-1 fg-4 text-end mt-1">
 			<table>
 				<tbody>
 					<tr>
 						<td>
-							<i class="icon-solid icon-arrow-down icon-fw me-1 text-blue-500"></i><small>RX:</small>
+							<i class="icon-solid icon-arrow-down icon-fw me-1 fg-blue-500"></i><small>RX:</small>
 						</td>
 						<td><small><%=prettyBytes(state.networkStats.rx_sec || 0, { binary: true })%>/s</small></td>
 					</tr>
 					<tr>
 						<td>
-							<i class="icon-solid icon-arrow-up icon-fw me-1 text-purple-500"></i><small>TX:</small>
+							<i class="icon-solid icon-arrow-up icon-fw me-1 fg-purple-500"></i><small>TX:</small>
 						</td>
 						<td><small><%=prettyBytes(state.networkStats.tx_sec || 0, { binary: true })%>/s</small></td>
 					</tr>

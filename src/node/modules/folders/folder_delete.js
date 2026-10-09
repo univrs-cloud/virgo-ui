@@ -13,7 +13,7 @@ const deleteFolder = async (event) => {
 	const folder = _.find(folderService.getFolders(), { name: row.dataset.id });
 	const warning = (folder?.isCustom ? 'The folder will be removed but the data at the custom path will NOT be deleted.' : 'This action cannot be undone and will permanently delete all associated data.');
 	const action = folder?.isCustom ? 'remove' : 'delete';
-	if (!await confirm(`Are you sure you want to ${action} the folder ${row.dataset.id}?<br><br>${warning}`, { buttons: [{ text: `Yes, ${action}`, class: 'btn-danger' }] })) {
+	if (!await confirm(`Are you sure you want to ${action} the folder ${row.dataset.id}?<br><br>${warning}`, { buttons: [{ text: `Yes, ${action}`, class: 'btn-solid theme-danger' }] })) {
 		return;
 	}
 

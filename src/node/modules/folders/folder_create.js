@@ -40,7 +40,7 @@ const render = async () => {
 };
 
 const createFolder = (event) => {
-	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
+	_.each(form.querySelectorAll('.dialog-footer u-button'), (button) => { button.disabled = true; });
 	const data = form.getData();
 	const validUsers = Array.from(form.querySelectorAll('.valid-users u-checkbox'))
 		.filter((cb) => cb.checked)
@@ -53,7 +53,7 @@ const createFolder = (event) => {
 		...(isNewShare && { refquota: Number(data.refquota) * 1024 * 1024 * 1024 })
 	};
 	folderService.createFolder(config);
-	bootstrap.Modal.getInstance(modal)?.hide();
+	bootstrap.Dialog.getInstance(modal)?.hide();
 };
 
 const restore = () => {
@@ -108,5 +108,5 @@ pathSelect.addEventListener('value-changed', () => {
 });
 
 form.addEventListener('valid', createFolder);
-modal.addEventListener('show.bs.modal', render);
-modal.addEventListener('hidden.bs.modal', restore);
+modal.addEventListener('show.bs.dialog', render);
+modal.addEventListener('hidden.bs.dialog', restore);

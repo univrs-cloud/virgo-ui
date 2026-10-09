@@ -40,7 +40,7 @@ const restore = () => {
 	nodeId = null;
 	installing = false;
 	updates.innerHTML = '';
-	_.each(modal.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = false; });
+	_.each(modal.querySelectorAll('.dialog-footer u-button'), (button) => { button.disabled = false; });
 	installButton.tip = '';
 };
 
@@ -49,7 +49,7 @@ const install = async () => {
 		return;
 	}
 
-	const buttons = modal.querySelectorAll('.modal-footer u-button');
+	const buttons = modal.querySelectorAll('.dialog-footer u-button');
 	installing = true;
 	_.each(buttons, (button) => { button.disabled = true; });
 	const node = _.find(nodeService.getNodes() ?? [], { nodeId });
@@ -58,7 +58,7 @@ const install = async () => {
 		const result = await nodeService.startSystemUpdate({ nodeId });
 		if (result?.status === 'succeeded') {
 			notifier.add({ title: `Installing system updates on ${name}.`, type: 'success' });
-			bootstrap.Modal.getInstance(modal)?.hide();
+			bootstrap.Dialog.getInstance(modal)?.hide();
 			return;
 		}
 		notifier.add({ title: result?.message || `Failed to start system update on ${name}.`, type: 'error', duration: 0 });
@@ -95,5 +95,5 @@ const complete = async (event) => {
 
 installButton.addEventListener('click', install);
 sites.addEventListener('click', complete);
-modal.addEventListener('show.bs.modal', show);
-modal.addEventListener('hidden.bs.modal', restore);
+modal.addEventListener('show.bs.dialog', show);
+modal.addEventListener('hidden.bs.dialog', restore);

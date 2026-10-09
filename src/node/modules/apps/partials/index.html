@@ -1,56 +1,56 @@
 <div id="apps" class="d-none">
 	<div class="row">
-		<div class="col-12 position-relative mb-3">
-			<h5 class="m-0">
+		<div class="col-12 position-relative mb-5">
+			<h4 class="m-0">
 				<i class="icon-duotone icon-solid icon-grid-round-2-plus icon-fw me-1" style="transform: rotate(180deg);"></i>
 				Apps
-			</h5>
-			<div class="position-absolute top-0 end-0 pe-3 mt-n1">
-				<a href="#app-center" class="btn btn-sm btn-outline-secondary py-1" data-bs-toggle="modal">App center</a>
+			</h4>
+			<div class="position-absolute top-0 end-0 pe-5 mt--1">
+				<a href="#app-center" class="btn-sm btn-outline theme-secondary py-1 min-h-0" data-bs-toggle="dialog">App center</a>
 			</div>
 		</div>
-		<div class="loading d-flex justify-content-center align-items-center h-100"><div class="spinner-border text-gray-600"></div></div>
-		<div class="oops d-flex justify-content-center align-items-center h-100 d-none"><span class="text-red-300">Error fetching data</span></div>
+		<div class="loading d-flex justify-content-center align-items-center h-100"><div class="spinner-border fg-gray-600"></div></div>
+		<div class="oops d-flex justify-content-center align-items-center h-100 d-none"><span class="fg-red-300">Error fetching data</span></div>
 		<div class="container-fluid position-relative d-none">
-			<div class="card rounded-4 border-0">
+			<div class="card border-0">
 				<div class="card-body">
-					<div class="row g-2 align-items-center">
-						<div class="col col-6 col-md-4">
+					<div class="row g-3 align-items-center">
+						<div class="col col-6 md:col-4">
 							<u-input type="search" label="Search" class="search"></u-input>
 						</div>
 						<div class="col-auto">
-							<div class="app-filters mb-4"></div>
+							<div class="app-filters mb-7"></div>
 						</div>
 					</div>
-					<div class="overflow-y-scroll mt-n3 pe-3 mx-0 me-n3">
+					<div class="overflow-y-scroll mt--5 pe-5 mx-0 me--5">
 						<table class="table table-hover align-middle m-0">
 							<thead class="sticky-top">
 								<tr>
-									<th class="orderable asc text-nowrap d-table-cell d-md-none" data-field="title">
+									<th class="orderable asc text-nowrap d-table-cell md:d-none" data-field="title">
 										App
 										<i class="icon icon-duotone icon-solid icon-sort icon-fw ms-1"></i>
 									</th>
-									<th class="orderable asc text-nowrap d-none d-md-table-cell" data-field="title" colspan="2">
+									<th class="orderable asc text-nowrap d-none md:d-table-cell" data-field="title" colspan="2">
 										App
 										<i class="icon icon-duotone icon-solid icon-sort icon-fw ms-1"></i>
 									</th>
-									<th class="orderable text-end text-nowrap d-none d-md-table-cell" data-field="resourceMetrics.cpu.percent" data-default-order="desc" style="width: 100px; min-width: 100px;">
+									<th class="orderable text-end text-nowrap d-none md:d-table-cell" data-field="resourceMetrics.cpu.percent" data-default-order="desc" style="width: 100px; min-width: 100px;">
 										<i class="icon-solid icon-microchip icon-fw" data-bs-toggle="tooltip" data-bs-original-title="CPU"></i>
 										<i class="icon icon-duotone icon-solid icon-sort icon-fw ms-1"></i>
 									</th>
-									<th class="orderable text-end text-nowrap d-none d-md-table-cell" data-field="resourceMetrics.memory.percent" data-default-order="desc" style="width: 100px; min-width: 100px;">
+									<th class="orderable text-end text-nowrap d-none md:d-table-cell" data-field="resourceMetrics.memory.percent" data-default-order="desc" style="width: 100px; min-width: 100px;">
 										<i class="icon-solid icon-memory icon-fw" data-bs-toggle="tooltip" data-bs-original-title="RAM"></i>
 										<i class="icon icon-duotone icon-solid icon-sort icon-fw ms-1"></i>
 									</th>
-									<th class="orderable text-end text-nowrap d-none d-md-table-cell" data-field="resourceMetrics.network.rx" data-default-order="desc" style="width: 100px; min-width: 100px;">
+									<th class="orderable text-end text-nowrap d-none md:d-table-cell" data-field="resourceMetrics.network.rx" data-default-order="desc" style="width: 100px; min-width: 100px;">
 										<i class="icon-solid icon-network-wired icon-fw" data-bs-toggle="tooltip" data-bs-original-title="Network"></i>
 										<i class="icon icon-duotone icon-solid icon-sort icon-fw ms-1"></i>
 									</th>
-									<th class="orderable text-end text-nowrap d-none d-md-table-cell" data-field="resourceMetrics.storage.dataset" data-default-order="desc" style="width: 100px; min-width: 100px;">
+									<th class="orderable text-end text-nowrap d-none md:d-table-cell" data-field="resourceMetrics.storage.dataset" data-default-order="desc" style="width: 100px; min-width: 100px;">
 										<i class="icon-solid icon-database icon-fw" data-bs-toggle="tooltip" data-bs-original-title="Data"></i>
 										<i class="icon icon-duotone icon-solid icon-sort icon-fw ms-1"></i>
 									</th>
-									<th class="orderable text-end text-nowrap d-none d-md-table-cell" data-field="resourceMetrics.storage.snapshots" data-default-order="desc" style="width: 100px; min-width: 100px;">
+									<th class="orderable text-end text-nowrap d-none md:d-table-cell" data-field="resourceMetrics.storage.snapshots" data-default-order="desc" style="width: 100px; min-width: 100px;">
 										<i class="icon-solid icon-clock-rotate-left icon-fw" data-bs-toggle="tooltip" data-bs-original-title="Snapshots"></i>
 										<i class="icon icon-duotone icon-solid icon-sort icon-fw ms-1"></i>
 									</th>

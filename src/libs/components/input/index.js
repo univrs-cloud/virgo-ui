@@ -109,7 +109,7 @@ export class Input extends LitElement {
 	firstUpdated() {
 		const label = this.renderRoot.querySelector('label');
 		if (label) {
-			this.#tooltip = new bootstrap.Tooltip(label);
+			this.#tooltip = new bootstrap.Tooltip(label, { container: this.closest('dialog') ?? 'body' });
 		}
 
 		const input = this.renderRoot.querySelector('input');
@@ -146,33 +146,38 @@ export class Input extends LitElement {
 		}
 
 		const inputType = this.type === 'password' ? (this.showPassword ? 'text' : 'password') : this.type;
-		const hasInputGroup = this.#hasPrefix || this.#hasSuffix;
+		const hasAdorn = this.#hasPrefix || this.#hasSuffix;
+		const input = html`
+			<input
+				type=${inputType}
+				class="${classMap({ 'form-control': !hasAdorn, 'form-ghost': hasAdorn, 'password-input': this.type === 'password', 'is-invalid': this.error && !hasAdorn })}"
+				placeholder=${this.placeholder || (hasAdorn ? ' ' : '')}
+				autocomplete=${this.autocomplete}
+				.value=${this.value}
+				?disabled=${this.disabled}
+				?readonly=${this.readonly}
+				tabindex=${this.readonly ? '-1' : '0'}
+				@focus=${this.#onFocus}
+				@input=${this.#onInput}
+			>
+		`;
 
 		return html`
-			<div class="mb-4">
-				<div class="${classMap({ 'input-group': hasInputGroup })} has-validation">
-					${this.#hasPrefix ? html`<span class="input-group-text"><slot name="prefix" @slotchange=${this.#onSlotChange}></slot></span>` : ''}
-					<div class="form-floating">
-						<input
-							type=${inputType}
-							class="form-control ${classMap({ 'password-input': this.type === 'password', 'is-invalid': this.error })}"
-							placeholder=${this.placeholder}
-							autocomplete=${this.autocomplete}
-							.value=${this.value}
-							?disabled=${this.disabled}
-							?readonly=${this.readonly}
-							tabindex=${this.readonly ? '-1' : '0'}
-							@focus=${this.#onFocus}
-							@input=${this.#onInput}
-						>
-						<label>
-							${this.label}
-							${this.tip ? html`<span class="help-inline ms-1" data-bs-toggle="tooltip" data-bs-original-title="${this.tip}"><i class="icon-solid icon-question-circle"></i></span>` : ''}
-						</label>
-						${this.type === 'password' ? html`<button type="button" class="password-toggle" @click=${this.#togglePassword}></button>` : ''}
-						<div class="invalid-feedback lh-1 z-1 position-absolute top-100 start-0 end-0 ${classMap({ 'd-block': this.error })}">${this.error || ''}</div>
-					</div>
-					${this.#hasSuffix ? html`<span class="input-group-text"><slot name="suffix" @slotchange=${this.#onSlotChange}></slot></span>` : ''}
+			<div class="mb-7">
+				<div class="form-floating">
+					<label>
+						${this.label}
+						${this.tip ? html`<span class="help-inline ms-1" data-bs-toggle="tooltip" data-bs-original-title="${this.tip}"><i class="icon-solid icon-question-circle"></i></span>` : ''}
+					</label>
+					${hasAdorn ? html`
+						<div class="form-control form-adorn ${classMap({ 'is-invalid': this.error })}" @click=${() => { this.focus(); }}>
+							${this.#hasPrefix ? html`<span class="form-adorn-text" aria-hidden="true"><slot name="prefix" @slotchange=${this.#onSlotChange}></slot></span>` : ''}
+							${input}
+							${this.#hasSuffix ? html`<span class="form-adorn-text" aria-hidden="true"><slot name="suffix" @slotchange=${this.#onSlotChange}></slot></span>` : ''}
+						</div>
+					` : input}
+					${this.type === 'password' ? html`<button type="button" class="password-toggle" @click=${this.#togglePassword}></button>` : ''}
+					<div class="invalid-feedback lh-1 z-1 position-absolute top-100 start-0 end-0 ${classMap({ 'd-block': this.error })}">${this.error || ''}</div>
 				</div>
 			</div>
 		`;

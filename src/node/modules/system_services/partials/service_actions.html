@@ -15,39 +15,39 @@
 	<%const canStop = (hasStartStop && isActive);%>
 	<%if (inline) {%>
 		<div class="d-inline-flex align-items-center">
-			<div class="d-inline-flex align-items-center bg-body-secondary bg-opacity-25 border border-light border-opacity-10 rounded-1 pe-3">
-				<a href="#" class="actions-button btn btn-sm border-0 <%=(canStart ? '' : 'disabled')%>" data-action="start" data-bs-toggle="tooltip" data-bs-original-title="Start"><i class="icon-solid icon-play icon-fw <%=(canStart ? 'text-green-400' : 'text-gray-500')%>"></i></a>
-				<a href="#" class="actions-button btn btn-sm border-0 <%=(canRestart ? 'confirm' : 'disabled')%>" data-action="restart" data-bs-toggle="tooltip" data-bs-original-title="Restart"><i class="icon-solid icon-arrow-rotate-left icon-fw <%=(canRestart ? 'text-body-emphasis' : 'text-gray-500')%>"></i></a>
-				<a href="#" class="actions-button btn btn-sm border-0 <%=(canStop ? 'confirm' : 'disabled')%>" data-action="stop" data-bs-toggle="tooltip" data-bs-original-title="Stop"><i class="icon-solid icon-stop icon-fw <%=(canStop ? 'text-red-400' : 'text-gray-500')%>"></i></a>
+			<div class="d-inline-flex align-items-center bg-2 bg-30 border border-white border-10 rounded-3 pe-5">
+				<a href="#" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 <%=(canStart ? '' : 'disabled')%>" data-action="start" data-bs-toggle="tooltip" data-bs-original-title="Start"><i class="icon-solid icon-play icon-fw <%=(canStart ? 'fg-green-400' : 'fg-gray-300')%>"></i></a>
+				<a href="#" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 <%=(canRestart ? 'confirm' : 'disabled')%>" data-action="restart" data-bs-toggle="tooltip" data-bs-original-title="Restart"><i class="icon-solid icon-arrow-rotate-left icon-fw <%=(canRestart ? 'fg-black' : 'fg-gray-300')%>"></i></a>
+				<a href="#" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 <%=(canStop ? 'confirm' : 'disabled')%>" data-action="stop" data-bs-toggle="tooltip" data-bs-original-title="Stop"><i class="icon-solid icon-stop icon-fw <%=(canStop ? 'fg-red-400' : 'fg-gray-300')%>"></i></a>
 			</div>
 	<%}%>
-	<div class="<%=(inline ? 'dropdown position-relative z-1 ms-n3' : 'dropdown')%>">
+	<div class="<%=(inline ? 'dropdown position-relative z-1 ms--5' : 'dropdown')%>">
 		<%if (inline) {%>
-			<span data-bs-toggle="dropdown" class="actions-toggle dropdown-toggle caret-off btn btn-sm border border-light border-opacity-10 rounded-1 px-2 py-1 <%=(isEnableableUnit ? '' : 'disabled')%>"><i class="icon-solid icon-ellipsis-vertical icon-fw <%=(isEnableableUnit ? 'text-secondary' : 'text-gray-500')%>"></i></span>
+			<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="actions-toggle btn-icon btn-text theme-secondary btn-sm border border-white border-10 rounded-3 <%=(isEnableableUnit ? '' : 'disabled')%>"><i class="icon-solid icon-ellipsis-vertical icon-fw <%=(isEnableableUnit ? 'fg-secondary' : 'fg-gray-300')%>"></i></span>
 		<%} else {%>
-			<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
+			<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw fg-secondary"></i></span>
 		<%}%>
-		<div class="dropdown-menu">
+		<div class="menu">
 			<%if (!hasAnyAction) {%>
-				<button type="button" class="dropdown-item disabled">No actions</button>
+				<button type="button" class="menu-item disabled">No actions</button>
 			<%} else {%>
 				<%if (hasStartStop && !inline) {%>
-					<a href="#" class="dropdown-item <%=(!isActive && !isTransitioning ? '' : 'disabled')%>" data-action="start"><i class="icon-regular icon-play icon-fw me-1"></i>Start</a>
-					<a href="#" class="dropdown-item <%=(isActive ? 'confirm' : 'disabled')%>" data-action="restart"><i class="icon-regular icon-arrow-rotate-left icon-fw me-1"></i>Restart</a>
-					<a href="#" class="dropdown-item <%=(isActive ? 'text-danger confirm' : 'disabled')%>" data-action="stop"><i class="icon-regular icon-stop icon-fw me-1"></i>Stop</a>
+					<a href="#" class="menu-item <%=(!isActive && !isTransitioning ? '' : 'disabled')%>" data-action="start"><i class="icon-regular icon-play icon-fw"></i>Start</a>
+					<a href="#" class="menu-item <%=(isActive ? 'confirm' : 'disabled')%>" data-action="restart"><i class="icon-regular icon-arrow-rotate-left icon-fw"></i>Restart</a>
+					<a href="#" class="menu-item <%=(isActive ? 'fg-danger confirm' : 'disabled')%>" data-action="stop"><i class="icon-regular icon-stop icon-fw"></i>Stop</a>
 					<%if (isEnableableUnit) {%>
-						<div class="dropdown-divider"></div>
+						<div class="menu-divider"></div>
 					<%}%>
 				<%}%>
 				<%if (isEnableableUnit) {%>
-					<a href="#" class="dropdown-item <%=(canEnable ? '' : 'disabled')%>" data-action="enable"><i class="icon-regular icon-toggle-on icon-fw me-1"></i>Enable</a>
+					<a href="#" class="menu-item <%=(canEnable ? '' : 'disabled')%>" data-action="enable"><i class="icon-regular icon-toggle-on icon-fw"></i>Enable</a>
 					<%if (hasStartStop) {%>
-						<a href="#" class="dropdown-item <%=(canEnable ? '' : 'disabled')%>" data-action="enable-start"><i class="icon-regular icon-toggle-on icon-fw me-1"></i>Enable &amp; start</a>
+						<a href="#" class="menu-item <%=(canEnable ? '' : 'disabled')%>" data-action="enable-start"><i class="icon-regular icon-toggle-on icon-fw"></i>Enable &amp; start</a>
 					<%}%>
-					<div class="dropdown-divider"></div>
-					<a href="#" class="dropdown-item <%=(canDisable ? 'text-danger confirm' : 'disabled')%>" data-action="disable"><i class="icon-regular icon-toggle-off icon-fw me-1"></i>Disable</a>
+					<div class="menu-divider"></div>
+					<a href="#" class="menu-item <%=(canDisable ? 'fg-danger confirm' : 'disabled')%>" data-action="disable"><i class="icon-regular icon-toggle-off icon-fw"></i>Disable</a>
 					<%if (hasStartStop) {%>
-						<a href="#" class="dropdown-item <%=(canDisable ? 'text-danger confirm' : 'disabled')%>" data-action="disable-stop"><i class="icon-regular icon-toggle-off icon-fw me-1"></i>Disable &amp; stop</a>
+						<a href="#" class="menu-item <%=(canDisable ? 'fg-danger confirm' : 'disabled')%>" data-action="disable-stop"><i class="icon-regular icon-toggle-off icon-fw"></i>Disable &amp; stop</a>
 					<%}%>
 				<%}%>
 			<%}%>

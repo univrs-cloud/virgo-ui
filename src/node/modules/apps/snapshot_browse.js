@@ -315,7 +315,7 @@ const render = () => {
 	if (_.isEmpty(state.selected)) {
 		state.isCollectionOpen = false;
 	}
-	morphdom(modal.querySelector('.modal-content'), browserTemplate({ state, rows, header, crumbs: toCrumbs(), entries: toEntries(), listing: state.listings[state.path], canDownload: !getNodeViewBase(), dataPrefix: DATA_PREFIX, prettyBytes }), {
+	morphdom(modal.querySelector('.dialog-content'), browserTemplate({ state, rows, header, crumbs: toCrumbs(), entries: toEntries(), listing: state.listings[state.path], canDownload: !getNodeViewBase(), dataPrefix: DATA_PREFIX, prettyBytes }), {
 		onBeforeNodeDiscarded: (node) => {
 			return !node.classList?.contains('scrollbar');
 		}
@@ -323,7 +323,7 @@ const render = () => {
 	_.each(modal.querySelectorAll('input[type="checkbox"]'), (input) => {
 		input.indeterminate = (input.dataset.partial === 'true');
 	});
-	modal.querySelector('.modal-body')?.dispatchEvent(new Event('scroll'));
+	modal.querySelector('.dialog-body')?.dispatchEvent(new Event('scroll'));
 };
 
 const foldersTo = (path) => {
@@ -336,14 +336,14 @@ const foldersTo = (path) => {
 };
 
 const reveal = () => {
-	if (!state?.focusPath || state.isLoading || !modal.classList.contains('show')) {
+	if (!state?.focusPath || state.isLoading || !modal.open) {
 		return;
 	}
 
 	const input = _.find(modal.querySelectorAll('.browse-check'), (element) => { return element.dataset.path === state.focusPath; });
 	state.focusPath = null;
 	input?.closest('tr').scrollIntoView({ block: 'center' });
-	modal.querySelector('.modal-body')?.dispatchEvent(new Event('scroll'));
+	modal.querySelector('.dialog-body')?.dispatchEvent(new Event('scroll'));
 };
 
 const load = async () => {
@@ -415,7 +415,7 @@ const open = async (event) => {
 	const session = { snapshot: button.dataset.browseSnapshot, date: button.dataset.browseDate, path: ROOT, focusPath: null, listings: {}, selected: {}, excluded: {}, expanded: {}, filter: [], busyPath: null, loadId: 0, isLoading: false, isCollectionOpen: false, error: null };
 	state = session;
 	render();
-	bootstrap.Modal.getOrCreateInstance(modal).show();
+	bootstrap.Dialog.getOrCreateInstance(modal).show();
 	await navigate(button.dataset.browsePath || ROOT);
 	const focus = button.dataset.browseFocus;
 	if (state !== session || session.error || !focus) {
@@ -559,5 +559,5 @@ const close = () => {
 module.addEventListener('click', open);
 modal.addEventListener('click', click);
 modal.addEventListener('change', change);
-modal.addEventListener('shown.bs.modal', reveal);
-modal.addEventListener('hidden.bs.modal', close);
+modal.addEventListener('shown.bs.dialog', reveal);
+modal.addEventListener('hidden.bs.dialog', close);

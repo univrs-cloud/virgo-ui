@@ -1,7 +1,7 @@
 <%const isPool = (pool.type?.toLowerCase() === 'pool')%>
 <tr class="item <%=(isPool ? 'cursor-pointer' : '')%>" data-id="<%-pool.poolGuid%>"<%=(isPool ? ` data-name="${_.escape(pool.name)}"` : '')%>>
 	<td style="min-width: 210px; max-width: 0;">
-		<div class="d-flex align-items-center mb-n1">
+		<div class="d-flex align-items-center mb--1">
 			<div class="text-truncate">
 				<%if (pool.name === 'system') {%>
 					VirgoOS
@@ -11,48 +11,48 @@
 			</div>
 			<%const driveHealth = poolHealth(pool)%>
 			<%if (driveHealth) {%>
-				<i class="icon-solid icon-triangle-exclamation icon-fw text-<%-driveHealth.color%>-300 ms-1 flex-shrink-0" data-bs-toggle="tooltip" data-bs-custom-class="storage-device" data-bs-original-title="<%=driveHealth.tip%>"></i>
+				<i class="icon-solid icon-triangle-exclamation icon-fw fg-<%-driveHealth.color%>-300 ms-1 flex-shrink-0" data-bs-toggle="tooltip" data-bs-custom-class="storage-device" data-bs-original-title="<%=driveHealth.tip%>"></i>
 			<%}%>
 			<%const rootVdev = pool.vdevs?.[pool.name]%>
 			<%const childVdevs = (rootVdev?.vdevs ? Object.values(rootVdev.vdevs) : [])%>
 			<%const firstVdev = childVdevs[0]%>
 			<%const poolConfig = ((firstVdev && firstVdev.vdevType !== 'disk') ? _.replace(firstVdev.name, /-\d+$/, '') : null)%>
 			<%if (poolConfig) {%>
-				<u-badge class="ms-2" pill><small><%-poolConfig%></small><%if (childVdevs.length > 1) {%><small class="ms-1 opacity-75">&times;<%-childVdevs.length%></small><%}%></u-badge>
+				<u-badge class="ms-3" pill><small><%-poolConfig%></small><%if (childVdevs.length > 1) {%><small class="ms-1 opacity-75">&times;<%-childVdevs.length%></small><%}%></u-badge>
 			<%}%>
 		</div>
 		<div class="d-flex">
-			<div class="text-truncate"><small class="text-body-tertiary"><%=(pool.name === 'system' ? 'system' : 'data')%></small></div>
+			<div class="text-truncate"><small class="fg-4"><%=(pool.name === 'system' ? 'system' : 'data')%></small></div>
 		</div>
 	</td>
-	<td class="text-end text-nowrap d-none d-md-table-cell">
-		<small class="fw-light text-body-secondary"><%=prettyBytes(pool.properties.size.value || 0, { binary: true })%></small>
+	<td class="text-end text-nowrap d-none md:d-table-cell">
+		<small class="fw-light fg-emphasis-secondary"><%=prettyBytes(pool.properties.size.value || 0, { binary: true })%></small>
 	</td>
-	<td class="text-end text-nowrap d-none d-md-table-cell">
+	<td class="text-end text-nowrap d-none md:d-table-cell">
 		<%if (pool.name === 'system') {%>
-			<small class="fw-light text-body-secondary" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(pool.properties.allocated.value || 0, { binary: true })%>"><%=pool.properties.capacity.value?.toFixed(2)%>%</small>
+			<small class="fw-light fg-emphasis-secondary" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(pool.properties.allocated.value || 0, { binary: true })%>"><%=pool.properties.capacity.value?.toFixed(2)%>%</small>
 			<u-progress shadow="false">
 				<u-progress-bar width="<%=pool.properties.capacity.value%>"></u-progress-bar>
 			</u-progress>
 		<%} else {%>
 			<%const capacity = (pool.properties.capacity.value || 0)%>
 			<%const dataColor = (capacity >= 90 ? 'red' : (capacity >= 80 ? 'orange' : 'blue'))%>
-			<small class="fw-light text-body-secondary" data-bs-toggle="tooltip" data-bs-original-title="Data: <%=prettyBytes(pool.properties.usedbydatasets.value || 0, { binary: true })%><br>Snapshots: <%=prettyBytes(pool.properties.usedbysnapshots.value || 0, { binary: true })%>"><%=capacity.toFixed(2)%>%</small>
+			<small class="fw-light fg-emphasis-secondary" data-bs-toggle="tooltip" data-bs-original-title="Data: <%=prettyBytes(pool.properties.usedbydatasets.value || 0, { binary: true })%><br>Snapshots: <%=prettyBytes(pool.properties.usedbysnapshots.value || 0, { binary: true })%>"><%=capacity.toFixed(2)%>%</small>
 			<u-progress shadow="false">
 				<u-progress-bar color="<%=dataColor%>" width="<%=pool.properties.usedbydatasets.percent%>" warning-threshold="999" danger-threshold="999"></u-progress-bar>
 				<u-progress-bar color="indigo" tint="100" width="<%=pool.properties.usedbysnapshots.percent%>" warning-threshold="999" danger-threshold="999"></u-progress-bar>
 			</u-progress>
 		<%}%>
 	</td>
-	<td class="<%=(pool.type?.toLowerCase() === 'pool' && pool.scanStats?.state.toLowerCase() === 'scanning' ? 'text-end' : 'text-center')%> text-nowrap d-none d-md-table-cell">
+	<td class="<%=(pool.type?.toLowerCase() === 'pool' && pool.scanStats?.state.toLowerCase() === 'scanning' ? 'text-end' : 'text-center')%> text-nowrap d-none md:d-table-cell">
 		<%if (pool.type?.toLowerCase() === 'pool' && pool.scanStats) {%>
 			<%if (pool.scanStats?.state.toLowerCase() === 'finished') {%>
 				<%const duration = moment.duration(moment.unix(pool.scanStats.endTime).diff(moment.unix(pool.scanStats.startTime))).humanize()%>
 				<%const tip = `Completed ${moment.unix(pool.scanStats.endTime).fromNow()}.<br>Took ${duration} to scan <strong>${prettyBytes(pool.scanStats.toExamine || 0, { binary: true })}</strong>.<br>Repaired <strong>${prettyBytes(pool.scanStats.processed || 0, { binary: true })}</strong>, ${pool.scanStats.errors || 0} errors.`%>
 				<%if (pool.scanStats.errors > 0) {%>
-					<i class="icon-solid icon-triangle-exclamation icon-fw text-red-300" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
+					<i class="icon-solid icon-triangle-exclamation icon-fw fg-red-300" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
 				<%} else {%>
-					<i class="icon-solid icon-circle-check icon-fw text-green-300" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
+					<i class="icon-solid icon-circle-check icon-fw fg-green-300" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
 				<%}%>
 			<%}%>
 			<%if (pool.scanStats?.state.toLowerCase() === 'scanning') {%>
@@ -62,13 +62,13 @@
 				<%const issued = `${prettyBytes(pool.scanStats.issued || 0, { binary: true })} / ${total}`%>
 				<%const tip = (isPaused ? `<strong>Paused</strong> since ${moment.unix(pool.scanStats.scrubPause).fromNow()}.<br>` : ``) + `Started ${moment.unix(pool.scanStats.startTime).fromNow()}.<br>Scanned ${scanned}.<br>Issued ${issued}.<br>Repaired <strong>${prettyBytes(pool.scanStats.processed || 0, { binary: true })}</strong>, ${pool.scanStats.errors || 0} errors.`%>
 				<%const progress = (pool.scanStats.toExamine === 0 ? 0 : (pool.scanStats.issued / pool.scanStats.toExamine) * 100)%>
-				<small class="fw-light text-body-secondary" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"><%=progress.toFixed(2)%>%</small>
+				<small class="fw-light fg-emphasis-secondary" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"><%=progress.toFixed(2)%>%</small>
 				<u-progress shadow="false">
 					<u-progress-bar color="cyan" tint="300" width="<%=progress%>" striped="<%=(!isPaused)%>" animated="<%=(!isPaused)%>" warning-threshold="999" danger-threshold="999"></u-progress-bar>
 				</u-progress>
 			<%}%>
 		<%} else {%>
-			<span class="text-body-tertiary">&mdash;</span>
+			<span class="fg-4">&mdash;</span>
 		<%}%>
 	</td>
 	<td>
@@ -76,15 +76,15 @@
 	</td>
 	<td class="text-center px-0">
 		<div class="dropdown">
-			<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
-			<div class="dropdown-menu">
-				<button type="button" class="dropdown-item disabled">No actions</button>
+			<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw fg-secondary"></i></span>
+			<div class="menu">
+				<button type="button" class="menu-item disabled">No actions</button>
 			</div>
 		</div>
 	</td>
 	<td class="text-end pe-0">
 		<%if (isPool) {%>
-			<i class="icon-light icon-angle-right icon-fw text-body-tertiary"></i>
+			<i class="icon-light icon-angle-right icon-fw fg-4"></i>
 		<%}%>
 	</td>
 </tr>

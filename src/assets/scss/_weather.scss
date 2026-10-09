@@ -135,8 +135,8 @@
 }
 
 .weather-forecast-popover {
-	--bs-popover-max-width: 350px;
-	--bs-popover-bg: var(--bs-gray-900);
-	--bs-popover-border-color: var(--bs-gray-900);
+	--popover-max-width: 350px;
+	--popover-bg: var(--gray-900);
+	--popover-border-color: var(--gray-900);
 	width: 350px;
 }

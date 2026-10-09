@@ -1,3 +1,8 @@
+@use "sass:meta";
+@use "layers";
+@use "variables" as vars;
+@use "utilities" as custom;
+
 // --------
 // webfonts
 // --------
@@ -5,53 +10,126 @@
 	$css-prefix: "icon",
 	$icon-property: "--icon"
 );
-@use "webfonts/fontawesome";
-@use "webfonts/brands";
-@use "webfonts/solid";
-@use "webfonts/regular";
-@use "webfonts/light";
-@use "webfonts/thin";
-@use "webfonts/duotone";
-@use "webfonts/duotone-regular";
-@use "webfonts/duotone-light";
-@use "webfonts/duotone-thin";
 
 // --------
-// xterm
+// Bootstrap 6.0.0-alpha.1
 // --------
-@use "@xterm/xterm/css/xterm";
+@use "bootstrap/scss/config" with (
+	$enable-gradients: false,
+	$enable-reduced-motion: false,
+	$color-mode-type: "data",
+	$breakpoints: (
+		xs: 0,
+		sm: 576px,
+		md: 768px,
+		lg: 992px,
+		xl: 1200px,
+		2xl: 1400px
+	),
+	$container-max-widths: (
+		xl: 1140px,
+		2xl: 1320px
+	),
+	$negative-spacers: custom.$negative-spacers,
+	$utilities: custom.$utilities
+);
+@use "bootstrap/scss/bootstrap" with (
+	$colors: (
+		"brand": vars.$primary
+	),
+	$theme-colors: (
+		"primary": (
+			"base": var(--brand-500),
+			"fg": light-dark(var(--brand-600), var(--brand-400)),
+			"fg-emphasis": light-dark(var(--brand-800), var(--brand-200)),
+			"bg": var(--brand-500),
+			"bg-subtle": light-dark(var(--brand-100), var(--brand-900)),
+			"bg-muted": light-dark(var(--brand-200), var(--brand-800)),
+			"border": light-dark(var(--brand-300), var(--brand-600)),
+			"focus-ring": light-dark(color-mix(in oklch, var(--brand-500) 50%, var(--bg-body)), color-mix(in oklch, var(--brand-500) 75%, var(--bg-body))),
+			"contrast": var(--white)
+		)
+	),
+	$root-tokens: (
+		--border-color: var(--gray-100),
+		--toast-spacing: .5rem,
+		--body-font-family: vars.$font-family-sans-serif
+	),
+	$button-link-tokens: (
+		--btn-disabled-bg: transparent
+	),
+	$form-floating-tokens: (
+		--form-floating-label-opacity: 65%
+	),
+	$card-tokens: (
+		--card-spacer-y: 1rem,
+		--card-spacer-x: 1rem,
+		--card-cap-padding-y: .5rem,
+		--card-cap-padding-x: 1rem
+	),
+	$tooltip-tokens: (
+		--tooltip-max-width: 400px
+	),
+	$table-tokens: (
+		--table-hover-bg-factor: 2%
+	)
+);
 
-// --------
-// tagify
-// --------
-@use "@yaireo/tagify/src/tagify.scss";
+@layer vendor {
+	@include meta.load-css("webfonts/fontawesome");
+	@include meta.load-css("webfonts/brands");
+	@include meta.load-css("webfonts/solid");
+	@include meta.load-css("webfonts/regular");
+	@include meta.load-css("webfonts/light");
+	@include meta.load-css("webfonts/thin");
+	@include meta.load-css("webfonts/duotone");
+	@include meta.load-css("webfonts/duotone-regular");
+	@include meta.load-css("webfonts/duotone-light");
+	@include meta.load-css("webfonts/duotone-thin");
 
-// --------
-// Inter
-// --------
-@import "inter";
+	// --------
+	// xterm
+	// --------
+	@include meta.load-css("@xterm/xterm/css/xterm");
 
-// --------
-// Custom variables, functions and mixins
-// --------
-@import "variables";
+	// --------
+	// tagify
+	// --------
+	@include meta.load-css("@yaireo/tagify/src/tagify.scss");
+}
 
-// --------
-// Bootstrap 5.3.8
-// --------
-@import "bootstrap";
+@layer custom {
+	// --------
+	// Inter
+	// --------
+	@include meta.load-css("inter");
 
-// --------
-// Custom styles
-// --------
-@import "colors";
-@import "cursors";
-@import "utilities";
-@import "layout";
-@import "forms";
-@import "tables";
-@import "weather";
-@import "theme";
+	// --------
+	// Custom styles
+	// --------
+	@include meta.load-css("colors");
+	@include meta.load-css("layout");
+	@include meta.load-css("forms");
+	@include meta.load-css("tables");
+	@include meta.load-css("weather");
+	@include meta.load-css("theme");
+}
 
-// Must to be imported at the end so new utilities are taken into account
-@import "bootstrap/scss/utilities/api";
+:root,
+:host {
+	--shadow-strength: 1;
+	color-scheme: light;
+}
+
+// Bootstrap's root gutter is unlayered; this override must be unlayered too.
+:root.dialog-open {
+	scrollbar-gutter: auto;
+}
+
+.drawer {
+	--drawer-height: 740px;
+	--drawer-padding-y: 0.875rem;
+	--drawer-inset: 0px;
+	--drawer-border-width: 0;
+	--drawer-border-radius: 0;
+}

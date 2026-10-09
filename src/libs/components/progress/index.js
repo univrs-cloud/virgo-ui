@@ -78,7 +78,7 @@ export class ProgressBar extends LitElement {
 	firstUpdated() {
 		const progressBar = this.renderRoot.querySelector('.progress-bar');
 		if (progressBar) {
-			this.#tooltip = new bootstrap.Tooltip(progressBar);
+			this.#tooltip = new bootstrap.Tooltip(progressBar, { container: this.closest('dialog') ?? 'body' });
 		}
 	}
 

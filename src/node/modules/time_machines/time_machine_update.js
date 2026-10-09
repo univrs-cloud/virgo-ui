@@ -29,7 +29,7 @@ const populateValidUsers = (timeMachine) => {
 };
 
 const updateTimeMachine = (event) => {
-	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
+	_.each(form.querySelectorAll('.dialog-footer u-button'), (button) => { button.disabled = true; });
 	const data = form.getData();
 	const config = {
 		name: data.name,
@@ -37,7 +37,7 @@ const updateTimeMachine = (event) => {
 		refquota: Number(data.refquota) * 1024 * 1024 * 1024
 	};
 	timeMachineService.updateTimeMachine(config);
-	bootstrap.Modal.getInstance(modal)?.hide();
+	bootstrap.Dialog.getInstance(modal)?.hide();
 };
 
 const render = (event) => {
@@ -79,5 +79,5 @@ form.validation = [
 ];
 
 form.addEventListener('valid', updateTimeMachine);
-modal.addEventListener('show.bs.modal', render);
-modal.addEventListener('hidden.bs.modal', restore);
+modal.addEventListener('show.bs.dialog', render);
+modal.addEventListener('hidden.bs.dialog', restore);

@@ -4,7 +4,7 @@ const module = document.querySelector('#sites');
 
 const remove = async (event) => {
 	if (
-		!event.target.closest('a')?.classList?.contains('dropdown-item') ||
+		!event.target.closest('a')?.classList?.contains('menu-item') ||
 		event.target.closest('a')?.dataset.action !== 'remove'
 	) {
 		return;
@@ -22,7 +22,7 @@ const remove = async (event) => {
 		: `Are you sure you want to remove ${name} from inventory?`);
 	if (
 		button.classList.contains('confirm') &&
-		!await confirm(message, { buttons: [{ text: 'Remove', class: 'btn-danger' }], acknowledge: (releasesDomain ? `I understand ${node.fqdn} will be released` : null) })
+		!await confirm(message, { buttons: [{ text: 'Remove', class: 'btn-solid theme-danger' }], acknowledge: (releasesDomain ? `I understand ${node.fqdn} will be released` : null) })
 	) {
 		return;
 	}

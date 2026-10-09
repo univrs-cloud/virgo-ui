@@ -1,49 +1,43 @@
-<div id="smtp" class="modal fade">
+<dialog id="smtp" class="dialog dialog-scrollable">
 	<u-form>
-		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">Notifications</h5>
-				</div>
-				<div class="modal-body">
-					<h6 class="mb-2">SMTP server</h6>
-					<div class="mb-2">
-						<div><small class="fw-light text-body-tertiary">Encryption</small></div>
-						<div class="form-check form-check-inline">
-							<label class="form-check-label">
-								<input type="radio" name="encryption" value="" class="form-check-input encryption">
-								None/StartTLS
-							</label>
-						</div>
-						<div class="form-check form-check-inline">
-							<label class="form-check-label">
-								<input type="radio" name="encryption" value="ssl" class="form-check-input encryption">
-								SSL
-							</label>
-						</div>
-					</div>
-					<div class="row g-2">
-						<div class="col-9">
-							<u-input name="address" label="SMTP server" class="address"></u-input>
-						</div>
-						<div class="col-3">
-							<u-input name="port" label="Port" class="port" placeholder="###"></u-input>
-						</div>
-					</div>
-					<u-input name="username" label="SMTP username" class="username"></u-input>
-					<u-input type="password" name="password" label="SMTP password" class="password" autocomplete="off"></u-input>
-					<u-input name="sender" label="Sender email address" class="sender"></u-input>
-
-					<hr class="border-secondary-subtle my-4">
-					
-					<h6 class="mb-2">Recipients</h6>
-					<u-input type="tags" name="recipients" label="List of email addresses" class="recipients"></u-input>
-				</div>
-				<div class="modal-footer">
-					<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="modal" outline>Cancel</u-button>
-					<u-button type="submit" variant="primary">Update</u-button>
+		<div class="dialog-header">
+			<h1 class="dialog-title">Notifications</h1>
+		</div>
+		<div class="dialog-body">
+			<h5 class="mb-3">SMTP server</h5>
+			<div class="mb-3">
+				<div><small class="fw-light fg-4">Encryption</small></div>
+				<div class="d-flex gap-5">
+					<label class="d-flex align-items-center gap-3">
+						<input type="radio" name="encryption" value="" class="radio encryption">
+						None/StartTLS
+					</label>
+					<label class="d-flex align-items-center gap-3">
+						<input type="radio" name="encryption" value="ssl" class="radio encryption">
+						SSL
+					</label>
 				</div>
 			</div>
+			<div class="row g-3">
+				<div class="col-9">
+					<u-input name="address" label="SMTP server" class="address"></u-input>
+				</div>
+				<div class="col-3">
+					<u-input name="port" label="Port" class="port" placeholder="###"></u-input>
+				</div>
+			</div>
+			<u-input name="username" label="SMTP username" class="username"></u-input>
+			<u-input type="password" name="password" label="SMTP password" class="password" autocomplete="off"></u-input>
+			<u-input name="sender" label="Sender email address" class="sender"></u-input>
+
+			<hr class="border-gray-200 my-5 opacity-25">
+			
+			<h5 class="mb-3">Recipients</h5>
+			<u-input type="tags" name="recipients" label="List of email addresses" class="recipients"></u-input>
+		</div>
+		<div class="dialog-footer">
+			<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="dialog" outline>Cancel</u-button>
+			<u-button type="submit" variant="primary">Update</u-button>
 		</div>
 	</u-form>
-</div>
+</dialog>

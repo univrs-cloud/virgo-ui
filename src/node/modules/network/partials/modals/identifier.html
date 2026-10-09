@@ -1,24 +1,20 @@
-<div id="network-identifier" class="modal fade" tabindex="-1">
+<dialog id="network-identifier" class="dialog dialog-scrollable" tabindex="-1">
 	<u-form>
-		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">Host</h5>
-				</div>
-				<div class="modal-body">
-					<u-input name="hostname" label="Hostname" class="hostname"></u-input>
-					<u-input name="cluster" label="Cluster" class="cluster"></u-input>
-					<u-input name="domainName" label="Domain name" class="domain-name"></u-input>
-					<div class="d-flex align-items-start text-body-secondary">
-						<i class="icon-solid icon-triangle-exclamation icon-fw text-yellow-500 me-2 mt-1"></i>
-						<small>Changing these doesn't reconfigure installed apps. Traefik, Authelia and Terminal need their <span class="font-monospace">DOMAIN</span> updated by hand.</small>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="modal" outline>Cancel</u-button>
-					<u-button type="submit" variant="primary">Update</u-button>
-				</div>
+		<div class="dialog-header">
+			<h1 class="dialog-title">Host</h1>
+		</div>
+		<div class="dialog-body">
+			<u-input name="hostname" label="Hostname" class="hostname"></u-input>
+			<u-input name="cluster" label="Cluster" class="cluster"></u-input>
+			<u-input name="domainName" label="Domain name" class="domain-name"></u-input>
+			<div class="d-flex align-items-start fg-emphasis-secondary">
+				<i class="icon-solid icon-triangle-exclamation icon-fw fg-yellow-500 me-3 mt-1"></i>
+				<small>Changing these doesn't reconfigure installed apps. Traefik, Authelia and Terminal need their <span class="font-monospace">DOMAIN</span> updated by hand.</small>
 			</div>
 		</div>
+		<div class="dialog-footer">
+			<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="dialog" outline>Cancel</u-button>
+			<u-button type="submit" variant="primary">Update</u-button>
+		</div>
 	</u-form>
-</div>
+</dialog>

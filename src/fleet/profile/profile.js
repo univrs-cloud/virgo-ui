@@ -8,14 +8,14 @@ const modal = document.querySelector('#fleet-profile-edit');
 const form = modal.querySelector('u-form');
 
 const updateProfile = async () => {
-	const buttons = form.querySelectorAll('.modal-footer u-button');
+	const buttons = form.querySelectorAll('.dialog-footer u-button');
 	_.each(buttons, (button) => { button.disabled = true; });
 	const data = form.getData();
 	try {
 		const result = await userService.updateUser(data);
 		if (result?.status === 'succeeded') {
 			accountService.patch({ name: data.name });
-			bootstrap.Modal.getInstance(modal)?.hide();
+			bootstrap.Dialog.getInstance(modal)?.hide();
 			return;
 		}
 		notifier.add({ title: result?.message || 'Failed to update profile.', type: 'error', duration: 0 });
@@ -43,5 +43,5 @@ form.validation = [
 	}
 ];
 form.addEventListener('valid', updateProfile);
-modal.addEventListener('show.bs.modal', render);
-modal.addEventListener('hidden.bs.modal', restore);
+modal.addEventListener('show.bs.dialog', render);
+modal.addEventListener('hidden.bs.dialog', restore);

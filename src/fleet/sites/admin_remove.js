@@ -14,7 +14,7 @@ const revoke = async (event) => {
 
 	if (
 		button.classList.contains('confirm') &&
-		!await confirm(`Are you sure you want to remove access for ${email}?`, { buttons: [{ text: 'Remove', class: 'btn-danger' }] })
+		!await confirm(`Are you sure you want to remove access for ${email}?`, { buttons: [{ text: 'Remove', class: 'btn-solid theme-danger' }] })
 	) {
 		return;
 	}
@@ -44,7 +44,7 @@ const revokeGroup = async (event) => {
 
 	if (
 		button.classList.contains('confirm') &&
-		!await confirm(`Are you sure you want to revoke access for group ${groupName}?`, { buttons: [{ text: 'Revoke', class: 'btn-danger' }] })
+		!await confirm(`Are you sure you want to revoke access for group ${groupName}?`, { buttons: [{ text: 'Revoke', class: 'btn-solid theme-danger' }] })
 	) {
 		return;
 	}

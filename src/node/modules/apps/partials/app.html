@@ -1,94 +1,94 @@
 <%const hasActiveContainers = _.some(app.projectContainers, (container) => _.includes(['running', 'restarting'], container.state));%>
 <tr class="item cursor-pointer" data-name="<%-app.name%>">
-	<td class="d-none d-md-table-cell" style="width: 1px;">
+	<td class="d-none md:d-table-cell" style="width: 1px;">
 		<div class="row-image">
 			<%if (app.isUnmanaged) {%>
-				<i class="icon-light icon-layer-group icon-fw text-body-secondary"></i>
+				<i class="icon-light icon-layer-group icon-fw fg-emphasis-secondary"></i>
 			<%} else {%>
 				<img src="<%-(_.includes(app.icon, '/') ? app.icon : `assets/img/apps/${app.icon}`)%>">
 			<%}%>
 		</div>
 	</td>
 	<td style="min-width: 210px; max-width: 0;">
-		<div class="d-flex align-items-center mb-n1">
+		<div class="d-flex align-items-center mb--1">
 			<div class="text-truncate"><%-app.title%></div>
 			<%if (app.isUnmanaged) {%>
-				<u-badge color="gray" tint="300" class="ms-2" pill>Unmanaged</u-badge>
+				<u-badge color="gray" tint="100" class="ms-3" pill>Unmanaged</u-badge>
 			<%}%>
 			<%if (app.hasUpdates) {%>
-				<u-badge color="green" class="ms-2" tip="Updates available" pill>
+				<u-badge color="green" class="ms-3" tip="Updates available" pill>
 					<i class="icon-solid icon-download icon-fw"></i>
 				</u-badge>
 			<%}%>
 		</div>
 		<%if (!_.isEmpty(app.urls)) {%>
 			<%_.each(app.urls, (url) => {%>
-				<a href="<%-url%>" target="<%-(app?.target || app.name)%>" referrerpolicy="no-referrer" class="d-inline-flex align-items-center link-underline link-underline-opacity-0 link-underline-opacity-75-hover pe-none pe-md-auto max-w-100">
-					<small class="text-truncate min-w-0"><%-_.replace(url, /^https?:\/\//, '')%></small><i class="icon-solid icon-arrow-up-right-from-square icon-fw icon-2xs ms-1 d-none d-sm-block"></i>
+				<a href="<%-url%>" target="<%-(app?.target || app.name)%>" referrerpolicy="no-referrer" class="d-inline-flex align-items-center underline-0 hover:underline-80 pe-none md:pe-auto max-w-100">
+					<small class="text-truncate min-w-0"><%-_.replace(url, /^https?:\/\//, '')%></small><i class="icon-solid icon-arrow-up-right-from-square icon-fw icon-2xs ms-1 d-none sm:d-block"></i>
 				</a>
 			<%})%>
 		<%} else {%>
 			&mdash;
 		<%}%>
 	</td>
-	<td class="text-end text-nowrap d-none d-md-table-cell">
+	<td class="text-end text-nowrap d-none md:d-table-cell">
 		<%if (!hasActiveContainers) {%>
-			<small class="fw-light text-body-tertiary">&mdash;</small>
+			<small class="fw-light fg-4">&mdash;</small>
 		<%} else if (!app.resourceMetrics) {%>
 			<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
 		<%} else {%>
-			<small class="fw-light text-body-secondary"><%=app.resourceMetrics?.cpu?.percent.toFixed(2)%>%</small>
+			<small class="fw-light fg-emphasis-secondary"><%=app.resourceMetrics?.cpu?.percent.toFixed(2)%>%</small>
 			<u-progress shadow="false">
 				<u-progress-bar width="<%=app.resourceMetrics?.cpu?.percent%>"></u-progress-bar>
 			</u-progress>
 		<%}%>
 	</td>
-	<td class="text-end text-nowrap d-none d-md-table-cell">
+	<td class="text-end text-nowrap d-none md:d-table-cell">
 		<%if (!hasActiveContainers) {%>
-			<small class="fw-light text-body-tertiary">&mdash;</small>
+			<small class="fw-light fg-4">&mdash;</small>
 		<%} else if (!app.resourceMetrics) {%>
 			<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
 		<%} else {%>
-			<small class="fw-light text-body-secondary" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(app.resourceMetrics?.memory?.usage || 0, { binary: true })%>"><%=app.resourceMetrics?.memory?.percent.toFixed(2)%>%</small>
+			<small class="fw-light fg-emphasis-secondary" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(app.resourceMetrics?.memory?.usage || 0, { binary: true })%>"><%=app.resourceMetrics?.memory?.percent.toFixed(2)%>%</small>
 			<u-progress shadow="false">
 				<u-progress-bar width="<%=app.resourceMetrics?.memory?.percent%>"></u-progress-bar>
 			</u-progress>
 		<%}%>
 	</td>
-	<td class="text-end text-nowrap d-none d-md-table-cell">
+	<td class="text-end text-nowrap d-none md:d-table-cell">
 		<%if (!hasActiveContainers) {%>
-			<small class="fw-light text-body-tertiary">&mdash;</small>
+			<small class="fw-light fg-4">&mdash;</small>
 		<%} else if (!app.resourceMetrics) {%>
 			<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
 		<%} else {%>
-			<small class="fw-light text-body-secondary d-flex">
+			<small class="fw-light fg-emphasis-secondary d-flex">
 				<span class="d-inline-block text-start" style="width: 12px;">
-					<i class="icon-solid icon-arrow-down icon-fw icon-2xs text-blue-500"></i>
+					<i class="icon-solid icon-arrow-down icon-fw icon-2xs fg-blue-500"></i>
 				</span>
 				<span class="ms-auto"><%=prettyBytes(app.resourceMetrics?.network?.rx || 0, { binary: true })%></span>
 			</small>
-			<small class="fw-light text-body-secondary d-flex">
+			<small class="fw-light fg-emphasis-secondary d-flex">
 				<span class="d-inline-block text-start" style="width: 12px;">
-					<i class="icon-solid icon-arrow-up icon-fw icon-2xs text-purple-500"></i>
+					<i class="icon-solid icon-arrow-up icon-fw icon-2xs fg-purple-500"></i>
 				</span>
 				<span class="ms-auto"><%=prettyBytes(app.resourceMetrics?.network?.tx || 0, { binary: true })%></span>
 			</small>
 		<%}%>
 	</td>
-	<td class="text-end text-nowrap d-none d-md-table-cell">
+	<td class="text-end text-nowrap d-none md:d-table-cell">
 		<%if (!app.resourceMetrics) {%>
 			<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
 		<%} else {%>
-			<small class="fw-light text-body-secondary"><%=prettyBytes(app.resourceMetrics?.storage?.dataset || 0, { binary: true })%></small>
+			<small class="fw-light fg-emphasis-secondary"><%=prettyBytes(app.resourceMetrics?.storage?.dataset || 0, { binary: true })%></small>
 		<%}%>
 	</td>
-	<td class="text-nowrap d-none d-md-table-cell">
+	<td class="text-nowrap d-none md:d-table-cell">
 		<div class="d-flex align-items-center w-100">
 			<div class="ms-auto text-end">
 				<%if (!app.resourceMetrics) {%>
 					<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
 				<%} else {%>
-					<small class="fw-light text-body-secondary"><%=prettyBytes(app.resourceMetrics?.storage?.snapshots || 0, { binary: true })%></small>
+					<small class="fw-light fg-emphasis-secondary"><%=prettyBytes(app.resourceMetrics?.storage?.snapshots || 0, { binary: true })%></small>
 				<%}%>
 			</div>
 		</div>
@@ -106,6 +106,6 @@
 		<%=appActionsTemplate({ app, jobs, inline: false })%>
 	</td>
 	<td class="text-end pe-0">
-		<i class="icon-light icon-angle-right icon-fw text-body-tertiary"></i>
+		<i class="icon-light icon-angle-right icon-fw fg-4"></i>
 	</td>
 </tr>

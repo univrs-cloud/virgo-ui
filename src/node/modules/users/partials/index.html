@@ -1,25 +1,25 @@
 <div id="users" class="d-none">
 	<div class="row">
-		<div class="col-12 position-relative mb-3">
-			<h5 class="m-0">
-				<i class="icon-duotone icon-solid icon-user icon-width-auto me-2"></i>
+		<div class="col-12 position-relative mb-5">
+			<h4 class="m-0">
+				<i class="icon-duotone icon-solid icon-user icon-width-auto me-3"></i>
 				Users
-			</h5>
-			<div class="position-absolute top-0 end-0 pe-3 mt-n1">
-				<a href="#user-create" class="btn btn-sm btn-outline-secondary py-1" data-bs-toggle="modal">New user</a>
+			</h4>
+			<div class="position-absolute top-0 end-0 pe-5 mt--1">
+				<a href="#user-create" class="btn-sm btn-outline theme-secondary py-1 min-h-0" data-bs-toggle="dialog">New user</a>
 			</div>
 		</div>
-		<div class="loading d-flex justify-content-center align-items-center h-100"><div class="spinner-border text-gray-600"></div></div>
-		<div class="oops d-flex justify-content-center align-items-center h-100 d-none"><span class="text-red-300">Error fetching data</span></div>
+		<div class="loading d-flex justify-content-center align-items-center h-100"><div class="spinner-border fg-gray-600"></div></div>
+		<div class="oops d-flex justify-content-center align-items-center h-100 d-none"><span class="fg-red-300">Error fetching data</span></div>
 		<div class="container-fluid position-relative d-none">
-			<div class="card rounded-4 border-0">
+			<div class="card border-0">
 				<div class="card-body">
-					<div class="row g-2">
-						<div class="col col-6 col-md-4">
+					<div class="row g-3">
+						<div class="col col-6 md:col-4">
 							<u-input type="search" label="Search" class="search"></u-input>
 						</div>
 					</div>
-					<div class="overflow-y-scroll mt-n3 pe-3 mx-0 me-n3">
+					<div class="overflow-y-scroll mt--5 pe-5 mx-0 me--5">
 						<table class="table table-hover align-middle m-0">
 							<thead class="sticky-top">
 								<tr>
@@ -27,12 +27,12 @@
 										User
 										<i class="icon icon-duotone icon-solid icon-sort icon-fw ms-1"></i>
 									</th>
-									<th class="orderable text-nowrap d-none d-md-table-cell" data-field="fullname">
+									<th class="orderable text-nowrap d-none md:d-table-cell" data-field="fullname">
 										Name
 										<i class="icon icon-duotone icon-solid icon-sort icon-fw ms-1"></i>
 									</th>
-									<th class="text-nowrap d-none d-md-table-cell">Groups</th>
-									<th class="text-center text-nowrap d-none d-md-table-cell" style="width: 40px; min-width: 40px;">
+									<th class="text-nowrap d-none md:d-table-cell">Groups</th>
+									<th class="text-center text-nowrap d-none md:d-table-cell" style="width: 40px; min-width: 40px;">
 										<i class="icon-solid icon-square-terminal icon-fw" data-bs-toggle="tooltip" data-bs-original-title="Shell access"></i>
 									</th>
 									<th class="orderable text-nowrap" data-field="isDisabled" style="width: 85px; min-width: 85px;">

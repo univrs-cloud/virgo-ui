@@ -2,8 +2,8 @@ import page from 'page';
 
 const header = document.querySelector('header');
 const main = document.querySelector('main');
-const offcanvas = document.querySelector('.offcanvas');
-const offcanvasInstance = bootstrap.Offcanvas.getOrCreateInstance(offcanvas);
+const drawer = document.querySelector('.drawer');
+const drawerInstance = bootstrap.Drawer.getOrCreateInstance(drawer);
 
 // Auth / MFA screens: each module exports mount(ctx) and renders a full-page card into <main>.
 // The header carries no app chrome on these routes, so it's cleared first.
@@ -35,8 +35,8 @@ const showApp = (moduleName) => async (ctx) => {
 	await ensureAppShell();
 	ctx.module = moduleName;
 	await loadModule(moduleName);
-	_.each(document.querySelectorAll(':is(header, .offcanvas) .nav-link.active'), (element) => { element.classList.remove('active'); });
-	_.each(document.querySelectorAll(`:is(header, .offcanvas) .nav-link[href="${ctx.pathname}"]`), (element) => { element.classList.add('active'); });
+	_.each(document.querySelectorAll(':is(header, .drawer) .nav-link.active'), (element) => { element.classList.remove('active'); });
+	_.each(document.querySelectorAll(`:is(header, .drawer) .nav-link[href="${ctx.pathname}"]`), (element) => { element.classList.add('active'); });
 	const modules = main.querySelector('.modules');
 	_.each(modules.querySelectorAll(':scope > div'), (element) => { element.classList.add('d-none'); });
 	const moduleElement = modules.querySelector(`#${moduleName}`);
@@ -106,13 +106,13 @@ const navigate = (event) => {
 		return;
 	}
 
-	if (!_.isNull(navLink.closest('.offcanvas'))) {
-		offcanvasInstance?.hide();
+	if (!_.isNull(navLink.closest('.drawer'))) {
+		drawerInstance?.hide();
 	}
 };
 
 header.addEventListener('click', navigate);
-offcanvas.addEventListener('click', navigate);
+drawer.addEventListener('click', navigate);
 
 const routes = [
 	{ path: '/signin', middleware: [guestOnly], handler: showAuthScreen(() => import('fleet/signin')) },

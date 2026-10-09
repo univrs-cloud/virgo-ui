@@ -32,8 +32,8 @@ const toggleOrder = (event) => {
 		_.each(container.querySelectorAll('.group.dragging'), (group) => {
 			group.classList.remove('dragging');
 			const icon = group.querySelector('.order .icon-solid');
-			icon.classList.remove('icon-check', 'text-green-500');
-			icon.classList.add('icon-bars-staggered', 'text-gray-500');
+			icon.classList.remove('icon-check', 'fg-green-500');
+			icon.classList.add('icon-bars-staggered', 'fg-gray-300');
 		});
 	}
 
@@ -44,15 +44,15 @@ const toggleOrder = (event) => {
 		cards = [];
 		hasDraggingStarted = false;
 		group.classList.remove('dragging');
-		icon.classList.remove('icon-check', 'text-green-500');
-		icon.classList.add('icon-bars-staggered', 'text-gray-500');
+		icon.classList.remove('icon-check', 'fg-green-500');
+		icon.classList.add('icon-bars-staggered', 'fg-gray-300');
 		return;
 	}
 
 	hasDraggingStarted = true;
 	group.classList.add('dragging');
-	icon.classList.remove('icon-bars-staggered', 'text-gray-500');
-	icon.classList.add('icon-check', 'text-green-500');
+	icon.classList.remove('icon-bars-staggered', 'fg-gray-300');
+	icon.classList.add('icon-check', 'fg-green-500');
 	sortable = new Sortable(group.querySelector(':scope > .row'), {
 		animation: 150,
 		draggable: '.col',

@@ -51,11 +51,8 @@ const addData = (receiveBytesPerSecond, transmitBytesPerSecond) => {
 	data[2].push(transmitBytesPerSecond || 0);
 };
 
-const hexToRgba = (hex, alpha) => {
-	const red = parseInt(hex.slice(1, 3), 16);
-	const green = parseInt(hex.slice(3, 5), 16);
-	const blue = parseInt(hex.slice(5, 7), 16);
-	return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+const withAlpha = (color, alpha) => {
+	return `color-mix(in srgb, ${color} ${alpha * 100}%, transparent)`;
 };
 
 const getComputedColor = (cssVariableName) => {
@@ -109,8 +106,8 @@ const render = (networkInterface, yAxisMax = DEFAULT_LINK_CAP_BPS) => {
 
 	const safeYMax = Number.isFinite(yAxisMax) && yAxisMax > 0 ? yAxisMax : DEFAULT_LINK_CAP_BPS;
 
-	const blueColor = getComputedColor('--bs-blue-500');
-	const purpleColor = getComputedColor('--bs-purple-500');
+	const blueColor = getComputedColor('--blue-500');
+	const purpleColor = getComputedColor('--purple-500');
 
 	const makeGradientFill = (color) => {
 		return (plot, seriesIndex) => {
@@ -128,9 +125,9 @@ const render = (networkInterface, yAxisMax = DEFAULT_LINK_CAP_BPS) => {
 				gradientBottomY = plot.height || 1;
 			}
 			const gradient = plot.ctx.createLinearGradient(0, gradientTopY, 0, gradientBottomY);
-			gradient.addColorStop(0, hexToRgba(color, 0.6));
-			gradient.addColorStop(0.4, hexToRgba(color, 0.35));
-			gradient.addColorStop(1, hexToRgba(color, 0.05));
+			gradient.addColorStop(0, withAlpha(color, 0.6));
+			gradient.addColorStop(0.4, withAlpha(color, 0.35));
+			gradient.addColorStop(1, withAlpha(color, 0.05));
 			return gradient;
 		};
 	};

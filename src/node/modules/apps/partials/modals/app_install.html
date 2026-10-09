@@ -1,22 +1,18 @@
-<div id="app-install" class="modal fade">
+<dialog id="app-install" class="dialog dialog-scrollable">
 	<u-form>
-		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">App install</h5>
-				</div>
-				<div class="modal-body">
-					<div class="mb-4">
-						<p class="description mb-2"></p>
-						<p class="note alert alert-info p-2 mb-0 d-none"></p>
-					</div>
-					<div class="inputs"></div>
-				</div>
-				<div class="modal-footer">
-					<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="modal" outline>Cancel</u-button>
-					<u-button type="submit" variant="primary">Install</u-button>
-				</div>
+		<div class="dialog-header">
+			<h1 class="dialog-title">App install</h1>
+		</div>
+		<div class="dialog-body">
+			<div class="mb-7">
+				<p class="description mb-3"></p>
+				<p class="note alert theme-info p-3 mb-0 d-none"></p>
 			</div>
+			<div class="inputs"></div>
+		</div>
+		<div class="dialog-footer">
+			<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="dialog" outline>Cancel</u-button>
+			<u-button type="submit" variant="primary">Install</u-button>
 		</div>
 	</u-form>
-</div>
+</dialog>

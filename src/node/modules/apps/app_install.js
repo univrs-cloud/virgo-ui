@@ -71,20 +71,20 @@ const renderCertResolver = (domain) => {
 };
 
 const install = (event) => {
-	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
+	_.each(form.querySelectorAll('.dialog-footer u-button'), (button) => { button.disabled = true; });
 	const env = form.getData();
 	const data = {
 		name: app.name,
 		env
 	};
 	appCenterService.install(data);
-	bootstrap.Modal.getInstance(modal)?.hide();
+	bootstrap.Dialog.getInstance(modal)?.hide();
 };
 
 const render = (event) => {
 	const name = event.relatedTarget.closest('.item').dataset.name;
 	app = _.find(appCenterService.getTemplates(), { name });
-	form.querySelector('.modal-title').textContent = app.title;
+	form.querySelector('.dialog-title').textContent = app.title;
 	form.querySelector('.description').textContent = app.description;
 	form.querySelector('.note').textContent = app.note || '';
 	form.querySelector('.note').classList[app.note ? 'remove' : 'add']('d-none');
@@ -186,7 +186,7 @@ const restore = (event) => {
 	nodeResolver = null;
 	certResolverChoice = null;
 	isCertResolverHidden = null;
-	_.each(form.querySelectorAll('.modal-title, .description, .note, .inputs'), (node) => { node.innerHTML = ''; });
+	_.each(form.querySelectorAll('.dialog-title, .description, .note, .inputs'), (node) => { node.innerHTML = ''; });
 	form.querySelector('.note').classList.add('d-none');
 	form.validation = [];
 	form.reset();
@@ -194,5 +194,5 @@ const restore = (event) => {
 
 form.validation = [];
 form.addEventListener('valid', install);
-modal.addEventListener('show.bs.modal', render);
-modal.addEventListener('hidden.bs.modal', restore);
+modal.addEventListener('show.bs.dialog', render);
+modal.addEventListener('hidden.bs.dialog', restore);

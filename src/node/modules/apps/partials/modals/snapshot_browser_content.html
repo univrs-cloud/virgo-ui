@@ -1,15 +1,15 @@
-<div class="modal-content h-100">
+<div class="dialog-content">
 	<%
 		const stateColors = { deleted: 'red-500', modified: 'yellow-600', renamed: 'blue-500', moved: 'indigo-500' };
-		const crumbStyle = '--bs-btn-color: var(--bs-body-color); --bs-btn-hover-color: var(--bs-body-color); --bs-btn-active-color: var(--bs-body-color); --bs-btn-hover-bg: var(--bs-secondary-bg); --bs-btn-active-bg: var(--bs-secondary-bg);';
-		const crumbPartStyle = '--bs-btn-color: var(--bs-body-color); --bs-btn-hover-color: var(--bs-body-color); --bs-btn-active-color: var(--bs-body-color); --bs-btn-hover-bg: rgba(var(--bs-body-color-rgb), 0.08); --bs-btn-active-bg: rgba(var(--bs-body-color-rgb), 0.08);';
+		const crumbStyle = '--btn-color: var(--fg-body); --btn-hover-color: var(--fg-body); --btn-active-color: var(--fg-body); --btn-hover-bg: var(--bg-2); --btn-active-bg: var(--bg-2);';
+		const crumbPartStyle = '--btn-color: var(--fg-body); --btn-hover-color: var(--fg-body); --btn-active-color: var(--fg-body); --btn-hover-bg: color-mix(in oklch, var(--fg-body) 8%, transparent); --btn-active-bg: color-mix(in oklch, var(--fg-body) 8%, transparent);';
 	%>
-	<div class="modal-header">
-		<h5 class="modal-title">Browse files <small class="text-body-tertiary">as of <%-state.date%></small></h5>
+	<div class="dialog-header">
+		<h1 class="dialog-title">Browse files <small class="fg-4">as of <%-state.date%></small></h1>
 	</div>
-	<div class="modal-body">
+	<div class="dialog-body">
 		<%if (state.isCollectionOpen) {%>
-			<table class="table table-sm table-hover align-middle mb-2" style="table-layout: fixed; margin-top: -1rem;">
+			<table class="table table-sm table-hover align-middle mb-3" style="table-layout: fixed; margin-top: -1rem;">
 				<colgroup>
 					<col>
 					<col style="width: 7rem;">
@@ -17,10 +17,11 @@
 				</colgroup>
 				<thead class="sticky-top" style="top: -1rem;">
 					<tr>
-						<th colspan="3" class="fw-normal border-0 px-0 pt-3">
+						<th colspan="3" class="fw-normal border-0 px-0 pt-5">
 							<nav>
-								<ol class="breadcrumb align-items-center mb-2">
-									<li class="breadcrumb-item"><a href="#" class="browse-collection text-decoration-none">Files</a></li>
+								<ol class="breadcrumb align-items-center mb-3">
+									<li class="breadcrumb-item"><a href="#" class="browse-collection breadcrumb-link">Files</a></li>
+									<li class="breadcrumb-divider mx-3">/</li>
 									<li class="breadcrumb-item active">Selected</li>
 								</ol>
 							</nav>
@@ -36,8 +37,8 @@
 					<%_.each(entries, (entry) => {%>
 						<tr>
 							<td>
-								<div class="d-flex align-items-center gap-2 min-w-0">
-									<i class="icon-light <%=(entry.kind === 'file' ? 'icon-file' : 'icon-folder')%> icon-fw text-body-tertiary"></i>
+								<div class="d-flex align-items-center gap-3 min-w-0">
+									<i class="icon-light <%=(entry.kind === 'file' ? 'icon-file' : 'icon-folder')%> icon-fw fg-4"></i>
 									<div class="min-w-0">
 										<span class="d-block text-truncate"><%-entry.path.slice(dataPrefix.length)%></span>
 										<%if (entry.kind === 'group') {%>
@@ -45,28 +46,28 @@
 										<%} else if (entry.kind === 'folder' && !_.isEmpty(entry.items)) {%>
 											<a href="#" class="browse-expand d-block small text-decoration-none" data-path="<%-entry.path%>">Everything except <%=_.size(entry.items)%><i class="icon-solid <%=(entry.isOpen ? 'icon-caret-up' : 'icon-caret-down')%> icon-xs ms-1"></i></a>
 										<%} else if (entry.kind === 'folder') {%>
-											<small class="d-block text-body-tertiary">Everything inside</small>
+											<small class="d-block fg-4">Everything inside</small>
 										<%}%>
 									</div>
 								</div>
 							</td>
-							<td class="text-end text-nowrap text-body-secondary"><%=(entry.kind === 'folder' ? 'Folder' : prettyBytes(entry.size || 0, { binary: true }))%></td>
-							<td class="text-end"><a href="#" class="<%=(entry.kind === 'group' ? 'browse-remove-group' : 'browse-remove')%> text-body-tertiary text-decoration-none" data-path="<%-entry.path%>"><i class="icon-solid icon-xmark icon-fw"></i></a></td>
+							<td class="text-end text-nowrap fg-emphasis-secondary"><%=(entry.kind === 'folder' ? 'Folder' : prettyBytes(entry.size || 0, { binary: true }))%></td>
+							<td class="text-end"><a href="#" class="<%=(entry.kind === 'group' ? 'browse-remove-group' : 'browse-remove')%> fg-4 text-decoration-none" data-path="<%-entry.path%>"><i class="icon-solid icon-xmark icon-fw"></i></a></td>
 						</tr>
 						<%if (entry.isOpen) {%>
 							<%_.each(entry.items, (item) => {%>
 								<tr>
 									<td>
-										<div class="d-flex align-items-center gap-2 min-w-0 ps-4">
-											<i class="icon-light <%=(item.isDir ? 'icon-folder' : 'icon-file')%> icon-fw text-body-tertiary"></i>
-											<span class="text-truncate <%=(entry.kind === 'folder' ? 'text-body-tertiary text-decoration-line-through' : '')%>"><%-item.path.slice(entry.path.length + 1)%></span>
+										<div class="d-flex align-items-center gap-3 min-w-0 ps-7">
+											<i class="icon-light <%=(item.isDir ? 'icon-folder' : 'icon-file')%> icon-fw fg-4"></i>
+											<span class="text-truncate <%=(entry.kind === 'folder' ? 'fg-4 text-decoration-line-through' : '')%>"><%-item.path.slice(entry.path.length + 1)%></span>
 										</div>
 									</td>
 									<%if (entry.kind === 'folder') {%>
 										<td colspan="2" class="text-end text-nowrap"><a href="#" class="browse-include small text-decoration-none" data-path="<%-item.path%>">Put back</a></td>
 									<%} else {%>
-										<td class="text-end text-nowrap text-body-secondary"><%=prettyBytes(item.size || 0, { binary: true })%></td>
-										<td class="text-end"><a href="#" class="browse-remove text-body-tertiary text-decoration-none" data-path="<%-item.path%>"><i class="icon-solid icon-xmark icon-fw"></i></a></td>
+										<td class="text-end text-nowrap fg-emphasis-secondary"><%=prettyBytes(item.size || 0, { binary: true })%></td>
+										<td class="text-end"><a href="#" class="browse-remove fg-4 text-decoration-none" data-path="<%-item.path%>"><i class="icon-solid icon-xmark icon-fw"></i></a></td>
 									<%}%>
 								</tr>
 							<%})%>
@@ -75,7 +76,7 @@
 				</tbody>
 			</table>
 		<%} else {%>
-			<table class="table table-sm table-hover align-middle mb-2" style="table-layout: fixed; margin-top: -1rem;">
+			<table class="table table-sm table-hover align-middle mb-3" style="table-layout: fixed; margin-top: -1rem;">
 				<colgroup>
 					<col style="width: 2rem;">
 					<col>
@@ -84,22 +85,25 @@
 				</colgroup>
 				<thead class="sticky-top" style="top: -1rem;">
 					<tr>
-						<th colspan="4" class="fw-normal border-0 px-0 pt-3">
+						<th colspan="4" class="fw-normal border-0 px-0 pt-5">
 								<nav>
-									<ol class="breadcrumb align-items-center mb-2">
+									<ol class="breadcrumb align-items-center mb-3">
 										<%_.each(crumbs, (crumb, index) => {%>
+											<%if (index > 0) {%>
+												<li class="breadcrumb-divider mx-3">/</li>
+											<%}%>
 											<li class="breadcrumb-item d-flex align-items-center">
-												<span class="dropdown btn d-flex align-items-center p-0 border-0" style="<%=crumbStyle%>">
+												<span class="dropdown btn-text theme-secondary d-flex align-items-stretch gap-0 p-0 border-0 min-h-0" style="<%=crumbStyle%>">
 													<%if (index === crumbs.length - 1) {%>
-														<span class="px-2 py-1 fw-semibold text-break"><%-crumb.name%></span>
+														<span class="px-3 py-1 fw-semibold text-break"><%-crumb.name%></span>
 													<%} else {%>
-														<a href="#" class="browse-go btn px-2 py-1 border-0 text-break" style="<%=crumbPartStyle%>" data-path="<%-crumb.path%>"><%-crumb.name%></a>
+														<a href="#" class="browse-go btn-text theme-secondary px-3 py-1 border-0 text-break min-h-0" style="<%=crumbPartStyle%>" data-path="<%-crumb.path%>"><%-crumb.name%></a>
 													<%}%>
 													<%if (!_.isEmpty(crumb.siblings)) {%>
-														<a href="#" class="btn px-1 py-1 border-0" style="<%=crumbPartStyle%>" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy":"fixed"}'><i class="icon-solid icon-caret-down icon-xs"></i></a>
-														<div class="dropdown-menu shadow overflow-y-auto" style="max-height: 16rem; overscroll-behavior: contain;">
+														<a href="#" class="btn-text theme-secondary px-1 py-1 border-0 min-h-0" style="<%=crumbPartStyle%>" data-bs-toggle="menu" data-bs-strategy="fixed"><i class="icon-solid icon-caret-down icon-xs"></i></a>
+														<div class="menu shadow shadow-opacity-100 overflow-y-auto" style="max-height: 16rem; overscroll-behavior: contain;">
 															<%_.each(crumb.siblings, (sibling) => {%>
-																<a href="#" class="browse-go dropdown-item <%=(sibling.path === crumb.path ? 'active' : '')%>" data-path="<%-sibling.path%>"><%-sibling.name%></a>
+																<a href="#" class="browse-go menu-item <%=(sibling.path === crumb.path ? 'active' : '')%>" data-path="<%-sibling.path%>"><%-sibling.name%></a>
 															<%})%>
 														</div>
 													<%}%>
@@ -109,37 +113,37 @@
 									</ol>
 								</nav>
 								<%if (listing?.isDeleted) {%>
-									<div class="small text-body-tertiary mt-2">This folder was deleted.</div>
+									<div class="small fg-4 mt-3">This folder was deleted.</div>
 								<%} else if (listing?.movedTo) {%>
-									<div class="small text-body-tertiary text-break mt-2">This folder is now at <%-listing.movedTo.slice(dataPrefix.length)%>.</div>
+									<div class="small fg-4 text-break mt-3">This folder is now at <%-listing.movedTo.slice(dataPrefix.length)%>.</div>
 								<%}%>
 								<%if (listing?.isIndexed === false) {%>
-									<div class="small text-body-tertiary mt-2">This restore point is not indexed yet, so changes are not shown.</div>
+									<div class="small fg-4 mt-3">This restore point is not indexed yet, so changes are not shown.</div>
 								<%}%>
 								<%if (state.error) {%>
-									<div class="small text-danger mt-2"><%-state.error%></div>
+									<div class="small fg-danger mt-3"><%-state.error%></div>
 								<%}%>
 	
 						</th>
 					</tr>
 					<tr>
-						<th><input type="checkbox" class="browse-check-all form-check-input" <%=(header.isChecked ? 'checked' : '')%> <%=(_.isEmpty(rows) ? 'disabled' : '')%> data-partial="<%=header.isPartial%>"></th>
+						<th><input type="checkbox" class="browse-check-all check align-middle" <%=(header.isChecked ? 'checked' : '')%> <%=(_.isEmpty(rows) ? 'disabled' : '')%> data-partial="<%=header.isPartial%>"></th>
 						<th>Name</th>
 						<th>
-							<div class="d-flex align-items-center gap-2">
+							<div class="d-flex align-items-center gap-3">
 								<span>Now</span>
 								<%if (state.path !== '') {%>
 									<span class="dropdown fw-normal">
-										<a href="#" class="text-decoration-none <%=(_.isEmpty(state.filter) ? 'text-body-tertiary' : 'text-primary')%>" data-bs-toggle="dropdown" data-bs-auto-close="outside" data-bs-popper-config='{"strategy":"fixed"}'><i class="icon-solid icon-filter icon-xs"></i><%if (!_.isEmpty(state.filter)) {%><small class="ms-1"><%=_.size(state.filter)%></small><%}%></a>
-										<div class="dropdown-menu shadow">
+										<a href="#" class="text-decoration-none <%=(_.isEmpty(state.filter) ? 'fg-4' : 'fg-primary')%>" data-bs-toggle="menu" data-bs-auto-close="outside" data-bs-strategy="fixed"><i class="icon-solid icon-filter icon-xs"></i><%if (!_.isEmpty(state.filter)) {%><small class="ms-1"><%=_.size(state.filter)%></small><%}%></a>
+										<div class="menu shadow shadow-opacity-100">
 											<%_.each(['deleted', 'modified', 'renamed', 'moved'], (name) => {%>
-												<label class="dropdown-item d-flex align-items-center gap-2">
-													<input type="checkbox" class="browse-filter form-check-input m-0" value="<%=name%>" <%=(_.includes(state.filter, name) ? 'checked' : '')%>>
+												<label class="menu-item d-flex align-items-center gap-3">
+													<input type="checkbox" class="browse-filter check m-0" value="<%=name%>" <%=(_.includes(state.filter, name) ? 'checked' : '')%>>
 													<span><%=_.startCase(name)%></span>
 												</label>
 											<%})%>
-											<div class="dropdown-divider"></div>
-											<button type="button" class="browse-filter-clear dropdown-item" <%=(_.isEmpty(state.filter) ? 'disabled' : '')%>>Show all</button>
+											<div class="menu-divider"></div>
+											<button type="button" class="browse-filter-clear menu-item" <%=(_.isEmpty(state.filter) ? 'disabled' : '')%>>Show all</button>
 										</div>
 									</span>
 								<%}%>
@@ -152,31 +156,31 @@
 					<%if (state.isLoading) {%>
 						<tr>
 							<td colspan="4" class="border-0">
-								<div class="d-flex justify-content-center align-items-center gap-2 py-3">
-									<div class="spinner-border spinner-border-sm text-gray-600"></div>
-									<span class="text-body-tertiary">Loading...</span>
+								<div class="d-flex justify-content-center align-items-center gap-3 py-5">
+									<div class="spinner-border spinner-sm fg-gray-600"></div>
+									<span class="fg-4">Loading...</span>
 								</div>
 							</td>
 						</tr>
 					<%} else if (_.isEmpty(rows) && !state.error) {%>
 						<tr>
-							<td colspan="4" class="border-0 px-0 small text-body-tertiary"><%=(_.isEmpty(state.filter) ? 'This folder is empty.' : 'Nothing matches the filter.')%></td>
+							<td colspan="4" class="border-0 px-0 small fg-4"><%=(_.isEmpty(state.filter) ? 'This folder is empty.' : 'Nothing matches the filter.')%></td>
 						</tr>
 					<%} else {%>
 						<%_.each(rows, (row) => {%>
 							<tr>
-								<td><input type="checkbox" class="browse-check form-check-input" data-path="<%-row.path%>" <%=(row.isChecked ? 'checked' : '')%> <%=(state.busyPath === row.path ? 'disabled' : '')%> data-partial="<%=row.isPartial%>"></td>
+								<td><input type="checkbox" class="browse-check check align-middle" data-path="<%-row.path%>" <%=(row.isChecked ? 'checked' : '')%> <%=(state.busyPath === row.path ? 'disabled' : '')%> data-partial="<%=row.isPartial%>"></td>
 								<td>
-									<div class="d-flex align-items-center gap-2 min-w-0">
-										<i class="icon-light <%=(row.isDir ? 'icon-folder' : 'icon-file')%> icon-fw text-body-tertiary"></i>
+									<div class="d-flex align-items-center gap-3 min-w-0">
+										<i class="icon-light <%=(row.isDir ? 'icon-folder' : 'icon-file')%> icon-fw fg-4"></i>
 										<div class="min-w-0">
 											<%if (row.isDir) {%>
-												<a href="#" class="browse-go d-block text-body text-decoration-none text-truncate" data-path="<%-row.path%>"><%-row.label%></a>
+												<a href="#" class="browse-go d-block fg-body text-decoration-none text-truncate" data-path="<%-row.path%>"><%-row.label%></a>
 											<%} else {%>
 												<span class="d-block text-truncate"><%-row.label%></span>
 											<%}%>
 											<%if (row.currentPath) {%>
-												<small class="d-block text-body-tertiary text-truncate">Now at <%-row.currentPath.slice(dataPrefix.length)%></small>
+												<small class="d-block fg-4 text-truncate">Now at <%-row.currentPath.slice(dataPrefix.length)%></small>
 											<%}%>
 										</div>
 									</div>
@@ -184,16 +188,16 @@
 								<td>
 									<div class="d-flex flex-wrap align-items-center gap-1">
 										<%_.each(row.states, (name) => {%>
-											<span class="badge rounded-pill border fw-normal text-<%=stateColors[name]%> border-<%=stateColors[name]%>"><%=_.startCase(name)%></span>
+											<span class="badge bg-transparent rounded-pill border fw-normal fg-<%=stateColors[name]%> border-<%=stateColors[name]%>"><%=_.startCase(name)%></span>
 										<%})%>
 										<%if (row.changesInside > 0) {%>
-											<small class="text-body-secondary"><%=row.changesInside%> <%=(_.isEmpty(state.filter) ? 'changed' : 'matching')%> inside</small>
+											<small class="fg-emphasis-secondary"><%=row.changesInside%> <%=(_.isEmpty(state.filter) ? 'changed' : 'matching')%> inside</small>
 										<%} else if (_.isEmpty(row.states) && state.path !== '' && listing?.isIndexed === true) {%>
-											<small class="text-body-tertiary">Unchanged</small>
+											<small class="fg-4">Unchanged</small>
 										<%}%>
 									</div>
 								</td>
-								<td class="text-end text-nowrap text-body-secondary"><%=(row.isDir ? '' : prettyBytes(row.size || 0, { binary: true }))%></td>
+								<td class="text-end text-nowrap fg-emphasis-secondary"><%=(row.isDir ? '' : prettyBytes(row.size || 0, { binary: true }))%></td>
 							</tr>
 						<%})%>
 					<%}%>
@@ -201,18 +205,18 @@
 			</table>
 		<%}%>
 	</div>
-	<div class="modal-footer">
-		<div class="d-flex align-items-center gap-2 me-auto">
+	<div class="dialog-footer">
+		<div class="d-flex align-items-center gap-3 me-auto">
 			<span><%=_.size(state.selected)%> selected</span>
 			<%if (!_.isEmpty(state.selected)) {%>
-				<button type="button" class="browse-collection btn btn-link btn-sm p-0 text-decoration-none"><%=(state.isCollectionOpen ? 'Back to files' : 'Show')%></button>
-				<button type="button" class="browse-clear btn btn-link btn-sm p-0 text-decoration-none">Clear</button>
+				<button type="button" class="browse-collection btn-link d-inline-block btn-sm p-0 text-decoration-none min-h-0"><%=(state.isCollectionOpen ? 'Back to files' : 'Show')%></button>
+				<button type="button" class="browse-clear btn-link d-inline-block btn-sm p-0 text-decoration-none min-h-0">Clear</button>
 			<%}%>
 		</div>
-		<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+		<button type="button" class="btn-outline theme-secondary" data-bs-dismiss="dialog">Cancel</button>
 		<%if (canDownload) {%>
-			<button type="button" class="browse-download btn btn-outline-primary" <%=(_.isEmpty(state.selected) ? 'disabled' : '')%>>Download</button>
+			<button type="button" class="browse-download btn-outline theme-primary" <%=(_.isEmpty(state.selected) ? 'disabled' : '')%>>Download</button>
 		<%}%>
-		<button type="button" class="browse-restore btn btn-primary" <%=(_.isEmpty(state.selected) ? 'disabled' : '')%>>Restore</button>
+		<button type="button" class="browse-restore btn-solid theme-primary" <%=(_.isEmpty(state.selected) ? 'disabled' : '')%>>Restore</button>
 	</div>
 </div>

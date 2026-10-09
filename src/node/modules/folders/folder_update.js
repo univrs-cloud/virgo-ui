@@ -22,7 +22,7 @@ const populateValidUsers = (folder) => {
 };
 
 const updateFolder = (event) => {
-	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
+	_.each(form.querySelectorAll('.dialog-footer u-button'), (button) => { button.disabled = true; });
 	const data = form.getData();
 	const validUsers = Array.from(form.querySelectorAll('.valid-users u-checkbox'))
 		.filter((cb) => cb.checked)
@@ -34,7 +34,7 @@ const updateFolder = (event) => {
 		...(!isNextcloudPath && { refquota: Number(data.refquota) * 1024 * 1024 * 1024 })
 	};
 	folderService.updateFolder(config);
-	bootstrap.Modal.getInstance(modal)?.hide();
+	bootstrap.Dialog.getInstance(modal)?.hide();
 };
 
 const render = (event) => {
@@ -77,5 +77,5 @@ const refquotaValidation = {
 form.validation = [refquotaValidation];
 
 form.addEventListener('valid', updateFolder);
-modal.addEventListener('show.bs.modal', render);
-modal.addEventListener('hidden.bs.modal', restore);
+modal.addEventListener('show.bs.dialog', render);
+modal.addEventListener('hidden.bs.dialog', restore);

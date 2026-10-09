@@ -1,36 +1,36 @@
-<div class="modal-content">
-	<div class="modal-header">
-		<h5 class="modal-title">File already exists</h5>
+<div class="dialog-content">
+	<div class="dialog-header">
+		<h1 class="dialog-title">File already exists</h1>
 	</div>
-	<div class="modal-body">
-		<p class="mb-3"><strong class="text-break"><%-state.inspection.name%></strong> is already in <strong class="text-break"><%-destination%></strong>.</p>
+	<div class="dialog-body">
+		<p class="mb-5"><strong class="text-break"><%-state.inspection.name%></strong> is already in <strong class="text-break"><%-destination%></strong>.</p>
 		<%if (state.error) {%>
-			<div class="small text-danger mb-3"><%-state.error%></div>
+			<div class="small fg-danger mb-5"><%-state.error%></div>
 		<%}%>
-		<div class="row g-2">
+		<div class="row g-3">
 			<div class="col-6">
-				<div class="border rounded p-2 h-100">
-					<small class="d-block text-body-tertiary">In the folder now</small>
+				<div class="border rounded-4 p-3 h-100">
+					<small class="d-block fg-4">In the folder now</small>
 					<div><%=prettyBytes(state.inspection.existing.size, { binary: true })%></div>
-					<small class="text-body-secondary"><%=moment(state.inspection.existing.modifiedAt).format('D MMM YYYY, HH:mm')%></small>
+					<small class="fg-emphasis-secondary"><%=moment(state.inspection.existing.modifiedAt).format('D MMM YYYY, HH:mm')%></small>
 				</div>
 			</div>
 			<div class="col-6">
-				<div class="border rounded p-2 h-100">
-					<small class="d-block text-body-tertiary">From <%-state.file.date%></small>
+				<div class="border rounded-4 p-3 h-100">
+					<small class="d-block fg-4">From <%-state.file.date%></small>
 					<div><%=prettyBytes(state.inspection.source.size, { binary: true })%></div>
-					<small class="text-body-secondary"><%=moment(state.inspection.source.modifiedAt).format('D MMM YYYY, HH:mm')%></small>
+					<small class="fg-emphasis-secondary"><%=moment(state.inspection.source.modifiedAt).format('D MMM YYYY, HH:mm')%></small>
 				</div>
 			</div>
 		</div>
 	</div>
-	<div class="modal-footer">
-		<button type="button" class="btn btn-outline-secondary me-auto" data-bs-dismiss="modal" <%=(state.busy ? 'disabled' : '')%>>Cancel</button>
-		<button type="button" class="restore-confirm btn btn-outline-primary" data-conflict="copy" <%=(state.busy ? 'disabled' : '')%>>
-			<%if (state.busy === 'copy') {%><span class="spinner-border spinner-border-sm me-1"></span><%}%>Restore as a copy
+	<div class="dialog-footer">
+		<button type="button" class="btn-outline theme-secondary me-auto" data-bs-dismiss="dialog" <%=(state.busy ? 'disabled' : '')%>>Cancel</button>
+		<button type="button" class="restore-confirm btn-outline theme-primary" data-conflict="copy" <%=(state.busy ? 'disabled' : '')%>>
+			<%if (state.busy === 'copy') {%><span class="spinner-border spinner-sm"></span><%}%>Restore as a copy
 		</button>
-		<button type="button" class="restore-confirm btn btn-danger" data-conflict="overwrite" <%=(state.busy ? 'disabled' : '')%>>
-			<%if (state.busy === 'overwrite') {%><span class="spinner-border spinner-border-sm me-1"></span><%}%>Overwrite
+		<button type="button" class="restore-confirm btn-solid theme-danger" data-conflict="overwrite" <%=(state.busy ? 'disabled' : '')%>>
+			<%if (state.busy === 'overwrite') {%><span class="spinner-border spinner-sm"></span><%}%>Overwrite
 		</button>
 	</div>
 </div>

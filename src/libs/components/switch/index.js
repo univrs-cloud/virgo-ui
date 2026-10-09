@@ -51,21 +51,20 @@ export class Switch extends LitElement {
 
 	render() {
 		return html`
-			${this.label ? html`<small class="fw-light text-body-tertiary">${this.label}</small>` : ''}
-			<div class="d-flex align-items-center">
-				${this.offLabel ? html`<div class="form-check form-switch form-check-inline ps-0 mb-0 me-2"><label class="form-check-label">${this.offLabel}</label> </div>` : ''}
-				<div class="form-check form-switch form-check-inline mb-0">
+			${this.label ? html`<small class="fw-light fg-4">${this.label}</small>` : ''}
+			<div class="d-flex align-items-center gap-3">
+				${this.offLabel ? html`<label>${this.offLabel}</label>` : ''}
+				<div class="switch">
 					<input
 						type="checkbox"
-						class="form-check-input"
 						role="switch"
 						aria-checked=${this.checked}
 						.checked=${this.checked}
 						?disabled=${this.disabled}
 						@change=${this.#onChange}
 					>
-					${this.onLabel ? html`<label class="form-check-label">${this.onLabel}</label>` : ''}
 				</div>
+				${this.onLabel ? html`<label>${this.onLabel}</label>` : ''}
 			</div>
 		`;
 	}
