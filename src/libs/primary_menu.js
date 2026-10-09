@@ -48,7 +48,7 @@ header.addEventListener('scroll', updateScrollShadows, true);
 window.addEventListener('resize', updateScrollShadows);
 new MutationObserver(updateScrollShadows).observe(header, { childList: true, subtree: true });
 new bootstrap.Tooltip(header, {
-	selector: 'body.menu-collapsed header nav .nav-link, header nav .menu-toggle',
+	selector: 'body.menu-collapsed header nav .nav-link, body.menu-collapsed header nav .account .btn, header nav .menu-toggle',
 	placement: 'right',
 	trigger: 'hover',
 	title: (link) => {
