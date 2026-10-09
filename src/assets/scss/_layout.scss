@@ -497,6 +497,9 @@ html:not(:has(head > base[href="/"])) {
 				margin-bottom: map-get($spacers, 2);
 				opacity: 0.25;
 			}
+			.nodes:empty + .nav-title {
+				display: none;
+			}
 			.nav-link {
 				position: relative;
 				u-badge {
