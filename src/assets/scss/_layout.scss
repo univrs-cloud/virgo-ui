@@ -584,7 +584,7 @@ html:not(:has(head > base[href="/"])) {
 			}
 			.nodes {
 				.nav-title,
-				.btn-group > a,
+				[data-bs-toggle="menu"] + a,
 				[data-bs-toggle="menu"] > span,
 				[data-bs-toggle="menu"] > .icon-caret-down {
 					display: none;
@@ -595,9 +595,9 @@ html:not(:has(head > base[href="/"])) {
 					padding-left: 0;
 				}
 				.menu {
-					position: fixed;
-					top: 4.5rem;
-					left: 3.25rem;
+					position: fixed !important;
+					top: 4.5rem !important;
+					left: 3.25rem !important;
 					width: auto !important;
 				}
 			}
