@@ -39,7 +39,7 @@ u-toast {
 u-badge .hover-reveal-text {
 	display: inline-block;
 	max-width: 0;
-	margin-left: 0;
+	margin-left: calc(-1 * var(--badge-gap, 0px));
 	overflow: hidden;
 	opacity: 0;
 	white-space: nowrap;
@@ -48,7 +48,7 @@ u-badge .hover-reveal-text {
 
 u-badge:hover .hover-reveal-text {
 	max-width: 6rem;
-	margin-left: map.get($spacers, 1);
+	margin-left: 0;
 	opacity: 1;
 }
 

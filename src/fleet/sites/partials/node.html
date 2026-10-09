@@ -104,12 +104,12 @@
 				<%}%>
 				<%if (upsBadge) {%>
 					<u-badge color="<%=upsBadge.color%>" tint="<%=upsBadge.tint%>" class="z-1 position-relative me-1" pill tip="<%=upsBadge.tip%>">
-						<i class="icon-solid <%=upsBadge.icon%> me-1" style="<%=upsBadge.animation%>"></i><%=upsBadge.label%>
+						<i class="icon-solid <%=upsBadge.icon%>" style="<%=upsBadge.animation%>"></i><%=upsBadge.label%>
 					</u-badge>
 				<%}%>
 				<%if (node.update?.state === 'running' && node.update.stage) {%>
 					<u-badge color="blue" tint="500" class="z-1 position-relative me-1" pill tip="<%=(node.update.stage === 'download' ? 'Downloading' : 'Installing')%> system updates">
-						<i class="icon-solid <%=(node.update.stage === 'download' ? 'icon-download' : 'icon-cog icon-spin')%> me-1"></i><%=node.update.percent%>%
+						<i class="icon-solid <%=(node.update.stage === 'download' ? 'icon-download' : 'icon-cog icon-spin')%>"></i><%=node.update.percent%>%
 					</u-badge>
 				<%} else if (node.update?.state === 'running') {%>
 					<u-badge color="blue" tint="500" class="z-1 position-relative me-1" pill tip="Updating system">
@@ -146,7 +146,7 @@
 					<a href="#node-app-updates" data-bs-toggle="dialog" data-node-id="<%-node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
 						<%if (!_.isEmpty(updating)) {%>
 							<u-badge color="blue" pill tip="Updating <%-_.join(_.map(updating, (app) => { return app.title; }), ', ')%>">
-								<i class="icon-solid icon-gear icon-spin me-1"></i><%=_.size(updating)%>
+								<i class="icon-solid icon-gear icon-spin"></i><%=_.size(updating)%>
 							</u-badge>
 						<%} else {%>
 							<u-badge color="blue" pill tip="<%=_.pluralize('app update', _.size(node.updates.apps), true)%>">
