@@ -1,7 +1,7 @@
 <%if (!isAuthenticated) {%>
-	<a href="/login?rd=<%=encodeURIComponent(window.location)%>" rel="external" class="btn btn-sm btn-primary me-2">
-		<i class="icon-duotone icon-solid icon-person-to-portal icon-fw me-2"></i>
-		Sign in
+	<a href="/login?rd=<%=encodeURIComponent(window.location)%>" rel="external" class="btn btn-sm btn-primary me-2 me-sm-0">
+		<i class="icon-duotone icon-solid icon-person-to-portal icon-fw"></i>
+		<span class="nav-label ms-2">Sign in</span>
 	</a>
 <%} else {%>
 	<div class="dropdown dropup d-flex align-items-center">
