@@ -1,73 +1,69 @@
-<div id="network-interface" class="modal fade" tabindex="-1">
+<dialog id="network-interface" class="dialog dialog-scrollable" tabindex="-1">
 	<u-form>
 		<u-input type="hidden" name="name" class="name"></u-input>
-		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">Network interface</h5>
-				</div>
-				<div class="modal-body">
-					<div class="alert alert-light">
-						<dl class="m-0">
-							<dt class="fw-light text-body-tertiary"><small>Name</small></dt>
-							<dd class="interface-name m-0"></dd>
-						</dl>
-					</div>
-					<div class="mb-3">
-						<u-switch name="method" on-value="auto" off-value="manual" on-label="Automatic" off-label="Manual" label="Configuration method" class="dhcp"></u-switch>
-					</div>
-					<div class="row">
-						<div class="manual col-12">
-							<div class="row g-2">
-								<div class="col-6">
-									<u-input name="ipAddress" label="IP address" class="ip-address" placeholder="###.###.###.###"></u-input>
-								</div>
-								<div class="col-3">
-									<u-input name="netmask" label="Netmask" class="netmask" placeholder="##"></u-input>
-								</div>
-							</div>
+		<div class="dialog-header">
+			<h1 class="dialog-title">Network interface</h1>
+		</div>
+		<div class="dialog-body">
+			<div class="alert theme-secondary mb-5">
+				<dl class="m-0">
+					<dt class="fw-light fg-4"><small>Name</small></dt>
+					<dd class="interface-name m-0"></dd>
+				</dl>
+			</div>
+			<div class="mb-5">
+				<u-switch name="method" on-value="auto" off-value="manual" on-label="Automatic" off-label="Manual" label="Configuration method" class="dhcp"></u-switch>
+			</div>
+			<div class="row">
+				<div class="manual col-12">
+					<div class="row g-3">
+						<div class="col-6">
+							<u-input name="ipAddress" label="IP address" class="ip-address" placeholder="###.###.###.###"></u-input>
 						</div>
-						<div class="manual col-12">
-							<div class="row g-2">
-								<div class="col-6">
-									<u-input name="virtualIp" label="Virtual IP" class="virtual-ip" placeholder="###.###.###.###"></u-input>
-								</div>
-							</div>
-						</div>
-						<div class="manual col-6">
-							<u-input name="gateway" label="Default gateway" class="gateway" placeholder="###.###.###.###"></u-input>
-						</div>
-						<div class="manual col-12">
-							<div class="dns-server row g-2 align-items-center">
-								<div class="col-6">
-									<u-input name="dnsServer1" label="DNS server 1" class="dns-server-1" placeholder="###.###.###.###"></u-input>
-								</div>
-							</div>
-							<div class="dns-server row g-2 align-items-center d-none">
-								<div class="col-6">
-									<u-input name="dnsServer2" label="DNS server 2" class="dns-server-2" placeholder="###.###.###.###"></u-input>
-								</div>
-								<div class="col-auto mb-4">
-									<u-button variant="secondary" class="remove d-flex" outline><i class="icon-regular icon-times icon-fw"></i></u-button>
-								</div>
-							</div>
-							<div class="dns-server row g-2 align-items-center d-none">
-								<div class="col-6">
-									<u-input name="dnsServer3" label="DNS server 3" class="dns-server-3" placeholder="###.###.###.###"></u-input>
-								</div>
-								<div class="col-auto mb-4">
-									<u-button variant="secondary" class="remove d-flex" outline><i class="icon-regular icon-times icon-fw"></i></u-button>
-								</div>
-							</div>
-							<button type="button" class="add btn btn-link p-0"><i class="icon-regular icon-plus icon-fw me-1"></i>Add DNS</button>
+						<div class="col-3">
+							<u-input name="netmask" label="Netmask" class="netmask" placeholder="##"></u-input>
 						</div>
 					</div>
 				</div>
-				<div class="modal-footer">
-					<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="modal" outline>Cancel</u-button>
-					<u-button type="submit" variant="primary">Update</u-button>
+				<div class="manual col-12">
+					<div class="row g-3">
+						<div class="col-6">
+							<u-input name="virtualIp" label="Virtual IP" class="virtual-ip" placeholder="###.###.###.###"></u-input>
+						</div>
+					</div>
+				</div>
+				<div class="manual col-6">
+					<u-input name="gateway" label="Default gateway" class="gateway" placeholder="###.###.###.###"></u-input>
+				</div>
+				<div class="manual col-12">
+					<div class="dns-server row g-3 align-items-center">
+						<div class="col-6">
+							<u-input name="dnsServer1" label="DNS server 1" class="dns-server-1" placeholder="###.###.###.###"></u-input>
+						</div>
+					</div>
+					<div class="dns-server row g-3 align-items-center d-none">
+						<div class="col-6">
+							<u-input name="dnsServer2" label="DNS server 2" class="dns-server-2" placeholder="###.###.###.###"></u-input>
+						</div>
+						<div class="col-auto mb-7">
+							<u-button variant="secondary" class="remove d-flex" outline><i class="icon-regular icon-times icon-fw"></i></u-button>
+						</div>
+					</div>
+					<div class="dns-server row g-3 align-items-center d-none">
+						<div class="col-6">
+							<u-input name="dnsServer3" label="DNS server 3" class="dns-server-3" placeholder="###.###.###.###"></u-input>
+						</div>
+						<div class="col-auto mb-7">
+							<u-button variant="secondary" class="remove d-flex" outline><i class="icon-regular icon-times icon-fw"></i></u-button>
+						</div>
+					</div>
+					<button type="button" class="add btn-link d-inline-block p-0 min-h-0"><i class="icon-regular icon-plus icon-fw me-1"></i>Add DNS</button>
 				</div>
 			</div>
 		</div>
+		<div class="dialog-footer">
+			<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="dialog" outline>Cancel</u-button>
+			<u-button type="submit" variant="primary">Update</u-button>
+		</div>
 	</u-form>
-</div>
+</dialog>

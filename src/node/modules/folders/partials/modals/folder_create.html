@@ -1,33 +1,29 @@
-<div id="folder-create" class="modal fade">
+<dialog id="folder-create" class="dialog dialog-scrollable">
 	<u-form>
-		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">New folder</h5>
+		<div class="dialog-header">
+			<h1 class="dialog-title">New folder</h1>
+		</div>
+		<div class="dialog-body">
+			<div class="loading d-flex justify-content-center align-items-center gap-3 py-3">
+				<div class="spinner-border spinner-sm fg-gray-600"></div>
+				<span class="fg-4">Preparing...</span>
+			</div>
+			<div class="content d-none">
+				<u-select name="path" label="Path" class="path"></u-select>
+				<u-input name="comment" label="Name" class="comment"></u-input>
+				<div class="mb-5">
+					<label class="form-label">Authorized users</label>
+					<div class="valid-users d-flex flex-column gap-1"></div>
+					<div class="form-text">Leave all unchecked for guest access</div>
 				</div>
-				<div class="modal-body">
-					<div class="loading d-flex justify-content-center align-items-center gap-2 py-2">
-						<div class="spinner-border spinner-border-sm text-gray-600"></div>
-						<span class="text-body-tertiary">Preparing...</span>
-					</div>
-					<div class="content d-none">
-						<u-select name="path" label="Path" class="path"></u-select>
-						<u-input name="comment" label="Name" class="comment"></u-input>
-						<div class="mb-3">
-							<label class="form-label">Authorized users</label>
-							<div class="valid-users d-flex flex-column gap-1"></div>
-							<div class="form-text">Leave all unchecked for guest access</div>
-						</div>
-						<u-input name="refquota" label="Capacity" class="refquota">
-							<span slot="suffix" class="mb-n3">GiB</span>
-						</u-input>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="modal" outline>Cancel</u-button>
-					<u-button type="submit" variant="primary">Create</u-button>
-				</div>
+				<u-input name="refquota" label="Capacity" class="refquota">
+					<span slot="suffix">GiB</span>
+				</u-input>
 			</div>
 		</div>
+		<div class="dialog-footer">
+			<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="dialog" outline>Cancel</u-button>
+			<u-button type="submit" variant="primary">Create</u-button>
+		</div>
 	</u-form>
-</div>
+</dialog>

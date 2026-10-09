@@ -1,8 +1,5 @@
-@supports (font-variation-settings: normal) {
-	:root {
-		--bs-body-font-family: "InterVariable", #{$font-family-sans-serif};
-	}
-}
+@use "sass:map";
+@use "bootstrap/scss/config" as *;
 
 img {
 	max-width: 100%;
@@ -15,38 +12,20 @@ u-toast {
 .dropdown {
 	position: relative;
 }
-.dropdown-toggle {
-	&::after {
-		vertical-align: middle;
-	}
-	&.caret-off::after {
-		display: none;
-	}
-}
-.dropdown-menu {
-	--bs-dropdown-bg: rgba(var(--bs-body-bg-rgb), 0.2);
-	--bs-dropdown-padding-x: 0.5rem;
-	--bs-dropdown-header-padding-x: 0.5rem;
-	--bs-dropdown-item-padding-x: 0.5rem;
-	--bs-dropdown-border-width: 0;
-	z-index: 1029;
+.menu {
+	--menu-zindex: 1029;
+	--menu-bg: color-mix(in oklch, var(--bg-body) 20%, transparent);
+	--menu-padding-x: 0.5rem;
+	--menu-header-padding-x: 0.5rem;
+	--menu-item-padding-x: 0.5rem;
+	--menu-border-width: 0;
 	backdrop-filter: blur(18px) grayscale(0.8) saturate(180%);
-	margin-top: 0;
 }
-.dropdown-item {
-	--bs-dropdown-link-hover-bg: rgba(0, 0, 0, 0.1);
-	border-radius: var(--bs-dropdown-border-radius);
-	&.text-danger:hover {
+.menu-item {
+	--menu-item-hover-bg: rgba(0, 0, 0, 0.1);
+	&.fg-danger:hover {
 		background-color: color-mix(in oklab, lab(48.4493% 77.4328 61.5452)10%, transparent);
 	}
-}
-.dropup {
-	.dropdown-menu {
-		margin-bottom: 0;
-	}
-}
-.account-toggle:hover {
-	background-color: tint-color($primary, 20%) !important;
 }
 
 .badge:not(.rounded-pill) {
@@ -69,47 +48,46 @@ u-badge .hover-reveal-text {
 
 u-badge:hover .hover-reveal-text {
 	max-width: 6rem;
-	margin-left: map-get($spacers, 1);
+	margin-left: map.get($spacers, 1);
 	opacity: 1;
 }
 
 .tooltip {
-	--bs-tooltip-zindex: 99999;
+	--tooltip-zindex: 99999;
 	&.storage-scan-progress {
-		--bs-tooltip-max-width: 400px;
+		--tooltip-max-width: 400px;
 	}
 	&.storage-device {
-		--bs-tooltip-max-width: 360px;
+		--tooltip-max-width: 360px;
 		.tooltip-inner {
 			text-align: left;
 		}
 	}
 }
 
-.modal {
-	--bs-modal-border-radius: var(--bs-border-radius-xl);
-	backdrop-filter: blur(6px) grayscale(0.8);
-}
-// u-form renders in light DOM and moves its children into a generated inner <form>, so a modal that
-// wraps its dialog in <u-form> inserts two block wrappers between .modal and .modal-dialog. That
-// breaks the percentage-height chain .modal-dialog-centered relies on, silently defeating its
-// vertical centering. display: contents drops both wrappers from layout so .modal-dialog lays out as
-// a direct child of .modal, exactly as Bootstrap expects.
-.modal > u-form,
-.modal > u-form > form {
-	display: contents;
-}
-.modal-dialog {
-	&.modal-fullscreen {
-		.modal-body {
+.dialog {
+	--dialog-border-width: 0;
+	--dialog-header-border-width: 0;
+	--dialog-footer-border-width: 0;
+	--dialog-backdrop-blur: 6px;
+	background-clip: initial;
+	&:not(.hiding)::backdrop {
+		backdrop-filter: blur(var(--dialog-backdrop-blur)) grayscale(0.8);
+	}
+	&:not([open]) {
+		position: fixed;
+		top: 0;
+	}
+	&.dialog-fullscreen {
+		.dialog-body {
 			max-height: none;
 		}
 	}
-}
-.modal-content {
-	position: relative;
-	background-clip: initial;
-	border: 0;
+	> u-form,
+	> u-form > form,
+	> .dialog-content {
+		display: contents;
+	}
 	.scrollbar {
 		opacity: 0;
 		z-index: 2000;
@@ -137,7 +115,7 @@ u-badge:hover .hover-reveal-text {
 		background: rgba(0, 0, 0, 0.5);
 	}
 }
-.modal-header {
+.dialog-header {
 	z-index: 2000;
 	position: absolute;
 	top: 0;
@@ -145,10 +123,9 @@ u-badge:hover .hover-reveal-text {
 	right: 0;
 	background-color: rgba(255, 255, 255, 0.25);
 	backdrop-filter: blur(8px);
-	border-bottom: 0;
-	border-radius: var(--bs-modal-border-radius);
+	border-radius: var(--dialog-border-radius);
 }
-.modal-body {
+.dialog-body {
 	overflow: auto;
 	// max-height: calc(100vh - 170px);
 	padding-top: 66px; // take into consideration input focus glow
@@ -159,11 +136,11 @@ u-badge:hover .hover-reveal-text {
 	&.has-scrollbar {
 		margin-right: 8px;
 	}
-	&:has(+ .modal-footer) {
+	&:has(+ .dialog-footer) {
 		padding-bottom: 70px;
 	}
 }
-.modal-footer {
+.dialog-footer {
 	position: absolute;
 	bottom: 0;
 	left: 0;
@@ -171,15 +148,14 @@ u-badge:hover .hover-reveal-text {
 	z-index: 2000;
 	background-color: rgba(255, 255, 255, 0.25);
 	backdrop-filter: blur(8px);
-	border-top: 0;
-	border-radius: var(--bs-modal-border-radius);
+	border-radius: var(--dialog-border-radius);
 	~ .scrollbar {
 		bottom: 70px;
 	}
 }
 
 .card {
-	--bs-card-border-color: var(--bs-gray-200);
+	--card-border-color: var(--gray-100);
 	position: relative;
 	margin-bottom: 1rem;
 	.card-spacer {
@@ -205,15 +181,14 @@ u-badge:hover .hover-reveal-text {
 		}
 	}
 	.card-footer {
-		border-left: var(--bs-card-border-width) solid var(--bs-card-border-color);
-		border-right: var(--bs-card-border-width) solid var(--bs-card-border-color);
+		border-left: var(--card-border-width) solid var(--card-border-color);
+		border-right: var(--card-border-width) solid var(--card-border-color);
 	}
-	.dropdown-toggle {
-		--bs-btn-active-border-color: transparent;
-		--bs-btn-hover-bg: var(--bs-gray-200);
-		--bs-btn-active-bg: var(--bs-gray-400);
-		--bs-btn-padding-x: 0.25rem;
-		--bs-btn-padding-y: 0.1rem;
+	[data-bs-toggle="menu"],
+	.btn-icon {
+		--btn-active-border-color: transparent;
+		--btn-hover-bg: var(--gray-100);
+		--btn-active-bg: var(--gray-200);
 	}
 	.indicator {
 		z-index: 1;
@@ -221,6 +196,18 @@ u-badge:hover .hover-reveal-text {
 		top: 0.15rem;
 		right: -1.35rem;
 		transform: translate(-50%,-50%);
+	}
+}
+.card-body {
+	display: block;
+	> :is(h1, h2, h3, h4, h5, h6) {
+		margin-bottom: 0.5rem;
+	}
+	> :is(p, ul, ol, dl, pre, blockquote, figure, .table) {
+		margin-bottom: 1rem;
+	}
+	> .row {
+		margin-top: calc(-1 * var(--gutter-y));
 	}
 }
 :host(.indicator) .badge {
@@ -238,13 +225,13 @@ u-badge:hover .hover-reveal-text {
 		height: calc(100dvh - 32px - var(--chrome));
 	}
 }
-.btn.actions-toggle {
-	--bs-btn-bg: var(--bs-gray-200);
-	--bs-btn-disabled-bg: var(--bs-gray-200);
+.actions-toggle {
+	--btn-bg: var(--gray-100);
+	--btn-disabled-bg: var(--gray-100);
 }
-.btn.actions-button {
-	--bs-btn-hover-bg: var(--bs-secondary-bg);
-	--bs-btn-active-bg: var(--bs-secondary-bg);
+.actions-button {
+	--btn-hover-bg: var(--bg-2);
+	--btn-active-bg: var(--bg-2);
 }
 #weather {
 	.weather-icon {
@@ -263,7 +250,7 @@ u-badge:hover .hover-reveal-text {
 	}
 }
 #notifications {
-	.dropdown-toggle {
+	[data-bs-toggle="menu"] {
 		&.icon-dot::before {
 			content: '';
 			z-index: 1;
@@ -273,7 +260,7 @@ u-badge:hover .hover-reveal-text {
 			width: 0.85rem;
 			height: 0.85rem;
 			border-radius: 50%;
-			background-color: var(--bs-primary);
+			background-color: var(--primary-base);
 			border: 2px solid #ecf2f8;
 		}
 		.icon-bell {
@@ -297,8 +284,8 @@ u-badge:hover .hover-reveal-text {
 }
 #resource-usage {
 	.badge{
-		--bs-badge-padding-y: 0.55em;
-		--bs-badge-padding-y: 0.25em;
+		--badge-padding-y: 0.55em;
+		--badge-padding-y: 0.25em;
 	}
 	small.fw-light {
 		font-size: 0.775em;
@@ -306,8 +293,8 @@ u-badge:hover .hover-reveal-text {
 }
 #dashboard {
 	.group {
-		border-radius: var(--bs-border-radius-xl);
-		padding: map-get($spacers, 2) 0 map-get($spacers, 1);
+		border-radius: var(--radius-9);
+		padding: map.get($spacers, 3) 0 map.get($spacers, 1);
 		.order {
 			display: flex;
 			align-items: center;
@@ -316,21 +303,21 @@ u-badge:hover .hover-reveal-text {
 		.card {
 			transition: box-shadow 0.3s ease-in-out;
 			&:hover {
-				background: var(--bs-light) !important;
-				box-shadow: var(--bs-box-shadow-sm);
+				background: var(--bg-1) !important;
+				box-shadow: var(--box-shadow-sm);
 			}
 		}
 	}
 	.dragging {
-		background: var(--bs-purple-100) !important;
-		border-radius: var(--bs-border-radius-xl) !important;
-		padding-left: map-get($spacers, 2);
-		padding-right: map-get($spacers, 2);
-		margin: 0 map-get($spacers, 2) * -1;
+		background: var(--purple-100) !important;
+		border-radius: var(--radius-9) !important;
+		padding-left: map.get($spacers, 3);
+		padding-right: map.get($spacers, 3);
+		margin: 0 map.get($spacers, 3) * -1;
 	}
 }
 #resources-monitor {
-	padding-bottom: map-get($spacers, 1);
+	padding-bottom: map.get($spacers, 1);
 }
 #apps,
 #shortcuts,
@@ -355,8 +342,8 @@ u-badge:hover .hover-reveal-text {
 	.table {
 		tbody {
 			td {
-				padding-top: $table-cell-padding-y-sm;
-				padding-bottom: $table-cell-padding-y-sm;
+				padding-top: .25rem;
+				padding-bottom: .25rem;
 			}
 		}
 	}
@@ -371,7 +358,7 @@ u-badge:hover .hover-reveal-text {
 		.item:has(.logs-container:not(.d-none)) .overflow-y-scroll,
 		.item:has(.terminal-container:not(.d-none)) .overflow-y-scroll {
 			overflow-y: hidden !important;
-			margin-right: calc(var(--scrollbar-width) + map-get($spacers, 3) * -1) !important;
+			margin-right: calc(var(--scrollbar-width) + map.get($spacers, 5) * -1) !important;
 		}
 	}
 }
@@ -399,10 +386,10 @@ u-badge:hover .hover-reveal-text {
 #storage,
 #system-services {
 	&:has(.details .item) > .row > .container-fluid > .card {
-		background-color: var(--bs-dark-bg-subtle);
-		margin-top: map-get($spacers, 2) * -1;
-		margin-left: map-get($spacers, 4);
-		margin-right: map-get($spacers, 4);
+		background-color: var(--gray-200);
+		margin-top: map.get($spacers, 3) * -1;
+		margin-left: map.get($spacers, 7);
+		margin-right: map.get($spacers, 7);
 		> .card-body {
 			height: calc(100dvh - 64px - var(--chrome));
 		}
@@ -432,7 +419,7 @@ u-badge:hover .hover-reveal-text {
 		.wrapper {
 			height: calc(100% - 40px);
 			isolation: isolate;
-			padding: map-get($spacers, 2) map-get($spacers, 1) map-get($spacers, 2) map-get($spacers, 3);
+			padding: map.get($spacers, 3) map.get($spacers, 1) map.get($spacers, 3) map.get($spacers, 5);
 		}
 	}
 	.logs-container {
@@ -443,37 +430,37 @@ u-badge:hover .hover-reveal-text {
 			min-height: 0;
 			list-style: none;
 			overflow-y: scroll;
-			background-color: var(--bs-black);
-			padding: 0 map-get($spacers, 3) 0 0;
-			margin: map-get($spacers, 2) map-get($spacers, 1) map-get($spacers, 2) map-get($spacers, 3);
+			background-color: var(--black);
+			padding: 0 map.get($spacers, 5) 0 0;
+			margin: map.get($spacers, 3) map.get($spacers, 1) map.get($spacers, 3) map.get($spacers, 5);
 		}
 		li {
-			font-family: var(--bs-font-monospace);
+			font-family: var(--font-mono);
 			font-size: 12px;
 			line-height: 18px;
-			color: var(--bs-white);
+			color: var(--white);
 			display: flex;
 			gap: 0.5em;
 			align-items: flex-start;
 			border-left: 3px solid transparent;
-			padding-left: map-get($spacers, 2);
+			padding-left: map.get($spacers, 3);
 			&.log-warning {
-				border-left-color: $orange-500;
-				background-color: rgba($orange-500, 0.15);
+				border-left-color: var(--orange-500);
+				background-color: color-mix(in oklch, var(--orange-500) 15%, transparent);
 			}
 			&.log-error {
-				border-left-color: $red-500;
-				background-color: rgba($red-500, 0.2);
+				border-left-color: var(--red-500);
+				background-color: color-mix(in oklch, var(--red-500) 20%, transparent);
 			}
 			&:hover {
-				color: var(--bs-black);
-				background-color: var(--bs-gray-100);
+				color: var(--black);
+				background-color: var(--gray-025);
 				.log-timestamp {
-					color: var(--bs-gray-700);
+					color: var(--gray-700);
 				}
 			}
 			.log-timestamp {
-				color: var(--bs-gray-500);
+				color: var(--gray-300);
 				flex-shrink: 0;
 				white-space: nowrap;
 				// The prefix eats most of the width on narrow screens, leaving the message unreadable.
@@ -493,7 +480,7 @@ u-badge:hover .hover-reveal-text {
 	}
 }
 #app-center {
-	.modal-body {
+	.dialog-body {
 		height: 100dvh;
 	}
 }
@@ -501,14 +488,14 @@ u-badge:hover .hover-reveal-text {
 	transform: rotate(180deg);
 }
 #storage {
-	--vdev-line-color: var(--bs-border-color);
+	--vdev-line-color: var(--border-color);
 	.vdev-tree {
 		--vdev-slot-width: 4.25rem;
 		.vdev-bar {
 			width: calc(100% - var(--vdev-slot-width));
 			height: 0;
 			margin: 0 auto;
-			border-top: var(--bs-border-width) solid var(--vdev-line-color);
+			border-top: var(--border-width) solid var(--vdev-line-color);
 		}
 		.vdev-slots {
 			display: flex;
@@ -523,8 +510,8 @@ u-badge:hover .hover-reveal-text {
 		}
 		.vdev-stem {
 			width: 0;
-			height: map-get($spacers, 2);
-			border-left: var(--bs-border-width) solid var(--vdev-line-color);
+			height: map.get($spacers, 3);
+			border-left: var(--border-width) solid var(--vdev-line-color);
 		}
 		.vdev-disk {
 			font-size: 1.75rem;
@@ -533,9 +520,9 @@ u-badge:hover .hover-reveal-text {
 	}
 }
 .tree-rows {
-	--tree-line-color: var(--bs-border-color);
-	--tree-path-color: var(--bs-secondary-color);
-	--tree-selected-color: var(--bs-primary);
+	--tree-line-color: var(--border-color);
+	--tree-path-color: var(--secondary-fg-emphasis);
+	--tree-selected-color: var(--primary-base);
 	--tree-elbow-width: 0.9rem;
 	--tree-icon-radius: 0.6rem;
 	.tree-row {
@@ -548,8 +535,8 @@ u-badge:hover .hover-reveal-text {
 		top: 0;
 		height: var(--tree-elbow-height, 50%);
 		width: var(--tree-elbow-width);
-		border-left: var(--bs-border-width) solid var(--tree-line-color);
-		border-bottom: var(--bs-border-width) solid var(--tree-line-color);
+		border-left: var(--border-width) solid var(--tree-line-color);
+		border-bottom: var(--border-width) solid var(--tree-line-color);
 		border-bottom-left-radius: 0.35rem;
 	}
 	.tree-row.tree-line::after {
@@ -558,7 +545,7 @@ u-badge:hover .hover-reveal-text {
 		left: var(--tree-line-x);
 		top: var(--tree-line-top);
 		bottom: 0;
-		border-left: var(--bs-border-width) solid var(--tree-line-color);
+		border-left: var(--border-width) solid var(--tree-line-color);
 	}
 	.tree-row.tree-selected::before,
 	.tree-row:has(.tree-selected)::before,
@@ -575,14 +562,17 @@ u-badge:hover .hover-reveal-text {
 }
 
 .shortcut-icon-field {
+	.popover {
+		--popover-zindex: 2001;
+	}
 	.shortcut-icon-box {
-		width: $form-floating-height;
-		height: $form-floating-height;
+		width: calc(3.75rem + var(--border-width) * 2);
+		height: calc(3.75rem + var(--border-width) * 2);
 		box-sizing: border-box;
 		padding: 0.75rem;
-		border: var(--bs-border-width) solid var(--bs-border-color);
-		border-radius: $input-border-radius;
-		background-color: var(--bs-body-bg);
+		border: var(--border-width) solid var(--border-color);
+		border-radius: var(--radius-5);
+		background-color: var(--bg-body);
 		cursor: pointer;
 	}
 	.shortcut-icon-img {
@@ -608,15 +598,15 @@ u-badge:hover .hover-reveal-text {
 		align-items: center;
 		justify-content: center;
 		padding: 0.25rem;
-		border: var(--bs-border-width) solid transparent;
-		border-radius: $input-border-radius;
+		border: var(--border-width) solid transparent;
+		border-radius: var(--radius-5);
 		background: transparent;
 		cursor: pointer;
 		transition: background-color 0.15s ease, border-color 0.15s ease;
 
 		&:hover {
-			background-color: var(--bs-secondary-bg);
-			border-color: var(--bs-border-color);
+			background-color: var(--bg-2);
+			border-color: var(--border-color);
 		}
 
 		img {
@@ -633,22 +623,18 @@ u-badge:hover .hover-reveal-text {
 			transform: rotate(180deg);
 		}
 		td {
-			border-top: var(--bs-border-width) solid var(--bs-border-color);
+			border-top: var(--border-width) solid var(--border-color);
 		}
 	}
-	.collapsing {
-		transition: none !important;
-		height: auto !important;
-	}
 	// Round bottom corners of last group-toggle when its section is collapsed
-	tbody:nth-last-child(2):not(:has(+ .show)):not(:has(+ .collapsing)) .group-toggle {
-		td:first-child { border-bottom-left-radius: var(--bs-card-border-radius); }
-		td:last-child { border-bottom-right-radius: var(--bs-card-border-radius); }
+	tbody:nth-last-child(2):not(:has(+ .show)) .group-toggle {
+		td:first-child { border-bottom-left-radius: var(--card-border-radius); }
+		td:last-child { border-bottom-right-radius: var(--card-border-radius); }
 	}
 	// Round bottom corners of last data row when its section is expanded
 	tbody:last-child.show tr:last-child {
-		td:first-child { border-bottom-left-radius: var(--bs-card-border-radius); }
-		td:last-child { border-bottom-right-radius: var(--bs-card-border-radius); }
+		td:first-child { border-bottom-left-radius: var(--card-border-radius); }
+		td:last-child { border-bottom-right-radius: var(--card-border-radius); }
 	}
 }
 
@@ -657,10 +643,10 @@ u-badge:hover .hover-reveal-text {
 		min-height: 7.5rem;
 	}
 	.invited {
-		.dropdown-item {
+		.menu-item {
 			&:active {
-				color: var(--bs-dropdown-link-hover-color);
-				background-color: var(--bs-dropdown-link-hover-bg);
+				color: var(--menu-item-hover-color);
+				background-color: var(--menu-item-hover-bg);
 			}
 		}
 	}
@@ -720,7 +706,7 @@ u-badge:hover .hover-reveal-text {
 	box-shadow: 0px 8px 9px -5px rgba(0, 0, 0, 0.2), 0px 15px 22px 2px rgba(0, 0, 0, 0.14), 0px 6px 28px 5px rgba(0, 0, 0, 0.12);
 }
 .z-depth-16,
-.dropdown-menu,
+.menu,
 .popover {
 	box-shadow: 0px 8px 10px -5px rgba(0, 0, 0, 0.2), 0px 16px 24px 2px rgba(0, 0, 0, 0.14), 0px 6px 30px 5px rgba(0, 0, 0, 0.12);
 }
@@ -746,6 +732,6 @@ u-badge:hover .hover-reveal-text {
 	box-shadow: 0px 11px 14px -7px rgba(0, 0, 0, 0.2), 0px 23px 36px 3px rgba(0, 0, 0, 0.14), 0px 9px 44px 8px rgba(0, 0, 0, 0.12);
 }
 .z-depth-24,
-.modal-content {
+.dialog {
 	box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12);
 }

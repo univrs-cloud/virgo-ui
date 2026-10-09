@@ -1,7 +1,7 @@
 .table {
 	thead {
-		background-color: var(--bs-white);
-		box-shadow: 0 1px 0 0 var(--bs-border-color);
+		background-color: var(--white);
+		box-shadow: 0 1px 0 0 var(--border-color);
 		th {
 			.icon {
 				display: none;
@@ -21,13 +21,13 @@
 				}
 				&.asc {
 					.icon {
-						--icon-primary-color: var(--bs-primary);
+						--icon-primary-color: var(--primary-base);
 						--icon-primary-opacity: 1;
 					}
 				}
 				&.desc {
 					.icon {
-						--icon-secondary-color: var(--bs-primary);
+						--icon-secondary-color: var(--primary-base);
 						--icon-secondary-opacity: 1;
 					}
 				}

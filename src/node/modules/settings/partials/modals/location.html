@@ -1,20 +1,16 @@
-<div id="location" class="modal fade">
+<dialog id="location" class="dialog dialog-sm dialog-scrollable">
 	<u-form>
-		<div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
-			<div class="modal-content">
-				<div class="modal-header align-items-center">
-					<h5 class="modal-title">Location</h5>
-					<a href="#" class="get-geo-location btn btn-link p-0 ms-auto">Get location</a>
-				</div>
-				<div class="modal-body">
-					<u-input name="latitude" label="Latitude" class="latitude"></u-input>
-					<u-input name="longitude" label="Longitude" class="longitude"></u-input>
-				</div>
-				<div class="modal-footer">
-					<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="modal" outline>Cancel</u-button>
-					<u-button type="submit" variant="primary">Update</u-button>
-				</div>
-			</div>
+		<div class="dialog-header align-items-center">
+			<h1 class="dialog-title">Location</h1>
+			<a href="#" class="get-geo-location btn-link d-inline-block p-0 ms-auto min-h-0">Get location</a>
+		</div>
+		<div class="dialog-body">
+			<u-input name="latitude" label="Latitude" class="latitude"></u-input>
+			<u-input name="longitude" label="Longitude" class="longitude"></u-input>
+		</div>
+		<div class="dialog-footer">
+			<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="dialog" outline>Cancel</u-button>
+			<u-button type="submit" variant="primary">Update</u-button>
 		</div>
 	</u-form>
-</div>
+</dialog>

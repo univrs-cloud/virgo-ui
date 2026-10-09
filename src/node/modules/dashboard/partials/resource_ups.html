@@ -5,22 +5,22 @@
 	const mode = (unreachable ? 'unreachable' : (missing ? 'missing' : (failed ? 'failed' : (state.ups === null ? 'loading' : 'reading'))));
 	const fault = (mode === 'unreachable' ? "can't connect" : (mode === 'missing' ? 'not found' : (state.ups?.message || 'error')));
 %>
-<li class="list-group-item ups py-3">
-	<h6 class="d-flex align-items-center text-body-emphasis mb-0">
-		<i class="icon-regular icon-car-battery icon-fw me-1 text-gray-500"></i>UPS
+<li class="list-group-item ups py-5">
+	<h5 class="d-flex align-items-center fg-black mb-0">
+		<i class="icon-regular icon-car-battery icon-fw me-1 fg-gray-300"></i>UPS
 		<%if (mode === 'missing') {%>
 			<u-badge color="red" tint="100" class="ms-1" pill><%-fault%></u-badge>
 		<%} else if (mode === 'unreachable' || mode === 'failed') {%>
-			<small class="ms-2 fw-light <%=(mode === 'failed' ? 'text-orange-700' : 'text-body-tertiary')%>"><%-fault%></small>
+			<small class="ms-3 fw-light <%=(mode === 'failed' ? 'fg-orange-700' : 'fg-4')%>"><%-fault%></small>
 		<%} else if (mode === 'reading' && state.ups.powerSource) {%>
 			<u-badge color="<%=(state.ups.powerSource === 'battery' ? 'orange' : 'green')%>" class="ms-1" pill><%=state.ups.powerSource.toUpperCase()%></u-badge>
 		<%}%>
-	</h6>
+	</h5>
 	<%if (mode === 'loading') {%>
-		<div class="spinner-border spinner-border-sm text-gray-600"></div>
+		<div class="spinner-border spinner-sm fg-gray-600"></div>
 	<%} else if (mode === 'reading') {%>
-		<div class="text-end mt-n3 mb-1">
-			<small class="fw-light text-body-tertiary"><%=state.ups?.capacity?.toFixed(0)%>%</small>
+		<div class="text-end mt--5 mb-1">
+			<small class="fw-light fg-4"><%=state.ups?.capacity?.toFixed(0)%>%</small>
 			<u-progress>
 				<u-progress-bar color="<%=(state.ups?.powerSource === 'grid' ? 'green' : 'orange')%>" width="<%=state.ups?.capacity%>" striped="<%=(state.ups?.powerSource === 'battery' || state.ups?.isCharging)%>" animated="<%=(state.ups?.powerSource === 'battery' || state.ups?.isCharging)%>" warning-threshold="999" danger-threshold="999"></u-progress-bar>
 			</u-progress>

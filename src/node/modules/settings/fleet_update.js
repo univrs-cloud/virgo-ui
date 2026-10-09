@@ -7,10 +7,10 @@ const modal = document.querySelector('#fleet');
 const form = modal.querySelector('u-form');
 
 const updateFleet = (event) => {
-	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
+	_.each(form.querySelectorAll('.dialog-footer u-button'), (button) => { button.disabled = true; });
 	const data = form.getData();
 	configurationService.updateFleet(data);
-	bootstrap.Modal.getInstance(modal)?.hide();
+	bootstrap.Dialog.getInstance(modal)?.hide();
 };
 
 const restore = (event) => {
@@ -20,7 +20,7 @@ const restore = (event) => {
 const render = (event) => {
 	const configuration = configurationService.getConfiguration();
 	const isRegistered = !_.isEmpty(configuration?.fleet?.token);
-	form.querySelector('.modal-footer u-button[type="submit"]').textContent = (isRegistered ? 'Update' : 'Register');
+	form.querySelector('.dialog-footer u-button[type="submit"]').textContent = (isRegistered ? 'Update' : 'Register');
 	modal.querySelector('.fleet-link span').textContent = (isRegistered ? 'View fleet' : 'Create account');
 	const email = configuration?.fleet?.email || '';
 	form.querySelector('.email').value = email;
@@ -43,5 +43,5 @@ form.validation = [
 	}
 ];
 form.addEventListener('valid', updateFleet);
-modal.addEventListener('show.bs.modal', render);
-modal.addEventListener('hidden.bs.modal', restore);
+modal.addEventListener('show.bs.dialog', render);
+modal.addEventListener('hidden.bs.dialog', restore);

@@ -57,7 +57,7 @@ export class Button extends LitElement {
 	firstUpdated() {
 		const span = this.renderRoot.querySelector('span');
 		if (span) {
-			this.#tooltip = new bootstrap.Tooltip(span);
+			this.#tooltip = new bootstrap.Tooltip(span, { container: this.closest('dialog') ?? 'body' });
 		}
 	}
 
@@ -76,7 +76,8 @@ export class Button extends LitElement {
 
 	render() {
 		const classes = {
-			[`btn${this.outline ? '-outline' : ''}-${this.variant}`]: true,
+			[(this.outline ? 'btn-outline' : 'btn-solid')]: true,
+			[`theme-${this.variant}`]: true,
 			[`btn-${this.size}`]: !!this.size
 		};
 		return html`
@@ -88,7 +89,7 @@ export class Button extends LitElement {
 			>
 				<button
 					type="${this.type || 'button'}"
-					class="btn ${classMap(classes)} d-inline-flex align-items-center"
+					class="${classMap(classes)} d-inline-flex align-items-center"
 					?disabled=${this.disabled}
 					@click=${this.#handleClick}
 				>

@@ -1,23 +1,19 @@
-<div id="fleet" class="modal fade">
+<dialog id="fleet" class="dialog dialog-sm dialog-scrollable">
 	<u-form>
-		<div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">Fleet</h5>
-					<a href="https://fleet.univrs.cloud" target="_blank" rel="noopener noreferrer" class="fleet-link ms-auto d-inline-flex align-items-center">
-						<span></span>
-						<i class="icon-solid icon-sm icon-arrow-up-right-from-square ms-2"></i>
-					</a>
-				</div>
-				<div class="modal-body">
-					<u-input name="email" label="Fleet account email" class="email"></u-input>
-					<u-input type="password" name="password" label="Fleet account password" class="password"></u-input>
-				</div>
-				<div class="modal-footer">
-					<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="modal" outline>Cancel</u-button>
-					<u-button type="submit" variant="primary">Submit</u-button>
-				</div>
-			</div>
+		<div class="dialog-header">
+			<h1 class="dialog-title">Fleet</h1>
+			<a href="https://fleet.univrs.cloud" target="_blank" rel="noopener noreferrer" class="fleet-link ms-auto d-inline-flex align-items-center">
+				<span></span>
+				<i class="icon-solid icon-sm icon-arrow-up-right-from-square ms-3"></i>
+			</a>
+		</div>
+		<div class="dialog-body">
+			<u-input name="email" label="Fleet account email" class="email"></u-input>
+			<u-input type="password" name="password" label="Fleet account password" class="password"></u-input>
+		</div>
+		<div class="dialog-footer">
+			<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="dialog" outline>Cancel</u-button>
+			<u-button type="submit" variant="primary">Submit</u-button>
 		</div>
 	</u-form>
-</div>
+</dialog>

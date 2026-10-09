@@ -55,7 +55,7 @@ const reboot = async (event) => {
 };
 
 const renderNavigation = async () => {
-	_.each(header.querySelectorAll('.navbar .nav, .offcanvas .navbar-nav'), (nav) => {
+	_.each(header.querySelectorAll('.navbar .nav, .drawer .navbar-nav'), (nav) => {
 		morphdom(
 			nav,
 			`<div>${navigationTemplate()}</div>`,
@@ -73,7 +73,7 @@ const renderNodePicker = (state) => {
 	const currentNode = nodeId ? _.find(state.nodes, { nodeId }) : state.nodes[0];
 	const currentNodeLabel = currentNode?.name || currentNode?.nodeId || '';
 	const nodePicker = `<div>${nodePickerTemplate({ nodes: state.nodes, currentNodeLabel, currentNodeId: nodeId })}</div>`;
-	_.each(document.querySelectorAll('header .navbar .nav .nodes, .offcanvas .navbar-nav .nodes'), (container) => {
+	_.each(document.querySelectorAll('header .navbar .nav .nodes, .drawer .navbar-nav .nodes'), (container) => {
 		morphdom(container, nodePicker, { childrenOnly: true });
 	});
 };

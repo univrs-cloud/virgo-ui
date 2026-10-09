@@ -12,7 +12,7 @@ const deleteTrustedProxy = async (event) => {
 	const row = button.closest('.item');
 	const address = row.dataset.id;
 
-	if (!await confirm(`Are you sure you want to delete the trusted proxy ${address}?`, { buttons: [{ text: 'Yes, delete', class: 'btn-danger' }] })) {
+	if (!await confirm(`Are you sure you want to delete the trusted proxy ${address}?`, { buttons: [{ text: 'Yes, delete', class: 'btn-solid theme-danger' }] })) {
 		return;
 	}
 

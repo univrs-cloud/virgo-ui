@@ -6,10 +6,10 @@ const modal = document.querySelector('#trusted-proxy-add');
 const form = modal.querySelector('u-form');
 
 const addTrustedProxy = (event) => {
-	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
+	_.each(form.querySelectorAll('.dialog-footer u-button'), (button) => { button.disabled = true; });
 	const data = form.getData();
 	networkService.addTrustedProxy(data);
-	bootstrap.Modal.getInstance(modal)?.hide();
+	bootstrap.Dialog.getInstance(modal)?.hide();
 };
 
 const restore = (event) => {
@@ -32,4 +32,4 @@ form.validation = [
 ];
 
 form.addEventListener('valid', addTrustedProxy);
-modal.addEventListener('hidden.bs.modal', restore);
+modal.addEventListener('hidden.bs.dialog', restore);

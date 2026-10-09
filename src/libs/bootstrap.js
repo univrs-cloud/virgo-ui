@@ -9,16 +9,15 @@ bootstrap.Tooltip.Default.sanitize = false;
 bootstrap.Tooltip.Default.selector = '[data-bs-toggle="tooltip"]';
 new bootstrap.Tooltip(document.querySelector('body'));
 
-bootstrap.Modal.Default.backdrop = 'static';
-bootstrap.Modal.Default.keyboard = false;
-bootstrap.Modal.Default.focus = false;
-bootstrap.Modal.addScrollbar = (modal) => {
+bootstrap.Dialog.Default.backdrop = 'static';
+bootstrap.Dialog.Default.keyboard = false;
+bootstrap.Dialog.addScrollbar = (modal) => {
 	const controller = new AbortController();
 	const signal = controller.signal;
 
-	modal.querySelector('.modal-content').insertAdjacentHTML('beforeend', `<div class="scrollbar"><div class="scrollbar-thumb"></div></div>`);
+	const modalBody = modal.querySelector('.dialog-body');
+	modalBody.parentElement.insertAdjacentHTML('beforeend', `<div class="scrollbar"><div class="scrollbar-thumb"></div></div>`);
 
-	const modalBody = modal.querySelector('.modal-body');
 	const scrollbar = modal.querySelector('.scrollbar');
 	const scrollbarThumb = modal.querySelector('.scrollbar-thumb');
 
@@ -46,7 +45,7 @@ bootstrap.Modal.addScrollbar = (modal) => {
 	}
 
 	const wheelHandler = (event) => {
-		if (event.target.closest('.dropdown-menu')) {
+		if (event.target.closest('.menu')) {
 			return;
 		}
 
@@ -109,13 +108,24 @@ bootstrap.Modal.addScrollbar = (modal) => {
 	};
 };
 
-document.addEventListener('shown.bs.modal', (event) => {
+document.addEventListener('keydown', (event) => {
+	if (_.toLower(event.key) !== 'escape') {
+		return;
+	}
+
+	const dialogs = document.querySelectorAll('dialog.dialog[open]');
+	if (!_.isEmpty(dialogs) && !_.some(dialogs, (dialog) => { return _.toLower(dialog.dataset.bsKeyboard) === 'true'; })) {
+		event.preventDefault();
+	}
+}, true);
+
+document.addEventListener('shown.bs.dialog', (event) => {
 	const modal = event.target;
 	modal.querySelector('u-input:not([type="hidden"]):not([disabled]):not([readonly])')?.focus(); // focus 1st input after modal is shown
-	bootstrap.Modal.addScrollbar(modal);
+	bootstrap.Dialog.addScrollbar(modal);
 });
 
-document.addEventListener('hidden.bs.modal', (event) => {
+document.addEventListener('hidden.bs.dialog', (event) => {
 	const modal = event.target;
 	if (modal._cleanupScrollbar) {
 		modal._cleanupScrollbar();

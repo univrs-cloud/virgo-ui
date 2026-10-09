@@ -5,18 +5,18 @@
 	<%_.each(topologies, (topology) => {%>
 		<%const id = `topology-${topology.type}`%>
 		<%const groups = _.chunk(drives, topology.width)%>
-		<label class="topology d-block border rounded-3 p-3 mb-2 <%=(topology.type === selectedType ? 'border-primary' : '')%>" for="<%-id%>">
-			<span class="d-flex align-items-start gap-3">
-				<input type="radio" class="form-check-input m-0 mt-1 flex-shrink-0" name="topology" id="<%-id%>" value="<%-topology.type%>" <%=(topology.type === selectedType ? 'checked' : '')%>>
+		<label class="topology d-block border rounded-5 p-5 mb-3 <%=(topology.type === selectedType ? 'border-primary' : '')%>" for="<%-id%>">
+			<span class="d-flex align-items-start gap-5">
+				<input type="radio" class="radio m-0 mt-1 flex-shrink-0" name="topology" id="<%-id%>" value="<%-topology.type%>" <%=(topology.type === selectedType ? 'checked' : '')%>>
 				<span class="flex-grow-1">
 					<span class="d-block"><%-LABELS[topology.type]%></span>
-					<small class="d-block text-body-tertiary">
+					<small class="d-block fg-4">
 						<%=prettyBytes(topology.usableBytes, { binary: true })%> usable &middot;
 						survives <%-topology.tolerance%> drive <%-(topology.tolerance === 1 ? 'failure' : 'failures')%><%-(topology.vdevs > 1 ? ' per group' : '')%>
 					</small>
 				</span>
 			</span>
-			<span class="d-flex flex-wrap justify-content-center gap-3 mt-3">
+			<span class="d-flex flex-wrap justify-content-center gap-5 mt-5">
 				<%_.each(groups, (group, index) => {%>
 					<span class="text-center">
 						<span class="d-block">
@@ -33,8 +33,8 @@
 										<%if (topology.width > 1) {%>
 											<span class="vdev-stem d-block"></span>
 										<%}%>
-										<i class="vdev-disk icon-duotone icon-solid icon-hard-drive text-blue-500"<%=(_.isEmpty(tipItems) ? '' : ` data-bs-toggle="tooltip" data-bs-custom-class="storage-device" data-bs-original-title="<div class='text-start'>${tipItems.join('')}</div>"`)%>></i>
-										<small class="text-body-tertiary text-truncate w-100 mt-1"><%-drive.name%></small>
+										<i class="vdev-disk icon-duotone icon-solid icon-hard-drive fg-blue-500"<%=(_.isEmpty(tipItems) ? '' : ` data-bs-toggle="tooltip" data-bs-custom-class="storage-device" data-bs-original-title="<div class='text-start'>${tipItems.join('')}</div>"`)%>></i>
+										<small class="fg-4 text-truncate w-100 mt-1"><%-drive.name%></small>
 									</span>
 								<%})%>
 							</span>
@@ -54,18 +54,18 @@
 		<%const toPercent = (bytes) => { return _.round((totalBytes > 0 ? (bytes / totalBytes) * 100 : 0), 2); }%>
 		<%const usablePercent = toPercent(selected.usableBytes)%>
 		<%const unusedPercent = toPercent(unusedBytes)%>
-		<u-progress class="mt-3" shadow="false">
+		<u-progress class="mt-5" shadow="false">
 			<u-progress-bar color="blue" tint="500" width="<%=usablePercent%>" warning-threshold="999" danger-threshold="999" tip="Capacity: <%=prettyBytes(selected.usableBytes, { binary: true })%>"></u-progress-bar>
 			<u-progress-bar color="pink" tint="400" width="<%=(100 - usablePercent - unusedPercent)%>" warning-threshold="999" danger-threshold="999" tip="Protection: <%=_.pluralize('drive', protectionDrives, true)%>"></u-progress-bar>
 			<%if (unusedPercent > 0) {%>
 				<u-progress-bar color="gray" tint="400" width="<%=unusedPercent%>" warning-threshold="999" danger-threshold="999" tip="Unused: <%=prettyBytes(unusedBytes, { binary: true })%>"></u-progress-bar>
 			<%}%>
 		</u-progress>
-		<div class="d-flex flex-wrap gap-3 mt-2">
-			<small class="text-body-secondary"><i class="icon-solid icon-circle text-blue-500 me-1" style="font-size: 0.5rem; vertical-align: middle;"></i>Capacity: <%=prettyBytes(selected.usableBytes, { binary: true })%></small>
-			<small class="text-body-secondary"><i class="icon-solid icon-circle text-pink-400 me-1" style="font-size: 0.5rem; vertical-align: middle;"></i>Protection: <%=_.pluralize('drive', protectionDrives, true)%></small>
+		<div class="d-flex flex-wrap gap-5 mt-3">
+			<small class="fg-emphasis-secondary"><i class="icon-solid icon-circle fg-blue-500 me-1" style="font-size: 0.5rem; vertical-align: middle;"></i>Capacity: <%=prettyBytes(selected.usableBytes, { binary: true })%></small>
+			<small class="fg-emphasis-secondary"><i class="icon-solid icon-circle fg-pink-400 me-1" style="font-size: 0.5rem; vertical-align: middle;"></i>Protection: <%=_.pluralize('drive', protectionDrives, true)%></small>
 			<%if (unusedPercent > 0) {%>
-				<small class="text-body-secondary"><i class="icon-solid icon-circle text-gray-400 me-1" style="font-size: 0.5rem; vertical-align: middle;"></i>Unused: <%=prettyBytes(unusedBytes, { binary: true })%> <span class="text-body-tertiary">(larger drives are used up to the smallest one's size)</span></small>
+				<small class="fg-emphasis-secondary"><i class="icon-solid icon-circle fg-gray-400 me-1" style="font-size: 0.5rem; vertical-align: middle;"></i>Unused: <%=prettyBytes(unusedBytes, { binary: true })%> <span class="fg-4">(larger drives are used up to the smallest one's size)</span></small>
 			<%}%>
 		</div>
 	<%}%>

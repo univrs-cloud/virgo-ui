@@ -1,52 +1,48 @@
-<div id="shortcut-create" class="modal fade">
+<dialog id="shortcut-create" class="dialog dialog-scrollable">
 	<u-form>
-		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">New shortcut</h5>
+		<div class="dialog-header">
+			<h1 class="dialog-title">New shortcut</h1>
+		</div>
+		<div class="dialog-body">
+			<div class="row g-5">
+				<div class="col">
+					<u-input name="title" label="Title" class="title"></u-input>
 				</div>
-				<div class="modal-body">
-					<div class="row g-3">
-						<div class="col">
-							<u-input name="title" label="Title" class="title"></u-input>
+				<div class="col-auto">
+					<div class="shortcut-icon-field mb-7">
+						<u-input type="hidden" name="icon" class="shortcut-icon"></u-input>
+						<div class="shortcut-icon-box d-flex align-items-center justify-content-center" tabindex="0" role="button" data-bs-toggle="popover">
+							<img class="shortcut-icon-img" src="assets/img/univrs.svg" alt="" width="32" height="32">
 						</div>
-						<div class="col-auto">
-							<div class="shortcut-icon-field mb-4">
-								<u-input type="hidden" name="icon" class="shortcut-icon"></u-input>
-								<div class="shortcut-icon-box d-flex align-items-center justify-content-center" tabindex="0" role="button" data-bs-toggle="popover">
-									<img class="shortcut-icon-img" src="assets/img/univrs.svg" alt="" width="32" height="32">
-								</div>
-								<div class="shortcut-icon-popover-content d-none">
-									<u-input type="search" name="iconSearch" label="Search" class="icon-search" autocomplete="off"></u-input>
-									<div class="shortcut-icon-results"></div>
-								</div>
-							</div>
+						<div class="shortcut-icon-popover-content d-none">
+							<u-input type="search" name="iconSearch" label="Search" class="icon-search" autocomplete="off"></u-input>
+							<div class="shortcut-icon-results"></div>
 						</div>
 					</div>
-					<u-select name="category" label="Category" class="category">
-						<option value="Productivity" selected>Productivity</option>
-						<option value="Networking">Networking</option>
-						<option value="System">System</option>
-					</u-select>
-					<hr class="my-4">
-					<u-checkbox name="useProxy" class="use-proxy" label="Use proxy"></u-checkbox>
-					<div class="url-container">
-						<u-input name="url" label="URL" class="url" placeholder="https://"></u-input>
-					</div>
-					<div class="proxy-container d-none">
-						<u-input name="subdomain" label="Subdomain" class="subdomain">
-							<span slot="prefix" class="mb-n3">https://</span>
-							<span slot="suffix" class="domain-suffix mb-n3"></span>
-						</u-input>
-						<u-input name="backendUrl" label="Forward to" class="backend-url" placeholder="https://192.168.1.1" tip="The internal address where requests will be forwarded (e.g., http://192.168.1.1, https://10.0.0.5, http://192.168.1.1:8080, https://10.0.0.5:8443)"></u-input>
-						<u-checkbox name="requireAuth" class="require-auth" label="Private access" tip="When enabled, only logged-in users can access this URL. When disabled, anyone with the link can access it."></u-checkbox>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="modal" outline>Cancel</u-button>
-					<u-button type="submit" variant="primary">Create</u-button>
 				</div>
 			</div>
+			<u-select name="category" label="Category" class="category">
+				<option value="Productivity" selected>Productivity</option>
+				<option value="Networking">Networking</option>
+				<option value="System">System</option>
+			</u-select>
+			<hr class="my-7 opacity-25">
+			<u-checkbox name="useProxy" class="use-proxy d-block mb-3" label="Use proxy"></u-checkbox>
+			<div class="url-container">
+				<u-input name="url" label="URL" class="url" placeholder="https://"></u-input>
+			</div>
+			<div class="proxy-container d-none">
+				<u-input name="subdomain" label="Subdomain" class="subdomain">
+					<span slot="prefix">https://</span>
+					<span slot="suffix" class="domain-suffix"></span>
+				</u-input>
+				<u-input name="backendUrl" label="Forward to" class="backend-url" placeholder="https://192.168.1.1" tip="The internal address where requests will be forwarded (e.g., http://192.168.1.1, https://10.0.0.5, http://192.168.1.1:8080, https://10.0.0.5:8443)"></u-input>
+				<u-checkbox name="requireAuth" class="require-auth" label="Private access" tip="When enabled, only logged-in users can access this URL. When disabled, anyone with the link can access it."></u-checkbox>
+			</div>
+		</div>
+		<div class="dialog-footer">
+			<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="dialog" outline>Cancel</u-button>
+			<u-button type="submit" variant="primary">Create</u-button>
 		</div>
 	</u-form>
-</div>
+</dialog>

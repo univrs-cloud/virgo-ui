@@ -41,9 +41,9 @@ export class FloatingWindow extends LitElement {
 		:host([minimized]) { display: none; }
 		:host([interacting]) ::slotted(*) { pointer-events: none; }
 		:host([dragging]) .card { background-color: transparent; }
-		:host([dragging]) .titlebar { background: linear-gradient(var(--bs-card-cap-bg), var(--bs-card-cap-bg)), var(--bs-card-bg); }
+		:host([dragging]) .titlebar { background: linear-gradient(var(--card-cap-bg), var(--card-cap-bg)), var(--card-bg); }
 		:host([dragging]) .card-body { opacity: 0.75; }
-		:host(:not([maximized])) ::slotted(iframe) { border-radius: 0 0 calc(var(--bs-border-radius-xl) - var(--bs-border-width)) calc(var(--bs-border-radius-xl) - var(--bs-border-width)); }
+		:host(:not([maximized])) ::slotted(iframe) { border-radius: 0 0 var(--card-inner-border-radius) var(--card-inner-border-radius); }
 		.card-body { min-height: 0; }
 		.titlebar, .handle { touch-action: none; }
 		.titlebar { cursor: move; }
@@ -188,14 +188,14 @@ export class FloatingWindow extends LitElement {
 
 	render() {
 		return html`
-			<div class="card h-100 overflow-hidden ${classMap({ 'rounded-4': !this.maximized, 'rounded-0': this.maximized, 'border-0': this.maximized, 'shadow': this.active && !this.maximized, 'shadow-sm': !this.active && !this.maximized })}">
+			<div class="card h-100 overflow-hidden ${classMap({ 'rounded-0': this.maximized, 'border-0': this.maximized, 'shadow': this.active && !this.maximized, 'shadow-opacity-100': this.active && !this.maximized, 'shadow-sm': !this.active && !this.maximized })}">
 				${this.maximized ? '' : html`
-					<div class="titlebar card-header d-flex align-items-center border-0 py-1 ps-3 pe-1 user-select-none" @pointerdown=${this.#onTitlePointerDown} @dblclick=${this.#onTitleDoubleClick}>
-						<small class="fw-bold text-truncate me-auto ${classMap({ 'text-dark': !this.active, 'text-opacity-50': !this.active })}">${this.label}</small>
+					<div class="titlebar card-header flex-row align-items-center border-0 py-1 ps-5 pe-1 user-select-none" @pointerdown=${this.#onTitlePointerDown} @dblclick=${this.#onTitleDoubleClick}>
+						<small class="fw-bold text-truncate me-auto ${classMap({ 'fg-body': !this.active, 'fg-50': !this.active })}">${this.label}</small>
 						<div class="btn-group btn-group-sm">
-							<button type="button" class="btn border-0" @click=${() => { this.minimize(); }}><i class="icon-solid icon-minus icon-fw"></i></button>
-							<button type="button" class="btn border-0" @click=${() => { this.toggleMaximize(); }}><i class="icon-regular icon-square icon-fw"></i></button>
-							<button type="button" class="btn border-0" @click=${() => { this.close(); }}><i class="icon-solid icon-times icon-fw"></i></button>
+							<button type="button" class="btn-text theme-secondary border-0" @click=${() => { this.minimize(); }}><i class="icon-solid icon-minus icon-fw"></i></button>
+							<button type="button" class="btn-text theme-secondary border-0" @click=${() => { this.toggleMaximize(); }}><i class="icon-regular icon-square icon-fw"></i></button>
+							<button type="button" class="btn-text theme-secondary border-0" @click=${() => { this.close(); }}><i class="icon-solid icon-times icon-fw"></i></button>
 						</div>
 					</div>
 				`}
@@ -203,7 +203,7 @@ export class FloatingWindow extends LitElement {
 					<slot></slot>
 					${this.loading ? html`
 						<div class="position-absolute top-0 start-0 d-flex justify-content-center align-items-center w-100 h-100 bg-body">
-							<div class="spinner-border spinner-border-sm me-1"></div>
+							<div class="spinner-border spinner-sm me-1"></div>
 							Loading...
 						</div>
 					` : ''}
@@ -216,7 +216,7 @@ export class FloatingWindow extends LitElement {
 
 	#renderSnapPreview() {
 		const rect = getSnapRect(this.snapZone, this.parentElement);
-		return html`<div class="snap-preview position-absolute pe-none rounded-4 border border-primary bg-primary bg-opacity-10" style="left: ${rect.x - this.x}px; top: ${rect.y - this.y}px; width: ${rect.width}px; height: ${rect.height}px;"></div>`;
+		return html`<div class="snap-preview position-absolute pe-none rounded-9 border border-primary bg-primary bg-10" style="left: ${rect.x - this.x}px; top: ${rect.y - this.y}px; width: ${rect.width}px; height: ${rect.height}px;"></div>`;
 	}
 
 	#unsnap(start) {

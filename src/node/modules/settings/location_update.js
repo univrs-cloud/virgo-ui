@@ -27,10 +27,10 @@ const getLocation = (event) => {
 };
 
 const updateLocation = (event) => {
-	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
+	_.each(form.querySelectorAll('.dialog-footer u-button'), (button) => { button.disabled = true; });
 	const data = form.getData();
 	configurationService.updateLocation(data);
-	bootstrap.Modal.getInstance(modal)?.hide();
+	bootstrap.Dialog.getInstance(modal)?.hide();
 };
 
 const restore = (event) => {
@@ -76,5 +76,5 @@ form.validation = [
 ];
 form.addEventListener('valid', updateLocation);
 form.querySelector('.get-geo-location').addEventListener('click', getLocation);
-modal.addEventListener('show.bs.modal', render);
-modal.addEventListener('hidden.bs.modal', restore);
+modal.addEventListener('show.bs.dialog', render);
+modal.addEventListener('hidden.bs.dialog', restore);

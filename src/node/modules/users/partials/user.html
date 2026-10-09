@@ -1,30 +1,35 @@
 <tr class="item" data-uid="<%-user.uid%>">
 	<td style="min-width: 210px; max-width: 0;">
-		<div class="d-flex align-items-center mb-n1">
-			<div class="text-truncate"><%-user.username%></div>
-			<%if (user.isOwner) {%>
-				<u-badge color="indigo" tint="400" class="ms-2" tip="Owner" pill><i class="icon-solid icon-crown"></i></u-badge>
-			<%}%>
-			<%if (isSameAsLoggedIn) {%>
-				<u-badge class="ms-2" pill><small>YOU</small></u-badge>
-			<%}%>
-		</div>
-		<div class="d-flex">
-			<div class="text-truncate"><small class="text-body-tertiary"><%-user.email || '—'%></small></div>
+		<div class="d-flex align-items-center gap-5">
+			<span class="avatar avatar-sm avatar-subtle theme-primary flex-shrink-0 d-none md:d-flex"><%-_.join(_.map(_.take(_.words(user.fullname || user.username), 2), _.head), '')%></span>
+			<div class="min-w-0">
+				<div class="d-flex align-items-center mb--1">
+					<div class="text-truncate"><%-user.username%></div>
+					<%if (user.isOwner) {%>
+						<u-badge color="indigo" tint="400" class="ms-3" tip="Owner" pill><i class="icon-solid icon-crown"></i></u-badge>
+					<%}%>
+					<%if (isSameAsLoggedIn) {%>
+						<u-badge class="ms-3" pill><small>YOU</small></u-badge>
+					<%}%>
+				</div>
+				<div class="d-flex">
+					<div class="text-truncate"><small class="fg-4"><%-user.email || '—'%></small></div>
+				</div>
+			</div>
 		</div>
 	</td>
-	<td class="d-none d-md-table-cell" style="min-width: 226px; max-width: 0;">
+	<td class="d-none md:d-table-cell" style="min-width: 226px; max-width: 0;">
 		<div class="d-flex">
 			<div class="text-truncate"><%-user.fullname || user.username%></div>
 		</div>
 	</td>
-	<td class="d-none d-md-table-cell">
+	<td class="d-none md:d-table-cell">
 		<%_.each(user.groups, (group) => {%>
 			<u-badge color="purple" pill><%-group%></u-badge>
 		<%})%>
 	</td>
-	<td class="text-center text-nowrap d-none d-md-table-cell">
-		<%=(_.includes(user.shell, 'nologin') ? '<i class="icon-solid icon-xmark text-gray-500"></i>' : '<i class="icon-solid icon-check text-gray-500"></i>')%>
+	<td class="text-center text-nowrap d-none md:d-table-cell">
+		<%=(_.includes(user.shell, 'nologin') ? '<i class="icon-solid icon-xmark fg-gray-300"></i>' : '<i class="icon-solid icon-check fg-gray-300"></i>')%>
 	</td>
 	<td class="text-nowrap">
 		<%if (user.isDisabled) {%>
@@ -37,24 +42,24 @@
 		<%if (!_.isEmpty(jobs)) {%>
 			<i class="icon-solid icon-gear icon-fw icon-spin"></i>
 		<%} else if (isSameAsLoggedIn) {%>
-			<a href="/users/profile"><i class="icon-light icon-angle-right icon-fw text-body-tertiary" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="This is you! Edit your profile or change your password in your <strong><u>Profile</u></strong> page."></i></a>
+			<a href="/users/profile"><i class="icon-light icon-angle-right icon-fw fg-4" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="This is you! Edit your profile or change your password in your <strong><u>Profile</u></strong> page."></i></a>
 		<%} else {%>
 			<div class="dropdown">
-				<span data-bs-toggle="dropdown" class="dropdown-toggle caret-off btn btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw text-secondary"></i></span>
-				<div class="dropdown-menu">
-					<a href="#user-update" class="dropdown-item" data-bs-toggle="modal"><i class="icon-regular icon-pen icon-fw me-1"></i>Edit</a>
+				<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw fg-secondary"></i></span>
+				<div class="menu">
+					<a href="#user-update" class="menu-item" data-bs-toggle="dialog"><i class="icon-regular icon-pen icon-fw"></i>Edit</a>
 					<%if (!user.isOwner && user.username !== account.user) {%>
 						<%if (!user.isDisabled) {%>
-							<a href="#user-password" class="dropdown-item" data-bs-toggle="modal"><i class="icon-regular icon-key icon-fw me-1"></i>Change password</a>
+							<a href="#user-password" class="menu-item" data-bs-toggle="dialog"><i class="icon-regular icon-key icon-fw"></i>Change password</a>
 						<%}%>
-						<div class="dropdown-divider"></div>
+						<div class="menu-divider"></div>
 						<%if (user.isDisabled) {%>
-							<a href="#" class="dropdown-item" data-action="unlock"><i class="icon-regular icon-lock-open icon-fw me-1"></i>Unlock</a>
+							<a href="#" class="menu-item" data-action="unlock"><i class="icon-regular icon-lock-open icon-fw"></i>Unlock</a>
 						<%} else {%>
-							<a href="#" class="dropdown-item text-danger confirm" data-action="lock"><i class="icon-regular icon-lock icon-fw me-1"></i>Lock</a>
+							<a href="#" class="menu-item fg-danger confirm" data-action="lock"><i class="icon-regular icon-lock icon-fw"></i>Lock</a>
 						<%}%>
-						<div class="dropdown-divider"></div>
-						<a href="#" class="dropdown-item text-danger confirm" data-action="delete"><i class="icon-regular icon-times icon-fw me-1"></i>Delete</a>
+						<div class="menu-divider"></div>
+						<a href="#" class="menu-item fg-danger confirm" data-action="delete"><i class="icon-regular icon-times icon-fw"></i>Delete</a>
 					<%}%>
 				</div>
 			</div>

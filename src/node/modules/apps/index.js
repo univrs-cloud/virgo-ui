@@ -141,7 +141,7 @@ const performAppAction = async (event) => {
 	const actionMessage = (button.dataset.action === 'uninstall' ? '<br><br>Data will <strong>NOT</strong> be deleted.' : '');
 	if (
 		button.classList.contains('confirm') &&
-		!await confirm(`Are you sure you want to ${button.dataset.action} the ${(app.isUnmanaged && !app.isStack ? 'container' : 'app')} ${app.title}?${actionMessage}`, { buttons: [{ text: _.upperFirst(button.dataset.action), class: (button.classList.contains('confirm') ? 'btn-danger' : 'btn-primary') }] })
+		!await confirm(`Are you sure you want to ${button.dataset.action} the ${(app.isUnmanaged && !app.isStack ? 'container' : 'app')} ${app.title}?${actionMessage}`, { buttons: [{ text: _.upperFirst(button.dataset.action), class: (button.classList.contains('confirm') ? 'btn-solid theme-danger' : 'btn-solid theme-primary') }] })
 	) {
 		return;
 	}
@@ -174,7 +174,7 @@ const performServiceAction = async (event) => {
 
 	if (
 		button.classList.contains('confirm') &&
-		!await confirm(`Are you sure you want to ${button.dataset.action} the service ${service.labels?.comDockerComposeService || _.trimStart(_.first(service.names), '/')}?`, { buttons: [{ text: _.upperFirst(button.dataset.action), class: (button.classList.contains('confirm') ? 'btn-danger' : 'btn-primary') }] })
+		!await confirm(`Are you sure you want to ${button.dataset.action} the service ${service.labels?.comDockerComposeService || _.trimStart(_.first(service.names), '/')}?`, { buttons: [{ text: _.upperFirst(button.dataset.action), class: (button.classList.contains('confirm') ? 'btn-solid theme-danger' : 'btn-solid theme-primary') }] })
 	) {
 		return;
 	}

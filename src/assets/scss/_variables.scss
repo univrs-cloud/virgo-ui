@@ -1,22 +1,3 @@
-$enable-reduced-motion: false !default;
-$enable-dark-mode: false !default;
-$enable-negative-margins: true !default;
-$enable-validation-icons: false !default;
+$primary: #658ffc;
 
-$aspect-ratios: (
-	"1x1": 100%,
-	"3x2": calc(2 / 3 * 100%),
-	"4x3": calc(3 / 4 * 100%),
-	"16x9": calc(9 / 16 * 100%),
-	"21x9": calc(9 / 21 * 100%)
-);
-
-$primary: #658ffc !default;
-
-$font-family-sans-serif: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !default;
-
-$zindex-offcanvas-backdrop: 1995 !default;
-$zindex-offcanvas: 2000 !default;
-$tooltip-max-width: 400px !default;
-
-$table-hover-bg-factor: 0.02 !default;
+$font-family-sans-serif: "'InterVariable', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";

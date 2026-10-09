@@ -1,20 +1,20 @@
 <div class="sessions">
-	<div class="row gx-4 gy-3 mb-3">
+	<div class="row gx-7 gy-5 mb-5">
 		<div class="col col-12">
-			<div class="card rounded-4 border-0 mb-0">
+			<div class="card border-0 mb-0">
 				<div class="card-body">
 					<%if (_.size(sessions) > 1) {%>
-						<a href="#" class="revoke-others btn btn-link btn-sm p-0 float-end text-danger text-decoration-none">Sign out everywhere else<i class="icon-regular icon-right-from-bracket icon-fw ms-1"></i></a>
+						<a href="#" class="revoke-others btn-link d-inline-block btn-sm p-0 float-end fg-danger text-decoration-none min-h-0">Sign out everywhere else<i class="icon-regular icon-right-from-bracket icon-fw ms-1"></i></a>
 					<%}%>
 					<h5 class="card-title d-flex align-items-center">Active sessions</h5>
 					<%if (_.isNull(sessions)) {%>
-						<div class="text-body-tertiary">Loading…</div>
+						<div class="fg-4">Loading…</div>
 					<%} else {%>
 						<div class="list-group list-group-flush">
 							<%_.each(sessions, (session) => {%>
 								<%const active = session.lastSeenAt && moment().diff(session.lastSeenAt, 'minutes') < 5;%>
-								<div class="list-group-item bg-transparent px-0 small d-flex align-items-center gap-2">
-									<i class="icon-solid icon-circle icon-fw icon-2xs flex-shrink-0 <%=(active ? 'text-green-500' : 'text-body-tertiary')%>"></i>
+								<div class="list-group-item bg-transparent px-0 small d-flex align-items-center gap-3">
+									<i class="icon-solid icon-circle icon-fw icon-2xs flex-shrink-0 <%=(active ? 'fg-green-500' : 'fg-4')%>"></i>
 									<span class="text-nowrap flex-shrink-0"><%-session.ipAddress || 'Unknown address'%></span>
 									<span class="fw-light text-truncate">
 										&middot;
@@ -22,15 +22,15 @@
 										&middot;
 										<span data-bs-toggle="tooltip" data-bs-original-title="Signed in on <%=moment(session.createdAt).format('MMMM D, YYYY [at] HH:mm')%>. Expires <%=moment(session.expiresAt).format('MMMM D, YYYY')%>.">signed in <%=moment(session.createdAt).fromNow()%></span>
 									</span>
-									<span class="fw-lighter text-body-tertiary text-truncate" style="flex-shrink: 999;" data-bs-toggle="tooltip" data-bs-original-title="<%-session.userAgent || 'No user agent recorded'%>"><%-session.userAgent || 'Unknown device'%></span>
-									<span class="ms-auto d-flex align-items-center gap-2 flex-shrink-0">
+									<span class="fw-lighter fg-4 text-truncate" style="flex-shrink: 999;" data-bs-toggle="tooltip" data-bs-original-title="<%-session.userAgent || 'No user agent recorded'%>"><%-session.userAgent || 'Unknown device'%></span>
+									<span class="ms-auto d-flex align-items-center gap-3 flex-shrink-0">
 										<%if (session.pending) {%>
 											<u-badge color="yellow" tint="100" pill tip="Signed in but hasn't passed the code challenge yet — it can't reach anything until it does.">Awaiting code</u-badge>
 										<%}%>
 										<%if (session.current) {%>
 											<u-badge color="green" tint="100" pill>This device</u-badge>
 										<%} else {%>
-											<a href="#" class="text-danger revoke" data-session-id="<%-session.id%>" data-bs-toggle="tooltip" data-bs-original-title="Sign this session out">
+											<a href="#" class="fg-danger revoke" data-session-id="<%-session.id%>" data-bs-toggle="tooltip" data-bs-original-title="Sign this session out">
 												<i class="icon-solid icon-circle-xmark"></i>
 											</a>
 										<%}%>

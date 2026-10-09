@@ -18,7 +18,7 @@ const render = (state) => {
 };
 
 const revoke = async (link) => {
-	if (!await confirm('Are you sure you want to sign this session out?', { buttons: [{ text: 'Sign out', class: 'btn-danger' }] })) {
+	if (!await confirm('Are you sure you want to sign this session out?', { buttons: [{ text: 'Sign out', class: 'btn-solid theme-danger' }] })) {
 		return;
 	}
 
@@ -35,7 +35,7 @@ const revoke = async (link) => {
 };
 
 const revokeOthers = async () => {
-	if (!await confirm('Are you sure you want to sign out all other sessions?', { buttons: [{ text: 'Sign out', class: 'btn-danger' }] })) {
+	if (!await confirm('Are you sure you want to sign out all other sessions?', { buttons: [{ text: 'Sign out', class: 'btn-solid theme-danger' }] })) {
 		return;
 	}
 

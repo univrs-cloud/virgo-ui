@@ -31,7 +31,7 @@ export const mount = () => {
 		hide.reset();
 		hide.classList.add('d-none');
 		show.classList.remove('d-none');
-		const shownInput = show.querySelector('u-input');
+		const shownInput = show.querySelector('u-otp, u-input');
 		shownInput?.updateComplete?.then(() => shownInput.focus());
 	};
 
@@ -41,14 +41,17 @@ export const mount = () => {
 		window.location.replace('/signin');
 	};
 
-	challengeForm.validation = [{ selector: '.code', rules: { isEmpty: `Can't be empty` } }];
+	challengeForm.validation = [{ selector: '.code', rules: { isEmpty: `Can't be empty`, isLength: { min: 6, max: 6, message: `Must be 6 digits` } } }];
 	recoveryForm.validation = [{ selector: '.recovery-code', rules: { isEmpty: `Can't be empty` } }];
 	challengeForm.addEventListener('valid', submit(challengeForm));
 	recoveryForm.addEventListener('valid', submit(recoveryForm));
 	main.querySelector('.show-recovery').addEventListener('click', toggle(recoveryForm, challengeForm));
 	main.querySelector('.show-challenge').addEventListener('click', toggle(challengeForm, recoveryForm));
+	_.each(main.querySelectorAll('.show-recovery, .show-challenge'), (link) => {
+		link.addEventListener('mousedown', (event) => { event.preventDefault(); });
+	});
 	main.querySelector('.sign-out').addEventListener('click', signOut);
 
-	const input = challengeForm.querySelector('u-input');
+	const input = challengeForm.querySelector('u-otp');
 	input?.updateComplete?.then(() => input.focus());
 };

@@ -1,18 +1,14 @@
-<div id="admin-add" class="modal fade">
+<dialog id="admin-add" class="dialog dialog-sm">
 	<u-form>
-		<div class="modal-dialog modal-sm modal-dialog-centered">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">Add admin</h5>
-				</div>
-				<div class="modal-body">
-					<u-input type="email" name="email" label="Email address" class="email" autocomplete="off"></u-input>
-				</div>
-				<div class="modal-footer">
-					<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="modal" outline>Cancel</u-button>
-					<u-button type="submit" variant="primary">Add</u-button>
-				</div>
-			</div>
+		<div class="dialog-header">
+			<h1 class="dialog-title">Add admin</h1>
+		</div>
+		<div class="dialog-body">
+			<u-input type="email" name="email" label="Email address" class="email" autocomplete="off"></u-input>
+		</div>
+		<div class="dialog-footer">
+			<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="dialog" outline>Cancel</u-button>
+			<u-button type="submit" variant="primary">Add</u-button>
 		</div>
 	</u-form>
-</div>
+</dialog>

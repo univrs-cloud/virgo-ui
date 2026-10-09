@@ -85,7 +85,7 @@ export class Textarea extends LitElement {
 	firstUpdated() {
 		const label = this.renderRoot.querySelector('label');
 		if (label) {
-			this.#tooltip = new bootstrap.Tooltip(label);
+			this.#tooltip = new bootstrap.Tooltip(label, { container: this.closest('dialog') ?? 'body' });
 		}
 
 		this.#updateValueFromLightDOM();
@@ -93,8 +93,12 @@ export class Textarea extends LitElement {
 
 	render() {
 		return html`
-			<div class="mb-4">
+			<div class="mb-7">
 				<div class="form-floating">
+					<label>
+						${this.label}
+						${this.tip ? html`<span class="help-inline ms-1" data-bs-toggle="tooltip" data-bs-original-title="${this.tip}"><i class="icon-solid icon-question-circle"></i></span>` : ''}
+					</label>
 					<textarea
 						class="form-control ${classMap({ 'is-invalid': this.error })}"
 						placeholder=${this.placeholder}
@@ -105,10 +109,6 @@ export class Textarea extends LitElement {
 						@focus=${this.#onFocus}
 						@input=${this.#onInput}
 					></textarea>
-					<label>
-						${this.label}
-						${this.tip ? html`<span class="help-inline ms-1" data-bs-toggle="tooltip" data-bs-original-title="${this.tip}"><i class="icon-solid icon-question-circle"></i></span>` : ''}
-					</label>
 					<div class="invalid-feedback lh-1 z-1 position-absolute top-100 start-0 end-0 ${classMap({ 'd-block': this.error })}">${this.error || ''}</div>
 				</div>
 			</div>

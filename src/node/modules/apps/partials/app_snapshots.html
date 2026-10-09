@@ -1,4 +1,4 @@
-<div class="snapshots card mb-2">
+<div class="snapshots card mb-3">
 	<%
 		const snapshotTierOrder = ['frequently', 'hourly', 'daily', 'monthly', 'yearly'];
 		const snapshotTierColors = { frequently: 'blue-200', hourly: 'blue-300', daily: 'blue-500', monthly: 'indigo-500', yearly: 'indigo-700' };
@@ -100,24 +100,24 @@
 			};
 		%>
 		<div class="card-body">
-			<div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
-				<div class="d-flex flex-wrap align-items-center gap-2 min-w-0 small text-body-tertiary">
-					<span class="fs-4 fw-light text-body"><%=snapshotLabel(selectedPoint)%></span>
+			<div class="d-flex flex-wrap align-items-center justify-content-between gap-5">
+				<div class="d-flex flex-wrap align-items-center gap-3 min-w-0 small fg-4">
+					<span class="fs-xl fw-light fg-body"><%=snapshotLabel(selectedPoint)%></span>
 					<%_.each(selectedPoint.tiers, (tier) => {%>
-						<span class="badge rounded-pill border fw-normal text-<%-snapshotTierColors[tier]%> border-<%-snapshotTierColors[tier]%>"><%=_.startCase(tier)%></span>
+						<span class="badge bg-transparent rounded-pill border fw-normal fg-<%-snapshotTierColors[tier]%> border-<%-snapshotTierColors[tier]%>"><%=_.startCase(tier)%></span>
 					<%})%>
 				</div>
 				<div class="btn-group btn-group-sm">
 					<%if (_.toLower(app.name) === 'nextcloud') {%>
-						<button type="button" class="snapshot-browse btn btn-light" data-browse-snapshot="<%-selectedPoint.snapshot%>" data-browse-date="<%-selectedPoint.createdMoment.format('D MMM YYYY, HH:mm')%>"><i class="icon-regular icon-folder-open icon-fw me-1"></i>Browse files</button>
+						<button type="button" class="snapshot-browse btn-solid theme-secondary" data-browse-snapshot="<%-selectedPoint.snapshot%>" data-browse-date="<%-selectedPoint.createdMoment.format('D MMM YYYY, HH:mm')%>"><i class="icon-regular icon-folder-open icon-fw"></i>Browse files</button>
 					<%} else {%>
-						<button type="button" class="snapshot-action btn btn-light" disabled><i class="icon-regular icon-clock-rotate-left icon-fw me-1"></i>Roll back</button>
+						<button type="button" class="snapshot-action btn-solid theme-secondary" disabled><i class="icon-regular icon-clock-rotate-left icon-fw"></i>Roll back</button>
 					<%}%>
 				</div>
 			</div>
 		</div>
-		<div class="card-body pt-0 d-none d-md-block">
-			<small class="d-block text-body-tertiary text-uppercase mb-2">Timeline</small>
+		<div class="card-body border-0 pt-0 d-none md:d-block">
+			<small class="d-block fg-4 text-uppercase mb-3">Timeline</small>
 			<div class="position-relative" style="height: 26px;">
 				<%_.each(_.initial(snapshotTicks), ([hours]) => {%>
 					<span class="position-absolute top-0 bottom-0 border-start" style="left: calc(0.5rem + (100% - 1rem) * <%=snapshotPosition(hours)%>);"></span>
@@ -127,27 +127,29 @@
 						const color = snapshotTierColors[_.last(point.tiers)];
 						const diameter = snapshotRadius(point.freed, 3, 9) * 2;
 					%>
-					<span class="position-absolute top-50 translate-middle rounded-circle cursor-pointer <%=(point.freed > 0 ? `bg-${color}` : `bg-body border border-2 border-${color}`)%>" style="left: calc(0.5rem + (100% - 1rem) * <%=snapshotPosition(point.age)%>); width: clamp(6px, <%=(diameter / 6).toFixed(2)%>vw, <%=diameter%>px); aspect-ratio: 1; <%=(point === selectedPoint ? 'outline: 2px solid var(--bs-emphasis-color); outline-offset: 1px;' : '')%>" data-snapshot="<%-point.key%>" data-bs-toggle="tooltip" data-bs-original-title="<%-snapshotTip(point)%>"></span>
+					<span class="position-absolute top-50 translate-middle rounded-circle cursor-pointer <%=(point.freed > 0 ? `bg-${color}` : `bg-body border border-2 border-${color}`)%>" style="left: calc(0.5rem + (100% - 1rem) * <%=snapshotPosition(point.age)%>); width: clamp(6px, <%=(diameter / 6).toFixed(2)%>vw, <%=diameter%>px); aspect-ratio: 1; <%=(point === selectedPoint ? 'outline: 2px solid var(--black); outline-offset: 1px;' : '')%>" data-snapshot="<%-point.key%>" data-bs-toggle="tooltip" data-bs-original-title="<%-snapshotTip(point)%>"></span>
 				<%})%>
 			</div>
-			<input type="range" class="snapshot-scrubber form-range" min="0" max="1000" value="<%=Math.round(snapshotPosition(selectedPoint.age) * 1000)%>" aria-label="Restore point" aria-valuetext="<%-snapshotLabel(selectedPoint)%>" data-selected="<%-selectedPoint.key%>" data-keys="<%-_.map(snapshotPoints, 'key').join(',')%>" data-positions="<%-_.map(snapshotPoints, (point) => { return snapshotPosition(point.age).toFixed(4); }).join(',')%>">
-			<div class="position-relative small text-body-tertiary" style="height: 1.25rem;">
+			<div class="form-range">
+				<input type="range" class="snapshot-scrubber form-range-input" min="0" max="1000" value="<%=Math.round(snapshotPosition(selectedPoint.age) * 1000)%>" aria-label="Restore point" aria-valuetext="<%-snapshotLabel(selectedPoint)%>" data-selected="<%-selectedPoint.key%>" data-keys="<%-_.map(snapshotPoints, 'key').join(',')%>" data-positions="<%-_.map(snapshotPoints, (point) => { return snapshotPosition(point.age).toFixed(4); }).join(',')%>">
+			</div>
+			<div class="position-relative small fg-4" style="height: 1.25rem;">
 				<%_.each(snapshotTicks, ([hours, label, last]) => {%>
 					<span class="position-absolute <%=(last ? 'end-0' : 'translate-middle-x')%>" style="<%=(last ? '' : `left: calc(0.5rem + (100% - 1rem) * ${snapshotPosition(hours)});`)%>"><%=label%></span>
 				<%})%>
-				<span class="position-absolute start-0 fw-semibold text-body-secondary">Now</span>
+				<span class="position-absolute start-0 fw-semibold fg-emphasis-secondary">Now</span>
 			</div>
 		</div>
-		<div class="card-body pt-0 d-md-none">
-			<small class="d-block text-body-tertiary text-uppercase mb-2">Orbits</small>
+		<div class="card-body border-0 pt-0 md:d-none">
+			<small class="d-block fg-4 text-uppercase mb-3">Orbits</small>
 			<svg class="d-block mx-auto" viewBox="0 0 400 400" style="width: 100%; max-width: 360px;" role="img" aria-label="Snapshot orbits">
 				<%_.each(orbits, (orbit) => {%>
-					<circle cx="<%=orbitCenter%>" cy="<%=orbitCenter%>" r="<%=orbit.radius%>" fill="none" style="stroke: var(--bs-border-color);"/>
-					<text x="<%=orbitCenter - 6%>" y="<%=orbitCenter - orbit.radius + 4%>" text-anchor="end" font-size="10" class="text-body-tertiary" fill="currentColor"><%=snapshotSpan(orbit.window)%></text>
+					<circle cx="<%=orbitCenter%>" cy="<%=orbitCenter%>" r="<%=orbit.radius%>" fill="none" style="stroke: var(--border-color);"/>
+					<text x="<%=orbitCenter - 6%>" y="<%=orbitCenter - orbit.radius + 4%>" text-anchor="end" font-size="10" class="fg-4" fill="currentColor"><%=snapshotSpan(orbit.window)%></text>
 				<%})%>
-				<line x1="<%=orbitCenter%>" x2="<%=orbitCenter%>" y1="<%=orbitCenter - _.first(orbits).radius - 12%>" y2="<%=orbitCenter - 40%>" style="stroke: var(--bs-border-color);"/>
-				<text x="<%=orbitCenter + 5%>" y="<%=orbitCenter - _.first(orbits).radius - 8%>" font-size="10" font-weight="600" class="text-body-secondary" fill="currentColor">Now</text>
-				<circle cx="<%=orbitCenter%>" cy="<%=orbitCenter%>" r="30" class="text-primary" fill="currentColor" fill-opacity="0.1"/>
+				<line x1="<%=orbitCenter%>" x2="<%=orbitCenter%>" y1="<%=orbitCenter - _.first(orbits).radius - 12%>" y2="<%=orbitCenter - 40%>" style="stroke: var(--border-color);"/>
+				<text x="<%=orbitCenter + 5%>" y="<%=orbitCenter - _.first(orbits).radius - 8%>" font-size="10" font-weight="600" class="fg-emphasis-secondary" fill="currentColor">Now</text>
+				<circle cx="<%=orbitCenter%>" cy="<%=orbitCenter%>" r="30" class="fg-primary" fill="currentColor" fill-opacity="0.1"/>
 				<image href="<%-(_.includes(app.icon, '/') ? app.icon : `assets/img/apps/${app.icon}`)%>" x="<%=orbitCenter - 18%>" y="<%=orbitCenter - 18%>" width="36" height="36"/>
 				<%_.each(orbits, (orbit) => {%>
 					<%_.each(orbit.entries, (entry) => {%>
@@ -155,22 +157,22 @@
 							const position = orbitPoint(orbit, entry.age);
 							const point = _.find(snapshotPoints, { key: entry.key });
 						%>
-						<circle cx="<%=position.x%>" cy="<%=position.y%>" r="<%=snapshotRadius(entry.size, 3.5, 15) + (point === selectedPoint ? 1.5 : 0)%>" class="cursor-pointer text-<%-snapshotTierColors[entry.tier]%>" style="fill: <%=(entry.size > 0 ? 'currentColor' : 'var(--bs-body-bg)')%>; stroke: <%=(point === selectedPoint ? 'var(--bs-emphasis-color)' : (entry.size > 0 ? 'var(--bs-body-bg)' : 'currentColor'))%>; stroke-width: <%=(point === selectedPoint ? 2 : (entry.size > 0 ? 1.2 : 1.5))%>;" data-snapshot="<%-entry.key%>" data-bs-toggle="tooltip" data-bs-original-title="<%-snapshotTip(point)%>"/>
+						<circle cx="<%=position.x%>" cy="<%=position.y%>" r="<%=snapshotRadius(entry.size, 3.5, 15) + (point === selectedPoint ? 1.5 : 0)%>" class="cursor-pointer fg-<%-snapshotTierColors[entry.tier]%>" style="fill: <%=(entry.size > 0 ? 'currentColor' : 'var(--bg-body)')%>; stroke: <%=(point === selectedPoint ? 'var(--black)' : (entry.size > 0 ? 'var(--bg-body)' : 'currentColor'))%>; stroke-width: <%=(point === selectedPoint ? 2 : (entry.size > 0 ? 1.2 : 1.5))%>;" data-snapshot="<%-entry.key%>" data-bs-toggle="tooltip" data-bs-original-title="<%-snapshotTip(point)%>"/>
 					<%})%>
 				<%})%>
 			</svg>
 		</div>
-		<div class="card-body pt-0">
-			<div class="d-flex align-items-center justify-content-between small text-body-tertiary">
-				<button type="button" class="btn btn-light btn-sm" data-snapshot="<%-snapshotPoints[Math.max(selectedIndex - 1, 0)].key%>"><i class="icon-solid icon-chevron-left icon-fw"></i>Newer</button>
+		<div class="card-body border-0 pt-0">
+			<div class="d-flex align-items-center justify-content-between small fg-4">
+				<button type="button" class="btn-solid theme-secondary btn-sm" data-snapshot="<%-snapshotPoints[Math.max(selectedIndex - 1, 0)].key%>"><i class="icon-solid icon-chevron-left icon-fw"></i>Newer</button>
 				<span>Restore point <%=selectedIndex + 1%> of <%=_.size(snapshotPoints)%></span>
-				<button type="button" class="btn btn-light btn-sm" data-snapshot="<%-snapshotPoints[Math.min(selectedIndex + 1, snapshotPoints.length - 1)].key%>">Older<i class="icon-solid icon-chevron-right icon-fw"></i></button>
+				<button type="button" class="btn-solid theme-secondary btn-sm" data-snapshot="<%-snapshotPoints[Math.min(selectedIndex + 1, snapshotPoints.length - 1)].key%>">Older<i class="icon-solid icon-chevron-right icon-fw"></i></button>
 			</div>
 		</div>
 		<%if (_.toLower(app.name) === 'nextcloud') {%>
 			<div class="card-body border-top pb-0">
-				<div class="row g-2 align-items-center">
-					<div class="col-12 col-md-5 col-xl-4 mb-n2">
+				<div class="row g-3 align-items-center">
+					<div class="col-12 md:col-5 xl:col-4 mb--3">
 						<u-input type="search" label="Search in snapshots" class="snapshot-search" <%=(snapshotSearching ? 'disabled' : '')%>></u-input>
 					</div>
 					<%
@@ -182,31 +184,29 @@
 						];
 					%>
 					<div class="col-auto">
-						<div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+						<div class="d-flex flex-wrap align-items-center gap-3 mb-5">
 							<%_.each(snapshotFilterGroups, (group) => {%>
 								<%
 									const current = snapshotFilter[group.key] || '';
 									const currentOption = _.find(group.options, ([value]) => { return value === current; });
 								%>
 								<div class="dropdown">
-									<span class="d-flex <%=(snapshotSearching ? 'opacity-50 pe-none' : '')%>" data-bs-toggle="dropdown">
-										<u-badge color="<%=(current ? 'blue' : 'gray')%>" tint="<%=(current ? '500' : '300')%>" class="cursor-pointer">
-											<%=(current ? currentOption[1] : group.label)%>
-											<i class="icon-solid icon-chevron-down icon-xs ms-1"></i>
-										</u-badge>
-									</span>
-									<div class="dropdown-menu dropdown-menu-start shadow">
+									<button type="button" class="chip <%=(current ? 'active' : '')%>" data-bs-toggle="menu" <%=(snapshotSearching ? 'disabled' : '')%>>
+										<%=(current ? currentOption[1] : group.label)%>
+										<i class="icon-solid icon-chevron-down icon-xs"></i>
+									</button>
+									<div class="menu shadow shadow-opacity-100">
 										<%_.each(group.options, ([value, label]) => {%>
-											<button type="button" class="dropdown-item <%=(value === current ? 'active' : '')%>" data-snapshot-filter="<%-group.key%>" data-value="<%-value%>"><%=label%></button>
+											<button type="button" class="menu-item <%=(value === current ? 'active' : '')%>" data-snapshot-filter="<%-group.key%>" data-value="<%-value%>"><%=label%></button>
 										<%})%>
 									</div>
 								</div>
 							<%})%>
 							<%if (_.some(_.values(snapshotFilter))) {%>
-								<button type="button" class="btn btn-link btn-sm text-decoration-none" data-snapshot-filter="clear" <%=(snapshotSearching ? 'disabled' : '')%>>Clear filters</button>
+								<button type="button" class="btn-link d-inline-block btn-sm text-decoration-none" data-snapshot-filter="clear" <%=(snapshotSearching ? 'disabled' : '')%>>Clear filters</button>
 							<%}%>
 							<%if (snapshotSearching) {%>
-								<div class="spinner-border spinner-border-sm text-gray-600" role="status"></div>
+								<div class="spinner-border spinner-sm fg-gray-600" role="status"></div>
 							<%}%>
 						</div>
 					</div>
@@ -300,15 +300,15 @@
 					const resultIcons = { file: 'icon-file', dir: 'icon-folder', link: 'icon-link' };
 				%>
 				<div class="card-body pt-0">
-					<div class="d-flex align-items-center gap-2 mb-2">
-						<small class="text-body-tertiary"><%=_.size(snapshotResults.results)%><%=(snapshotResults.hasMore ? '+' : '')%> <%=(_.size(snapshotResults.results) === 1 && !snapshotResults.hasMore ? 'match' : 'matches')%> for “<%-snapshotResults.query.term%>”</small>
-						<button type="button" class="snapshot-search-clear btn btn-link btn-sm text-decoration-none" <%=(snapshotSearching ? 'disabled' : '')%>>Clear</button>
+					<div class="d-flex align-items-center gap-3 mb-3">
+						<small class="fg-4"><%=_.size(snapshotResults.results)%><%=(snapshotResults.hasMore ? '+' : '')%> <%=(_.size(snapshotResults.results) === 1 && !snapshotResults.hasMore ? 'match' : 'matches')%> for “<%-snapshotResults.query.term%>”</small>
+						<button type="button" class="snapshot-search-clear btn-link d-inline-block btn-sm text-decoration-none" <%=(snapshotSearching ? 'disabled' : '')%>>Clear</button>
 					</div>
 					<%if (snapshotResults.message) {%>
-						<div class="small text-danger mb-2"><%-snapshotResults.message%></div>
+						<div class="small fg-danger mb-3"><%-snapshotResults.message%></div>
 					<%}%>
 					<%if (_.isEmpty(snapshotResults.results) && !snapshotResults.message) {%>
-						<div class="small text-body-secondary">No files match.</div>
+						<div class="small fg-emphasis-secondary">No files match.</div>
 					<%}%>
 					<div class="tree-rows">
 						<%_.each(resultRows, (row) => {%>
@@ -319,13 +319,13 @@
 								<div class="tree-row <%=(row.depth && !row.isLast ? 'tree-line' : '')%>" data-depth="<%=row.depth%>" style="--tree-elbow-x: 0.55rem; --tree-elbow-height: 1rem; --tree-line-x: 0.55rem; --tree-line-top: 0; <%=(row.depth ? 'padding-left: 1.5rem;' : '')%>">
 									<div class="tree-row py-1 <%=(row.hasChildren ? 'tree-line' : '')%>" data-depth="0" style="--tree-line-x: 0.55rem; --tree-line-top: calc(1rem + var(--tree-icon-radius));">
 										<%if (item) {%>
-											<div class="d-flex gap-2 min-w-0">
-												<i class="icon-light <%-resultIcons[item.type] || 'icon-file'%> icon-fw lh-base text-body-tertiary"></i>
+											<div class="d-flex gap-3 min-w-0">
+												<i class="icon-light <%-resultIcons[item.type] || 'icon-file'%> icon-fw lh-md fg-4"></i>
 												<div class="min-w-0">
-													<div class="d-flex align-items-center gap-2 min-w-0">
-														<span class="text-truncate <%=(item.deleted ? 'text-body-secondary' : '')%>"><%-row.name%></span>
+													<div class="d-flex align-items-center gap-3 min-w-0">
+														<span class="text-truncate <%=(item.deleted ? 'fg-emphasis-secondary' : '')%>"><%-row.name%></span>
 														<%if (item.deleted) {%>
-															<span class="badge rounded-pill border fw-normal text-red-500 border-red-500">Deleted</span>
+															<span class="badge bg-transparent rounded-pill border fw-normal fg-red-500 border-red-500">Deleted</span>
 														<%}%>
 													</div>
 													<%if (!_.isEmpty(item.versions)) {%>
@@ -355,18 +355,18 @@
 																(item.deleted && item.lastSeenSnap && !_.some(item.versions, { snapshot: item.lastSeenSnap }) ? [{ snapshot: item.lastSeenSnap, label: 'last seen' }] : [])
 															);
 														%>
-														<small class="d-flex flex-column text-body-tertiary">
+														<small class="d-flex flex-column fg-4">
 															<%_.each(versionEntries, (version) => {%>
 																<%const versionPoint = resultPoint(version.snapshot);%>
 																<span class="<%=(version.renamedFrom ? 'text-break' : 'text-nowrap')%>">
 																	<%if (versionPoint) {%>
-																		<button type="button" class="btn btn-link btn-sm p-0 align-baseline text-decoration-none" data-snapshot="<%-versionPoint.key%>"><%=versionPoint.createdMoment.format('D MMM YYYY, HH:mm')%></button>
+																		<button type="button" class="btn-link d-inline-block btn-sm p-0 align-baseline text-decoration-none min-h-0" data-snapshot="<%-versionPoint.key%>"><%=versionPoint.createdMoment.format('D MMM YYYY, HH:mm')%></button>
 																	<%} else if (isResultPruned(version.snapshot)) {%>
 																		<span data-bs-toggle="tooltip" data-bs-original-title="This snapshot no longer exists"><%-resultDate(version.snapshot)%></span>
 																	<%} else {%>
 																		<%-resultDate(version.snapshot)%>
 																	<%}%>
-																	<%=` · ${version.label}`%><%if (version.renamedFrom) {%> from <span class="text-body-secondary"><%-version.renamedFrom%></span><%}%><%=(version.lastSeen ? ' · last seen' : '')%><%=(item.type === 'dir' || _.isUndefined(version.size) ? '' : ` · ${prettyBytes(version.size || 0, { binary: true })}`)%>
+																	<%=` · ${version.label}`%><%if (version.renamedFrom) {%> from <span class="fg-emphasis-secondary"><%-version.renamedFrom%></span><%}%><%=(version.lastSeen ? ' · last seen' : '')%><%=(item.type === 'dir' || _.isUndefined(version.size) ? '' : ` · ${prettyBytes(version.size || 0, { binary: true })}`)%>
 																	<%const versionTarget = (isResultPruned(version.snapshot) ? null : browseTarget(item, version));%>
 																	<%if (versionTarget) {%>
 																		<a href="#" class="snapshot-browse ms-1 text-decoration-none" data-bs-toggle="tooltip" data-bs-original-title="Browse files" data-browse-snapshot="<%-version.snapshot%>" data-browse-date="<%-(versionPoint ? versionPoint.createdMoment.format('D MMM YYYY, HH:mm') : resultDate(version.snapshot))%>" data-browse-path="<%-versionTarget.path%>" data-browse-focus="<%-versionTarget.focus%>"><i class="icon-solid icon-folder-open"></i></a>
@@ -381,22 +381,22 @@
 															<%})%>
 														</small>
 													<%} else {%>
-														<small class="d-block text-body-tertiary">Live · no versions</small>
+														<small class="d-block fg-4">Live · no versions</small>
 													<%}%>
 												</div>
 											</div>
 										<%} else {%>
-											<div class="d-flex align-items-center gap-2 min-w-0 text-body-tertiary">
+											<div class="d-flex align-items-center gap-3 min-w-0 fg-4">
 												<i class="icon-light icon-folder-open icon-fw"></i>
 												<span class="text-truncate"><%-row.name%></span>
 												<%const downloads = (canDownloadSnapshotFiles && row.node.mountpoint && (row.depth > 0 || _.includes(row.name, '/')) ? folderDownloads(row.node) : []);%>
 												<%if (!_.isEmpty(downloads)) {%>
 													<div class="dropdown">
-														<span class="small link-primary cursor-pointer" data-bs-toggle="dropdown"><i class="icon-solid icon-download"></i></span>
-														<div class="dropdown-menu shadow overflow-y-auto" style="max-height: 16rem;">
-															<h6 class="dropdown-header">Download as of<i class="icon-solid icon-triangle-exclamation icon-fw text-orange-500 ms-1" data-bs-toggle="tooltip" data-bs-original-title="Downloads the entire folder as it was at that date, not just the files shown in the results."></i></h6>
+														<span class="small fg-primary cursor-pointer" data-bs-toggle="menu"><i class="icon-solid icon-download"></i></span>
+														<div class="menu shadow shadow-opacity-100 overflow-y-auto" style="max-height: 16rem;">
+															<h6 class="menu-header">Download as of<i class="icon-solid icon-triangle-exclamation icon-fw fg-orange-500 ms-1" data-bs-toggle="tooltip" data-bs-original-title="Downloads the entire folder as it was at that date, not just the files shown in the results."></i></h6>
 															<%_.each(downloads, (entry) => {%>
-																<a href="/snapshots/download?path=<%=encodeURIComponent(entry.path)%>" class="dropdown-item" download><%-entry.label%></a>
+																<a href="/snapshots/download?path=<%=encodeURIComponent(entry.path)%>" class="menu-item" download><%-entry.label%></a>
 															<%})%>
 														</div>
 													</div>
@@ -408,7 +408,7 @@
 						<%})%>
 					</div>
 					<%if (snapshotResults.hasMore) {%>
-						<button type="button" class="snapshot-search-more btn btn-light btn-sm mt-3" <%=(snapshotSearching ? 'disabled' : '')%>>Load more</button>
+						<button type="button" class="snapshot-search-more btn-solid theme-secondary btn-sm mt-5" <%=(snapshotSearching ? 'disabled' : '')%>>Load more</button>
 					<%}%>
 				</div>
 			<%}%>

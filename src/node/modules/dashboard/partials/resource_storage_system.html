@@ -1,20 +1,20 @@
 <%const pool = (state.storage === false ? false : _.find(state.storage, (pool) => { return pool.name === 'system'; }))%>
-<li class="list-group-item storage-system py-3">
-	<h6 class="text-body-emphasis mb-0">
-		<i class="icon-regular icon-sd-card icon-fw me-1 text-gray-500"></i>VirgoOS
-	</h6>
+<li class="list-group-item storage-system py-5">
+	<h5 class="fg-black mb-0">
+		<i class="icon-regular icon-sd-card icon-fw me-1 fg-gray-300"></i>VirgoOS
+	</h5>
 	<%if (state.storage === null) {%>
-		<div class="spinner-border spinner-border-sm text-gray-600"></div>
+		<div class="spinner-border spinner-sm fg-gray-600"></div>
 	<%} else if (pool === false) {%>
-		<span class="text-red-300">Error fetching data</span>
+		<span class="fg-red-300">Error fetching data</span>
 	<%} else {%>
-		<div class="text-end mt-n3 mb-1">
-			<small class="fw-light text-body-tertiary"><%=pool.properties.capacity.value?.toFixed(0)%>%</small>
+		<div class="text-end mt--5 mb-1">
+			<small class="fw-light fg-4"><%=pool.properties.capacity.value?.toFixed(0)%>%</small>
 			<u-progress>
 				<u-progress-bar width="<%=pool.properties.capacity.value%>"></u-progress-bar>
 			</u-progress>
 		</div>
-		<div class="lh-1 text-body-tertiary mt-1">
+		<div class="lh-1 fg-4 mt-1">
 			<small><strong class="fw-semibold"><%=prettyBytes(pool.properties.allocated.value || 0, { binary: true })%></strong> used from <%=prettyBytes(pool.properties.size.value || 0, { binary: true })%></small><br>
 			<small class="d-none">Free: <%=prettyBytes(pool.properties.free.value || 0, { binary: true })%></small>
 		</div>

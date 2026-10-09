@@ -93,5 +93,5 @@ const update = async (event) => {
 };
 
 updates.addEventListener('click', update);
-modal.addEventListener('show.bs.modal', show);
-modal.addEventListener('hidden.bs.modal', restore);
+modal.addEventListener('show.bs.dialog', show);
+modal.addEventListener('hidden.bs.dialog', restore);

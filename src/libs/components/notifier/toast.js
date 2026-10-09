@@ -76,7 +76,7 @@ export class Toast extends LitElement {
 						<strong>${unsafeHTML(this.title)}</strong>
 						${unsafeHTML(this.message)}
 					</div>
-					${this.dismissible ? html`<button type="button" class="btn-close ${this.type === 'neutral' ? '' : 'btn-close-white'} me-2 m-auto" @click=${() => { this.hide(); }}></button>` : ''}
+					${this.dismissible ? html`<button type="button" class="btn-close ${this.type === 'neutral' ? '' : 'fg-white'} me-3 m-auto" @click=${() => { this.hide(); }}></button>` : ''}
 				</div>
 			</div>
 		`;
@@ -115,7 +115,7 @@ export class Toast extends LitElement {
 		const { signal } = this.#abortController;
 		
 		// Remove Bootstrap's show class to ensure fresh state
-		toastEl.classList.remove('show', 'showing', 'hide');
+		toastEl.classList.remove('show');
 		
 		// Get existing Bootstrap Toast instance if any and dispose it
 		const existingInstance = bootstrap.Toast.getInstance(toastEl);

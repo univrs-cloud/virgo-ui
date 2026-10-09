@@ -1,36 +1,36 @@
-<tr class="item cursor-pointer <%=(service.active === 'failed' ? 'table-danger' : (service.broken ? 'table-warning' : ''))%>" data-unit="<%-service.unit%>">
+<tr class="item cursor-pointer <%=(service.active === 'failed' ? 'theme-danger' : (service.broken ? 'theme-warning' : ''))%>" data-unit="<%-service.unit%>">
 	<td style="min-width: 200px; max-width: 0;">
-		<div class="d-flex align-items-center mb-n1">
+		<div class="d-flex align-items-center mb--1">
 			<div class="text-truncate"><%-service.unit%></div>
 			<%if (service.broken) {%>
-				<u-badge color="red" class="ms-2 flex-shrink-0" tip="Service not found or failed to load" pill>
+				<u-badge color="red" class="ms-3 flex-shrink-0" tip="Service not found or failed to load" pill>
 					<i class="icon-solid icon-triangle-exclamation icon-fw"></i>
 				</u-badge>
 			<%} else if (service.unitFileState === 'masked') {%>
-				<u-badge color="orange" class="ms-2 flex-shrink-0" tip="Service is masked and cannot be started or enabled" pill>
+				<u-badge color="orange" class="ms-3 flex-shrink-0" tip="Service is masked and cannot be started or enabled" pill>
 					<i class="icon-solid icon-ban icon-fw"></i>
 				</u-badge>
 			<%}%>
 		</div>
 		<div class="d-flex">
-			<div class="text-truncate"><small class="text-body-secondary"><%-service.description%></small></div>
+			<div class="text-truncate"><small class="fg-emphasis-secondary"><%-service.description%></small></div>
 		</div>
 	</td>
-	<td class="text-end text-nowrap d-none d-md-table-cell">
+	<td class="text-end text-nowrap d-none md:d-table-cell">
 		<%if (service.type === 'service' && service.active === 'active') {%>
-			<small class="fw-light text-body-secondary" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(service.memory?.usage || 0, { binary: true })%>"><%=service.memory?.percent.toFixed(2)%>%</small>
+			<small class="fw-light fg-emphasis-secondary" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(service.memory?.usage || 0, { binary: true })%>"><%=service.memory?.percent.toFixed(2)%>%</small>
 			<u-progress shadow="false">
 				<u-progress-bar width="<%=service.memory?.percent%>"></u-progress-bar>
 			</u-progress>
 		<%} else {%>
-			<span class="text-body-tertiary">&mdash;</span>
+			<span class="fg-4">&mdash;</span>
 		<%}%>
 	</td>
-	<td class="d-none d-md-table-cell text-body-secondary"><%-service.unitFileState%></td>
+	<td class="d-none md:d-table-cell fg-emphasis-secondary"><%-service.unitFileState%></td>
 	<td class="text-nowrap">
 		<%
 			const stateBadgeColor = (service.active === 'active' ? (service.sub === 'running' ? 'green' : 'blue') : (service.active === 'failed' ? 'red' : 'gray'));
-			const stateBadgeTint = (service.active === 'active' ? 100 : 200);
+			const stateBadgeTint = (service.active === 'failed' ? 200 : 100);
 		%>
 		<u-badge color="<%=stateBadgeColor%>" tint="<%=stateBadgeTint%>" pill><%-service.sub%></u-badge>
 	</td>
@@ -38,6 +38,6 @@
 		<%=serviceActionsTemplate({ service, jobs, inline: false })%>
 	</td>
 	<td class="text-end pe-0">
-		<i class="icon-light icon-angle-right icon-fw text-body-tertiary"></i>
+		<i class="icon-light icon-angle-right icon-fw fg-4"></i>
 	</td>
 </tr>

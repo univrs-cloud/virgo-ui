@@ -1,27 +1,27 @@
 <header>
-	<div class="navbar navbar-position navbar-light p-0">
-		<div class="container-fluid ps-3 pe-0">
-			<a href="/" class="navbar-brand order-sm-0 <%=(runtimeRole === 'fleet' ? 'fleet' : '')%>" <%=(runtimeRole === 'fleet' ? 'rel="external"' : '')%>>
+	<div class="navbar navbar-position p-0">
+		<div class="container-fluid ps-5 pe-0">
+			<a href="/" class="navbar-brand sm:order-0 <%=(runtimeRole === 'fleet' ? 'fleet' : '')%>" <%=(runtimeRole === 'fleet' ? 'rel="external"' : '')%>>
 				<span class="fw-normal ms-1"><%=(runtimeRole === 'node' ? 'univrs' : 'Fleet')%></span>
 			</a>
 			<div class="navbar-glass navbar-glass-shadow d-flex align-items-center justify-content-end">
-				<div class="account d-sm-none"></div>
-				<button type="button" class="navbar-toggler border-0 p-2 <%=(!isAuthenticated || isUpdating ? 'd-none' : '')%>" data-bs-toggle="offcanvas" data-bs-target=".offcanvas" role="button">
-					<i class="icon-solid icon-ellipsis-vertical icon-fw icon-fw text-secondary"></i>
+				<div class="account sm:d-none"></div>
+				<button type="button" class="navbar-toggler btn-icon btn-link text-decoration-none <%=(!isAuthenticated || isUpdating ? 'd-none' : '')%>" data-bs-toggle="drawer" data-bs-target=".drawer" role="button">
+					<i class="icon-solid icon-ellipsis-vertical icon-fw icon-fw fg-secondary"></i>
 				</button>
 			</div>
 		</div>
 	</div>
-	<nav class="bg-primary d-none d-sm-block">
-		<div id="navbar" class="navbar navbar-dark d-flex flex-column">
-			<hr class="border-secondary-subtle w-100 mt-0 mb-3">
+	<nav class="bg-primary d-none sm:d-block">
+		<div id="navbar" class="navbar d-flex flex-column">
+			<hr class="border-gray-200 w-100 mt-0 mb-5 opacity-25">
 			<div class="nav nav-pills mb-auto"></div>
-			<hr class="border-secondary-subtle w-100 my-0">
-			<button type="button" class="menu-toggle btn align-self-start border-0 px-2 py-1 text-white" data-collapse-title="Collapse" data-expand-title="Expand">
+			<hr class="border-gray-200 w-100 my-0 opacity-25">
+			<button type="button" class="menu-toggle btn-link btn-sm fs-md text-decoration-none align-self-start border-0 px-3 py-1 fg-white" data-collapse-title="Collapse" data-expand-title="Expand">
 				<i class="icon-duotone icon-solid icon-sidebar icon-fw"></i>
 			</button>
-			<hr class="border-secondary-subtle w-100 mt-0 mb-2">
-			<div class="account mb-n2"></div>
+			<hr class="border-gray-200 w-100 mt-0 mb-3 opacity-25">
+			<div class="account mb--3"></div>
 		</div>
 	</nav>
 </header>

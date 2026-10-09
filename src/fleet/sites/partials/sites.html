@@ -1,8 +1,8 @@
 <%if (_.isEmpty(nodes)) {%>
-	<div class="no-content d-flex flex-column justify-content-center align-items-center py-5">
+	<div class="no-content d-flex flex-column justify-content-center align-items-center py-12">
 		<i class="icon-duotone icon-solid icon-server icon-4x"></i>
-		<h5 class="text-body-tertiary mt-4">No sites yet</h5>
-		<p class="text-body-tertiary mb-0">Sites will appear here once they have been registered.</p>
+		<h5 class="fg-4 mt-7">No sites yet</h5>
+		<p class="fg-4 mb-0">Sites will appear here once they have been registered.</p>
 	</div>
 <%} else {%>
 	<%
@@ -37,20 +37,20 @@
 		});
 	%>
 	<div class="row">
-		<div class="col-12 position-relative mb-3">
-			<h5 class="m-0">
+		<div class="col-12 position-relative mb-5">
+			<h4 class="m-0">
 				<i class="icon-duotone icon-solid icon-server icon-fw me-1"></i>
 				Sites
-			</h5>
+			</h4>
 		</div>
 		<%if (!_.isEmpty(badPools)) {%>
 			<div class="col-12">
-				<div class="alert alert-danger">
+				<div class="alert theme-danger mb-5">
 					<div class="d-flex align-items-center">
-						<i class="icon-solid icon-triangle-exclamation icon-fw me-2"></i>
+						<i class="icon-solid icon-triangle-exclamation icon-fw me-3"></i>
 						<strong>Storage needs attention</strong>
 					</div>
-					<div class="small ps-4 ms-1 mt-1">
+					<div class="small ps-7 ms-1 mt-1">
 						Replace the faulty <%=_.pluralize('drive', badPools.length)%> as soon as possible to avoid data loss:
 						<ul class="mb-0 mt-1">
 							<%_.each(badPools, (bad) => {%>
@@ -81,7 +81,7 @@
 		<%_.each(groups, (group, index) => {%>
 			<%if (showLabels) {%>
 				<div class="col-12">
-					<h6 class="text-body-tertiary ps-1 mb-2 <%=index > 0 ? 'mt-3' : ''%>"><%-group.label%> &middot; <%=_.pluralize('node', group.members.length, true)%></h6>
+					<h5 class="fg-4 ps-1 mb-3 <%=index > 0 ? 'mt-5' : ''%>"><%-group.label%> &middot; <%=_.pluralize('node', group.members.length, true)%></h5>
 				</div>
 			<%}%>
 			<%_.each(group.members, (node) => {%>

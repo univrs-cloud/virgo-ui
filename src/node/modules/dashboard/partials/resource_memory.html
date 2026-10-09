@@ -1,20 +1,20 @@
-<li class="list-group-item memory py-3">
-	<h6 class="text-body-emphasis mb-0">
-		<i class="icon-regular icon-memory icon-fw me-1 text-gray-500"></i>RAM
-	</h6>
+<li class="list-group-item memory py-5">
+	<h5 class="fg-black mb-0">
+		<i class="icon-regular icon-memory icon-fw me-1 fg-gray-300"></i>RAM
+	</h5>
 	<%if (state.memory === null) {%>
-		<div class="spinner-border spinner-border-sm text-gray-600"></div>
+		<div class="spinner-border spinner-sm fg-gray-600"></div>
 	<%} else if (state.memory === false) {%>
-		<span class="text-red-300">Error fetching data</span>
+		<span class="fg-red-300">Error fetching data</span>
 	<%} else {%>
 		<%const usedPercent = ((state.memory.total - state.memory.available) / state.memory.total) * 100%>
-		<div class="text-end mt-n3 mb-1">
-			<small class="fw-light text-body-tertiary"><%=usedPercent?.toFixed(0)%>%</small>
+		<div class="text-end mt--5 mb-1">
+			<small class="fw-light fg-4"><%=usedPercent?.toFixed(0)%>%</small>
 			<u-progress>
 				<u-progress-bar width="<%=usedPercent%>"></u-progress-bar>
 			</u-progress>
 		</div>
-		<div class="lh-1 text-body-tertiary mt-1">
+		<div class="lh-1 fg-4 mt-1">
 			<small><strong class="fw-semibold"><%=prettyBytes(state.memory.total - state.memory.available || 0, { binary: true })%></strong> used from <%=prettyBytes(state.memory.total || 0, { binary: true })%></small>
 		</div>
 	<%}%>

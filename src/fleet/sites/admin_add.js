@@ -17,7 +17,7 @@ const restore = () => {
 };
 
 const inviteAdmin = async () => {
-	const buttons = form.querySelectorAll('.modal-footer u-button');
+	const buttons = form.querySelectorAll('.dialog-footer u-button');
 	_.each(buttons, (button) => { button.disabled = true; });
 	let data = form.getData();
 	data.nodeId = nodeId;
@@ -25,7 +25,7 @@ const inviteAdmin = async () => {
 		const result = await nodeService.inviteAdmin(data);
 		if (result?.status === 'succeeded') {
 			notifier.add({ title: `${data.email} invited as admin.`, type: 'success' });
-			bootstrap.Modal.getInstance(modal)?.hide();
+			bootstrap.Dialog.getInstance(modal)?.hide();
 			return;
 		}
 		notifier.add({ title: result?.message || 'Failed to add admin.', type: 'error', duration: 0 });
@@ -45,5 +45,5 @@ form.validation = [
 	}
 ];
 form.addEventListener('valid', inviteAdmin);
-modal.addEventListener('show.bs.modal', render);
-modal.addEventListener('hidden.bs.modal', restore);
+modal.addEventListener('show.bs.dialog', render);
+modal.addEventListener('hidden.bs.dialog', restore);

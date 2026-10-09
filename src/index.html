@@ -1,5 +1,5 @@
 <!doctype html>
-<html dir="ltr" lang="en-US">
+<html dir="ltr" lang="en-US" data-bs-theme="light">
 	<head>
 		<meta charset="utf-8">
 		<base href="/">
@@ -18,14 +18,14 @@
 
 		<main class="position-absolute top-0 w-100 h-100 ms-0 p-0">
 			<div class="d-flex flex-column justify-content-center align-items-center mx-auto h-100">
-				<img src="assets/img/univrs.svg" class="mb-3" width="60">
+				<img src="assets/img/univrs.svg" class="mb-5" width="60">
 				<div class="booting">
-					<div class="spinner-border spinner-border-sm me-1"></div>
+					<div class="spinner-border spinner-sm me-1"></div>
 					Loading...
 				</div>
 				<div class="connecting align-items-center">
-					<i class="icon-duotone icon-light icon-mobile-notch d-sm-none"></i>
-					<i class="icon-duotone icon-light icon-desktop d-none d-sm-inline-block"></i>
+					<i class="icon-duotone icon-light icon-mobile-notch sm:d-none"></i>
+					<i class="icon-duotone icon-light icon-desktop d-none sm:d-inline-block"></i>
 					<span class="connecting-dots"><i></i><i></i><i></i></span>
 					<i class="icon-duotone icon-light icon-globe"></i>
 					<span class="connecting-dots"><i></i><i></i><i></i></span>
@@ -34,23 +34,23 @@
 			</div>
 		</main>
 
-		<div class="offcanvas offcanvas-bottom flex-grow-1 bg-primary" data-bs-scroll="true" tabindex="-1">
-			<div class="offcanvas-body">
+		<dialog class="drawer drawer-bottom flex-grow-1 bg-primary" data-bs-scroll="true" tabindex="-1">
+			<div class="drawer-body">
 				<div class="navbar-nav position-relative"></div>
 			</div>
-			<div class="offcanvas-header">
-				<div class="offcanvas-title"></div>
-				<button type="button" class="navbar-toggler border-0 pe-2 ms-auto" data-bs-dismiss="offcanvas" data-bs-target=".offcanvas">
+			<div class="drawer-header">
+				<div class="drawer-title"></div>
+				<button type="button" class="btn-icon btn-link text-decoration-none fg-body ms-auto" data-bs-dismiss="drawer">
 					<i class="icon-solid icon-xmark icon-fw"></i>
 				</button>
 			</div>
-		</div>
+		</dialog>
 
 		<div id="power" class="position-absolute top-0 w-100 h-100 d-none">
 			<div class="d-flex flex-column justify-content-center align-items-center mx-auto h-100">
-				<img src="assets/img/univrs.svg" class="mb-3" width="60">
+				<img src="assets/img/univrs.svg" class="mb-5" width="60">
 				<div class="rebooting d-none">
-					<div class="spinner-border spinner-border-sm me-1"></div>
+					<div class="spinner-border spinner-sm me-1"></div>
 					Rebooting...
 				</div>
 				<div class="powered-off d-none">

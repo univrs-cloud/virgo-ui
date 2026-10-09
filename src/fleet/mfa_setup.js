@@ -73,12 +73,12 @@ export const mount = () => {
 	};
 
 	form.validation = [
-		{ selector: '.code', rules: { isEmpty: `Can't be empty` } }
+		{ selector: '.code', rules: { isEmpty: `Can't be empty`, isLength: { min: 6, max: 6, message: `Must be 6 digits` } } }
 	];
 	form.addEventListener('valid', verify);
 	main.querySelector('.sign-out').addEventListener('click', signOut);
 
-	const input = form.querySelector('u-input');
+	const input = form.querySelector('u-otp');
 	input?.updateComplete?.then(() => input.focus());
 
 	begin();

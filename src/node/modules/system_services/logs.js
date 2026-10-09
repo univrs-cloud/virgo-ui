@@ -1,6 +1,6 @@
 import * as serviceService from 'node/modules/system_services/services/service';
 
-const DISCONNECTED_LABEL = 'Disconnected <a href="#" class="reconnect-logs link-underline link-underline-opacity-0 link-underline-opacity-75-hover ms-1">Connect</a>';
+const DISCONNECTED_LABEL = 'Disconnected <a href="#" class="reconnect-logs underline-0 hover:underline-80 ms-1">Connect</a>';
 
 const socket = serviceService.getSocket();
 const module = document.querySelector('#system-services');
@@ -71,8 +71,8 @@ const setStatus = (label, isLive = false) => {
 		return;
 	}
 
-	liveIndicator.classList.toggle('text-green-500', isLive);
-	liveIndicator.classList.toggle('text-gray-500', !isLive);
+	liveIndicator.classList.toggle('fg-green-500', isLive);
+	liveIndicator.classList.toggle('fg-gray-300', !isLive);
 	liveIndicator.innerHTML = `<i class="icon-solid icon-tower-broadcast icon-fw me-1"></i>${label}`;
 };
 
@@ -131,7 +131,7 @@ const colorizeLogLevels = (text) => {
 	return text.replace(
 		/\blevel=(\w+)\b/g,
 		(match, level) => {
-			const colorClass = level === 'error' ? 'text-red-500' : level === 'warn' ? 'text-yellow-400' : level === 'info' ? 'text-blue-400' : level === 'debug' ? 'text-gray-500' : '';
+			const colorClass = level === 'error' ? 'fg-red-500' : level === 'warn' ? 'fg-yellow-400' : level === 'info' ? 'fg-blue-400' : level === 'debug' ? 'fg-gray-300' : '';
 			return `<span class="${colorClass}">level=${level}</span>`;
 		}
 	);
@@ -142,7 +142,7 @@ const colorizeStatusCodes = (text) => {
 		/\bstatus_code=(\d+)\b/g,
 		(match, code) => {
 			const numCode = parseInt(code, 10);
-			const colorClass = numCode >= 500 ? 'text-red-500' : numCode >= 400 ? 'text-orange-500' : numCode >= 300 ? 'text-yellow-400' : 'text-green-500';
+			const colorClass = numCode >= 500 ? 'fg-red-500' : numCode >= 400 ? 'fg-orange-500' : numCode >= 300 ? 'fg-yellow-400' : 'fg-green-500';
 			return `<span class="${colorClass}">status_code=${code}</span>`;
 		}
 	);
@@ -177,7 +177,7 @@ socket.on('host:service:logs:error', (error) => {
 		return;
 	}
 
-	appendLine(`<span class="log-content text-red-500">${escapeHtml(error?.message || error)}</span>`);
+	appendLine(`<span class="log-content fg-red-500">${escapeHtml(error?.message || error)}</span>`);
 	setStatus(DISCONNECTED_LABEL);
 });
 

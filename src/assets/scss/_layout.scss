@@ -1,11 +1,14 @@
-:root {
-	--bs-toast-spacing: #{map-get($spacers, 2)};
-}
+@use "sass:map";
+@use "bootstrap/scss/config" as *;
 
 ::selection {
 	color: #ffffff;
 	text-shadow: none;
 	background: #658ffc;
+}
+.otp-input::selection {
+	color: transparent;
+	background: transparent;
 }
 
 html {
@@ -17,16 +20,18 @@ body {
 	// Vertical chrome the viewport-height calcs have to allow for: the bottom bar below sm,
 	// the top bar above it. Sidebar shells drop to 0 at sm — see the min-width block below.
 	--chrome: 56px;
-	--bs-bg: rgba(237, 242, 249, 0.96);
+	--app-bg: rgba(237, 242, 249, 0.96);
 	overflow-y: scroll;
 	width: 100%;
 	height: 100%;
 	font-weight: 300;
-	background-color: var(--bs-bg);
+	background-color: var(--app-bg);
 	margin-bottom: 56px;
-	&[style*="overflow: hidden;"] {
-		.navbar {
-			padding-right: var(--scrollbar-width) !important;
+	.dialog-open & {
+		overflow-y: hidden;
+		padding-right: var(--scrollbar-width, 0px);
+		header .navbar-position {
+			padding-right: var(--scrollbar-width, 0px) !important;
 		}
 	}
 	&.reboot,
@@ -41,6 +46,8 @@ body {
 
 header {
 	.navbar {
+		--navbar-bg: transparent;
+		--navbar-brand-font-size: 1.25rem;
 		box-shadow: 0 -0.5rem 0.5rem -0.5rem rgba(0, 0, 0, 0.2);
 		&.navbar-position {
 			z-index: 1030;
@@ -50,7 +57,16 @@ header {
 			right: 0;
 		}
 		.nav-pills {
-			--bs-nav-link-padding-x: 0.5rem;
+			--nav-link-padding-x: 0.5rem;
+			--nav-pills-bg: transparent;
+			--nav-pills-padding: 0;
+			--nav-pills-border-radius: 0;
+			--nav-pills-link-border-radius: var(--radius-4);
+			--nav-link-justify: flex-start;
+			--nav-link-gap: 0;
+			--nav-link-border-width: 0;
+			--nav-link-hover-bg: transparent;
+			--nav-link-active-bg: transparent;
 			display: block;
 			overflow: hidden auto;
 			flex: 1 1 0;
@@ -65,8 +81,8 @@ header {
 			background-color: rgba(237, 242, 249, 0.25);
 			backdrop-filter: blur(8px);
 		}
-		.dropdown-menu {
-			--bs-dropdown-bg: var(--bs-body-bg);
+		.menu {
+			--menu-bg: var(--bg-body);
 		}
 		.sign-in,
 		.sign-out {
@@ -94,9 +110,9 @@ header {
 	}
 }
 header,
-.offcanvas {
+.drawer {
 	.nav-title {
-		color: $gray-300;
+		color: var(--gray-100);
 	}
 	.rail-only {
 		display: none;
@@ -115,7 +131,7 @@ header,
 		}
 	}
 	.nav-window {
-		min-height: calc(1.5em + 2 * var(--bs-nav-link-padding-y));
+		min-height: calc(1.5em + 2 * var(--nav-link-padding-y));
 	}
 	.nav-window:not(.active):not(:hover) {
 		.unmaximize-window,
@@ -123,25 +139,31 @@ header,
 			display: none;
 		}
 	}
+	.close-window:hover {
+		color: var(--danger-base);
+		&.rail-only {
+			background: radial-gradient(closest-side, var(--white) 70%, transparent 75%);
+		}
+	}
 	.nav-link {
+		display: block;
 		font-weight: 400;
-		color: var(--bs-white);
-		text-decoration-color: RGBA(var(--bs-white), var(--bs-link-underline-opacity,1));
+		color: var(--white);
 		&:not(.active):hover {
-			color: var(--bs-white);
+			color: var(--white);
 		}
 		&.active {
 			font-weight: 400;
 		}
 		&.active,
 		&:hover {
-			color: var(--bs-white) !important;
+			color: var(--white) !important;
 			svg {
-				fill: var(--bs-white);
+				fill: var(--white);
 			}
 		}
 		svg {
-			fill: var(--bs-white);
+			fill: var(--white);
 		}
 		.fa-primary {
 			fill: rgba(255,255,255,0.85);
@@ -149,47 +171,50 @@ header,
 	}
 }
 div:not(.navbar) .nav-pills {
-	--bs-nav-pills-link-active-color: var(--bs-white);
-	--bs-nav-pills-link-active-bg: var(--bs-indigo-500);
-	--bs-nav-link-color: var(--bs-white);
-	--bs-nav-link-hover-color: var(--bs-gray-100);
-	background: var(--bs-secondary-bg-subtle);
-	border-radius: var(--bs-border-radius);
-	padding: 0.25rem;
+	--nav-pills-link-active-color: var(--white);
+	--nav-pills-link-active-bg: var(--indigo-500);
+	--nav-link-color: var(--white);
+	--nav-link-hover-color: var(--gray-100);
+	--nav-pills-bg: var(--secondary-bg-subtle);
+	--nav-pills-border-radius: var(--radius-4);
+	--nav-pills-link-border-radius: var(--radius-4);
+	--nav-link-border-width: 0;
 	.nav-link {
 		padding-top: 0.2rem;
 		padding-bottom: 0.2rem;
 		&.active {
-			box-shadow: var(--bs-box-shadow);
+			box-shadow: var(--box-shadow);
 		}
 		&:not(.active) {
-			color: var(--bs-black);
+			color: var(--black);
 			background-color: none;
 		}
 	}
 }
-.offcanvas {
-	--bs-offcanvas-height: 726px;
-	--bs-offcanvas-padding-y: 0.875rem;
+.drawer {
 	background-color: rgba(237, 242, 249, 0.96);
 	backdrop-filter: blur(6px) grayscale(0.8);
   	opacity: 0.9;
-	.dropdown-menu {
-		--bs-dropdown-bg: var(--bs-body-bg);
+	.menu {
+		--menu-bg: var(--bg-body);
+	}
+	.navbar-nav {
+		--nav-gap: 0;
+		--nav-link-gap: 0;
+		--nav-link-border-width: 0;
 	}
 }
-.offcanvas-header {
-	--bs-offcanvas-padding-x: 0.575rem;
-	--bs-navbar-toggler-font-size: 1.25rem;
-	--bs-navbar-toggler-padding-y: 0.25rem;
-	--bs-navbar-toggler-padding-x: 0.75rem;
+.drawer-header {
+	--drawer-padding-x: 0.575rem;
+	--navbar-toggler-font-size: 1.25rem;
+	--navbar-toggler-padding-y: 0.25rem;
+	--navbar-toggler-padding-x: 0.75rem;
 	box-shadow: 0 -0.5rem 0.5rem -0.5rem rgba(0, 0, 0, 0.2);
 }
-.offcanvas-title {
+.drawer-title {
 	line-height: 1.15;
 }
-.offcanvas-backdrop {
-	opacity: 1 !important;
+.drawer:not(.hiding)::backdrop {
 	backdrop-filter: blur(6px) grayscale(0.8);
 	background-color: transparent;
 	background-image: linear-gradient(to bottom right, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.1));
@@ -197,12 +222,12 @@ div:not(.navbar) .nav-pills {
 
 main,
 #update {
-	padding-top: map-get($spacers, 3);
+	padding-top: map.get($spacers, 5);
 }
 
 .loading {
 	min-height: calc(100vh - 56px - var(--chrome));
-	.modal & {
+	.dialog & {
 		min-height: unset;
 	}
 }
@@ -211,7 +236,7 @@ main,
 	display: none;
 	gap: 0.625rem;
 	font-size: 1.125rem;
-	color: var(--bs-blue-300);
+	color: var(--blue-300);
 }
 .connecting-dots {
 	display: flex;
@@ -220,7 +245,7 @@ main,
 		width: 0.3125rem;
 		height: 0.3125rem;
 		border-radius: 50%;
-		background-color: var(--bs-primary);
+		background-color: var(--primary-base);
 		animation: connecting-dot 1.6s ease-in-out infinite;
 	}
 	@for $dot from 1 through 3 {
@@ -255,14 +280,42 @@ html:not(:has(head > base[href="/"])) {
 	}
 }
 
+.login-background {
+	path {
+		animation: login-slide infinite;
+	}
+}
+.login-logo {
+	filter: drop-shadow(0 8px 6px rgba(56, 96, 224, 0.18));
+	g {
+		animation: login-logo-open 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.4s both;
+		&:first-of-type {
+			--login-logo-offset: 44px;
+		}
+		&:last-of-type {
+			--login-logo-offset: -44px;
+		}
+	}
+}
+@keyframes login-slide {
+	to {
+		transform: translateX(var(--login-period));
+	}
+}
+@keyframes login-logo-open {
+	from {
+		transform: translateX(var(--login-logo-offset));
+	}
+}
+
 .eula {
 	// Everything around the scroll area (hero, card padding, button) adds up to ~219px.
 	max-height: calc(100dvh - 219px - var(--chrome));
 	min-height: 12rem;
 	overflow-y: auto;
 	overscroll-behavior: contain;
-	h6 {
-		color: var(--bs-body-color);
+	h5 {
+		color: var(--fg-body);
 	}
 	> :last-child {
 		margin-bottom: 0;
@@ -296,11 +349,11 @@ html:not(:has(head > base[href="/"])) {
 			padding-right: 0;
 			.navbar-glass {
 				width: auto !important;
-				padding: map-get($spacers, 2);
+				padding: map.get($spacers, 3);
 			}
 		}
 	}
-	.offcanvas {
+	.drawer {
 		.navbar-nav {
 			.nav-link {
 				padding-top: 0.75rem;
@@ -340,7 +393,7 @@ html:not(:has(head > base[href="/"])) {
 				width: 100%;
 			}
 			.account {
-				.dropdown-menu {
+				.menu {
 					left: 0;
 					right: auto;
 					min-width: 100%;
@@ -348,9 +401,14 @@ html:not(:has(head > base[href="/"])) {
 			}
 			.account-toggle {
 				padding-left: 0.125rem !important;
+				@media (hover: hover) {
+					&:hover {
+						background-color: color-mix(in oklch, var(--white) 20%, var(--primary-base)) !important;
+					}
+				}
 			}
 			.nav-pills {
-				--bs-nav-link-padding-y: 0.375rem;
+				--nav-link-padding-y: 0.375rem;
 				margin-top: -1rem;
 				margin-right: -0.75rem;
 				margin-left: -0.75rem;
@@ -395,7 +453,7 @@ html:not(:has(head > base[href="/"])) {
 				}
 				.nav-link {
 					&.active {
-						box-shadow: var(--bs-box-shadow-sm);
+						box-shadow: var(--box-shadow-sm);
 					}
 					&:not(.active):hover {
 						background-color: #82a7ff;
@@ -408,7 +466,7 @@ html:not(:has(head > base[href="/"])) {
 			}
 		}
 		.navbar-brand {
-			color: var(--bs-white);
+			color: var(--white);
 		}
 		.navbar {
 			flex-flow: row nowrap;
@@ -436,20 +494,12 @@ html:not(:has(head > base[href="/"])) {
 			}
 			.navbar-nav {
 				.nav-link {
-					padding-right: map-get($spacers, 2);
-					padding-left: map-get($spacers, 2);
+					padding-right: map.get($spacers, 3);
+					padding-left: map.get($spacers, 3);
 					&:hover {
-						color: var(--bs-white);
+						color: var(--white);
 						background-color: #82a7ff;
-						border-radius: $border-radius;
-					}
-				}
-			}
-			&.navbar-position {
-				.dropup {
-					.dropdown-menu {
-						top: 100%;
-						bottom: unset;
+						border-radius: var(--radius-4);
 					}
 				}
 			}
@@ -467,7 +517,7 @@ html:not(:has(head > base[href="/"])) {
 		}
 		&.setup {
 			.navbar {
-				background: var(--bs-primary);
+				background: var(--primary-base);
 			}
 		}
 	}
@@ -492,9 +542,9 @@ html:not(:has(head > base[href="/"])) {
 				display: inline-block;
 			}
 			.nav-title {
-				border-top: var(--bs-border-width) solid var(--bs-secondary-border-subtle);
-				margin-top: map-get($spacers, 2) !important;
-				margin-bottom: map-get($spacers, 2);
+				border-top: var(--border-width) solid var(--gray-200);
+				margin-top: map.get($spacers, 3) !important;
+				margin-bottom: map.get($spacers, 3);
 				opacity: 0.25;
 			}
 			.nodes:empty + .nav-title {
@@ -535,18 +585,16 @@ html:not(:has(head > base[href="/"])) {
 			.nodes {
 				.nav-title,
 				.btn-group > a,
-				.dropdown-toggle > span {
+				[data-bs-toggle="menu"] > span,
+				[data-bs-toggle="menu"] > .icon-caret-down {
 					display: none;
 				}
-				.dropdown-toggle {
+				[data-bs-toggle="menu"] {
 					justify-content: center !important;
 					padding-right: 0;
 					padding-left: 0;
-					&::after {
-						display: none;
-					}
 				}
-				.dropdown-menu {
+				.menu {
 					position: fixed;
 					top: 4.5rem;
 					left: 3.25rem;
@@ -556,13 +604,16 @@ html:not(:has(head > base[href="/"])) {
 			.account-toggle {
 				gap: 0 !important;
 				padding-right: 0.125rem !important;
-				> span {
+				> span:not(.avatar) {
 					overflow: hidden;
 					flex-grow: 0 !important;
 					width: 0;
 				}
 				> i {
 					display: none !important;
+				}
+				&:hover {
+					background-color: transparent !important;
 				}
 			}
 		}

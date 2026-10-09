@@ -236,7 +236,7 @@ const renderPoolDetails = (name) => {
 		{
 			childrenOnly: true,
 			onBeforeElUpdated: (fromEl, toEl) => {
-				if (fromEl.classList.contains('details-toggle') || fromEl.classList.contains('collapse') || fromEl.classList.contains('collapsing')) {
+				if (fromEl.classList.contains('details-toggle') || fromEl.classList.contains('collapse')) {
 					morphdom(fromEl, toEl, { childrenOnly: true });
 					return false;
 				}

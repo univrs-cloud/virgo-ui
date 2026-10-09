@@ -18,13 +18,14 @@ const iconPopoverContent = modal.querySelector('.shortcut-icon-popover-content')
 let iconPopoverOutsideClick = null;
 
 new bootstrap.Popover(iconBox, {
-	placement: 'left',
+	placement: 'left-start',
+	fallbackPlacements: ['left-start'],
 	title: '',
 	content: iconPopoverContent.innerHTML,
 	html: true,
 	container: iconBox,
 	sanitize: false,
-	offset: [32, 0],
+	offset: [0, 0],
 	trigger: 'manual'
 });
 
@@ -112,7 +113,7 @@ const updateValidation = (useProxy) => {
 };
 
 const createShortcut = (event) => {
-	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
+	_.each(form.querySelectorAll('.dialog-footer u-button'), (button) => { button.disabled = true; });
 	let data = form.getData();
 	const useProxy = (data.useProxy === 'true');
 	
@@ -133,7 +134,7 @@ const createShortcut = (event) => {
 	delete data.requireAuth;
 	
 	shortcutService.createShortcut(data);
-	bootstrap.Modal.getInstance(modal)?.hide();
+	bootstrap.Dialog.getInstance(modal)?.hide();
 };
 
 const restore = (event) => {
@@ -179,4 +180,4 @@ useProxyCheckbox.addEventListener('checked-changed', (event) => {
 	toggleProxyMode(event.target.checked);
 });
 form.addEventListener('valid', createShortcut);
-modal.addEventListener('hidden.bs.modal', restore);
+modal.addEventListener('hidden.bs.dialog', restore);

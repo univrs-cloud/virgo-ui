@@ -140,7 +140,7 @@ const createPool = async (event) => {
 	const drives = storageService.getUsableDrives(storageService.getDrives());
 	const message = `All data on the selected drives will be erased during formatting. This action cannot be undone. The selected RAID type cannot be changed after setup.`;
 	if (!await confirm(message, {
-		buttons: [{ text: 'Format and proceed', class: 'btn-danger' }],
+		buttons: [{ text: 'Format and proceed', class: 'btn-solid theme-danger' }],
 		acknowledge: 'I understand and want to proceed'
 	})) {
 		return;

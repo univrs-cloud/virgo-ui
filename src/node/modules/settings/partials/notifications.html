@@ -1,23 +1,23 @@
 <div class="col col-12">
-	<div class="row gx-4 gy-2">
-		<div class="col-12 col-lg-4 col-xxl-3">
-			<h6 class="m-0">Notifications</h6>
-			<p class="text-body-secondary small mt-1 mb-0">The mail server the node sends its emails through, and who receives them.</p>
+	<div class="row gx-7 gy-3">
+		<div class="col-12 lg:col-4 2xl:col-3">
+			<h5 class="m-0">Notifications</h5>
+			<p class="fg-emphasis-secondary small mt-1 mb-0">The mail server the node sends its emails through, and who receives them.</p>
 		</div>
-		<div class="col-12 col-lg-8 col-xxl-9">
-			<div class="card rounded-4 border-0 mb-0">
+		<div class="col-12 lg:col-8 2xl:col-9">
+			<div class="card border-0 mb-0">
 				<div class="card-body">
 					<%if (_.isNull(smtp)) {%>
-						<div class="d-flex align-items-center gap-3">
+						<div class="d-flex align-items-center gap-5">
 							<div class="me-auto">Not configured</div>
-							<a href="#smtp" class="btn btn-link text-nowrap p-0" data-bs-toggle="modal"><i class="icon-regular icon-pen icon-fw me-1"></i>Edit</a>
+							<a href="#smtp" class="btn-link d-inline-block text-nowrap p-0 min-h-0" data-bs-toggle="dialog"><i class="icon-regular icon-pen icon-fw me-1"></i>Edit</a>
 						</div>
 					<%} else {%>
-						<div class="d-flex align-items-center gap-3 mb-2">
-							<h6 class="me-auto mb-0">SMTP server</h6>
-							<a href="#smtp" class="btn btn-link text-nowrap p-0" data-bs-toggle="modal"><i class="icon-regular icon-pen icon-fw me-1"></i>Edit</a>
+						<div class="d-flex align-items-center gap-5 mb-3">
+							<h5 class="me-auto mb-0">SMTP server</h5>
+							<a href="#smtp" class="btn-link d-inline-block text-nowrap p-0 min-h-0" data-bs-toggle="dialog"><i class="icon-regular icon-pen icon-fw me-1"></i>Edit</a>
 						</div>
-						<dl class="row row-cols-1 row-cols-sm-2 row-cols-xl-3 g-3 mb-0">
+						<dl class="row row-cols-1 sm:row-cols-2 xl:row-cols-3 g-5 mb-0">
 							<div class="col min-w-0">
 								<dt class="fw-lighter lh-1"><small>SMTP server</small></dt>
 								<dd class="m-0 text-break"><%-smtp?.address%></dd>
@@ -40,15 +40,15 @@
 							</div>
 						</dl>
 
-						<hr class="border-secondary-subtle my-4">
+						<hr class="border-gray-200 my-5 opacity-25">
 
-						<h6>Recipients</h6>
+						<h5>Recipients</h5>
 						<%if (!smtp?.recipients) {%>
-							<span class="text-danger">No recipient configured</span>
+							<span class="fg-danger">No recipient configured</span>
 						<%} else {%>
-							<div class="d-flex flex-wrap gap-2">
+							<div class="d-flex flex-wrap gap-3">
 								<%_.each(smtp?.recipients, (recipient) => {%>
-									<u-badge color="gray" tint="200" pill><i class="icon-light icon-user me-1"></i><%-recipient%></u-badge>
+									<span class="chip cursor-default"><span class="chip-icon"><i class="icon-light icon-user"></i></span><%-recipient%></span>
 								<%})%>
 							</div>
 						<%}%>

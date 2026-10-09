@@ -1,57 +1,98 @@
-// Add min-width utility (not shipped by Bootstrap).
-// min-width: 0 is needed so flex children with text-truncate can shrink below their content width.
-$utilities: map-merge(
-	$utilities,
-	(
-		'min-width': (
-			property: min-width,
-			class: min-w,
-			values: (0: 0)
-		)
-	)
+@use "sass:map";
+
+$color-names: "blue" "indigo" "violet" "purple" "pink" "red" "orange" "amber" "yellow" "lime" "green" "teal" "cyan" "brown" "gray" "pewter";
+$color-stops: "025" "050" "100" "200" "300" "400" "500" "600" "700" "800" "900" "950" "975";
+
+$color-refs: ();
+@each $name in $color-names {
+	@each $stop in $color-stops {
+		$color-refs: map.set($color-refs, "#{$name}-#{$stop}", var(--#{$name}-#{$stop}));
+	}
+}
+
+$negative-spacers: (
+	"-1": -.25rem,
+	"-2": -.375rem,
+	"-3": -.5rem,
+	"-4": -.75rem,
+	"-5": -1rem
 );
 
-// Add `max-w` as an alias of Bootstrap's `mw` (max-width) for symmetry with `min-w`.
-// Bootstrap's native `mw-100` is left intact; this adds `max-w-100` alongside it.
-$utilities: map-merge(
-	$utilities,
-	(
-		'max-width-alias': (
-			property: max-width,
-			class: max-w,
-			values: (100: 100%)
+$utilities: (
+	"cursor": (
+		property: cursor,
+		class: cursor,
+		responsive: true,
+		values: auto default pointer wait text move help not-allowed
+	),
+	"pointer-events": (
+		property: pointer-events,
+		class: pe,
+		responsive: true,
+		values: none auto
+	),
+	"line-height-xs": (
+		property: line-height,
+		class: lh,
+		values: (xs: var(--line-height-xs))
+	),
+	"font-variant-numeric": (
+		property: font-variant-numeric,
+		class: numeric,
+		values: (tabular: tabular-nums)
+	),
+	"size": (
+		property: width height,
+		class: size,
+		values: (5: 3rem)
+	),
+	"gradient": (
+		property: background-image,
+		class: bg,
+		values: (
+			gradient: var(--gradient),
+			gradient-top: linear-gradient(180deg, rgb(0 0 0 / 5%), rgb(0 0 0 / 0%) 2.5rem)
 		)
-	)
-);
-
-$utilities: map-merge(
-	$utilities,
-	(
-		'gradient': map-merge(
-			map-get($utilities, 'gradient'),
-			(values: map-merge(map-get(map-get($utilities, 'gradient'), 'values'), (gradient-top: linear-gradient(180deg, rgba($black, .05), rgba($black, 0) 2.5rem))))
-		)
-	)
-);
-
-$utilities: map-merge(
-	$utilities,
-	(
-		'font-variant-numeric': (
-			property: font-variant-numeric,
-			class: numeric,
-			values: (tabular: tabular-nums)
-		)
-	)
-);
-
-$utilities: map-merge(
-	$utilities,
-	(
-		'size': (
-			property: width height,
-			class: size,
-			values: (5: map-get($spacers, 5))
-		)
+	),
+	"underline-transparent": (
+		property: text-decoration-color,
+		class: underline,
+		values: (0: transparent)
+	),
+	"fg-scale": (
+		property: (
+			"--fg": null,
+			"color": var(--fg)
+		),
+		class: fg,
+		values: $color-refs
+	),
+	"bg-scale": (
+		property: (
+			"--bg": null,
+			"background-color": var(--bg)
+		),
+		class: bg,
+		values: $color-refs
+	),
+	"border-scale": (
+		property: (
+			"--bc": null,
+			"border-color": var(--bc)
+		),
+		class: border,
+		values: $color-refs
+	),
+	"margin-top-negative": (
+		responsive: true,
+		property: margin-block-start,
+		class: mt,
+		values: $negative-spacers
+	),
+	"margin-bottom-negative": (
+		responsive: true,
+		property: margin-block-end,
+		class: mb,
+		values: $negative-spacers
 	)
 );

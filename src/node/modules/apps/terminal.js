@@ -4,7 +4,7 @@ import { FitAddon } from '@xterm/addon-fit';
 import { SearchAddon } from '@xterm/addon-search';
 import { WebLinksAddon } from '@xterm/addon-web-links';
 
-const DISCONNECTED_LABEL = 'Disconnected <a href="#" class="reconnect-terminal link-underline link-underline-opacity-0 link-underline-opacity-75-hover ms-1">Connect</a>';
+const DISCONNECTED_LABEL = 'Disconnected <a href="#" class="reconnect-terminal underline-0 hover:underline-80 ms-1">Connect</a>';
 const SEARCH_OPTIONS = {
 	decorations: {
 		matchBackground: '#664d03',
@@ -186,8 +186,8 @@ const setStatus = (label, isLive = false) => {
 		return;
 	}
 
-	liveIndicator.classList.toggle('text-green-500', isLive);
-	liveIndicator.classList.toggle('text-gray-500', !isLive);
+	liveIndicator.classList.toggle('fg-green-500', isLive);
+	liveIndicator.classList.toggle('fg-gray-300', !isLive);
 	liveIndicator.innerHTML = `<i class="icon-solid icon-tower-broadcast icon-fw me-1"></i>${label}`;
 };
 
@@ -259,7 +259,7 @@ socket.on('docker:container:terminal:error', (error) => {
 		// The stream can fail before it ever connects (a container with no shell), so there is no
 		// terminal to write into — put the reason in the wrapper rather than leaving it blank. Appended,
 		// so a retry that fails again adds to the feedback instead of silently replacing it.
-		terminalContainer.querySelector('.wrapper').insertAdjacentHTML('beforeend', `<div class="text-red-500 p-2">${escapeHtml(message)}</div>`);
+		terminalContainer.querySelector('.wrapper').insertAdjacentHTML('beforeend', `<div class="fg-red-500 p-3">${escapeHtml(message)}</div>`);
 	}
 	setStatus(DISCONNECTED_LABEL);
 });

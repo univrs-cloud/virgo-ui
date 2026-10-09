@@ -24,12 +24,12 @@ const initialState = (file, selection = null) => {
 };
 
 const renderContent = (element, html) => {
-	morphdom(element.querySelector('.modal-content'), html, {
+	morphdom(element.querySelector('.dialog-content'), html, {
 		onBeforeNodeDiscarded: (node) => {
 			return !node.classList?.contains('scrollbar');
 		}
 	});
-	element.querySelector('.modal-body')?.dispatchEvent(new Event('scroll'));
+	element.querySelector('.dialog-body')?.dispatchEvent(new Event('scroll'));
 };
 
 const render = () => {
@@ -47,13 +47,13 @@ const render = () => {
 
 const revealSelected = () => {
 	const row = modal.querySelector('.tree-selected > .tree-row');
-	const body = modal.querySelector('.modal-body');
+	const body = modal.querySelector('.dialog-body');
 	if (!row || !body) {
 		return;
 	}
 
-	const top = body.getBoundingClientRect().top + (modal.querySelector('.modal-header')?.offsetHeight || 0);
-	const bottom = body.getBoundingClientRect().bottom - (modal.querySelector('.modal-footer')?.offsetHeight || 0);
+	const top = body.getBoundingClientRect().top + (modal.querySelector('.dialog-header')?.offsetHeight || 0);
+	const bottom = body.getBoundingClientRect().bottom - (modal.querySelector('.dialog-footer')?.offsetHeight || 0);
 	const rect = row.getBoundingClientRect();
 	if (rect.top < top || rect.bottom > bottom) {
 		row.scrollIntoView({ block: 'center', behavior: 'smooth' });
@@ -155,7 +155,7 @@ const open = async (event) => {
 	});
 	state = session;
 	render();
-	bootstrap.Modal.getOrCreateInstance(modal).show();
+	bootstrap.Dialog.getOrCreateInstance(modal).show();
 	try {
 		session.folders = await loadFolders();
 		if (state !== session) {
@@ -181,7 +181,7 @@ const openSelection = async (event) => {
 	state = session;
 	document.body.append(modal, conflictModal);
 	render();
-	bootstrap.Modal.getOrCreateInstance(modal).show();
+	bootstrap.Dialog.getOrCreateInstance(modal).show();
 	try {
 		session.folders = await loadFolders();
 	} catch (error) {
@@ -217,8 +217,8 @@ const restoreSelection = async (session) => {
 		return;
 	}
 
-	bootstrap.Modal.getInstance(modal)?.hide();
-	bootstrap.Modal.getInstance(browserModal())?.hide();
+	bootstrap.Dialog.getInstance(modal)?.hide();
+	bootstrap.Dialog.getInstance(browserModal())?.hide();
 };
 
 const toggleFolder = async (event) => {
@@ -406,8 +406,8 @@ const restoreFile = async (session, conflict) => {
 		return;
 	}
 
-	bootstrap.Modal.getInstance(conflictModal)?.hide();
-	bootstrap.Modal.getInstance(modal)?.hide();
+	bootstrap.Dialog.getInstance(conflictModal)?.hide();
+	bootstrap.Dialog.getInstance(modal)?.hide();
 };
 
 const submit = async (event) => {
@@ -446,7 +446,7 @@ const submit = async (event) => {
 		session.busy = null;
 		session.inspection = response;
 		render();
-		bootstrap.Modal.getOrCreateInstance(conflictModal).show();
+		bootstrap.Dialog.getOrCreateInstance(conflictModal).show();
 		return;
 	}
 
@@ -470,9 +470,6 @@ const closeConflict = () => {
 	state.inspection = null;
 	state.error = null;
 	state.busy = null;
-	if (modal.classList.contains('show')) {
-		document.body.classList.add('modal-open');
-	}
 	render();
 };
 
@@ -489,10 +486,7 @@ const reveal = () => {
 
 const restore = () => {
 	state = null;
-	bootstrap.Modal.getInstance(conflictModal)?.hide();
-	if (browserModal()?.classList.contains('show')) {
-		document.body.classList.add('modal-open');
-	}
+	bootstrap.Dialog.getInstance(conflictModal)?.hide();
 };
 
 module.addEventListener('click', open);
@@ -506,6 +500,6 @@ modal.addEventListener('input', typeFolderName);
 modal.addEventListener('keydown', keyDraft, true);
 modal.addEventListener('click', submit);
 conflictModal.addEventListener('click', confirmConflict);
-conflictModal.addEventListener('hidden.bs.modal', closeConflict);
-modal.addEventListener('shown.bs.modal', reveal);
-modal.addEventListener('hidden.bs.modal', restore);
+conflictModal.addEventListener('hidden.bs.dialog', closeConflict);
+modal.addEventListener('shown.bs.dialog', reveal);
+modal.addEventListener('hidden.bs.dialog', restore);

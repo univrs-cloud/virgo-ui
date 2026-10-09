@@ -1,30 +1,30 @@
 <%_.each(apps, (app) => {%>
 	<dt class="fw-lighter d-flex align-items-center">
 		<%if (app.isRunning) {%>
-			<i class="icon-duotone icon-solid icon-circle-check icon-fw me-2" style="--icon-secondary-color: var(--bs-green);"></i>
+			<i class="icon-duotone icon-solid icon-circle-check icon-fw me-3" style="--icon-secondary-color: var(--green-500);"></i>
 		<%} else if (app.isFailed) {%>
-			<i class="icon-duotone icon-solid icon-circle-xmark icon-fw me-2" style="--icon-secondary-color: var(--bs-red);"></i>
+			<i class="icon-duotone icon-solid icon-circle-xmark icon-fw me-3" style="--icon-secondary-color: var(--red-500);"></i>
 		<%} else {%>
-			<div class="spinner-border spinner-border-sm text-gray-600 me-2"></div>
+			<div class="spinner-border spinner-sm fg-gray-600 me-3"></div>
 		<%}%>
-		<span class="text-body"><%-app.title%></span>
+		<span class="fg-body"><%-app.title%></span>
 	</dt>
-	<dd class="ms-4 ps-2">
-		<small class="text-body-tertiary"><%-app.description%></small>
+	<dd class="ms-7 ps-3">
+		<small class="fg-4"><%-app.description%></small>
 		<%if (app.isFailed && !app.isRunning) {%>
-			<div class="text-danger"><small>Installation failed. Setup cannot continue until this app is installed and running.</small></div>
+			<div class="fg-danger"><small>Installation failed. Setup cannot continue until this app is installed and running.</small></div>
 			<%if (app.failedReason) {%>
-				<div class="text-body-secondary"><small><%-app.failedReason%></small></div>
+				<div class="fg-emphasis-secondary"><small><%-app.failedReason%></small></div>
 			<%}%>
 		<%} else if (!app.isRunning) {%>
 			<%if (app.message) {%>
-				<div class="text-body-secondary"><small><%-app.message%></small></div>
+				<div class="fg-emphasis-secondary"><small><%-app.message%></small></div>
 			<%}%>
 			<%if (app.job) {%>
 				<div class="small"><%=jobProgressTemplate({ job: app.job })%></div>
 			<%}%>
 			<%if (!app.isInstalling) {%>
-				<div class="text-body-secondary"><small>Waiting for it to start...</small></div>
+				<div class="fg-emphasis-secondary"><small>Waiting for it to start...</small></div>
 			<%}%>
 		<%}%>
 	</dd>

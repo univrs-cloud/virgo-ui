@@ -9,11 +9,11 @@ const form = modal.querySelector('u-form');
 let user;
 
 const updateUser = (event) => {
-	_.each(form.querySelectorAll('.modal-footer u-button'), (button) => { button.disabled = true; });
+	_.each(form.querySelectorAll('.dialog-footer u-button'), (button) => { button.disabled = true; });
 	let data = form.getData();
 	data.username = user.username;
 	userService.updateUser(data);
-	bootstrap.Modal.getInstance(modal)?.hide();
+	bootstrap.Dialog.getInstance(modal)?.hide();
 };
 
 const render = (event) => {
@@ -64,5 +64,5 @@ form.validation = [
 	}
 ];
 form.addEventListener('valid', updateUser);
-modal.addEventListener('show.bs.modal', render);
-modal.addEventListener('hidden.bs.modal', restore);
+modal.addEventListener('show.bs.dialog', render);
+modal.addEventListener('hidden.bs.dialog', restore);
