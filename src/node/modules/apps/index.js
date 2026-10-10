@@ -21,7 +21,8 @@ const loading = module.querySelector('.loading');
 const container = module.querySelector('.container-fluid');
 const details = container.querySelector('.details');
 const searchInput = module.querySelector('.search');
-const appFilters = module.querySelector('.app-filters');
+const filterMenu = module.querySelector('.filter-menu');
+const filterCount = module.querySelector('.filter-count');
 const table = container.querySelector('.table');
 let routeAppName = null;
 let searchTimer;
@@ -49,13 +50,20 @@ const search = (event) => {
 };
 
 const filterApps = (event) => {
-	const option = event.target.closest('[data-app-filter]');
+	const option = event.target.closest('button[data-filter-key], button[data-action="reset-filters"]');
 	if (!option) {
 		return;
 	}
 
-	const { appFilter, value } = option.dataset;
-	filterValues = (appFilter === 'clear' ? {} : { ...filterValues, [appFilter]: value });
+	const { filterKey, value } = option.dataset;
+	if (option.dataset.action === 'reset-filters') {
+		filterValues = { category: [], status: '', updates: '' };
+	} else if (filterKey === 'category') {
+		const others = _.reject(filterValues.category, (category) => { return _.toLower(category) === _.toLower(value); });
+		filterValues = { ...filterValues, category: (others.length === filterValues.category.length ? [...others, value] : others) };
+	} else {
+		filterValues = { ...filterValues, [filterKey]: value };
+	}
 	appService.setFilters(filterValues);
 	render({ apps: appService.getApps(), jobs: appService.getJobs() });
 };
@@ -418,18 +426,19 @@ const render = (state) => {
 		return;
 	}
 	
-	const categories = _.sortBy(_.uniqBy(_.compact(_.map(state.apps, 'category')), _.toLower), _.toLower);
+	const categories = _.sortBy(_.uniqBy([..._.compact(_.map(state.apps, 'category')), ...filterValues.category], _.toLower), _.toLower);
 	morphdom(
-		appFilters,
+		filterMenu,
 		`<div>${filtersTemplate({ categories, filters: filterValues })}</div>`,
 		{ childrenOnly: true }
 	);
+	filterCount.textContent = (filterValues.category.length + _.size(_.compact([filterValues.status, filterValues.updates]))) || '';
 
 	apps = state.apps;
 	apps = filterListByQuery(apps, searchValue, ['title', 'name', 'icon', 'urls']);
 	const statusStates = { running: 'success', partial: 'warning', stopped: 'danger' };
 	apps = _.filter(apps, (app) => {
-		if (filterValues.category && _.toLower(app.category) !== _.toLower(filterValues.category)) {
+		if (!_.isEmpty(filterValues.category) && !_.includes(_.map(filterValues.category, _.toLower), _.toLower(app.category))) {
 			return false;
 		}
 		if (filterValues.status && app.state !== statusStates[filterValues.status]) {
@@ -503,7 +512,7 @@ module.addEventListener('keydown', searchSnapshots);
 module.addEventListener('mouseenter', toggleStateTooltip, true);
 module.addEventListener('mouseleave', toggleStateTooltip, true);
 searchInput.addEventListener('input', search);
-appFilters.addEventListener('click', filterApps);
+filterMenu.addEventListener('click', filterApps);
 table.querySelector('thead').addEventListener('click', order);
 table.querySelector('tbody').addEventListener('click', expand);
 

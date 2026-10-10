@@ -195,7 +195,11 @@ const getFilters = () => {
 	} catch (error) {
 		stored = null;
 	}
-	return _.pickBy(_.pick(stored, ['category', 'status', 'updates']), _.isString);
+	return {
+		category: _.filter(_.castArray(stored?.category ?? []), _.isString),
+		status: (_.isString(stored?.status) ? stored.status : ''),
+		updates: (_.isString(stored?.updates) ? stored.updates : '')
+	};
 };
 
 const setFilters = (filters) => {

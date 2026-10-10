@@ -1,29 +1,28 @@
 <%
 	const filterGroups = [
-		{ key: 'category', label: 'Category', options: [['', 'Any category'], ..._.map(categories, (category) => { return [category, category]; })] },
-		{ key: 'status', label: 'Status', options: [['', 'Any status'], ['running', 'Running'], ['partial', 'Partly running'], ['stopped', 'Stopped']] },
+		{ key: 'status', label: 'Status', options: [['', 'Any'], ['running', 'Running'], ['partial', 'Partly running'], ['stopped', 'Stopped']] },
 		{ key: 'updates', label: 'Updates', options: [['', 'Any'], ['available', 'Updates available'], ['current', 'Up to date']] }
 	];
 %>
-<div class="d-flex flex-wrap align-items-center gap-3">
-	<%_.each(filterGroups, (group) => {%>
-		<%
-			const current = filters[group.key] || '';
-			const currentOption = _.find(group.options, ([value]) => { return _.toLower(value) === _.toLower(current); });
-		%>
-		<div class="dropdown">
-			<button type="button" class="chip <%=(current ? 'active' : '')%>" data-bs-toggle="menu">
-				<%-(current ? (currentOption?.[1] || current) : group.label)%>
-				<i class="icon-solid icon-chevron-down icon-xs"></i>
-			</button>
-			<div class="menu shadow shadow-opacity-100">
-				<%_.each(group.options, ([value, label]) => {%>
-					<button type="button" class="menu-item <%=(_.toLower(value) === _.toLower(current) ? 'active' : '')%>" data-app-filter="<%-group.key%>" data-value="<%-value%>"><%-label%></button>
-				<%})%>
-			</div>
-		</div>
-	<%})%>
-	<%if (_.some(_.values(filters))) {%>
-		<button type="button" class="btn-link d-inline-block btn-sm text-decoration-none" data-app-filter="clear">Clear filters</button>
-	<%}%>
-</div>
+<%_.each(filterGroups, (group) => {%>
+	<h6 class="menu-header text-uppercase"><%-group.label%></h6>
+	<div class="d-flex flex-wrap gap-3 px-3 pb-3">
+		<%_.each(group.options, ([value, label]) => {%>
+			<button type="button" class="chip <%=(_.toLower(value) === _.toLower(filters[group.key]) ? 'active' : '')%>" data-filter-key="<%-group.key%>" data-value="<%-value%>"><%-label%></button>
+		<%})%>
+	</div>
+	<div class="menu-divider"></div>
+<%})%>
+<%if (!_.isEmpty(categories)) {%>
+	<h6 class="menu-header text-uppercase">Category</h6>
+	<div class="d-flex flex-wrap gap-3 px-3 pb-3">
+		<%_.each(categories, (category) => {%>
+			<button type="button" class="chip <%=(_.includes(_.map(filters.category, _.toLower), _.toLower(category)) ? 'active' : '')%>" data-filter-key="category" data-value="<%-category%>"><%-category%></button>
+		<%})%>
+	</div>
+	<div class="menu-divider"></div>
+<%}%>
+<button type="button" class="menu-item" data-action="reset-filters">
+	<i class="icon-solid icon-rotate-left icon-fw"></i>
+	Reset filters
+</button>

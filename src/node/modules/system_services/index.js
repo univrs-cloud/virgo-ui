@@ -5,7 +5,6 @@ import serviceActionsPartial from 'node/modules/system_services/partials/service
 import serviceDetailsPartial from 'node/modules/system_services/partials/service_details.html';
 import filterPartial from 'node/modules/system_services/partials/service_filter.html';
 import filterOptionsPartial from 'node/modules/system_services/partials/service_filter_options.html';
-import filterPillsPartial from 'node/modules/system_services/partials/service_filter_pills.html';
 import * as serviceService from 'node/modules/system_services/services/service';
 import { filterListByQuery } from 'utils/list_search';
 
@@ -14,7 +13,6 @@ const serviceTemplate = _.template(servicePartial);
 const serviceActionsTemplate = _.template(serviceActionsPartial);
 const serviceDetailsTemplate = _.template(serviceDetailsPartial);
 const filterOptionsTemplate = _.template(filterOptionsPartial);
-const filterPillsTemplate = _.template(filterPillsPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate({ filterPartial }));
 const module = document.querySelector('#system-services');
 const loading = module.querySelector('.loading');
@@ -23,8 +21,7 @@ const container = module.querySelector('.container-fluid');
 const details = container.querySelector('.details');
 const searchInput = module.querySelector('.search');
 const filterMenu = module.querySelector('.filter-menu');
-const filterBadge =module.querySelector('.filter-toggle');
-const filterPills = module.querySelector('.filter-pills');
+const filterCount = module.querySelector('.filter-count');
 const filterTypeNav = module.querySelector('.filter-type');
 const table = container.querySelector('.table');
 let routeServiceUnit = null;
@@ -61,13 +58,17 @@ const search = (event) => {
 };
 
 const toggleFilter = (event) => {
-	const input = event.target.closest('input[data-filter-key]');
-	if (!input) {
+	const option = event.target.closest('button[data-filter-key], button[data-action="reset-filters"]');
+	if (!option) {
 		return;
 	}
 
-	const key = input.dataset.filterKey;
-	filters[key] = (input.checked ? _.union(filters[key], [input.value]) : _.without(filters[key], input.value));
+	const { filterKey, value } = option.dataset;
+	if (option.dataset.action === 'reset-filters') {
+		filters = _.mapValues(filters, () => { return []; });
+	} else {
+		filters[filterKey] = (filters[filterKey].includes(value) ? _.without(filters[filterKey], value) : _.union(filters[filterKey], [value]));
+	}
 	serviceService.setFilters({ type: filterType, ...filters });
 	const services = serviceService.getServices();
 	const jobs = serviceService.getJobs();
@@ -87,23 +88,6 @@ const selectType = (event) => {
 	const typedServices = _.filter(services, matchesType);
 	filters = _.mapValues(filters, (values, key) => { return _.intersection(values, _.map(typedServices, (service) => { return filterValue(service, key); })); });
 	serviceService.setFilters({ type: filterType, ...filters });
-	render({ services, jobs });
-};
-
-const removeFilter = (event) => {
-	const button = event.target.closest('button[data-filter-key], button[data-action="clear-filters"]');
-	if (!button) {
-		return;
-	}
-
-	if (button.dataset.action === 'clear-filters') {
-		filters = _.mapValues(filters, () => { return []; });
-	} else {
-		filters[button.dataset.filterKey] = [];
-	}
-	serviceService.setFilters({ type: filterType, ...filters });
-	const services = serviceService.getServices();
-	const jobs = serviceService.getJobs();
 	render({ services, jobs });
 };
 
@@ -136,10 +120,8 @@ const renderFilters = (allServices, searchedServices) => {
 	});
 	const selectedCount = _.sumBy(groups, (group) => { return group.selected.length; });
 
-	morphdom(filterMenu, `<ul>${filterOptionsTemplate({ groups })}</ul>`, { childrenOnly: true });
-	morphdom(filterPills, `<div>${(selectedCount > 0 ? filterPillsTemplate({ groups }) : '')}</div>`, { childrenOnly: true });
-	filterPills.classList.toggle('md:d-flex', selectedCount > 0);
-	filterBadge.classList.toggle('active', selectedCount > 0);
+	morphdom(filterMenu, `<div>${filterOptionsTemplate({ groups })}</div>`, { childrenOnly: true });
+	filterCount.textContent = selectedCount || '';
 };
 
 const order = (event) => {
@@ -301,8 +283,7 @@ module.addEventListener('click', performServiceAction);
 syncButton.addEventListener('click', sync);
 searchInput.addEventListener('input', search);
 filterTypeNav.addEventListener('click', selectType);
-filterMenu.addEventListener('change', toggleFilter);
-filterPills.addEventListener('click', removeFilter);
+filterMenu.addEventListener('click', toggleFilter);
 table.querySelector('thead').addEventListener('click', order);
 table.querySelector('tbody').addEventListener('click', expand);
 
