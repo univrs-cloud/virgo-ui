@@ -19,7 +19,13 @@
 							<u-input type="search" label="Search" class="search"></u-input>
 						</div>
 						<div class="col-auto">
-							<div class="app-filters mb-7"></div>
+							<div class="dropdown mb-7">
+								<button type="button" class="btn-sm btn-icon btn-outline theme-secondary position-relative" data-bs-toggle="menu" data-bs-auto-close="outside" aria-label="Filters">
+									<i class="icon-solid icon-filter icon-width-auto"></i>
+									<span class="filter-count badge rounded-pill theme-primary position-absolute top-0 start-100 translate-middle"></span>
+								</button>
+								<div class="menu filter-menu" style="width: 320px;"></div>
+							</div>
 						</div>
 					</div>
 					<div class="overflow-y-scroll mt--5 pe-5 mx-0 me--5">
