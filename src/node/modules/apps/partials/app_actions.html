@@ -11,7 +11,7 @@
 				<a href="#" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 <%=(canStop ? 'confirm' : 'disabled')%>" data-action="stop" data-bs-toggle="tooltip" data-bs-original-title="Stop"><i class="icon-solid icon-stop icon-fw <%=(canStop ? 'fg-red-400' : 'fg-gray-300')%>"></i></a>
 			</div>
 	<%}%>
-	<div class="<%=(inline ? 'dropdown position-relative z-1 ms--5' : 'dropdown')%>">
+	<div class="<%=(inline ? 'dropdown position-relative ms--5' : 'dropdown')%>">
 		<%if (inline) {%>
 			<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="actions-toggle btn-icon btn-text theme-secondary btn-sm border border-white border-10 rounded-3"><i class="icon-solid icon-ellipsis-vertical icon-fw fg-secondary"></i></span>
 		<%} else {%>
