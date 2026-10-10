@@ -3,7 +3,8 @@ import Store from 'stores/store';
 class User extends Store {
 	constructor() {
 		const initialState = {
-			users: null
+			users: null,
+			role: null
 		};
 		super({
 			namespace: 'user'
@@ -13,6 +14,10 @@ class User extends Store {
 
 		this.socket.on('users', (users) => {
 			this.setState({ users }, 'get_users');
+		});
+
+		this.socket.on('user:role', (role) => {
+			this.setState({ role }, 'get_role');
 		});
 	}
 
