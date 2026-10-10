@@ -62,6 +62,7 @@ const render = async (state) => {
 				import('node/header'),
 				import('node/main'),
 				import('node/power'),
+				import('node/session'),
 				...(isAdmin ? [] : [import('node/maintenance')])
 			]);
 			const { modulesLoaded } = await import('node/modules');
