@@ -1,4 +1,4 @@
-<div class="snapshots card mb-3">
+<div class="snapshots card border-0 mb-3">
 	<%
 		const snapshotTierOrder = ['frequently', 'hourly', 'daily', 'monthly', 'yearly'];
 		const snapshotTierColors = { frequently: 'blue-200', hourly: 'blue-300', daily: 'blue-500', monthly: 'indigo-500', yearly: 'indigo-700' };
@@ -170,41 +170,42 @@
 			</div>
 		</div>
 		<%if (_.toLower(app.name) === 'nextcloud') {%>
-			<div class="card-body border-top pb-0">
+			<div class="card-body border-top pb-0 pe-9 me--5">
 				<div class="row g-3 align-items-center">
-					<div class="col-12 md:col-5 xl:col-4 mb--3">
+					<div class="col md:col-5 xl:col-4 mb--3">
 						<u-input type="search" label="Search in snapshots" class="snapshot-search" <%=(snapshotSearching ? 'disabled' : '')%>></u-input>
 					</div>
 					<%
 						const snapshotFilterGroups = [
-							{ key: 'type', label: 'Type', options: [['', 'Any type'], ['file', 'Files'], ['dir', 'Folders']] },
-							{ key: 'state', label: 'State', options: [['', 'Any state'], ['live', 'Live'], ['modified', 'Modified'], ['renamed', 'Renamed or moved'], ['unchanged', 'Unchanged'], ['deleted', 'Deleted']] },
-							{ key: 'modified', label: 'Modified', options: [['', 'Any time'], ['1d', 'Last 24 hours'], ['7d', 'Last 7 days'], ['30d', 'Last 30 days'], ['365d', 'Last year']] },
-							{ key: 'size', label: 'Size', options: [['', 'Any size'], ['small', 'Under 1 MiB'], ['medium', '1 MiB – 100 MiB'], ['large', '100 MiB – 1 GiB'], ['huge', 'Over 1 GiB']] }
+							{ key: 'type', label: 'Type', options: [['', 'Any'], ['file', 'Files'], ['dir', 'Folders']] },
+							{ key: 'state', label: 'State', options: [['', 'Any'], ['live', 'Live'], ['modified', 'Modified'], ['renamed', 'Renamed or moved'], ['unchanged', 'Unchanged'], ['deleted', 'Deleted']] },
+							{ key: 'modified', label: 'Modified', options: [['', 'Any'], ['1d', 'Last 24 hours'], ['7d', 'Last 7 days'], ['30d', 'Last 30 days'], ['365d', 'Last year']] },
+							{ key: 'size', label: 'Size', options: [['', 'Any'], ['small', 'Under 1 MiB'], ['medium', '1 MiB – 100 MiB'], ['large', '100 MiB – 1 GiB'], ['huge', 'Over 1 GiB']] }
 						];
 					%>
 					<div class="col-auto">
-						<div class="d-flex flex-wrap align-items-center gap-3 mb-5">
-							<%_.each(snapshotFilterGroups, (group) => {%>
-								<%
-									const current = snapshotFilter[group.key] || '';
-									const currentOption = _.find(group.options, ([value]) => { return value === current; });
-								%>
-								<div class="dropdown">
-									<button type="button" class="chip <%=(current ? 'active' : '')%>" data-bs-toggle="menu" <%=(snapshotSearching ? 'disabled' : '')%>>
-										<%=(current ? currentOption[1] : group.label)%>
-										<i class="icon-solid icon-chevron-down icon-xs"></i>
+						<div class="d-flex align-items-center gap-3 mb-5">
+							<div class="dropdown">
+								<button type="button" class="btn-sm btn-icon btn-outline theme-secondary position-relative" data-bs-toggle="menu" data-bs-auto-close="outside" aria-label="Filters" <%=(snapshotSearching ? 'disabled' : '')%>>
+									<i class="icon-solid icon-filter icon-width-auto"></i>
+									<span class="badge rounded-pill theme-primary position-absolute top-0 start-100 translate-middle"><%=(_.size(_.compact(_.values(snapshotFilter))) || '')%></span>
+								</button>
+								<div class="menu" style="width: 320px;">
+									<%_.each(snapshotFilterGroups, (group) => {%>
+										<h6 class="menu-header text-uppercase"><%-group.label%></h6>
+										<div class="d-flex flex-wrap gap-3 px-3 pb-3">
+											<%_.each(group.options, ([value, label]) => {%>
+												<button type="button" class="chip <%=(_.toLower(value) === _.toLower(snapshotFilter[group.key] || '') ? 'active' : '')%>" data-snapshot-filter="<%-group.key%>" data-value="<%-value%>" <%=(snapshotSearching ? 'disabled' : '')%>><%-label%></button>
+											<%})%>
+										</div>
+										<div class="menu-divider"></div>
+									<%})%>
+									<button type="button" class="menu-item" data-snapshot-filter="clear" <%=(snapshotSearching ? 'disabled' : '')%>>
+										<i class="icon-solid icon-rotate-left icon-fw"></i>
+										Reset filters
 									</button>
-									<div class="menu shadow shadow-opacity-100">
-										<%_.each(group.options, ([value, label]) => {%>
-											<button type="button" class="menu-item <%=(value === current ? 'active' : '')%>" data-snapshot-filter="<%-group.key%>" data-value="<%-value%>"><%=label%></button>
-										<%})%>
-									</div>
 								</div>
-							<%})%>
-							<%if (_.some(_.values(snapshotFilter))) {%>
-								<button type="button" class="btn-link d-inline-block btn-sm text-decoration-none" data-snapshot-filter="clear" <%=(snapshotSearching ? 'disabled' : '')%>>Clear filters</button>
-							<%}%>
+							</div>
 							<%if (snapshotSearching) {%>
 								<div class="spinner-border spinner-sm fg-gray-600" role="status"></div>
 							<%}%>
