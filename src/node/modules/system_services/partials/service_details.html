@@ -11,7 +11,7 @@
 					<i class="icon-duotone icon-solid icon-cube icon-fw" style="font-size: 1.875rem; width: 2rem;"></i>
 				</div>
 				<div class="col ps-1 min-w-0">
-					<div class="d-flex align-items-center mb--1 min-w-0">
+					<div class="d-flex align-items-center mb--2 min-w-0">
 						<div class="text-truncate min-w-0"><%-service.unit%></div>
 						<%if (service.broken) {%>
 							<u-badge color="red" class="ms-3" tip="Service not found or failed to load" pill>
@@ -23,7 +23,7 @@
 							</u-badge>
 						<%}%>
 					</div>
-					<small class="fg-emphasis-secondary text-truncate d-block min-w-0"><%-service.description || '—'%></small>
+					<div class="text-truncate min-w-0"><small class="fg-emphasis-secondary"><%-service.description || '—'%></small></div>
 				</div>
 				<div class="col-auto ps-5 ms-auto">
 					<div class="d-none md:d-block"><%=serviceActionsTemplate({ service, jobs, inline: true })%></div>
@@ -85,7 +85,7 @@
 
 					<div class="services pe-5 me--5">
 						<div class="d-flex align-items-center gap-3 mt-3">
-							<a href="#" class="logs btn-solid theme-secondary btn-sm" data-unit="<%-service.unit%>">
+							<a href="#" class="logs btn-solid theme-secondary btn-xs" data-unit="<%-service.unit%>">
 								<i class="icon-solid icon-memo icon-fw"></i>Logs
 							</a>
 						</div>

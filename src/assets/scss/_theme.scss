@@ -230,6 +230,7 @@ u-badge:hover .hover-reveal-text {
 	--btn-disabled-bg: var(--gray-100);
 }
 .actions-button {
+	--btn-min-height: calc(var(--btn-input-sm-min-height) - 2px);
 	--btn-hover-bg: var(--bg-2);
 	--btn-active-bg: var(--bg-2);
 }
@@ -363,7 +364,7 @@ u-badge:hover .hover-reveal-text {
 	}
 }
 #apps .details .overflow-y-scroll {
-	height: calc(100dvh - 199px - var(--chrome));
+	height: calc(100dvh - 190px - var(--chrome));
 }
 #apps,
 #shortcuts,

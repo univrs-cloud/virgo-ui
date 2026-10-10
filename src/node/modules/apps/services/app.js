@@ -64,6 +64,7 @@ function composeApps(configured, containers, appsResourceMetrics, imageUpdates, 
 			});
 			entity.projectContainers = _.map(entity.projectContainers, (container) => {
 				container.hasUpdates = !_.isEmpty(_.filter(imageUpdates, { containerId: container.id }));
+				container.urls = Docker.composeUrlFromLabels([container]);
 				return container;
 			});
 			let activeCount = _.size(_.filter(entity.projectContainers, (container) => { return _.includes(['running', 'restarting'], container.state); }));
@@ -91,6 +92,7 @@ function composeUnmanaged(configured, containers, appsResourceMetrics, imageUpda
 	return _.map(Docker.groupUnmanagedContainers(configured, containers), ({ name, title, isStack, containers: groupContainers }) => {
 		const projectContainers = _.map(groupContainers, (container) => {
 			container.hasUpdates = _.some(imageUpdates, { containerId: container.id });
+			container.urls = Docker.composeUrlFromLabels([container]);
 			return container;
 		});
 		const activeCount = _.size(_.filter(projectContainers, (container) => { return _.includes(['running', 'restarting'], container.state); }));
