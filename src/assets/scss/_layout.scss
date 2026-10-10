@@ -287,14 +287,13 @@ html:not(:has(head > base[href="/"])) {
 }
 .login-logo {
 	filter: drop-shadow(0 8px 6px rgba(56, 96, 224, 0.18));
-	g {
-		animation: login-logo-open 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.4s both;
-		&:first-of-type {
-			--login-logo-offset: 44px;
-		}
-		&:last-of-type {
-			--login-logo-offset: -44px;
-		}
+	.login-logo-orb {
+		animation: login-logo-rise 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.4s backwards;
+	}
+}
+.fleet-logo {
+	.fleet-logo-cube {
+		animation: fleet-logo-drop 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) calc(0.4s + var(--fleet-logo-cube) * 0.09s) backwards;
 	}
 }
 @keyframes login-slide {
@@ -302,9 +301,16 @@ html:not(:has(head > base[href="/"])) {
 		transform: translateX(var(--login-period));
 	}
 }
-@keyframes login-logo-open {
+@keyframes fleet-logo-drop {
 	from {
-		transform: translateX(var(--login-logo-offset));
+		opacity: 0;
+		transform: translateY(-70px);
+	}
+}
+@keyframes login-logo-rise {
+	from {
+		opacity: 0;
+		transform: translateY(-90px);
 	}
 }
 
