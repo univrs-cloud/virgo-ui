@@ -209,7 +209,7 @@
 							const healthLabel = properties.health?.value || 'Unknown';
 							const usageTip = `${prettyBytes(properties.allocated?.value || 0, { binary: true })} of ${prettyBytes(properties.size?.value || 0, { binary: true })} used`;
 						%>
-						<div class="d-flex align-items-center border border-gray-100 bd-gray-100 shadow-sm px-3 py-1 rounded-9" style="font-size: 0.75rem;">
+						<div class="d-flex align-items-center border border-gray-100 bd-gray-50 shadow-sm px-3 py-1 rounded-9" style="font-size: 0.75rem;">
 							<i class="icon-solid icon-circle icon-fw me-1 <%=healthColor%>" data-bs-toggle="tooltip" data-bs-original-title="<%-healthLabel%>"></i>
 							<span class="fg-emphasis-secondary me-3"><%-pool.name%></span>
 							<%if (scanState === 'scanning') {%>
