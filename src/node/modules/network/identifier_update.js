@@ -4,7 +4,7 @@ import * as networkService from 'node/modules/network/services/network';
 const HOSTNAME_PATTERN = /^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$/i;
 const FLEET_ZONE = 'univrs.cloud';
 const RESERVED_CLUSTER_NAMES = ['fleet', 'apps', 'packages', 'www', 'api', 'auth', 'admin', 'mail', 'smtp', 'imap', 'ns', 'ns1', 'ns2', 'mx', 'traefik', 'status', 'docs', 'blog', 'cdn', 'static'];
-const RESERVED_NODE_NAMES = ['analytics', 'auth', 'autoconfig', 'autodiscover', 'dockhand', 'euro-office', 'gitea', 'mail', 'nextcloud', 'pihole', 'rspamd', 'talk', 'terminal', 'torrent', 'traefik', 'vpn'];
+const RESERVED_NODE_NAMES = ['analytics', 'auth', 'autoconfig', 'autodiscover', 'dockhand', 'gitea', 'mail', 'nextcloud', 'pihole', 'rspamd', 'talk', 'terminal', 'torrent', 'traefik', 'vpn'];
 
 document.querySelector('body').insertAdjacentHTML('beforeend', identifierModalPartial);
 
