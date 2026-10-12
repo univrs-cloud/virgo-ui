@@ -44,9 +44,9 @@
 
 			<div class="position-relative">
 				<div class="nav nav-underline d-flex gap-0 border-bottom">
-					<button type="button" class="nav-link px-4 <%=(appTab === 'snapshots' ? '' : 'active border-primary fw-light')%>" data-app-tab="services"><i class="icon-light icon-cube icon-fw"></i>Services <small class="opacity-75">(<%=_.size(app.projectContainers)%>)</small></button>
+					<button type="button" class="nav-link px-4 <%=(appTab === 'snapshots' ? '' : 'active border-primary fw-light')%>" data-app-tab="services"><i class="icon-light icon-cube icon-fw"></i>Services <small class="opacity-75"><%=_.size(app.projectContainers)%></small></button>
 					<%if (!app.isUnmanaged) {%>
-						<button type="button" class="nav-link px-4 <%=(appTab === 'snapshots' ? 'active border-primary fw-light' : '')%>" data-app-tab="snapshots"><i class="icon-light icon-clock-rotate-left icon-fw"></i>Snapshots <small class="opacity-75">(<%=_.size(app.snapshots)%>)</small></button>
+						<button type="button" class="nav-link px-4 <%=(appTab === 'snapshots' ? 'active border-primary fw-light' : '')%>" data-app-tab="snapshots"><span class="position-relative d-inline-flex"><i class="icon-light icon-clock-rotate-left icon-fw"></i><%if (app.snapshotPolicy) {%><i class="icon-solid icon-circle icon-2xs icon-width-auto lh-1 position-absolute top-100 start-100 translate-middle <%=({ enabled: 'fg-green-300', paused: 'fg-orange-300', disabled: 'fg-gray-400' })[_.toLower(app.snapshotPolicy.mode)]%>" style="margin: -0.1875rem 0 0 -0.125rem;" data-bs-toggle="tooltip" data-bs-original-title="<%-_.upperFirst(app.snapshotPolicy.mode)%>"></i><%}%></span>Snapshots<%if (_.toLower(app.snapshotPolicy?.mode) !== 'disabled') {%> <small class="opacity-75"><%=_.size(app.snapshots)%></small><%}%></button>
 					<%}%>
 					<%if (app.composeFile) {%>
 						<small class="fg-emphasis-secondary text-truncate align-self-center ms-auto px-3"><%-app.composeFile%></small>
@@ -102,7 +102,7 @@
 									<div class="service list-group-item pt-5 pb-7" data-id="<%-container.id%>">
 										<div class="row g-3 align-items-center">
 											<div class="col-12">
-												<%const stateColor = (container.state === 'running' ? 'fg-green-300' : (_.includes(['restarting', 'paused'], container.state) ? 'fg-orange-300' : (_.includes(['exited', 'dead'], container.state) ? 'fg-red-300' : 'fg-gray-400')));%>
+												<%const stateColor = (container.state === 'running' ? 'fg-green-300' : (_.includes(['restarting', 'paused'], container.state) ? 'fg-orange-300' : (_.includes(['exited', 'dead'], container.state) ? 'fg-red-400' : 'fg-gray-400')));%>
 												<div class="d-flex align-items-center justify-content-between w-100 mb-3">
 													<div class="d-flex align-items-center min-w-0">
 														<span class="state-icon position-relative d-inline-flex me-3">

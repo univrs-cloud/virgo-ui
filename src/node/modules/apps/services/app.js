@@ -209,7 +209,8 @@ const getFilters = () => {
 	return {
 		category: _.filter(_.castArray(stored?.category ?? []), _.isString),
 		status: (_.isString(stored?.status) ? stored.status : ''),
-		updates: (_.isString(stored?.updates) ? stored.updates : '')
+		updates: (_.isString(stored?.updates) ? stored.updates : ''),
+		snapshots: (_.isString(stored?.snapshots) ? stored.snapshots : '')
 	};
 };
 

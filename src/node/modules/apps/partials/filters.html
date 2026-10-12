@@ -1,7 +1,8 @@
 <%
 	const filterGroups = [
 		{ key: 'status', label: 'Status', options: [['', 'Any'], ['running', 'Running'], ['partial', 'Partly running'], ['stopped', 'Stopped']] },
-		{ key: 'updates', label: 'Updates', options: [['', 'Any'], ['available', 'Updates available'], ['current', 'Up to date']] }
+		{ key: 'updates', label: 'Updates', options: [['', 'Any'], ['available', 'Updates available'], ['current', 'Up to date']] },
+		{ key: 'snapshots', label: 'Snapshots', options: [['', 'Any'], ['enabled', 'Enabled'], ['paused', 'Paused'], ['disabled', 'Disabled']] }
 	];
 %>
 <%_.each(filterGroups, (group) => {%>
