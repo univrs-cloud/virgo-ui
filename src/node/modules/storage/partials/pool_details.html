@@ -90,6 +90,9 @@
 										Repaired <strong><%=prettyBytes(scan.processed || 0, { binary: true })%></strong>, <%=_.pluralize('error', scan.errors || 0, true)%>.
 									</small>
 								<%}%>
+								<%if (scanState !== 'SCANNING' && pool.nextScrub) {%>
+									<small class="fg-4 d-block mt-1">Next data integrity check on <strong><%-moment(pool.nextScrub).format('D MMM YYYY, HH:mm')%></strong> (<%-moment(pool.nextScrub).fromNow()%>).</small>
+								<%}%>
 								</div>
 								<%if (errorCount > 0) {%>
 									<u-badge color="red" class="flex-shrink-0 align-self-start" pill><small><%=_.pluralize('data error', errorCount, true)%></small></u-badge>
