@@ -1,0 +1,10 @@
+<%
+	const itemClasses = { completed: 'theme-success active', inProgress: 'active', pending: 'fg-secondary' };
+%>
+<ol class="stepper m-0">
+	<%_.each(items, ({ label, state }) => {%>
+		<li class="stepper-item <%=itemClasses[state]%>">
+			<div class="mt-1"><%=label%></div>
+		</li>
+	<%})%>
+</ol>

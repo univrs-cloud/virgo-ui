@@ -73,6 +73,10 @@
 	$table-tokens: (
 		--table-hover-bg-factor: 2%
 	),
+	$stepper-tokens: (
+		--stepper-align-items: start,
+		--stepper-bg: var(--bg-4)
+	),
 	$dialog-sizes: (
 		sm: 300px
 	)

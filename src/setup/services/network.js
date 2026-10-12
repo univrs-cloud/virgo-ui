@@ -18,7 +18,7 @@ const { subscribe } = createSubscription({
 		},
 		{
 			store: Job,
-			propertyNames: ['jobs']
+			propertyNames: ['jobs', 'isLoaded']
 		}
 	],
 	filters: {
@@ -32,6 +32,23 @@ const { subscribe } = createSubscription({
 
 const getSystem = () => {
 	return Host.getSystem();
+};
+
+const hasJobs = () => {
+	return Job.isLoaded();
+};
+
+const isJobRunning = (name) => {
+	const job = _.find(Job.getJobs(), { name });
+	return !_.isUndefined(job) && !_.includes(['completed', 'failed'], job.progress?.state);
+};
+
+const isInterfaceUpdating = () => {
+	return isJobRunning(INTERFACE_JOB);
+};
+
+const isIdentifierUpdating = () => {
+	return isJobRunning(IDENTIFIER_JOB);
 };
 
 // Each of these reads the delivered system when a render passes one, and falls back to the store for
@@ -97,6 +114,9 @@ export {
 	INTERFACE_JOB,
 	subscribe,
 	getSystem,
+	hasJobs,
+	isInterfaceUpdating,
+	isIdentifierUpdating,
 	getDefaultInterface,
 	hasStaticAddress,
 	getFqdn,

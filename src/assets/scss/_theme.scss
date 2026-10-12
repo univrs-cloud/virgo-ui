@@ -223,6 +223,25 @@ u-badge:hover .hover-reveal-text {
 	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
+.stepper-item {
+	&::before {
+		font-weight: 400;
+	}
+	&:not(.active)::before {
+		background-color: var(--app-bg);
+		border: var(--stepper-track-size) solid var(--stepper-bg);
+	}
+	&.theme-success {
+		&::before {
+			color: var(--theme-fg);
+			background-color: var(--theme-bg-subtle);
+		}
+		&::after {
+			background-color: var(--theme-border);
+		}
+	}
+}
+
 .no-content {
 	height: calc(100dvh - 72px - var(--chrome));
 	#not-found & {
