@@ -11,7 +11,7 @@ const { subscribe } = createSubscription({
 		},
 		{
 			store: Host,
-			propertyNames: ['system', 'discovery', 'peers']
+			propertyNames: ['system', 'discovery', 'peers', 'firewall']
 		},
 		{
 			store: Configuration,
@@ -19,7 +19,7 @@ const { subscribe } = createSubscription({
 		}
 	],
 	filters: {
-		jobs: isTrustedProxiesJob
+		jobs: isNetworkJob
 	},
 	attachStore: storeAttach.beforeCallbacks,
 	mapState: (properties) => {
@@ -29,6 +29,14 @@ const { subscribe } = createSubscription({
 
 function isTrustedProxiesJob(job) {
 	return _.startsWith(job?.name, 'trustedProxy');
+}
+
+function isUnbanJob(job) {
+	return _.startsWith(job?.name, 'host:firewall:unban');
+}
+
+function isNetworkJob(job) {
+	return isTrustedProxiesJob(job) || isUnbanJob(job);
 }
 
 const getJobs = () => {
@@ -80,6 +88,14 @@ const handoverVirtualIp = (data) => {
 	Host.handoverVirtualIp(data);
 };
 
+const syncFirewall = () => {
+	Host.syncFirewall();
+};
+
+const unbanAddress = (data) => {
+	Host.unbanAddress(data);
+};
+
 const addTrustedProxy = (data) => {
 	Configuration.addTrustedProxy(data);
 };
@@ -118,6 +134,8 @@ export {
 	getDiscoveredWithVirtualIp,
 	promoteVirtualIp,
 	handoverVirtualIp,
+	syncFirewall,
+	unbanAddress,
 	addTrustedProxy,
 	updateTrustedProxy,
 	deleteTrustedProxy,
