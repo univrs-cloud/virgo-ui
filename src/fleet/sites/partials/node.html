@@ -194,7 +194,7 @@
 			</div>
 			<%if (!node.online && node.lastSeenAt) {%>
 				<div class="fg-4 mt-5" style="font-size: 0.75rem;">
-					Last seen <%=moment(node.lastSeenAt).fromNow()%>, on <%=moment(node.lastSeenAt).format('MMMM D, YYYY [at] HH:mm')%>.
+					Last seen <%=moment(node.lastSeenAt).fromNow()%>, on <%=moment(node.lastSeenAt).format('MMM D, YYYY [at] HH:mm')%>.
 				</div>
 			<%}%>
 			<%if (node.online && !_.isEmpty(pools)) {%>

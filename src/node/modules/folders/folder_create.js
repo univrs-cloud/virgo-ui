@@ -13,6 +13,7 @@ const loading = modal.querySelector('.loading');
 const content = modal.querySelector('.content');
 const pathSelect = form.querySelector('.path');
 const refquota = form.querySelector('.refquota');
+const snapshots = form.querySelector('.snapshots');
 
 const render = async () => {
 	const customPaths = await folderService.getCustomPaths();
@@ -28,6 +29,7 @@ const render = async () => {
 	}
 	pathSelect.options = options;
 	refquota.classList.remove('d-none');
+	snapshots.classList.remove('d-none');
 
 	const users = userService.getUsers();
 	const validUsers = form.querySelector('.valid-users');
@@ -50,7 +52,7 @@ const createFolder = (event) => {
 		comment: data.comment,
 		path: data.path,
 		validUsers,
-		...(isNewShare && { refquota: Number(data.refquota) * 1024 * 1024 * 1024 })
+		...(isNewShare && { refquota: Number(data.refquota) * 1024 * 1024 * 1024, snapshots: snapshots.checked })
 	};
 	folderService.createFolder(config);
 	bootstrap.Dialog.getInstance(modal)?.hide();
@@ -105,6 +107,7 @@ form.validation = [
 
 pathSelect.addEventListener('value-changed', () => {
 	refquota.classList.toggle('d-none', !!pathSelect.value);
+	snapshots.classList.toggle('d-none', !!pathSelect.value);
 });
 
 form.addEventListener('valid', createFolder);

@@ -57,7 +57,7 @@ const filterApps = (event) => {
 
 	const { filterKey, value } = option.dataset;
 	if (option.dataset.action === 'reset-filters') {
-		filterValues = { category: [], status: '', updates: '' };
+		filterValues = { category: [], status: '', updates: '', snapshots: '' };
 	} else if (filterKey === 'category') {
 		const others = _.reject(filterValues.category, (category) => { return _.toLower(category) === _.toLower(value); });
 		filterValues = { ...filterValues, category: (others.length === filterValues.category.length ? [...others, value] : others) };
@@ -379,6 +379,11 @@ const updateSnapshots = async (event) => {
 		return;
 	}
 
+	event.preventDefault();
+	if (button.classList.contains('disabled')) {
+		return;
+	}
+
 	const app = _.find(appService.getApps(), { name });
 	const mode = button.dataset.snapshotMode;
 	if (!app || _.toLower(app.snapshotPolicy?.mode) === _.toLower(mode)) {
@@ -459,7 +464,7 @@ const render = (state) => {
 		`<div>${filtersTemplate({ categories, filters: filterValues })}</div>`,
 		{ childrenOnly: true }
 	);
-	filterCount.textContent = (filterValues.category.length + _.size(_.compact([filterValues.status, filterValues.updates]))) || '';
+	filterCount.textContent = (filterValues.category.length + _.size(_.compact([filterValues.status, filterValues.updates, filterValues.snapshots]))) || '';
 
 	apps = state.apps;
 	apps = filterListByQuery(apps, searchValue, ['title', 'name', 'icon', 'urls']);
@@ -472,6 +477,9 @@ const render = (state) => {
 			return false;
 		}
 		if (filterValues.updates && app.hasUpdates !== (filterValues.updates === 'available')) {
+			return false;
+		}
+		if (filterValues.snapshots && _.toLower(app.snapshotPolicy?.mode) !== _.toLower(filterValues.snapshots)) {
 			return false;
 		}
 		return true;

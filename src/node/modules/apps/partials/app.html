@@ -84,11 +84,23 @@
 	</td>
 	<td class="text-nowrap d-none md:d-table-cell">
 		<div class="d-flex align-items-center w-100">
-			<div class="ms-auto text-end">
+			<div class="w-100 text-end">
 				<%if (!app.resourceMetrics) {%>
 					<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
 				<%} else {%>
-					<small class="fw-light fg-emphasis-secondary"><%=prettyBytes(app.resourceMetrics?.storage?.snapshots || 0, { binary: true })%></small>
+					<%const snapshotMode = _.toLower(app.snapshotPolicy?.mode);%>
+					<div class="d-flex align-items-center gap-3">
+						<%if (snapshotMode === 'enabled') {%>
+							<i class="icon-solid icon-circle-play icon-width-auto fg-green-200" data-bs-toggle="tooltip" data-bs-original-title="Snapshots enabled"></i>
+						<%} else if (snapshotMode === 'paused') {%>
+							<i class="icon-solid icon-circle-pause icon-width-auto fg-orange-200" data-bs-toggle="tooltip" data-bs-original-title="Snapshots paused"></i>
+						<%} else if (snapshotMode === 'disabled') {%>
+							<i class="icon-solid icon-ban icon-width-auto fg-gray-200" data-bs-toggle="tooltip" data-bs-original-title="Snapshots disabled"></i>
+						<%}%>
+						<%if (snapshotMode !== 'disabled') {%>
+							<small class="fw-light fg-emphasis-secondary ms-auto"><%=prettyBytes(app.resourceMetrics?.storage?.snapshots || 0, { binary: true })%></small>
+						<%}%>
+					</div>
 				<%}%>
 			</div>
 		</div>
