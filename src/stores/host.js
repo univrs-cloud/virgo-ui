@@ -23,6 +23,7 @@ class Host extends Store {
 			drives: null,
 			topologies: null,
 			services: null,
+			firewall: null,
 			ups: null,
 			time: null
 		};
@@ -69,6 +70,10 @@ class Host extends Store {
 
 		this.socket.on('host:system:services', (services) => {
 			this.setState({ services }, 'get_services');
+		});
+
+		this.socket.on('host:firewall', (firewall) => {
+			this.setState({ firewall }, 'get_firewall');
 		});
 
 		this.socket.on('host:cpu:stats', (cpuStats) => {
@@ -191,6 +196,15 @@ class Host extends Store {
 	syncServices() {
 		this.setState({ services: null }, 'services_fetch_start');
 		this.socket.emit('host:system:services:fetch');
+	}
+
+	syncFirewall() {
+		this.setState({ firewall: null }, 'firewall_fetch_start');
+		this.socket.emit('host:firewall:fetch');
+	}
+
+	unbanAddress(data) {
+		this.socket.emit('host:firewall:unban', data);
 	}
 
 	performServiceAction(data) {

@@ -25,7 +25,7 @@ const render = (state) => {
 		['asc']
 	);
 	trustedProxies = _.map(trustedProxies, (trustedProxy) => {
-		const jobs = _.filter(state?.jobs, (job) => { return job.data?.config?.address === trustedProxy; });
+		const jobs = _.filter(state?.jobs, (job) => { return _.startsWith(job?.name, 'trustedProxy') && job.data?.config?.address === trustedProxy; });
 		return trustedProxyTemplate({ trustedProxy, jobs });
 	});
 	morphdom(
@@ -34,7 +34,10 @@ const render = (state) => {
 			system: state.system,
 			networkInterface,
 			trustedProxies,
-			peerVirtualIp: _.find(state.discovery, (peer) => { return Boolean(peer?.virtualIp); }) || null
+			firewall: state.firewall,
+			unbanJobs: _.filter(state?.jobs, (job) => { return _.startsWith(job?.name, 'host:firewall:unban'); }),
+			peerVirtualIp: _.find(state.discovery, (peer) => { return Boolean(peer?.virtualIp); }) || null,
+			moment
 		})}</div>`,
 		{ childrenOnly: true }
 	);
@@ -62,7 +65,17 @@ const copyToClipboard = (event) => {
 	}
 };
 
+const syncFirewall = (event) => {
+	if (event.target.closest('a')?.dataset.action !== 'sync-firewall') {
+		return;
+	}
+
+	event.preventDefault();
+	networkService.syncFirewall();
+};
+
 module.addEventListener('click', copyToClipboard);
+module.addEventListener('click', syncFirewall);
 
 networkService.subscribe([render]);
 
@@ -71,3 +84,4 @@ import('node/modules/network/interface_update');
 import('node/modules/network/trusted_proxy_add');
 import('node/modules/network/trusted_proxy_update');
 import('node/modules/network/trusted_proxy_delete');
+import('node/modules/network/unban');

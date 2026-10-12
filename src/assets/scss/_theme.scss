@@ -33,6 +33,10 @@ u-toast {
 	border-radius: 0.1rem;
 }
 
+.chip-dismiss-danger:hover {
+	color: var(--danger-base);
+}
+
 // Hover-reveal label inside a badge: a .hover-reveal-text child stays collapsed (leaving just the
 // icon) and expands when its u-badge is hovered, growing the badge. Scoped to u-badge so it only
 // applies to badge content. Reverses on mouse-out because the transition lives on the base rule.
