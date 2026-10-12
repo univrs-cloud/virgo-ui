@@ -2,6 +2,19 @@
 	<td style="min-width: 210px; max-width: 0;">
 		<div class="d-flex align-items-center mb--1">
 			<div class="text-truncate"><%-folder.comment%></div>
+			<%if (folder.snapshotPolicy) {%>
+				<%
+					const snapshotMode = _.toLower(folder.snapshotPolicy.mode);
+					const snapshotColors = { enabled: 'fg-green-400', paused: 'fg-orange-300', disabled: 'fg-gray-300' };
+					const snapshotRetention = _.map(_.filter(['frequently', 'hourly', 'daily', 'weekly', 'monthly', 'yearly'], (tier) => { return folder.snapshotPolicy.retention[tier] > 0; }), (tier) => { return `${folder.snapshotPolicy.retention[tier]} ${tier}`; }).join(', ');
+					const snapshotTips = {
+						enabled: `Snapshots enabled${(snapshotRetention ? `. Keeps ${snapshotRetention}.` : '')}`,
+						paused: 'Snapshots paused. No new snapshots are taken, existing ones are kept.',
+						disabled: 'Snapshots disabled. No snapshots are taken or kept.'
+					};
+				%>
+				<i class="icon-light icon-clock-rotate-left icon-fw ms-3 <%=snapshotColors[snapshotMode]%>" data-bs-toggle="tooltip" data-bs-original-title="<%-snapshotTips[snapshotMode]%>"></i>
+			<%}%>
 		</div>
 		<div class="d-flex">
 			<div class="text-truncate"><small class="fg-4"><%-folder.path%></small></div>
@@ -55,6 +68,18 @@
 				<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw fg-secondary"></i></span>
 				<div class="menu">
 					<a href="#folder-update" class="menu-item" data-bs-toggle="dialog"><i class="icon-regular icon-pen icon-fw"></i>Edit</a>
+					<%if (folder.snapshotPolicy) {%>
+						<%const snapshotMode = _.toLower(folder.snapshotPolicy.mode);%>
+						<div class="menu-divider"></div>
+						<%if (snapshotMode === 'enabled') {%>
+							<a href="#" class="menu-item" data-action="snapshots" data-mode="paused"><i class="icon-regular icon-pause icon-fw"></i>Pause snapshots</a>
+						<%} else {%>
+							<a href="#" class="menu-item" data-action="snapshots" data-mode="enabled"><i class="icon-regular icon-clock-rotate-left icon-fw"></i><%=(snapshotMode === 'paused' ? 'Resume snapshots' : 'Enable snapshots')%></a>
+						<%}%>
+						<%if (snapshotMode !== 'disabled') {%>
+							<a href="#" class="menu-item fg-danger" data-action="snapshots" data-mode="disabled"><i class="icon-regular icon-ban icon-fw"></i>Disable snapshots</a>
+						<%}%>
+					<%}%>
 					<div class="menu-divider"></div>
 					<a href="#" class="menu-item fg-danger confirm" data-action="delete"><i class="icon-regular icon-times icon-fw"></i><%=(folder.isCustom ? 'Remove' : 'Delete')%></a>
 				</div>

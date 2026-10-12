@@ -372,6 +372,33 @@ const runSnapshotSearch = async (name, query, append) => {
 	}
 };
 
+const updateSnapshots = async (event) => {
+	const button = event.target.closest('[data-snapshot-mode]');
+	const name = button?.closest('.item')?.dataset?.name;
+	if (!name) {
+		return;
+	}
+
+	const app = _.find(appService.getApps(), { name });
+	const mode = button.dataset.snapshotMode;
+	if (!app || _.toLower(app.snapshotPolicy?.mode) === _.toLower(mode)) {
+		return;
+	}
+
+	if (
+		mode === 'disabled' &&
+		!await confirm(`Are you sure you want to disable snapshots for the app ${app.title}?<br><br>All existing snapshots of this app will be <strong>permanently deleted</strong> and no new ones will be taken. Without snapshots, its data can no longer be recovered after an accidental deletion, a corruption or a failed update.<br><br>To stop taking new snapshots while keeping the existing ones, pause them instead.`, { buttons: [{ text: 'Disable', class: 'btn-solid theme-danger' }] })
+	) {
+		return;
+	}
+
+	const data = {
+		name: app.name,
+		mode
+	};
+	appService.updateSnapshots(data);
+};
+
 const filterJobsByApp = (jobs, app) => {
 	const containerIds = _.map(app.projectContainers, 'id');
 	const appJobs = _.filter(jobs, (job) => { return job.data?.config?.name === app.name; });
@@ -506,6 +533,7 @@ module.addEventListener('click', loadMoreSnapshots);
 module.addEventListener('click', clearSnapshotSearch);
 module.addEventListener('click', selectSnapshot);
 module.addEventListener('click', filterSnapshots);
+module.addEventListener('click', updateSnapshots);
 module.addEventListener('input', scrubSnapshot);
 module.addEventListener('keydown', stepSnapshot);
 module.addEventListener('keydown', searchSnapshots);

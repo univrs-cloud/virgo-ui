@@ -80,6 +80,11 @@ function composeApps(configured, containers, appsResourceMetrics, imageUpdates, 
 			entity.snapshots = _.filter(_.values(snapshots), (snapshot) => {
 				return snapshot.dataset === entity.dataset;
 			});
+			entity.hasDatasetMounts = _.some(entity.projectContainers, (container) => {
+				return _.some(container.mounts, (mount) => {
+					return _.startsWith(_.toLower(mount.source), _.toLower(`/${entity.dataset}/`));
+				});
+			});
 			return entity;
 		});
 }
@@ -162,6 +167,10 @@ const performServiceAction = (data) => {
 	Docker.performServiceAction(data);
 };
 
+const updateSnapshots = (data) => {
+	Docker.updateSnapshots(data);
+};
+
 const searchSnapshots = (query) => {
 	return Indexer.search(query);
 };
@@ -222,6 +231,7 @@ export {
 	update,
 	performAppAction,
 	performServiceAction,
+	updateSnapshots,
 	searchSnapshots,
 	browseSnapshot,
 	browseSnapshotChanges,

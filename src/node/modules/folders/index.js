@@ -91,7 +91,7 @@ const render = (state) => {
 		[tableOrder.direction]
 	);
 	const rows = _.join(_.map(folders, (folder) => {
-		const jobs = _.filter(state.jobs, (job) => { return job.data?.config?.comment === folder.comment; });
+		const jobs = _.filter(state.jobs, (job) => { return job.data?.config?.comment === folder.comment || job.data?.config?.name === folder.name; });
 		return folderTemplate({ folder, jobs, accessOn, prettyBytes });
 	}), '');
 	
@@ -114,3 +114,4 @@ folderService.subscribe([render]);
 import('node/modules/folders/folder_create');
 import('node/modules/folders/folder_update');
 import('node/modules/folders/folder_delete');
+import('node/modules/folders/folder_snapshots');
