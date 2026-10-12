@@ -17,7 +17,7 @@ const form = step.querySelector('u-form');
 const registered = step.querySelector('.registered');
 const status = registered.querySelector('.status');
 const reRegisterLink = registered.querySelector('.re-register');
-const fleetLink = step.querySelector('.fleet-link span');
+const fleetLinks = step.querySelectorAll('.fleet-link span');
 const optional = form.querySelector('.optional');
 const skipButton = form.querySelector('[data-action="skip"]');
 const submitButton = form.querySelector('[type="submit"]');
@@ -33,7 +33,7 @@ const renderStatus = () => {
 	skipButton.classList.toggle('d-none', !canSkip);
 	form.classList.toggle('d-none', !needsRegistration);
 	registered.classList.toggle('d-none', needsRegistration);
-	fleetLink.textContent = (registeredNode ? 'View fleet' : 'Create account');
+	_.each(fleetLinks, (link) => { link.textContent = (registeredNode ? 'View fleet' : 'Create account'); });
 	submitButton.textContent = (registeredNode ? 'Register again' : 'Register');
 	if (needsRegistration) {
 		return;

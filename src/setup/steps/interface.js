@@ -199,12 +199,16 @@ const applyVirtualIp = () => {
 
 const render = (state) => {
 	applyVirtualIp();
-	if (isApplying()) {
-		const jobState = _.find(state.jobs, { name: networkService.INTERFACE_JOB })?.progress?.state;
+	const job = _.find(state.jobs, { name: networkService.INTERFACE_JOB });
+	const jobState = job?.progress?.state;
+	if (job && !_.includes(['completed', 'failed'], jobState)) {
+		backButton.disabled = true;
+		submitButton.loading();
+	} else if (isApplying()) {
 		if (jobState === 'failed') {
 			restore();
 		} else if (!pendingUrl) {
-			isApplied = (isApplied || jobState === 'completed' || isConfigurationApplied(state.system));
+			isApplied = (isApplied || jobState === 'completed' || (pendingConfiguration ? isConfigurationApplied(state.system) : _.isUndefined(job)));
 			if (isApplied && networkService.hasStaticAddress(state.system)) {
 				restore();
 				if (!step.classList.contains('d-none')) {

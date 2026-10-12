@@ -315,8 +315,6 @@ html:not(:has(head > base[href="/"])) {
 }
 
 .eula {
-	// Everything around the scroll area (hero, card padding, button) adds up to ~219px.
-	max-height: calc(100dvh - 219px - var(--chrome));
 	min-height: 12rem;
 	overflow-y: auto;
 	overscroll-behavior: contain;
@@ -325,6 +323,21 @@ html:not(:has(head > base[href="/"])) {
 	}
 	> :last-child {
 		margin-bottom: 0;
+	}
+}
+.wizard {
+	u-form,
+	u-form > form {
+		display: contents;
+	}
+}
+.wizard > .row > .col-12 {
+	height: calc(100dvh - var(--chrome) - #{map.get($spacers, 5) * 2});
+}
+@media (min-width: 576px) {
+	.wizard > .row > .col-12 {
+		height: 824px;
+		max-height: calc(100dvh - var(--chrome) - #{map.get($spacers, 5) * 2});
 	}
 }
 

@@ -14,16 +14,20 @@ import * as appsService from 'setup/services/apps';
 import * as fleetService from 'setup/services/fleet';
 import * as networkService from 'setup/services/network';
 import * as storageService from 'setup/services/storage';
-import { STEPS, completeStepsBefore, stepPath } from 'setup/wizard';
+import stepperPartial from 'setup/partials/stepper.html';
+import { STEPS, completeStepsBefore, stepPath, stepperItems } from 'setup/wizard';
 
+const stepperTemplate = _.template(stepperPartial);
 const container = document.querySelector('main');
 const loading = container.querySelector('.loading');
 const wizard = container.querySelector('.wizard');
+const stepper = container.querySelector('.stepper');
 let isStarted = false;
 const bootSubscriptions = [];
 
 const showStep = (ctx) => {
 	_.each(container.querySelectorAll('.wizard > div'), (element) => { element.classList.add('d-none'); });
+	morphdom(stepper, stepperTemplate({ items: stepperItems(ctx.step) }));
 
 	const step = container.querySelector(`#${ctx.step}`);
 	step?.classList.remove('d-none');
@@ -59,6 +63,16 @@ const hasCoreAppsRunning = () => {
 
 _.each(STEPS, ({ name, path }) => {
 	page(path, (ctx) => {
+		if (isAfter(name, 'interface') && networkService.isInterfaceUpdating()) {
+			page.redirect(stepPath('interface'));
+			return;
+		}
+
+		if (isAfter(name, 'host') && networkService.isIdentifierUpdating()) {
+			page.redirect(stepPath('host'));
+			return;
+		}
+
 		if (isAfter(name, 'interface') && !networkService.hasStaticAddress()) {
 			page.redirect(stepPath('interface'));
 			return;
@@ -97,6 +111,7 @@ page('*', (ctx) => {
  * included, since the node reports that as `false` and it is as much an answer as any other. */
 const isReported = () => {
 	return !_.isNil(networkService.getSystem())
+		&& networkService.hasJobs()
 		&& !_.isNil(storageService.getStorage())
 		&& !_.isNil(fleetService.getConfiguration());
 };

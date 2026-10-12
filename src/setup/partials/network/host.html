@@ -1,13 +1,12 @@
 <div id="host" class="row d-none">
-	<div class="col-12 md:col-10 lg:col-8 xl:col-6 mx-auto">
+	<div class="col-12 d-flex flex-column">
 		<div class="mb-7">
-			<h4 class="mb-3">Network</h4>
+			<h4 class="mb-3">Network host</h4>
 			<p class="fg-emphasis-secondary m-0">Choose how this node identifies itself on your network. <a href="https://docs.univrs.cloud/setup/host/" class="text-nowrap" target="_blank" rel="noopener noreferrer" data-bs-toggle="tooltip" data-bs-original-title="Open the docs for this step">Learn more<i class="icon-solid icon-sm icon-arrow-up-right-from-square ms-1"></i></a></p>
 		</div>
 		<u-form>
-			<div class="card border-0 mb-0">
-				<div class="card-body">
-					<h5 class="card-title">Host</h5>
+			<div class="card border-0 flex-grow-1 min-h-0 mb-0">
+				<div class="card-body min-h-0 overflow-y-auto pb-0">
 					<u-input name="hostname" label="Hostname" class="hostname" autocomplete="off"></u-input>
 					<u-input name="cluster" label="Cluster" class="cluster" autocomplete="off"></u-input>
 					<u-input name="domainName" label="Domain name" class="domain-name" autocomplete="off"></u-input>
@@ -39,10 +38,10 @@
 							<small class="availability-message"></small>
 						</div>
 					</div>
-					<div class="d-flex justify-content-end gap-3">
-						<u-button variant="secondary" data-action="back" outline>Back</u-button>
-						<u-button type="submit" variant="primary" loading-text="Updating host...">Continue</u-button>
-					</div>
+				</div>
+				<div class="d-flex justify-content-end gap-3 px-5 pb-5">
+					<u-button variant="secondary" data-action="back" outline>Back</u-button>
+					<u-button type="submit" variant="primary" loading-text="Updating host...">Continue</u-button>
 				</div>
 			</div>
 		</u-form>

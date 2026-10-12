@@ -1,13 +1,13 @@
 const STEPS = [
-	{ name: 'welcome', path: '/' },
-	{ name: 'interface', path: '/network/interface' },
-	{ name: 'host', path: '/network/host' },
-	{ name: 'ports', path: '/network/ports' },
-	{ name: 'storage', path: '/storage' },
-	{ name: 'fleet', path: '/fleet' },
-	{ name: 'apps', path: '/apps' },
-	{ name: 'password', path: '/password' },
-	{ name: 'finish', path: '/finish' }
+	{ name: 'welcome', path: '/', label: 'Welcome' },
+	{ name: 'interface', path: '/network/interface', label: 'Network interface' },
+	{ name: 'host', path: '/network/host', label: 'Network host' },
+	{ name: 'ports', path: '/network/ports', label: 'Port forwarding' },
+	{ name: 'storage', path: '/storage', label: 'Storage' },
+	{ name: 'fleet', path: '/fleet', label: 'Fleet registration' },
+	{ name: 'apps', path: '/apps', label: 'Core apps' },
+	{ name: 'password', path: '/password', label: 'Password' },
+	{ name: 'finish', path: '/finish', label: 'Finish' }
 ];
 
 let completedSteps = [];
@@ -43,8 +43,24 @@ const previousStepPath = (name) => {
 	return _.nth(STEPS, Math.max(_.findIndex(STEPS, { name }) - 1, 0))?.path;
 };
 
+const stepperItems = (name) => {
+	const index = _.findIndex(STEPS, { name });
+	return _.map(STEPS, ({ label }, position) => {
+		if (position < index) {
+			return { label, state: 'completed' };
+		}
+
+		if (position > index) {
+			return { label, state: 'pending' };
+		}
+
+		return { label, state: 'inProgress' };
+	});
+};
+
 export {
 	STEPS,
+	stepperItems,
 	completeStep,
 	completeStepsBefore,
 	isStepCompleted,

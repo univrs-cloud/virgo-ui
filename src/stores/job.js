@@ -3,7 +3,8 @@ import Store from 'stores/store';
 class Job extends Store {
 	constructor() {
 		const initialState = {
-			jobs: []
+			jobs: [],
+			isLoaded: false
 		};
 		super({
 			namespace: 'job'
@@ -12,7 +13,7 @@ class Job extends Store {
 		this.setState(initialState, 'socket_connect');
 
 		this.socket.on('jobs', (jobs) => {
-			this.setState({ jobs }, 'set_jobs');
+			this.setState({ jobs, isLoaded: true }, 'set_jobs');
 		});
 
 		this.socket.on('job', (job) => {
@@ -34,6 +35,10 @@ class Job extends Store {
 
 	getJobs() {
 		return this.getStateProperty('jobs');
+	}
+
+	isLoaded() {
+		return this.getStateProperty('isLoaded');
 	}
 }
 

@@ -8,8 +8,9 @@ const toasts = {};
 // Every job the node runs is reported here, whoever asked for it — the wizard is not the only way to
 // reach a node being set up, and a second tab watching the same node should see the same work.
 const render = (state) => {
+	const children = _.groupBy(_.filter(state.jobs, jobService.getParentId), jobService.getParentId);
 	_.each(state.jobs, (job) => {
-		if (job.opts?.repeat || acknowledgedJobIds.has(job.id)) {
+		if (job.opts?.repeat || jobService.getParentId(job) || acknowledgedJobIds.has(job.id)) {
 			return;
 		}
 
@@ -32,6 +33,9 @@ const render = (state) => {
 		}
 
 		let message = jobProgressTemplate({ job });
+		_.each(children[job.id], (child) => {
+			message += `<div>${_.escape(child.progress.message)}</div>${jobProgressTemplate({ job: child })}`;
+		});
 		message += `<div>${(job.progress.state === 'failed' ? job.failedReason : '')}</div>`;
 		if (_.isUndefined(toasts[job.id])) {
 			toasts[job.id] = notifier.add({ title, message, type, dismissible, duration });

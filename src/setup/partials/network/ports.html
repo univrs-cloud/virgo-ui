@@ -1,12 +1,11 @@
 <div id="ports" class="row d-none">
-	<div class="col-12 md:col-10 lg:col-8 xl:col-6 mx-auto">
+	<div class="col-12 d-flex flex-column">
 		<div class="mb-7">
-			<h4 class="mb-3">Network</h4>
+			<h4 class="mb-3">Port forwarding</h4>
 			<p class="fg-emphasis-secondary m-0">Apps can be reached from outside your network through your router, which has to be told to send those connections to this node. <a href="https://docs.univrs.cloud/setup/ports/" class="text-nowrap" target="_blank" rel="noopener noreferrer" data-bs-toggle="tooltip" data-bs-original-title="Open the docs for this step">Learn more<i class="icon-solid icon-sm icon-arrow-up-right-from-square ms-1"></i></a></p>
 		</div>
-		<div class="card border-0 mb-0">
-			<div class="card-body">
-				<h5 class="card-title">Port forwarding</h5>
+		<div class="card border-0 flex-grow-1 min-h-0 mb-0">
+			<div class="card-body min-h-0 overflow-y-auto pb-0">
 				<p class="fg-emphasis-secondary">Forward these ports to <span class="address fg-body"></span>.</p>
 				<div class="table-responsive">
 					<table class="table align-middle m-0">
@@ -48,10 +47,10 @@
 					<i class="icon-duotone icon-solid icon-triangle-exclamation icon-fw mt-1 me-1"></i>
 					Never forward port 53. Pi-hole answers DNS on the local network only, and a name server open to the internet will be abused.
 				</div>
-				<div class="d-flex justify-content-end gap-3 mt-7">
-					<u-button variant="secondary" data-action="back" outline>Back</u-button>
-					<u-button variant="primary" data-action="continue">Continue</u-button>
-				</div>
+			</div>
+			<div class="d-flex justify-content-end gap-3 px-5 pb-5 mt-7">
+				<u-button variant="secondary" data-action="back" outline>Back</u-button>
+				<u-button variant="primary" data-action="continue">Continue</u-button>
 			</div>
 		</div>
 	</div>

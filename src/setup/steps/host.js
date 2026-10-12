@@ -253,14 +253,15 @@ const render = (state) => {
 		// job can settle while nothing is listening. Every connection is told the current system, so that
 		// answer arrives whether the report did or not — which is why the step waits on it rather than on
 		// the job reporting completed. Only a failure concludes the step without it.
-		const isApplied = isIdentifierApplied(state.system);
-		if (job?.progress?.state !== 'failed' && !isApplied) {
+		const isFailed = (job?.progress?.state === 'failed');
+		const isApplied = (pendingIdentifier ? isIdentifierApplied(state.system) : !isFailed);
+		if (!isFailed && !isApplied) {
 			return;
 		}
 
 		const url = pendingUrl;
 		idle();
-		if (!isApplied || step.classList.contains('d-none')) {
+		if (isFailed || !isApplied || step.classList.contains('d-none')) {
 			return;
 		}
 
