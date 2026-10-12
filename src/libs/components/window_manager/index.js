@@ -101,7 +101,7 @@ export class WindowManager extends LitElement {
 
 		const frame = document.createElement('iframe');
 		frame.className = 'flex-grow-1 w-100 border-0';
-		frame.allow = 'clipboard-read; clipboard-write; fullscreen';
+		frame.allow = 'clipboard-read; clipboard-write; fullscreen; camera; microphone; display-capture; autoplay';
 		frame.referrerPolicy = 'no-referrer';
 		frame.src = item.dataset.src;
 		frame.addEventListener('load', () => { item.loading = false; }, { once: true });
