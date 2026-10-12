@@ -31,6 +31,10 @@ class Share extends Store {
 	deleteShare(data) {
 		this.socket.emit('share:delete', data);
 	}
+
+	updateSnapshots(data) {
+		this.socket.emit('share:snapshots:update', data);
+	}
 }
 
 export default new Share();

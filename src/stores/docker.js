@@ -72,6 +72,10 @@ class Docker extends Store {
 		this.socket.emit('app:service:performAction', data);
 	}
 
+	updateSnapshots(data) {
+		this.socket.emit('app:snapshots:update', data);
+	}
+
 	setOrder(data) {
 		this.socket.emit('app:order', data);
 	}

@@ -27,6 +27,51 @@
 			};
 		}), (point) => { return point.createdMoment.valueOf(); }, ['desc']);
 	%>
+	<%if (app.snapshotPolicy) {%>
+		<%
+			const snapshotMode = _.toLower(app.snapshotPolicy.mode);
+			const snapshotRetention = _.map(_.filter(['frequently', 'hourly', 'daily', 'weekly', 'monthly', 'yearly'], (tier) => { return app.snapshotPolicy.retention[tier] > 0; }), (tier) => { return `${app.snapshotPolicy.retention[tier]} ${tier}`; }).join(', ');
+			const snapshotModeTexts = {
+				enabled: `Snapshots are taken automatically${(snapshotRetention ? `, keeping ${snapshotRetention}` : '')}.`,
+				paused: 'No new snapshots are taken. Existing ones are kept.',
+				disabled: 'No snapshots are taken or kept.'
+			};
+			const isNextcloud = (_.toLower(app.name) === 'nextcloud');
+			const snapshotModes = [
+				{ mode: 'enabled', label: 'Enabled', isAllowed: (app.canBeRemoved && app.hasDatasetMounts) },
+				{ mode: 'paused', label: 'Paused', isAllowed: (app.canBeRemoved && app.hasDatasetMounts && !isNextcloud) },
+				{ mode: 'disabled', label: 'Disabled', isAllowed: (app.canBeRemoved && !isNextcloud) }
+			];
+			let snapshotModeNote = '';
+			if (!app.canBeRemoved) {
+				snapshotModeNote = 'Managed by the system.';
+			} else if (!app.hasDatasetMounts) {
+				snapshotModeNote = 'This app keeps no data to snapshot.';
+			} else if (isNextcloud) {
+				snapshotModeNote = 'Required for file search and restore.';
+			}
+		%>
+		<div class="card-body">
+			<div class="d-flex flex-wrap align-items-center justify-content-between gap-5">
+				<div class="min-w-0">
+					<small class="d-block fg-4 text-uppercase">Snapshotting</small>
+					<div><%-snapshotModeTexts[snapshotMode]%></div>
+					<%if (snapshotModeNote) {%>
+						<small class="d-block fg-4"><%-snapshotModeNote%></small>
+					<%}%>
+				</div>
+				<%if (!_.isEmpty(appJobs)) {%>
+					<i class="icon-solid icon-gear icon-fw icon-spin"></i>
+				<%} else {%>
+					<div class="btn-group btn-group-sm">
+						<%_.each(snapshotModes, ({ mode, label, isAllowed }) => {%>
+							<button type="button" class="btn-solid <%=(mode === snapshotMode ? 'theme-primary' : 'theme-secondary')%>" data-snapshot-mode="<%-mode%>" <%=(isAllowed || mode === snapshotMode ? '' : 'disabled')%>><%-label%></button>
+						<%})%>
+					</div>
+				<%}%>
+			</div>
+		</div>
+	<%}%>
 	<%if (!_.isEmpty(snapshotPoints)) {%>
 		<%
 			const snapshotTiers = _.filter(snapshotTierOrder, (tier) => { return _.some(snapshotEntries, { tier }); });

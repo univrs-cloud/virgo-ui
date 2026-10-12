@@ -91,6 +91,10 @@ const deleteFolder = (data) => {
 	Share.deleteShare(data);
 };
 
+const updateFolderSnapshots = (data) => {
+	Share.updateSnapshots(data);
+};
+
 export {
 	subscribe,
 	getJobs,
@@ -99,5 +103,6 @@ export {
 	getCustomPaths,
 	createFolder,
 	updateFolder,
-	deleteFolder
+	deleteFolder,
+	updateFolderSnapshots
 };
