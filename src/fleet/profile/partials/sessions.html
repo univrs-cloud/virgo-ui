@@ -4,7 +4,7 @@
 			<div class="card border-0 mb-0">
 				<div class="card-body">
 					<%if (_.size(sessions) > 1) {%>
-						<a href="#" class="revoke-others btn-link d-inline-block btn-sm p-0 float-end fg-danger text-decoration-none min-h-0">Sign out everywhere else<i class="icon-regular icon-right-from-bracket icon-fw ms-1"></i></a>
+						<a href="#" class="revoke-others btn-link d-inline-block btn-sm p-0 float-end fg-danger text-decoration-none min-h-0">Sign out everywhere else<i class="icon-solid icon-right-from-bracket icon-fw ms-1"></i></a>
 					<%}%>
 					<h5 class="card-title d-flex align-items-center">Active sessions</h5>
 					<%if (_.isNull(sessions)) {%>
@@ -28,10 +28,10 @@
 											<u-badge color="yellow" tint="100" pill tip="Signed in but hasn't passed the code challenge yet — it can't reach anything until it does.">Awaiting code</u-badge>
 										<%}%>
 										<%if (session.current) {%>
-											<u-badge color="green" tint="100" pill>This device</u-badge>
+											<span class="current-session fg-primary d-flex align-items-center"><i></i>Current session</span>
 										<%} else {%>
 											<a href="#" class="fg-danger revoke" data-session-id="<%-session.id%>" data-bs-toggle="tooltip" data-bs-original-title="Sign this session out">
-												<i class="icon-solid icon-circle-xmark"></i>
+												<i class="icon-solid icon-right-from-bracket"></i>
 											</a>
 										<%}%>
 									</span>
