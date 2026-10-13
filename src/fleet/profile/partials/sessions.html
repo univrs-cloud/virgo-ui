@@ -35,7 +35,7 @@
 										<%if (session.current) {%>
 											<span class="current-session fg-primary d-flex align-items-center"><i></i>Current session</span>
 										<%} else {%>
-											<a href="#" class="fg-danger revoke" data-session-id="<%-session.id%>" data-bs-toggle="tooltip" data-bs-original-title="Sign this session out">
+											<a href="#" class="fg-danger revoke" data-session-id="<%-session.id%>" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="Sign this session out">
 												<i class="icon-solid icon-right-from-bracket"></i>
 											</a>
 										<%}%>
