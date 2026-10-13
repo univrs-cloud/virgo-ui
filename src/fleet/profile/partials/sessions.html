@@ -12,13 +12,18 @@
 					<%} else {%>
 						<div class="list-group list-group-flush">
 							<%_.each(sessions, (session) => {%>
-								<%const active = session.lastSeenAt && moment().diff(session.lastSeenAt, 'minutes') < 5;%>
 								<div class="list-group-item bg-transparent px-0 small d-flex align-items-center gap-3">
-									<i class="icon-solid icon-circle icon-fw icon-2xs flex-shrink-0 <%=(active ? 'fg-green-500' : 'fg-4')%>"></i>
+									<i class="icon-solid icon-circle icon-fw icon-2xs flex-shrink-0 <%=(session.connected ? 'fg-green-500' : 'fg-4')%>"></i>
 									<span class="text-nowrap flex-shrink-0"><%-session.ipAddress || 'Unknown address'%></span>
 									<span class="fw-light text-truncate">
 										&middot;
-										<%if (session.lastSeenAt) {%>active <%=moment(session.lastSeenAt).fromNow()%><%} else {%>no activity recorded<%}%>
+										<%if (session.connected) {%>
+											active now
+										<%} else if (session.lastSeenAt) {%>
+											active <%=moment(session.lastSeenAt).fromNow()%>
+										<%} else {%>
+											no activity recorded
+										<%}%>
 										&middot;
 										<span data-bs-toggle="tooltip" data-bs-original-title="Signed in on <%=moment(session.createdAt).format('MMM D, YYYY [at] HH:mm')%>. Expires <%=moment(session.expiresAt).format('MMM D, YYYY')%>.">signed in <%=moment(session.createdAt).fromNow()%></span>
 									</span>
