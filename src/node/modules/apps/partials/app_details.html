@@ -46,7 +46,18 @@
 				<div class="nav nav-underline d-flex gap-0 border-bottom">
 					<button type="button" class="nav-link px-4 <%=(appTab === 'snapshots' ? '' : 'active border-primary fw-light')%>" data-app-tab="services"><i class="icon-light icon-cube icon-fw"></i>Services <small class="opacity-75"><%=_.size(app.projectContainers)%></small></button>
 					<%if (!app.isUnmanaged) {%>
-						<button type="button" class="nav-link px-4 <%=(appTab === 'snapshots' ? 'active border-primary fw-light' : '')%>" data-app-tab="snapshots"><span class="position-relative d-inline-flex"><i class="icon-light icon-clock-rotate-left icon-fw"></i><%if (app.snapshotPolicy) {%><i class="icon-solid icon-circle icon-2xs icon-width-auto lh-1 position-absolute top-100 start-100 translate-middle <%=({ enabled: 'fg-green-300', paused: 'fg-orange-300', disabled: 'fg-gray-400' })[_.toLower(app.snapshotPolicy.mode)]%>" style="margin: -0.1875rem 0 0 -0.125rem;" data-bs-toggle="tooltip" data-bs-original-title="<%-_.upperFirst(app.snapshotPolicy.mode)%>"></i><%}%></span>Snapshots<%if (_.toLower(app.snapshotPolicy?.mode) !== 'disabled') {%> <small class="opacity-75"><%=_.size(app.snapshots)%></small><%}%></button>
+						<button type="button" class="nav-link px-4 <%=(appTab === 'snapshots' ? 'active border-primary fw-light' : '')%>" data-app-tab="snapshots">
+							<span class="position-relative d-inline-flex">
+								<i class="icon-light icon-clock-rotate-left icon-fw"></i>
+								<%if (app.snapshotPolicy) {%>
+									<i class="icon-solid icon-circle icon-2xs icon-width-auto lh-1 position-absolute top-100 start-100 translate-middle <%=({ enabled: 'fg-green-300', paused: 'fg-orange-300', disabled: 'fg-gray-400' })[_.toLower(app.snapshotPolicy.mode)]%>" style="margin: -0.1875rem 0 0 -0.125rem;" data-bs-toggle="tooltip" data-bs-original-title="<%-_.upperFirst(app.snapshotPolicy.mode)%>"></i>
+								<%}%>
+							</span>
+							Snapshots
+							<%if (_.toLower(app.snapshotPolicy?.mode) !== 'disabled') {%>
+								<small class="opacity-75"><%=_.size(app.snapshots)%></small>
+							<%}%>
+						</button>
 					<%}%>
 					<%if (app.composeFile) {%>
 						<small class="fg-emphasis-secondary text-truncate align-self-center ms-auto px-3"><%-app.composeFile%></small>

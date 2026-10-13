@@ -37,7 +37,9 @@
 			<dd class="m-0">
 				<%_.each(drives, (drive) => {%>
 					<div><%-(drive.model || drive.name)%> @ <%=prettyBytes(drive.size || 0, { binary: true })%></div>
-					<%if (drive.serialNumber) {%><small class="d-block fg-4 mt--1">SN: <%-drive.serialNumber%></small><%}%>
+					<%if (drive.serialNumber) {%>
+						<small class="d-block fg-4 mt--1">SN: <%-drive.serialNumber%></small>
+					<%}%>
 				<%})%>
 			</dd>
 		</dl>
@@ -48,7 +50,9 @@
 			<dd class="m-0">
 				<%_.each(drives, (drive) => {%>
 					<div><%-(drive.model || drive.name)%> @ <strong><%=prettyBytes(drive.size || 0, { binary: true })%></strong></div>
-					<%if (drive.serialNumber) {%><small class="d-block fg-4 mt--1">SN: <%-drive.serialNumber%></small><%}%>
+					<%if (drive.serialNumber) {%>
+						<small class="d-block fg-4 mt--1">SN: <%-drive.serialNumber%></small>
+					<%}%>
 				<%})%>
 			</dd>
 		</dl>

@@ -73,12 +73,18 @@
 										<u-progress-bar color="cyan" tint="300" width="<%=progress%>" striped="<%-isRunning%>" animated="<%-isRunning%>" warning-threshold="999" danger-threshold="999"></u-progress-bar>
 									</u-progress>
 									<small class="fg-4 d-block mt-1">
-										<%if (isPaused) {%><strong>Paused</strong> since <%-moment.unix(scan.scrubPause).fromNow()%>. <%}%>
+										<%if (isPaused) {%>
+											<strong>Paused</strong> since <%-moment.unix(scan.scrubPause).fromNow()%>.
+										<%}%>
 										Started <%-moment.unix(scan.startTime).fromNow()%>.
 										Scanned <strong><%=prettyBytes(scan.examined || 0, { binary: true })%></strong> / <%=prettyBytes(scan.toExamine || 0, { binary: true })%>.
 										Repaired <strong><%=prettyBytes(scan.processed || 0, { binary: true })%></strong>, <%=_.pluralize('error', scan.errors || 0, true)%>.
 										<%if (!isPaused && rate > 0) {%>
-											Running at <strong><%=prettyBytes(rate, { binary: true })%>/s</strong><%if (!_.isNull(remaining)) {%>, <%-moment.duration(remaining, 'seconds').humanize()%> left<%}%>.
+											<%if (_.isNull(remaining)) {%>
+												Running at <strong><%=prettyBytes(rate, { binary: true })%>/s</strong>.
+											<%} else {%>
+												Running at <strong><%=prettyBytes(rate, { binary: true })%>/s</strong>, <%-moment.duration(remaining, 'seconds').humanize()%> left.
+											<%}%>
 										<%}%>
 									</small>
 								<%} else {%>
@@ -86,7 +92,9 @@
 									<%const scanOutcome = (scanState === 'CANCELED' ? 'Canceled' : 'Completed')%>
 									<small class="fg-4 d-block">
 										<%-scanOutcome%> <%-moment.unix(scan.endTime).fromNow()%>.
-										<%if (!_.isNull(duration)) {%>Took <%-duration%> to scan <strong><%=prettyBytes(scan.examined || 0, { binary: true })%></strong>.<%}%>
+										<%if (!_.isNull(duration)) {%>
+											Took <%-duration%> to scan <strong><%=prettyBytes(scan.examined || 0, { binary: true })%></strong>.
+										<%}%>
 										Repaired <strong><%=prettyBytes(scan.processed || 0, { binary: true })%></strong>, <%=_.pluralize('error', scan.errors || 0, true)%>.
 									</small>
 								<%}%>
@@ -124,7 +132,13 @@
 								</div>
 								<div class="col-6 md:col-3">
 									<small class="fg-4 d-block text-truncate"><i class="icon-solid icon-compress icon-fw me-1"></i>Space saved</small>
-									<h4 class="m-0"><%if (compressRatio > 0) {%><%=prettyBytes(saved, { binary: true })%> <small class="fs-md fw-light fg-4">(<%=compressRatio.toFixed(2)%>x compression)</small><%} else {%>&mdash;<%}%></h4>
+									<h4 class="m-0">
+										<%if (compressRatio > 0) {%>
+											<%=prettyBytes(saved, { binary: true })%> <small class="fs-md fw-light fg-4">(<%=compressRatio.toFixed(2)%>x compression)</small>
+										<%} else {%>
+											&mdash;
+										<%}%>
+									</h4>
 								</div>
 							</div>
 							<u-progress shadow="false">
