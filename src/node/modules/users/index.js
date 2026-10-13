@@ -23,8 +23,9 @@ const search = (event) => {
 	searchTimer = setTimeout(() => {
 		searchValue = event.target.value;
 		const users = userService.getUsers();
+		const sessions = userService.getSessions();
 		const jobs = userService.getJobs();
-		render({ users, jobs });
+		render({ users, sessions, jobs });
 	}, 300);
 };
 
@@ -39,8 +40,9 @@ const order = (event) => {
 	_.each(table.querySelectorAll('thead th'), (cell) => { cell.classList.remove('asc', 'desc'); });
 	cell.classList.add(tableOrder.direction);
 	const users = userService.getUsers();
+	const sessions = userService.getSessions();
 	const jobs = userService.getJobs();
-	render({ users, jobs });
+	render({ users, sessions, jobs });
 };
 
 const render = (state) => {
@@ -61,8 +63,9 @@ const render = (state) => {
 	);
 	const rows = _.join(_.map(users, (user) => {
 		const jobs = _.filter(state.jobs, (job) => { return job.data?.config?.username === user.username; });
+		const sessions = _.filter(state.sessions, (session) => { return _.toLower(session.username) === _.toLower(user.username); });
 		const isSameAsLoggedIn = (user.username === account?.user);
-		return userTemplate({ user, jobs, isSameAsLoggedIn });
+		return userTemplate({ user, sessions, jobs, isSameAsLoggedIn });
 	}), '');
 	
 	morphdom(
@@ -85,3 +88,4 @@ import('node/modules/users/user_update');
 import('node/modules/users/user_password');
 import('node/modules/users/user_delete');
 import('node/modules/users/user_access_control');
+import('node/modules/users/user_sessions');

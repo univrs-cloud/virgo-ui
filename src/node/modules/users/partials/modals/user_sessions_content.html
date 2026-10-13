@@ -1,0 +1,26 @@
+<div class="dialog-content">
+	<div class="dialog-header">
+		<h1 class="dialog-title">Sessions</h1>
+		<button type="button" class="btn-close" data-bs-dismiss="dialog"></button>
+	</div>
+	<div class="dialog-body">
+		<div class="d-flex align-items-center gap-3 mb-3">
+			<span class="fg-emphasis-secondary text-truncate"><%-user.fullname || user.username%></span>
+			<%if (_.some(sessions, { isCurrent: false })) {%>
+				<a href="#" class="revoke-all btn-link btn-sm p-0 ms-auto fg-danger text-decoration-none text-nowrap min-h-0">
+					<%if (isSameAsLoggedIn) {%>
+						Sign out everywhere else
+					<%} else {%>
+						Sign out all sessions
+					<%}%>
+					<i class="icon-solid icon-right-from-bracket icon-fw ms-1"></i>
+				</a>
+			<%}%>
+		</div>
+		<%if (_.isEmpty(sessions)) {%>
+			<div class="fg-4">No sessions.</div>
+		<%} else {%>
+			<%=sessionsList%>
+		<%}%>
+	</div>
+</div>

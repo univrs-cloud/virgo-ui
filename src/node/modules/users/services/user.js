@@ -10,7 +10,7 @@ const { subscribe } = createSubscription({
 		},
 		{
 			store: User,
-			propertyNames: ['users']
+			propertyNames: ['users', 'sessions']
 		}
 	],
 	filters: {
@@ -20,6 +20,7 @@ const { subscribe } = createSubscription({
 	mapState: (properties) => {
 		return {
 			users: normalizeUsers(properties?.users),
+			sessions: properties?.sessions || [],
 			jobs: properties?.jobs || []
 		};
 	}
@@ -54,6 +55,22 @@ const getUsers = () => {
 	return normalizeUsers(User.getUsers());
 };
 
+const getSessions = () => {
+	return User.getSessions() || [];
+};
+
+const listSessions = () => {
+	return User.listSessions();
+};
+
+const revokeSession = (data) => {
+	return User.revokeSession(data);
+};
+
+const revokeAllSessions = (data) => {
+	return User.revokeAllSessions(data);
+};
+
 const createUser = (data) => {
 	User.createUser(data);
 };
@@ -82,6 +99,10 @@ export {
 	subscribe,
 	getJobs,
 	getUsers,
+	getSessions,
+	listSessions,
+	revokeSession,
+	revokeAllSessions,
 	createUser,
 	updateUser,
 	deleteUser,

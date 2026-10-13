@@ -1,9 +1,11 @@
 import modulePartial from 'node/modules/users/profile/partials/index.html';
 import profilePartial from 'node/modules/users/profile/partials/profile.html';
+import sessionsPartial from 'node/modules/users/partials/sessions.html';
 import * as userService from 'node/modules/users/services/user';
 
 const moduleTemplate = _.template(modulePartial);
 const profileTemplate = _.template(profilePartial);
+const sessionsTemplate = _.template(sessionsPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
 const module = document.querySelector('#profile');
 const loading = module.querySelector('.loading');
@@ -16,10 +18,12 @@ const render = (state) => {
 	}
 
 	const user = _.find(state.users, { username: account.user });
+	const sessions = _.filter(state.sessions, (session) => { return _.toLower(session.username) === _.toLower(account.user); });
+	const sessionsList = sessionsTemplate({ sessions, moment });
 
 	morphdom(
 		row,
-		`<div>${profileTemplate({ user })}</div>`,
+		`<div>${profileTemplate({ user, sessions, sessionsList })}</div>`,
 		{ childrenOnly: true }
 	);
 
@@ -31,3 +35,4 @@ userService.subscribe([render]);
 
 import('node/modules/users/profile/profile');
 import('node/modules/users/profile/password');
+import('node/modules/users/profile/sessions');
