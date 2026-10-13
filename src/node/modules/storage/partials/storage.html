@@ -18,7 +18,12 @@
 			<%const firstVdev = childVdevs[0]%>
 			<%const poolConfig = ((firstVdev && firstVdev.vdevType !== 'disk') ? _.replace(firstVdev.name, /-\d+$/, '') : null)%>
 			<%if (poolConfig) {%>
-				<u-badge class="ms-3" pill><small><%-poolConfig%></small><%if (childVdevs.length > 1) {%><small class="ms-1 opacity-75">&times;<%-childVdevs.length%></small><%}%></u-badge>
+				<u-badge class="ms-3" pill>
+					<small><%-poolConfig%></small>
+					<%if (childVdevs.length > 1) {%>
+						<small class="ms-1 opacity-75">&times;<%-childVdevs.length%></small>
+					<%}%>
+				</u-badge>
 			<%}%>
 		</div>
 		<div class="d-flex">

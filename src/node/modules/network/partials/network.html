@@ -173,7 +173,17 @@
 							<small class="d-block fw-lighter lh-1">Allowed</small>
 							<div class="d-flex flex-wrap gap-3 mt-1">
 								<%_.each(allowedRules, (rule) => {%>
-									<u-badge color="gray" tint="100" pill><small><%if (rule.name) {%><span class="fw-lighter me-1"><%-rule.name%></span><%}%><%-_.join(_.compact([_.join(rule.ports, ', '), _.join(rule.protocols, ', ')]), ' / ')%><%if (rule.source) {%><span class="fw-lighter ms-1">from <%-rule.source%></span><%}%></small></u-badge>
+									<u-badge color="gray" tint="100" pill>
+										<small class="d-flex align-items-center">
+											<%if (rule.name) {%>
+												<span class="fw-lighter me-1"><%-rule.name%></span>
+											<%}%>
+											<%-_.join(_.compact([_.join(rule.ports, ', '), _.join(rule.protocols, ', ')]), ' / ')%>
+											<%if (rule.source) {%>
+												<span class="fw-lighter ms-1">from <%-rule.source%></span>
+											<%}%>
+										</small>
+									</u-badge>
 								<%})%>
 								<%if (_.isEmpty(allowedRules)) {%>
 									—
@@ -202,7 +212,13 @@
 														<div class="item chip cursor-default" data-jail="<%-jail.name%>" data-address="<%-ban.address%>">
 															<%-ban.address%>
 															<%if (ban.bannedAt) {%>
-																<span class="d-flex align-items-center flex-shrink-0"><i class="icon-light icon-circle-info lh-1 fg-secondary" data-bs-toggle="tooltip" data-bs-original-title="Blocked on <%-moment.unix(ban.bannedAt).format('D MMM YYYY, HH:mm')%> <span class='opacity-50'>(<%-moment.unix(ban.bannedAt).fromNow()%>)</span><br><%if (ban.permanent) {%>Never expires<%} else if (ban.expiresAt) {%>Expires on <%-moment.unix(ban.expiresAt).format('D MMM YYYY, HH:mm')%> <span class='opacity-50'>(<%-moment.unix(ban.expiresAt).fromNow()%>)</span><%}%>"></i></span>
+																<span class="d-flex align-items-center flex-shrink-0"><i class="icon-light icon-circle-info lh-1 fg-secondary" data-bs-toggle="tooltip" data-bs-original-title="Blocked on <%-moment.unix(ban.bannedAt).format('D MMM YYYY, HH:mm')%> <span class='opacity-50'>(<%-moment.unix(ban.bannedAt).fromNow()%>)</span><br>
+																	<%if (ban.permanent) {%>
+																		Never expires
+																	<%} else if (ban.expiresAt) {%>
+																		Expires on <%-moment.unix(ban.expiresAt).format('D MMM YYYY, HH:mm')%> <span class='opacity-50'>(<%-moment.unix(ban.expiresAt).fromNow()%>)</span>
+																	<%}%>
+																"></i></span>
 															<%}%>
 															<%if (_.some(unbanJobs, (job) => { return job.data?.config?.jail === jail.name && job.data?.config?.address === ban.address; })) {%>
 																<span class="chip-icon"><i class="icon-solid icon-gear icon-spin fg-secondary"></i></span>

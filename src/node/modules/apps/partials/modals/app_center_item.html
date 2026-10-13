@@ -21,7 +21,12 @@
 								<u-badge color="purple" pill><%-category%></u-badge>
 							<%})%>
 							<%if (app.multiple === true && !app.isInstalled) {%>
-								<u-badge color="purple" pill>Multiple<%if (app.instances > 0) {%> x<%-app.instances%><%}%></u-badge>
+								<u-badge color="purple" pill>
+									Multiple
+									<%if (app.instances > 0) {%>
+										x<%-app.instances%>
+									<%}%>
+								</u-badge>
 							<%}%>
 						</div>
 						<%if (!_.isEmpty(jobs)) {%>

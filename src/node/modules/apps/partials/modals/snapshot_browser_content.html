@@ -134,7 +134,12 @@
 								<span>Now</span>
 								<%if (state.path !== '') {%>
 									<span class="dropdown fw-normal">
-										<a href="#" class="text-decoration-none <%=(_.isEmpty(state.filter) ? 'fg-4' : 'fg-primary')%>" data-bs-toggle="menu" data-bs-auto-close="outside" data-bs-strategy="fixed"><i class="icon-solid icon-filter icon-xs"></i><%if (!_.isEmpty(state.filter)) {%><small class="ms-1"><%=_.size(state.filter)%></small><%}%></a>
+										<a href="#" class="d-inline-flex align-items-center text-decoration-none <%=(_.isEmpty(state.filter) ? 'fg-4' : 'fg-primary')%>" data-bs-toggle="menu" data-bs-auto-close="outside" data-bs-strategy="fixed">
+											<i class="icon-solid icon-filter icon-xs"></i>
+											<%if (!_.isEmpty(state.filter)) {%>
+												<small class="ms-1"><%=_.size(state.filter)%></small>
+											<%}%>
+										</a>
 										<div class="menu shadow shadow-opacity-100">
 											<%_.each(['deleted', 'modified', 'renamed', 'moved'], (name) => {%>
 												<label class="menu-item d-flex align-items-center gap-3">
