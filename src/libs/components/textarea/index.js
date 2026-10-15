@@ -1,4 +1,4 @@
-import { LitElement, html } from 'lit';
+import { LitElement, html, nothing } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
 import { sheet } from '../styles.js';
 
@@ -100,6 +100,7 @@ export class Textarea extends LitElement {
 						${this.tip ? html`<span class="help-inline ms-1" data-bs-toggle="tooltip" data-bs-original-title="${this.tip}"><i class="icon-solid icon-question-circle"></i></span>` : ''}
 					</label>
 					<textarea
+						name=${this.getAttribute('name') || nothing}
 						class="form-control ${classMap({ 'is-invalid': this.error })}"
 						placeholder=${this.placeholder}
 						.value=${this.value}

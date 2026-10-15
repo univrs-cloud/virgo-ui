@@ -1,4 +1,4 @@
-import { LitElement, html } from 'lit';
+import { LitElement, html, nothing } from 'lit';
 import { sheet } from '../styles.js';
 
 export class Switch extends LitElement {
@@ -58,6 +58,7 @@ export class Switch extends LitElement {
 					<input
 						type="checkbox"
 						role="switch"
+						name=${this.getAttribute('name') || nothing}
 						aria-checked=${this.checked}
 						.checked=${this.checked}
 						?disabled=${this.disabled}
