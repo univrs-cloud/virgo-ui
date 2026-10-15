@@ -5,7 +5,10 @@ input:-webkit-autofill,
 input:-webkit-autofill:focus {
 	transition: background-color 600000s 0s, color 600000s 0s;
 }
-input[type=search]::-webkit-search-cancel-button {
+[type=search] {
+	appearance: none;
+}
+[type=search]::-webkit-search-cancel-button {
 	-webkit-appearance: searchfield-cancel-button;
 }
 textarea {
