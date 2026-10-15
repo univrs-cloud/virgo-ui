@@ -6,9 +6,14 @@
 <div class="windows"></div>
 <%if (isAdmin) {%>
 	<div class="nav-title sm:ps-3 mt-3 sm:mt-5"><small>Resources</small></div>
-	<a href="/apps" class="nav-item nav-link <%=(active === '/apps' && 'active')%>">
-		<i class="icon-duotone icon-solid icon-grid-round-2-plus icon-fw" style="transform: rotate(180deg);"></i>
-		<span class="nav-label ms-3">Apps</span>
+	<a href="/apps" class="nav-item nav-link d-flex align-items-center <%=(active === '/apps' && 'active')%>">
+		<span>
+			<i class="icon-duotone icon-solid icon-grid-round-2-plus icon-fw" style="transform: rotate(180deg);"></i>
+			<span class="nav-label ms-3">Apps</span>
+		</span>
+		<%if (hasAppUpdates) {%>
+			<u-badge color="green" class="md:ms-auto ms-auto" pill><i class="icon-solid icon-arrow-down icon-fw"></i></u-badge>
+		<%}%>
 	</a>
 	<a href="/shortcuts" class="nav-item nav-link <%=(active === '/shortcuts' && 'active')%>">
 		<i class="icon-duotone icon-solid icon-square-arrow-up-right icon-fw"></i>
@@ -23,9 +28,14 @@
 		<span class="nav-label ms-3">Time machines</span>
 	</a>
 	<div class="nav-title sm:ps-3 mt-3 sm:mt-5"><small>System</small></div>
-	<a href="/storage" class="nav-item nav-link <%=(active === '/storage' && 'active')%>">
-		<i class="icon-duotone icon-solid icon-hard-drive icon-fw"></i>
-		<span class="nav-label ms-3">Storage</span>
+	<a href="/storage" class="nav-item nav-link d-flex align-items-center <%=(active === '/storage' && 'active')%>">
+		<span>
+			<i class="icon-duotone icon-solid icon-hard-drive icon-fw"></i>
+			<span class="nav-label ms-3">Storage</span>
+		</span>
+		<%if (hasStorageProblems || isStorageFull) {%>
+			<u-badge color="<%=(hasStorageProblems ? 'red' : 'orange')%>" tint="500" class="md:ms-auto ms-auto" pill><i class="icon-solid icon-triangle-exclamation icon-fw"></i></u-badge>
+		<%}%>
 	</a>
 	<a href="/users" class="nav-item nav-link <%=(active === '/users' && 'active')%>">
 		<i class="icon-duotone icon-solid icon-user icon-fw"></i>
@@ -48,8 +58,8 @@
 			<i class="icon-duotone icon-solid icon-download icon-fw"></i>
 			<span class="nav-label ms-3">Updates</span>
 		</span>
-		<%if (typeof updates !== 'undefined' && !_.isEmpty(updates)) {%>
-			<u-badge color="white" class="md:ms-auto ms-auto" pill><small><%=_.size(updates)%></small></u-badge>
+		<%if (systemUpdates > 0) {%>
+			<u-badge color="white" class="md:ms-auto ms-auto" pill><small><%=systemUpdates%></small></u-badge>
 		<%}%>
 	</a>
 	<a href="/about" class="nav-item nav-link <%=(active === '/about' && 'active')%>">

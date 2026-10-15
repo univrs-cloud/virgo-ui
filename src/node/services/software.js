@@ -10,7 +10,9 @@ const { subscribe: subscribeToUpdates } = createSubscription({
 	],
 	attachStore: storeAttach.afterCallbacks,
 	mapState: (properties) => {
-		return properties;
+		return {
+			systemUpdates: _.size(properties?.updates)
+		};
 	}
 });
 

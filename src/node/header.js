@@ -3,7 +3,9 @@ import navigationPartial from 'node/partials/navigation.html';
 import navigationWindowsPartial from 'node/partials/navigation_windows.html';
 import nodePickerPartial from 'fleet/partials/node_picker.html';
 import * as account from 'node/account';
+import * as appService from 'node/services/app';
 import * as softwareService from 'node/services/software';
+import * as storageService from 'node/services/storage';
 import * as nodeService from 'node/services/node';
 import * as windowService from 'node/services/window';
 import page from 'page';
@@ -15,13 +17,29 @@ const navigationTemplate = _.template(navigationPartial);
 const navigationWindowsTemplate = _.template(navigationWindowsPartial);
 const nodePickerTemplate = _.template(nodePickerPartial);
 const header = document.querySelector('header');
+let systemUpdates = 0;
+let hasAppUpdates = false;
+let hasStorageProblems = false;
+let isStorageFull = false;
 
-const renderNavigation = async (state) => {
-	if (!state.updates) {
-		return;
-	}
+const setSystemUpdates = (state) => {
+	systemUpdates = state.systemUpdates;
+	renderNavigation();
+};
 
-	const newNav = `<div>${navigationTemplate({ active: page.current, updates: state.updates })}</div>`;
+const setAppUpdates = (state) => {
+	hasAppUpdates = state.hasAppUpdates;
+	renderNavigation();
+};
+
+const setStorageProblems = (state) => {
+	hasStorageProblems = state.hasStorageProblems;
+	isStorageFull = state.isStorageFull;
+	renderNavigation();
+};
+
+const renderNavigation = () => {
+	const newNav = `<div>${navigationTemplate({ active: page.current, systemUpdates, hasAppUpdates, hasStorageProblems, isStorageFull })}</div>`;
 	_.each(document.querySelectorAll('header .navbar .nav, .drawer .navbar-nav'), (nav) => {
 		morphdom(
 			nav,
@@ -108,7 +126,7 @@ morphdom(
 	header,
 	headerTemplate({ isUpdating: false })
 );
-renderNavigation({ updates: [] });
+renderNavigation();
 
 account.init();
 
@@ -116,7 +134,11 @@ header.addEventListener('click', handleWindowClick);
 header.addEventListener('click', handlePageClick);
 document.addEventListener('update-mode', () => { windowService.closeAll(); });
 
-softwareService.subscribeToUpdates([renderNavigation]);
+softwareService.subscribeToUpdates([setSystemUpdates]);
+if (isAdmin) {
+	appService.subscribeToAppUpdates([setAppUpdates]);
+	storageService.subscribeToStorageProblems([setStorageProblems]);
+}
 windowService.subscribe([renderWindows]);
 new Sortable(header.querySelector('.navbar .nav .windows'), {
 	animation: 150,
