@@ -1,4 +1,4 @@
-import { LitElement, html } from 'lit';
+import { LitElement, html, nothing } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
 import { sheet } from '../styles.js';
 
@@ -89,6 +89,7 @@ export class Checkbox extends LitElement {
 				<input
 					type="checkbox"
 					id="input"
+					name=${this.getAttribute('name') || nothing}
 					class="check"
 					.checked=${this.checked}
 					?disabled=${this.disabled}

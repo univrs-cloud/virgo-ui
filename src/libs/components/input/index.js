@@ -1,4 +1,4 @@
-import { LitElement, html } from 'lit';
+import { LitElement, html, nothing } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
 import { sheet } from '../styles.js';
 import Tagify from '@yaireo/tagify';
@@ -140,6 +140,7 @@ export class Input extends LitElement {
 			return html`
 				<input
 					type=${this.type}
+					name=${this.getAttribute('name') || nothing}
 					.value=${this.value}
 				/>
 			`;
@@ -150,9 +151,10 @@ export class Input extends LitElement {
 		const input = html`
 			<input
 				type=${inputType}
+				name=${this.getAttribute('name') || nothing}
 				class="${classMap({ 'form-control': !hasAdorn, 'form-ghost': hasAdorn, 'password-input': this.type === 'password', 'is-invalid': this.error && !hasAdorn })}"
 				placeholder=${this.placeholder || (hasAdorn ? ' ' : '')}
-				autocomplete=${this.autocomplete}
+				autocomplete=${this.autocomplete || nothing}
 				.value=${this.value}
 				?disabled=${this.disabled}
 				?readonly=${this.readonly}
