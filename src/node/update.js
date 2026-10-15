@@ -72,9 +72,9 @@ const renderNodePicker = (state) => {
 	const nodeId = getNodeViewId();
 	const currentNode = nodeId ? _.find(state.nodes, { nodeId }) : state.nodes[0];
 	const currentNodeLabel = currentNode?.name || currentNode?.nodeId || '';
-	const nodePicker = `<div>${nodePickerTemplate({ nodes: state.nodes, currentNodeLabel, currentNodeId: nodeId })}</div>`;
-	_.each(document.querySelectorAll('header .navbar > .nodes, .drawer .navbar-nav .nodes'), (container) => {
-		morphdom(container, nodePicker, { childrenOnly: true });
+	_.each(document.querySelectorAll('header .navbar > .nodes, .drawer .drawer-title'), (container) => {
+		const isDrawer = !_.isNull(container.closest('.drawer'));
+		morphdom(container, `<div>${nodePickerTemplate({ nodes: state.nodes, currentNodeLabel, currentNodeId: nodeId, isDrawer })}</div>`, { childrenOnly: true });
 	});
 };
 
