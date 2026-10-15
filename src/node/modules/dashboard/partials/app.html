@@ -43,12 +43,10 @@
 		<%if (_.includes(['success', 'warning'], app.state) && !_.isEmpty(app.urls)) {%>
 			<a href="<%-app.urls[0]%>" target="<%-(app?.target || app.name)%>" referrerpolicy="no-referrer" class="stretched-link"></a>
 		<%}%>
-		<%let color =''%>
-		<%if (app.state === 'success') color = 'green'%>
-		<%if (app.state === 'warning') color = 'yellow'%>
-		<%if (_.includes(['danger', undefined], app.state)) color = 'red'%>
-		<u-badge color="<%=color%>" class="indicator" pill border>
-			<%=runningContainers%> / <%=_.size(app.projectContainers)%>
-		</u-badge>
+		<%if (app.state !== 'success') {%>
+			<u-badge color="<%=(app.state === 'warning' ? 'yellow' : 'red')%>" class="indicator" pill border>
+				<%=runningContainers%> / <%=_.size(app.projectContainers)%>
+			</u-badge>
+		<%}%>
 	</div>
 </div>
