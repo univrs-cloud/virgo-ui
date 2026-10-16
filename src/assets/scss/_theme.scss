@@ -327,8 +327,10 @@ u-badge:hover .hover-reveal-text {
 		.card {
 			transition: box-shadow 0.3s ease-in-out;
 			&:hover {
-				background: var(--bg-1) !important;
 				box-shadow: var(--box-shadow-sm);
+			}
+			&.stopped .card-image {
+				filter: grayscale(1);
 			}
 		}
 	}
@@ -338,6 +340,12 @@ u-badge:hover .hover-reveal-text {
 		padding-left: map.get($spacers, 3);
 		padding-right: map.get($spacers, 3);
 		margin: 0 map.get($spacers, 3) * -1;
+		.card {
+			pointer-events: auto !important;
+			* {
+				pointer-events: none !important;
+			}
+		}
 	}
 }
 #resources-monitor {
