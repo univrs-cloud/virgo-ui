@@ -1,6 +1,6 @@
 <%const runningContainers = _.size(_.filter(app.projectContainers, { state: 'running' }))%>
 <div class="col xl:col-4 lg:col-4 md:col-12 sm:col-12 col-6">
-	<div class="card border-0 <%=(runningContainers === 0 || _.isEmpty(app.urls) ? 'bd-gray-100 pe-none' : '')%>" data-id="<%-app.id%>" data-type="app">
+	<div class="card border-0 <%=(runningContainers === 0 ? 'stopped bd-gray-100 pe-none' : (_.isEmpty(app.urls) ? 'pe-none' : ''))%>" data-id="<%-app.id%>" data-type="app">
 		<div class="card-body ps-0 pe-3 py-1">
 			<div class="row g-0 align-items-center">
 				<div class="card-image card-spacer col-auto p-3">
@@ -12,7 +12,7 @@
 				</div>
 				<div class="col overflow-hidden">
 					<div class="d-flex align-items-center">
-						<div class="text-truncate"><%-app.title%></div>
+						<div class="text-truncate <%=(runningContainers === 0 || _.isEmpty(app.urls) ? 'fg-gray-400' : '')%>"><%-app.title%></div>
 						<%if (app.hasUpdates) {%>
 							<u-badge color="green" class="ms-3" pill>
 								<i class="icon-solid icon-arrow-down icon-fw"></i>
