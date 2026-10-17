@@ -1,0 +1,22 @@
+<li class="<%-edge%>">
+	<div class="topology-node">
+		<div class="topology-icon">
+			<%if (shortcut.icon) {%>
+				<img src="<%-(_.includes(shortcut.icon, '/') ? shortcut.icon : `assets/img/shortcuts/${shortcut.icon}`)%>" alt="">
+			<%} else {%>
+				<i class="topology-glyph icon-light icon-square-arrow-up-right fg-emphasis-secondary"></i>
+			<%}%>
+		</div>
+		<div class="d-flex align-items-center justify-content-center gap-1 w-100 mt-2">
+			<span class="text-truncate"<%if (shortcut.host) {%> data-bs-toggle="tooltip" data-bs-original-title="<%-_.escape(shortcut.host)%>"<%}%>><%-shortcut.title%></span>
+			<%if (showLock && shortcut.isAuthRequired) {%>
+				<i class="icon-solid icon-lock icon-xs icon-width-auto fg-4 flex-shrink-0" data-bs-toggle="tooltip" data-bs-original-title="Login required"></i>
+			<%}%>
+		</div>
+		<%if (shortcut.target) {%>
+			<div class="d-flex flex-wrap justify-content-center gap-1 mt-1">
+				<u-badge color="gray" tint="100" tip="Forwarded to <%-shortcut.target%>" pill><small><i class="icon-solid icon-arrow-right icon-fw me-1"></i><%-shortcut.target%></small></u-badge>
+			</div>
+		<%}%>
+	</div>
+</li>

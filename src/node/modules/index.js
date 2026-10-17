@@ -9,6 +9,7 @@ const moduleLoaders = {
 		'users': () => import('node/modules/users'),
 		'storage': () => import('node/modules/storage'),
 		'network': () => import('node/modules/network'),
+		'topology': () => import('node/modules/topology'),
 		'settings': () => import('node/modules/settings'),
 		'system-services': () => import('node/modules/system_services'),
 		'system-updates': () => import('node/modules/system_updates'),

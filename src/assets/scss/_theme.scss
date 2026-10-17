@@ -391,6 +391,7 @@ $card-image-size: 30px;
 #users,
 #storage,
 #system-services,
+#topology,
 #nodes {
 	.overflow-y-scroll {
 		height: calc(100dvh - 170px - var(--chrome));
@@ -610,6 +611,142 @@ $card-image-size: 30px;
 			font-size: 1.75rem;
 			line-height: 1;
 		}
+	}
+}
+#topology {
+	.topology-viewport {
+		position: relative;
+		flex: 1;
+		min-height: 0;
+		overflow: hidden;
+		cursor: grab;
+		touch-action: none;
+		user-select: none;
+		&.dragging {
+			cursor: grabbing;
+		}
+	}
+	.topology-tree {
+		--topology-gap: 1.25rem;
+		--topology-line: calc(var(--border-width) * 1.5);
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: max-content;
+		transform-origin: 0 0;
+		:where(ul) {
+			--topology-edge-color: var(--secondary-base);
+			--topology-edge-style: solid;
+		}
+		ul {
+			position: relative;
+			display: flex;
+			justify-content: center;
+			margin: 0;
+			padding: var(--topology-gap) 0 0;
+			list-style: none;
+		}
+		> ul {
+			padding-top: 0;
+		}
+		ul ul::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 50%;
+			height: var(--topology-gap);
+			border-left: var(--topology-line) var(--topology-edge-style) var(--topology-edge-color);
+		}
+		li {
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			padding: var(--topology-gap) map.get($spacers, 3) 0;
+		}
+		> ul > li {
+			padding-top: 0;
+		}
+		ul ul > li::before,
+		ul ul > li::after {
+			content: '';
+			position: absolute;
+			top: 0;
+			width: 50%;
+			height: var(--topology-gap);
+			border-top: var(--topology-line) var(--topology-edge-style) var(--topology-edge-color);
+		}
+		ul ul > li::before {
+			right: 50%;
+		}
+		ul ul > li::after {
+			left: 50%;
+			border-left: var(--topology-line) var(--topology-edge-style) var(--topology-edge-color);
+		}
+		ul ul > li:first-child::before,
+		ul ul > li:last-child::after {
+			border-top-color: transparent;
+		}
+		ul ul > li:only-child::before {
+			display: none;
+		}
+	}
+	.topology-node {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 8.5rem;
+		text-align: center;
+	}
+	.topology-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+		width: 3rem;
+		height: 3rem;
+		font-size: 1.25rem;
+		img {
+			max-width: 2.25rem;
+			max-height: 2.25rem;
+			object-fit: contain;
+			pointer-events: none;
+		}
+		.topology-glyph {
+			font-size: 2.25rem;
+		}
+	}
+	.topology-stem {
+		height: map.get($spacers, 3);
+		border-left: var(--topology-line) solid var(--secondary-base);
+		margin-top: map.get($spacers, 2);
+	}
+	.topology-legend {
+		display: inline-block;
+		width: 1.5rem;
+		border-top: calc(var(--border-width) * 1.5) var(--topology-edge-style, solid) var(--topology-edge-color, var(--secondary-base));
+	}
+	.topology-edge-primary {
+		--topology-edge-color: var(--primary-base);
+	}
+	.topology-edge-success {
+		--topology-edge-color: var(--success-base);
+	}
+	.topology-edge-warning {
+		--topology-edge-color: var(--warning-base);
+	}
+	.topology-edge-danger {
+		--topology-edge-color: var(--danger-base);
+	}
+	.topology-edge-muted {
+		--topology-edge-color: var(--secondary-base);
+	}
+	.topology-edge-dashed {
+		--topology-edge-style: dashed;
+	}
+	.topology-edge-dotted {
+		--topology-edge-style: dotted;
 	}
 }
 .tree-rows {
