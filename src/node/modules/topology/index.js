@@ -26,7 +26,8 @@ const expanded = new Set(['proxy', 'auth', 'shares']);
 const view = { x: 0, y: 0, scale: 1 };
 let lastState = null;
 let hasFitted = false;
-let drag = null;
+const pointers = new Map();
+let gesture = null;
 
 const applyView = () => {
 	canvas.style.transform = `translate(${view.x}px, ${view.y}px) scale(${view.scale})`;
@@ -114,42 +115,69 @@ const zoom = (event) => {
 	zoomAt(Math.exp(-event.deltaY * WHEEL_ZOOM_SPEED), event.clientX - bounds.left, event.clientY - bounds.top);
 };
 
-const startDrag = (event) => {
+const readGesture = () => {
+	const bounds = viewport.getBoundingClientRect();
+	const [first, second] = [...pointers.values()];
+	if (!second) {
+		return { x: first.x - bounds.left, y: first.y - bounds.top, distance: 0 };
+	}
+
+	return {
+		x: (first.x + second.x) / 2 - bounds.left,
+		y: (first.y + second.y) / 2 - bounds.top,
+		distance: Math.hypot(first.x - second.x, first.y - second.y)
+	};
+};
+
+const startPointer = (event) => {
 	if (event.button !== 0 || event.target.closest('button, a, .btn-group')) {
 		return;
 	}
 
-	drag = { pointerId: event.pointerId, x: event.clientX - view.x, y: event.clientY - view.y };
+	pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
 	viewport.setPointerCapture(event.pointerId);
 	viewport.classList.add('dragging');
+	gesture = readGesture();
 };
 
-const moveDrag = (event) => {
-	if (drag?.pointerId !== event.pointerId) {
+const movePointer = (event) => {
+	if (!pointers.has(event.pointerId)) {
 		return;
 	}
 
-	view.x = event.clientX - drag.x;
-	view.y = event.clientY - drag.y;
-	applyView();
+	pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+	const next = readGesture();
+	view.x += next.x - gesture.x;
+	view.y += next.y - gesture.y;
+	if (next.distance && gesture.distance) {
+		zoomAt(next.distance / gesture.distance, next.x, next.y);
+	} else {
+		applyView();
+	}
+	gesture = next;
 };
 
-const endDrag = (event) => {
-	if (drag?.pointerId !== event.pointerId) {
+const endPointer = (event) => {
+	if (!pointers.delete(event.pointerId)) {
 		return;
 	}
 
-	drag = null;
+	if (pointers.size > 0) {
+		gesture = readGesture();
+		return;
+	}
+
+	gesture = null;
 	viewport.classList.remove('dragging');
 };
 
 module.addEventListener('click', toggle);
 module.addEventListener('click', control);
 viewport.addEventListener('wheel', zoom, { passive: false });
-viewport.addEventListener('pointerdown', startDrag);
-viewport.addEventListener('pointermove', moveDrag);
-viewport.addEventListener('pointerup', endDrag);
-viewport.addEventListener('pointercancel', endDrag);
+viewport.addEventListener('pointerdown', startPointer);
+viewport.addEventListener('pointermove', movePointer);
+viewport.addEventListener('pointerup', endPointer);
+viewport.addEventListener('pointercancel', endPointer);
 new ResizeObserver(() => {
 	if (!hasFitted) {
 		fit();
