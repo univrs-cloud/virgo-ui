@@ -1,0 +1,31 @@
+<div id="topology" class="d-none">
+	<div class="row">
+		<div class="col-12 position-relative mb-5">
+			<h4 class="m-0">
+				<i class="icon-duotone icon-solid icon-chart-diagram icon-width-auto me-3"></i>
+				Topology
+			</h4>
+		</div>
+		<div class="loading d-flex justify-content-center align-items-center h-100"><div class="spinner-border fg-gray-600"></div></div>
+		<div class="oops d-flex justify-content-center align-items-center h-100 d-none"><span class="fg-red-300">Error fetching data</span></div>
+		<div class="container-fluid d-none">
+			<div class="card border-0 mb-0">
+				<div class="card-body p-0">
+					<div class="topology-viewport">
+						<div class="topology-tree"></div>
+						<div class="btn-group btn-group-sm position-absolute top-0 end-0 m-3">
+							<button type="button" class="btn-icon btn-solid theme-secondary" data-action="zoom-out" data-bs-toggle="tooltip" data-bs-original-title="Zoom out"><i class="icon-solid icon-magnifying-glass-minus icon-fw"></i></button>
+							<button type="button" class="btn-icon btn-solid theme-secondary" data-action="fit" data-bs-toggle="tooltip" data-bs-original-title="Fit to view"><i class="icon-solid icon-expand icon-fw"></i></button>
+							<button type="button" class="btn-icon btn-solid theme-secondary" data-action="zoom-in" data-bs-toggle="tooltip" data-bs-original-title="Zoom in"><i class="icon-solid icon-magnifying-glass-plus icon-fw"></i></button>
+						</div>
+						<div class="d-flex flex-wrap align-items-center gap-5 position-absolute bottom-0 start-0 m-3 pe-none">
+							<small class="d-flex align-items-center fg-4"><span class="topology-legend topology-edge-primary me-2"></span>Through Traefik</small>
+							<small class="d-flex align-items-center fg-4"><span class="topology-legend topology-edge-primary topology-edge-dashed me-2"></span>Published port</small>
+							<small class="d-flex align-items-center fg-4"><span class="topology-legend topology-edge-dotted me-2"></span>Not reachable from the network</small>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

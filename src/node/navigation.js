@@ -114,6 +114,7 @@ const routes = [
 	{ path: '/users', module: 'users', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/storage/:poolName?', module: 'storage', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/network', module: 'network', middleware: [requireAuth, requiresAdmin] },
+	{ path: '/topology', module: 'topology', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/settings', module: 'settings', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/system-services/:serviceUnit?', module: 'system-services', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/system-updates', module: 'system-updates', middleware: [requireAuth, requiresAdmin] },
