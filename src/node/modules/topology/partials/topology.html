@@ -64,7 +64,7 @@
 							<%}%>
 						</div>
 						<%if (proxy || !_.isEmpty(topology.published) || hasShares || !_.isEmpty(topology.internal)) {%>
-							<ul>
+							<ul class="topology-edge-primary">
 								<%if (proxy) {%>
 									<%
 										const running = _.size(_.filter(proxy.containers, { state: 'running' }));
@@ -92,7 +92,7 @@
 										</div>
 										<%if (auth || !_.isEmpty(topology.routed) || !_.isEmpty(topology.proxied)) {%>
 											<div class="topology-stem"></div>
-											<button type="button" class="btn-icon btn-solid theme-primary btn-xs rounded-pill" data-action="toggle" data-key="proxy"><i class="icon-solid icon-<%=(isProxyExpanded ? 'minus' : 'plus')%> icon-xs"></i></button>
+											<button type="button" class="topology-toggle btn-icon btn-solid theme-primary btn-xs rounded-pill" data-action="toggle" data-key="proxy"><i class="icon-solid icon-<%=(isProxyExpanded ? 'minus' : 'plus')%> icon-xs"></i></button>
 											<%if (isProxyExpanded) {%>
 												<ul class="topology-edge-primary">
 													<%if (auth) {%>
@@ -118,7 +118,7 @@
 															</div>
 															<%if (protectedCount > 0) {%>
 																<div class="topology-stem"></div>
-																<button type="button" class="btn-icon btn-solid theme-primary btn-xs rounded-pill" data-action="toggle" data-key="auth"><i class="icon-solid icon-<%=(isAuthExpanded ? 'minus' : 'plus')%> icon-xs"></i></button>
+																<button type="button" class="topology-toggle btn-icon btn-solid theme-primary btn-xs rounded-pill" data-action="toggle" data-key="auth"><i class="icon-solid icon-<%=(isAuthExpanded ? 'minus' : 'plus')%> icon-xs"></i></button>
 																<%if (isAuthExpanded) {%>
 																	<ul class="topology-edge-primary">
 																		<%_.each(topology.protected.stacks, (stack) => {%>
@@ -156,7 +156,7 @@
 											</div>
 										</div>
 										<div class="topology-stem"></div>
-										<button type="button" class="btn-icon btn-solid theme-primary btn-xs rounded-pill" data-action="toggle" data-key="shares"><i class="icon-solid icon-<%=(isSharesExpanded ? 'minus' : 'plus')%> icon-xs"></i></button>
+										<button type="button" class="topology-toggle btn-icon btn-solid theme-primary btn-xs rounded-pill" data-action="toggle" data-key="shares"><i class="icon-solid icon-<%=(isSharesExpanded ? 'minus' : 'plus')%> icon-xs"></i></button>
 										<%if (isSharesExpanded) {%>
 											<ul class="topology-edge-primary topology-edge-dashed">
 												<%_.each(topology.folders, (share) => {%>
@@ -170,18 +170,18 @@
 									</li>
 								<%}%>
 								<%if (!_.isEmpty(topology.internal)) {%>
-									<li class="topology-edge-dotted">
+									<li class="topology-edge-muted topology-edge-dotted">
 										<div class="topology-node">
 											<div class="topology-icon rounded-5 bg-gray-200 fg-gray-600"><i class="icon-duotone icon-solid icon-eye-slash"></i></div>
 											<div class="text-truncate w-100 mt-2">Internal only</div>
-											<small class="d-block fg-4 text-truncate w-100"><%=_.pluralize('stack', _.size(topology.internal), true)%></small>
+											<small class="d-block fg-4 text-truncate w-100"><%=_.pluralize('app', _.size(topology.internal), true)%></small>
 										</div>
 										<div class="topology-stem"></div>
-										<button type="button" class="btn-icon btn-solid theme-primary btn-xs rounded-pill" data-action="toggle" data-key="internal"><i class="icon-solid icon-<%=(isInternalExpanded ? 'minus' : 'plus')%> icon-xs"></i></button>
+										<button type="button" class="topology-toggle btn-icon btn-solid theme-primary btn-xs rounded-pill" data-action="toggle" data-key="internal"><i class="icon-solid icon-<%=(isInternalExpanded ? 'minus' : 'plus')%> icon-xs"></i></button>
 										<%if (isInternalExpanded) {%>
-											<ul class="topology-edge-dotted">
+											<ul class="topology-edge-muted topology-edge-dotted">
 												<%_.each(topology.internal, (stack) => {%>
-													<%=stackTemplate({ stack, edge: 'topology-edge-dotted', showLock: true })%>
+													<%=stackTemplate({ stack, edge: 'topology-edge-muted topology-edge-dotted', showLock: true })%>
 												<%})%>
 											</ul>
 										<%}%>

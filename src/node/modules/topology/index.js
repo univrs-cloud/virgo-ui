@@ -10,6 +10,7 @@ const MAX_SCALE = 2;
 const BUTTON_ZOOM_FACTOR = 1.25;
 const WHEEL_ZOOM_SPEED = 0.002;
 const FIT_PADDING = 48;
+const DASH_PATTERNS = { dashed: '6 4', dotted: '0.1 4' };
 
 const moduleTemplate = _.template(modulePartial);
 const topologyTemplate = _.template(topologyPartial);
@@ -22,6 +23,8 @@ const loading = module.querySelector('.loading');
 const container = module.querySelector('.container-fluid');
 const viewport = container.querySelector('.topology-viewport');
 const canvas = viewport.querySelector('.topology-tree');
+const edges = canvas.querySelector('.topology-edges');
+const content = canvas.querySelector('.topology-content');
 const expanded = new Set(['proxy', 'auth', 'shares']);
 const view = { x: 0, y: 0, scale: 1 };
 let lastState = null;
@@ -57,6 +60,65 @@ const zoomAt = (factor, originX, originY) => {
 	applyView();
 };
 
+const offsetWithin = (element) => {
+	let x = 0;
+	let y = 0;
+	let current = element;
+	while (current && current !== content) {
+		x += current.offsetLeft;
+		y += current.offsetTop;
+		current = current.offsetParent;
+	}
+	return { x, y };
+};
+
+const readEdge = (element) => {
+	const style = getComputedStyle(element);
+	return {
+		color: _.trim(style.getPropertyValue('--topology-edge-color')),
+		style: _.trim(style.getPropertyValue('--topology-edge-style'))
+	};
+};
+
+const toPath = (d, edge) => {
+	const dash = DASH_PATTERNS[edge.style];
+	const linecap = (edge.style === 'dotted' ? 'round' : 'butt');
+	return `<path d="${d}" style="stroke: ${edge.color};${(dash ? ` stroke-dasharray: ${dash}; stroke-linecap: ${linecap};` : '')}"></path>`;
+};
+
+const drawEdges = () => {
+	const paths = [];
+	_.each(content.querySelectorAll('ul ul'), (list) => {
+		const anchor = list.previousElementSibling;
+		const children = _.filter(list.children, (child) => { return child.matches('li'); });
+		if (_.isNull(anchor) || _.isEmpty(children)) {
+			return;
+		}
+
+		const anchorOffset = offsetWithin(anchor);
+		const parentX = anchorOffset.x + anchor.offsetWidth / 2;
+		const parentY = anchorOffset.y + anchor.offsetHeight;
+		const targets = _.map(children, (child) => {
+			const node = child.querySelector(':scope > .topology-node');
+			const nodeOffset = offsetWithin(node);
+			return { x: nodeOffset.x + node.offsetWidth / 2, y: nodeOffset.y, top: offsetWithin(child).y, edge: readEdge(child) };
+		});
+		const barY = _.head(targets).top;
+		const isUniform = _.every(targets, (target) => { return _.isEqual(target.edge, _.head(targets).edge); });
+		paths.push(toPath(`M${parentX} ${parentY}V${barY}`, (isUniform ? _.head(targets).edge : readEdge(list))));
+		_.each(_.partition(targets, (target) => { return target.x < parentX; }), (side) => {
+			let startX = parentX;
+			_.each(_.sortBy(side, (target) => { return Math.abs(target.x - parentX); }), (target) => {
+				paths.push(toPath(`M${startX} ${barY}H${target.x}V${target.y}`, target.edge));
+				startX = target.x;
+			});
+		});
+	});
+	edges.setAttribute('width', content.offsetWidth);
+	edges.setAttribute('height', content.offsetHeight);
+	edges.innerHTML = paths.join('');
+};
+
 const render = (state) => {
 	if (_.isNil(state.system) || _.isNil(state.configuration) || _.isNil(state.topology)) {
 		return;
@@ -64,7 +126,7 @@ const render = (state) => {
 
 	lastState = state;
 	morphdom(
-		canvas,
+		content,
 		`<div>${topologyTemplate({
 			system: state.system,
 			networkInterface: _.find(state.system?.networkInterfaces, { default: true }),
@@ -80,6 +142,7 @@ const render = (state) => {
 
 	loading.classList.add('d-none');
 	container.classList.remove('d-none');
+	drawEdges();
 	if (!hasFitted) {
 		fit();
 	}
@@ -178,10 +241,13 @@ viewport.addEventListener('pointerdown', startPointer);
 viewport.addEventListener('pointermove', movePointer);
 viewport.addEventListener('pointerup', endPointer);
 viewport.addEventListener('pointercancel', endPointer);
-new ResizeObserver(() => {
+const resizeObserver = new ResizeObserver(() => {
+	drawEdges();
 	if (!hasFitted) {
 		fit();
 	}
-}).observe(viewport);
+});
+resizeObserver.observe(viewport);
+resizeObserver.observe(content);
 
 topologyService.subscribe([render]);

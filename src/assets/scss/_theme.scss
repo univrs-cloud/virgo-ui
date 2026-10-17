@@ -646,17 +646,6 @@ $card-image-size: 30px;
 			padding: var(--topology-gap) 0 0;
 			list-style: none;
 		}
-		> ul {
-			padding-top: 0;
-		}
-		ul ul::before {
-			content: '';
-			position: absolute;
-			top: 0;
-			left: 50%;
-			height: var(--topology-gap);
-			border-left: var(--topology-line) var(--topology-edge-style) var(--topology-edge-color);
-		}
 		li {
 			position: relative;
 			display: flex;
@@ -664,31 +653,25 @@ $card-image-size: 30px;
 			align-items: center;
 			padding: var(--topology-gap) map.get($spacers, 3) 0;
 		}
-		> ul > li {
+	}
+	.topology-content {
+		position: relative;
+		> ul {
 			padding-top: 0;
+			> li {
+				padding-top: 0;
+			}
 		}
-		ul ul > li::before,
-		ul ul > li::after {
-			content: '';
-			position: absolute;
-			top: 0;
-			width: 50%;
-			height: var(--topology-gap);
-			border-top: var(--topology-line) var(--topology-edge-style) var(--topology-edge-color);
-		}
-		ul ul > li::before {
-			right: 50%;
-		}
-		ul ul > li::after {
-			left: 50%;
-			border-left: var(--topology-line) var(--topology-edge-style) var(--topology-edge-color);
-		}
-		ul ul > li:first-child::before,
-		ul ul > li:last-child::after {
-			border-top-color: transparent;
-		}
-		ul ul > li:only-child::before {
-			display: none;
+	}
+	.topology-edges {
+		position: absolute;
+		top: 0;
+		left: 0;
+		overflow: visible;
+		pointer-events: none;
+		fill: none;
+		path {
+			stroke-width: var(--topology-line);
 		}
 	}
 	.topology-node {
@@ -716,6 +699,11 @@ $card-image-size: 30px;
 		.topology-glyph {
 			font-size: 2.25rem;
 		}
+	}
+	.topology-toggle:hover {
+		--btn-hover-bg: color-mix(in oklch, var(--theme-bg-muted) 50%, var(--theme-bg-subtle));
+		--btn-hover-border-color: color-mix(in oklch, var(--theme-bg-muted) 50%, var(--theme-bg-subtle));
+		--btn-hover-color: var(--theme-fg-emphasis);
 	}
 	.topology-stem {
 		height: map.get($spacers, 3);
