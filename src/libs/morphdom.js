@@ -61,6 +61,10 @@ const morphdom = (fromNode, toNode, options) => {
 				}
 			}
 
+			if (node.nodeType === Node.ELEMENT_NODE && node.classList.contains('table-scroll-overlay')) {
+				return false;
+			}
+
 			removeTooltips(node);
 		}
 	});

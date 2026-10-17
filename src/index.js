@@ -3,6 +3,7 @@ import 'libs/lodash';
 import 'libs/bootstrap';
 import 'libs/primary_menu';
 import 'libs/dialog';
+import 'libs/table_scrollbar';
 import 'libs/components';
 import * as runtimeService from 'libs/services/runtime';
 import { forNode, isAvailable } from 'libs/webrtc_transport';

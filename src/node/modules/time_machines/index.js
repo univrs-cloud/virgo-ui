@@ -11,6 +11,7 @@ const module = document.querySelector('#time-machines');
 const loading = module.querySelector('.loading');
 const container = module.querySelector('.container-fluid');
 const searchInput = module.querySelector('.search');
+const listCount = module.querySelector('.list-count');
 const table = container.querySelector('.table');
 let searchTimer;
 let searchValue = '';
@@ -81,6 +82,9 @@ const render = (state) => {
 	const accessOn = _.find(state.networkInterface?.addrInfo, { family: 'inet' })?.local;
 	let timeMachines = state.timeMachines;
 	timeMachines = filterListByQuery(timeMachines, searchValue, ['name', 'path', 'comment', 'validUsers']);
+	const total = _.size(state.timeMachines);
+	const noun = (total === 1 ? 'time machine' : 'time machines');
+	listCount.textContent = (_.trim(searchValue) ? `${_.size(timeMachines)} of ${total} ${noun}` : `${total} ${noun}`);
 	timeMachines = _.orderBy(timeMachines,
 		[
 			(timeMachines) => {

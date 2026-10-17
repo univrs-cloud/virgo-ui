@@ -1,31 +1,31 @@
 <div class="item container-fluid" data-name="<%-app.name%>">
 	<div class="card border-0 shadow shadow-opacity-100">
 		<div class="card-body">
-			<div class="row g-0 align-items-center mt--3 mb-3">
-				<div class="col-auto me-3">
+			<div class="card-image-row mt--3 mb-3">
+				<div class="card-image-row-back me-3">
 					<button class="compress btn-icon btn-solid theme-secondary btn-sm">
 						<i class="icon-light icon-arrow-left icon-fw"></i>
 					</button>
 				</div>
-				<div class="card-image card-spacer col-auto p-3">
+				<div class="card-image-row-icon card-image card-spacer px-3">
 					<%if (app.isUnmanaged) {%>
 						<i class="icon-light icon-layer-group icon-fw fg-emphasis-secondary"></i>
 					<%} else {%>
 						<img src="<%-(_.includes(app.icon, '/') ? app.icon : `assets/img/apps/${app.icon}`)%>">
 					<%}%>
 				</div>
-				<div class="col ps-1 min-w-0">
-					<div class="d-flex align-items-center mb--2 min-w-0">
-						<div class="text-truncate min-w-0"><%-app.title%></div>
-						<%if (app.isUnmanaged) {%>
-							<u-badge color="gray" tint="100" class="ms-3" pill>Unmanaged</u-badge>
-						<%}%>
-						<%if (app.hasUpdates) {%>
-							<u-badge color="green" class="ms-3" tip="Updates available" pill>
-								<i class="icon-solid icon-arrow-down icon-fw"></i>
-							</u-badge>
-						<%}%>
-					</div>
+				<div class="card-image-row-title d-flex align-items-center mb--2 ps-1 min-w-0">
+					<div class="text-truncate min-w-0"><%-app.title%></div>
+					<%if (app.isUnmanaged) {%>
+						<u-badge color="gray" tint="100" class="ms-3" pill>Unmanaged</u-badge>
+					<%}%>
+					<%if (app.hasUpdates) {%>
+						<u-badge color="green" class="ms-3" tip="Updates available" pill>
+							<i class="icon-solid icon-arrow-down icon-fw"></i>
+						</u-badge>
+					<%}%>
+				</div>
+				<div class="card-image-row-urls ps-1 min-w-0">
 					<%if (!_.isEmpty(app.urls)) {%>
 						<%_.each(app.urls, (url) => {%>
 							<a href="<%-url%>" target="<%-(app?.target || app.name)%>" referrerpolicy="no-referrer" class="d-inline-flex align-items-center underline-0 hover:underline-80 max-w-100">
@@ -36,7 +36,7 @@
 						&mdash;
 					<%}%>
 				</div>
-				<div class="col-auto ps-5 ms-auto">
+				<div class="card-image-row-menu ps-5">
 					<div class="d-none md:d-block"><%=appActionsTemplate({ app, jobs, inline: true })%></div>
 					<div class="md:d-none"><%=appActionsTemplate({ app, jobs, inline: false })%></div>
 				</div>
@@ -103,9 +103,9 @@
 					<div class="wrapper color-scheme-dark"></div>
 				</div>
 
-				<div class="overflow-y-scroll pe-5 mx-0 me--5">
+				<div class="table-scroll overflow-y-scroll pe-5 mx-0 me--5">
 					<div class="<%=(appTab === 'snapshots' ? 'd-none' : '')%>">
-						<div class="services me--5">
+						<div class="services">
 							<div class="list-group list-group-flush">
 								<%_.each(app.projectContainers, (container, index) => {%>
 									<%const resourceMetrics = _.find((app.resourceMetrics?.containers || []), { id: container.id })%>
@@ -140,7 +140,7 @@
 														</a>
 														<div class="d-flex align-items-center gap-3">
 															<%if (!_.isEmpty(appJobs) || !_.isEmpty(containerJobs)) {%>
-																<i class="icon-solid icon-gear icon-fw icon-spin"></i>
+																<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-solid icon-gear icon-fw icon-spin"></i></span>
 															<%} else {%>
 																<%const isStopped = _.includes(['created', 'exited'], container.state);%>
 																<%const isRunning = _.includes(['running', 'paused'], container.state);%>
@@ -183,7 +183,7 @@
 
 											<div class="col-12">
 												<div class="d-flex flex-wrap align-items-center gap-1">
-													<u-badge color="blue" tint="100" pill><i class="icon-light icon-layer-group icon-fw me-1"></i><%-container.image%></u-badge>
+													<u-badge color="blue" tint="100" pill class="max-w-100" tip="<%-container.image%>"><i class="icon-light icon-layer-group icon-fw flex-shrink-0 me-1"></i><span class="d-flex min-w-0"><span class="text-truncate"><%-container.image.slice(0, container.image.lastIndexOf('/') + 1)%></span><span class="text-truncate flex-shrink-0 max-w-100"><%-container.image.slice(container.image.lastIndexOf('/') + 1)%></span></span></u-badge>
 													<%if (!_.isEmpty(container.mounts)) {%>
 														<%const mountLines = _.map(_.sortBy(container.mounts, 'destination'), (mount) => {
 															const source = (mount.type === 'volume' ? mount.name : mount.source);

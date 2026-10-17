@@ -13,7 +13,7 @@
 				<%} else if (update.state === 'failed') {%>
 					<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-5 bg-red-100 fg-red-500"><i class="icon-duotone icon-solid icon-circle-xmark"></i></div>
 				<%} else if (update.progress) {%>
-					<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-5 bg-subtle-primary fg-primary"><i class="icon-duotone icon-solid <%=(update.progress.stage === 'download' ? 'icon-download' : 'icon-cog icon-spin')%>"></i></div>
+					<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-5 bg-subtle-primary fg-primary overflow-hidden"><i class="<%=(update.progress.stage === 'download' ? 'icon-solid icon-arrow-down icon-fall' : 'icon-duotone icon-solid icon-cog icon-spin')%>"></i></div>
 				<%} else {%>
 					<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-5 bg-subtle-primary fg-primary"><i class="icon-duotone icon-solid icon-spinner-third icon-spin"></i></div>
 				<%}%>

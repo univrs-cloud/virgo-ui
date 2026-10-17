@@ -16,6 +16,7 @@ const loading = module.querySelector('.loading');
 const container = module.querySelector('.container-fluid');
 const details = container.querySelector('.details');
 const searchInput = module.querySelector('.search');
+const listCount = module.querySelector('.list-count');
 const table = container.querySelector('.table');
 let routePoolName = null;
 let searchTimer;
@@ -267,7 +268,11 @@ const render = (state) => {
 		return pool;
 	});
 
-	const rows = _.join(_.map(filterListByQuery(pools, searchValue, ['name', 'poolGuid', 'type']), (pool) => {
+	const searchedPools = filterListByQuery(pools, searchValue, ['name', 'poolGuid', 'type']);
+	const total = _.size(pools);
+	const noun = (total === 1 ? 'pool' : 'pools');
+	listCount.textContent = (_.trim(searchValue) ? `${_.size(searchedPools)} of ${total} ${noun}` : `${total} ${noun}`);
+	const rows = _.join(_.map(searchedPools, (pool) => {
 		return storageTemplate({ pool, stateColor, poolHealth, prettyBytes, moment });
 	}), '');
 

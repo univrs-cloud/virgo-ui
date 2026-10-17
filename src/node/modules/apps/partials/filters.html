@@ -5,16 +5,20 @@
 		{ key: 'snapshots', label: 'Snapshots', options: [['', 'Any'], ['enabled', 'Enabled'], ['paused', 'Paused'], ['disabled', 'Disabled']] }
 	];
 %>
-<%_.each(filterGroups, (group) => {%>
-	<h6 class="menu-header text-uppercase"><%-group.label%></h6>
-	<div class="d-flex flex-wrap gap-3 px-3 pb-3">
-		<%_.each(group.options, ([value, label]) => {%>
-			<button type="button" class="chip <%=(_.toLower(value) === _.toLower(filters[group.key]) ? 'active' : '')%>" data-filter-key="<%-group.key%>" data-value="<%-value%>"><%-label%></button>
-		<%})%>
-	</div>
-	<div class="menu-divider"></div>
+<%_.each(filterGroups, (group) => {
+	const options = _.filter(group.options, ([value]) => { return !value || _.includes(present[group.key], value) || _.toLower(value) === _.toLower(filters[group.key]); });
+%>
+	<%if (_.size(options) > 2 || filters[group.key]) {%>
+		<h6 class="menu-header text-uppercase"><%-group.label%></h6>
+		<div class="d-flex flex-wrap gap-3 px-3 pb-3">
+			<%_.each(options, ([value, label]) => {%>
+				<button type="button" class="chip <%=(_.toLower(value) === _.toLower(filters[group.key]) ? 'active' : '')%>" data-filter-key="<%-group.key%>" data-value="<%-value%>"><%-label%></button>
+			<%})%>
+		</div>
+		<div class="menu-divider"></div>
+	<%}%>
 <%})%>
-<%if (!_.isEmpty(categories)) {%>
+<%if (_.size(categories) > 1 || !_.isEmpty(filters.category)) {%>
 	<h6 class="menu-header text-uppercase">Category</h6>
 	<div class="d-flex flex-wrap gap-3 px-3 pb-3">
 		<%_.each(categories, (category) => {%>

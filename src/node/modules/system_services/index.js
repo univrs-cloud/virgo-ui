@@ -20,6 +20,7 @@ const syncButton = module.querySelector('button[data-action="sync"]');
 const container = module.querySelector('.container-fluid');
 const details = container.querySelector('.details');
 const searchInput = module.querySelector('.search');
+const listCount = module.querySelector('.list-count');
 const filterMenu = module.querySelector('.filter-menu');
 const filterCount = module.querySelector('.filter-count');
 const filterTypeNav = module.querySelector('.filter-type');
@@ -231,6 +232,9 @@ const render = (state) => {
 	services = _.filter(services, matchesType);
 	renderFilters(_.filter(state.services, matchesType), services);
 	services = _.filter(services, (service) => { return matchesFilters(service); });
+	const total = _.size(state.services);
+	const noun = (total === 1 ? 'service' : 'services');
+	listCount.textContent = (_.trim(searchValue) || filterType || _.some(filters, _.size) ? `${_.size(services)} of ${total} ${noun}` : `${total} ${noun}`);
 	services = _.orderBy(services,
 		[
 			(service) => {

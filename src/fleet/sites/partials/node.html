@@ -109,7 +109,12 @@
 				<%}%>
 				<%if (node.update?.state === 'running' && node.update.stage) {%>
 					<u-badge color="blue" tint="500" class="z-1 position-relative me-1" pill tip="<%=(node.update.stage === 'download' ? 'Downloading' : 'Installing')%> system updates">
-						<i class="icon-solid <%=(node.update.stage === 'download' ? 'icon-download' : 'icon-cog icon-spin')%>"></i><%=node.update.percent%>%
+						<%if (node.update.stage === 'download') {%>
+							<span class="d-inline-flex overflow-hidden"><i class="icon-solid icon-arrow-down icon-fall"></i></span>
+						<%} else {%>
+							<i class="icon-solid icon-cog icon-spin"></i>
+						<%}%>
+						<%=node.update.percent%>%
 					</u-badge>
 				<%} else if (node.update?.state === 'running') {%>
 					<u-badge color="blue" tint="500" class="z-1 position-relative me-1" pill tip="Updating system">
@@ -133,7 +138,7 @@
 				<%if (!node.update && !_.isEmpty(node.updates?.system)) {%>
 					<a href="#node-system-updates" data-bs-toggle="dialog" data-node-id="<%-node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
 						<u-badge color="blue" pill tip="<%=_.pluralize('system update', _.size(node.updates.system), true)%>">
-							<i class="icon-solid icon-download"></i>
+							<i class="icon-solid icon-arrow-down"></i>
 						</u-badge>
 					</a>
 				<%}%>

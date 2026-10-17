@@ -10,6 +10,7 @@ const module = document.querySelector('#shortcuts');
 const loading = module.querySelector('.loading');
 const container = module.querySelector('.container-fluid');
 const searchInput = module.querySelector('.search');
+const listCount = module.querySelector('.list-count');
 const table = container.querySelector('.table');
 let searchTimer;
 let searchValue = '';
@@ -50,6 +51,9 @@ const render = (state) => {
 	
 	let shortcuts = state.shortcuts;
 	shortcuts = filterListByQuery(shortcuts, searchValue, ['title', 'name', 'url', 'icon', 'category']);
+	const total = _.size(state.shortcuts);
+	const noun = (total === 1 ? 'shortcut' : 'shortcuts');
+	listCount.textContent = (_.trim(searchValue) ? `${_.size(shortcuts)} of ${total} ${noun}` : `${total} ${noun}`);
 	shortcuts = _.orderBy(shortcuts,
 		[
 			(shortcut) => {

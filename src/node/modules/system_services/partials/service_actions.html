@@ -1,5 +1,5 @@
 <%if (!_.isEmpty(jobs)) {%>
-	<i class="icon-solid icon-gear icon-fw icon-spin"></i>
+	<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-solid icon-gear icon-fw icon-spin"></i></span>
 <%} else {%>
 	<%
 	const hasStartStop = (service.type !== 'target' && !service.broken && service.unitFileState !== 'masked');
