@@ -158,6 +158,8 @@ u-badge:hover .hover-reveal-text {
 	}
 }
 
+$card-image-size: 30px;
+
 .card {
 	--card-border-color: var(--gray-100);
 	position: relative;
@@ -166,14 +168,45 @@ u-badge:hover .hover-reveal-text {
 		min-width: 3rem;
 		max-width: 3rem;
 	}
+	.card-image-row {
+		display: grid;
+		grid-template-columns: auto auto minmax(0, 1fr) auto;
+		grid-template-areas: ". . title ." "back icon urls menu";
+		align-content: center;
+		min-height: calc(#{$card-image-size} + #{map.get($spacers, 3) * 2});
+		.card-image-row-back,
+		.card-image-row-icon,
+		.card-image-row-menu {
+			display: flex;
+			align-items: center;
+			align-self: start;
+			height: 0;
+			margin-top: map.get($spacers, 2) * 0.5;
+		}
+		.card-image-row-back {
+			grid-area: back;
+		}
+		.card-image-row-icon {
+			grid-area: icon;
+		}
+		.card-image-row-title {
+			grid-area: title;
+		}
+		.card-image-row-urls {
+			grid-area: urls;
+		}
+		.card-image-row-menu {
+			grid-area: menu;
+		}
+	}
 	.card-image {
 		img {
 			overflow: hidden;
 			object-fit: contain;
 			display: flex;
 			width: 100%;
-			min-height: 30px;
-			max-height: 30px;
+			min-height: $card-image-size;
+			max-height: $card-image-size;
 		}
 		.icon-light {
 			font-size: 1.24em;
@@ -363,12 +396,16 @@ u-badge:hover .hover-reveal-text {
 		height: calc(100dvh - 170px - var(--chrome));
 	}
 	> .row > .container-fluid > .card > .card-body {
+		--table-scrollbar-inset-bottom: var(--card-border-radius);
 		display: flex;
 		flex-direction: column;
-		height: calc(100dvh - 72px - var(--chrome));
+		height: calc(100dvh - 72px - var(--chrome) - var(--card-border-width) * 2);
 		> .overflow-y-scroll {
 			flex: 1;
 			min-height: 0;
+		}
+		> .table-scroll {
+			margin-bottom: calc(var(--card-spacer-y) * -1);
 		}
 	}
 	.table {
@@ -384,8 +421,32 @@ u-badge:hover .hover-reveal-text {
 #storage,
 #system-services {
 	.details {
-		.overflow-y-scroll {
-			height: calc(100dvh - 151px - var(--chrome));
+		> .item {
+			display: flex;
+			flex-direction: column;
+			height: 100%;
+			> .card {
+				flex: 1;
+				min-height: 0;
+				> .card-body {
+					--table-scrollbar-inset-bottom: var(--card-border-radius);
+					display: flex;
+					flex-direction: column;
+					gap: 0;
+					min-height: 0;
+					> .position-relative {
+						display: flex;
+						flex-direction: column;
+						flex: 1;
+						min-height: 0;
+					}
+				}
+			}
+		}
+		.table-scroll {
+			flex: 1;
+			min-height: 0;
+			margin-bottom: calc(var(--card-spacer-y) * -1);
 		}
 		.item:has(.logs-container:not(.d-none)) .overflow-y-scroll,
 		.item:has(.terminal-container:not(.d-none)) .overflow-y-scroll {
@@ -393,9 +454,6 @@ u-badge:hover .hover-reveal-text {
 			margin-right: calc(var(--scrollbar-width) + map.get($spacers, 5) * -1) !important;
 		}
 	}
-}
-#apps .details .overflow-y-scroll {
-	height: calc(100dvh - 190px - var(--chrome));
 }
 #apps,
 #shortcuts,
@@ -423,7 +481,10 @@ u-badge:hover .hover-reveal-text {
 		margin-left: map.get($spacers, 7);
 		margin-right: map.get($spacers, 7);
 		> .card-body {
-			height: calc(100dvh - 64px - var(--chrome));
+			height: calc(100dvh - 64px - var(--chrome) - var(--card-border-width) * 2);
+			> .table-scroll {
+				margin-bottom: 0;
+			}
 		}
 	}
 	.details {

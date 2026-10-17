@@ -332,6 +332,23 @@ html:not(:has(head > base[href="/"])) {
 	}
 }
 
+.icon-fall {
+	display: inline-block;
+	animation: icon-fall 1.6s ease-in-out infinite;
+}
+@keyframes icon-fall {
+	0% {
+		transform: translateY(-250%);
+	}
+	35%,
+	65% {
+		transform: translateY(0);
+	}
+	100% {
+		transform: translateY(250%);
+	}
+}
+
 .eula {
 	min-height: 12rem;
 	overflow-y: auto;

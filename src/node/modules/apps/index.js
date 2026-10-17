@@ -21,6 +21,7 @@ const loading = module.querySelector('.loading');
 const container = module.querySelector('.container-fluid');
 const details = container.querySelector('.details');
 const searchInput = module.querySelector('.search');
+const listCount = module.querySelector('.list-count');
 const filterMenu = module.querySelector('.filter-menu');
 const filterCount = module.querySelector('.filter-count');
 const table = container.querySelector('.table');
@@ -458,17 +459,23 @@ const render = (state) => {
 		return;
 	}
 	
+	const statusStates = { running: 'success', partial: 'warning', stopped: 'danger' };
 	const categories = _.sortBy(_.uniqBy([..._.compact(_.map(state.apps, 'category')), ...filterValues.category], _.toLower), _.toLower);
+	const present = {
+		status: _.uniq(_.map(state.apps, (app) => { return _.invert(statusStates)[app.state]; })),
+		updates: _.uniq(_.map(state.apps, (app) => { return (app.hasUpdates ? 'available' : 'current'); })),
+		snapshots: _.uniq(_.map(state.apps, (app) => { return _.toLower(app.snapshotPolicy?.mode); }))
+	};
 	morphdom(
 		filterMenu,
-		`<div>${filtersTemplate({ categories, filters: filterValues })}</div>`,
+		`<div>${filtersTemplate({ categories, present, filters: filterValues })}</div>`,
 		{ childrenOnly: true }
 	);
-	filterCount.textContent = (filterValues.category.length + _.size(_.compact([filterValues.status, filterValues.updates, filterValues.snapshots]))) || '';
+	const activeFilters = filterValues.category.length + _.size(_.compact([filterValues.status, filterValues.updates, filterValues.snapshots]));
+	filterCount.textContent = activeFilters || '';
 
 	apps = state.apps;
 	apps = filterListByQuery(apps, searchValue, ['title', 'name', 'icon', 'urls']);
-	const statusStates = { running: 'success', partial: 'warning', stopped: 'danger' };
 	apps = _.filter(apps, (app) => {
 		if (!_.isEmpty(filterValues.category) && !_.includes(_.map(filterValues.category, _.toLower), _.toLower(app.category))) {
 			return false;
@@ -484,6 +491,9 @@ const render = (state) => {
 		}
 		return true;
 	});
+	const total = _.size(state.apps);
+	const noun = (total === 1 ? 'app' : 'apps');
+	listCount.textContent = (_.trim(searchValue) || activeFilters ? `${_.size(apps)} of ${total} ${noun}` : `${total} ${noun}`);
 	apps = _.orderBy(apps,
 		[
 			(app) => {

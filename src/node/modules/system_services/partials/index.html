@@ -12,7 +12,7 @@
 		<div class="loading d-flex justify-content-center align-items-center h-100"><div class="spinner-border fg-gray-600"></div></div>
 		<div class="oops d-flex justify-content-center align-items-center h-100 d-none"><span class="fg-red-300">Error fetching data</span></div>
 		<div class="container-fluid position-relative d-none">
-			<div class="card border-0">
+			<div class="card">
 				<div class="card-body">
 					<div class="row g-3 align-items-center">
 						<div class="col col-6 md:col-4">
@@ -31,8 +31,11 @@
 						<div class="col-auto">
 							<%=filterPartial%>
 						</div>
+						<div class="col-auto ms-auto mb-7">
+							<span class="list-count small fg-emphasis-secondary text-nowrap"></span>
+						</div>
 					</div>
-					<div class="overflow-y-scroll mt--5 pe-5 mx-0 me--5">
+					<div class="table-scroll overflow-y-scroll mt--5 pe-5 mx-0 me--5">
 						<table class="table table-hover align-middle m-0">
 							<thead class="sticky-top">
 								<tr>

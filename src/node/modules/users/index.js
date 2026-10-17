@@ -10,6 +10,7 @@ const module = document.querySelector('#users');
 const loading = module.querySelector('.loading');
 const container = module.querySelector('.container-fluid');
 const searchInput = module.querySelector('.search');
+const listCount = module.querySelector('.list-count');
 const table = container.querySelector('.table');
 let searchTimer;
 let searchValue = '';
@@ -52,6 +53,9 @@ const render = (state) => {
 	
 	let users = state.users;
 	users = filterListByQuery(users, searchValue, ['username', 'email', 'fullname', 'groups', 'shell', 'uid']);
+	const total = _.size(state.users);
+	const noun = (total === 1 ? 'user' : 'users');
+	listCount.textContent = (_.trim(searchValue) ? `${_.size(users)} of ${total} ${noun}` : `${total} ${noun}`);
 	users = _.orderBy(users,
 		[
 			(user) => {

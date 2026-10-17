@@ -2,16 +2,18 @@
 	const groupLabels = { sub: 'State', unitFileState: 'Automatic startup' };
 %>
 <%_.each(groups, (group) => {%>
-	<h6 class="menu-header text-uppercase"><%=groupLabels[group.key]%></h6>
-	<div class="d-flex flex-wrap gap-3 px-3 pb-3">
-		<%_.each(group.options, (option) => {%>
-			<button type="button" class="chip <%=(option.selected ? 'active' : '')%> <%=(option.count === 0 && !option.selected ? 'opacity-50' : '')%>" data-filter-key="<%-group.key%>" data-value="<%-option.value%>">
-				<%-option.value%>
-				<span class="opacity-50"><%=option.count%></span>
-			</button>
-		<%})%>
-	</div>
-	<div class="menu-divider"></div>
+	<%if (_.size(group.options) > 1 || !_.isEmpty(group.selected)) {%>
+		<h6 class="menu-header text-uppercase"><%=groupLabels[group.key]%></h6>
+		<div class="d-flex flex-wrap gap-3 px-3 pb-3">
+			<%_.each(group.options, (option) => {%>
+				<button type="button" class="chip <%=(option.selected ? 'active' : '')%> <%=(option.count === 0 && !option.selected ? 'opacity-50' : '')%>" data-filter-key="<%-group.key%>" data-value="<%-option.value%>">
+					<%-option.value%>
+					<span class="opacity-50"><%=option.count%></span>
+				</button>
+			<%})%>
+		</div>
+		<div class="menu-divider"></div>
+	<%}%>
 <%})%>
 <button type="button" class="menu-item" data-action="reset-filters">
 	<i class="icon-solid icon-rotate-left icon-fw"></i>
