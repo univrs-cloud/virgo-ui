@@ -653,6 +653,9 @@ $card-image-size: 30px;
 			align-items: center;
 			padding: var(--topology-gap) map.get($spacers, 3) 0;
 		}
+		li:not(:has(> ul)) {
+			padding-top: calc(var(--topology-gap) * 2);
+		}
 	}
 	.topology-content {
 		position: relative;
@@ -672,6 +675,47 @@ $card-image-size: 30px;
 		fill: none;
 		path {
 			stroke-width: var(--topology-line);
+		}
+		.topology-flows path {
+			stroke-linecap: round;
+			stroke-linejoin: round;
+			opacity: 0;
+		}
+		.topology-flow-bands {
+			opacity: 0.6;
+		}
+		.topology-flow-band {
+			stroke: light-dark(var(--blue-200), var(--blue-800));
+		}
+	}
+	.topology-particles {
+		position: absolute;
+		pointer-events: none;
+	}
+	.topology-traffic-hidden .topology-flows {
+		display: none;
+	}
+	.topology-viewport:not(.topology-traffic-hidden) {
+		.topology-edge-line {
+			display: none;
+		}
+		.topology-stem {
+			border-left-color: transparent;
+		}
+		.topology-shortcut {
+			display: none;
+		}
+		.topology-traffic {
+			min-height: calc(map.get($font-sizes, "xs", "font-size") * map.get($font-sizes, "xs", "line-height"));
+		}
+		.topology-detail,
+		.topology-node > :has(> .topology-detail):not(:has(> :not(.topology-detail))) {
+			display: none !important;
+		}
+		.topology-node > :not(.topology-icon):not(:empty):not(:has(> u-badge)) {
+			padding-inline: map.get($spacers, 1);
+			border-radius: var(--radius-3);
+			background-color: var(--card-bg);
 		}
 	}
 	.topology-node {
