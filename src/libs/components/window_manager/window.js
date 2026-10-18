@@ -7,6 +7,9 @@ const MIN_HEIGHT = 200;
 const EDGES = ['n', 'e', 's', 'w', 'ne', 'se', 'sw', 'nw'];
 const SNAP_EDGE = 16;
 const SNAP_CORNER_SHARE = 0.25;
+const ANIMATION = { duration: 200, easing: 'cubic-bezier(0.2, 0, 0, 1)' };
+const SHOWN = { opacity: 1, transform: 'none' };
+const HIDDEN = { opacity: 0, transform: 'scale(0.95)' };
 
 const getSnapRect = (zone, bounds) => {
 	const halfWidth = Math.round(bounds.clientWidth / 2);
@@ -38,7 +41,8 @@ const getSnapZone = (event, bounds) => {
 export class FloatingWindow extends LitElement {
 	static styles = [sheet, css`
 		:host { position: absolute; top: 0; left: 0; display: block; pointer-events: auto; }
-		:host([minimized]) { display: none; }
+		:host([minimized]:not([hiding])) { display: none; }
+		:host([hiding]), :host([closing]) { pointer-events: none; }
 		:host([interacting]) ::slotted(*) { pointer-events: none; }
 		:host([dragging]) .card { background-color: transparent; }
 		:host([dragging]) .titlebar { background: linear-gradient(var(--card-cap-bg), var(--card-cap-bg)), var(--card-bg); }
@@ -81,6 +85,9 @@ export class FloatingWindow extends LitElement {
 	static #stack = [];
 
 	#unsnapped = null;
+	#from = null;
+	#move = null;
+	#fade = null;
 
 	static #restack() {
 		const top = [...FloatingWindow.#stack].reverse().find((item) => { return !item.minimized; });
@@ -123,12 +130,35 @@ export class FloatingWindow extends LitElement {
 		FloatingWindow.#restack();
 	}
 
+	willUpdate(changed) {
+		const wasMinimized = (changed.has('minimized') ? changed.get('minimized') : this.minimized);
+		this.#from = (this.hasUpdated && changed.has('maximized') && !wasMinimized && !this.minimized ? this.#getBox() : null);
+	}
+
+	firstUpdated() {
+		if (!this.minimized) {
+			this.#fadeIn();
+		}
+	}
+
 	updated(changed) {
 		this.style.transform = (this.maximized ? '' : `translate(${this.x}px, ${this.y}px)`);
 		this.style.width = (this.maximized ? '100%' : `${this.width}px`);
 		this.style.height = (this.maximized ? '100%' : `${this.height}px`);
+		if (this.#from) {
+			this.#playMove(this.#from);
+		}
 		if (changed.has('minimized')) {
 			FloatingWindow.#restack();
+		}
+		if (changed.has('minimized') && changed.get('minimized') !== undefined) {
+			if (this.minimized) {
+				this.toggleAttribute('hiding', true);
+				this.#fadeOut(() => { this.toggleAttribute('hiding', false); });
+			} else {
+				this.toggleAttribute('hiding', false);
+				this.#fadeIn();
+			}
 		}
 		if (changed.has('minimized') || changed.has('maximized') || changed.has('snap') || changed.has('label') || changed.has('active')) {
 			this.dispatchEvent(new CustomEvent('window-change', { bubbles: true, composed: true }));
@@ -136,6 +166,10 @@ export class FloatingWindow extends LitElement {
 	}
 
 	raise() {
+		if (this.hasAttribute('closing')) {
+			return;
+		}
+
 		if (FloatingWindow.#stack.at(-1) !== this) {
 			FloatingWindow.#stack = FloatingWindow.#stack.filter((item) => { return item !== this; });
 			FloatingWindow.#stack.push(this);
@@ -182,8 +216,21 @@ export class FloatingWindow extends LitElement {
 	}
 
 	close() {
+		if (this.hasAttribute('closing')) {
+			return;
+		}
+
+		this.toggleAttribute('closing', true);
+		FloatingWindow.#stack = FloatingWindow.#stack.filter((item) => { return item !== this; });
+		FloatingWindow.#restack();
 		this.dispatchEvent(new CustomEvent('window-close', { bubbles: true, composed: true }));
-		this.remove();
+		this.dispatchEvent(new CustomEvent('window-change', { bubbles: true, composed: true }));
+		if (this.minimized) {
+			this.remove();
+			return;
+		}
+
+		this.#fadeOut(() => { this.remove(); });
 	}
 
 	render() {
@@ -212,6 +259,33 @@ export class FloatingWindow extends LitElement {
 			${this.snapZone ? this.#renderSnapPreview() : ''}
 			${this.maximized ? '' : EDGES.map((edge) => { return html`<div class="handle" data-edge=${edge} @pointerdown=${this.#onHandlePointerDown}></div>`; })}
 		`;
+	}
+
+	#getBox() {
+		const rect = this.getBoundingClientRect();
+		const bounds = this.parentElement.getBoundingClientRect();
+		return { x: rect.left - bounds.left, y: rect.top - bounds.top, width: rect.width, height: rect.height };
+	}
+
+	#playMove(from) {
+		const bounds = this.parentElement;
+		const to = (this.maximized ? { x: 0, y: 0, width: bounds.clientWidth, height: bounds.clientHeight } : { x: this.x, y: this.y, width: this.width, height: this.height });
+		this.#move?.cancel();
+		this.#move = this.animate([
+			{ transformOrigin: '0 0', transform: `translate(${from.x}px, ${from.y}px) scale(${from.width / to.width}, ${from.height / to.height})` },
+			{ transformOrigin: '0 0', transform: `translate(${to.x}px, ${to.y}px)` }
+		], ANIMATION);
+	}
+
+	#fadeIn() {
+		this.#fade?.cancel();
+		this.#fade = this.renderRoot.querySelector('.card').animate([HIDDEN, SHOWN], ANIMATION);
+	}
+
+	#fadeOut(onFinish) {
+		this.#fade?.cancel();
+		this.#fade = this.renderRoot.querySelector('.card').animate([SHOWN, HIDDEN], { ...ANIMATION, fill: 'forwards' });
+		this.#fade.onfinish = onFinish;
 	}
 
 	#renderSnapPreview() {

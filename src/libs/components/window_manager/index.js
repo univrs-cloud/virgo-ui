@@ -37,7 +37,7 @@ export class WindowManager extends LitElement {
 	}
 
 	get windows() {
-		return [...this.querySelectorAll(':scope > u-window')];
+		return [...this.querySelectorAll(':scope > u-window:not([closing])')];
 	}
 
 	open(options = {}) {
