@@ -7,9 +7,7 @@
 	const fleetStatus = { connected: ['fg-success', 'Connected'], reconnecting: ['fg-warning', 'Reconnecting...'], expired: ['fg-danger', 'Registration expired'], disabled: ['fg-4', 'Disabled'] }[fleetState];
 	const proxy = topology.proxy;
 	const isProxyExpanded = expanded.has('proxy');
-	const isAuthExpanded = expanded.has('auth');
 	const auth = topology.auth;
-	const protectedCount = _.size(topology.protected.stacks) + _.size(topology.protected.shortcuts);
 	const isInternalExpanded = expanded.has('internal');
 	const isSharesExpanded = expanded.has('shares');
 	const hasShares = (!_.isEmpty(topology.folders) || !_.isEmpty(topology.timeMachines));
@@ -19,49 +17,50 @@
 		<li>
 			<div class="topology-node">
 				<div class="topology-icon rounded-5 bg-subtle-primary fg-primary"><i class="icon-duotone icon-solid icon-tower-broadcast"></i></div>
-				<div class="text-truncate w-100 mt-2">Fleet</div>
-				<small class="d-block fg-4 text-truncate w-100"><%-fleet.email%></small>
+				<div class="text-truncate max-w-100 mt-2">Fleet</div>
+				<small class="d-block fg-4 text-truncate max-w-100"><%-fleet.email%></small>
 				<small class="d-flex align-items-center justify-content-center <%=fleetStatus[0]%>"><i class="icon-solid icon-circle icon-2xs icon-width-auto me-1"></i><%=fleetStatus[1]%></small>
 			</div>
-			<ul class="<%=fleetEdge%>">
+			<ul class="<%=fleetEdge%>" data-no-traffic>
 	<%}%>
 	<li>
 		<div class="topology-node">
 			<div class="topology-icon rounded-5 bg-subtle-primary fg-primary"><i class="icon-duotone icon-solid icon-globe"></i></div>
-			<div class="text-truncate w-100 mt-2">Internet</div>
+			<div class="text-truncate max-w-100 mt-2">Internet</div>
 			<%if (domainName) {%>
-				<small class="d-block fg-4 text-truncate w-100"><%-domainName%></small>
+				<small class="d-block fg-4 text-truncate max-w-100"><%-domainName%></small>
 			<%}%>
 		</div>
-		<ul class="topology-edge-primary">
+		<ul class="topology-edge-primary" data-no-traffic>
 			<li>
 				<div class="topology-node">
 					<div class="topology-icon rounded-5 bg-subtle-primary fg-primary"><i class="icon-duotone icon-solid icon-router"></i></div>
-					<div class="text-truncate w-100 mt-2">Router</div>
+					<div class="text-truncate max-w-100 mt-2">Router</div>
 					<%if (networkInterface?.gateway) {%>
-						<small class="d-block fg-4 text-truncate w-100"><%-networkInterface.gateway%></small>
+						<small class="d-block fg-4 text-truncate max-w-100"><%-networkInterface.gateway%></small>
 					<%}%>
 				</div>
 				<ul class="topology-edge-primary">
-					<li>
+					<li data-traffic="node">
 						<div class="topology-node">
 							<div class="topology-icon rounded-5 bg-subtle-primary fg-primary"><i class="icon-duotone icon-solid icon-nas"></i></div>
-							<div class="w-100 mt-2">
+							<div class="max-w-100 mt-2">
 								<span class="d-inline-block max-w-100 text-truncate align-top"<%if (system?.osInfo?.fqdn) {%> data-bs-toggle="tooltip" data-bs-original-title="<%-system.osInfo.fqdn%>"<%}%>><%-system?.osInfo?.hostname%></span>
 							</div>
 							<%if (address) {%>
-								<small class="d-block fg-4 text-truncate w-100"><%-address.local%></small>
+								<small class="d-block fg-4 text-truncate max-w-100"><%-address.local%></small>
 							<%}%>
 							<%if (!_.isEmpty(topology.nodes) || system?.virtualIp?.holding) {%>
 								<div class="d-flex flex-wrap justify-content-center gap-1 mt-1">
 									<%if (!_.isEmpty(topology.nodes)) {%>
-										<u-badge color="green" tint="100" pill><small>This node</small></u-badge>
+										<u-badge class="topology-detail" color="green" tint="100" pill><small>This node</small></u-badge>
 									<%}%>
 									<%if (system?.virtualIp?.holding) {%>
-										<u-badge color="gray" tint="100" tip="Virtual IP" pill><small><i class="icon-regular icon-ghost icon-fw me-1"></i><%-system.virtualIp.address%></small></u-badge>
+										<u-badge class="topology-detail" color="gray" tint="100" tip="Virtual IP" pill><small><i class="icon-regular icon-ghost icon-fw me-1"></i><%-system.virtualIp.address%></small></u-badge>
 									<%}%>
 								</div>
 							<%}%>
+							<div class="topology-traffic max-w-100" data-traffic-label="node"></div>
 						</div>
 						<%if (proxy || !_.isEmpty(topology.published) || hasShares || !_.isEmpty(topology.internal)) {%>
 							<ul class="topology-edge-primary">
@@ -71,7 +70,7 @@
 										const active = _.size(_.filter(proxy.containers, (container) => { return _.includes(['running', 'restarting'], container.state); }));
 										const stateColor = (active === _.size(proxy.containers) ? 'fg-success' : (active === 0 ? 'fg-danger' : 'fg-orange-500'));
 									%>
-									<li class="topology-edge-primary">
+									<li class="topology-edge-primary" data-traffic="app:<%-proxy.name%>">
 										<div class="topology-node">
 											<div class="topology-icon">
 												<%if (proxy.icon) {%>
@@ -80,15 +79,16 @@
 													<i class="topology-glyph icon-light icon-layer-group fg-emphasis-secondary"></i>
 												<%}%>
 											</div>
-											<div class="d-flex align-items-center justify-content-center gap-1 w-100 mt-2">
+											<div class="d-flex align-items-center justify-content-center gap-1 max-w-100 mt-2">
 												<i class="icon-solid icon-circle icon-2xs icon-width-auto flex-shrink-0 <%=stateColor%>" data-bs-toggle="tooltip" data-bs-original-title="<%=running%> / <%=_.size(proxy.containers)%> running"></i>
 												<span class="text-truncate"<%if (!_.isEmpty(proxy.routes)) {%> data-bs-toggle="tooltip" data-bs-original-title="<%-_.map(proxy.routes, (route) => { return _.escape(`${route.host}${route.path}`); }).join('<br>')%>"<%}%>><%-proxy.title%></span>
 											</div>
 											<div class="d-flex flex-wrap justify-content-center gap-1 mt-1">
 												<%_.each(proxy.ports, (port) => {%>
-													<u-badge color="gray" tint="100" tip="<%=`${port.port} (${_.join(port.protocols, ', ')})`%>" pill><small>:<%=port.port%></small></u-badge>
+													<u-badge class="topology-detail" color="gray" tint="100" tip="<%=`${port.port} (${_.join(port.protocols, ', ')})`%>" pill><small>:<%=port.port%></small></u-badge>
 												<%})%>
 											</div>
+											<div class="topology-traffic max-w-100" data-traffic-label="app:<%-proxy.name%>"></div>
 										</div>
 										<%if (auth || !_.isEmpty(topology.routed) || !_.isEmpty(topology.proxied)) {%>
 											<div class="topology-stem"></div>
@@ -101,7 +101,7 @@
 															const authActive = _.size(_.filter(auth.containers, (container) => { return _.includes(['running', 'restarting'], container.state); }));
 															const authStateColor = (authActive === _.size(auth.containers) ? 'fg-success' : (authActive === 0 ? 'fg-danger' : 'fg-orange-500'));
 														%>
-														<li class="topology-edge-primary">
+														<li class="topology-edge-primary" data-traffic="app:<%-auth.name%>">
 															<div class="topology-node">
 																<div class="topology-icon">
 																	<%if (auth.icon) {%>
@@ -110,33 +110,19 @@
 																		<i class="topology-glyph icon-light icon-layer-group fg-emphasis-secondary"></i>
 																	<%}%>
 																</div>
-																<div class="d-flex align-items-center justify-content-center gap-1 w-100 mt-2">
+																<div class="d-flex align-items-center justify-content-center gap-1 max-w-100 mt-2">
 																	<i class="icon-solid icon-circle icon-2xs icon-width-auto flex-shrink-0 <%=authStateColor%>" data-bs-toggle="tooltip" data-bs-original-title="<%=authRunning%> / <%=_.size(auth.containers)%> running"></i>
 																	<span class="text-truncate"<%if (!_.isEmpty(auth.routes)) {%> data-bs-toggle="tooltip" data-bs-original-title="<%-_.map(auth.routes, (route) => { return _.escape(`${route.host}${route.path}`); }).join('<br>')%>"<%}%>><%-auth.title%></span>
 																</div>
-																<small class="d-block fg-4 text-truncate w-100"><%=protectedCount%> gated</small>
+																<div class="topology-traffic max-w-100" data-traffic-label="app:<%-auth.name%>"></div>
 															</div>
-															<%if (protectedCount > 0) {%>
-																<div class="topology-stem"></div>
-																<button type="button" class="topology-toggle btn-icon btn-solid theme-primary btn-xs rounded-pill" data-action="toggle" data-key="auth"><i class="icon-solid icon-<%=(isAuthExpanded ? 'minus' : 'plus')%> icon-xs"></i></button>
-																<%if (isAuthExpanded) {%>
-																	<ul class="topology-edge-primary">
-																		<%_.each(topology.protected.stacks, (stack) => {%>
-																			<%=stackTemplate({ stack, edge: 'topology-edge-primary', showLock: false })%>
-																		<%})%>
-																		<%_.each(topology.protected.shortcuts, (shortcut) => {%>
-																			<%=shortcutTemplate({ shortcut, edge: 'topology-edge-primary', showLock: false })%>
-																		<%})%>
-																	</ul>
-																<%}%>
-															<%}%>
 														</li>
 													<%}%>
 													<%_.each(topology.routed, (stack) => {%>
-														<%=stackTemplate({ stack, edge: 'topology-edge-primary', showLock: true })%>
+														<%=stackTemplate({ stack, edge: 'topology-edge-primary' })%>
 													<%})%>
 													<%_.each(topology.proxied, (shortcut) => {%>
-														<%=shortcutTemplate({ shortcut, edge: 'topology-edge-primary', showLock: true })%>
+														<%=shortcutTemplate({ shortcut, edge: 'topology-edge-primary' })%>
 													<%})%>
 												</ul>
 											<%}%>
@@ -144,16 +130,17 @@
 									</li>
 								<%}%>
 								<%_.each(topology.published, (stack) => {%>
-									<%=stackTemplate({ stack, edge: 'topology-edge-primary topology-edge-dashed', showLock: true })%>
+									<%=stackTemplate({ stack, edge: 'topology-edge-primary topology-edge-dashed' })%>
 								<%})%>
 								<%if (hasShares) {%>
 									<li class="topology-edge-primary topology-edge-dashed">
 										<div class="topology-node">
 											<div class="topology-icon rounded-5 bg-subtle-primary fg-primary"><i class="icon-duotone icon-solid icon-folder-open"></i></div>
-											<div class="text-truncate w-100 mt-2">Sharing</div>
+											<div class="text-truncate max-w-100 mt-2">Sharing</div>
 											<div class="d-flex flex-wrap justify-content-center gap-1 mt-1">
-												<u-badge color="gray" tint="100" tip="445 (tcp)" pill><small>:445</small></u-badge>
+												<u-badge class="topology-detail" color="gray" tint="100" tip="445 (tcp)" pill><small>:445</small></u-badge>
 											</div>
+											<div class="topology-traffic max-w-100"></div>
 										</div>
 										<div class="topology-stem"></div>
 										<button type="button" class="topology-toggle btn-icon btn-solid theme-primary btn-xs rounded-pill" data-action="toggle" data-key="shares"><i class="icon-solid icon-<%=(isSharesExpanded ? 'minus' : 'plus')%> icon-xs"></i></button>
@@ -170,18 +157,20 @@
 									</li>
 								<%}%>
 								<%if (!_.isEmpty(topology.internal)) {%>
-									<li class="topology-edge-muted topology-edge-dotted">
+									<%const internalTraffic = _.map(topology.internal, (stack) => { return `app:${stack.name}`; }).join(' ');%>
+									<li class="topology-edge-muted topology-edge-dotted" data-traffic="<%-internalTraffic%>">
 										<div class="topology-node">
 											<div class="topology-icon rounded-5 bg-gray-200 fg-gray-600"><i class="icon-duotone icon-solid icon-eye-slash"></i></div>
-											<div class="text-truncate w-100 mt-2">Internal only</div>
-											<small class="d-block fg-4 text-truncate w-100"><%=_.pluralize('app', _.size(topology.internal), true)%></small>
+											<div class="text-truncate max-w-100 mt-2">Internal only</div>
+											<small class="topology-detail fg-4 text-truncate max-w-100"><%=_.pluralize('app', _.size(topology.internal), true)%></small>
+											<div class="topology-traffic max-w-100" data-traffic-label="<%-internalTraffic%>"></div>
 										</div>
 										<div class="topology-stem"></div>
 										<button type="button" class="topology-toggle btn-icon btn-solid theme-primary btn-xs rounded-pill" data-action="toggle" data-key="internal"><i class="icon-solid icon-<%=(isInternalExpanded ? 'minus' : 'plus')%> icon-xs"></i></button>
 										<%if (isInternalExpanded) {%>
 											<ul class="topology-edge-muted topology-edge-dotted">
 												<%_.each(topology.internal, (stack) => {%>
-													<%=stackTemplate({ stack, edge: 'topology-edge-muted topology-edge-dotted', showLock: true })%>
+													<%=stackTemplate({ stack, edge: 'topology-edge-muted topology-edge-dotted' })%>
 												<%})%>
 											</ul>
 										<%}%>
@@ -194,7 +183,7 @@
 						<li class="<%=(node.isAdopted ? 'topology-edge-primary' : 'topology-edge-muted')%>">
 							<div class="topology-node">
 								<div class="topology-icon rounded-5 <%=(node.isAdopted ? 'bg-subtle-primary fg-primary' : 'bg-gray-200 fg-gray-600')%>"><i class="icon-duotone icon-solid icon-nas"></i></div>
-								<div class="d-flex align-items-center justify-content-center gap-1 w-100 mt-2">
+								<div class="d-flex align-items-center justify-content-center gap-1 max-w-100 mt-2">
 									<%if (node.isAdopted) {%>
 										<i class="icon-solid icon-circle icon-2xs icon-width-auto flex-shrink-0 <%=(node.isOnline ? 'fg-success' : 'fg-danger')%>" data-bs-toggle="tooltip" data-bs-original-title="<%=(node.isOnline ? 'Online' : 'Offline')%>"></i>
 									<%}%>
@@ -202,7 +191,7 @@
 									<span class="text-truncate"<%if (nodeFqdn) {%> data-bs-toggle="tooltip" data-bs-original-title="<%-nodeFqdn%>"<%}%>><%-node.name || 'unknown'%></span>
 								</div>
 								<%if (node.address) {%>
-									<small class="d-block fg-4 text-truncate w-100"><%-node.address%></small>
+									<small class="d-block fg-4 text-truncate max-w-100"><%-node.address%></small>
 								<%}%>
 								<div class="d-flex flex-wrap justify-content-center gap-1 mt-1">
 									<u-badge color="<%=(node.isAdopted ? 'blue' : 'gray')%>" tint="100" pill><small><%=(node.isAdopted ? 'Adopted' : 'Not adopted')%></small></u-badge>

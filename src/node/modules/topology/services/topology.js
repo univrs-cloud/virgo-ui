@@ -7,6 +7,7 @@ import { createSubscription, storeAttach } from 'libs/services/module_store_subs
 const LOOPBACK_ADDRESS = /^(127\.|::1$)/;
 const PROXY_STACK = 'traefik';
 const AUTH_STACK = 'authelia';
+const TRAFFIC_KEY = 'topology:traffic';
 
 const { subscribe } = createSubscription({
 	stores: [
@@ -36,6 +37,34 @@ const { subscribe } = createSubscription({
 		};
 	}
 });
+
+const { subscribe: subscribeToTraffic } = createSubscription({
+	stores: [
+		{
+			store: Host,
+			propertyNames: ['networkStats']
+		},
+		{
+			store: Docker,
+			propertyNames: ['appsResourceMetrics']
+		}
+	],
+	attachStore: storeAttach.beforeCallbacks,
+	mapState: (properties) => {
+		return composeTraffic(properties?.networkStats, properties?.appsResourceMetrics);
+	}
+});
+
+function composeTraffic(networkStats, appsResourceMetrics) {
+	const traffic = {};
+	if (_.isObject(networkStats)) {
+		traffic.node = { rx: networkStats.rx_sec || 0, tx: networkStats.tx_sec || 0 };
+	}
+	_.each(appsResourceMetrics, (metrics) => {
+		traffic[`app:${metrics.name}`] = { rx: metrics.network?.rx || 0, tx: metrics.network?.tx || 0 };
+	});
+	return traffic;
+}
 
 function getRoutes(containers) {
 	const routes = _.flatMap(containers, (container) => {
@@ -186,17 +215,11 @@ function composeTopology(configured, containers, shares, peers, discovery) {
 	const routed = (proxy ? _.filter(others, (stack) => { return !_.isEmpty(stack.routes); }) : []);
 	const unrouted = _.difference(others, routed);
 	const proxied = (proxy ? composeProxied(configured) : []);
-	const isProtectedStack = (stack) => { return Boolean(auth) && _.every(stack.routes, 'isAuthRequired'); };
-	const isProtectedShortcut = (shortcut) => { return Boolean(auth) && shortcut.isAuthRequired; };
 	return {
 		proxy,
 		auth,
-		protected: {
-			stacks: _.filter(routed, isProtectedStack),
-			shortcuts: _.filter(proxied, isProtectedShortcut)
-		},
-		routed: _.reject(routed, isProtectedStack),
-		proxied: _.reject(proxied, isProtectedShortcut),
+		routed,
+		proxied,
 		published: _.filter(unrouted, (stack) => { return !_.isEmpty(stack.ports) || stack.isHostNetwork; }),
 		internal: _.filter(unrouted, (stack) => { return _.isEmpty(stack.ports) && !stack.isHostNetwork; }),
 		folders: composeShares(shares, false),
@@ -205,6 +228,25 @@ function composeTopology(configured, containers, shares, peers, discovery) {
 	};
 }
 
+const isTrafficShown = () => {
+	try {
+		return (localStorage.getItem(TRAFFIC_KEY) === 'shown');
+	} catch (error) {
+		return false;
+	}
+};
+
+const setTrafficShown = (isShown) => {
+	try {
+		localStorage.setItem(TRAFFIC_KEY, (isShown ? 'shown' : 'hidden'));
+	} catch (error) {
+		return;
+	}
+};
+
 export {
-	subscribe
+	subscribe,
+	subscribeToTraffic,
+	isTrafficShown,
+	setTrafficShown
 };
