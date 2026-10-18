@@ -63,6 +63,10 @@ export class FloatingWindow extends LitElement {
 		.titlebar, .handle { touch-action: none; }
 		.titlebar { cursor: move; }
 		.snap-preview { z-index: -1; }
+		.loading { background-color: var(--app-bg); }
+		.loading-icon { width: calc(30px + 0.5rem); height: calc(30px + 0.5rem); }
+		.loading-icon img { width: 30px; height: 30px; object-fit: contain; }
+		@supports (corner-shape: squircle) { .loading-icon { border-radius: 50% !important; corner-shape: squircle; } }
 		.handle { position: absolute; }
 		.handle[data-edge="n"], .handle[data-edge="s"] { left: 10px; right: 10px; height: 8px; cursor: ns-resize; }
 		.handle[data-edge="e"], .handle[data-edge="w"] { top: 10px; bottom: 10px; width: 8px; cursor: ew-resize; }
@@ -270,9 +274,11 @@ export class FloatingWindow extends LitElement {
 				<div class="card-body position-relative d-flex flex-column overflow-auto p-0">
 					<slot></slot>
 					${this.loading ? html`
-						<div class="position-absolute top-0 start-0 d-flex justify-content-center align-items-center w-100 h-100 bg-body">
-							<div class="spinner-border spinner-sm me-1"></div>
-							Loading...
+						<div class="loading position-absolute top-0 start-0 d-flex flex-column justify-content-center align-items-center w-100 h-100">
+							<div class="loading-icon d-flex justify-content-center align-items-center flex-shrink-0 rounded-5 bg-white fg-body shadow-sm mb-6">
+								${this.icon ? html`<img src=${this.icon.includes('/') ? this.icon : `assets/img/${this.type}s/${this.icon}`}>` : html`<i class="icon-light icon-layer-group icon-xl"></i>`}
+							</div>
+							<div class="spinner-border spinner-sm"></div>
 						</div>
 					` : ''}
 				</div>
