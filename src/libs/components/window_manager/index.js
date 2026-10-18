@@ -66,6 +66,7 @@ export class WindowManager extends LitElement {
 		item.width = width;
 		item.height = height;
 		item.snap = options.snap ?? '';
+		item.origin = options.origin ?? null;
 		item.x = Math.max(0, Math.round((this.clientWidth - width) / 2)) + offset;
 		item.y = Math.max(0, Math.round((this.clientHeight - height) / 2)) + offset;
 		if (options.url) {

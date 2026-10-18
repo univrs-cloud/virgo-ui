@@ -7,9 +7,20 @@ const MIN_HEIGHT = 200;
 const EDGES = ['n', 'e', 's', 'w', 'ne', 'se', 'sw', 'nw'];
 const SNAP_EDGE = 16;
 const SNAP_CORNER_SHARE = 0.25;
-const ANIMATION = { duration: 200, easing: 'cubic-bezier(0.2, 0, 0, 1)' };
+const SPRING = (CSS.supports('transition-timing-function', 'linear(0, 1)') ? 'linear(0, 0.07, 0.226, 0.408, 0.581, 0.727, 0.839, 0.92, 0.974, 1.006, 1.022, 1.028, 1.028, 1.024, 1.019, 1.014, 1.009, 1.006, 1.003, 1.001, 1, 1, 0.999, 0.999, 1)' : 'cubic-bezier(0.2, 0, 0, 1)');
+const ENTER = { duration: 240, easing: SPRING };
+const EXIT = { duration: 150, easing: 'cubic-bezier(0.3, 0, 0.8, 0.15)', fill: 'forwards' };
+const REVEAL = { duration: 150, easing: 'ease-out' };
+const MOVE_MIN_DURATION = 240;
+const MOVE_MAX_DURATION = 420;
+const MOVE_DURATION_PER_PIXEL = 0.12;
 const SHOWN = { opacity: 1, transform: 'none' };
 const HIDDEN = { opacity: 0, transform: 'scale(0.95)' };
+
+const getMoveDuration = (from, to) => {
+	const distance = Math.max(Math.hypot(to.x - from.x, to.y - from.y), Math.hypot(to.x + to.width - from.x - from.width, to.y + to.height - from.y - from.height));
+	return Math.min(MOVE_MAX_DURATION, MOVE_MIN_DURATION + distance * MOVE_DURATION_PER_PIXEL);
+};
 
 const getSnapRect = (zone, bounds) => {
 	const halfWidth = Math.round(bounds.clientWidth / 2);
@@ -116,6 +127,7 @@ export class FloatingWindow extends LitElement {
 		this.minimized = false;
 		this.active = false;
 		this.loading = false;
+		this.origin = null;
 		this.addEventListener('pointerdown', () => { this.raise(); }, { capture: true });
 	}
 
@@ -136,9 +148,18 @@ export class FloatingWindow extends LitElement {
 	}
 
 	firstUpdated() {
-		if (!this.minimized) {
-			this.#fadeIn();
+		if (this.minimized) {
+			return;
 		}
+
+		if (this.origin) {
+			this.#playMove(this.#getBox(this.origin));
+			this.#fade = this.renderRoot.querySelector('.card').animate([{ opacity: 0 }, { opacity: 1 }], REVEAL);
+			this.origin = null;
+			return;
+		}
+
+		this.#fadeIn();
 	}
 
 	updated(changed) {
@@ -261,8 +282,7 @@ export class FloatingWindow extends LitElement {
 		`;
 	}
 
-	#getBox() {
-		const rect = this.getBoundingClientRect();
+	#getBox(rect = this.getBoundingClientRect()) {
 		const bounds = this.parentElement.getBoundingClientRect();
 		return { x: rect.left - bounds.left, y: rect.top - bounds.top, width: rect.width, height: rect.height };
 	}
@@ -274,17 +294,17 @@ export class FloatingWindow extends LitElement {
 		this.#move = this.animate([
 			{ transformOrigin: '0 0', transform: `translate(${from.x}px, ${from.y}px) scale(${from.width / to.width}, ${from.height / to.height})` },
 			{ transformOrigin: '0 0', transform: `translate(${to.x}px, ${to.y}px)` }
-		], ANIMATION);
+		], { duration: getMoveDuration(from, to), easing: SPRING });
 	}
 
 	#fadeIn() {
 		this.#fade?.cancel();
-		this.#fade = this.renderRoot.querySelector('.card').animate([HIDDEN, SHOWN], ANIMATION);
+		this.#fade = this.renderRoot.querySelector('.card').animate([HIDDEN, SHOWN], ENTER);
 	}
 
 	#fadeOut(onFinish) {
 		this.#fade?.cancel();
-		this.#fade = this.renderRoot.querySelector('.card').animate([SHOWN, HIDDEN], { ...ANIMATION, fill: 'forwards' });
+		this.#fade = this.renderRoot.querySelector('.card').animate([SHOWN, HIDDEN], EXIT);
 		this.#fade.onfinish = onFinish;
 	}
 
