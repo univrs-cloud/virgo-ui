@@ -14,19 +14,19 @@ const BUTTON_ZOOM_FACTOR = 1.25;
 const WHEEL_ZOOM_SPEED = 0.002;
 const FIT_PADDING = 48;
 const DASH_PATTERNS = { dashed: '6 4', dotted: '0.1 4' };
+const CURVE_STEPS = 24;
 const FLOW_REFERENCE_RATE = 1_048_576;
-const FLOW_HOP_SECONDS = 6;
-const FLOW_MIN_SPEED = 40;
 const FLOW_IDLE_WIDTH = 8;
 const FLOW_MIN_WIDTH = 9;
 const FLOW_MAX_WIDTH = 32;
 const FLOW_MIN_DOT_RATE = 10;
 const FLOW_MAX_DOT_RATE = 120;
 const FLOW_ROUTE_DOT_RATE = 1;
+const FLOW_MAX_DOTS = 6000;
 const FLOW_DOT_RADIUS = 0.9;
 const FLOW_DRIFT = 0.8;
-const FLOW_MAX_DOTS = 6000;
-const CURVE_STEPS = 24;
+const FLOW_HOP_SECONDS = 6;
+const FLOW_MIN_SPEED = 40;
 const FLOW_FRAME_MS = 1000 / 30;
 
 const moduleTemplate = _.template(modulePartial);
@@ -50,6 +50,12 @@ const particlesContext = particles.getContext('2d');
 const trafficSwitch = container.querySelector('.traffic-switch');
 const expanded = new Set(['proxy', 'shares']);
 const view = { x: 0, y: 0, scale: 1 };
+const pointers = new Map();
+let gesture = null;
+let hasFitted = false;
+let isViewChanged = false;
+let isVisible = false;
+let unsubscribers = [];
 let lastState = null;
 let traffic = {};
 let isTrafficShown = topologyService.isTrafficShown();
@@ -58,10 +64,49 @@ let routes = [];
 let dotColors = { rx: '', tx: '' };
 let frame = null;
 let lastFrame = null;
-let isViewChanged = false;
-let hasFitted = false;
-const pointers = new Map();
-let gesture = null;
+
+const render = (state) => {
+	if (_.isNil(state.system) || _.isNil(state.configuration) || _.isNil(state.topology)) {
+		return;
+	}
+	
+	lastState = state;
+	morphdom(
+		content,
+		`<div>${topologyTemplate({
+			system: state.system,
+			networkInterface: _.find(state.system?.networkInterfaces, { default: true }),
+			fleet: state.configuration?.fleet || null,
+			topology: state.topology,
+			expanded,
+			stackTemplate,
+			shareTemplate,
+			shortcutTemplate,
+			proxyTemplate,
+			sharingTemplate
+		})}</div>`,
+		{ childrenOnly: true }
+	);
+
+	loading.classList.add('d-none');
+	container.classList.remove('d-none');
+	fillTraffic();
+	drawEdges();
+	if (!hasFitted) {
+		fit();
+	}
+};
+
+const renderTraffic = (state) => {
+	const isSameKeys = _.isEqual(_.keys(traffic).sort(), _.keys(state || {}).sort());
+	traffic = state || {};
+	fillTraffic();
+	if (isSameKeys) {
+		applyFlows();
+	} else {
+		drawEdges();
+	}
+};
 
 const applyView = () => {
 	canvas.style.transform = `translate(${view.x}px, ${view.y}px) scale(${view.scale})`;
@@ -102,311 +147,6 @@ const zoomAt = (factor, originX, originY) => {
 	view.y = originY - (originY - view.y) * (scale / view.scale);
 	view.scale = scale;
 	applyView();
-};
-
-const offsetWithin = (element) => {
-	let x = 0;
-	let y = 0;
-	let current = element;
-	while (current && current !== content) {
-		x += current.offsetLeft;
-		y += current.offsetTop;
-		current = current.offsetParent;
-	}
-	return { x, y };
-};
-
-const readEdge = (element) => {
-	const style = getComputedStyle(element);
-	return {
-		color: _.trim(style.getPropertyValue('--topology-edge-color')),
-		style: _.trim(style.getPropertyValue('--topology-edge-style'))
-	};
-};
-
-const toPath = (d, edge) => {
-	const dash = DASH_PATTERNS[edge.style];
-	const linecap = (edge.style === 'dotted' ? 'round' : 'butt');
-	return `<path class="topology-edge-line" d="${d}" style="stroke: ${edge.color};${(dash ? ` stroke-dasharray: ${dash}; stroke-linecap: ${linecap};` : '')}"></path>`;
-};
-
-const trafficOf = (keys) => {
-	const entries = _.compact(_.map(_.split(keys, ' '), (key) => { return traffic[key]; }));
-	if (_.isEmpty(entries)) {
-		return null;
-	}
-
-	return { rx: _.sumBy(entries, 'rx'), tx: _.sumBy(entries, 'tx') };
-};
-
-const fillTraffic = () => {
-	_.each(content.querySelectorAll('[data-traffic-label]'), (label) => {
-		const rates = trafficOf(label.dataset.trafficLabel);
-		label.innerHTML = (isTrafficShown && rates ? trafficTemplate({ ...rates, prettyBytes }) : '');
-	});
-};
-
-const shareOf = (rate, reference) => {
-	return (rate > 0 ? Math.sqrt(Math.min(rate / reference, 1)) : 0);
-};
-
-const subtreeTraffic = (item, cache) => {
-	if (cache.has(item)) {
-		return cache.get(item);
-	}
-
-	const own = trafficOf(item.dataset.traffic) || { rx: 0, tx: 0 };
-	const rendered = item.querySelectorAll(':scope > ul > li');
-	const hidden = trafficOf(item.dataset.trafficSubtree);
-	const children = (rendered.length > 0 ? _.map(rendered, (child) => { return subtreeTraffic(child, cache); }) : _.compact([hidden]));
-	const rates = { rx: Math.max(own.rx, _.sumBy(children, 'rx')), tx: Math.max(own.tx, _.sumBy(children, 'tx')) };
-	cache.set(item, rates);
-	return rates;
-};
-
-const dotBudgetOf = (rate, reference) => {
-	return (rate > 0 ? Math.max(FLOW_MIN_DOT_RATE, FLOW_MAX_DOT_RATE * Math.sqrt(Math.min(rate / reference, 1))) : 0);
-};
-
-const applyFlows = () => {
-	const cache = new Map();
-	const totals = _.map(flows, (flow) => {
-		const rates = _.map(flow.items, (item) => { return subtreeTraffic(item, cache); });
-		return { rx: _.sumBy(rates, 'rx'), tx: _.sumBy(rates, 'tx') };
-	});
-	const reference = Math.max(FLOW_REFERENCE_RATE, ..._.map(totals, (total) => { return total.rx + total.tx; }));
-	_.each(flows, (flow, index) => {
-		const share = shareOf(totals[index].rx + totals[index].tx, reference);
-		const width = (share > 0 ? FLOW_MIN_WIDTH + (FLOW_MAX_WIDTH - FLOW_MIN_WIDTH) * share : FLOW_IDLE_WIDTH);
-		flow.band.style.strokeWidth = `${width}px`;
-		flow.band.style.opacity = 1;
-		flow.half = Math.max(0, width / 2 - 2);
-	});
-	const excesses = _.map(routes, (route) => {
-		const own = subtreeTraffic(route.item, cache);
-		const children = _.map(route.children, (child) => { return subtreeTraffic(child, cache); });
-		return { rx: Math.max(0, own.rx - _.sumBy(children, 'rx')), tx: Math.max(0, own.tx - _.sumBy(children, 'tx')) };
-	});
-	const sums = { rx: _.sumBy(excesses, 'rx'), tx: _.sumBy(excesses, 'tx') };
-	const spares = _.mapValues(sums, (sum, direction) => {
-		const floors = _.size(_.filter(excesses, (excess) => { return excess[direction] > 0; })) * FLOW_ROUTE_DOT_RATE;
-		return Math.max(0, dotBudgetOf(sum, reference) - floors);
-	});
-	_.each(routes, (route, index) => {
-		route.dotRates = _.mapValues(sums, (sum, direction) => {
-			const excess = excesses[index][direction];
-			return (excess > 0 ? FLOW_ROUTE_DOT_RATE + spares[direction] * excess / sum : 0);
-		});
-	});
-};
-
-const newDot = (route, position) => {
-	return { position, lateral: Math.random() * 2 - 1, drift: (Math.random() * 2 - 1) * FLOW_DRIFT };
-};
-
-const fillRoutes = () => {
-	_.each(routes, (route) => {
-		_.each(['rx', 'tx'], (direction) => {
-			const count = Math.round(route.dotRates[direction] * _.sumBy(route.hops, (hop) => { return hop.length / hopSpeed(hop); }));
-			route.dots[direction] = _.times(count, () => { return newDot(route, Math.random() * route.length); });
-			route.pending[direction] = Math.random();
-		});
-	});
-};
-
-const hopSpeed = (hop) => {
-	return Math.max(FLOW_MIN_SPEED, hop.length / FLOW_HOP_SECONDS);
-};
-
-const advanceRoute = (route, direction, elapsed, budget) => {
-	const dots = route.dots[direction];
-	const sign = (direction === 'rx' ? 1 : -1);
-	route.pending[direction] += route.dotRates[direction] * elapsed;
-	while (route.pending[direction] >= 1) {
-		route.pending[direction] -= 1;
-		if (budget.remaining > 0) {
-			const hop = (direction === 'rx' ? _.head(route.hops) : _.last(route.hops));
-			const lead = hopSpeed(hop) * elapsed * Math.random();
-			dots.push(newDot(route, (direction === 'rx' ? lead : route.length - lead)));
-		}
-	}
-	route.dots[direction] = _.filter(dots, (dot) => {
-		const hop = _.find(route.hops, (candidate) => { return dot.position <= candidate.end; }) || _.last(route.hops);
-		dot.position += sign * hopSpeed(hop) * elapsed;
-		dot.lateral += dot.drift * elapsed;
-		if (Math.abs(dot.lateral) > 1) {
-			dot.lateral = Math.sign(dot.lateral) * 2 - dot.lateral;
-			dot.drift = -dot.drift;
-		}
-		return dot.position >= 0 && dot.position <= route.length;
-	});
-	budget.remaining -= route.dots[direction].length;
-};
-
-const traceRoute = (route, dots, radius) => {
-	const width = viewport.clientWidth;
-	const height = viewport.clientHeight;
-	_.each(dots, (dot) => {
-		let distance = dot.position;
-		let segment = _.last(route.segments);
-		for (const candidate of route.segments) {
-			if (distance <= candidate.length) {
-				segment = candidate;
-				break;
-			}
-			distance -= candidate.length;
-		}
-
-		const x = view.x + (segment.x1 + segment.ux * distance + segment.px * dot.lateral * segment.link.half) * view.scale;
-		const y = view.y + (segment.y1 + segment.uy * distance + segment.py * dot.lateral * segment.link.half) * view.scale;
-		if (x < -radius || y < -radius || x > width + radius || y > height + radius) {
-			return;
-		}
-
-		particlesContext.moveTo(x + radius, y);
-		particlesContext.arc(x, y, radius, 0, Math.PI * 2);
-	});
-};
-
-const animate = (time) => {
-	frame = requestAnimationFrame(animate);
-	if (!isViewChanged && !_.isNull(lastFrame) && time - lastFrame < FLOW_FRAME_MS - 2) {
-		return;
-	}
-
-	isViewChanged = false;
-
-	const elapsed = Math.min((_.isNull(lastFrame) ? 0 : (time - lastFrame) / 1000), 0.1);
-	lastFrame = time;
-	if (!_.isNull(container.offsetParent)) {
-		const radius = Math.max(0.6, FLOW_DOT_RADIUS * view.scale);
-		const budget = { remaining: FLOW_MAX_DOTS };
-		particlesContext.clearRect(0, 0, viewport.clientWidth, viewport.clientHeight);
-		_.each(['rx', 'tx'], (direction) => {
-			particlesContext.beginPath();
-			_.each(routes, (route) => {
-				advanceRoute(route, direction, elapsed, budget);
-				traceRoute(route, route.dots[direction], radius);
-			});
-			particlesContext.fillStyle = dotColors[direction];
-			particlesContext.fill();
-		});
-	}
-};
-
-const startFlows = () => {
-	if (!isTrafficShown || !_.isNull(frame) || _.isEmpty(flows)) {
-		return;
-	}
-
-	lastFrame = null;
-	frame = requestAnimationFrame(animate);
-};
-
-const stopFlows = () => {
-	if (_.isNull(frame)) {
-		return;
-	}
-
-	cancelAnimationFrame(frame);
-	frame = null;
-	particlesContext.clearRect(0, 0, viewport.clientWidth, viewport.clientHeight);
-};
-
-const curveOf = (x1, y1, x2, y2) => {
-	const middle = (y1 + y2) / 2;
-	return `M${x1} ${y1}C${x1} ${middle} ${x2} ${middle} ${x2} ${y2}`;
-};
-
-const curvePoints = (x1, y1, x2, y2) => {
-	const middle = (y1 + y2) / 2;
-	return _.map(_.range(CURVE_STEPS + 1), (step) => {
-		const t = step / CURVE_STEPS;
-		const u = 1 - t;
-		return {
-			x: u * u * u * x1 + 3 * u * u * t * x1 + 3 * u * t * t * x2 + t * t * t * x2,
-			y: u * u * u * y1 + 3 * u * u * t * middle + 3 * u * t * t * middle + t * t * t * y2
-		};
-	});
-};
-
-const piecesOf = (points, link) => {
-	return _.compact(_.map(_.range(points.length - 1), (index) => {
-		const from = points[index];
-		const to = points[index + 1];
-		const length = Math.hypot(to.x - from.x, to.y - from.y);
-		if (length === 0) {
-			return null;
-		}
-
-		const ux = (to.x - from.x) / length;
-		const uy = (to.y - from.y) / length;
-		return { x1: from.x, y1: from.y, length, ux, uy, px: -uy, py: ux, link };
-	}));
-};
-
-const isBranch = (item) => {
-	return !_.isNull(item.querySelector(':scope > ul, :scope > button[data-action="toggle"]'));
-};
-
-const nodeBounds = (item) => {
-	const node = item.querySelector(':scope > .topology-node');
-	const left = item.offsetLeft + node.offsetLeft;
-	return { left, right: left + node.offsetWidth };
-};
-
-const packLeaves = (leaves, branch, toward) => {
-	const gap = parseFloat(getComputedStyle(_.head(leaves)).paddingLeft) || 0;
-	const bounds = nodeBounds(branch);
-	if (toward === 'right') {
-		let edge = bounds.left - gap;
-		_.eachRight(leaves, (item) => {
-			const shift = edge - (item.offsetLeft + item.offsetWidth);
-			if (shift > 0) {
-				item.style.left = `${shift}px`;
-			}
-			edge = item.offsetLeft;
-		});
-		return;
-	}
-
-	let edge = bounds.right + gap;
-	_.each(leaves, (item) => {
-		const shift = edge - item.offsetLeft;
-		if (shift < 0) {
-			item.style.left = `${shift}px`;
-		}
-		edge = item.offsetLeft + item.offsetWidth;
-	});
-};
-
-const compactLeaves = () => {
-	_.each(content.querySelectorAll('li[style]'), (item) => { item.style.left = ''; });
-	_.each(content.querySelectorAll('ul'), (list) => {
-		const items = _.filter(list.children, (child) => { return child.matches('li') && child.getClientRects().length > 0; });
-		let run = [];
-		let previousBranch = null;
-		const flush = (nextBranch) => {
-			if (!_.isEmpty(run)) {
-				if (previousBranch) {
-					packLeaves(run, previousBranch, 'left');
-				} else if (nextBranch) {
-					packLeaves(run, nextBranch, 'right');
-				}
-			}
-			run = [];
-		};
-		_.each(items, (item) => {
-			if (isBranch(item)) {
-				flush(item);
-				previousBranch = item;
-				return;
-			}
-
-			run.push(item);
-		});
-		flush(null);
-	});
 };
 
 const drawEdges = () => {
@@ -483,47 +223,309 @@ const drawEdges = () => {
 	startFlows();
 };
 
-const render = (state) => {
-	if (_.isNil(state.system) || _.isNil(state.configuration) || _.isNil(state.topology)) {
+const compactLeaves = () => {
+	_.each(content.querySelectorAll('li[style]'), (item) => { item.style.left = ''; });
+	_.each(content.querySelectorAll('ul'), (list) => {
+		const items = _.filter(list.children, (child) => { return child.matches('li') && child.getClientRects().length > 0; });
+		let run = [];
+		let previousBranch = null;
+		const flush = (nextBranch) => {
+			if (!_.isEmpty(run)) {
+				if (previousBranch) {
+					packLeaves(run, previousBranch, 'left');
+				} else if (nextBranch) {
+					packLeaves(run, nextBranch, 'right');
+				}
+			}
+			run = [];
+		};
+		_.each(items, (item) => {
+			if (isBranch(item)) {
+				flush(item);
+				previousBranch = item;
+				return;
+			}
+
+			run.push(item);
+		});
+		flush(null);
+	});
+};
+
+const packLeaves = (leaves, branch, toward) => {
+	const gap = parseFloat(getComputedStyle(_.head(leaves)).paddingLeft) || 0;
+	const bounds = nodeBounds(branch);
+	if (toward === 'right') {
+		let edge = bounds.left - gap;
+		_.eachRight(leaves, (item) => {
+			const shift = edge - (item.offsetLeft + item.offsetWidth);
+			if (shift > 0) {
+				item.style.left = `${shift}px`;
+			}
+			edge = item.offsetLeft;
+		});
 		return;
 	}
 
-	lastState = state;
-	morphdom(
-		content,
-		`<div>${topologyTemplate({
-			system: state.system,
-			networkInterface: _.find(state.system?.networkInterfaces, { default: true }),
-			fleet: state.configuration?.fleet || null,
-			topology: state.topology,
-			expanded,
-			stackTemplate,
-			shareTemplate,
-			shortcutTemplate,
-			proxyTemplate,
-			sharingTemplate
-		})}</div>`,
-		{ childrenOnly: true }
-	);
+	let edge = bounds.right + gap;
+	_.each(leaves, (item) => {
+		const shift = edge - item.offsetLeft;
+		if (shift < 0) {
+			item.style.left = `${shift}px`;
+		}
+		edge = item.offsetLeft + item.offsetWidth;
+	});
+};
 
-	loading.classList.add('d-none');
-	container.classList.remove('d-none');
-	fillTraffic();
-	drawEdges();
-	if (!hasFitted) {
-		fit();
+const isBranch = (item) => {
+	return !_.isNull(item.querySelector(':scope > ul, :scope > button[data-action="toggle"]'));
+};
+
+const nodeBounds = (item) => {
+	const node = item.querySelector(':scope > .topology-node');
+	const left = item.offsetLeft + node.offsetLeft;
+	return { left, right: left + node.offsetWidth };
+};
+
+const offsetWithin = (element) => {
+	let x = 0;
+	let y = 0;
+	let current = element;
+	while (current && current !== content) {
+		x += current.offsetLeft;
+		y += current.offsetTop;
+		current = current.offsetParent;
+	}
+	return { x, y };
+};
+
+const readEdge = (element) => {
+	const style = getComputedStyle(element);
+	return {
+		color: _.trim(style.getPropertyValue('--topology-edge-color')),
+		style: _.trim(style.getPropertyValue('--topology-edge-style'))
+	};
+};
+
+const toPath = (d, edge) => {
+	const dash = DASH_PATTERNS[edge.style];
+	const linecap = (edge.style === 'dotted' ? 'round' : 'butt');
+	return `<path class="topology-edge-line" d="${d}" style="stroke: ${edge.color};${(dash ? ` stroke-dasharray: ${dash}; stroke-linecap: ${linecap};` : '')}"></path>`;
+};
+
+const curveOf = (x1, y1, x2, y2) => {
+	const middle = (y1 + y2) / 2;
+	return `M${x1} ${y1}C${x1} ${middle} ${x2} ${middle} ${x2} ${y2}`;
+};
+
+const curvePoints = (x1, y1, x2, y2) => {
+	const middle = (y1 + y2) / 2;
+	return _.map(_.range(CURVE_STEPS + 1), (step) => {
+		const t = step / CURVE_STEPS;
+		const u = 1 - t;
+		return {
+			x: u * u * u * x1 + 3 * u * u * t * x1 + 3 * u * t * t * x2 + t * t * t * x2,
+			y: u * u * u * y1 + 3 * u * u * t * middle + 3 * u * t * t * middle + t * t * t * y2
+		};
+	});
+};
+
+const piecesOf = (points, link) => {
+	return _.compact(_.map(_.range(points.length - 1), (index) => {
+		const from = points[index];
+		const to = points[index + 1];
+		const length = Math.hypot(to.x - from.x, to.y - from.y);
+		if (length === 0) {
+			return null;
+		}
+
+		const ux = (to.x - from.x) / length;
+		const uy = (to.y - from.y) / length;
+		return { x1: from.x, y1: from.y, length, ux, uy, px: -uy, py: ux, link };
+	}));
+};
+
+const fillTraffic = () => {
+	_.each(content.querySelectorAll('[data-traffic-label]'), (label) => {
+		const rates = trafficOf(label.dataset.trafficLabel);
+		label.innerHTML = (isTrafficShown && rates ? trafficTemplate({ ...rates, prettyBytes }) : '');
+	});
+};
+
+const trafficOf = (keys) => {
+	const entries = _.compact(_.map(_.split(keys, ' '), (key) => { return traffic[key]; }));
+	if (_.isEmpty(entries)) {
+		return null;
+	}
+
+	return { rx: _.sumBy(entries, 'rx'), tx: _.sumBy(entries, 'tx') };
+};
+
+const applyFlows = () => {
+	const cache = new Map();
+	const totals = _.map(flows, (flow) => {
+		const rates = _.map(flow.items, (item) => { return subtreeTraffic(item, cache); });
+		return { rx: _.sumBy(rates, 'rx'), tx: _.sumBy(rates, 'tx') };
+	});
+	const reference = Math.max(FLOW_REFERENCE_RATE, ..._.map(totals, (total) => { return total.rx + total.tx; }));
+	_.each(flows, (flow, index) => {
+		const share = shareOf(totals[index].rx + totals[index].tx, reference);
+		const width = (share > 0 ? FLOW_MIN_WIDTH + (FLOW_MAX_WIDTH - FLOW_MIN_WIDTH) * share : FLOW_IDLE_WIDTH);
+		flow.band.style.strokeWidth = `${width}px`;
+		flow.band.style.opacity = 1;
+		flow.half = Math.max(0, width / 2 - 2);
+	});
+	const excesses = _.map(routes, (route) => {
+		const own = subtreeTraffic(route.item, cache);
+		const children = _.map(route.children, (child) => { return subtreeTraffic(child, cache); });
+		return { rx: Math.max(0, own.rx - _.sumBy(children, 'rx')), tx: Math.max(0, own.tx - _.sumBy(children, 'tx')) };
+	});
+	const sums = { rx: _.sumBy(excesses, 'rx'), tx: _.sumBy(excesses, 'tx') };
+	const spares = _.mapValues(sums, (sum, direction) => {
+		const floors = _.size(_.filter(excesses, (excess) => { return excess[direction] > 0; })) * FLOW_ROUTE_DOT_RATE;
+		return Math.max(0, dotBudgetOf(sum, reference) - floors);
+	});
+	_.each(routes, (route, index) => {
+		route.dotRates = _.mapValues(sums, (sum, direction) => {
+			const excess = excesses[index][direction];
+			return (excess > 0 ? FLOW_ROUTE_DOT_RATE + spares[direction] * excess / sum : 0);
+		});
+	});
+};
+
+const subtreeTraffic = (item, cache) => {
+	if (cache.has(item)) {
+		return cache.get(item);
+	}
+
+	const own = trafficOf(item.dataset.traffic) || { rx: 0, tx: 0 };
+	const rendered = item.querySelectorAll(':scope > ul > li');
+	const hidden = trafficOf(item.dataset.trafficSubtree);
+	const children = (rendered.length > 0 ? _.map(rendered, (child) => { return subtreeTraffic(child, cache); }) : _.compact([hidden]));
+	const rates = { rx: Math.max(own.rx, _.sumBy(children, 'rx')), tx: Math.max(own.tx, _.sumBy(children, 'tx')) };
+	cache.set(item, rates);
+	return rates;
+};
+
+const shareOf = (rate, reference) => {
+	return (rate > 0 ? Math.sqrt(Math.min(rate / reference, 1)) : 0);
+};
+
+const dotBudgetOf = (rate, reference) => {
+	return (rate > 0 ? Math.max(FLOW_MIN_DOT_RATE, FLOW_MAX_DOT_RATE * Math.sqrt(Math.min(rate / reference, 1))) : 0);
+};
+
+const startFlows = () => {
+	if (!isVisible || !isTrafficShown || !_.isNull(frame) || _.isEmpty(flows)) {
+		return;
+	}
+
+	lastFrame = null;
+	frame = requestAnimationFrame(animate);
+};
+
+const stopFlows = () => {
+	if (_.isNull(frame)) {
+		return;
+	}
+
+	cancelAnimationFrame(frame);
+	frame = null;
+	particlesContext.clearRect(0, 0, viewport.clientWidth, viewport.clientHeight);
+};
+
+const animate = (time) => {
+	frame = requestAnimationFrame(animate);
+	if (!isViewChanged && !_.isNull(lastFrame) && time - lastFrame < FLOW_FRAME_MS - 2) {
+		return;
+	}
+
+	isViewChanged = false;
+
+	const elapsed = Math.min((_.isNull(lastFrame) ? 0 : (time - lastFrame) / 1000), 0.1);
+	lastFrame = time;
+	if (!_.isNull(container.offsetParent)) {
+		const radius = Math.max(0.6, FLOW_DOT_RADIUS * view.scale);
+		const budget = { remaining: FLOW_MAX_DOTS };
+		particlesContext.clearRect(0, 0, viewport.clientWidth, viewport.clientHeight);
+		_.each(['rx', 'tx'], (direction) => {
+			particlesContext.beginPath();
+			_.each(routes, (route) => {
+				advanceRoute(route, direction, elapsed, budget);
+				traceRoute(route, route.dots[direction], radius);
+			});
+			particlesContext.fillStyle = dotColors[direction];
+			particlesContext.fill();
+		});
 	}
 };
 
-const renderTraffic = (state) => {
-	const isSameKeys = _.isEqual(_.keys(traffic).sort(), _.keys(state || {}).sort());
-	traffic = state || {};
-	fillTraffic();
-	if (isSameKeys) {
-		applyFlows();
-	} else {
-		drawEdges();
+const fillRoutes = () => {
+	_.each(routes, (route) => {
+		_.each(['rx', 'tx'], (direction) => {
+			const count = Math.round(route.dotRates[direction] * _.sumBy(route.hops, (hop) => { return hop.length / hopSpeed(hop); }));
+			route.dots[direction] = _.times(count, () => { return newDot(route, Math.random() * route.length); });
+			route.pending[direction] = Math.random();
+		});
+	});
+};
+
+const advanceRoute = (route, direction, elapsed, budget) => {
+	const dots = route.dots[direction];
+	const sign = (direction === 'rx' ? 1 : -1);
+	route.pending[direction] += route.dotRates[direction] * elapsed;
+	while (route.pending[direction] >= 1) {
+		route.pending[direction] -= 1;
+		if (budget.remaining > 0) {
+			const hop = (direction === 'rx' ? _.head(route.hops) : _.last(route.hops));
+			const lead = hopSpeed(hop) * elapsed * Math.random();
+			dots.push(newDot(route, (direction === 'rx' ? lead : route.length - lead)));
+		}
 	}
+	route.dots[direction] = _.filter(dots, (dot) => {
+		const hop = _.find(route.hops, (candidate) => { return dot.position <= candidate.end; }) || _.last(route.hops);
+		dot.position += sign * hopSpeed(hop) * elapsed;
+		dot.lateral += dot.drift * elapsed;
+		if (Math.abs(dot.lateral) > 1) {
+			dot.lateral = Math.sign(dot.lateral) * 2 - dot.lateral;
+			dot.drift = -dot.drift;
+		}
+		return dot.position >= 0 && dot.position <= route.length;
+	});
+	budget.remaining -= route.dots[direction].length;
+};
+
+const traceRoute = (route, dots, radius) => {
+	const width = viewport.clientWidth;
+	const height = viewport.clientHeight;
+	_.each(dots, (dot) => {
+		let distance = dot.position;
+		let segment = _.last(route.segments);
+		for (const candidate of route.segments) {
+			if (distance <= candidate.length) {
+				segment = candidate;
+				break;
+			}
+			distance -= candidate.length;
+		}
+
+		const x = view.x + (segment.x1 + segment.ux * distance + segment.px * dot.lateral * segment.link.half) * view.scale;
+		const y = view.y + (segment.y1 + segment.uy * distance + segment.py * dot.lateral * segment.link.half) * view.scale;
+		if (x < -radius || y < -radius || x > width + radius || y > height + radius) {
+			return;
+		}
+
+		particlesContext.moveTo(x + radius, y);
+		particlesContext.arc(x, y, radius, 0, Math.PI * 2);
+	});
+};
+
+const newDot = (route, position) => {
+	return { position, lateral: Math.random() * 2 - 1, drift: (Math.random() * 2 - 1) * FLOW_DRIFT };
+};
+
+const hopSpeed = (hop) => {
+	return Math.max(FLOW_MIN_SPEED, hop.length / FLOW_HOP_SECONDS);
 };
 
 const toggleTraffic = (event) => {
@@ -565,20 +567,6 @@ const zoom = (event) => {
 	event.preventDefault();
 	const bounds = viewport.getBoundingClientRect();
 	zoomAt(Math.exp(-event.deltaY * WHEEL_ZOOM_SPEED), event.clientX - bounds.left, event.clientY - bounds.top);
-};
-
-const readGesture = () => {
-	const bounds = viewport.getBoundingClientRect();
-	const [first, second] = [...pointers.values()];
-	if (!second) {
-		return { x: first.x - bounds.left, y: first.y - bounds.top, distance: 0 };
-	}
-
-	return {
-		x: (first.x + second.x) / 2 - bounds.left,
-		y: (first.y + second.y) / 2 - bounds.top,
-		distance: Math.hypot(first.x - second.x, first.y - second.y)
-	};
 };
 
 const startPointer = (event) => {
@@ -623,6 +611,37 @@ const endPointer = (event) => {
 	viewport.classList.remove('dragging');
 };
 
+const readGesture = () => {
+	const bounds = viewport.getBoundingClientRect();
+	const [first, second] = [...pointers.values()];
+	if (!second) {
+		return { x: first.x - bounds.left, y: first.y - bounds.top, distance: 0 };
+	}
+
+	return {
+		x: (first.x + second.x) / 2 - bounds.left,
+		y: (first.y + second.y) / 2 - bounds.top,
+		distance: Math.hypot(first.x - second.x, first.y - second.y)
+	};
+};
+
+const syncVisibility = () => {
+	const isShown = !module.classList.contains('d-none');
+	if (isShown === isVisible) {
+		return;
+	}
+
+	isVisible = isShown;
+	if (isVisible) {
+		unsubscribers = [topologyService.subscribe([render]), topologyService.subscribeToTraffic([renderTraffic])];
+		return;
+	}
+
+	_.each(unsubscribers, (unsubscribe) => { unsubscribe(); });
+	unsubscribers = [];
+	stopFlows();
+};
+
 module.addEventListener('click', toggle);
 module.addEventListener('click', control);
 viewport.addEventListener('wheel', zoom, { passive: false });
@@ -630,7 +649,15 @@ viewport.addEventListener('pointerdown', startPointer);
 viewport.addEventListener('pointermove', movePointer);
 viewport.addEventListener('pointerup', endPointer);
 viewport.addEventListener('pointercancel', endPointer);
+trafficSwitch.addEventListener('switch-changed', toggleTraffic);
+trafficSwitch.checked = isTrafficShown;
+viewport.classList.toggle('topology-traffic-hidden', !isTrafficShown);
+
 const resizeObserver = new ResizeObserver(() => {
+	if (!isVisible) {
+		return;
+	}
+
 	sizeParticles();
 	drawEdges();
 	if (!hasFitted) {
@@ -640,9 +667,5 @@ const resizeObserver = new ResizeObserver(() => {
 resizeObserver.observe(viewport);
 resizeObserver.observe(content);
 
-trafficSwitch.checked = isTrafficShown;
-viewport.classList.toggle('topology-traffic-hidden', !isTrafficShown);
-trafficSwitch.addEventListener('switch-changed', toggleTraffic);
-
-topologyService.subscribe([render]);
-topologyService.subscribeToTraffic([renderTraffic]);
+new MutationObserver(syncVisibility).observe(module, { attributes: true, attributeFilter: ['class'] });
+syncVisibility();
