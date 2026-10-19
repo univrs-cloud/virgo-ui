@@ -20,8 +20,9 @@ const FLOW_MIN_SPEED = 40;
 const FLOW_IDLE_WIDTH = 8;
 const FLOW_MIN_WIDTH = 9;
 const FLOW_MAX_WIDTH = 32;
-const FLOW_MIN_DOT_RATE = 6;
-const FLOW_MAX_DOT_RATE = 60;
+const FLOW_MIN_DOT_RATE = 10;
+const FLOW_MAX_DOT_RATE = 120;
+const FLOW_ROUTE_DOT_RATE = 1;
 const FLOW_DOT_RADIUS = 0.9;
 const FLOW_DRIFT = 0.8;
 const FLOW_MAX_DOTS = 6000;
@@ -155,14 +156,16 @@ const subtreeTraffic = (item, cache) => {
 	}
 
 	const own = trafficOf(item.dataset.traffic) || { rx: 0, tx: 0 };
-	const children = _.map(item.querySelectorAll(':scope > ul > li'), (child) => { return subtreeTraffic(child, cache); });
+	const rendered = item.querySelectorAll(':scope > ul > li');
+	const hidden = trafficOf(item.dataset.trafficSubtree);
+	const children = (rendered.length > 0 ? _.map(rendered, (child) => { return subtreeTraffic(child, cache); }) : _.compact([hidden]));
 	const rates = { rx: Math.max(own.rx, _.sumBy(children, 'rx')), tx: Math.max(own.tx, _.sumBy(children, 'tx')) };
 	cache.set(item, rates);
 	return rates;
 };
 
-const dotRateOf = (rate, reference) => {
-	return (rate > 0 ? Math.max(FLOW_MIN_DOT_RATE, FLOW_MAX_DOT_RATE * Math.min(rate / reference, 1)) : 0);
+const dotBudgetOf = (rate, reference) => {
+	return (rate > 0 ? Math.max(FLOW_MIN_DOT_RATE, FLOW_MAX_DOT_RATE * Math.sqrt(Math.min(rate / reference, 1))) : 0);
 };
 
 const applyFlows = () => {
@@ -179,13 +182,21 @@ const applyFlows = () => {
 		flow.band.style.opacity = 1;
 		flow.half = Math.max(0, width / 2 - 2);
 	});
-	_.each(routes, (route) => {
+	const excesses = _.map(routes, (route) => {
 		const own = subtreeTraffic(route.item, cache);
 		const children = _.map(route.children, (child) => { return subtreeTraffic(child, cache); });
-		route.dotRates = {
-			rx: dotRateOf(Math.max(0, own.rx - _.sumBy(children, 'rx')), reference),
-			tx: dotRateOf(Math.max(0, own.tx - _.sumBy(children, 'tx')), reference)
-		};
+		return { rx: Math.max(0, own.rx - _.sumBy(children, 'rx')), tx: Math.max(0, own.tx - _.sumBy(children, 'tx')) };
+	});
+	const sums = { rx: _.sumBy(excesses, 'rx'), tx: _.sumBy(excesses, 'tx') };
+	const spares = _.mapValues(sums, (sum, direction) => {
+		const floors = _.size(_.filter(excesses, (excess) => { return excess[direction] > 0; })) * FLOW_ROUTE_DOT_RATE;
+		return Math.max(0, dotBudgetOf(sum, reference) - floors);
+	});
+	_.each(routes, (route, index) => {
+		route.dotRates = _.mapValues(sums, (sum, direction) => {
+			const excess = excesses[index][direction];
+			return (excess > 0 ? FLOW_ROUTE_DOT_RATE + spares[direction] * excess / sum : 0);
+		});
 	});
 };
 
