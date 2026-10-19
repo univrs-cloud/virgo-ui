@@ -5,7 +5,7 @@ class User extends Store {
 		const initialState = {
 			users: null,
 			sessions: null,
-			role: null
+			userRole: null
 		};
 		super({
 			namespace: 'user'
@@ -22,7 +22,7 @@ class User extends Store {
 		});
 
 		this.socket.on('user:role', (role) => {
-			this.setState({ role }, 'get_role');
+			this.setState({ userRole: role }, 'get_user_role');
 		});
 	}
 
