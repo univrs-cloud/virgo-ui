@@ -13,15 +13,16 @@ const WHEEL_ZOOM_SPEED = 0.002;
 const FIT_PADDING = 48;
 const DASH_PATTERNS = { dashed: '6 4', dotted: '0.1 4' };
 const FLOW_REFERENCE_RATE = 1_048_576;
-const FLOW_SPEED = 40;
+const FLOW_HOP_SECONDS = 6;
+const FLOW_MIN_SPEED = 40;
 const FLOW_IDLE_WIDTH = 8;
 const FLOW_MIN_WIDTH = 9;
 const FLOW_MAX_WIDTH = 32;
-const FLOW_MIN_DOT_RATE = 0.4;
-const FLOW_MAX_DOT_RATE = 7;
+const FLOW_MIN_DOT_RATE = 1;
+const FLOW_MAX_DOT_RATE = 60;
 const FLOW_DOT_RADIUS = 0.9;
 const FLOW_DRIFT = 0.8;
-const FLOW_MAX_DOTS = 2500;
+const FLOW_MAX_DOTS = 6000;
 const FLOW_FRAME_MS = 1000 / 30;
 
 const moduleTemplate = _.template(modulePartial);
@@ -190,25 +191,32 @@ const newDot = (route, position) => {
 const fillRoutes = () => {
 	_.each(routes, (route) => {
 		_.each(['rx', 'tx'], (direction) => {
-			const count = Math.round(route.dotRates[direction] * route.length / FLOW_SPEED);
+			const count = Math.round(route.dotRates[direction] * _.sumBy(route.hops, (hop) => { return hop.length / hopSpeed(hop); }));
 			route.dots[direction] = _.times(count, () => { return newDot(route, Math.random() * route.length); });
 			route.pending[direction] = Math.random();
 		});
 	});
 };
 
+const hopSpeed = (hop) => {
+	return Math.max(FLOW_MIN_SPEED, hop.length / FLOW_HOP_SECONDS);
+};
+
 const advanceRoute = (route, direction, elapsed, budget) => {
 	const dots = route.dots[direction];
-	const step = (direction === 'rx' ? 1 : -1) * FLOW_SPEED * elapsed;
+	const sign = (direction === 'rx' ? 1 : -1);
 	route.pending[direction] += route.dotRates[direction] * elapsed;
 	while (route.pending[direction] >= 1) {
 		route.pending[direction] -= 1;
 		if (budget.remaining > 0) {
-			dots.push(newDot(route, (direction === 'rx' ? 0 : route.length)));
+			const hop = (direction === 'rx' ? _.head(route.hops) : _.last(route.hops));
+			const lead = hopSpeed(hop) * elapsed * Math.random();
+			dots.push(newDot(route, (direction === 'rx' ? lead : route.length - lead)));
 		}
 	}
 	route.dots[direction] = _.filter(dots, (dot) => {
-		dot.position += step;
+		const hop = _.find(route.hops, (candidate) => { return dot.position <= candidate.end; }) || _.last(route.hops);
+		dot.position += sign * hopSpeed(hop) * elapsed;
 		dot.lateral += dot.drift * elapsed;
 		if (Math.abs(dot.lateral) > 1) {
 			dot.lateral = Math.sign(dot.lateral) * 2 - dot.lateral;
@@ -329,7 +337,7 @@ const drawEdges = () => {
 				segments.push(piece, drop);
 				bus.push(piece);
 				if (parentChain) {
-					chains.set(target.item, [...parentChain, stem, ...bus, drop]);
+					chains.set(target.item, [...parentChain, [stem, ...bus, drop]]);
 				}
 				startX = target.x;
 			});
@@ -358,11 +366,19 @@ const drawEdges = () => {
 		segment.py = Math.abs(segment.ux);
 	});
 	flows = segments;
-	routes = _.map([...chains], ([item, chain]) => {
+	routes = _.map([...chains], ([item, links]) => {
+		let end = 0;
+		const hops = _.map(links, (link) => {
+			const length = _.sumBy(link, 'length');
+			end += length;
+			return { length, end };
+		});
+		const chain = _.flatten(links);
 		return {
 			item,
 			children: _.filter(item.querySelectorAll(':scope > ul > li'), (child) => { return chains.has(child); }),
 			segments: chain,
+			hops,
 			length: _.sumBy(chain, 'length'),
 			dotRates: { rx: 0, tx: 0 },
 			dots: { rx: [], tx: [] },
