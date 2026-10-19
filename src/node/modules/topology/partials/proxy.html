@@ -1,0 +1,41 @@
+<%
+	const isProxyExpanded = expanded.has('proxy');
+	const running = _.size(_.filter(proxy.containers, { state: 'running' }));
+	const active = _.size(_.filter(proxy.containers, (container) => { return _.includes(['running', 'restarting'], container.state); }));
+	const stateColor = (active === _.size(proxy.containers) ? 'fg-success' : (active === 0 ? 'fg-danger' : 'fg-orange-500'));
+%>
+<li class="topology-edge-primary" data-traffic="app:<%-proxy.name%>">
+	<div class="topology-node">
+		<div class="topology-icon">
+			<%if (proxy.icon) {%>
+				<img src="<%-(_.includes(proxy.icon, '/') ? proxy.icon : `assets/img/apps/${proxy.icon}`)%>" alt="">
+			<%} else {%>
+				<i class="topology-glyph icon-light icon-layer-group fg-emphasis-secondary"></i>
+			<%}%>
+		</div>
+		<div class="d-flex align-items-center justify-content-center gap-1 max-w-100 mt-2">
+			<i class="icon-solid icon-circle icon-2xs icon-width-auto flex-shrink-0 <%=stateColor%>" data-bs-toggle="tooltip" data-bs-original-title="<%=running%> / <%=_.size(proxy.containers)%> running"></i>
+			<span class="text-truncate"<%if (!_.isEmpty(proxy.routes)) {%> data-bs-toggle="tooltip" data-bs-original-title="<%-_.map(proxy.routes, (route) => { return _.escape(`${route.host}${route.path}`); }).join('<br>')%>"<%}%>><%-proxy.title%></span>
+		</div>
+		<div class="d-flex flex-wrap justify-content-center gap-1 mt-1">
+			<%_.each(proxy.ports, (port) => {%>
+				<u-badge class="topology-detail" color="gray" tint="100" tip="<%=`${port.port} (${_.join(port.protocols, ', ')})`%>" pill><small>:<%=port.port%></small></u-badge>
+			<%})%>
+		</div>
+		<div class="topology-traffic max-w-100" data-traffic-label="app:<%-proxy.name%>"></div>
+	</div>
+	<%if (!_.isEmpty(topology.routed) || !_.isEmpty(topology.proxied)) {%>
+		<div class="topology-stem"></div>
+		<button type="button" class="topology-toggle btn-icon btn-solid theme-primary btn-xs rounded-pill" data-action="toggle" data-key="proxy"><i class="icon-solid icon-<%=(isProxyExpanded ? 'minus' : 'plus')%> icon-xs"></i></button>
+		<%if (isProxyExpanded) {%>
+			<ul class="topology-edge-primary">
+				<%_.each(topology.routed, (stack) => {%>
+					<%=stackTemplate({ stack, edge: 'topology-edge-primary' })%>
+				<%})%>
+				<%_.each(topology.proxied, (shortcut) => {%>
+					<%=shortcutTemplate({ shortcut, edge: 'topology-edge-primary' })%>
+				<%})%>
+			</ul>
+		<%}%>
+	<%}%>
+</li>
