@@ -4,6 +4,8 @@ import stackPartial from 'node/modules/topology/partials/stack.html';
 import sharePartial from 'node/modules/topology/partials/share.html';
 import shortcutPartial from 'node/modules/topology/partials/shortcut.html';
 import trafficPartial from 'node/modules/topology/partials/traffic.html';
+import proxyPartial from 'node/modules/topology/partials/proxy.html';
+import sharingPartial from 'node/modules/topology/partials/sharing.html';
 import * as topologyService from 'node/modules/topology/services/topology';
 
 const MIN_SCALE = 0.2;
@@ -18,11 +20,12 @@ const FLOW_MIN_SPEED = 40;
 const FLOW_IDLE_WIDTH = 8;
 const FLOW_MIN_WIDTH = 9;
 const FLOW_MAX_WIDTH = 32;
-const FLOW_MIN_DOT_RATE = 1;
+const FLOW_MIN_DOT_RATE = 6;
 const FLOW_MAX_DOT_RATE = 60;
 const FLOW_DOT_RADIUS = 0.9;
 const FLOW_DRIFT = 0.8;
 const FLOW_MAX_DOTS = 6000;
+const CURVE_STEPS = 24;
 const FLOW_FRAME_MS = 1000 / 30;
 
 const moduleTemplate = _.template(modulePartial);
@@ -31,6 +34,8 @@ const stackTemplate = _.template(stackPartial);
 const shareTemplate = _.template(sharePartial);
 const shortcutTemplate = _.template(shortcutPartial);
 const trafficTemplate = _.template(trafficPartial);
+const proxyTemplate = _.template(proxyPartial);
+const sharingTemplate = _.template(sharingPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
 const module = document.querySelector('#topology');
 const loading = module.querySelector('.loading');
@@ -241,8 +246,8 @@ const traceRoute = (route, dots, radius) => {
 			distance -= candidate.length;
 		}
 
-		const x = view.x + (segment.x1 + segment.ux * distance + segment.px * dot.lateral * segment.half) * view.scale;
-		const y = view.y + (segment.y1 + segment.uy * distance + segment.py * dot.lateral * segment.half) * view.scale;
+		const x = view.x + (segment.x1 + segment.ux * distance + segment.px * dot.lateral * segment.link.half) * view.scale;
+		const y = view.y + (segment.y1 + segment.uy * distance + segment.py * dot.lateral * segment.link.half) * view.scale;
 		if (x < -radius || y < -radius || x > width + radius || y > height + radius) {
 			return;
 		}
@@ -297,9 +302,106 @@ const stopFlows = () => {
 	particlesContext.clearRect(0, 0, viewport.clientWidth, viewport.clientHeight);
 };
 
+const curveOf = (x1, y1, x2, y2) => {
+	const middle = (y1 + y2) / 2;
+	return `M${x1} ${y1}C${x1} ${middle} ${x2} ${middle} ${x2} ${y2}`;
+};
+
+const curvePoints = (x1, y1, x2, y2) => {
+	const middle = (y1 + y2) / 2;
+	return _.map(_.range(CURVE_STEPS + 1), (step) => {
+		const t = step / CURVE_STEPS;
+		const u = 1 - t;
+		return {
+			x: u * u * u * x1 + 3 * u * u * t * x1 + 3 * u * t * t * x2 + t * t * t * x2,
+			y: u * u * u * y1 + 3 * u * u * t * middle + 3 * u * t * t * middle + t * t * t * y2
+		};
+	});
+};
+
+const piecesOf = (points, link) => {
+	return _.compact(_.map(_.range(points.length - 1), (index) => {
+		const from = points[index];
+		const to = points[index + 1];
+		const length = Math.hypot(to.x - from.x, to.y - from.y);
+		if (length === 0) {
+			return null;
+		}
+
+		const ux = (to.x - from.x) / length;
+		const uy = (to.y - from.y) / length;
+		return { x1: from.x, y1: from.y, length, ux, uy, px: -uy, py: ux, link };
+	}));
+};
+
+const isBranch = (item) => {
+	return !_.isNull(item.querySelector(':scope > ul'));
+};
+
+const nodeBounds = (item) => {
+	const node = item.querySelector(':scope > .topology-node');
+	const left = item.offsetLeft + node.offsetLeft;
+	return { left, right: left + node.offsetWidth };
+};
+
+const packLeaves = (leaves, branch, toward) => {
+	const gap = parseFloat(getComputedStyle(_.head(leaves)).paddingLeft) || 0;
+	const bounds = nodeBounds(branch);
+	if (toward === 'right') {
+		let edge = bounds.left - gap;
+		_.eachRight(leaves, (item) => {
+			const shift = edge - (item.offsetLeft + item.offsetWidth);
+			if (shift > 0) {
+				item.style.left = `${shift}px`;
+			}
+			edge = item.offsetLeft;
+		});
+		return;
+	}
+
+	let edge = bounds.right + gap;
+	_.each(leaves, (item) => {
+		const shift = edge - item.offsetLeft;
+		if (shift < 0) {
+			item.style.left = `${shift}px`;
+		}
+		edge = item.offsetLeft + item.offsetWidth;
+	});
+};
+
+const compactLeaves = () => {
+	_.each(content.querySelectorAll('li[style]'), (item) => { item.style.left = ''; });
+	_.each(content.querySelectorAll('ul'), (list) => {
+		const items = _.filter(list.children, (child) => { return child.matches('li') && child.getClientRects().length > 0; });
+		let run = [];
+		let previousBranch = null;
+		const flush = (nextBranch) => {
+			if (!_.isEmpty(run)) {
+				if (previousBranch) {
+					packLeaves(run, previousBranch, 'left');
+				} else if (nextBranch) {
+					packLeaves(run, nextBranch, 'right');
+				}
+			}
+			run = [];
+		};
+		_.each(items, (item) => {
+			if (isBranch(item)) {
+				flush(item);
+				previousBranch = item;
+				return;
+			}
+
+			run.push(item);
+		});
+		flush(null);
+	});
+};
+
 const drawEdges = () => {
+	compactLeaves();
 	const paths = [];
-	const segments = [];
+	const links = [];
 	const chains = new Map();
 	_.each(content.querySelectorAll('ul ul'), (list) => {
 		const anchor = list.previousElementSibling;
@@ -313,67 +415,46 @@ const drawEdges = () => {
 		const parentY = anchorOffset.y + anchor.offsetHeight;
 		const parentNode = list.parentElement.querySelector(':scope > .topology-node');
 		const flowY = (parentNode ? offsetWithin(parentNode).y + parentNode.offsetHeight : parentY);
-		const targets = _.map(children, (child) => {
+		const hasTraffic = !('noTraffic' in list.dataset);
+		const parentChain = (hasTraffic ? (chains.get(list.parentElement) || []) : null);
+		_.each(children, (child) => {
 			const node = child.querySelector(':scope > .topology-node');
 			const nodeOffset = offsetWithin(node);
-			const isPassedThrough = !_.isNull(child.querySelector(':scope > ul'));
-			return { x: nodeOffset.x + node.offsetWidth / 2, y: nodeOffset.y, flowY: (isPassedThrough ? nodeOffset.y + node.offsetHeight : nodeOffset.y), top: offsetWithin(child).y, edge: readEdge(child) };
-		});
-		const barY = _.head(targets).top;
-		const isUniform = _.every(targets, (target) => { return _.isEqual(target.edge, _.head(targets).edge); });
-		paths.push(toPath(`M${parentX} ${parentY}V${barY}`, (isUniform ? _.head(targets).edge : readEdge(list))));
-		const hasTraffic = !('noTraffic' in list.dataset);
-		const stem = { x1: parentX, y1: flowY, x2: parentX, y2: barY, items: (hasTraffic ? children : []) };
-		const parentChain = (hasTraffic ? (chains.get(list.parentElement) || []) : null);
-		segments.push(stem);
-		_.each(_.partition(_.map(targets, (target, index) => { return { ...target, item: children[index] }; }), (target) => { return target.x < parentX; }), (side) => {
-			let startX = parentX;
-			const ordered = _.sortBy(side, (target) => { return Math.abs(target.x - parentX); });
-			const bus = [];
-			_.each(ordered, (target, index) => {
-				paths.push(toPath(`M${startX} ${barY}H${target.x}V${target.y}`, target.edge));
-				const piece = { x1: startX, y1: barY, x2: target.x, y2: barY, items: (hasTraffic ? _.map(_.slice(ordered, index), 'item') : []) };
-				const drop = { x1: target.x, y1: barY, x2: target.x, y2: target.flowY, items: (hasTraffic ? [target.item] : []) };
-				segments.push(piece, drop);
-				bus.push(piece);
-				if (parentChain) {
-					chains.set(target.item, [...parentChain, [stem, ...bus, drop]]);
-				}
-				startX = target.x;
-			});
+			const x = nodeOffset.x + node.offsetWidth / 2;
+			const y = nodeOffset.y;
+			const throughY = (_.isNull(child.querySelector(':scope > ul')) ? y : nodeOffset.y + node.offsetHeight);
+			paths.push(toPath(curveOf(parentX, parentY, x, y), readEdge(child)));
+			const link = { d: `${curveOf(parentX, flowY, x, y)}${(throughY > y ? `L${x} ${throughY}` : '')}`, items: (hasTraffic ? [child] : []), half: 0 };
+			const points = [...curvePoints(parentX, flowY, x, y), ...(throughY > y ? [{ x, y: throughY }] : [])];
+			link.pieces = piecesOf(points, link);
+			links.push(link);
+			if (parentChain) {
+				chains.set(child, [...parentChain, link.pieces]);
+			}
 		});
 	});
 	edges.setAttribute('width', content.offsetWidth);
 	edges.setAttribute('height', content.offsetHeight);
 	edges.innerHTML = [
 		'<defs><filter id="topology-flow-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4"></feGaussianBlur></filter></defs>',
-		`<g class="topology-flows topology-flow-bands" filter="url(#topology-flow-glow)">${_.map(segments, (segment) => { return `<path class="topology-flow-band" d="M${segment.x1} ${segment.y1}L${segment.x2} ${segment.y2}"></path>`; }).join('')}</g>`,
+		`<g class="topology-flows topology-flow-bands" filter="url(#topology-flow-glow)">${_.map(links, (link) => { return `<path class="topology-flow-band" d="${link.d}"></path>`; }).join('')}</g>`,
 		paths.join('')
 	].join('');
 	const bands = edges.querySelectorAll('.topology-flow-band');
 	const style = getComputedStyle(particles);
 	dotColors = { rx: _.trim(style.getPropertyValue('--blue-500')), tx: _.trim(style.getPropertyValue('--purple-500')) };
-	_.each(segments, (segment, index) => {
-		const length = Math.abs(segment.x2 - segment.x1) + Math.abs(segment.y2 - segment.y1);
-		Object.assign(segment, {
-			length,
-			ux: (length > 0 ? (segment.x2 - segment.x1) / length : 0),
-			uy: (length > 0 ? (segment.y2 - segment.y1) / length : 0),
-			half: 0,
-			band: bands[index]
-		});
-		segment.px = Math.abs(segment.uy);
-		segment.py = Math.abs(segment.ux);
+	_.each(links, (link, index) => {
+		link.band = bands[index];
 	});
-	flows = segments;
-	routes = _.map([...chains], ([item, links]) => {
+	flows = links;
+	routes = _.map([...chains], ([item, hopPieces]) => {
 		let end = 0;
-		const hops = _.map(links, (link) => {
-			const length = _.sumBy(link, 'length');
+		const hops = _.map(hopPieces, (pieces) => {
+			const length = _.sumBy(pieces, 'length');
 			end += length;
 			return { length, end };
 		});
-		const chain = _.flatten(links);
+		const chain = _.flatten(hopPieces);
 		return {
 			item,
 			children: _.filter(item.querySelectorAll(':scope > ul > li'), (child) => { return chains.has(child); }),
@@ -407,7 +488,9 @@ const render = (state) => {
 			expanded,
 			stackTemplate,
 			shareTemplate,
-			shortcutTemplate
+			shortcutTemplate,
+			proxyTemplate,
+			sharingTemplate
 		})}</div>`,
 		{ childrenOnly: true }
 	);

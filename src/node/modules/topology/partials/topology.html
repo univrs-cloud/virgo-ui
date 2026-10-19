@@ -6,11 +6,14 @@
 	const fleetEdge = { connected: 'topology-edge-success', reconnecting: 'topology-edge-warning topology-edge-dashed', expired: 'topology-edge-danger topology-edge-dashed', disabled: 'topology-edge-dotted' }[fleetState];
 	const fleetStatus = { connected: ['fg-success', 'Connected'], reconnecting: ['fg-warning', 'Reconnecting...'], expired: ['fg-danger', 'Registration expired'], disabled: ['fg-4', 'Disabled'] }[fleetState];
 	const proxy = topology.proxy;
-	const isProxyExpanded = expanded.has('proxy');
 	const auth = topology.auth;
-	const isInternalExpanded = expanded.has('internal');
-	const isSharesExpanded = expanded.has('shares');
 	const hasShares = (!_.isEmpty(topology.folders) || !_.isEmpty(topology.timeMachines));
+	const apps = _.sortBy(_.concat(
+		_.map(topology.internal, (stack) => { return { title: stack.title, html: stackTemplate({ stack, edge: 'topology-edge-muted topology-edge-dotted' }) }; }),
+		(auth ? [{ title: auth.title, html: stackTemplate({ stack: auth, edge: 'topology-edge-muted topology-edge-dotted' }) }] : []),
+		(proxy ? [{ title: proxy.title, html: proxyTemplate({ proxy, topology, expanded, stackTemplate, shortcutTemplate }) }] : []),
+		_.map(topology.published, (stack) => { return { title: stack.title, html: stackTemplate({ stack, edge: 'topology-edge-primary topology-edge-dashed' }) }; })
+	), [(app) => { return _.toLower(app.title); }]);
 %>
 <ul>
 	<%if (fleetState) {%>
@@ -64,117 +67,11 @@
 						</div>
 						<%if (proxy || !_.isEmpty(topology.published) || hasShares || !_.isEmpty(topology.internal)) {%>
 							<ul class="topology-edge-primary">
-								<%if (proxy) {%>
-									<%
-										const running = _.size(_.filter(proxy.containers, { state: 'running' }));
-										const active = _.size(_.filter(proxy.containers, (container) => { return _.includes(['running', 'restarting'], container.state); }));
-										const stateColor = (active === _.size(proxy.containers) ? 'fg-success' : (active === 0 ? 'fg-danger' : 'fg-orange-500'));
-									%>
-									<li class="topology-edge-primary" data-traffic="app:<%-proxy.name%>">
-										<div class="topology-node">
-											<div class="topology-icon">
-												<%if (proxy.icon) {%>
-													<img src="<%-(_.includes(proxy.icon, '/') ? proxy.icon : `assets/img/apps/${proxy.icon}`)%>" alt="">
-												<%} else {%>
-													<i class="topology-glyph icon-light icon-layer-group fg-emphasis-secondary"></i>
-												<%}%>
-											</div>
-											<div class="d-flex align-items-center justify-content-center gap-1 max-w-100 mt-2">
-												<i class="icon-solid icon-circle icon-2xs icon-width-auto flex-shrink-0 <%=stateColor%>" data-bs-toggle="tooltip" data-bs-original-title="<%=running%> / <%=_.size(proxy.containers)%> running"></i>
-												<span class="text-truncate"<%if (!_.isEmpty(proxy.routes)) {%> data-bs-toggle="tooltip" data-bs-original-title="<%-_.map(proxy.routes, (route) => { return _.escape(`${route.host}${route.path}`); }).join('<br>')%>"<%}%>><%-proxy.title%></span>
-											</div>
-											<div class="d-flex flex-wrap justify-content-center gap-1 mt-1">
-												<%_.each(proxy.ports, (port) => {%>
-													<u-badge class="topology-detail" color="gray" tint="100" tip="<%=`${port.port} (${_.join(port.protocols, ', ')})`%>" pill><small>:<%=port.port%></small></u-badge>
-												<%})%>
-											</div>
-											<div class="topology-traffic max-w-100" data-traffic-label="app:<%-proxy.name%>"></div>
-										</div>
-										<%if (auth || !_.isEmpty(topology.routed) || !_.isEmpty(topology.proxied)) {%>
-											<div class="topology-stem"></div>
-											<button type="button" class="topology-toggle btn-icon btn-solid theme-primary btn-xs rounded-pill" data-action="toggle" data-key="proxy"><i class="icon-solid icon-<%=(isProxyExpanded ? 'minus' : 'plus')%> icon-xs"></i></button>
-											<%if (isProxyExpanded) {%>
-												<ul class="topology-edge-primary">
-													<%if (auth) {%>
-														<%
-															const authRunning = _.size(_.filter(auth.containers, { state: 'running' }));
-															const authActive = _.size(_.filter(auth.containers, (container) => { return _.includes(['running', 'restarting'], container.state); }));
-															const authStateColor = (authActive === _.size(auth.containers) ? 'fg-success' : (authActive === 0 ? 'fg-danger' : 'fg-orange-500'));
-														%>
-														<li class="topology-edge-primary" data-traffic="app:<%-auth.name%>">
-															<div class="topology-node">
-																<div class="topology-icon">
-																	<%if (auth.icon) {%>
-																		<img src="<%-(_.includes(auth.icon, '/') ? auth.icon : `assets/img/apps/${auth.icon}`)%>" alt="">
-																	<%} else {%>
-																		<i class="topology-glyph icon-light icon-layer-group fg-emphasis-secondary"></i>
-																	<%}%>
-																</div>
-																<div class="d-flex align-items-center justify-content-center gap-1 max-w-100 mt-2">
-																	<i class="icon-solid icon-circle icon-2xs icon-width-auto flex-shrink-0 <%=authStateColor%>" data-bs-toggle="tooltip" data-bs-original-title="<%=authRunning%> / <%=_.size(auth.containers)%> running"></i>
-																	<span class="text-truncate"<%if (!_.isEmpty(auth.routes)) {%> data-bs-toggle="tooltip" data-bs-original-title="<%-_.map(auth.routes, (route) => { return _.escape(`${route.host}${route.path}`); }).join('<br>')%>"<%}%>><%-auth.title%></span>
-																</div>
-																<div class="topology-traffic max-w-100" data-traffic-label="app:<%-auth.name%>"></div>
-															</div>
-														</li>
-													<%}%>
-													<%_.each(topology.routed, (stack) => {%>
-														<%=stackTemplate({ stack, edge: 'topology-edge-primary' })%>
-													<%})%>
-													<%_.each(topology.proxied, (shortcut) => {%>
-														<%=shortcutTemplate({ shortcut, edge: 'topology-edge-primary' })%>
-													<%})%>
-												</ul>
-											<%}%>
-										<%}%>
-									</li>
-								<%}%>
-								<%_.each(topology.published, (stack) => {%>
-									<%=stackTemplate({ stack, edge: 'topology-edge-primary topology-edge-dashed' })%>
+								<%_.each(apps, (app) => {%>
+									<%=app.html%>
 								<%})%>
 								<%if (hasShares) {%>
-									<li class="topology-edge-primary topology-edge-dashed">
-										<div class="topology-node">
-											<div class="topology-icon rounded-5 bg-subtle-primary fg-primary"><i class="icon-duotone icon-solid icon-folder-open"></i></div>
-											<div class="text-truncate max-w-100 mt-2">Sharing</div>
-											<div class="d-flex flex-wrap justify-content-center gap-1 mt-1">
-												<u-badge class="topology-detail" color="gray" tint="100" tip="445 (tcp)" pill><small>:445</small></u-badge>
-											</div>
-											<div class="topology-traffic max-w-100"></div>
-										</div>
-										<div class="topology-stem"></div>
-										<button type="button" class="topology-toggle btn-icon btn-solid theme-primary btn-xs rounded-pill" data-action="toggle" data-key="shares"><i class="icon-solid icon-<%=(isSharesExpanded ? 'minus' : 'plus')%> icon-xs"></i></button>
-										<%if (isSharesExpanded) {%>
-											<ul class="topology-edge-primary topology-edge-dashed">
-												<%_.each(topology.folders, (share) => {%>
-													<%=shareTemplate({ share, icon: 'folder-closed', iconStyle: '' })%>
-												<%})%>
-												<%_.each(topology.timeMachines, (share) => {%>
-													<%=shareTemplate({ share, icon: 'clock-rotate-left', iconStyle: '--icon-primary-opacity: 0.4; --icon-secondary-opacity: 1;' })%>
-												<%})%>
-											</ul>
-										<%}%>
-									</li>
-								<%}%>
-								<%if (!_.isEmpty(topology.internal)) {%>
-									<%const internalTraffic = _.map(topology.internal, (stack) => { return `app:${stack.name}`; }).join(' ');%>
-									<li class="topology-edge-muted topology-edge-dotted" data-traffic="<%-internalTraffic%>">
-										<div class="topology-node">
-											<div class="topology-icon rounded-5 bg-gray-200 fg-gray-600"><i class="icon-duotone icon-solid icon-eye-slash"></i></div>
-											<div class="text-truncate max-w-100 mt-2">Internal only</div>
-											<small class="topology-detail fg-4 text-truncate max-w-100"><%=_.pluralize('app', _.size(topology.internal), true)%></small>
-											<div class="topology-traffic max-w-100" data-traffic-label="<%-internalTraffic%>"></div>
-										</div>
-										<div class="topology-stem"></div>
-										<button type="button" class="topology-toggle btn-icon btn-solid theme-primary btn-xs rounded-pill" data-action="toggle" data-key="internal"><i class="icon-solid icon-<%=(isInternalExpanded ? 'minus' : 'plus')%> icon-xs"></i></button>
-										<%if (isInternalExpanded) {%>
-											<ul class="topology-edge-muted topology-edge-dotted">
-												<%_.each(topology.internal, (stack) => {%>
-													<%=stackTemplate({ stack, edge: 'topology-edge-muted topology-edge-dotted' })%>
-												<%})%>
-											</ul>
-										<%}%>
-									</li>
+									<%=sharingTemplate({ topology, expanded, shareTemplate })%>
 								<%}%>
 							</ul>
 						<%}%>

@@ -643,7 +643,7 @@ $card-image-size: 30px;
 			display: flex;
 			justify-content: center;
 			margin: 0;
-			padding: var(--topology-gap) 0 0;
+			padding: calc(var(--topology-gap) * 2) 0 0;
 			list-style: none;
 		}
 		li {
@@ -652,9 +652,6 @@ $card-image-size: 30px;
 			flex-direction: column;
 			align-items: center;
 			padding: var(--topology-gap) map.get($spacers, 3) 0;
-		}
-		li:not(:has(> ul)) {
-			padding-top: calc(var(--topology-gap) * 2);
 		}
 	}
 	.topology-content {
