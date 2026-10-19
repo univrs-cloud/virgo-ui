@@ -710,6 +710,9 @@ $card-image-size: 30px;
 		.topology-node > :has(> .topology-detail):not(:has(> :not(.topology-detail))) {
 			display: none !important;
 		}
+		.topology-icon:not([class*="bg-"]) {
+			background-image: radial-gradient(circle closest-side, var(--card-bg) 45%, transparent);
+		}
 		.topology-node > :not(.topology-icon):not(:empty):not(:has(> u-badge)) {
 			padding-inline: map.get($spacers, 1);
 			border-radius: var(--radius-3);
@@ -723,6 +726,9 @@ $card-image-size: 30px;
 		align-items: center;
 		width: 8.5rem;
 		text-align: center;
+	}
+	.topology-node.stopped .topology-icon {
+		filter: grayscale(1);
 	}
 	.topology-icon {
 		display: flex;

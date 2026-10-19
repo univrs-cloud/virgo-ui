@@ -6,7 +6,7 @@
 	const routesTip = _.map(stack.routes, (route) => { return _.escape(`${route.host}${route.path}`); }).join('<br>');
 %>
 <li class="<%-edge%>" data-traffic="app:<%-stack.name%>">
-	<div class="topology-node">
+	<div class="topology-node<%=(running === 0 ? ' stopped' : '')%>">
 		<div class="topology-icon">
 			<%if (stack.icon) {%>
 				<img src="<%-(_.includes(stack.icon, '/') ? stack.icon : `assets/img/apps/${stack.icon}`)%>" alt="">
@@ -31,6 +31,6 @@
 				<%}%>
 			</div>
 		<%}%>
-		<div class="topology-traffic max-w-100" data-traffic-label="app:<%-stack.name%>"></div>
+		<div class="topology-traffic max-w-100"<%if (running > 0) {%> data-traffic-label="app:<%-stack.name%>"<%}%>></div>
 	</div>
 </li>
