@@ -641,6 +641,7 @@ $card-image-size: 30px;
 		ul {
 			position: relative;
 			display: flex;
+			align-items: flex-start;
 			justify-content: center;
 			margin: 0;
 			padding: calc(var(--topology-gap) * 2) 0 0;
@@ -703,7 +704,7 @@ $card-image-size: 30px;
 			display: none;
 		}
 		.topology-traffic {
-			min-height: calc(map.get($font-sizes, "xs", "font-size") * map.get($font-sizes, "xs", "line-height"));
+			height: calc(map.get($font-sizes, "xs", "font-size") * map.get($font-sizes, "xs", "line-height"));
 		}
 		.topology-detail,
 		.topology-node > :has(> .topology-detail):not(:has(> :not(.topology-detail))) {

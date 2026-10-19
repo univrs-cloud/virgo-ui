@@ -335,7 +335,7 @@ const piecesOf = (points, link) => {
 };
 
 const isBranch = (item) => {
-	return !_.isNull(item.querySelector(':scope > ul'));
+	return !_.isNull(item.querySelector(':scope > ul, :scope > button[data-action="toggle"]'));
 };
 
 const nodeBounds = (item) => {
