@@ -1,7 +1,10 @@
 import Job from 'stores/job';
 import Host from 'stores/host';
 import Share from 'stores/share';
+import User from 'stores/user';
 import { createSubscription, storeAttach } from 'libs/services/module_store_subscription';
+
+const DEFAULT_NETWORK_INTERFACE_SPEED_BPS = 1_000_000_000;
 
 const { subscribe } = createSubscription({
 	stores: [
@@ -15,7 +18,11 @@ const { subscribe } = createSubscription({
 		},
 		{
 			store: Share,
-			propertyNames: ['shares']
+			propertyNames: ['shares', 'clients']
+		},
+		{
+			store: User,
+			propertyNames: ['users']
 		}
 	],
 	filters: {
@@ -23,7 +30,7 @@ const { subscribe } = createSubscription({
 	},
 	attachStore: storeAttach.beforeCallbacks,
 	mapState: (properties) => {
-		const timeMachines = filterTimeMachines(properties?.shares);
+		const timeMachines = composeTimeMachines(properties?.shares, properties?.clients);
 		const networkInterface = _.find(properties?.system?.networkInterfaces, { default: true });
 		return {
 			timeMachines,
@@ -35,6 +42,37 @@ const { subscribe } = createSubscription({
 
 function isTimeMachinesJob(job) {
 	return _.startsWith(job?.name, 'share');
+}
+
+function composeTimeMachines(shares, clients) {
+	const timeMachines = filterTimeMachines(shares);
+	if (_.isNull(timeMachines)) {
+		return null;
+	}
+
+	return _.map(timeMachines, (timeMachine) => {
+		const timeMachineClients = getTimeMachineClients(timeMachine, clients);
+		return {
+			...timeMachine,
+			clients: timeMachineClients,
+			network: { rx: _.sumBy(timeMachineClients, 'rx'), tx: _.sumBy(timeMachineClients, 'tx') }
+		};
+	});
+}
+
+function getTimeMachineClients(timeMachine, clients) {
+	const name = _.toLower(timeMachine.name);
+	const sessions = _.map((_.isArray(clients) ? clients : []), (session) => {
+		return { ...session, shares: _.uniq(_.map(session.shares, _.toLower)) };
+	});
+	return _.sortBy(_.map(_.groupBy(_.filter(sessions, (session) => { return _.includes(session.shares, name); }), 'address'), (group, address) => {
+		return {
+			address,
+			usernames: _.sortBy(_.uniq(_.map(group, 'username')), _.toLower),
+			rx: _.sumBy(group, (session) => { return (session.rx || 0) / _.size(session.shares); }),
+			tx: _.sumBy(group, (session) => { return (session.tx || 0) / _.size(session.shares); })
+		};
+	}), 'address');
 }
 
 function filterTimeMachines(shares) {
@@ -58,7 +96,15 @@ const getSystem = () => {
 };
 
 const getTimeMachines = () => {
-	return filterTimeMachines(Share.getShares());
+	return composeTimeMachines(Share.getShares(), Share.getClients());
+};
+
+const getDefaultNetworkInterface = () => {
+	return _.find(Host.getSystem()?.networkInterfaces, { default: true });
+};
+
+const getDefaultNetworkInterfaceSpeed = () => {
+	return ((getDefaultNetworkInterface()?.speed || (DEFAULT_NETWORK_INTERFACE_SPEED_BPS / 1_000_000)) * 1_000_000 / 8);
 };
 
 const createTimeMachine = (data) => {
@@ -81,6 +127,8 @@ export {
 	getJobs,
 	getSystem,
 	getTimeMachines,
+	getDefaultNetworkInterface,
+	getDefaultNetworkInterfaceSpeed,
 	createTimeMachine,
 	updateTimeMachine,
 	deleteTimeMachine

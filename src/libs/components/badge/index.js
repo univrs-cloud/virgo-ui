@@ -28,19 +28,18 @@ export class Badge extends LitElement {
 		this.pill = false;
 		this.border = false;
 		this.tip = '';
+		this.addEventListener('mouseleave', () => { this.#tooltip?.hide(); });
+	}
+
+	connectedCallback() {
+		super.connectedCallback();
+		this.#tooltip = new bootstrap.Tooltip(this, { selector: false, trigger: 'hover', title: () => { return this.tip; } });
 	}
 
 	disconnectedCallback() {
 		super.disconnectedCallback();
 		this.#tooltip?.dispose();
 		this.#tooltip = null;
-	}
-
-	firstUpdated() {
-		const badge = this.renderRoot.querySelector('.badge');
-		if (badge) {
-			this.#tooltip = new bootstrap.Tooltip(badge, { container: this.closest('dialog') ?? 'body' });
-		}
 	}
 
 	render() {
@@ -51,12 +50,7 @@ export class Badge extends LitElement {
 			'border border-white': this.border
 		};
 		return html`
-			<div
-				class="d-flex align-items-center badge ${classMap(classes)} fw-normal"
-				data-bs-original-title="${this.tip}"
-				@mouseenter=${() => { this.#tooltip?.show(); }}
-				@mouseleave=${() => { this.#tooltip?.hide(); }}
-			>
+			<div class="d-flex align-items-center badge ${classMap(classes)} fw-normal">
 				<slot></slot>
 			</div>
 		`;

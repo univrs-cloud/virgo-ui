@@ -1,12 +1,15 @@
-<%const isSharesExpanded = expanded.has('shares');%>
-<li class="topology-edge-primary topology-edge-dashed">
+<%
+	const isSharesExpanded = expanded.has('shares');
+	const sharesTraffic = _.map(_.concat(topology.folders, topology.timeMachines), (share) => { return `smbshare:${_.toLower(share.name)}`; }).join(' ');
+%>
+<li class="topology-edge-primary topology-edge-dashed" data-traffic-subtree="<%-sharesTraffic%>" data-traffic-relay data-sharing>
 	<div class="topology-node">
 		<div class="topology-icon rounded-5 bg-subtle-primary fg-primary"><i class="icon-duotone icon-solid icon-folder-open"></i></div>
 		<div class="text-truncate max-w-100 mt-2">Sharing</div>
 		<div class="d-flex flex-wrap justify-content-center gap-1 mt-1">
 			<u-badge class="topology-detail" color="gray" tint="100" tip="445 (tcp)" pill><small>:445</small></u-badge>
 		</div>
-		<div class="topology-traffic max-w-100"></div>
+		<div class="topology-traffic max-w-100" data-traffic-label="<%-sharesTraffic%>"></div>
 	</div>
 	<div class="topology-stem"></div>
 	<button type="button" class="topology-toggle btn-icon btn-solid theme-primary btn-xs rounded-pill" data-action="toggle" data-key="shares"><i class="icon-solid icon-<%=(isSharesExpanded ? 'minus' : 'plus')%> icon-xs"></i></button>

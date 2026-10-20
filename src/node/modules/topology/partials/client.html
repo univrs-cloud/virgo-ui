@@ -1,0 +1,8 @@
+<li class="topology-edge-muted" data-traffic="smb:<%-client.address%>" data-traffic-relay data-client="<%-client.address%>"<%if (!client.isLocal) {%> data-client-remote<%}%> data-client-shares="<%-_.join(client.shares, ' ')%>">
+	<div class="topology-node">
+		<div class="topology-icon rounded-5 bg-gray-200 fg-gray-600"><i class="icon-duotone icon-solid icon-laptop"></i></div>
+		<div class="text-truncate max-w-100 mt-2"><%-_.join(client.usernames, ', ')%></div>
+		<small class="d-block fg-4 text-truncate max-w-100"><%-client.address%></small>
+		<div class="topology-traffic max-w-100" data-traffic-label="smb:<%-client.address%>"></div>
+	</div>
+</li>

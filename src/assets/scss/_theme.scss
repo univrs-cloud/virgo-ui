@@ -419,6 +419,8 @@ $card-image-size: 30px;
 	}
 }
 #apps,
+#folders,
+#time-machines,
 #storage,
 #system-services {
 	.details {
@@ -474,6 +476,8 @@ $card-image-size: 30px;
 	}
 }
 #apps,
+#folders,
+#time-machines,
 #storage,
 #system-services {
 	&:has(.details .item) > .row > .container-fluid > .card {
@@ -657,6 +661,18 @@ $card-image-size: 30px;
 	}
 	.topology-content {
 		position: relative;
+		> .topology-clients {
+			margin-bottom: calc(var(--topology-gap) * 2);
+		}
+		.topology-node > .topology-clients {
+			position: absolute;
+			top: 0;
+			left: 100%;
+			padding: 0;
+			> li {
+				padding-top: 0;
+			}
+		}
 		> ul {
 			padding-top: 0;
 			> li {
@@ -713,7 +729,7 @@ $card-image-size: 30px;
 		.topology-icon:not([class*="bg-"]) {
 			background-image: radial-gradient(circle closest-side, var(--card-bg) 45%, transparent);
 		}
-		.topology-node > :not(.topology-icon):not(:empty):not(:has(> u-badge)) {
+		.topology-node > :not(.topology-icon):not(.topology-clients):not(:empty):not(:has(> u-badge)) {
 			padding-inline: map.get($spacers, 1);
 			border-radius: var(--radius-3);
 			background-color: var(--card-bg);
@@ -745,7 +761,7 @@ $card-image-size: 30px;
 			pointer-events: none;
 		}
 		.topology-glyph {
-			font-size: 2.25rem;
+			font-size: 1.75rem;
 		}
 	}
 	.topology-toggle:hover {

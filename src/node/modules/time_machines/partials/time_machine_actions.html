@@ -1,0 +1,27 @@
+<%if (!_.isEmpty(jobs)) {%>
+	<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-solid icon-gear icon-fw icon-spin"></i></span>
+<%} else {%>
+	<%if (inline) {%>
+		<div class="d-inline-flex align-items-center bg-2 rounded-3">
+			<div class="d-inline-flex align-items-center px-1">
+				<a href="#time-machine-update" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 rounded-3" data-bs-toggle="dialog" aria-label="Edit"><i class="icon-solid icon-pen icon-fw fg-black"></i></a>
+			</div>
+	<%}%>
+	<div class="<%=(inline ? 'dropdown position-relative' : 'dropdown')%>">
+		<%if (inline) {%>
+			<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="actions-toggle btn-icon btn-text theme-secondary btn-sm rounded-3"><i class="icon-solid icon-ellipsis-vertical icon-fw fg-secondary"></i></span>
+		<%} else {%>
+			<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw fg-secondary"></i></span>
+		<%}%>
+		<div class="menu">
+			<%if (!inline) {%>
+				<a href="#time-machine-update" class="menu-item" data-bs-toggle="dialog"><i class="icon-regular icon-pen icon-fw"></i>Edit</a>
+				<div class="menu-divider"></div>
+			<%}%>
+			<a href="#" class="menu-item fg-danger confirm" data-action="delete"><i class="icon-regular icon-times icon-fw"></i>Delete</a>
+		</div>
+	</div>
+	<%if (inline) {%>
+		</div>
+	<%}%>
+<%}%>

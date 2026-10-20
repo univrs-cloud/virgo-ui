@@ -40,9 +40,13 @@
 			</div>
 
 			<div class="position-relative">
+				<div class="nav nav-underline d-flex gap-0 border-bottom">
+					<button type="button" class="nav-link px-4 active border-primary fw-light"><i class="icon-light icon-circle-info icon-fw"></i>Overview</button>
+				</div>
+
 				<div class="table-scroll overflow-y-scroll pe-5 mx-0 me--5">
-					<div class="card mb-3">
-						<div class="card-body py-3">
+					<div class="list-group list-group-flush">
+						<div class="list-group-item pt-5 pb-7">
 							<div class="d-flex flex-column md:flex-row md:align-items-center gap-1 md:gap-5">
 								<small class="fg-4 flex-shrink-0 text-truncate" style="width: 8.5rem;"><i class="icon-solid icon-heart-pulse icon-fw me-1"></i>Health</small>
 								<h4 class="m-0 flex-grow-1 <%-healthClass%>"><%-health || '—'%></h4>
@@ -109,10 +113,8 @@
 								<%}%>
 							</div>
 						</div>
-					</div>
 
-					<div class="card mb-3">
-						<div class="card-body py-3">
+						<div class="list-group-item pt-5 pb-7">
 							<div class="d-flex align-items-center min-w-0 mb-3">
 								<i class="icon-light icon-chart-pie icon-fw fg-4 me-3"></i>
 								<span>Usage</span>
@@ -156,14 +158,13 @@
 								</div>
 							</div>
 						</div>
-					</div>
 
-					<div class="card mb-3">
-						<div class="card-body py-3">
-							<div class="d-flex align-items-center min-w-0">
-								<i class="icon-light icon-list-tree icon-fw fg-4 me-3"></i>
-								<span>Topology</span>
-								<small class="fg-4 ms-3">(<%=_.pluralize('group', _.size(groups), true)%>)</small>
+						<div class="list-group-item px-0 pt-5 pb-3">
+							<div class="px-5">
+								<div class="d-flex align-items-center min-w-0">
+									<i class="icon-light icon-list-tree icon-fw fg-4 me-3"></i>
+									<span>Topology</span>
+									<small class="fg-4 ms-3">(<%=_.pluralize('group', _.size(groups), true)%>)</small>
 							</div>
 							<div class="vdev-tree d-flex flex-wrap justify-content-center gap-7 py-5">
 								<%_.each(groups, (group) => {%>
@@ -202,22 +203,23 @@
 									</div>
 								<%})%>
 							</div>
-						</div>
-						<div class="details-toggle d-inline-flex align-items-center cursor-pointer ps-5 pb-3" data-bs-toggle="collapse" data-bs-target="#vdev-details-<%-_.kebabCase(pool.name)%>" aria-expanded="false" aria-controls="vdev-details-<%-_.kebabCase(pool.name)%>">
-							<small class="fg-4">Details</small>
-							<i class="icon-solid icon-chevron-down icon-fw icon-xs fg-secondary ms-1"></i>
-						</div>
-						<div class="tree-rows collapse pb-3" id="vdev-details-<%-_.kebabCase(pool.name)%>">
-							<%_.each(vdevSections, (section) => {%>
-								<small class="d-block fg-4 ps-5 mt-3"><%-SECTION_LABELS[section.key]%></small>
-								<%_.each(section.rows, ({ vdev, drive, depth, isLast, role, pair, activity, close }) => {%>
-									<%if (close) {%>
-										</div>
-									<%} else {%>
-										<%=poolVdevTemplate({ vdev, drive, depth, isLast, role, pair, activity, stateColor, healthColor, driveHealthTip, prettyBytes })%>
-									<%}%>
+							</div>
+							<div class="details-toggle d-inline-flex align-items-center cursor-pointer ps-5 pb-3" data-bs-toggle="collapse" data-bs-target="#vdev-details-<%-_.kebabCase(pool.name)%>" aria-expanded="false" aria-controls="vdev-details-<%-_.kebabCase(pool.name)%>">
+								<small class="fg-4">Details</small>
+								<i class="icon-solid icon-chevron-down icon-fw icon-xs fg-secondary ms-1"></i>
+							</div>
+							<div class="tree-rows collapse pb-3" id="vdev-details-<%-_.kebabCase(pool.name)%>">
+								<%_.each(vdevSections, (section) => {%>
+									<small class="d-block fg-4 ps-5 mt-3"><%-SECTION_LABELS[section.key]%></small>
+									<%_.each(section.rows, ({ vdev, drive, depth, isLast, role, pair, activity, close }) => {%>
+										<%if (close) {%>
+											</div>
+										<%} else {%>
+											<%=poolVdevTemplate({ vdev, drive, depth, isLast, role, pair, activity, stateColor, healthColor, driveHealthTip, prettyBytes })%>
+										<%}%>
+									<%})%>
 								<%})%>
-							<%})%>
+							</div>
 						</div>
 					</div>
 				</div>

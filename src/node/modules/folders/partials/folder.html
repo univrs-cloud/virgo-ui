@@ -1,4 +1,4 @@
-<tr class="item" data-id="<%-folder.name%>">
+<tr class="item cursor-pointer" data-id="<%-folder.name%>">
 	<td style="min-width: 210px; max-width: 0;">
 		<div class="d-flex align-items-center mb--1">
 			<div class="text-truncate"><%-folder.comment%></div>
@@ -19,6 +19,19 @@
 		<div class="d-flex">
 			<div class="text-truncate"><small class="fg-4"><%-folder.path%></small></div>
 		</div>
+	</td>
+	<td class="text-nowrap d-none md:d-table-cell">
+		<%if (_.isEmpty(folder.clients)) {%>
+			<u-badge color="gray" tint="100" pill>
+				<i class="icon-solid icon-user icon-xs fg-4"></i>
+				<small>0</small>
+			</u-badge>
+		<%} else {%>
+			<u-badge color="gray" tint="100" tip="<%-_.map(folder.clients, (client) => { return _.escape(`${_.join(client.usernames, ', ')} (${client.address})`); }).join('<br>')%>" pill>
+				<i class="icon-solid icon-user icon-xs fg-green-500"></i>
+				<small><%-_.size(folder.clients)%></small>
+			</u-badge>
+		<%}%>
 	</td>
 	<td>
 		<div class="d-flex flex-row justify-content-center">
@@ -52,6 +65,20 @@
 		<%}%>
 	</td>
 	<td class="text-end text-nowrap d-none md:d-table-cell">
+		<small class="fw-light fg-emphasis-secondary d-flex">
+			<span class="d-inline-block text-start" style="width: 12px;">
+				<i class="icon-solid icon-arrow-down icon-fw icon-2xs fg-blue-500"></i>
+			</span>
+			<span class="ms-auto"><%=prettyBytes(folder.network.rx, { binary: true })%></span>
+		</small>
+		<small class="fw-light fg-emphasis-secondary d-flex">
+			<span class="d-inline-block text-start" style="width: 12px;">
+				<i class="icon-solid icon-arrow-up icon-fw icon-2xs fg-purple-500"></i>
+			</span>
+			<span class="ms-auto"><%=prettyBytes(folder.network.tx, { binary: true })%></span>
+		</small>
+	</td>
+	<td class="text-end text-nowrap d-none md:d-table-cell">
 		<small class="fw-light fg-emphasis-secondary"><%=prettyBytes(folder.size || 0, { binary: true })%></small>
 	</td>
 	<td class="text-end text-nowrap d-none md:d-table-cell">
@@ -61,29 +88,9 @@
 		</u-progress>
 	</td>
 	<td class="text-center px-0">
-		<%if (!_.isEmpty(jobs)) {%>
-			<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-solid icon-gear icon-fw icon-spin"></i></span>
-		<%} else {%>
-			<div class="dropdown">
-				<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw fg-secondary"></i></span>
-				<div class="menu">
-					<a href="#folder-update" class="menu-item" data-bs-toggle="dialog"><i class="icon-regular icon-pen icon-fw"></i>Edit</a>
-					<%if (folder.snapshotPolicy) {%>
-						<%const snapshotMode = _.toLower(folder.snapshotPolicy.mode);%>
-						<div class="menu-header">Snapshots</div>
-						<%if (snapshotMode === 'enabled') {%>
-							<a href="#" class="menu-item" data-action="snapshots" data-mode="paused"><i class="icon-regular icon-pause icon-fw"></i>Pause</a>
-						<%} else {%>
-							<a href="#" class="menu-item" data-action="snapshots" data-mode="enabled"><i class="icon-regular icon-clock-rotate-left icon-fw"></i><%=(snapshotMode === 'paused' ? 'Resume' : 'Enable')%></a>
-						<%}%>
-						<%if (snapshotMode !== 'disabled') {%>
-							<a href="#" class="menu-item fg-danger" data-action="snapshots" data-mode="disabled"><i class="icon-regular icon-ban icon-fw"></i>Disable</a>
-						<%}%>
-					<%}%>
-					<div class="menu-divider"></div>
-					<a href="#" class="menu-item fg-danger confirm" data-action="delete"><i class="icon-regular icon-times icon-fw"></i><%=(folder.isCustom ? 'Remove' : 'Delete')%></a>
-				</div>
-			</div>
-		<%}%>
+		<%=folderActionsTemplate({ folder, jobs, inline: false })%>
+	</td>
+	<td class="text-end pe-0">
+		<i class="icon-light icon-angle-right icon-fw fg-4"></i>
 	</td>
 </tr>

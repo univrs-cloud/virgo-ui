@@ -33,6 +33,7 @@ export class Button extends LitElement {
 		this.outline = false;
 		this.tip = '';
 		this.disabled = false;
+		this.addEventListener('mouseleave', () => { this.#tooltip?.hide(); });
 	}
 
 	connectedCallback() {
@@ -40,6 +41,7 @@ export class Button extends LitElement {
 		this.#initialSlotContent = Array.from(this.childNodes).map(node => node.cloneNode(true));
 		this.#initialTip = this.tip;
 		this.#initialDisabled = this.hasAttribute('disabled');
+		this.#tooltip = new bootstrap.Tooltip(this, { selector: false, trigger: 'hover', title: () => { return this.tip; } });
 	}
 
 	disconnectedCallback() {
@@ -52,13 +54,6 @@ export class Button extends LitElement {
 		this.reset();
 		this.tip = this.#initialTip;
 		this.disabled = this.#initialDisabled;
-	}
-
-	firstUpdated() {
-		const span = this.renderRoot.querySelector('span');
-		if (span) {
-			this.#tooltip = new bootstrap.Tooltip(span, { container: this.closest('dialog') ?? 'body' });
-		}
 	}
 
 	loading() {
@@ -81,12 +76,7 @@ export class Button extends LitElement {
 			[`btn-${this.size}`]: !!this.size
 		};
 		return html`
-			<span
-				class="d-inline-block"
-				data-bs-original-title="${this.tip}"
-				@mouseenter=${() => { this.#tooltip?.show(); }}
-				@mouseleave=${() => { this.#tooltip?.hide(); }}
-			>
+			<span class="d-inline-block">
 				<button
 					type="${this.type || 'button'}"
 					class="${classMap(classes)} d-inline-flex align-items-center"

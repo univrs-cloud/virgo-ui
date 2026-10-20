@@ -67,19 +67,18 @@ export class ProgressBar extends LitElement {
 		this.striped = false;
 		this.animated = false;
 		this.tip = '';
+		this.addEventListener('mouseleave', () => { this.#tooltip?.hide(); });
+	}
+
+	connectedCallback() {
+		super.connectedCallback();
+		this.#tooltip = new bootstrap.Tooltip(this, { selector: false, trigger: 'hover', title: () => { return this.tip; } });
 	}
 
 	disconnectedCallback() {
 		super.disconnectedCallback();
 		this.#tooltip?.dispose();
 		this.#tooltip = null;
-	}
-
-	firstUpdated() {
-		const progressBar = this.renderRoot.querySelector('.progress-bar');
-		if (progressBar) {
-			this.#tooltip = new bootstrap.Tooltip(progressBar, { container: this.closest('dialog') ?? 'body' });
-		}
 	}
 
 	render() {
@@ -94,13 +93,7 @@ export class ProgressBar extends LitElement {
 
 		return html`
 			<style>:host { width: ${this.width}%; }</style>
-			<div
-				class="progress-bar ${classMap(classes)}"
-				data-bs-original-title="${this.tip}"
-				@mouseenter=${() => { this.#tooltip?.show(); }}
-				@mouseleave=${() => { this.#tooltip?.hide(); }}
-			>
-			</div>
+			<div class="progress-bar ${classMap(classes)}"></div>
 		`;
 	}
 }
