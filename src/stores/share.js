@@ -3,7 +3,8 @@ import Store from 'stores/store';
 class Share extends Store {
 	constructor() {
 		const initialState = {
-			shares: null
+			shares: null,
+			clients: null
 		};
 		super({
 			namespace: 'share'
@@ -14,10 +15,18 @@ class Share extends Store {
 		this.socket.on('shares', (shares) => {
 			this.setState({ shares }, 'get_shares');
 		});
+
+		this.socket.on('share:clients', (clients) => {
+			this.setState({ clients }, 'get_clients');
+		});
 	}
 
 	getShares() {
 		return this.getStateProperty('shares');
+	}
+
+	getClients() {
+		return this.getStateProperty('clients');
 	}
 
 	createShare(data) {

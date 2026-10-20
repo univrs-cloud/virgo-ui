@@ -14,7 +14,16 @@
 		(proxy ? [{ title: proxy.title, html: proxyTemplate({ proxy, topology, expanded, stackTemplate, shortcutTemplate }) }] : []),
 		_.map(topology.published, (stack) => { return { title: stack.title, html: stackTemplate({ stack, edge: 'topology-edge-primary topology-edge-dashed' }) }; })
 	), [(app) => { return _.toLower(app.title); }]);
+	const localClients = _.filter(topology.clients, 'isLocal');
+	const remoteClients = _.reject(topology.clients, 'isLocal');
 %>
+<%if (!fleetState && !_.isEmpty(remoteClients)) {%>
+	<ul class="topology-clients">
+		<%_.each(remoteClients, (client) => {%>
+			<%=clientTemplate({ client })%>
+		<%})%>
+	</ul>
+<%}%>
 <ul>
 	<%if (fleetState) {%>
 		<li>
@@ -23,19 +32,33 @@
 				<div class="text-truncate max-w-100 mt-2">Fleet</div>
 				<small class="d-block fg-4 text-truncate max-w-100"><%-fleet.email%></small>
 				<small class="d-flex align-items-center justify-content-center <%=fleetStatus[0]%>"><i class="icon-solid icon-circle icon-2xs icon-width-auto me-1"></i><%=fleetStatus[1]%></small>
+				<%if (!_.isEmpty(remoteClients)) {%>
+					<ul class="topology-clients">
+						<%_.each(remoteClients, (client) => {%>
+							<%=clientTemplate({ client })%>
+						<%})%>
+					</ul>
+				<%}%>
 			</div>
 			<ul class="<%=fleetEdge%>" data-no-traffic>
 	<%}%>
-	<li>
+	<li data-internet>
 		<div class="topology-node">
 			<div class="topology-icon rounded-5 bg-subtle-primary fg-primary"><i class="icon-duotone icon-solid icon-globe"></i></div>
 			<div class="text-truncate max-w-100 mt-2">Internet</div>
 			<%if (domainName) {%>
 				<small class="d-block fg-4 text-truncate max-w-100"><%-domainName%></small>
 			<%}%>
+			<%if (!_.isEmpty(localClients)) {%>
+				<ul class="topology-clients">
+					<%_.each(localClients, (client) => {%>
+						<%=clientTemplate({ client })%>
+					<%})%>
+				</ul>
+			<%}%>
 		</div>
 		<ul class="topology-edge-primary" data-no-traffic>
-			<li>
+			<li data-router>
 				<div class="topology-node">
 					<div class="topology-icon rounded-5 bg-subtle-primary fg-primary"><i class="icon-duotone icon-solid icon-router"></i></div>
 					<div class="text-truncate max-w-100 mt-2">Router</div>

@@ -1,11 +1,18 @@
+import copy from 'copy-to-clipboard';
+import page from 'page';
 import modulePartial from 'node/modules/time_machines/partials/index.html';
 import timeMachinePartial from 'node/modules/time_machines/partials/time_machine.html';
+import timeMachineActionsPartial from 'node/modules/time_machines/partials/time_machine_actions.html';
+import timeMachineDetailsPartial from 'node/modules/time_machines/partials/time_machine_details.html';
 import * as timeMachineService from 'node/modules/time_machines/services/time_machine';
-import copy from 'copy-to-clipboard';
+import * as userService from 'node/modules/time_machines/services/user';
 import { filterListByQuery } from 'utils/list_search';
+import { getShareAddress } from 'utils/share_address';
 
 const moduleTemplate = _.template(modulePartial);
 const timeMachineTemplate = _.template(timeMachinePartial);
+const timeMachineActionsTemplate = _.template(timeMachineActionsPartial);
+const timeMachineDetailsTemplate = _.template(timeMachineDetailsPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
 const module = document.querySelector('#time-machines');
 const loading = module.querySelector('.loading');
@@ -13,20 +20,25 @@ const container = module.querySelector('.container-fluid');
 const searchInput = module.querySelector('.search');
 const listCount = module.querySelector('.list-count');
 const table = container.querySelector('.table');
+const details = container.querySelector('.details');
+let routeTimeMachineName = null;
 let searchTimer;
 let searchValue = '';
 let tableOrder = {
 	field: 'name',
 	direction: 'asc'
 };
+let timeMachines = [];
+const timeMachineTabs = {};
 
 const search = (event) => {
 	clearTimeout(searchTimer);
 	searchTimer = setTimeout(() => {
 		searchValue = event.target.value;
 		const timeMachines = timeMachineService.getTimeMachines();
+		const networkInterface = timeMachineService.getDefaultNetworkInterface();
 		const jobs = timeMachineService.getJobs();
-		render({ timeMachines, jobs });
+		render({ timeMachines, networkInterface, jobs });
 	}, 300);
 };
 
@@ -51,8 +63,51 @@ const order = (event) => {
 	_.each(table.querySelectorAll('thead th'), (cell) => { cell.classList.remove('asc', 'desc'); });
 	cell.classList.add(tableOrder.direction);
 	const timeMachines = timeMachineService.getTimeMachines();
+	const networkInterface = timeMachineService.getDefaultNetworkInterface();
 	const jobs = timeMachineService.getJobs();
-	render({ timeMachines, jobs });
+	render({ timeMachines, networkInterface, jobs });
+};
+
+const expand = (event) => {
+	if (event.target.closest('a, .dropdown')) {
+		return;
+	}
+
+	const row = event.target.closest('.item');
+	if (_.isNull(row)) {
+		return;
+	}
+
+	event.preventDefault();
+	page(`/time-machines/${encodeURIComponent(row.dataset.id)}`);
+};
+
+const selectTab = (event) => {
+	const button = event.target.closest('[data-time-machine-tab]');
+	const name = button?.closest('.item')?.dataset?.id;
+	if (!name) {
+		return;
+	}
+
+	timeMachineTabs[name] = button.dataset.timeMachineTab;
+	renderTimeMachineDetails(name);
+};
+
+const clearTimeMachineTabs = (name) => {
+	_.each(_.keys(timeMachineTabs), (key) => {
+		if (_.isUndefined(name) || _.toLower(key) === _.toLower(name)) {
+			delete timeMachineTabs[key];
+		}
+	});
+};
+
+const compress = (event) => {
+	if (!event.target.closest('button')?.classList.contains('compress')) {
+		return;
+	}
+
+	event.preventDefault();
+	page('/time-machines');
 };
 
 const copyToClipboard = (event) => {
@@ -74,13 +129,43 @@ const copyToClipboard = (event) => {
 	}
 };
 
+const filterJobsByTimeMachine = (jobs, timeMachine) => {
+	return _.filter(jobs, (job) => { return job.data?.config?.comment === timeMachine.comment; });
+};
+
+const renderTimeMachineDetails = (name) => {
+	if (!name) {
+		return;
+	}
+
+	const timeMachine = _.find(timeMachines, (entry) => { return _.toLower(entry.name) === _.toLower(name); });
+	if (!timeMachine) {
+		return;
+	}
+
+	const jobs = filterJobsByTimeMachine(timeMachineService.getJobs(), timeMachine);
+	const users = userService.getUsers();
+	const accessOn = getShareAddress(timeMachineService.getSystem());
+	const networkMaxBytesPerSec = timeMachineService.getDefaultNetworkInterfaceSpeed();
+	morphdom(
+		details,
+		`<div>${timeMachineDetailsTemplate({ timeMachine, users, jobs, accessOn, networkMaxBytesPerSec, timeMachineTab: timeMachineTabs[name] || 'overview', timeMachineActionsTemplate, prettyBytes, moment })}</div>`,
+		{ childrenOnly: true }
+	);
+};
+
+const hideTimeMachineDetails = () => {
+	details.classList.remove('d-block');
+	details.innerHTML = '';
+};
+
 const render = (state) => {
 	if (_.isNull(state.timeMachines)) {
 		return;
 	}
-	
-	const accessOn = _.find(state.networkInterface?.addrInfo, { family: 'inet' })?.local;
-	let timeMachines = state.timeMachines;
+
+	const accessOn = getShareAddress(timeMachineService.getSystem());
+	timeMachines = state.timeMachines;
 	timeMachines = filterListByQuery(timeMachines, searchValue, ['name', 'path', 'comment', 'validUsers']);
 	const total = _.size(state.timeMachines);
 	const noun = (total === 1 ? 'time machine' : 'time machines');
@@ -95,8 +180,8 @@ const render = (state) => {
 		[tableOrder.direction]
 	);
 	const rows = _.join(_.map(timeMachines, (timeMachine) => {
-		const jobs = _.filter(state.jobs, (job) => { return job.data?.config?.comment === timeMachine.comment; });
-		return timeMachineTemplate({ timeMachine, jobs, accessOn, prettyBytes, moment });
+		const jobs = filterJobsByTimeMachine(state.jobs, timeMachine);
+		return timeMachineTemplate({ timeMachine, jobs, accessOn, timeMachineActionsTemplate, prettyBytes, moment });
 	}), '');
 	
 	morphdom(
@@ -105,13 +190,40 @@ const render = (state) => {
 		{ childrenOnly: true }
 	);
 
+	if (routeTimeMachineName && !_.some(state.timeMachines, (timeMachine) => { return _.toLower(timeMachine.name) === _.toLower(routeTimeMachineName); })) {
+		page('/time-machines');
+	}
+
+	const detailsTimeMachineName = routeTimeMachineName || container.querySelector('.details .item')?.dataset.id;
+	if (detailsTimeMachineName) {
+		renderTimeMachineDetails(detailsTimeMachineName);
+	}
+
 	loading.classList.add('d-none');
 	container.classList.remove('d-none');
 };
 
+const handleRoute = (ctx) => {
+	const name = ctx?.params?.timeMachineName;
+	routeTimeMachineName = (_.isEmpty(name) ? null : name);
+	if (_.isEmpty(name)) {
+		clearTimeMachineTabs();
+		hideTimeMachineDetails();
+		return;
+	}
+
+	clearTimeMachineTabs(name);
+	renderTimeMachineDetails(name);
+	details.classList.add('d-block');
+};
+
+module.onRoute = handleRoute;
+module.addEventListener('click', compress);
+module.addEventListener('click', selectTab);
 searchInput.addEventListener('input', search);
 table.querySelector('thead').addEventListener('click', order);
-table.addEventListener('click', copyToClipboard);
+table.querySelector('tbody').addEventListener('click', expand);
+container.addEventListener('click', copyToClipboard);
 
 timeMachineService.subscribe([render]);
 

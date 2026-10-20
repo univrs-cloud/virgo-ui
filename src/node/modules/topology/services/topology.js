@@ -21,7 +21,7 @@ const { subscribe } = createSubscription({
 		},
 		{
 			store: Share,
-			propertyNames: ['shares']
+			propertyNames: ['shares', 'clients']
 		},
 		{
 			store: Configuration,
@@ -33,7 +33,7 @@ const { subscribe } = createSubscription({
 		return {
 			system: properties?.system,
 			configuration: properties?.configuration,
-			topology: composeTopology(properties?.configured, properties?.containers, properties?.shares, properties?.peers, properties?.discovery)
+			topology: composeTopology(properties?.configured, properties?.containers, properties?.shares, properties?.peers, properties?.discovery, properties?.clients, properties?.system)
 		};
 	}
 });
@@ -47,21 +47,42 @@ const { subscribe: subscribeToTraffic } = createSubscription({
 		{
 			store: Docker,
 			propertyNames: ['appsResourceMetrics']
+		},
+		{
+			store: Share,
+			propertyNames: ['clients']
 		}
 	],
 	attachStore: storeAttach.beforeCallbacks,
 	mapState: (properties) => {
-		return composeTraffic(properties?.networkStats, properties?.appsResourceMetrics);
+		return composeTraffic(properties?.networkStats, properties?.appsResourceMetrics, properties?.clients);
 	}
 });
 
-function composeTraffic(networkStats, appsResourceMetrics) {
+function composeTraffic(networkStats, appsResourceMetrics, clients) {
 	const traffic = {};
 	if (_.isObject(networkStats)) {
 		traffic.node = { rx: networkStats.rx_sec || 0, tx: networkStats.tx_sec || 0 };
 	}
 	_.each(appsResourceMetrics, (metrics) => {
 		traffic[`app:${metrics.name}`] = { rx: metrics.network?.rx || 0, tx: metrics.network?.tx || 0 };
+	});
+	const add = (key, rx, tx) => {
+		const current = traffic[key] || { rx: 0, tx: 0 };
+		traffic[key] = { rx: current.rx + rx, tx: current.tx + tx };
+	};
+	_.each((_.isArray(clients) ? clients : []), (session) => {
+		const shares = _.uniq(_.map(session.shares, _.toLower));
+		const rx = session.rx || 0;
+		const tx = session.tx || 0;
+		add(`smb:${session.address}`, rx, tx);
+		if (_.isEmpty(shares)) {
+			add(`smbroute:${session.address}:`, rx, tx);
+		}
+		_.each(shares, (share) => {
+			add(`smbshare:${share}`, rx / _.size(shares), tx / _.size(shares));
+			add(`smbroute:${session.address}:${share}`, rx / _.size(shares), tx / _.size(shares));
+		});
 	});
 	return traffic;
 }
@@ -203,7 +224,54 @@ function composeNodes(peers, discovery) {
 	return _.concat(adopted, available);
 }
 
-function composeTopology(configured, containers, shares, peers, discovery) {
+function addressNumber(address) {
+	const parts = _.map(_.split(address, '.'), Number);
+	if (_.size(parts) !== 4 || _.some(parts, (part) => { return !_.isInteger(part) || part < 0 || part > 255; })) {
+		return null;
+	}
+
+	return (((parts[0] << 24) >>> 0) + (parts[1] << 16) + (parts[2] << 8) + parts[3]);
+}
+
+function isInSubnet(address, network) {
+	const value = addressNumber(address);
+	const base = addressNumber(network?.local);
+	if (_.isNull(value) || _.isNull(base) || !_.isInteger(network?.prefixlen)) {
+		return false;
+	}
+
+	const mask = (network.prefixlen === 0 ? 0 : ((~0 << (32 - network.prefixlen)) >>> 0));
+	return ((value & mask) >>> 0) === ((base & mask) >>> 0);
+}
+
+function groupClients(clients) {
+	return _.map(_.groupBy((_.isArray(clients) ? clients : []), 'address'), (sessions, address) => {
+		return {
+			address,
+			usernames: _.sortBy(_.uniq(_.map(sessions, 'username')), _.toLower),
+			shares: _.sortBy(_.uniq(_.map(_.flatMap(sessions, 'shares'), _.toLower)))
+		};
+	});
+}
+
+function composeClients(clients, system) {
+	const networkInterface = _.find(system?.networkInterfaces, { default: true });
+	const network = _.find(networkInterface?.addrInfo, { family: 'inet' });
+	return _.orderBy(
+		_.map(groupClients(clients), (client) => {
+			return {
+				address: client.address,
+				usernames: client.usernames,
+				shares: client.shares,
+				isLocal: isInSubnet(client.address, network)
+			};
+		}),
+		[(client) => { return _.toLower(_.head(client.usernames)); }, 'address'],
+		['asc', 'asc']
+	);
+}
+
+function composeTopology(configured, containers, shares, peers, discovery, clients, system) {
 	if (!_.isArray(configured) || !_.isArray(containers)) {
 		return null;
 	}
@@ -224,7 +292,8 @@ function composeTopology(configured, containers, shares, peers, discovery) {
 		internal: _.filter(unrouted, (stack) => { return _.isEmpty(stack.ports) && !stack.isHostNetwork; }),
 		folders: composeShares(shares, false),
 		timeMachines: composeShares(shares, true),
-		nodes: composeNodes(peers, discovery)
+		nodes: composeNodes(peers, discovery),
+		clients: composeClients(clients, system)
 	};
 }
 

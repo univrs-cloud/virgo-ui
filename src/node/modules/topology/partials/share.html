@@ -1,4 +1,4 @@
-<li>
+<li data-traffic="smbshare:<%-_.toLower(share.name)%>" data-traffic-relay data-share="<%-_.toLower(share.name)%>">
 	<div class="topology-node">
 		<div class="topology-icon">
 			<i class="topology-glyph icon-duotone icon-solid icon-<%=icon%> fg-emphasis-secondary" style="<%=iconStyle%>"></i>
@@ -9,5 +9,6 @@
 				<i class="icon-solid icon-lock icon-xs icon-width-auto fg-4 flex-shrink-0" data-bs-toggle="tooltip" data-bs-original-title="<%-_.escape(_.join(share.validUsers, ', '))%>"></i>
 			<%}%>
 		</div>
+		<div class="topology-traffic max-w-100" data-traffic-label="smbshare:<%-_.toLower(share.name)%>"></div>
 	</div>
 </li>

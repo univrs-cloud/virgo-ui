@@ -4,8 +4,9 @@ import stackPartial from 'node/modules/topology/partials/stack.html';
 import sharePartial from 'node/modules/topology/partials/share.html';
 import shortcutPartial from 'node/modules/topology/partials/shortcut.html';
 import trafficPartial from 'node/modules/topology/partials/traffic.html';
-import proxyPartial from 'node/modules/topology/partials/proxy.html';
 import sharingPartial from 'node/modules/topology/partials/sharing.html';
+import proxyPartial from 'node/modules/topology/partials/proxy.html';
+import clientPartial from 'node/modules/topology/partials/client.html';
 import * as topologyService from 'node/modules/topology/services/topology';
 
 const MIN_SCALE = 0.2;
@@ -35,8 +36,9 @@ const stackTemplate = _.template(stackPartial);
 const shareTemplate = _.template(sharePartial);
 const shortcutTemplate = _.template(shortcutPartial);
 const trafficTemplate = _.template(trafficPartial);
-const proxyTemplate = _.template(proxyPartial);
 const sharingTemplate = _.template(sharingPartial);
+const proxyTemplate = _.template(proxyPartial);
+const clientTemplate = _.template(clientPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
 const module = document.querySelector('#topology');
 const loading = module.querySelector('.loading');
@@ -57,6 +59,7 @@ let isViewChanged = false;
 let isVisible = false;
 let unsubscribers = [];
 let lastState = null;
+let lastMarkup = null;
 let traffic = {};
 let isTrafficShown = topologyService.isTrafficShown();
 let flows = [];
@@ -71,22 +74,25 @@ const render = (state) => {
 	}
 	
 	lastState = state;
-	morphdom(
-		content,
-		`<div>${topologyTemplate({
-			system: state.system,
-			networkInterface: _.find(state.system?.networkInterfaces, { default: true }),
-			fleet: state.configuration?.fleet || null,
-			topology: state.topology,
-			expanded,
-			stackTemplate,
-			shareTemplate,
-			shortcutTemplate,
-			proxyTemplate,
-			sharingTemplate
-		})}</div>`,
-		{ childrenOnly: true }
-	);
+	const markup = topologyTemplate({
+		system: state.system,
+		networkInterface: _.find(state.system?.networkInterfaces, { default: true }),
+		fleet: state.configuration?.fleet || null,
+		topology: state.topology,
+		expanded,
+		stackTemplate,
+		shareTemplate,
+		shortcutTemplate,
+		proxyTemplate,
+		sharingTemplate,
+		clientTemplate
+	});
+	if (markup === lastMarkup) {
+		return;
+	}
+
+	lastMarkup = markup;
+	morphdom(content, `<div>${markup}</div>`, { childrenOnly: true });
 
 	loading.classList.add('d-none');
 	container.classList.remove('d-none');
@@ -126,19 +132,35 @@ const sizeParticles = () => {
 };
 
 const fit = () => {
-	const width = canvas.offsetWidth;
-	const height = canvas.offsetHeight;
+	const bounds = treeBounds();
 	const viewportWidth = viewport.clientWidth;
 	const viewportHeight = viewport.clientHeight;
-	if (!width || !height || !viewportWidth || !viewportHeight) {
+	if (_.isNull(bounds) || !viewportWidth || !viewportHeight) {
 		return;
 	}
 
+	const width = bounds.right - bounds.left;
+	const height = bounds.bottom - bounds.top;
 	view.scale = _.clamp(Math.min((viewportWidth - FIT_PADDING * 2) / width, (viewportHeight - FIT_PADDING * 2) / height, 1), MIN_SCALE, MAX_SCALE);
-	view.x = (viewportWidth - width * view.scale) / 2;
-	view.y = Math.max(FIT_PADDING, (viewportHeight - height * view.scale) / 2);
+	view.x = (viewportWidth - width * view.scale) / 2 - bounds.left * view.scale;
+	view.y = (viewportHeight - height * view.scale) / 2 - bounds.top * view.scale;
 	hasFitted = true;
 	applyView();
+};
+
+const treeBounds = () => {
+	const origin = canvas.getBoundingClientRect();
+	const rects = _.filter(_.map(content.querySelectorAll('.topology-node, .topology-toggle'), (element) => { return element.getBoundingClientRect(); }), (rect) => { return rect.width > 0 && rect.height > 0; });
+	if (_.isEmpty(rects)) {
+		return null;
+	}
+
+	return {
+		left: (_.min(_.map(rects, 'left')) - origin.left) / view.scale,
+		top: (_.min(_.map(rects, 'top')) - origin.top) / view.scale,
+		right: (_.max(_.map(rects, 'right')) - origin.left) / view.scale,
+		bottom: (_.max(_.map(rects, 'bottom')) - origin.top) / view.scale
+	};
 };
 
 const zoomAt = (factor, originX, originY) => {
@@ -154,7 +176,8 @@ const drawEdges = () => {
 	const paths = [];
 	const links = [];
 	const chains = new Map();
-	_.each(content.querySelectorAll('ul ul'), (list) => {
+	const linkByItem = new Map();
+	_.each(content.querySelectorAll('ul ul:not(.topology-clients)'), (list) => {
 		const anchor = list.previousElementSibling;
 		const children = _.filter(list.children, (child) => { return child.matches('li') && child.getClientRects().length > 0; });
 		if (_.isNull(anchor) || _.isEmpty(children)) {
@@ -168,7 +191,7 @@ const drawEdges = () => {
 		const flowY = (parentNode ? offsetWithin(parentNode).y + parentNode.offsetHeight : parentY);
 		const hasTraffic = !('noTraffic' in list.dataset);
 		const parentChain = (hasTraffic ? (chains.get(list.parentElement) || []) : null);
-		_.each(children, (child) => {
+		_.each(_.reject(children, (child) => { return 'clientShares' in child.dataset; }), (child) => {
 			const node = child.querySelector(':scope > .topology-node');
 			const nodeOffset = offsetWithin(node);
 			const x = nodeOffset.x + node.offsetWidth / 2;
@@ -179,11 +202,13 @@ const drawEdges = () => {
 			const points = [...curvePoints(parentX, flowY, x, y), ...(throughY > y ? [{ x, y: throughY }] : [])];
 			link.pieces = piecesOf(points, link);
 			links.push(link);
+			linkByItem.set(child, link);
 			if (parentChain) {
 				chains.set(child, [...parentChain, link.pieces]);
 			}
 		});
 	});
+	clientLinks(paths, links, linkByItem);
 	edges.setAttribute('width', content.offsetWidth);
 	edges.setAttribute('height', content.offsetHeight);
 	edges.innerHTML = [
@@ -198,25 +223,12 @@ const drawEdges = () => {
 		link.band = bands[index];
 	});
 	flows = links;
-	routes = _.map([...chains], ([item, hopPieces]) => {
-		let end = 0;
-		const hops = _.map(hopPieces, (pieces) => {
-			const length = _.sumBy(pieces, 'length');
-			end += length;
-			return { length, end };
-		});
-		const chain = _.flatten(hopPieces);
-		return {
-			item,
-			children: _.filter(item.querySelectorAll(':scope > ul > li'), (child) => { return chains.has(child); }),
-			segments: chain,
-			hops,
-			length: _.sumBy(chain, 'length'),
-			dotRates: { rx: 0, tx: 0 },
-			dots: { rx: [], tx: [] },
-			pending: { rx: 0, tx: 0 }
-		};
-	});
+	routes = _.concat(
+		_.map([...chains], ([item, hopPieces]) => {
+			return routeOf(item, hopPieces, { children: _.filter(item.querySelectorAll(':scope > ul > li'), (child) => { return chains.has(child); }) });
+		}),
+		clientRoutes(chains, linkByItem)
+	);
 	applyFlows();
 	fillRoutes();
 	stopFlows();
@@ -313,6 +325,87 @@ const toPath = (d, edge) => {
 	return `<path class="topology-edge-line" d="${d}" style="stroke: ${edge.color};${(dash ? ` stroke-dasharray: ${dash}; stroke-linecap: ${linecap};` : '')}"></path>`;
 };
 
+const routeOf = (item, hopPieces, extra) => {
+	let end = 0;
+	const hops = _.map(hopPieces, (pieces) => {
+		const length = _.sumBy(pieces, 'length');
+		end += length;
+		return { length, end };
+	});
+	const segments = _.flatten(hopPieces);
+	return {
+		item,
+		children: [],
+		segments,
+		hops,
+		length: _.sumBy(segments, 'length'),
+		dotRates: { rx: 0, tx: 0 },
+		dots: { rx: [], tx: [] },
+		pending: { rx: 0, tx: 0 },
+		...extra
+	};
+};
+
+const clientLinks = (paths, links, linkByItem) => {
+	const router = content.querySelector('li[data-router]');
+	const internet = content.querySelector('li[data-internet]');
+	const remotes = [];
+	_.each(content.querySelectorAll('li[data-client-shares]'), (client) => {
+		const isRemote = ('clientRemote' in client.dataset);
+		const target = (isRemote ? internet : router);
+		if (!target || client.getClientRects().length === 0) {
+			return;
+		}
+
+		const from = client.querySelector(':scope > .topology-node');
+		const to = target.querySelector(':scope > .topology-node');
+		const fromOffset = offsetWithin(from);
+		const toOffset = offsetWithin(to);
+		const x1 = fromOffset.x + from.offsetWidth / 2;
+		const y1 = fromOffset.y + from.offsetHeight;
+		const x2 = toOffset.x + to.offsetWidth / 2;
+		const y2 = toOffset.y;
+		const throughY = toOffset.y + to.offsetHeight;
+		paths.push(toPath(curveOf(x1, y1, x2, y2), readEdge(client)));
+		const link = { d: `${curveOf(x1, y1, x2, y2)}L${x2} ${throughY}`, items: [client], half: 0 };
+		link.pieces = piecesOf([...curvePoints(x1, y1, x2, y2), { x: x2, y: throughY }], link);
+		links.push(link);
+		linkByItem.set(client, link);
+		if (isRemote) {
+			remotes.push(client);
+		}
+	});
+	if (router && linkByItem.has(router) && !_.isEmpty(remotes)) {
+		linkByItem.get(router).items = remotes;
+	}
+};
+
+const clientRoutes = (chains, linkByItem) => {
+	const node = content.querySelector('li[data-traffic="node"]');
+	const sharing = content.querySelector('li[data-sharing]');
+	return _.flatMap(content.querySelectorAll('li[data-client-shares]'), (client) => {
+		const link = linkByItem.get(client);
+		if (!link || !node) {
+			return [];
+		}
+
+		const router = content.querySelector('li[data-router]');
+		const entry = [link.pieces, ...(('clientRemote' in client.dataset) && linkByItem.has(router) ? [linkByItem.get(router).pieces] : [])];
+		const shares = _.split(client.dataset.clientShares, ' ');
+		const targets = new Map();
+		_.each(_.uniq([...shares, '']), (share) => {
+			const shareItem = (share ? content.querySelector(`li[data-share="${CSS.escape(share)}"]`) : null);
+			const target = (shareItem && chains.has(shareItem) ? shareItem : (sharing && chains.has(sharing) ? sharing : null));
+			if (target) {
+				targets.set(target, [...(targets.get(target) || []), `smbroute:${client.dataset.client}:${share}`]);
+			}
+		});
+		return _.map([...targets], ([target, keys]) => {
+			return routeOf(client, [...entry, ...chains.get(target)], { source: { key: keys.join(' '), share: 1 } });
+		});
+	});
+};
+
 const curveOf = (x1, y1, x2, y2) => {
 	const middle = (y1 + y2) / 2;
 	return `M${x1} ${y1}C${x1} ${middle} ${x2} ${middle} ${x2} ${y2}`;
@@ -376,6 +469,15 @@ const applyFlows = () => {
 		flow.half = Math.max(0, width / 2 - 2);
 	});
 	const excesses = _.map(routes, (route) => {
+		if (route.source) {
+			const rates = trafficOf(route.source.key) || { rx: 0, tx: 0 };
+			return { rx: rates.rx * route.source.share, tx: rates.tx * route.source.share };
+		}
+
+		if ('trafficRelay' in route.item.dataset) {
+			return { rx: 0, tx: 0 };
+		}
+
 		const own = subtreeTraffic(route.item, cache);
 		const children = _.map(route.children, (child) => { return subtreeTraffic(child, cache); });
 		return { rx: Math.max(0, own.rx - _.sumBy(children, 'rx')), tx: Math.max(0, own.tx - _.sumBy(children, 'tx')) };

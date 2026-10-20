@@ -5,7 +5,7 @@
 	const newestStr = (moments.length ? moment.max(moments).format('YYYY-MM-DD HH:mm') : '—');
 	const snapshotTooltip = (moments.length ? `Latest: ${newestStr}<br>Oldest: ${oldestStr}` : '');
 %>
-<tr class="item" data-id="<%-timeMachine.name%>">
+<tr class="item cursor-pointer" data-id="<%-timeMachine.name%>">
 	<td style="min-width: 210px; max-width: 0;">
 		<div class="d-flex align-items-center mb--1">
 			<div class="text-truncate"><%-timeMachine.comment%></div>
@@ -13,6 +13,19 @@
 		<div class="d-flex">
 			<div class="text-truncate"><small class="fg-4"><%-timeMachine.path%></small></div>
 		</div>
+	</td>
+	<td class="text-nowrap d-none md:d-table-cell">
+		<%if (_.isEmpty(timeMachine.clients)) {%>
+			<u-badge color="gray" tint="100" pill>
+				<i class="icon-solid icon-user icon-xs fg-4"></i>
+				<small>0</small>
+			</u-badge>
+		<%} else {%>
+			<u-badge color="gray" tint="100" tip="<%-_.map(timeMachine.clients, (client) => { return _.escape(`${_.join(client.usernames, ', ')} (${client.address})`); }).join('<br>')%>" pill>
+				<i class="icon-solid icon-user icon-xs fg-green-500"></i>
+				<small><%-_.size(timeMachine.clients)%></small>
+			</u-badge>
+		<%}%>
 	</td>
 	<td class="text-center">
 		<a href="#" class="fg-body underline-0" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-original-title="Click to copy the time machine address. In Finder, press ⌘K and paste it to connect. This lets Time Machine use it for backups.">
@@ -33,6 +46,20 @@
 		<small class="fw-light fg-emphasis-secondary" data-bs-toggle="tooltip" data-bs-original-title="<%=snapshotTooltip%>"><%=_.sumBy(timeMachine.timeMachine, (m) => { return _.size(m.snapshots || []); })%></small>
 	</td>
 	<td class="text-end text-nowrap d-none md:d-table-cell">
+		<small class="fw-light fg-emphasis-secondary d-flex">
+			<span class="d-inline-block text-start" style="width: 12px;">
+				<i class="icon-solid icon-arrow-down icon-fw icon-2xs fg-blue-500"></i>
+			</span>
+			<span class="ms-auto"><%=prettyBytes(timeMachine.network.rx, { binary: true })%></span>
+		</small>
+		<small class="fw-light fg-emphasis-secondary d-flex">
+			<span class="d-inline-block text-start" style="width: 12px;">
+				<i class="icon-solid icon-arrow-up icon-fw icon-2xs fg-purple-500"></i>
+			</span>
+			<span class="ms-auto"><%=prettyBytes(timeMachine.network.tx, { binary: true })%></span>
+		</small>
+	</td>
+	<td class="text-end text-nowrap d-none md:d-table-cell">
 		<small class="fw-light fg-emphasis-secondary"><%=prettyBytes(timeMachine.size || 0, { binary: true })%></small>
 	</td>
 	<td class="text-end text-nowrap d-none md:d-table-cell">
@@ -42,17 +69,9 @@
 		</u-progress>
 	</td>
 	<td class="text-center px-0">
-		<%if (!_.isEmpty(jobs)) {%>
-			<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-solid icon-gear icon-fw icon-spin"></i></span>
-		<%} else {%>
-			<div class="dropdown">
-				<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw fg-secondary"></i></span>
-				<div class="menu">
-					<a href="#time-machine-update" class="menu-item" data-bs-toggle="dialog"><i class="icon-regular icon-pen icon-fw"></i>Edit</a>
-					<div class="menu-divider"></div>
-					<a href="#" class="menu-item fg-danger confirm" data-action="delete"><i class="icon-regular icon-times icon-fw"></i>Delete</a>
-				</div>
-			</div>
-		<%}%>
+		<%=timeMachineActionsTemplate({ timeMachine, jobs, inline: false })%>
+	</td>
+	<td class="text-end pe-0">
+		<i class="icon-light icon-angle-right icon-fw fg-4"></i>
 	</td>
 </tr>
