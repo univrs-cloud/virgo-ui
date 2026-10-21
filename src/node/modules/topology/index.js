@@ -16,12 +16,13 @@ const WHEEL_ZOOM_SPEED = 0.002;
 const FIT_PADDING = 48;
 const DASH_PATTERNS = { dashed: '6 4', dotted: '0.1 4' };
 const CURVE_STEPS = 24;
-const FLOW_REFERENCE_RATE = 1_048_576;
+const FLOW_FLOOR_RATE = 10_240;
+const FLOW_LEVEL_CURVE = 120;
 const FLOW_IDLE_WIDTH = 8;
 const FLOW_MIN_WIDTH = 9;
 const FLOW_MAX_WIDTH = 32;
 const FLOW_MIN_DOT_RATE = 10;
-const FLOW_MAX_DOT_RATE = 120;
+const FLOW_MAX_DOT_RATE = 360;
 const FLOW_ROUTE_DOT_RATE = 1;
 const FLOW_MAX_DOTS = 6000;
 const FLOW_DOT_RADIUS = 0.9;
@@ -460,10 +461,10 @@ const applyFlows = () => {
 		const rates = _.map(flow.items, (item) => { return subtreeTraffic(item, cache); });
 		return { rx: _.sumBy(rates, 'rx'), tx: _.sumBy(rates, 'tx') };
 	});
-	const reference = Math.max(FLOW_REFERENCE_RATE, ..._.map(totals, (total) => { return total.rx + total.tx; }));
+	const capacity = topologyService.getDefaultNetworkInterfaceSpeed();
 	_.each(flows, (flow, index) => {
-		const share = shareOf(totals[index].rx + totals[index].tx, reference);
-		const width = (share > 0 ? FLOW_MIN_WIDTH + (FLOW_MAX_WIDTH - FLOW_MIN_WIDTH) * share : FLOW_IDLE_WIDTH);
+		const rate = Math.max(totals[index].rx, totals[index].tx);
+		const width = (rate > 0 ? FLOW_MIN_WIDTH + (FLOW_MAX_WIDTH - FLOW_MIN_WIDTH) * levelOf(rate, capacity) : FLOW_IDLE_WIDTH);
 		flow.band.style.strokeWidth = `${width}px`;
 		flow.band.style.opacity = 1;
 		flow.half = Math.max(0, width / 2 - 2);
@@ -485,7 +486,7 @@ const applyFlows = () => {
 	const sums = { rx: _.sumBy(excesses, 'rx'), tx: _.sumBy(excesses, 'tx') };
 	const spares = _.mapValues(sums, (sum, direction) => {
 		const floors = _.size(_.filter(excesses, (excess) => { return excess[direction] > 0; })) * FLOW_ROUTE_DOT_RATE;
-		return Math.max(0, dotBudgetOf(sum, reference) - floors);
+		return Math.max(0, dotBudgetOf(sum, capacity) - floors);
 	});
 	_.each(routes, (route, index) => {
 		route.dotRates = _.mapValues(sums, (sum, direction) => {
@@ -509,12 +510,13 @@ const subtreeTraffic = (item, cache) => {
 	return rates;
 };
 
-const shareOf = (rate, reference) => {
-	return (rate > 0 ? Math.sqrt(Math.min(rate / reference, 1)) : 0);
+const levelOf = (rate, capacity) => {
+	const position = _.clamp(Math.log(rate / FLOW_FLOOR_RATE) / Math.log(Math.max(capacity, FLOW_FLOOR_RATE * 2) / FLOW_FLOOR_RATE), 0, 1);
+	return (Math.pow(FLOW_LEVEL_CURVE, position) - 1) / (FLOW_LEVEL_CURVE - 1);
 };
 
-const dotBudgetOf = (rate, reference) => {
-	return (rate > 0 ? Math.max(FLOW_MIN_DOT_RATE, FLOW_MAX_DOT_RATE * Math.sqrt(Math.min(rate / reference, 1))) : 0);
+const dotBudgetOf = (rate, capacity) => {
+	return (rate > 0 ? FLOW_MIN_DOT_RATE + (FLOW_MAX_DOT_RATE - FLOW_MIN_DOT_RATE) * levelOf(rate, capacity) : 0);
 };
 
 const startFlows = () => {

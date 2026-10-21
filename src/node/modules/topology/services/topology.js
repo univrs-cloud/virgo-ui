@@ -8,6 +8,7 @@ const LOOPBACK_ADDRESS = /^(127\.|::1$)/;
 const PROXY_STACK = 'traefik';
 const AUTH_STACK = 'authelia';
 const TRAFFIC_KEY = 'topology:traffic';
+const DEFAULT_NETWORK_INTERFACE_SPEED_BPS = 1_000_000_000;
 
 const { subscribe } = createSubscription({
 	stores: [
@@ -297,6 +298,11 @@ function composeTopology(configured, containers, shares, peers, discovery, clien
 	};
 }
 
+const getDefaultNetworkInterfaceSpeed = () => {
+	const networkInterface = _.find(Host.getSystem()?.networkInterfaces, { default: true });
+	return ((networkInterface?.speed || (DEFAULT_NETWORK_INTERFACE_SPEED_BPS / 1_000_000)) * 1_000_000 / 8);
+};
+
 const isTrafficShown = () => {
 	try {
 		return (localStorage.getItem(TRAFFIC_KEY) === 'shown');
@@ -316,6 +322,7 @@ const setTrafficShown = (isShown) => {
 export {
 	subscribe,
 	subscribeToTraffic,
+	getDefaultNetworkInterfaceSpeed,
 	isTrafficShown,
 	setTrafficShown
 };
