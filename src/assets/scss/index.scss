@@ -133,6 +133,12 @@
 	scrollbar-gutter: auto;
 }
 
+@media (min-width: 992px) {
+	:root:has(u-window[maximized]:not([minimized], [closing])) {
+		scrollbar-gutter: auto;
+	}
+}
+
 .drawer {
 	--drawer-height: 740px;
 	--drawer-padding-y: 0.875rem;
