@@ -1,9 +1,8 @@
-import * as updateMode from 'libs/update_mode';
-
 const WINDOWS_KEY = 'windows:open';
 const windowManager = document.querySelector('u-window-manager');
 let callbacks = [];
 let order = [];
+let isSaveSuspended = false;
 
 const getWindows = () => {
 	const windows = _.sortBy(windowManager.windows, (item) => {
@@ -40,6 +39,7 @@ const subscribe = (subscribers) => {
 };
 
 const open = (options) => {
+	isSaveSuspended = false;
 	return !_.isNull(windowManager.open(options));
 };
 
@@ -47,7 +47,8 @@ const close = (id) => {
 	getWindow(id)?.close();
 };
 
-const closeAll = () => {
+const closeAll = ({ persist = true } = {}) => {
+	isSaveSuspended = !persist;
 	windowManager.closeAll();
 };
 
@@ -81,7 +82,7 @@ const background = () => {
 };
 
 const save = (windows) => {
-	if (!windowManager.available || updateMode.isActive()) {
+	if (!windowManager.available || isSaveSuspended) {
 		return;
 	}
 

@@ -132,7 +132,7 @@ account.init();
 
 header.addEventListener('click', handleWindowClick);
 header.addEventListener('click', handlePageClick);
-document.addEventListener('update-mode', () => { windowService.closeAll(); });
+document.addEventListener('update-mode', () => { windowService.closeAll({ persist: false }); });
 
 softwareService.subscribeToUpdates([setSystemUpdates]);
 if (isAdmin) {
