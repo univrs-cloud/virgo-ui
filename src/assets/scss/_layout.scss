@@ -34,6 +34,15 @@ body {
 			padding-right: var(--scrollbar-width, 0px) !important;
 		}
 	}
+	@media (min-width: 992px) {
+		:root:has(u-window[maximized]:not([minimized], [closing])) & {
+			overflow-y: hidden;
+			padding-right: var(--scrollbar-width, 0px);
+			header .navbar-position {
+				padding-right: var(--scrollbar-width, 0px) !important;
+			}
+		}
+	}
 	&.reboot,
 	&.powered-off,
 	&.maintenance {
