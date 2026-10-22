@@ -648,7 +648,7 @@ $card-image-size: 30px;
 			align-items: flex-start;
 			justify-content: center;
 			margin: 0;
-			padding: calc(var(--topology-gap) * 2) 0 0;
+			padding: calc(var(--topology-gap) * 3) 0 0;
 			list-style: none;
 		}
 		li {
@@ -657,6 +657,11 @@ $card-image-size: 30px;
 			flex-direction: column;
 			align-items: center;
 			padding: var(--topology-gap) map.get($spacers, 3) 0;
+			pointer-events: none;
+		}
+		.topology-node,
+		.topology-toggle {
+			pointer-events: auto;
 		}
 	}
 	.topology-content {
@@ -699,7 +704,10 @@ $card-image-size: 30px;
 			opacity: 0.6;
 		}
 		.topology-flow-band {
-			stroke: light-dark(var(--blue-200), var(--blue-800));
+			stroke: light-dark(var(--blue-100), var(--blue-900));
+		}
+		.topology-flow-band-idle {
+			stroke: light-dark(var(--gray-200), var(--gray-800));
 		}
 	}
 	.topology-particles {

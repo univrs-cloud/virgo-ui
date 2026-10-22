@@ -51,16 +51,16 @@ const { subscribe: subscribeToTraffic } = createSubscription({
 		},
 		{
 			store: Share,
-			propertyNames: ['clients']
+			propertyNames: ['shares', 'clients']
 		}
 	],
 	attachStore: storeAttach.beforeCallbacks,
 	mapState: (properties) => {
-		return composeTraffic(properties?.networkStats, properties?.appsResourceMetrics, properties?.clients);
+		return composeTraffic(properties?.networkStats, properties?.appsResourceMetrics, properties?.shares, properties?.clients);
 	}
 });
 
-function composeTraffic(networkStats, appsResourceMetrics, clients) {
+function composeTraffic(networkStats, appsResourceMetrics, shares, clients) {
 	const traffic = {};
 	if (_.isObject(networkStats)) {
 		traffic.node = { rx: networkStats.rx_sec || 0, tx: networkStats.tx_sec || 0 };
@@ -72,17 +72,20 @@ function composeTraffic(networkStats, appsResourceMetrics, clients) {
 		const current = traffic[key] || { rx: 0, tx: 0 };
 		traffic[key] = { rx: current.rx + rx, tx: current.tx + tx };
 	};
+	_.each(shares, (share) => {
+		add(`smbshare:${_.toLower(share.name)}`, 0, 0);
+	});
 	_.each((_.isArray(clients) ? clients : []), (session) => {
-		const shares = _.uniq(_.map(session.shares, _.toLower));
+		const sessionShares = _.uniq(_.map(session.shares, _.toLower));
 		const rx = session.rx || 0;
 		const tx = session.tx || 0;
 		add(`smb:${session.address}`, rx, tx);
-		if (_.isEmpty(shares)) {
+		if (_.isEmpty(sessionShares)) {
 			add(`smbroute:${session.address}:`, rx, tx);
 		}
-		_.each(shares, (share) => {
-			add(`smbshare:${share}`, rx / _.size(shares), tx / _.size(shares));
-			add(`smbroute:${session.address}:${share}`, rx / _.size(shares), tx / _.size(shares));
+		_.each(sessionShares, (share) => {
+			add(`smbshare:${share}`, rx / _.size(sessionShares), tx / _.size(sessionShares));
+			add(`smbroute:${session.address}:${share}`, rx / _.size(sessionShares), tx / _.size(sessionShares));
 		});
 	});
 	return traffic;
