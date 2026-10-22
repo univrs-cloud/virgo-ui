@@ -89,14 +89,18 @@
 							<div class="topology-traffic max-w-100" data-traffic-label="node"></div>
 						</div>
 						<%if (proxy || !_.isEmpty(topology.published) || hasShares || !_.isEmpty(topology.internal)) {%>
-							<ul class="topology-edge-primary">
-								<%_.each(apps, (app) => {%>
-									<%=app.html%>
-								<%})%>
-								<%if (hasShares) {%>
-									<%=sharingTemplate({ topology, expanded, shareTemplate })%>
-								<%}%>
-							</ul>
+							<div class="topology-stem"></div>
+							<button type="button" class="topology-toggle btn-icon btn-solid theme-primary btn-xs rounded-pill" data-action="toggle" data-key="node"><i class="icon-solid icon-<%=(expanded.has('node') ? 'minus' : 'plus')%> icon-xs"></i></button>
+							<%if (expanded.has('node')) {%>
+								<ul class="topology-edge-primary">
+									<%_.each(apps, (app) => {%>
+										<%=app.html%>
+									<%})%>
+									<%if (hasShares) {%>
+										<%=sharingTemplate({ topology, expanded, shareTemplate })%>
+									<%}%>
+								</ul>
+							<%}%>
 						<%}%>
 					</li>
 					<%_.each(topology.nodes, (node) => {%>

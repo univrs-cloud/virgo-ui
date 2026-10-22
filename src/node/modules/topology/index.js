@@ -16,12 +16,14 @@ const WHEEL_ZOOM_SPEED = 0.002;
 const FIT_PADDING = 48;
 const DASH_PATTERNS = { dashed: '6 4', dotted: '0.1 4' };
 const CURVE_STEPS = 24;
+const CURVE_STEM = 16;
 const FLOW_FLOOR_RATE = 10_240;
 const FLOW_LEVEL_CURVE = 120;
-const FLOW_IDLE_WIDTH = 8;
-const FLOW_MIN_WIDTH = 9;
-const FLOW_MAX_WIDTH = 32;
-const FLOW_MIN_DOT_RATE = 10;
+const FLOW_IDLE_WIDTH = 2;
+const FLOW_STATUS_WIDTH = 4;
+const FLOW_MIN_WIDTH = 6;
+const FLOW_MAX_WIDTH = 24;
+const FLOW_MIN_DOT_RATE = 40;
 const FLOW_MAX_DOT_RATE = 360;
 const FLOW_ROUTE_DOT_RATE = 1;
 const FLOW_MAX_DOTS = 6000;
@@ -51,7 +53,7 @@ const content = canvas.querySelector('.topology-content');
 const particles = canvas.querySelector('.topology-particles');
 const particlesContext = particles.getContext('2d');
 const trafficSwitch = container.querySelector('.traffic-switch');
-const expanded = new Set(['proxy', 'shares']);
+const expanded = new Set(['node', 'proxy', 'shares']);
 const view = { x: 0, y: 0, scale: 1 };
 const pointers = new Map();
 let gesture = null;
@@ -189,18 +191,20 @@ const drawEdges = () => {
 		const parentX = anchorOffset.x + anchor.offsetWidth / 2;
 		const parentY = anchorOffset.y + anchor.offsetHeight;
 		const parentNode = list.parentElement.querySelector(':scope > .topology-node');
-		const flowY = (parentNode ? offsetWithin(parentNode).y + parentNode.offsetHeight : parentY);
+		const parentIcon = (parentNode ? parentNode.querySelector(':scope > .topology-icon') : null);
+		const flowY = (parentIcon ? offsetWithin(parentIcon).y + parentIcon.offsetHeight : parentY);
 		const hasTraffic = !('noTraffic' in list.dataset);
 		const parentChain = (hasTraffic ? (chains.get(list.parentElement) || []) : null);
-		_.each(_.reject(children, (child) => { return 'clientShares' in child.dataset; }), (child) => {
+		const arms = _.reject(children, (child) => { return 'clientShares' in child.dataset; });
+		_.each(arms, (child) => {
 			const node = child.querySelector(':scope > .topology-node');
 			const nodeOffset = offsetWithin(node);
 			const x = nodeOffset.x + node.offsetWidth / 2;
 			const y = nodeOffset.y;
 			const throughY = (_.isNull(child.querySelector(':scope > ul')) ? y : nodeOffset.y + node.offsetHeight);
+			const link = { d: `${curveOf(parentX, parentY, x, y, flowY)}${(throughY > y ? `L${x} ${throughY}` : '')}`, items: (hasTraffic ? [child] : []), statusColor: (hasTraffic ? '' : readEdge(child).color), half: 0 };
 			paths.push(toPath(curveOf(parentX, parentY, x, y), readEdge(child)));
-			const link = { d: `${curveOf(parentX, flowY, x, y)}${(throughY > y ? `L${x} ${throughY}` : '')}`, items: (hasTraffic ? [child] : []), half: 0 };
-			const points = [...curvePoints(parentX, flowY, x, y), ...(throughY > y ? [{ x, y: throughY }] : [])];
+			const points = [...curvePoints(parentX, parentY, x, y, flowY), ...(throughY > y ? [{ x, y: throughY }] : [])];
 			link.pieces = piecesOf(points, link);
 			links.push(link);
 			linkByItem.set(child, link);
@@ -213,8 +217,9 @@ const drawEdges = () => {
 	edges.setAttribute('width', content.offsetWidth);
 	edges.setAttribute('height', content.offsetHeight);
 	edges.innerHTML = [
-		'<defs><filter id="topology-flow-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4"></feGaussianBlur></filter></defs>',
-		`<g class="topology-flows topology-flow-bands" filter="url(#topology-flow-glow)">${_.map(links, (link) => { return `<path class="topology-flow-band" d="${link.d}"></path>`; }).join('')}</g>`,
+		'<defs><filter id="topology-flow-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3"></feGaussianBlur></filter></defs>',
+		'<g class="topology-flows topology-flow-bands topology-flow-idle" filter="url(#topology-flow-glow)"></g>',
+		`<g class="topology-flows topology-flow-bands topology-flow-busy" filter="url(#topology-flow-glow)">${_.map(links, (link) => { return `<path class="topology-flow-band" d="${link.d}"></path>`; }).join('')}</g>`,
 		paths.join('')
 	].join('');
 	const bands = edges.querySelectorAll('.topology-flow-band');
@@ -291,7 +296,7 @@ const packLeaves = (leaves, branch, toward) => {
 };
 
 const isBranch = (item) => {
-	return !_.isNull(item.querySelector(':scope > ul, :scope > button[data-action="toggle"]'));
+	return !_.isNull(item.querySelector(':scope > ul'));
 };
 
 const nodeBounds = (item) => {
@@ -368,8 +373,10 @@ const clientLinks = (paths, links, linkByItem) => {
 		const y2 = toOffset.y;
 		const throughY = toOffset.y + to.offsetHeight;
 		paths.push(toPath(curveOf(x1, y1, x2, y2), readEdge(client)));
-		const link = { d: `${curveOf(x1, y1, x2, y2)}L${x2} ${throughY}`, items: [client], half: 0 };
-		link.pieces = piecesOf([...curvePoints(x1, y1, x2, y2), { x: x2, y: throughY }], link);
+		const icon = from.querySelector(':scope > .topology-icon');
+		const fromY = (icon ? offsetWithin(icon).y + icon.offsetHeight : y1);
+		const link = { d: `${curveOf(x1, y1, x2, y2, fromY)}L${x2} ${throughY}`, items: [client], half: 0 };
+		link.pieces = piecesOf([...curvePoints(x1, y1, x2, y2, fromY), { x: x2, y: throughY }], link);
 		links.push(link);
 		linkByItem.set(client, link);
 		if (isRemote) {
@@ -396,7 +403,7 @@ const clientRoutes = (chains, linkByItem) => {
 		const targets = new Map();
 		_.each(_.uniq([...shares, '']), (share) => {
 			const shareItem = (share ? content.querySelector(`li[data-share="${CSS.escape(share)}"]`) : null);
-			const target = (shareItem && chains.has(shareItem) ? shareItem : (sharing && chains.has(sharing) ? sharing : null));
+			const target = _.find([shareItem, sharing, node], (candidate) => { return candidate && chains.has(candidate); }) || null;
 			if (target) {
 				targets.set(target, [...(targets.get(target) || []), `smbroute:${client.dataset.client}:${share}`]);
 			}
@@ -407,21 +414,27 @@ const clientRoutes = (chains, linkByItem) => {
 	});
 };
 
-const curveOf = (x1, y1, x2, y2) => {
-	const middle = (y1 + y2) / 2;
-	return `M${x1} ${y1}C${x1} ${middle} ${x2} ${middle} ${x2} ${y2}`;
+const curveOf = (x1, y1, x2, y2, fromY = y1) => {
+	const endY = y2 - Math.min(CURVE_STEM, (y2 - y1) / 4);
+	const height = endY - y1;
+	return `M${x1} ${fromY}L${x1} ${y1}C${x1} ${y1 + height * 0.75} ${x2} ${y1 + height * 0.25} ${x2} ${endY}L${x2} ${y2}`;
 };
 
-const curvePoints = (x1, y1, x2, y2) => {
-	const middle = (y1 + y2) / 2;
-	return _.map(_.range(CURVE_STEPS + 1), (step) => {
-		const t = step / CURVE_STEPS;
-		const u = 1 - t;
-		return {
-			x: u * u * u * x1 + 3 * u * u * t * x1 + 3 * u * t * t * x2 + t * t * t * x2,
-			y: u * u * u * y1 + 3 * u * u * t * middle + 3 * u * t * t * middle + t * t * t * y2
-		};
-	});
+const curvePoints = (x1, y1, x2, y2, fromY = y1) => {
+	const endY = y2 - Math.min(CURVE_STEM, (y2 - y1) / 4);
+	const height = endY - y1;
+	return [
+		{ x: x1, y: fromY },
+		..._.map(_.range(CURVE_STEPS + 1), (step) => {
+			const t = step / CURVE_STEPS;
+			const u = 1 - t;
+			return {
+				x: u * u * u * x1 + 3 * u * u * t * x1 + 3 * u * t * t * x2 + t * t * t * x2,
+				y: u * u * u * y1 + 3 * u * u * t * (y1 + height * 0.75) + 3 * u * t * t * (y1 + height * 0.25) + t * t * t * endY
+			};
+		}),
+		{ x: x2, y: y2 }
+	];
 };
 
 const piecesOf = (points, link) => {
@@ -462,11 +475,20 @@ const applyFlows = () => {
 		return { rx: _.sumBy(rates, 'rx'), tx: _.sumBy(rates, 'tx') };
 	});
 	const capacity = topologyService.getDefaultNetworkInterfaceSpeed();
+	const idleBands = edges.querySelector('.topology-flow-idle');
+	const busyBands = edges.querySelector('.topology-flow-busy');
+	const busiest = _.max(_.map(totals, (total) => { return Math.max(total.rx, total.tx); })) || 0;
 	_.each(flows, (flow, index) => {
 		const rate = Math.max(totals[index].rx, totals[index].tx);
-		const width = (rate > 0 ? FLOW_MIN_WIDTH + (FLOW_MAX_WIDTH - FLOW_MIN_WIDTH) * levelOf(rate, capacity) : FLOW_IDLE_WIDTH);
+		const width = (rate > 0 ? FLOW_MIN_WIDTH + (FLOW_MAX_WIDTH - FLOW_MIN_WIDTH) * Math.sqrt(rate / busiest) : (flow.statusColor ? FLOW_STATUS_WIDTH : FLOW_IDLE_WIDTH));
 		flow.band.style.strokeWidth = `${width}px`;
 		flow.band.style.opacity = 1;
+		flow.band.classList.toggle('topology-flow-band-idle', rate === 0);
+		flow.band.style.stroke = (rate === 0 && flow.statusColor ? flow.statusColor : '');
+		const group = (rate > 0 ? busyBands : idleBands);
+		if (flow.band.parentNode !== group) {
+			group.appendChild(flow.band);
+		}
 		flow.half = Math.max(0, width / 2 - 2);
 	});
 	const excesses = _.map(routes, (route) => {
@@ -575,6 +597,12 @@ const fillRoutes = () => {
 };
 
 const advanceRoute = (route, direction, elapsed, budget) => {
+	if (route.dotRates[direction] === 0) {
+		route.dots[direction] = [];
+		route.pending[direction] = 0;
+		return;
+	}
+
 	const dots = route.dots[direction];
 	const sign = (direction === 'rx' ? 1 : -1);
 	route.pending[direction] += route.dotRates[direction] * elapsed;
@@ -650,12 +678,19 @@ const toggle = (event) => {
 	}
 
 	const key = button.dataset.key;
+	const before = button.getBoundingClientRect();
 	if (expanded.has(key)) {
 		expanded.delete(key);
 	} else {
 		expanded.add(key);
 	}
 	render(lastState);
+	const after = content.querySelector(`button[data-action="toggle"][data-key="${key}"]`)?.getBoundingClientRect();
+	if (after) {
+		view.x += before.left - after.left;
+		view.y += before.top - after.top;
+		applyView();
+	}
 };
 
 const control = (event) => {
