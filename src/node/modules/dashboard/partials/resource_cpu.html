@@ -4,16 +4,16 @@
 			<h5 class="fg-black mb-0 me-2">
 				<i class="icon-regular icon-microchip icon-fw me-1 fg-gray-300"></i>CPU
 			</h5>
-			<%if (state.cpuStats) {%>
+			<%if (state.cpuSensors) {%>
 				<u-badge color="gray" tint="050" class="me-1" pill>
 					<i class="icon-regular icon-temperature-half icon-fw fg-gray-300"></i>
-					<%=state.cpuStats.temperature?.main?.toFixed(0)%> °C
+					<%=state.cpuSensors.temperature?.main?.toFixed(0)%> °C
 				</u-badge>
 			<%}%>
-			<%if (state.cpuStats?.fan) {%>
+			<%if (state.cpuSensors?.fan) {%>
 				<u-badge color="gray" tint="050" class="me-1" pill>
 					<i class="icon-solid icon-fan icon-fw fg-gray-300"></i>
-					<%=state.cpuStats.fan%> rpm
+					<%=state.cpuSensors.fan%> rpm
 				</u-badge>
 			<%}%>
 		</div>

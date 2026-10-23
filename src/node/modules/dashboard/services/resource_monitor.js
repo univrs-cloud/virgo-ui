@@ -5,7 +5,7 @@ const { subscribe } = createSubscription({
 	stores: [
 		{
 			store: Host,
-			propertyNames: ['system', 'cpuStats', 'stats', 'memory', 'storage', 'drives', 'ups', 'time']
+			propertyNames: ['system', 'cpuSensors', 'stats', 'memory', 'storage', 'drives', 'ups', 'time']
 		}
 	],
 	attachStore: storeAttach.beforeCallbacks,
