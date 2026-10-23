@@ -127,35 +127,30 @@ const makeSeries = (series) => {
 };
 
 const tooltipPlugin = () => {
-	let plotOverlayElement;
-	let overlayBoundsLeft;
-	let overlayBoundsTop;
-
-	const syncBounds = () => {
-		const overlayBoundingRect = plotOverlayElement.getBoundingClientRect();
-		overlayBoundsLeft = overlayBoundingRect.left;
-		overlayBoundsTop = overlayBoundingRect.top;
-	};
-
+	const pointer = { x: 0, y: 0 };
 	const tooltip = document.createElement('div');
-	tooltip.className = 'uplot-tooltip position-absolute d-none pe-none text-nowrap rounded shadow bd-black px-2 py-1 fs-xs';
+	tooltip.className = 'uplot-tooltip position-fixed d-none pe-none text-nowrap numeric-tabular rounded shadow bd-black px-2 py-1 fs-xs';
 	document.body.appendChild(tooltip);
+
+	const place = () => {
+		tooltip.style.left = `${pointer.x + 10}px`;
+		tooltip.style.top = `${pointer.y - tooltip.offsetHeight - 10}px`;
+	};
 
 	return {
 		hooks: {
 			init: (plot) => {
-				plotOverlayElement = plot.over;
-
-				plotOverlayElement.onmouseenter = () => {
+				plot.over.addEventListener('mouseenter', () => {
 					tooltip.classList.remove('d-none');
-				};
-
-				plotOverlayElement.onmouseleave = () => {
+				});
+				plot.over.addEventListener('mouseleave', () => {
 					tooltip.classList.add('d-none');
-				};
-			},
-			setSize: () => {
-				syncBounds();
+				});
+				plot.over.addEventListener('mousemove', (event) => {
+					pointer.x = event.clientX;
+					pointer.y = event.clientY;
+					place();
+				});
 			},
 			setCursor: (plot) => {
 				const dataIndex = plot.cursor.idx;
@@ -180,9 +175,7 @@ const tooltipPlugin = () => {
 					<div class="opacity-75">${range}</div>
 					${values.join('')}
 				`;
-				syncBounds();
-				tooltip.style.left = (plot.cursor.left + overlayBoundsLeft + 10) + 'px';
-				tooltip.style.top = (plot.cursor.top + overlayBoundsTop - tooltip.offsetHeight - 10) + 'px';
+				place();
 			},
 			destroy: () => {
 				tooltip.remove();
