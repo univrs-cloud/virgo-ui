@@ -381,8 +381,29 @@ const stopAnimation = () => {
 	}
 };
 
+const resizeObserver = new ResizeObserver(() => {
+	let isResized = false;
+	_.each(charts, (chart) => {
+		const width = getElementWidth(chart.root.parentElement);
+		if (width !== chart.width) {
+			chart.setSize({ width, height: CHART_HEIGHT });
+			isResized = true;
+		}
+	});
+
+	if (isResized) {
+		updateData();
+		setScales();
+	}
+});
+
 const destroyChart = (name) => {
-	charts[name]?.destroy();
+	if (!charts[name]) {
+		return;
+	}
+
+	resizeObserver.unobserve(charts[name].root.parentElement);
+	charts[name].destroy();
 	delete charts[name];
 };
 
@@ -406,6 +427,7 @@ const render = (nextStats, limits) => {
 
 		if (!charts[name] && latest && isVisible(element)) {
 			charts[name] = createChart(name, element);
+			resizeObserver.observe(element);
 		}
 	});
 
