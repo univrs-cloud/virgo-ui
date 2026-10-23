@@ -119,6 +119,7 @@
 	@include meta.load-css("forms");
 	@include meta.load-css("tables");
 	@include meta.load-css("weather");
+	@include meta.load-css("resource_charts");
 	@include meta.load-css("theme");
 }
 

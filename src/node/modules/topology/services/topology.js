@@ -43,7 +43,7 @@ const { subscribe: subscribeToTraffic } = createSubscription({
 	stores: [
 		{
 			store: Host,
-			propertyNames: ['networkStats']
+			propertyNames: ['stats']
 		},
 		{
 			store: Docker,
@@ -56,14 +56,14 @@ const { subscribe: subscribeToTraffic } = createSubscription({
 	],
 	attachStore: storeAttach.beforeCallbacks,
 	mapState: (properties) => {
-		return composeTraffic(properties?.networkStats, properties?.appsResourceMetrics, properties?.shares, properties?.clients);
+		return composeTraffic(_.last(properties?.stats), properties?.appsResourceMetrics, properties?.shares, properties?.clients);
 	}
 });
 
-function composeTraffic(networkStats, appsResourceMetrics, shares, clients) {
+function composeTraffic(sample, appsResourceMetrics, shares, clients) {
 	const traffic = {};
-	if (_.isObject(networkStats)) {
-		traffic.node = { rx: networkStats.rx_sec || 0, tx: networkStats.tx_sec || 0 };
+	if (_.isObject(sample)) {
+		traffic.node = { rx: sample.rx || 0, tx: sample.tx || 0 };
 	}
 	_.each(appsResourceMetrics, (metrics) => {
 		traffic[`app:${metrics.name}`] = { rx: metrics.network?.rx || 0, tx: metrics.network?.tx || 0 };
@@ -77,6 +77,7 @@ function composeTraffic(networkStats, appsResourceMetrics, shares, clients) {
 	});
 	_.each((_.isArray(clients) ? clients : []), (session) => {
 		const sessionShares = _.uniq(_.map(session.shares, _.toLower));
+		const activeShares = _.uniq(_.map(session.activeShares, _.toLower));
 		const rx = session.rx || 0;
 		const tx = session.tx || 0;
 		add(`smb:${session.address}`, rx, tx);
@@ -84,8 +85,11 @@ function composeTraffic(networkStats, appsResourceMetrics, shares, clients) {
 			add(`smbroute:${session.address}:`, rx, tx);
 		}
 		_.each(sessionShares, (share) => {
-			add(`smbshare:${share}`, rx / _.size(sessionShares), tx / _.size(sessionShares));
-			add(`smbroute:${session.address}:${share}`, rx / _.size(sessionShares), tx / _.size(sessionShares));
+			const isActive = _.includes(activeShares, share);
+			const shareRx = (isActive ? rx / _.size(activeShares) : 0);
+			const shareTx = (isActive ? tx / _.size(activeShares) : 0);
+			add(`smbshare:${share}`, shareRx, shareTx);
+			add(`smbroute:${session.address}:${share}`, shareRx, shareTx);
 		});
 	});
 	return traffic;
