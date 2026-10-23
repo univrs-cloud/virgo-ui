@@ -13,8 +13,8 @@
 		<span class="fg-red-300">Error fetching data</span>
 	<%} else {%>
 		<div class="resource-chart" data-chart="memory"></div>
-		<div class="lh-1 fg-4 mt-1">
-			<small><strong class="fw-semibold"><%=prettyBytes(_.last(state.stats)?.memory || 0, { binary: true })%></strong> used from <%=prettyBytes(state.memory.total || 0, { binary: true })%></small>
+		<div class="lh-1 numeric-tabular fg-4 mt-1">
+			<small><strong class="fw-semibold"><%=prettyBytes(_.last(state.stats)?.memory || 0, { binary: true, minimumFractionDigits: 2, maximumFractionDigits: 2 })%></strong> used from <%=prettyBytes(state.memory.total || 0, { binary: true, minimumFractionDigits: 2, maximumFractionDigits: 2 })%></small>
 		</div>
 	<%}%>
 </li>
