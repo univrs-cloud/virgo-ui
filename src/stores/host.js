@@ -14,7 +14,7 @@ class Host extends Store {
 			checkUpdates: false,
 			updates: null,
 			update: -1,
-			cpuStats: null,
+			cpuSensors: null,
 			memory: null,
 			stats: null,
 			discovery: null,
@@ -78,8 +78,8 @@ class Host extends Store {
 			this.setState({ firewall }, 'get_firewall');
 		});
 
-		this.socket.on('host:cpu:stats', (cpuStats) => {
-			this.setState({ cpuStats }, 'get_cpu_stats');
+		this.socket.on('host:cpu:sensors', (cpuSensors) => {
+			this.setState({ cpuSensors }, 'get_cpu_sensors');
 		});
 
 		this.socket.on('host:memory', (memory) => {
