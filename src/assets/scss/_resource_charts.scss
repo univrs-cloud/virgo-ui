@@ -3,16 +3,19 @@
 		height: 90px;
 	}
 	.resource-timeline-track {
-		height: 16px;
+		height: 1.2rem;
 		touch-action: none;
 	}
 	.resource-timeline-tick {
 		width: 1px;
 		height: 50%;
 	}
+	.resource-rate {
+		min-width: 7ch;
+	}
 	.resource-timeline-handle {
 		width: 4px;
-		height: 50%;
+		height: 66%;
 		cursor: ew-resize;
 	}
 }

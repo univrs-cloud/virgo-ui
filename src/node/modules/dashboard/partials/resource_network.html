@@ -7,12 +7,20 @@
 		<div class="spinner-border spinner-sm fg-gray-600"></div>
 	<%} else {%>
 		<div class="resource-chart" data-chart="network"></div>
-		<div class="d-flex align-items-center lh-1 fg-4 mt-1">
-			<div class="d-flex align-items-center w-50">
-				<i class="icon-solid icon-arrow-down icon-fw me-1 fg-blue-500"></i><small>RX: <%=prettyBytes(_.last(state.stats)?.rx || 0, { binary: true })%>/s</small>
+		<%const [rxValue, rxUnit] = prettyBytes(_.last(state.stats)?.rx || 0, { binary: true, minimumFractionDigits: 2, maximumFractionDigits: 2 }).split(' ')%>
+		<%const [txValue, txUnit] = prettyBytes(_.last(state.stats)?.tx || 0, { binary: true, minimumFractionDigits: 2, maximumFractionDigits: 2 }).split(' ')%>
+		<div class="d-flex lh-1 numeric-tabular fg-4 mt-1">
+			<div class="w-50">
+				<div class="d-flex align-items-center fs-xs mb-1">
+					<i class="icon-solid icon-arrow-down icon-fw me-1 fg-blue-500"></i>RX
+				</div>
+				<small><span class="resource-rate d-inline-block text-end"><%=rxValue%></span> <%=rxUnit%>/s</small>
 			</div>
-			<div class="d-flex align-items-center w-50">
-				<i class="icon-solid icon-arrow-up icon-fw me-1 fg-purple-500"></i><small>TX: <%=prettyBytes(_.last(state.stats)?.tx || 0, { binary: true })%>/s</small>
+			<div class="w-50">
+				<div class="d-flex align-items-center fs-xs mb-1">
+					<i class="icon-solid icon-arrow-up icon-fw me-1 fg-purple-500"></i>TX
+				</div>
+				<small><span class="resource-rate d-inline-block text-end"><%=txValue%></span> <%=txUnit%>/s</small>
 			</div>
 		</div>
 	<%}%>

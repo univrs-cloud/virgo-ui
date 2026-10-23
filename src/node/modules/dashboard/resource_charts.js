@@ -10,13 +10,14 @@ const FRAMES_PER_SECOND = 10;
 const LIVE_SNAP_PX = 4;
 const HANDLE_HIT_PX = 8;
 const SYNC_KEY = 'resources-monitor';
+const ALERT_RATIO = 0.9;
 const CHARTS = {
 	cpu: {
-		series: [{ key: 'cpu', label: 'CPU', color: '--blue-500' }],
+		series: [{ key: 'cpu', label: 'CPU', color: '--blue-500', alertColor: '--red-500' }],
 		format: (value) => { return `${value.toFixed(0)}%`; }
 	},
 	memory: {
-		series: [{ key: 'memory', label: 'RAM', color: '--blue-500' }],
+		series: [{ key: 'memory', label: 'RAM', color: '--blue-500', alertColor: '--red-500' }],
 		format: (value) => { return prettyBytes(value, { binary: true }); }
 	},
 	network: {
@@ -28,6 +29,7 @@ const CHARTS = {
 	}
 };
 let charts = {};
+let chartValues = {};
 let timeline = null;
 let maxima = {};
 let stats = [];
@@ -110,20 +112,47 @@ const makeGradientFill = (color) => {
 	};
 };
 
+const makeLine = (label, color) => {
+	return {
+		label,
+		stroke: color,
+		fill: makeGradientFill(color),
+		width: 1,
+		paths: uPlot.paths.spline(),
+		points: {
+			show: false
+		}
+	};
+};
+
 const makeSeries = (series) => {
-	return series.map(({ label, color }) => {
-		const computedColor = getComputedColor(color);
-		return {
-			label,
-			stroke: computedColor,
-			fill: makeGradientFill(computedColor),
-			width: 1,
-			paths: uPlot.paths.spline(),
-			points: {
-				show: false
-			}
-		};
+	const lines = series.map(({ label, color }) => {
+		return makeLine(label, getComputedColor(color));
 	});
+	const alertLines = series.filter(({ alertColor }) => { return alertColor; }).map(({ label, alertColor }) => {
+		return makeLine(label, getComputedColor(alertColor));
+	});
+	return [...lines, ...alertLines];
+};
+
+const withAlerts = (name, columns) => {
+	const limit = (maxima[name] ? maxima[name] * ALERT_RATIO : Infinity);
+	const alertColumns = [];
+	CHARTS[name].series.forEach(({ alertColor }, seriesIndex) => {
+		if (!alertColor) {
+			return;
+		}
+
+		const values = columns[seriesIndex + 1];
+		const isAlert = (index) => { return values[index] >= limit; };
+		alertColumns.push(values.map((value, index) => {
+			return (isAlert(index) || isAlert(index - 1) || isAlert(index + 1) ? value : null);
+		}));
+		columns[seriesIndex + 1] = values.map((value, index) => {
+			return (isAlert(index) ? null : value);
+		});
+	});
+	return [...columns, ...alertColumns];
 };
 
 const tooltipPlugin = () => {
@@ -168,7 +197,7 @@ const tooltipPlugin = () => {
 					}
 
 					return series.map(({ label }, seriesIndex) => {
-						return `<div>${label}: ${format(charts[name].data[seriesIndex + 1]?.[dataIndex] ?? 0)}</div>`;
+						return `<div>${label}: ${format(chartValues[name]?.[seriesIndex + 1]?.[dataIndex] ?? 0)}</div>`;
 					});
 				});
 				tooltip.innerHTML = `
@@ -185,7 +214,7 @@ const tooltipPlugin = () => {
 };
 
 const createChart = (name, element) => {
-	const { series } = CHARTS[name];
+	const lines = makeSeries(CHARTS[name].series);
 	return new uPlot({
 		width: getElementWidth(element),
 		height: CHART_HEIGHT,
@@ -196,7 +225,7 @@ const createChart = (name, element) => {
 		],
 		series: [
 			{},
-			...makeSeries(series)
+			...lines
 		],
 		axes: [
 			{
@@ -235,7 +264,7 @@ const createChart = (name, element) => {
 				}
 			}
 		}
-	}, [[], ...series.map(() => { return []; })], element);
+	}, [[], ...lines.map(() => { return []; })], element);
 };
 
 const toTimelineX = (time) => {
@@ -288,7 +317,9 @@ const updateData = () => {
 	const { start, end } = getRange();
 	_.each(charts, (chart, name) => {
 		const bucketMs = getBucketMs(chart.width, timeframe.size);
-		chart.setData(toColumns(CHARTS[name].series, start - bucketMs, Math.min(end, latest.time), bucketMs), false);
+		const columns = toColumns(CHARTS[name].series, start - bucketMs, Math.min(end, latest.time), bucketMs);
+		chartValues[name] = columns;
+		chart.setData(withAlerts(name, [...columns]), false);
 	});
 };
 
