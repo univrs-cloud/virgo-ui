@@ -1,0 +1,21 @@
+#resources-monitor {
+	.resource-chart {
+		height: 90px;
+	}
+	.resource-timeline-track {
+		height: 16px;
+		touch-action: none;
+	}
+	.resource-timeline-tick {
+		width: 1px;
+		height: 50%;
+	}
+	.resource-timeline-handle {
+		width: 4px;
+		height: 50%;
+		cursor: ew-resize;
+	}
+}
+.uplot-tooltip {
+	z-index: 10000;
+}

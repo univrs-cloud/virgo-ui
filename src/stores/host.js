@@ -1,5 +1,7 @@
 import Store from 'stores/store';
 
+const STATS_HISTORY_MS = 60 * 60 * 1000;
+
 class Host extends Store {
 	constructor() {
 		const initialState = {
@@ -14,7 +16,7 @@ class Host extends Store {
 			update: -1,
 			cpuStats: null,
 			memory: null,
-			networkStats: null,
+			stats: null,
 			discovery: null,
 			peers: null,
 			storage: null,
@@ -92,8 +94,18 @@ class Host extends Store {
 			this.setState({ discovery }, 'get_discovery');
 		});
 
-		this.socket.on('host:network:stats', (networkStats) => {
-			this.setState({ networkStats }, 'get_network_stats');
+		this.socket.on('host:stats:history', (stats) => {
+			this.setState({ stats }, 'get_stats_history');
+		});
+
+		this.socket.on('host:stats', (sample) => {
+			const stats = this.getState().stats;
+			if (!stats) {
+				return;
+			}
+
+			const since = sample.time - STATS_HISTORY_MS;
+			this.setState({ stats: [..._.filter(stats, (entry) => { return entry.time > since; }), sample] }, 'get_stats');
 		});
 
 		this.socket.on('host:drives', (drives) => {
