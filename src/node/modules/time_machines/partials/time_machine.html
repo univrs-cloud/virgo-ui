@@ -16,12 +16,12 @@
 	</td>
 	<td class="text-nowrap d-none md:d-table-cell">
 		<%if (_.isEmpty(timeMachine.clients)) {%>
-			<u-badge color="gray" tint="100" pill>
+			<u-badge color="gray" tint="050" pill>
 				<i class="icon-solid icon-user icon-xs fg-4"></i>
 				<small>0</small>
 			</u-badge>
 		<%} else {%>
-			<u-badge color="gray" tint="100" tip="<%-_.map(timeMachine.clients, (client) => { return _.escape(`${_.join(client.usernames, ', ')} (${client.address})`); }).join('<br>')%>" pill>
+			<u-badge color="gray" tint="050" tip="<%-_.map(timeMachine.clients, (client) => { return _.escape(`${_.join(client.usernames, ', ')} (${client.address})`); }).join('<br>')%>" pill>
 				<i class="icon-solid icon-user icon-xs fg-green-500"></i>
 				<small><%-_.size(timeMachine.clients)%></small>
 			</u-badge>

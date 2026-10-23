@@ -33,20 +33,20 @@
 	</td>
 	<td class="text-nowrap">
 		<%if (_.isEmpty(sessions)) {%>
-			<u-badge color="gray" tint="100" pill>
+			<u-badge color="gray" tint="050" pill>
 				<i class="icon-solid icon-circle icon-2xs fg-4"></i>
 				<small>0</small>
 			</u-badge>
 		<%} else {%>
 			<a href="#user-sessions" class="d-inline-flex align-items-center gap-1 text-decoration-none" data-bs-toggle="dialog">
 				<%if (_.some(sessions, 'isConnected')) {%>
-					<u-badge color="gray" tint="100" pill>
+					<u-badge color="gray" tint="050" pill>
 						<i class="icon-solid icon-circle icon-2xs fg-green-500"></i>
 						<small><%-_.size(_.filter(sessions, 'isConnected'))%></small>
 					</u-badge>
 				<%}%>
 				<%if (!_.every(sessions, 'isConnected')) {%>
-					<u-badge color="gray" tint="100" pill>
+					<u-badge color="gray" tint="050" pill>
 						<i class="icon-solid icon-circle icon-2xs fg-4"></i>
 						<small><%-_.size(_.reject(sessions, 'isConnected'))%></small>
 					</u-badge>

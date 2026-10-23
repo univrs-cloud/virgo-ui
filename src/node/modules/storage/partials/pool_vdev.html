@@ -19,12 +19,15 @@
 %>
 <%
 	let temperatureColor = 'gray';
+	let temperatureTint = '050';
 	if (drive?.temperature >= drive?.temperatureWarningThreshold) {
 		temperatureColor = 'yellow';
+		temperatureTint = '100';
 	}
 
 	if (drive?.temperature >= drive?.temperatureCriticalThreshold) {
 		temperatureColor = 'red';
+		temperatureTint = '100';
 	}
 %>
 <div class="tree-row <%=(depth > 0 && !isLast ? 'tree-line' : '')%>" data-guid="<%-vdev.guid%>" data-depth="<%-depth%>" style="--tree-elbow-x: 0.5rem; --tree-elbow-height: 1.25rem; --tree-line-x: 0.5rem; --tree-line-top: 0; padding-left: <%=(depth > 0 ? '1.5rem' : 'var(--card-spacer-x)')%>;">
@@ -39,7 +42,7 @@
 			<i class="icon-solid icon-arrows-rotate icon-xs icon-fw lh-1 fg-blue-400 ms-3 flex-shrink-0 <%=(activity === 'awaiting' ? '' : 'icon-spin')%>" data-bs-toggle="tooltip" data-bs-original-title="<%-{ resilvering: 'Resilvering', repairing: 'Repairing', awaiting: 'Awaiting resilver' }[activity]%>"></i>
 		<%}%>
 		<%if (size) {%>
-			<u-badge color="gray" tint="100" class="ms-3 flex-shrink-0" pill><small><%=prettyBytes(size, { binary: true })%></small></u-badge>
+			<u-badge color="gray" tint="050" class="ms-3 flex-shrink-0" pill><small><%=prettyBytes(size, { binary: true })%></small></u-badge>
 		<%}%>
 		<%if (errors > 0) {%>
 			<u-badge color="red" tint="100" class="ms-3 flex-shrink-0" tip="Errors: <%-errorsTip%>" pill><small><%-readErrors%> / <%-writeErrors%> / <%-checksumErrors%></small></u-badge>
@@ -48,7 +51,7 @@
 			<u-badge color="orange" tint="100" class="ms-3 flex-shrink-0" tip="Slow I/O operations" pill><small><%-vdev.slowIos%></small></u-badge>
 		<%}%>
 		<%if (isDisk && !_.isNil(drive?.temperature)) {%>
-			<u-badge color="<%-temperatureColor%>" tint="100" class="ms-3 flex-shrink-0" tip="Warning at <%-drive.temperatureWarningThreshold%> °C, critical at <%-drive.temperatureCriticalThreshold%> °C" pill>
+			<u-badge color="<%-temperatureColor%>" tint="<%=temperatureTint%>" class="ms-3 flex-shrink-0" tip="Warning at <%-drive.temperatureWarningThreshold%> °C, critical at <%-drive.temperatureCriticalThreshold%> °C" pill>
 				<small><%-drive.temperature%> °C</small>
 			</u-badge>
 		<%}%>
