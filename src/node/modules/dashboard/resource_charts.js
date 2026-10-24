@@ -84,7 +84,7 @@ const toColumns = (series, start, end, bucketMs) => {
 
 	const columns = [buckets.map((bucket, index) => { return (firstBucket + index) * bucketMs; })];
 	series.forEach(({ key }) => {
-		columns.push(buckets.map((bucket) => { return (bucket.length > 0 ? _.maxBy(bucket, key)[key] : 0); }));
+		columns.push(buckets.map((bucket) => { return (bucket.length > 0 ? _.meanBy(bucket, key) : 0); }));
 	});
 	return columns;
 };
