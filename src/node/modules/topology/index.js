@@ -60,6 +60,7 @@ let gesture = null;
 let hasFitted = false;
 let isViewChanged = false;
 let isVisible = false;
+let isWatchingResourceMetrics = false;
 let unsubscribers = [];
 let lastState = null;
 let lastMarkup = null;
@@ -764,7 +765,18 @@ const readGesture = () => {
 	};
 };
 
+const syncResourceMetrics = () => {
+	const shouldWatch = (!module.classList.contains('d-none') && document.visibilityState === 'visible');
+	if (shouldWatch === isWatchingResourceMetrics) {
+		return;
+	}
+
+	isWatchingResourceMetrics = shouldWatch;
+	topologyService.watchResourceMetrics(shouldWatch);
+};
+
 const syncVisibility = () => {
+	syncResourceMetrics();
 	const isShown = !module.classList.contains('d-none');
 	if (isShown === isVisible) {
 		return;
@@ -807,4 +819,5 @@ resizeObserver.observe(viewport);
 resizeObserver.observe(content);
 
 new MutationObserver(syncVisibility).observe(module, { attributes: true, attributeFilter: ['class'] });
+document.addEventListener('visibilitychange', syncResourceMetrics);
 syncVisibility();

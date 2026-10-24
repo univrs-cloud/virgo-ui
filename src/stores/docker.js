@@ -14,6 +14,15 @@ class Docker extends Store {
 		});
 
 		this.setState(initialState, 'socket_connect');
+		this.resourceMetricsWatchers = 0;
+		this.isWatchingResourceMetrics = false;
+		this.resourceMetricsTimer = null;
+
+		this.socket.on('connect', () => {
+			if (this.resourceMetricsWatchers > 0) {
+				this.socket.emit('app:resourceMetrics:watch', true);
+			}
+		});
 
 		this.socket.on('app:configured', (configured) => {
 			this.setState({ configured }, 'set_configured');
@@ -46,6 +55,20 @@ class Docker extends Store {
 
 	getAppsResourceMetrics() {
 		return this.getStateProperty('appsResourceMetrics');
+	}
+
+	watchResourceMetrics(isWatching) {
+		this.resourceMetricsWatchers = Math.max(this.resourceMetricsWatchers + (isWatching ? 1 : -1), 0);
+		clearTimeout(this.resourceMetricsTimer);
+		this.resourceMetricsTimer = setTimeout(() => {
+			const isNowWatching = (this.resourceMetricsWatchers > 0);
+			if (isNowWatching === this.isWatchingResourceMetrics) {
+				return;
+			}
+
+			this.isWatchingResourceMetrics = isNowWatching;
+			this.socket.emit('app:resourceMetrics:watch', isNowWatching);
+		});
 	}
 
 	getImageUpdates() {

@@ -326,9 +326,14 @@ const setTrafficShown = (isShown) => {
 	}
 };
 
+const watchResourceMetrics = (isWatching) => {
+	Docker.watchResourceMetrics(isWatching);
+};
+
 export {
 	subscribe,
 	subscribeToTraffic,
+	watchResourceMetrics,
 	getDefaultNetworkInterfaceSpeed,
 	isTrafficShown,
 	setTrafficShown
