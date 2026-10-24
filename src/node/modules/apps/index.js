@@ -26,6 +26,7 @@ const filterMenu = module.querySelector('.filter-menu');
 const filterCount = module.querySelector('.filter-count');
 const table = container.querySelector('.table');
 let routeAppName = null;
+let isWatchingResourceMetrics = false;
 let searchTimer;
 let searchValue = '';
 let filterValues = appService.getFilters();
@@ -541,6 +542,16 @@ const handleRoute = (ctx) => {
 	details.classList.add('d-block');
 };
 
+const syncResourceMetrics = () => {
+	const shouldWatch = (!module.classList.contains('d-none') && document.visibilityState === 'visible');
+	if (shouldWatch === isWatchingResourceMetrics) {
+		return;
+	}
+
+	isWatchingResourceMetrics = shouldWatch;
+	appService.watchResourceMetrics(shouldWatch);
+};
+
 module.onRoute = handleRoute;
 module.addEventListener('click', compress);
 module.addEventListener('click', update);
@@ -563,6 +574,9 @@ table.querySelector('thead').addEventListener('click', order);
 table.querySelector('tbody').addEventListener('click', expand);
 
 appService.subscribe([render]);
+new MutationObserver(syncResourceMetrics).observe(module, { attributes: true, attributeFilter: ['class'] });
+document.addEventListener('visibilitychange', syncResourceMetrics);
+syncResourceMetrics();
 
 import('node/modules/apps/logs');
 import('node/modules/apps/terminal');

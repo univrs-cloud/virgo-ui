@@ -222,8 +222,13 @@ const setFilters = (filters) => {
 	}
 };
 
+const watchResourceMetrics = (isWatching) => {
+	Docker.watchResourceMetrics(isWatching);
+};
+
 export {
 	subscribe,
+	watchResourceMetrics,
 	getSocket,
 	getJobs,
 	getApps,
