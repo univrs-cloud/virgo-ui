@@ -13,16 +13,14 @@
 		<span class="fg-red-300">Error fetching data</span>
 	<%} else {%>
 		<div class="resource-chart" data-chart="memory"></div>
-		<%const [usedValue, usedUnit] = prettyBytes(Math.max((_.last(state.stats)?.memory || 0) - (_.last(state.stats)?.arc || 0), 0), { binary: true, minimumFractionDigits: 2, maximumFractionDigits: 2 }).split(' ')%>
-		<%const [totalValue, totalUnit] = prettyBytes(state.memory.total || 0, { binary: true, minimumFractionDigits: 2, maximumFractionDigits: 2 }).split(' ')%>
-		<%const [cacheValue, cacheUnit] = prettyBytes(_.last(state.stats)?.arc || 0, { binary: true, minimumFractionDigits: 2, maximumFractionDigits: 2 }).split(' ')%>
-		<%const [cacheMaxValue, cacheMaxUnit] = prettyBytes(state.arc?.max || 0, { binary: true, minimumFractionDigits: 2, maximumFractionDigits: 2 }).split(' ')%>
+		<%const totalExponent = Math.max(Math.floor(Math.log(state.memory.total || 1) / Math.log(1024)), 0)%>
+		<%const cacheMaxExponent = Math.max(Math.floor(Math.log(state.arc?.max || 1) / Math.log(1024)), 0)%>
 		<div class="d-flex justify-content-between gap-3 lh-1 numeric-tabular text-nowrap fg-4 mt-1">
 			<div class="d-flex">
 				<i class="icon-solid icon-circle icon-fw fs-xs me-1 fg-blue-500"></i>
 				<div>
 					<div class="fs-xs mb-1">In use</div>
-					<span class="fs-xs"><strong class="fw-semibold"><%=usedValue%><%if (usedUnit.toLowerCase() !== totalUnit.toLowerCase()) {%> <%=usedUnit%><%}%></strong> / <%=totalValue%> <%=totalUnit%></span>
+					<span class="fs-xs"><strong class="fw-semibold"><%=(Math.floor((Math.max((_.last(state.stats)?.memory || 0) - (_.last(state.stats)?.arc || 0), 0) / 1024 ** totalExponent) * 100) / 100).toFixed(2)%></strong> / <%=prettyBytes(state.memory.total || 0, { binary: true, minimumFractionDigits: 2, maximumFractionDigits: 2 })%></span>
 				</div>
 			</div>
 			<div class="d-flex">
@@ -35,9 +33,9 @@
 						<%}%>
 					</div>
 					<%if (state.arc?.max) {%>
-						<span class="fs-xs"><strong class="fw-semibold"><%=cacheValue%><%if (cacheUnit.toLowerCase() !== cacheMaxUnit.toLowerCase()) {%> <%=cacheUnit%><%}%></strong> / <span class="tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="Limit set in Settings, RAM cache."><%=cacheMaxValue%> <%=cacheMaxUnit%></span></span>
+						<span class="fs-xs"><strong class="fw-semibold"><%=(Math.floor(((_.last(state.stats)?.arc || 0) / 1024 ** cacheMaxExponent) * 100) / 100).toFixed(2)%></strong> / <span class="tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="Limit set in Settings, RAM cache."><%=prettyBytes(state.arc.max, { binary: true })%></span></span>
 					<%} else {%>
-						<span class="fs-xs"><strong class="fw-semibold"><%=cacheValue%> <%=cacheUnit%></strong></span>
+						<span class="fs-xs"><strong class="fw-semibold"><%=prettyBytes(_.last(state.stats)?.arc || 0, { binary: true, minimumFractionDigits: 2, maximumFractionDigits: 2 })%></strong></span>
 					<%}%>
 				</div>
 			</div>
