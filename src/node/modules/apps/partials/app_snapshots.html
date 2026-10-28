@@ -3,7 +3,6 @@
 		const snapshotTierOrder = ['frequently', 'hourly', 'daily', 'monthly', 'yearly', 'update'];
 		const snapshotTierColors = { frequently: 'blue-200', hourly: 'blue-300', daily: 'blue-500', monthly: 'indigo-500', yearly: 'indigo-700', update: 'orange-500' };
 		const snapshotTierHours = { frequently: 0.25, hourly: 1, daily: 24, monthly: 730.5, yearly: 8766, update: 1 };
-		const snapshotTierPeriods = { frequently: 'hour', hourly: 'hour', daily: 'day', monthly: 'month', yearly: 'year', update: 'second' };
 		const snapshotNow = moment();
 		const snapshotEntries = _.filter(_.map(app.snapshots, (snapshot) => {
 			const segments = snapshot.snapshotName.split('_');
@@ -187,7 +186,7 @@
 				<%})%>
 			</div>
 			<div class="form-range">
-				<input type="range" class="snapshot-scrubber form-range-input" min="0" max="1000" value="<%=Math.round(snapshotPosition(selectedPoint.age) * 1000)%>" data-selected="<%-selectedPoint.key%>" data-keys="<%-_.map(snapshotPoints, 'key').join(',')%>" data-preferred-keys="<%-_.map(snapshotPoints, (point) => { return (_.find(snapshotPoints, (candidate) => { return _.includes(candidate.tiers, 'update') && candidate.createdMoment.isSame(point.createdMoment, snapshotTierPeriods[_.first(point.tiers)]); }) || point).key; }).join(',')%>" data-positions="<%-_.map(snapshotPoints, (point) => { return snapshotPosition(point.age).toFixed(4); }).join(',')%>">
+				<input type="range" class="snapshot-scrubber form-range-input" min="0" max="1000" value="<%=Math.round(snapshotPosition(selectedPoint.age) * 1000)%>" data-selected="<%-selectedPoint.key%>" data-keys="<%-_.map(snapshotPoints, 'key').join(',')%>" data-positions="<%-_.map(snapshotPoints, (point) => { return snapshotPosition(point.age).toFixed(4); }).join(',')%>">
 			</div>
 			<div class="position-relative small fg-4" style="height: 1.25rem;">
 				<%_.each(snapshotTicks, ([hours, label, last]) => {%>
