@@ -16,6 +16,7 @@ class Host extends Store {
 			update: -1,
 			cpuSensors: null,
 			memory: null,
+			arc: null,
 			stats: null,
 			discovery: null,
 			peers: null,
@@ -84,6 +85,10 @@ class Host extends Store {
 
 		this.socket.on('host:memory', (memory) => {
 			this.setState({ memory }, 'get_memory');
+		});
+
+		this.socket.on('host:arc', (arc) => {
+			this.setState({ arc }, 'get_arc');
 		});
 
 		this.socket.on('host:peers', (peers) => {
@@ -219,6 +224,10 @@ class Host extends Store {
 		this.socket.emit('host:firewall:unban', data);
 	}
 
+	updateArc(data) {
+		this.socket.emit('host:arc:update', data);
+	}
+
 	performServiceAction(data) {
 		this.socket.emit(`host:system:service:${data.action}`, { unit: data.unit });
 	}
@@ -241,6 +250,10 @@ class Host extends Store {
 
 	getMemory() {
 		return this.getStateProperty('memory');
+	}
+
+	getArc() {
+		return this.getStateProperty('arc');
 	}
 
 	getCheckUpdates() {

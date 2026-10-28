@@ -21,7 +21,7 @@ const { subscribe } = createSubscription({
 		},
 		{
 			store: Host,
-			propertyNames: ['system']
+			propertyNames: ['system', 'arc']
 		},
 		{
 			store: Configuration,
@@ -68,6 +68,10 @@ const disableFleet = () => {
 	Configuration.disableFleet();
 };
 
+const updateArc = (data) => {
+	Host.updateArc(data);
+};
+
 export {
 	subscribe,
 	getJobs,
@@ -76,5 +80,6 @@ export {
 	updateLocation,
 	updateFleet,
 	enableFleet,
-	disableFleet
+	disableFleet,
+	updateArc
 };
