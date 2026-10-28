@@ -54,7 +54,7 @@
 		"validator": "^13.15.35"
 	},
 	"devDependencies": {
-		"autoprefixer": "^10.6.1",
+		"autoprefixer": "^10.6.2",
 		"clean-webpack-plugin": "^4.0.0",
 		"copy-webpack-plugin": "^14.0.0",
 		"css-loader": "^7.1.5",
@@ -64,13 +64,13 @@
 		"html-webpack-plugin": "^5.6.8",
 		"mini-css-extract-plugin": "^2.10.2",
 		"node-deb": "^0.10.7",
-		"postcss": "^8.5.31",
+		"postcss": "^8.5.32",
 		"postcss-cli": "^12.0.0",
 		"postcss-loader": "^8.2.1",
 		"raw-loader": "^4.0.2",
 		"sass": "^1.106.1",
-		"sass-loader": "^17.0.1",
-		"webpack": "^5.112.1",
+		"sass-loader": "^17.1.0",
+		"webpack": "^5.112.2",
 		"webpack-cli": "^7.2.3",
 		"webpack-dev-server": "^6.1.0",
 		"webpack-pwa-manifest": "^4.3.0"
