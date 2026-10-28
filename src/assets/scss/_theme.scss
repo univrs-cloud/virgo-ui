@@ -336,7 +336,12 @@ $card-image-size: 30px;
 }
 #update {
 	.card-body {
+		--table-scrollbar-inset-bottom: var(--card-border-radius);
+		gap: 0;
 		height: calc(100dvh - 72px - var(--chrome));
+		> .table-scroll {
+			margin-bottom: calc(var(--card-spacer-y) * -1);
+		}
 	}
 }
 #resource-usage {
