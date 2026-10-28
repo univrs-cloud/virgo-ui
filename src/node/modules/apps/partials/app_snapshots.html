@@ -1,16 +1,19 @@
 <div class="snapshots card border-0 mb-3">
 	<%
-		const snapshotTierOrder = ['frequently', 'hourly', 'daily', 'monthly', 'yearly'];
-		const snapshotTierColors = { frequently: 'blue-200', hourly: 'blue-300', daily: 'blue-500', monthly: 'indigo-500', yearly: 'indigo-700' };
-		const snapshotTierHours = { frequently: 0.25, hourly: 1, daily: 24, monthly: 730.5, yearly: 8766 };
+		const snapshotTierOrder = ['frequently', 'hourly', 'daily', 'monthly', 'yearly', 'update'];
+		const snapshotTierColors = { frequently: 'blue-200', hourly: 'blue-300', daily: 'blue-500', monthly: 'indigo-500', yearly: 'indigo-700', update: 'orange-500' };
+		const snapshotTierHours = { frequently: 0.25, hourly: 1, daily: 24, monthly: 730.5, yearly: 8766, update: 1 };
+		const snapshotTierPeriods = { frequently: 'hour', hourly: 'hour', daily: 'day', monthly: 'month', yearly: 'year', update: 'second' };
 		const snapshotNow = moment();
 		const snapshotEntries = _.filter(_.map(app.snapshots, (snapshot) => {
 			const segments = snapshot.snapshotName.split('_');
-			const createdMoment = moment.utc(segments.slice(1, -1).join(' '), 'YYYY-MM-DD HH:mm:ss', true).local();
+			const isUpdate = (_.toLower(_.first(segments)) === 'update');
+			const stamp = (isUpdate ? _.tail(segments) : segments.slice(1, -1));
+			const createdMoment = moment.utc(stamp.join(' '), 'YYYY-MM-DD HH:mm:ss', true).local();
 			return {
 				name: snapshot.snapshotName,
-				key: segments.slice(1, -1).join('_'),
-				tier: _.toLower(_.last(segments)),
+				key: stamp.join('_'),
+				tier: (isUpdate ? 'update' : _.toLower(_.last(segments))),
 				createdMoment,
 				age: Math.max(snapshotNow.diff(createdMoment, 'hours', true), 0),
 				size: snapshot.properties?.used?.value || 0
@@ -19,7 +22,7 @@
 		const snapshotPoints = _.orderBy(_.map(_.groupBy(snapshotEntries, 'key'), (entries, key) => {
 			return {
 				key,
-				snapshot: entries[0].name,
+				snapshot: (_.find(entries, { tier: 'update' }) || entries[0]).name,
 				createdMoment: entries[0].createdMoment,
 				age: entries[0].age,
 				tiers: _.intersection(snapshotTierOrder, _.map(entries, 'tier')),
@@ -159,8 +162,10 @@
 				<div class="btn-group btn-group-sm">
 					<%if (_.toLower(app.name) === 'nextcloud') {%>
 						<button type="button" class="snapshot-browse btn-solid theme-secondary" data-browse-snapshot="<%-selectedPoint.snapshot%>" data-browse-date="<%-selectedPoint.createdMoment.format('D MMM YYYY, HH:mm')%>"><i class="icon-regular icon-folder-open icon-fw"></i>Browse files</button>
+					<%} else if (_.some(appJobs, { name: 'app:rollback' })) {%>
+						<button type="button" class="snapshot-action btn-solid theme-secondary" disabled><i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>Roll back</button>
 					<%} else {%>
-						<button type="button" class="snapshot-action btn-solid theme-secondary" disabled><i class="icon-regular icon-clock-rotate-left icon-fw"></i>Roll back</button>
+						<button type="button" class="snapshot-action btn-solid theme-secondary" data-rollback-snapshot="<%-selectedPoint.snapshot%>" data-rollback-date="<%-selectedPoint.createdMoment.format('D MMM YYYY, HH:mm')%>" <%=(_.includes(selectedPoint.tiers, 'update') ? '' : 'disabled')%>><i class="icon-regular icon-clock-rotate-left icon-fw"></i>Roll back</button>
 					<%}%>
 				</div>
 			</div>
@@ -180,7 +185,7 @@
 				<%})%>
 			</div>
 			<div class="form-range">
-				<input type="range" class="snapshot-scrubber form-range-input" min="0" max="1000" value="<%=Math.round(snapshotPosition(selectedPoint.age) * 1000)%>" aria-label="Restore point" aria-valuetext="<%-snapshotLabel(selectedPoint)%>" data-selected="<%-selectedPoint.key%>" data-keys="<%-_.map(snapshotPoints, 'key').join(',')%>" data-positions="<%-_.map(snapshotPoints, (point) => { return snapshotPosition(point.age).toFixed(4); }).join(',')%>">
+				<input type="range" class="snapshot-scrubber form-range-input" min="0" max="1000" value="<%=Math.round(snapshotPosition(selectedPoint.age) * 1000)%>" aria-label="Restore point" aria-valuetext="<%-snapshotLabel(selectedPoint)%>" data-selected="<%-selectedPoint.key%>" data-keys="<%-_.map(snapshotPoints, 'key').join(',')%>" data-preferred-keys="<%-_.map(snapshotPoints, (point) => { return (_.find(snapshotPoints, (candidate) => { return _.includes(candidate.tiers, 'update') && candidate.createdMoment.isSame(point.createdMoment, snapshotTierPeriods[_.last(point.tiers)]); }) || point).key; }).join(',')%>"data-positions="<%-_.map(snapshotPoints, (point) => { return snapshotPosition(point.age).toFixed(4); }).join(',')%>">
 			</div>
 			<div class="position-relative small fg-4" style="height: 1.25rem;">
 				<%_.each(snapshotTicks, ([hours, label, last]) => {%>
