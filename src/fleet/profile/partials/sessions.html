@@ -25,7 +25,7 @@
 											no activity recorded
 										<%}%>
 										&middot;
-										<span data-bs-toggle="tooltip" data-bs-original-title="Signed in on <%=moment(session.createdAt).format('MMM D, YYYY [at] HH:mm')%>. Expires <%=moment(session.expiresAt).format('MMM D, YYYY')%>.">signed in <%=moment(session.createdAt).fromNow()%></span>
+										<span class="tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="Signed in on <%=moment(session.createdAt).format('MMM D, YYYY [at] HH:mm')%>. Expires <%=moment(session.expiresAt).format('MMM D, YYYY')%>.">signed in <%=moment(session.createdAt).fromNow()%></span>
 									</span>
 									<span class="fw-lighter fg-4 text-truncate" style="flex-shrink: 999;" data-bs-toggle="tooltip" data-bs-original-title="<%-session.userAgent || 'No user agent recorded'%>"><%-session.userAgent || 'Unknown device'%></span>
 									<span class="ms-auto d-flex align-items-center gap-3 flex-shrink-0">

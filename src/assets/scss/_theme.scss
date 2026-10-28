@@ -69,6 +69,13 @@ u-badge:hover .hover-reveal-text {
 	}
 }
 
+.tooltip-hint {
+	text-decoration: underline dotted var(--gray-500);
+	text-decoration-skip-ink: none;
+	text-underline-offset: .2em;
+	cursor: help;
+}
+
 .dialog {
 	--dialog-border-width: 0;
 	--dialog-header-border-width: 0;

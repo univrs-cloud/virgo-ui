@@ -43,7 +43,7 @@
 		<%}%>
 	</td>
 	<td class="text-end text-nowrap d-none md:d-table-cell">
-		<small class="fw-light fg-emphasis-secondary" data-bs-toggle="tooltip" data-bs-original-title="<%=snapshotTooltip%>"><%=_.sumBy(timeMachine.timeMachine, (m) => { return _.size(m.snapshots || []); })%></small>
+		<small class="fw-light fg-emphasis-secondary tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="<%=snapshotTooltip%>"><%=_.sumBy(timeMachine.timeMachine, (m) => { return _.size(m.snapshots || []); })%></small>
 	</td>
 	<td class="text-end text-nowrap d-none md:d-table-cell">
 		<small class="fw-light fg-emphasis-secondary d-flex">
@@ -63,7 +63,7 @@
 		<small class="fw-light fg-emphasis-secondary"><%=prettyBytes(timeMachine.size || 0, { binary: true })%></small>
 	</td>
 	<td class="text-end text-nowrap d-none md:d-table-cell">
-		<small class="fw-light fg-emphasis-secondary" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(timeMachine.alloc || 0, { binary: true })%>"><%=timeMachine.cap.toFixed(2)%>%</small>
+		<small class="fw-light fg-emphasis-secondary tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(timeMachine.alloc || 0, { binary: true })%>"><%=timeMachine.cap.toFixed(2)%>%</small>
 		<u-progress shadow="false">
 			<u-progress-bar width="<%=timeMachine.cap%>"></u-progress-bar>
 		</u-progress>

@@ -18,7 +18,7 @@
 	</td>
 	<td class="text-end text-nowrap d-none md:d-table-cell">
 		<%if (service.type === 'service' && service.active === 'active') {%>
-			<small class="fw-light fg-emphasis-secondary" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(service.memory?.usage || 0, { binary: true })%>"><%=service.memory?.percent.toFixed(2)%>%</small>
+			<small class="fw-light fg-emphasis-secondary tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(service.memory?.usage || 0, { binary: true })%>"><%=service.memory?.percent.toFixed(2)%>%</small>
 			<u-progress shadow="false">
 				<u-progress-bar width="<%=service.memory?.percent%>"></u-progress-bar>
 			</u-progress>

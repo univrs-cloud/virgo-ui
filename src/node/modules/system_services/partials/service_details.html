@@ -79,7 +79,7 @@
 									<small class="fg-4 pb-1"><i class="icon-solid icon-memory icon-fw me-1"></i>RAM</small>
 									<h4>
 										<%if (service.type === 'service' && service.active === 'active') {%>
-											<span data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(service.memory?.usage || 0, { binary: true })%>"><%=service.memory?.percent.toFixed(2)%>%</span>
+											<span class="tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(service.memory?.usage || 0, { binary: true })%>"><%=service.memory?.percent.toFixed(2)%>%</span>
 										<%} else {%>
 											&mdash;
 										<%}%>

@@ -191,7 +191,7 @@
 												<div class="col-6">
 													<small class="d-block fg-4 pb-1"><i class="icon-solid icon-arrow-up-to-line icon-width-auto me-1"></i>Latest</small>
 													<%if (latest) {%>
-														<span class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%-latest.format('D MMM YYYY, HH:mm')%>"><%-latest.fromNow()%></span>
+														<span class="fw-light tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="<%-latest.format('D MMM YYYY, HH:mm')%>"><%-latest.fromNow()%></span>
 													<%} else {%>
 														<span class="fw-light">None</span>
 													<%}%>
@@ -199,7 +199,7 @@
 												<div class="col-6">
 													<small class="d-block fg-4 pb-1"><i class="icon-solid icon-arrow-down-to-line icon-width-auto me-1"></i>Oldest</small>
 													<%if (oldest) {%>
-														<span class="fw-light" data-bs-toggle="tooltip" data-bs-original-title="<%-oldest.format('D MMM YYYY, HH:mm')%>"><%-oldest.fromNow()%></span>
+														<span class="fw-light tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="<%-oldest.format('D MMM YYYY, HH:mm')%>"><%-oldest.fromNow()%></span>
 													<%} else {%>
 														<span class="fw-light">None</span>
 													<%}%>
