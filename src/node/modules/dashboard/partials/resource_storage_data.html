@@ -18,8 +18,7 @@
 			</u-progress>
 		</div>
 		<div class="lh-1 fg-4 mt-1">
-			<small><strong class="fw-semibold"><%=prettyBytes(pool.properties.allocated.value || 0, { binary: true })%></strong> used from <%=prettyBytes(pool.properties.size.value || 0, { binary: true })%></small><br>
-			<small class="d-none">Free: <%=prettyBytes(pool.properties.free.value || 0, { binary: true })%></small>
+			<span class="fs-xs"><strong class="fw-semibold"><%=prettyBytes(pool.properties.allocated.value || 0, { binary: true })%></strong> used from <%=prettyBytes(pool.properties.size.value || 0, { binary: true })%></span>
 		</div>
 		<div class="mt-1">
 			<%_.each(_.reject(state.drives, 'system'), (drive) => {%>
