@@ -411,7 +411,7 @@ const restoreFile = async (session, conflict) => {
 };
 
 const submit = async (event) => {
-	if (!event.target.closest('.restore-submit') || !state?.selected || state.busy) {
+	if (!event.target.closest('.restore-submit') || !state?.selected || state.busy || state.isLoading) {
 		return;
 	}
 

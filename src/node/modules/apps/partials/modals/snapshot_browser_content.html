@@ -218,10 +218,10 @@
 				<button type="button" class="browse-clear btn-link d-inline-block btn-sm p-0 text-decoration-none min-h-0">Clear</button>
 			<%}%>
 		</div>
-		<button type="button" class="btn-outline theme-secondary" data-bs-dismiss="dialog">Cancel</button>
+		<u-button variant="secondary" outline data-bs-dismiss="dialog">Cancel</u-button>
 		<%if (canDownload) {%>
-			<button type="button" class="browse-download btn-outline theme-primary" <%=(_.isEmpty(state.selected) ? 'disabled' : '')%>>Download</button>
+			<u-button variant="primary" outline class="browse-download" <%=(_.isEmpty(state.selected) ? 'disabled' : '')%>>Download</u-button>
 		<%}%>
-		<button type="button" class="browse-restore btn-solid theme-primary" <%=(_.isEmpty(state.selected) ? 'disabled' : '')%>>Restore</button>
+		<u-button variant="primary" class="browse-restore" <%=(_.isEmpty(state.selected) ? 'disabled' : '')%>>Restore</u-button>
 	</div>
 </div>

@@ -29,8 +29,8 @@
 				<div class="d-flex align-items-center gap-3 px-3 py-1">
 					<i class="icon-light icon-folder-plus icon-fw fg-4"></i>
 					<input type="text" class="folder-name form-control form-control-sm" placeholder="Folder name" value="<%-draft.name%>">
-					<button type="button" class="draft-add btn-solid theme-primary btn-sm">Add</button>
-					<button type="button" class="draft-cancel btn-outline theme-secondary btn-sm">Cancel</button>
+					<u-button variant="primary" size="sm" class="draft-add">Add</u-button>
+					<u-button variant="secondary" outline size="sm" class="draft-cancel">Cancel</u-button>
 				</div>
 				<%if (draft.error) {%>
 					<small class="d-block fg-danger px-3 pb-1"><%-draft.error%></small>
