@@ -16,13 +16,15 @@
 				tier: (isUpdate ? 'update' : _.toLower(_.last(segments))),
 				createdMoment,
 				age: Math.max(snapshotNow.diff(createdMoment, 'hours', true), 0),
-				size: snapshot.properties?.used?.value || 0
+				size: snapshot.properties?.used?.value || 0,
+				hasImageDigests: !_.isEmpty(_.attempt(JSON.parse, snapshot.properties?.['univrs:images']?.value))
 			};
 		}), (entry) => { return entry.createdMoment.isValid() && _.includes(snapshotTierOrder, entry.tier); });
 		const snapshotPoints = _.orderBy(_.map(_.groupBy(snapshotEntries, 'key'), (entries, key) => {
 			return {
 				key,
-				snapshot: (_.find(entries, { tier: 'update' }) || entries[0]).name,
+				snapshot: (_.find(entries, { tier: 'update' }) || _.find(entries, 'hasImageDigests') || entries[0]).name,
+				canRollback: _.some(entries, 'hasImageDigests'),
 				createdMoment: entries[0].createdMoment,
 				age: entries[0].age,
 				tiers: _.intersection(snapshotTierOrder, _.map(entries, 'tier')),
@@ -165,7 +167,7 @@
 					<%} else if (_.some(appJobs, { name: 'app:rollback' })) {%>
 						<button type="button" class="snapshot-action btn-solid theme-secondary" disabled><i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>Roll back</button>
 					<%} else {%>
-						<button type="button" class="snapshot-action btn-solid theme-secondary" data-rollback-snapshot="<%-selectedPoint.snapshot%>" data-rollback-date="<%-selectedPoint.createdMoment.format('D MMM YYYY, HH:mm')%>" <%=(_.includes(selectedPoint.tiers, 'update') ? '' : 'disabled')%>><i class="icon-regular icon-clock-rotate-left icon-fw"></i>Roll back</button>
+						<button type="button" class="snapshot-action btn-solid theme-secondary" data-rollback-snapshot="<%-selectedPoint.snapshot%>" data-rollback-date="<%-selectedPoint.createdMoment.format('D MMM YYYY, HH:mm')%>" <%=(selectedPoint.canRollback ? '' : 'disabled')%>><i class="icon-regular icon-clock-rotate-left icon-fw"></i>Roll back</button>
 					<%}%>
 				</div>
 			</div>
