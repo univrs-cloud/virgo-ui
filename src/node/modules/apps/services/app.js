@@ -171,6 +171,10 @@ const updateSnapshots = (data) => {
 	Docker.updateSnapshots(data);
 };
 
+const rollback = (data) => {
+	Docker.rollback(data);
+};
+
 const searchSnapshots = (query) => {
 	return Indexer.search(query);
 };
@@ -238,6 +242,7 @@ export {
 	performAppAction,
 	performServiceAction,
 	updateSnapshots,
+	rollback,
 	searchSnapshots,
 	browseSnapshot,
 	browseSnapshotChanges,

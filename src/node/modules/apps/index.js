@@ -242,11 +242,11 @@ const scrubSnapshot = (event) => {
 		return;
 	}
 
-	const keys = event.target.dataset.keys.split(',');
+	const preferredKeys = event.target.dataset.preferredKeys.split(',');
 	const positions = _.map(event.target.dataset.positions.split(','), Number);
 	const value = event.target.value / 1000;
-	const index = _.minBy(_.range(keys.length), (i) => { return Math.abs(positions[i] - value); });
-	snapshotSelections[name] = keys[index];
+	const index = _.minBy(_.range(preferredKeys.length), (i) => { return Math.abs(positions[i] - value); });
+	snapshotSelections[name] = preferredKeys[index];
 	renderAppDetails(name);
 };
 
@@ -406,6 +406,30 @@ const updateSnapshots = async (event) => {
 	appService.updateSnapshots(data);
 };
 
+const rollback = async (event) => {
+	const button = event.target.closest('[data-rollback-snapshot]');
+	const name = button?.closest('.item')?.dataset?.name;
+	if (!name || button.disabled) {
+		return;
+	}
+
+	const app = _.find(appService.getApps(), { name });
+	if (!app) {
+		return;
+	}
+
+	const date = button.dataset.rollbackDate;
+	if (!await confirm(`Are you sure you want to roll back ${app.title} to ${date}?<br><br>${app.title} will be stopped, its data and settings will be put back as they were on ${date}, and it will be started again with the versions it ran then.<br><br>Everything ${app.title} saved after ${date} will be <strong>permanently lost</strong>, together with the snapshots taken since then.`, { buttons: [{ text: 'Roll back', class: 'btn-solid theme-danger' }] })) {
+		return;
+	}
+
+	const data = {
+		name: app.name,
+		snapshot: button.dataset.rollbackSnapshot
+	};
+	appService.rollback(data);
+};
+
 const filterJobsByApp = (jobs, app) => {
 	const containerIds = _.map(app.projectContainers, 'id');
 	const appJobs = _.filter(jobs, (job) => { return job.data?.config?.name === app.name; });
@@ -563,6 +587,7 @@ module.addEventListener('click', clearSnapshotSearch);
 module.addEventListener('click', selectSnapshot);
 module.addEventListener('click', filterSnapshots);
 module.addEventListener('click', updateSnapshots);
+module.addEventListener('click', rollback);
 module.addEventListener('input', scrubSnapshot);
 module.addEventListener('keydown', stepSnapshot);
 module.addEventListener('keydown', searchSnapshots);

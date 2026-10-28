@@ -55,6 +55,9 @@
 		--toast-spacing: .5rem,
 		--body-font-family: vars.$font-family-sans-serif
 	),
+	$button-tokens: (
+		--btn-disabled-opacity: .4
+	),
 	$button-link-tokens: (
 		--btn-disabled-bg: transparent
 	),
