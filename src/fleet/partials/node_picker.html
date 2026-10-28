@@ -32,7 +32,7 @@
 				<%}%>
 				<%_.each(group.members, (node) => {%>
 					<%if (node.nodeId === currentNodeId) {%>
-						<div class="menu-item d-flex align-items-center bg-subtle-primary pe-none" aria-current="true">
+						<div class="menu-item d-flex align-items-center bg-subtle-primary pe-none">
 							<i class="icon-solid icon-dot flex-shrink-0 <%-node.online ? 'fg-green-400' : 'fg-red-500'%>"></i>
 							<span class="text-truncate min-w-0"><%-node.name || node.nodeId%></span>
 							<i class="icon-solid icon-circle-check icon-sm flex-shrink-0 fg-primary ms-auto ps-3"></i>

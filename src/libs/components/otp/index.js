@@ -92,7 +92,6 @@ export class Otp extends LitElement {
 							name=${this.name}
 							maxlength=${this.length}
 							autocomplete=${this.autocomplete}
-							aria-label=${this.label}
 							?disabled=${this.disabled}
 						>
 					</div>

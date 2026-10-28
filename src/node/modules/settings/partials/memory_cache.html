@@ -28,7 +28,7 @@
 								<div>Size limit</div>
 								<small class="d-block fg-4">The most memory the cache may use.</small>
 								<div class="form-range mt-7">
-									<input type="range" class="arc-max form-range-input" min="<%=min%>" max="<%=max%>" step="<%=step%>" value="<%=arc.max%>" list="arc-ticks" aria-label="Size limit">
+									<input type="range" class="arc-max form-range-input" min="<%=min%>" max="<%=max%>" step="<%=step%>" value="<%=arc.max%>" list="arc-ticks">
 									<datalist id="arc-ticks">
 										<%_.each(ticks, (tick) => {%>
 											<option value="<%=tick%>" label="<%=prettyBytes(tick, { binary: true })%>"></option>

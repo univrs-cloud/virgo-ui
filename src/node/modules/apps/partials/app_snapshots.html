@@ -187,7 +187,7 @@
 				<%})%>
 			</div>
 			<div class="form-range">
-				<input type="range" class="snapshot-scrubber form-range-input" min="0" max="1000" value="<%=Math.round(snapshotPosition(selectedPoint.age) * 1000)%>" aria-label="Restore point" aria-valuetext="<%-snapshotLabel(selectedPoint)%>" data-selected="<%-selectedPoint.key%>" data-keys="<%-_.map(snapshotPoints, 'key').join(',')%>" data-preferred-keys="<%-_.map(snapshotPoints, (point) => { return (_.find(snapshotPoints, (candidate) => { return _.includes(candidate.tiers, 'update') && candidate.createdMoment.isSame(point.createdMoment, snapshotTierPeriods[_.last(point.tiers)]); }) || point).key; }).join(',')%>"data-positions="<%-_.map(snapshotPoints, (point) => { return snapshotPosition(point.age).toFixed(4); }).join(',')%>">
+				<input type="range" class="snapshot-scrubber form-range-input" min="0" max="1000" value="<%=Math.round(snapshotPosition(selectedPoint.age) * 1000)%>" data-selected="<%-selectedPoint.key%>" data-keys="<%-_.map(snapshotPoints, 'key').join(',')%>" data-preferred-keys="<%-_.map(snapshotPoints, (point) => { return (_.find(snapshotPoints, (candidate) => { return _.includes(candidate.tiers, 'update') && candidate.createdMoment.isSame(point.createdMoment, snapshotTierPeriods[_.first(point.tiers)]); }) || point).key; }).join(',')%>" data-positions="<%-_.map(snapshotPoints, (point) => { return snapshotPosition(point.age).toFixed(4); }).join(',')%>">
 			</div>
 			<div class="position-relative small fg-4" style="height: 1.25rem;">
 				<%_.each(snapshotTicks, ([hours, label, last]) => {%>
@@ -197,7 +197,7 @@
 			</div>
 		</div>
 		<div class="card-body border-0 pt-0 md:d-none">
-			<svg class="d-block mx-auto" viewBox="0 0 400 400" style="width: 100%; max-width: 360px;" role="img" aria-label="Snapshot orbits">
+			<svg class="d-block mx-auto" viewBox="0 0 400 400" style="width: 100%; max-width: 360px;">
 				<%_.each(orbits, (orbit) => {%>
 					<circle cx="<%=orbitCenter%>" cy="<%=orbitCenter%>" r="<%=orbit.radius%>" fill="none" style="stroke: var(--border-color);"/>
 					<text x="<%=orbitCenter - 6%>" y="<%=orbitCenter - orbit.radius + 4%>" text-anchor="end" font-size="10" class="fg-4" fill="currentColor"><%=snapshotSpan(orbit.window)%></text>
@@ -241,7 +241,7 @@
 					<div class="col-auto">
 						<div class="d-flex align-items-center gap-3 mb-5">
 							<div class="dropdown">
-								<button type="button" class="btn-sm btn-icon btn-outline theme-secondary position-relative" data-bs-toggle="menu" data-bs-auto-close="outside" aria-label="Filters" <%=(snapshotSearching ? 'disabled' : '')%>>
+								<button type="button" class="btn-sm btn-icon btn-outline theme-secondary position-relative" data-bs-toggle="menu" data-bs-auto-close="outside" <%=(snapshotSearching ? 'disabled' : '')%>>
 									<i class="icon-solid icon-filter icon-width-auto"></i>
 									<span class="badge rounded-pill theme-primary position-absolute top-0 start-100 translate-middle"><%=(_.size(_.compact(_.values(snapshotFilter))) || '')%></span>
 								</button>
@@ -262,7 +262,7 @@
 								</div>
 							</div>
 							<%if (snapshotSearching) {%>
-								<div class="spinner-border spinner-sm fg-gray-600" role="status"></div>
+								<div class="spinner-border spinner-sm fg-gray-600"></div>
 							<%}%>
 						</div>
 					</div>
