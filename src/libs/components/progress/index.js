@@ -20,7 +20,7 @@ export class Progress extends LitElement {
 
 	render() {
 		return html`
-			<div class="progress ${classMap({ 'shadow-none': this.shadow === false })}" role="progressbar" style="height: 6px;">
+			<div class="progress ${classMap({ 'shadow-none': this.shadow === false })}" style="height: 6px;">
 				<slot></slot>
 			</div>
 		`;

@@ -132,10 +132,10 @@
 														</div>
 													</div>
 													<div class="d-flex flex-shrink-0 align-items-center gap-3 ms-3">
-														<a href="#" class="logs btn-solid theme-secondary btn-xs" aria-label="Logs" data-id="<%-container.id%>">
+														<a href="#" class="logs btn-solid theme-secondary btn-xs" data-id="<%-container.id%>">
 															<i class="icon-solid icon-memo icon-fw"></i><span class="d-none md:d-inline">Logs</span>
 														</a>
-														<a href="#" class="terminal btn-solid theme-secondary btn-xs <%=(container.state === 'running' ? '' : 'disabled')%>" aria-label="Terminal" data-id="<%-container.id%>">
+														<a href="#" class="terminal btn-solid theme-secondary btn-xs <%=(container.state === 'running' ? '' : 'disabled')%>" data-id="<%-container.id%>">
 															<i class="icon-solid icon-terminal icon-fw <%=(container.state === 'running' ? '' : 'fg-gray-300')%>"></i><span class="d-none md:d-inline">Terminal</span>
 														</a>
 														<div class="d-flex align-items-center gap-3">

@@ -57,9 +57,7 @@ export class Switch extends LitElement {
 				<div class="switch">
 					<input
 						type="checkbox"
-						role="switch"
 						name=${this.getAttribute('name') || nothing}
-						aria-checked=${this.checked}
 						.checked=${this.checked}
 						?disabled=${this.disabled}
 						@change=${this.#onChange}

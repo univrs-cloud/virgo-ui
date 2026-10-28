@@ -173,9 +173,9 @@ export class Input extends LitElement {
 					</label>
 					${hasAdorn ? html`
 						<div class="form-control form-adorn ${classMap({ 'is-invalid': this.error })}" @click=${() => { this.focus(); }}>
-							${this.#hasPrefix ? html`<span class="form-adorn-text" aria-hidden="true"><slot name="prefix" @slotchange=${this.#onSlotChange}></slot></span>` : ''}
+							${this.#hasPrefix ? html`<span class="form-adorn-text"><slot name="prefix" @slotchange=${this.#onSlotChange}></slot></span>` : ''}
 							${input}
-							${this.#hasSuffix ? html`<span class="form-adorn-text" aria-hidden="true"><slot name="suffix" @slotchange=${this.#onSlotChange}></slot></span>` : ''}
+							${this.#hasSuffix ? html`<span class="form-adorn-text"><slot name="suffix" @slotchange=${this.#onSlotChange}></slot></span>` : ''}
 						</div>
 					` : input}
 					${this.type === 'password' ? html`<button type="button" class="password-toggle" @click=${this.#togglePassword}></button>` : ''}
