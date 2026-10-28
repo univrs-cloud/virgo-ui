@@ -160,13 +160,14 @@
 						<span class="badge bg-transparent rounded-pill border fw-normal fg-<%-snapshotTierColors[tier]%> border-<%-snapshotTierColors[tier]%>"><%=_.startCase(tier)%></span>
 					<%})%>
 				</div>
-				<div class="btn-group btn-group-sm">
+				<div class="d-flex gap-3">
 					<%if (_.toLower(app.name) === 'nextcloud') {%>
-						<button type="button" class="snapshot-browse btn-solid theme-secondary" data-browse-snapshot="<%-selectedPoint.snapshot%>" data-browse-date="<%-selectedPoint.createdMoment.format('D MMM YYYY, HH:mm')%>"><i class="icon-regular icon-folder-open icon-fw"></i>Browse files</button>
-					<%} else if (_.some(appJobs, { name: 'app:rollback' })) {%>
-						<button type="button" class="snapshot-action btn-solid theme-secondary" disabled><i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>Roll back</button>
+						<u-button variant="secondary" size="sm" class="snapshot-browse" data-browse-snapshot="<%-selectedPoint.snapshot%>" data-browse-date="<%-selectedPoint.createdMoment.format('D MMM YYYY, HH:mm')%>"><i class="icon-regular icon-folder-open icon-fw"></i>Browse files</u-button>
+					<%}%>
+					<%if (_.some(appJobs, { name: 'app:rollback' })) {%>
+						<u-button variant="secondary" size="sm" class="snapshot-action" disabled><i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>Roll back</u-button>
 					<%} else {%>
-						<button type="button" class="snapshot-action btn-solid theme-secondary" data-rollback-snapshot="<%-selectedPoint.snapshot%>" data-rollback-date="<%-selectedPoint.createdMoment.format('D MMM YYYY, HH:mm')%>" <%=(selectedPoint.canRollback ? '' : 'disabled')%>><i class="icon-regular icon-clock-rotate-left icon-fw"></i>Roll back</button>
+						<u-button variant="<%=(selectedPoint.canRollback ? 'danger' : 'secondary')%>" size="sm" class="snapshot-action" data-rollback-snapshot="<%-selectedPoint.snapshot%>" data-rollback-date="<%-selectedPoint.createdMoment.format('D MMM YYYY, HH:mm')%>" <%=(selectedPoint.canRollback ? 'subtle' : 'disabled')%>><i class="icon-regular icon-clock-rotate-left icon-fw"></i>Roll back</u-button>
 					<%}%>
 				</div>
 			</div>
@@ -218,9 +219,9 @@
 		</div>
 		<div class="card-body border-0 pt-0">
 			<div class="d-flex align-items-center justify-content-between small fg-4">
-				<button type="button" class="btn-solid theme-secondary btn-sm" data-snapshot="<%-snapshotPoints[Math.max(selectedIndex - 1, 0)].key%>"><i class="icon-solid icon-chevron-left icon-fw"></i>Newer</button>
+				<u-button variant="secondary" size="sm" data-snapshot="<%-snapshotPoints[Math.max(selectedIndex - 1, 0)].key%>"><i class="icon-solid icon-chevron-left icon-fw"></i>Newer</u-button>
 				<span>Restore point <%=selectedIndex + 1%> of <%=_.size(snapshotPoints)%></span>
-				<button type="button" class="btn-solid theme-secondary btn-sm" data-snapshot="<%-snapshotPoints[Math.min(selectedIndex + 1, snapshotPoints.length - 1)].key%>">Older<i class="icon-solid icon-chevron-right icon-fw"></i></button>
+				<u-button variant="secondary" size="sm" data-snapshot="<%-snapshotPoints[Math.min(selectedIndex + 1, snapshotPoints.length - 1)].key%>">Older<i class="icon-solid icon-chevron-right icon-fw"></i></u-button>
 			</div>
 		</div>
 		<%if (_.toLower(app.name) === 'nextcloud') {%>
@@ -468,7 +469,7 @@
 						<%})%>
 					</div>
 					<%if (snapshotResults.hasMore) {%>
-						<button type="button" class="snapshot-search-more btn-solid theme-secondary btn-sm mt-5" <%=(snapshotSearching ? 'disabled' : '')%>>Load more</button>
+						<u-button variant="secondary" size="sm" class="snapshot-search-more mt-5" <%=(snapshotSearching ? 'disabled' : '')%>>Load more</u-button>
 					<%}%>
 				</div>
 			<%}%>

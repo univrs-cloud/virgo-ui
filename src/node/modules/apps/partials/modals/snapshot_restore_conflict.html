@@ -25,18 +25,18 @@
 		</div>
 	</div>
 	<div class="dialog-footer">
-		<button type="button" class="btn-outline theme-secondary me-auto" data-bs-dismiss="dialog" <%=(state.busy ? 'disabled' : '')%>>Cancel</button>
-		<button type="button" class="restore-confirm btn-outline theme-primary" data-conflict="copy" <%=(state.busy ? 'disabled' : '')%>>
+		<u-button variant="secondary" outline class="me-auto" data-bs-dismiss="dialog" <%=(state.busy ? 'disabled' : '')%>>Cancel</u-button>
+		<u-button variant="primary" outline class="restore-confirm" data-conflict="copy" <%=(state.busy ? 'disabled' : '')%>>
 			<%if (state.busy === 'copy') {%>
 				<span class="spinner-border spinner-sm"></span>
 			<%}%>
 			Restore as a copy
-		</button>
-		<button type="button" class="restore-confirm btn-solid theme-danger" data-conflict="overwrite" <%=(state.busy ? 'disabled' : '')%>>
+		</u-button>
+		<u-button variant="danger" class="restore-confirm" data-conflict="overwrite" <%=(state.busy ? 'disabled' : '')%>>
 			<%if (state.busy === 'overwrite') {%>
 				<span class="spinner-border spinner-sm"></span>
 			<%}%>
 			Overwrite
-		</button>
+		</u-button>
 	</div>
 </div>
