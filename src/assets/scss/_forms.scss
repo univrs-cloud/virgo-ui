@@ -141,3 +141,10 @@ textarea {
 		}
 	}
 }
+
+.form-range {
+	--range-fill: var(--bs-range-fill, 0);
+	.form-range-tick-label {
+		font-size: var(--font-size-xs);
+	}
+}

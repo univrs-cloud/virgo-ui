@@ -16,7 +16,7 @@
 					<%} else {%>
 						<div class="d-flex align-items-center gap-5">
 							<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-5 bg-subtle-primary fg-primary align-self-start"><i class="icon-duotone icon-solid icon-tower-broadcast"></i></div>
-							<div class="min-w-0 me-auto">
+							<div class="min-w-0 flex-fill">
 								<div class="fs-lg lh-xs text-truncate"><%-fleet?.email%></div>
 								<%if (fleet?.enabled) {%>
 									<%if (fleet?.authFailed) {%>
@@ -25,21 +25,21 @@
 										<small class="d-flex align-items-center lh-xs <%=(fleet?.connected ? 'fg-success' : 'fg-warning')%>"><i class="icon-solid icon-circle icon-sm me-1"></i><%=(fleet?.connected ? 'Connected' : 'Reconnecting...')%></small>
 									<%}%>
 								<%}%>
+
+								<hr class="border-gray-200 my-5 opacity-25">
+
+								<dl class="m-0">
+									<dt class="fw-lighter lh-1"><small>Status</small></dt>
+									<dd class="m-0">
+										<u-switch class="fleet-switch" on-label="Enabled" <%=(fleet?.enabled ? 'checked' : '')%> <%=(fleet?.enabled && fleetRequired ? 'disabled' : '')%>></u-switch>
+										<%if (fleet?.enabled && fleetRequired) {%>
+											<small class="d-block fg-4">Required while the domain is on univrs.cloud</small>
+										<%}%>
+									</dd>
+								</dl>
 							</div>
 							<a href="#fleet" class="btn-link d-inline-block text-nowrap align-self-start border-0 px-0 py-3 mt-1 min-h-0" data-bs-toggle="dialog"><i class="icon-regular icon-pen icon-fw me-1"></i><%=(!fleet?.token ? 'Register' : 'Edit')%></a>
 						</div>
-
-						<hr class="border-gray-200 my-5 opacity-25">
-
-						<dl class="m-0">
-							<dt class="fw-lighter lh-1"><small>Status</small></dt>
-							<dd class="m-0">
-								<u-switch class="fleet-switch" on-label="Enabled" <%=(fleet?.enabled ? 'checked' : '')%> <%=(fleet?.enabled && fleetRequired ? 'disabled' : '')%>></u-switch>
-								<%if (fleet?.enabled && fleetRequired) {%>
-									<small class="d-block fg-4">Required while the domain is on univrs.cloud</small>
-								<%}%>
-							</dd>
-						</dl>
 					<%}%>
 				</div>
 			</div>

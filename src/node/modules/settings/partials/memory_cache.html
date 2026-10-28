@@ -1,0 +1,45 @@
+<div class="col col-12">
+	<div class="row gx-7 gy-3">
+		<div class="col-12 lg:col-4 2xl:col-3 lg:pt-5">
+			<h5 class="m-0">Memory cache</h5>
+			<p class="fg-emphasis-secondary small mt-1 mb-0">Recently used files are kept in memory so they open without reading the drives again. A larger cache makes files faster, a smaller one leaves more memory for apps. The cache gives memory back when apps need it.</p>
+		</div>
+		<div class="col-12 lg:col-8 2xl:col-9">
+			<div class="card border-0 mb-0">
+				<div class="card-body">
+					<%if (_.isNull(arc)) {%>
+						<div class="d-flex justify-content-center"><div class="spinner-border fg-gray-600"></div></div>
+					<%} else if (arc === false) {%>
+						<div class="d-flex align-items-center gap-5">
+							<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-5 bg-gray-200 fg-gray-600"><i class="icon-duotone icon-solid icon-memory"></i></div>
+							<div class="me-auto">Unavailable</div>
+						</div>
+					<%} else {%>
+						<%const step = 128 * 1024 * 1024%>
+						<%const min = Math.ceil(arc.min / step) * step%>
+						<%const max = Math.floor(arc.limit / step) * step%>
+						<%const gib = 1024 * 1024 * 1024%>
+						<%const tickStep = Math.max(1, Math.ceil(max / gib / 4)) * gib%>
+						<%const tickGap = (max - min) * 0.15%>
+						<%const ticks = [min, ..._.filter(_.range(tickStep, max, tickStep), (tick) => { return tick - min > tickGap && max - tick > tickGap; }), max]%>
+						<div class="d-flex gap-5">
+							<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-5 bg-subtle-primary fg-primary align-self-start"><i class="icon-duotone icon-solid icon-memory"></i></div>
+							<div class="min-w-0 flex-fill">
+								<div>Size limit</div>
+								<small class="d-block fg-4">The most memory the cache may use.</small>
+								<div class="form-range mt-7">
+									<input type="range" class="arc-max form-range-input" min="<%=min%>" max="<%=max%>" step="<%=step%>" value="<%=arc.max%>" list="arc-ticks" aria-label="Size limit">
+									<datalist id="arc-ticks">
+										<%_.each(ticks, (tick) => {%>
+											<option value="<%=tick%>" label="<%=prettyBytes(tick, { binary: true })%>"></option>
+										<%})%>
+									</datalist>
+								</div>
+							</div>
+						</div>
+					<%}%>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

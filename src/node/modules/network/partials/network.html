@@ -46,58 +46,60 @@
 				<div class="card-body">
 					<div class="d-flex align-items-center gap-5">
 						<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-5 bg-subtle-primary fg-primary align-self-start"><i class="icon-duotone icon-solid icon-ethernet"></i></div>
-						<dl class="min-w-0 me-auto mb-0">
-							<dt class="fw-lighter lh-1"><small>Address</small></dt>
-							<dd class="d-flex flex-wrap align-items-center m-0">
-								<span class="fs-lg lh-xs"><%-address?.local%>/<%-address?.prefixlen%></span>
-								<u-badge color="gray" tint="100" class="ms-3" pill><%=(networkInterface?.dhcp ? 'Automatic' : 'Manual')%></u-badge>
-							</dd>
-						</dl>
+						<div class="min-w-0 flex-fill">
+							<dl class="mb-0">
+								<dt class="fw-lighter lh-1"><small>Address</small></dt>
+								<dd class="d-flex flex-wrap align-items-center m-0">
+									<span class="fs-lg lh-xs"><%-address?.local%>/<%-address?.prefixlen%></span>
+									<u-badge color="gray" tint="100" class="ms-3" pill><%=(networkInterface?.dhcp ? 'Automatic' : 'Manual')%></u-badge>
+								</dd>
+							</dl>
+
+							<hr class="border-gray-200 my-5 opacity-25">
+
+							<dl class="row row-cols-1 sm:row-cols-2 xl:row-cols-3 g-5 mb-0">
+								<div class="col min-w-0">
+									<dt class="fw-lighter lh-1"><small>Name</small></dt>
+									<dd class="m-0"><%-networkInterface?.ifname%></dd>
+								</div>
+								<div class="col min-w-0">
+									<dt class="fw-lighter lh-1"><small>Virtual IP</small></dt>
+									<dd class="d-flex flex-wrap align-items-center m-0">
+										<%if (system?.virtualIp?.address) {%>
+											<%-system.virtualIp.address%>
+											<u-badge color="<%=(system.virtualIp.holding ? 'green' : 'gray')%>" tint="100" class="ms-1" pill><%=(system.virtualIp.holding ? 'Holding' : 'Standby')%></u-badge>
+										<%} else if (peerVirtualIp) {%>
+											<%-peerVirtualIp.virtualIp%>
+											<u-badge color="gray" tint="050" class="ms-1" pill>On <%-peerVirtualIp.name || peerVirtualIp.address%></u-badge>
+										<%} else {%>
+											—
+										<%}%>
+									</dd>
+								</div>
+								<div class="col min-w-0">
+									<dt class="fw-lighter lh-1"><small>Default gateway</small></dt>
+									<dd class="m-0"><%-networkInterface?.gateway%></dd>
+								</div>
+								<div class="col min-w-0">
+									<dt class="fw-lighter lh-1"><small>DNS</small></dt>
+									<dd class="m-0 text-break"><%-_.join(networkInterface?.dnsServers, ', ') || '—'%></dd>
+								</div>
+								<div class="col min-w-0">
+									<dt class="fw-lighter lh-1"><small>MTU</small></dt>
+									<dd class="m-0"><%-networkInterface?.mtu%></dd>
+								</div>
+								<div class="col min-w-0">
+									<dt class="fw-lighter lh-1"><small>MAC</small></dt>
+									<dd class="d-flex align-items-center m-0">
+										<div class="text-truncate"><%-networkInterface?.address%></div>
+										<a href="#" class="fg-secondary flex-shrink-0 ms-3" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-original-title="Copy MAC address"><i class="icon-regular icon-copy icon-sm"></i></a>
+										<span class="copy d-none"><%-networkInterface?.address%></span>
+									</dd>
+								</div>
+							</dl>
+						</div>
 						<a href="#network-interface" class="btn-link d-inline-block text-nowrap align-self-start border-0 px-0 py-3 mt-1 min-h-0" data-bs-toggle="dialog"><i class="icon-regular icon-pen icon-fw me-1"></i>Edit</a>
 					</div>
-
-					<hr class="border-gray-200 my-5 opacity-25">
-
-					<dl class="row row-cols-1 sm:row-cols-2 xl:row-cols-3 g-5 mb-0">
-						<div class="col min-w-0">
-							<dt class="fw-lighter lh-1"><small>Name</small></dt>
-							<dd class="m-0"><%-networkInterface?.ifname%></dd>
-						</div>
-						<div class="col min-w-0">
-							<dt class="fw-lighter lh-1"><small>Virtual IP</small></dt>
-							<dd class="d-flex flex-wrap align-items-center m-0">
-								<%if (system?.virtualIp?.address) {%>
-									<%-system.virtualIp.address%>
-									<u-badge color="<%=(system.virtualIp.holding ? 'green' : 'gray')%>" tint="100" class="ms-1" pill><%=(system.virtualIp.holding ? 'Holding' : 'Standby')%></u-badge>
-								<%} else if (peerVirtualIp) {%>
-									<%-peerVirtualIp.virtualIp%>
-									<u-badge color="gray" tint="050" class="ms-1" pill>On <%-peerVirtualIp.name || peerVirtualIp.address%></u-badge>
-								<%} else {%>
-									—
-								<%}%>
-							</dd>
-						</div>
-						<div class="col min-w-0">
-							<dt class="fw-lighter lh-1"><small>Default gateway</small></dt>
-							<dd class="m-0"><%-networkInterface?.gateway%></dd>
-						</div>
-						<div class="col min-w-0">
-							<dt class="fw-lighter lh-1"><small>DNS</small></dt>
-							<dd class="m-0 text-break"><%-_.join(networkInterface?.dnsServers, ', ') || '—'%></dd>
-						</div>
-						<div class="col min-w-0">
-							<dt class="fw-lighter lh-1"><small>MTU</small></dt>
-							<dd class="m-0"><%-networkInterface?.mtu%></dd>
-						</div>
-						<div class="col min-w-0">
-							<dt class="fw-lighter lh-1"><small>MAC</small></dt>
-							<dd class="d-flex align-items-center m-0">
-								<div class="text-truncate"><%-networkInterface?.address%></div>
-								<a href="#" class="fg-secondary flex-shrink-0 ms-3" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-original-title="Copy MAC address"><i class="icon-regular icon-copy icon-sm"></i></a>
-								<span class="copy d-none"><%-networkInterface?.address%></span>
-							</dd>
-						</div>
-					</dl>
 				</div>
 			</div>
 		</div>
@@ -150,95 +152,96 @@
 				<div class="card-body">
 					<div class="d-flex align-items-center gap-5">
 						<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-5 bg-subtle-primary fg-primary align-self-start"><i class="icon-duotone icon-solid icon-block-brick-fire"></i></div>
-						<dl class="min-w-0 me-auto mb-0">
-							<dt class="fw-lighter lh-1"><small>Incoming connections</small></dt>
-							<dd class="m-0">
-								<span class="fs-lg lh-xs">
-									<%if (_.isNil(firewall)) {%>
-										Checking...
-									<%} else if (firewall.rules === false) {%>
-										Could not read the rules
-									<%} else {%>
-										<%-({ drop: 'Blocked unless allowed', reject: 'Blocked unless allowed', accept: 'Allowed unless blocked' }[firewall.policy?.toLowerCase()] || '—')%>
-									<%}%>
-								</span>
-							</dd>
-						</dl>
-					</div>
+						<div class="min-w-0 flex-fill">
+							<dl class="mb-0">
+								<dt class="fw-lighter lh-1"><small>Incoming connections</small></dt>
+								<dd class="m-0">
+									<span class="fs-lg lh-xs">
+										<%if (_.isNil(firewall)) {%>
+											Checking...
+										<%} else if (firewall.rules === false) {%>
+											Could not read the rules
+										<%} else {%>
+											<%-({ drop: 'Blocked unless allowed', reject: 'Blocked unless allowed', accept: 'Allowed unless blocked' }[firewall.policy?.toLowerCase()] || '—')%>
+										<%}%>
+									</span>
+								</dd>
+							</dl>
+							<%if (!_.isNil(firewall)) {%>
+								<%if (firewall.rules !== false) {%>
+									<hr class="border-gray-200 my-5 opacity-25">
 
-					<%if (!_.isNil(firewall)) {%>
-						<%if (firewall.rules !== false) {%>
-							<hr class="border-gray-200 my-5 opacity-25">
-
-							<small class="d-block fw-lighter lh-1">Allowed</small>
-							<div class="d-flex flex-wrap gap-3 mt-1">
-								<%_.each(allowedRules, (rule) => {%>
-									<u-badge color="gray" tint="050" pill>
-										<small class="d-flex align-items-center">
-											<%if (rule.name) {%>
-												<span class="fw-lighter me-1"><%-rule.name%></span>
-											<%}%>
-											<%-_.join(_.compact([_.join(rule.ports, ', '), _.join(rule.protocols, ', ')]), ' / ')%>
-											<%if (rule.source) {%>
-												<span class="fw-lighter ms-1">from <%-rule.source%></span>
-											<%}%>
-										</small>
-									</u-badge>
-								<%})%>
-								<%if (_.isEmpty(allowedRules)) {%>
-									—
-								<%}%>
-							</div>
-						<%}%>
-
-						<hr class="border-gray-200 my-5 opacity-25">
-
-						<div class="d-flex align-items-center gap-5">
-							<div class="min-w-0 me-auto">
-								<%if (firewall.jails === false) {%>
-									<small class="d-block fw-lighter lh-1">Blocked addresses</small>
-									<div class="mt-1">Could not read the blocked addresses</div>
-								<%} else if (_.isEmpty(firewall.jails)) {%>
-									<small class="d-block fw-lighter lh-1">Blocked addresses</small>
-									<div class="mt-1">—</div>
-								<%} else {%>
-									<dl class="row row-cols-1 g-5 mb-0">
-										<%_.each(firewall.jails, (jail) => {%>
-											<div class="col min-w-0">
-												<dt class="fw-lighter lh-1"><small>Blocked addresses (<%-jail.name%>)</small></dt>
-												<dd class="fg-emphasis-secondary small mt-1 mb-0"><%-jail.totalBanned%> blocked in total, <%-jail.currentlyFailed%> failed attempts being watched</dd>
-												<dd class="d-flex flex-wrap align-items-center gap-3 mt-1 mb-0">
-													<%_.each(jail.bans, (ban) => {%>
-														<div class="item chip cursor-default" data-jail="<%-jail.name%>" data-address="<%-ban.address%>">
-															<%-ban.address%>
-															<%if (ban.bannedAt) {%>
-																<span class="d-flex align-items-center flex-shrink-0"><i class="icon-light icon-circle-info lh-1 fg-secondary" data-bs-toggle="tooltip" data-bs-original-title="Blocked on <%-moment.unix(ban.bannedAt).format('D MMM YYYY, HH:mm')%> <span class='opacity-50'>(<%-moment.unix(ban.bannedAt).fromNow()%>)</span><br>
-																	<%if (ban.permanent) {%>
-																		Never expires
-																	<%} else if (ban.expiresAt) {%>
-																		Expires on <%-moment.unix(ban.expiresAt).format('D MMM YYYY, HH:mm')%> <span class='opacity-50'>(<%-moment.unix(ban.expiresAt).fromNow()%>)</span>
-																	<%}%>
-																"></i></span>
-															<%}%>
-															<%if (_.some(unbanJobs, (job) => { return job.data?.config?.jail === jail.name && job.data?.config?.address === ban.address; })) {%>
-																<span class="chip-icon"><i class="icon-solid icon-gear icon-spin fg-secondary"></i></span>
-															<%} else {%>
-																<button type="button" class="chip-dismiss chip-dismiss-danger" data-action="unban" data-bs-toggle="tooltip" data-bs-original-title="Unblock"><i class="icon-solid icon-circle-xmark"></i></button>
-															<%}%>
-														</div>
-													<%})%>
-													<%if (_.isEmpty(jail.bans)) {%>
-														None
+									<small class="d-block fw-lighter lh-1">Allowed</small>
+									<div class="d-flex flex-wrap gap-3 mt-1">
+										<%_.each(allowedRules, (rule) => {%>
+											<u-badge color="gray" tint="050" pill>
+												<small class="d-flex align-items-center">
+													<%if (rule.name) {%>
+														<span class="fw-lighter me-1"><%-rule.name%></span>
 													<%}%>
-												</dd>
-											</div>
+													<%-_.join(_.compact([_.join(rule.ports, ', '), _.join(rule.protocols, ', ')]), ' / ')%>
+													<%if (rule.source) {%>
+														<span class="fw-lighter ms-1">from <%-rule.source%></span>
+													<%}%>
+												</small>
+											</u-badge>
 										<%})%>
-									</dl>
+										<%if (_.isEmpty(allowedRules)) {%>
+											—
+										<%}%>
+									</div>
 								<%}%>
-							</div>
-							<a href="#" class="btn-link d-inline-block text-nowrap align-self-start border-0 px-0 py-3 min-h-0" data-action="sync-firewall"><i class="icon-solid icon-arrows-rotate icon-fw me-1"></i>Refresh</a>
+
+								<hr class="border-gray-200 my-5 opacity-25">
+
+								<div class="d-flex align-items-center gap-5">
+									<div class="min-w-0 me-auto">
+										<%if (firewall.jails === false) {%>
+											<small class="d-block fw-lighter lh-1">Blocked addresses</small>
+											<div class="mt-1">Could not read the blocked addresses</div>
+										<%} else if (_.isEmpty(firewall.jails)) {%>
+											<small class="d-block fw-lighter lh-1">Blocked addresses</small>
+											<div class="mt-1">—</div>
+										<%} else {%>
+											<dl class="row row-cols-1 g-5 mb-0">
+												<%_.each(firewall.jails, (jail) => {%>
+													<div class="col min-w-0">
+														<dt class="fw-lighter lh-1"><small>Blocked addresses (<%-jail.name%>)</small></dt>
+														<dd class="fg-emphasis-secondary small mt-1 mb-0"><%-jail.totalBanned%> blocked in total, <%-jail.currentlyFailed%> failed attempts being watched</dd>
+														<dd class="d-flex flex-wrap align-items-center gap-3 mt-1 mb-0">
+															<%_.each(jail.bans, (ban) => {%>
+																<div class="item chip cursor-default" data-jail="<%-jail.name%>" data-address="<%-ban.address%>">
+																	<%-ban.address%>
+																	<%if (ban.bannedAt) {%>
+																		<span class="d-flex align-items-center flex-shrink-0"><i class="icon-light icon-circle-info lh-1 fg-secondary" data-bs-toggle="tooltip" data-bs-original-title="Blocked on <%-moment.unix(ban.bannedAt).format('D MMM YYYY, HH:mm')%> <span class='opacity-50'>(<%-moment.unix(ban.bannedAt).fromNow()%>)</span><br>
+																			<%if (ban.permanent) {%>
+																				Never expires
+																			<%} else if (ban.expiresAt) {%>
+																				Expires on <%-moment.unix(ban.expiresAt).format('D MMM YYYY, HH:mm')%> <span class='opacity-50'>(<%-moment.unix(ban.expiresAt).fromNow()%>)</span>
+																			<%}%>
+																		"></i></span>
+																	<%}%>
+																	<%if (_.some(unbanJobs, (job) => { return job.data?.config?.jail === jail.name && job.data?.config?.address === ban.address; })) {%>
+																		<span class="chip-icon"><i class="icon-solid icon-gear icon-spin fg-secondary"></i></span>
+																	<%} else {%>
+																		<button type="button" class="chip-dismiss chip-dismiss-danger" data-action="unban" data-bs-toggle="tooltip" data-bs-original-title="Unblock"><i class="icon-solid icon-circle-xmark"></i></button>
+																	<%}%>
+																</div>
+															<%})%>
+															<%if (_.isEmpty(jail.bans)) {%>
+																None
+															<%}%>
+														</dd>
+													</div>
+												<%})%>
+											</dl>
+										<%}%>
+									</div>
+									<a href="#" class="btn-link d-inline-block text-nowrap align-self-start border-0 px-0 py-3 min-h-0" data-action="sync-firewall"><i class="icon-solid icon-arrows-rotate icon-fw me-1"></i>Refresh</a>
+								</div>
+							<%}%>
 						</div>
-					<%}%>
+					</div>
 				</div>
 			</div>
 		</div>

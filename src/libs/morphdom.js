@@ -61,7 +61,7 @@ const morphdom = (fromNode, toNode, options) => {
 				}
 			}
 
-			if (node.nodeType === Node.ELEMENT_NODE && node.classList.contains('table-scroll-overlay')) {
+			if (node.nodeType === Node.ELEMENT_NODE && (node.classList.contains('table-scroll-overlay') || node.classList.contains('form-range-bubble') || node.classList.contains('form-range-ticks'))) {
 				return false;
 			}
 
