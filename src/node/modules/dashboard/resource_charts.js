@@ -17,15 +17,19 @@ const CHARTS = {
 		format: (value) => { return `${value.toFixed(0)}%`; }
 	},
 	memory: {
-		series: [{ key: 'memory', label: 'RAM', color: '--blue-500', alertColor: '--red-500' }],
-		format: (value) => { return prettyBytes(value, { binary: true }); }
+		series: [
+			{ value: (sample) => { return Math.max((sample?.memory || 0) - (sample?.arc || 0), 0); }, label: 'In use', color: '--blue-500', alertColor: '--red-500' },
+			{ key: 'arc', label: 'Cache', color: '--purple-500' }
+		],
+		stacked: true,
+		format: (value) => { return prettyBytes(value, { binary: true, minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
 	},
 	network: {
 		series: [
 			{ key: 'rx', label: 'RX', color: '--blue-500' },
 			{ key: 'tx', label: 'TX', color: '--purple-500' }
 		],
-		format: (value) => { return `${prettyBytes(value, { binary: true })}/s`; }
+		format: (value) => { return `${prettyBytes(value, { binary: true, minimumFractionDigits: 2, maximumFractionDigits: 2 })}/s`; }
 	}
 };
 let charts = {};
@@ -83,8 +87,9 @@ const toColumns = (series, start, end, bucketMs) => {
 	});
 
 	const columns = [buckets.map((bucket, index) => { return (firstBucket + index) * bucketMs; })];
-	series.forEach(({ key }) => {
-		columns.push(buckets.map((bucket) => { return (bucket.length > 0 ? _.meanBy(bucket, key) : 0); }));
+	series.forEach(({ key, value }) => {
+		const read = value ?? ((sample) => { return sample?.[key]; });
+		columns.push(buckets.map((bucket) => { return (bucket.length > 0 ? _.meanBy(bucket, (sample) => { return read(sample) || 0; }) : 0); }));
 	});
 	return columns;
 };
@@ -133,6 +138,29 @@ const makeSeries = (series) => {
 		return makeLine(label, getComputedColor(alertColor));
 	});
 	return [...lines, ...alertLines];
+};
+
+const makeBands = (series) => {
+	const alertSeries = series.filter(({ alertColor }) => { return alertColor; });
+	return _.flatMap(series.slice(1), (definition, index) => {
+		const lower = series[index];
+		const bands = [{ series: [index + 2, index + 1] }];
+		if (lower.alertColor) {
+			bands.push({ series: [index + 2, series.length + alertSeries.indexOf(lower) + 1] });
+		}
+		return bands;
+	});
+};
+
+const toStacked = (name, columns) => {
+	if (!CHARTS[name].stacked) {
+		return [...columns];
+	}
+
+	return columns.reduce((stacked, values, index) => {
+		stacked.push(index > 1 ? values.map((value, valueIndex) => { return value + stacked[index - 1][valueIndex]; }) : values);
+		return stacked;
+	}, []);
 };
 
 const withAlerts = (name, columns) => {
@@ -227,6 +255,7 @@ const createChart = (name, element) => {
 			{},
 			...lines
 		],
+		bands: (CHARTS[name].stacked ? makeBands(CHARTS[name].series) : []),
 		axes: [
 			{
 				show: false
@@ -319,7 +348,7 @@ const updateData = () => {
 		const bucketMs = getBucketMs(chart.width, timeframe.size);
 		const columns = toColumns(CHARTS[name].series, start - bucketMs, Math.min(end, latest.time), bucketMs);
 		chartValues[name] = columns;
-		chart.setData(withAlerts(name, [...columns]), false);
+		chart.setData(withAlerts(name, toStacked(name, columns)), false);
 	});
 };
 
