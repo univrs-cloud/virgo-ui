@@ -242,11 +242,11 @@ const scrubSnapshot = (event) => {
 		return;
 	}
 
-	const preferredKeys = event.target.dataset.preferredKeys.split(',');
+	const keys = event.target.dataset.keys.split(',');
 	const positions = _.map(event.target.dataset.positions.split(','), Number);
 	const value = event.target.value / 1000;
-	const index = _.minBy(_.range(preferredKeys.length), (i) => { return Math.abs(positions[i] - value); });
-	snapshotSelections[name] = preferredKeys[index];
+	const index = _.minBy(_.range(keys.length), (i) => { return Math.abs(positions[i] - value); });
+	snapshotSelections[name] = keys[index];
 	renderAppDetails(name);
 };
 
