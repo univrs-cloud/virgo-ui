@@ -1,4 +1,4 @@
-<div class="item container-fluid" data-name="<%-app.name%>">
+<div class="item container-fluid numeric-tabular" data-name="<%-app.name%>">
 	<div class="card border-0 shadow shadow-opacity-100">
 		<div class="card-body">
 			<div class="card-image-row mt--3 mb-3">
@@ -7,7 +7,7 @@
 						<i class="icon-light icon-arrow-left icon-fw"></i>
 					</button>
 				</div>
-				<div class="card-image-row-icon card-image card-spacer px-3">
+				<div class="card-image-row-icon card-image card-spacer px-3 <%=(_.some(app.projectContainers, (container) => _.includes(['running', 'restarting'], container.state)) ? '' : 'stopped')%>">
 					<%if (app.isUnmanaged) {%>
 						<i class="icon-light icon-layer-group icon-fw fg-emphasis-secondary"></i>
 					<%} else {%>
@@ -270,16 +270,12 @@
 																<%if (!resourceMetrics) {%>
 																	<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
 																<%} else {%>
-																	<%
-																		const rxIsRate = !_.isNil(resourceMetrics?.network?.rx_sec);
-																		const rxValue = resourceMetrics?.network?.rx_sec ?? resourceMetrics?.network?.rx ?? 0;
-																	%>
-																	<small class="fw-light"><%=prettyBytes(rxValue, { binary: true })%><%=(rxIsRate ? '/s' : '')%></small>
+																	<small class="fw-light"><%=_.prettyBitRate(resourceMetrics?.network?.rx || 0)%></small>
 																<%}%>
 															</div>
 															<%if (resourceMetrics) {%>
 																<%
-																	const rxValue = resourceMetrics?.network?.rx_sec ?? resourceMetrics?.network?.rx ?? 0;
+																	const rxValue = resourceMetrics?.network?.rx || 0;
 																	const rxPercent = networkMaxBytesPerSec > 0 ? _.min([(rxValue / networkMaxBytesPerSec) * 100, 100]) : 0;
 																%>
 																<u-progress shadow="false" class="d-block">
@@ -294,16 +290,12 @@
 																<%if (!resourceMetrics) {%>
 																	<i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>
 																<%} else {%>
-																	<%
-																		const txIsRate = !_.isNil(resourceMetrics?.network?.tx_sec);
-																		const txValue = resourceMetrics?.network?.tx_sec ?? resourceMetrics?.network?.tx ?? 0;
-																	%>
-																	<small class="fw-light"><%=prettyBytes(txValue, { binary: true })%><%=(txIsRate ? '/s' : '')%></small>
+																	<small class="fw-light"><%=_.prettyBitRate(resourceMetrics?.network?.tx || 0)%></small>
 																<%}%>
 															</div>
 															<%if (resourceMetrics) {%>
 																<%
-																	const txValue = resourceMetrics?.network?.tx_sec ?? resourceMetrics?.network?.tx ?? 0;
+																	const txValue = resourceMetrics?.network?.tx || 0;
 																	const txPercent = networkMaxBytesPerSec > 0 ? _.min([(txValue / networkMaxBytesPerSec) * 100, 100]) : 0;
 																%>
 																<u-progress shadow="false" class="d-block">

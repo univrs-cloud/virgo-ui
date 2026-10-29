@@ -69,13 +69,13 @@
 			<span class="d-inline-block text-start" style="width: 12px;">
 				<i class="icon-solid icon-arrow-down icon-fw icon-2xs fg-blue-500"></i>
 			</span>
-			<span class="ms-auto"><%=prettyBytes(folder.network.rx, { binary: true })%></span>
+			<span class="ms-auto"><%=_.prettyBitRate(folder.network.rx)%></span>
 		</small>
 		<small class="fw-light fg-emphasis-secondary d-flex">
 			<span class="d-inline-block text-start" style="width: 12px;">
 				<i class="icon-solid icon-arrow-up icon-fw icon-2xs fg-purple-500"></i>
 			</span>
-			<span class="ms-auto"><%=prettyBytes(folder.network.tx, { binary: true })%></span>
+			<span class="ms-auto"><%=_.prettyBitRate(folder.network.tx)%></span>
 		</small>
 	</td>
 	<td class="text-end text-nowrap d-none md:d-table-cell">

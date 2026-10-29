@@ -29,7 +29,7 @@ const CHARTS = {
 			{ key: 'rx', label: 'RX', color: '--blue-500' },
 			{ key: 'tx', label: 'TX', color: '--purple-500' }
 		],
-		format: (value) => { return `${prettyBytes(value, { binary: true, minimumFractionDigits: 2, maximumFractionDigits: 2 })}/s`; }
+		format: (value) => { return _.prettyBitRate(value); }
 	}
 };
 let charts = {};

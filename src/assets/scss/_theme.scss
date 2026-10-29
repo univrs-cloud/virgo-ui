@@ -223,6 +223,9 @@ $card-image-size: 30px;
 			padding: 0.2rem;
 			margin: 0.125rem 0;
 		}
+		&.stopped {
+			filter: grayscale(1);
+		}
 	}
 	.card-footer {
 		border-left: var(--card-border-width) solid var(--card-border-color);
@@ -484,6 +487,9 @@ $card-image-size: 30px;
 		}
 		.icon-light {
 			font-size: 1.24em;
+		}
+		&.stopped {
+			filter: grayscale(1);
 		}
 	}
 }
