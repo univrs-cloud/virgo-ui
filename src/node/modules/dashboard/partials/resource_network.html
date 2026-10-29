@@ -1,22 +1,22 @@
 <li class="list-group-item network py-5">
 	<h5 class="fg-black mb-0">
 		<i class="icon-regular icon-network-wired icon-fw me-1 fg-gray-300"></i>Network
-		<small class="fg-emphasis-secondary"> &middot; <%-_.find(state.system?.networkInterfaces, { default: true })?.ifname%> &middot; <%=prettyBytes((_.find(state.system?.networkInterfaces, { default: true })?.speed || 0)  * 1000 * 1000, { bits: true })%>/s</small>
+		<small class="fg-emphasis-secondary"> &middot; <%-_.find(state.system?.networkInterfaces, { default: true })?.ifname%> &middot; <%=_.prettyBitRate((_.find(state.system?.networkInterfaces, { default: true })?.speed || 0) * 1000 * 1000 / 8, { minimumFractionDigits: 0 })%></small>
 	</h5>
 	<%if (state.stats === null) {%>
 		<div class="spinner-border spinner-sm fg-gray-600"></div>
 	<%} else {%>
 		<div class="resource-chart" data-chart="network"></div>
-		<%const [rxValue, rxUnit] = prettyBytes(_.last(state.stats)?.rx || 0, { binary: true, minimumFractionDigits: 2, maximumFractionDigits: 2 }).split(' ')%>
-		<%const [txValue, txUnit] = prettyBytes(_.last(state.stats)?.tx || 0, { binary: true, minimumFractionDigits: 2, maximumFractionDigits: 2 }).split(' ')%>
+		<%const [rxValue, rxUnit] = _.prettyBitRate(_.last(state.stats)?.rx || 0).split(' ')%>
+		<%const [txValue, txUnit] = _.prettyBitRate(_.last(state.stats)?.tx || 0).split(' ')%>
 		<div class="d-flex justify-content-between lh-1 numeric-tabular fg-4 mt-1">
 			<div class="d-flex align-items-center fs-xs">
-				<i class="icon-solid icon-arrow-down icon-fw me-1 fg-blue-500"></i>RX
-				<span class="resource-rate d-inline-block text-end ms-1"><%=rxValue%></span><span class="resource-unit d-inline-block ms-1"><%=rxUnit%>/s</span>
+				<i class="icon-solid icon-arrow-down icon-fw fg-blue-500"></i>RX
+				<span class="resource-rate d-inline-block text-end ms-1"><%=rxValue%></span><span class="resource-unit d-inline-block ms-1"><%=rxUnit%></span>
 			</div>
 			<div class="d-flex align-items-center fs-xs">
-				<i class="icon-solid icon-arrow-up icon-fw me-1 fg-purple-500"></i>TX
-				<span class="resource-rate d-inline-block text-end ms-1"><%=txValue%></span><span class="resource-unit d-inline-block ms-1"><%=txUnit%>/s</span>
+				<i class="icon-solid icon-arrow-up icon-fw fg-purple-500"></i>TX
+				<span class="resource-rate d-inline-block text-end ms-1"><%=txValue%></span><span class="resource-unit d-inline-block ms-1"><%=txUnit%></span>
 			</div>
 		</div>
 	<%}%>

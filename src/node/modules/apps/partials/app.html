@@ -1,7 +1,7 @@
 <%const hasActiveContainers = _.some(app.projectContainers, (container) => _.includes(['running', 'restarting'], container.state));%>
 <tr class="item cursor-pointer" data-name="<%-app.name%>">
 	<td class="d-none md:d-table-cell" style="width: 1px;">
-		<div class="row-image">
+		<div class="row-image <%=(hasActiveContainers ? '' : 'stopped')%>">
 			<%if (app.isUnmanaged) {%>
 				<i class="icon-light icon-layer-group icon-fw fg-emphasis-secondary"></i>
 			<%} else {%>
@@ -65,13 +65,13 @@
 				<span class="d-inline-block text-start" style="width: 12px;">
 					<i class="icon-solid icon-arrow-down icon-fw icon-2xs fg-blue-500"></i>
 				</span>
-				<span class="ms-auto"><%=prettyBytes(app.resourceMetrics?.network?.rx || 0, { binary: true })%></span>
+				<span class="ms-auto"><%=_.prettyBitRate(app.resourceMetrics?.network?.rx || 0)%></span>
 			</small>
 			<small class="fw-light fg-emphasis-secondary d-flex">
 				<span class="d-inline-block text-start" style="width: 12px;">
 					<i class="icon-solid icon-arrow-up icon-fw icon-2xs fg-purple-500"></i>
 				</span>
-				<span class="ms-auto"><%=prettyBytes(app.resourceMetrics?.network?.tx || 0, { binary: true })%></span>
+				<span class="ms-auto"><%=_.prettyBitRate(app.resourceMetrics?.network?.tx || 0)%></span>
 			</small>
 		<%}%>
 	</td>

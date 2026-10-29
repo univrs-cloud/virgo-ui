@@ -1,4 +1,4 @@
 <small class="d-flex align-items-center justify-content-center gap-2 text-nowrap fs-xs fg-4">
-	<span class="d-flex align-items-center <%=(rx > 0 ? 'fg-blue-500' : 'fg-4')%>"><i class="icon-solid icon-arrow-down icon-xs icon-width-auto me-1"></i><%=prettyBytes(rx, { binary: true })%>/s</span>
-	<span class="d-flex align-items-center <%=(tx > 0 ? 'fg-purple-500' : 'fg-4')%>"><i class="icon-solid icon-arrow-up icon-xs icon-width-auto me-1"></i><%=prettyBytes(tx, { binary: true })%>/s</span>
+	<span class="d-flex align-items-center <%=(rx > 0 ? 'fg-blue-500' : 'fg-4')%>"><i class="icon-solid icon-arrow-down icon-xs icon-width-auto me-1"></i><%=_.prettyBitRate(rx)%></span>
+	<span class="d-flex align-items-center <%=(tx > 0 ? 'fg-purple-500' : 'fg-4')%>"><i class="icon-solid icon-arrow-up icon-xs icon-width-auto me-1"></i><%=_.prettyBitRate(tx)%></span>
 </small>

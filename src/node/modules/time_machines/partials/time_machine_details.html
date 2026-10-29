@@ -2,7 +2,7 @@
 	const machines = _.sortBy(timeMachine.timeMachine || [], (machine) => { return _.toLower(machine.name); });
 	const activeTab = (_.isEmpty(machines) ? 'overview' : timeMachineTab);
 %>
-<div class="item container-fluid" data-id="<%-timeMachine.name%>">
+<div class="item container-fluid numeric-tabular" data-id="<%-timeMachine.name%>">
 	<div class="card border-0 shadow shadow-opacity-100">
 		<div class="card-body">
 			<div class="card-image-row mt--3 mb-3">
@@ -139,7 +139,7 @@
 												<div class="col-6">
 													<div class="d-flex align-items-center justify-content-between">
 														<small class="fg-4"><i class="icon-solid icon-arrow-down icon-fw me-1 fg-blue-500"></i>RX</small>
-														<small class="fw-light"><%=prettyBytes(client.rx, { binary: true })%>/s</small>
+														<small class="fw-light"><%=_.prettyBitRate(client.rx)%></small>
 													</div>
 													<u-progress shadow="false" class="d-block">
 														<u-progress-bar width="<%=(networkMaxBytesPerSec > 0 ? _.min([(client.rx / networkMaxBytesPerSec) * 100, 100]) : 0)%>"></u-progress-bar>
@@ -148,7 +148,7 @@
 												<div class="col-6">
 													<div class="d-flex align-items-center justify-content-between">
 														<small class="fg-4"><i class="icon-solid icon-arrow-up icon-fw me-1 fg-purple-500"></i>TX</small>
-														<small class="fw-light"><%=prettyBytes(client.tx, { binary: true })%>/s</small>
+														<small class="fw-light"><%=_.prettyBitRate(client.tx)%></small>
 													</div>
 													<u-progress shadow="false" class="d-block">
 														<u-progress-bar width="<%=(networkMaxBytesPerSec > 0 ? _.min([(client.tx / networkMaxBytesPerSec) * 100, 100]) : 0)%>"></u-progress-bar>

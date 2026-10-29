@@ -241,6 +241,20 @@ main,
 	}
 }
 
+.progress.booting {
+	width: 2.5rem;
+	height: 0.25rem;
+	box-shadow: none;
+	.progress-bar {
+		width: 40%;
+		animation: booting-bar 1s ease-in-out infinite alternate;
+	}
+}
+@keyframes booting-bar {
+	to {
+		transform: translateX(150%);
+	}
+}
 .connecting {
 	display: none;
 	gap: 0.625rem;

@@ -13,7 +13,7 @@
 <%const tolerance = `${_.pluralize('disk failure', faultTolerance, true)} tolerated per group`%>
 <%const dataWidth = (size > 0 ? data / size * 100 : 0)%>
 <%const snapshotsWidth = (size > 0 ? snapshots / size * 100 : 0)%>
-<div class="item container-fluid" data-name="<%-pool.name%>">
+<div class="item container-fluid numeric-tabular" data-name="<%-pool.name%>">
 	<div class="card border-0 shadow shadow-opacity-100">
 		<div class="card-body">
 			<div class="row g-0 align-items-center mt--3 mb-3">
