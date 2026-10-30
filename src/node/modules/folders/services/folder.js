@@ -71,18 +71,18 @@ function composeFolders(shares, clients, snapshots, configured) {
 
 function getSnapshotSource(folder, configured) {
 	if (folder.snapshotPolicy) {
-		return { snapshotDataset: folder.dataset, snapshotSource: null, snapshotBrowseRoot: null, canChangeSnapshots: true };
+		return { snapshotDataset: folder.dataset, snapshotSource: null, snapshotBrowse: { dataset: folder.dataset, root: '' }, canChangeSnapshots: true };
 	}
 
 	const folderPath = `${_.toLower(folder.path)}/`;
 	const app = _.find(configured, (entry) => { return entry.type === 'app' && Boolean(entry.dataset) && _.startsWith(folderPath, `/${_.toLower(entry.dataset)}/`); });
 	if (!app) {
-		return { snapshotDataset: null, snapshotSource: null, snapshotBrowseRoot: null, canChangeSnapshots: false };
+		return { snapshotDataset: null, snapshotSource: null, snapshotBrowse: null, canChangeSnapshots: false };
 	}
 
 	const relativePath = folder.path.slice(app.dataset.length + 1);
-	const snapshotBrowseRoot = (_.toLower(app.name) === 'nextcloud' && /^\/data\/[^/]+\/files$/.test(relativePath) ? relativePath : null);
-	return { snapshotPolicy: app.snapshotPolicy || null, snapshotDataset: app.dataset, snapshotSource: app.title, snapshotBrowseRoot, canChangeSnapshots: false };
+	const snapshotBrowse = (_.toLower(app.name) === 'nextcloud' && /^\/data\/[^/]+\/files$/.test(relativePath) ? { dataset: '', root: relativePath } : null);
+	return { snapshotPolicy: app.snapshotPolicy || null, snapshotDataset: app.dataset, snapshotSource: app.title, snapshotBrowse, canChangeSnapshots: false };
 }
 
 function getFolderClients(folder, clients) {

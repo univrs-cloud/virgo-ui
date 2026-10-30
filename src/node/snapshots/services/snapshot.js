@@ -12,8 +12,8 @@ const browseSnapshotChanges = (config) => {
 	return Indexer.browseChanges(config);
 };
 
-const getRestoreFolders = (path) => {
-	return Indexer.getRestoreFolders(path);
+const getRestoreFolders = (path, dataset) => {
+	return Indexer.getRestoreFolders(path, dataset);
 };
 
 const inspectRestore = (config) => {

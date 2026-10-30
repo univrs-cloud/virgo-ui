@@ -72,7 +72,7 @@ const fetchListing = async (session, path) => {
 		return;
 	}
 
-	const response = await snapshotService.browseSnapshot({ snapshot: session.snapshot, path });
+	const response = await snapshotService.browseSnapshot({ snapshot: session.snapshot, dataset: session.dataset, path });
 	if (response?.status !== 'succeeded') {
 		throw new Error(response?.message || 'Could not load the folder.');
 	}
@@ -215,7 +215,7 @@ const selectMatches = async (item) => {
 		let offset = 0;
 		let hasMore = true;
 		while (hasMore && state === session) {
-			const response = await snapshotService.browseSnapshotChanges({ snapshot: session.snapshot, path: item.path, states, offset });
+			const response = await snapshotService.browseSnapshotChanges({ snapshot: session.snapshot, dataset: session.dataset, path: item.path, states, offset });
 			if (response?.status !== 'succeeded') {
 				throw new Error(response?.message || 'Could not load the changes.');
 			}
@@ -279,7 +279,7 @@ const toEntries = () => {
 };
 
 const displayPath = (path) => {
-	if (state.root && (path === state.root || isInside(path, state.root))) {
+	if ((state.root || state.dataset) && (path === state.root || isInside(path, state.root))) {
 		return `${state.rootName}${path.slice(state.root.length)}`;
 	}
 
@@ -293,7 +293,7 @@ const toCrumbs = () => {
 	}
 
 	let path = state.root;
-	if (state.root === '') {
+	if (state.root === '' && !state.dataset) {
 		const root = _.find(state.listings[state.root]?.folders, (folder) => { return state.path === folder.path || isInside(state.path, folder.path); });
 		if (!root) {
 			return crumbs;
@@ -323,7 +323,7 @@ const render = () => {
 	if (_.isEmpty(state.selected)) {
 		state.isCollectionOpen = false;
 	}
-	morphdom(modal.querySelector('.dialog-content'), browserTemplate({ state, rows, header, crumbs: toCrumbs(), entries: toEntries(), listing: state.listings[state.path], canDownload: !getNodeViewBase(), displayPath, prettyBytes }), {
+	morphdom(modal.querySelector('.dialog-content'), browserTemplate({ state, rows, header, crumbs: toCrumbs(), entries: toEntries(), listing: state.listings[state.path], isUsersList: (state.path === '' && !state.dataset), canDownload: !getNodeViewBase(), displayPath, prettyBytes }), {
 		onBeforeNodeDiscarded: (node) => {
 			return !node.classList?.contains('scrollbar');
 		}
@@ -340,7 +340,7 @@ const foldersTo = (path) => {
 	}
 
 	const segments = path.split('/');
-	const depth = (state.root === '' ? USER_ROOT_DEPTH : state.root.split('/').length + 1);
+	const depth = (state.root === '' && !state.dataset ? USER_ROOT_DEPTH : state.root.split('/').length + 1);
 	return _.concat([state.root], _.map(_.range(depth, segments.length + 1), (index) => { return _.take(segments, index).join('/'); }));
 };
 
@@ -406,7 +406,7 @@ const download = () => {
 	const input = document.createElement('input');
 	input.type = 'hidden';
 	input.name = 'selection';
-	input.value = JSON.stringify({ snapshot: state.snapshot, items: _.keys(state.selected), excluded: _.keys(state.excluded) });
+	input.value = JSON.stringify({ snapshot: state.snapshot, dataset: state.dataset, items: _.keys(state.selected), excluded: _.keys(state.excluded) });
 	form.append(input);
 	document.body.append(form);
 	form.submit();
@@ -422,7 +422,7 @@ const open = async (event) => {
 	event.preventDefault();
 	button.blur();
 	const root = button.dataset.browseRoot || '';
-	const session = { snapshot: button.dataset.browseSnapshot, date: button.dataset.browseDate, root, rootName: button.dataset.browseRootName, path: root, focusPath: null, listings: {}, selected: {}, excluded: {}, expanded: {}, filter: [], busyPath: null, loadId: 0, isLoading: false, isCollectionOpen: false, error: null };
+	const session = { snapshot: button.dataset.browseSnapshot, date: button.dataset.browseDate, dataset: (button.dataset.browseDataset || ''), root, rootName: button.dataset.browseRootName, path: root, focusPath: null, listings: {}, selected: {}, excluded: {}, expanded: {}, filter: [], busyPath: null, loadId: 0, isLoading: false, isCollectionOpen: false, error: null };
 	state = session;
 	render();
 	bootstrap.Dialog.getOrCreateInstance(modal).show();
@@ -503,7 +503,7 @@ const click = async (event) => {
 
 	if (event.target.closest('.browse-restore')) {
 		if (!_.isEmpty(state.selected)) {
-			document.dispatchEvent(new CustomEvent('snapshot-restore-selection', { detail: { snapshot: state.snapshot, date: state.date, root: state.root, rootName: state.rootName, count: _.size(state.selected), items: _.keys(state.selected), excluded: _.keys(state.excluded) } }));
+			document.dispatchEvent(new CustomEvent('snapshot-restore-selection', { detail: { snapshot: state.snapshot, date: state.date, dataset: state.dataset, root: state.root, rootName: state.rootName, count: _.size(state.selected), items: _.keys(state.selected), excluded: _.keys(state.excluded) } }));
 		}
 		return;
 	}

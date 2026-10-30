@@ -132,7 +132,7 @@
 						<th>
 							<div class="d-flex align-items-center gap-3">
 								<span>Now</span>
-								<%if (state.path !== '') {%>
+								<%if (!isUsersList) {%>
 									<span class="dropdown fw-normal">
 										<a href="#" class="d-inline-flex align-items-center text-decoration-none <%=(_.isEmpty(state.filter) ? 'fg-4' : 'fg-primary')%>" data-bs-toggle="menu" data-bs-auto-close="outside" data-bs-strategy="fixed">
 											<i class="icon-solid icon-filter icon-xs"></i>
@@ -197,7 +197,7 @@
 										<%})%>
 										<%if (row.changesInside > 0) {%>
 											<small class="fg-emphasis-secondary"><%=row.changesInside%> <%=(_.isEmpty(state.filter) ? 'changed' : 'matching')%> inside</small>
-										<%} else if (_.isEmpty(row.states) && state.path !== '' && listing?.isIndexed === true) {%>
+										<%} else if (_.isEmpty(row.states) && !isUsersList && listing?.isIndexed === true) {%>
 											<small class="fg-4">Unchanged</small>
 										<%}%>
 									</div>

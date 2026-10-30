@@ -43,7 +43,7 @@
 	</div>
 	<div class="dialog-footer">
 		<u-button variant="secondary" outline class="ms-auto" data-bs-dismiss="dialog" <%=(state.busy ? 'disabled' : '')%>>Cancel</u-button>
-		<u-button variant="primary" class="restore-submit" <%=(state.busy || state.isLoading || !state.selected ? 'disabled' : '')%>>
+		<u-button variant="primary" class="restore-submit" <%=(state.busy || state.isLoading || state.selected === null ? 'disabled' : '')%>>
 			<%if (state.busy && !state.inspection) {%>
 				<span class="spinner-border spinner-sm"></span>
 			<%}%>

@@ -208,9 +208,9 @@
 									</div>
 								</div>
 							</div>
-							<%if (folder.snapshotBrowseRoot) {%>
+							<%if (!_.isEmpty(folder.snapshots)) {%>
 								<div class="snapshots card border-0">
-									<%=renderSnapshots(`folder:${folder.name}`, { snapshots: folder.snapshots, browse: { root: folder.snapshotBrowseRoot, rootName: folder.comment } })%>
+									<%=renderSnapshots(`folder:${folder.name}`, { snapshots: folder.snapshots, browse: (folder.snapshotBrowse ? { ...folder.snapshotBrowse, rootName: folder.comment } : null) })%>
 								</div>
 							<%}%>
 						</div>
