@@ -30,6 +30,15 @@ const toggle = (event) => {
 	setCollapsed(!document.body.classList.contains('menu-collapsed'));
 };
 
+const hideNodesTooltip = (event) => {
+	const button = event.target.closest('.nodes [data-bs-toggle="menu"]');
+	if (_.isNull(button)) {
+		return;
+	}
+
+	bootstrap.Tooltip.getInstance(button)?.hide();
+};
+
 const updateScrollShadows = () => {
 	const list = header.querySelector('nav .nav-pills');
 	if (_.isNull(list)) {
@@ -44,11 +53,12 @@ const header = document.querySelector('header');
 
 document.body.classList.toggle('menu-collapsed', isCollapsed());
 header.addEventListener('click', toggle);
+header.addEventListener('click', hideNodesTooltip);
 header.addEventListener('scroll', updateScrollShadows, true);
 window.addEventListener('resize', updateScrollShadows);
 new MutationObserver(updateScrollShadows).observe(header, { childList: true, subtree: true });
 new bootstrap.Tooltip(header, {
-	selector: 'body.menu-collapsed header nav .nav-link, body.menu-collapsed header nav .account .btn-solid, header nav .menu-toggle',
+	selector: 'body.menu-collapsed header nav .nav-link, body.menu-collapsed header nav .account .btn-solid, body.menu-collapsed header nav .nodes [data-bs-toggle="menu"], header nav .menu-toggle',
 	placement: 'right',
 	trigger: 'hover',
 	title: (link) => {
