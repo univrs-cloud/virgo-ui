@@ -19,8 +19,8 @@ class Indexer extends Store {
 		return this.socket.timeout(30000).emitWithAck('indexer:browse:changes', config);
 	}
 
-	getRestoreFolders(path) {
-		return this.socket.timeout(30000).emitWithAck('indexer:restore:folders', { path });
+	getRestoreFolders(path, dataset) {
+		return this.socket.timeout(30000).emitWithAck('indexer:restore:folders', { path, dataset });
 	}
 
 	inspectRestore(config) {

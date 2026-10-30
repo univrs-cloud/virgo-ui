@@ -113,7 +113,7 @@
 				</div>
 				<div class="d-flex gap-3">
 					<%if (browse) {%>
-						<u-button variant="secondary" size="sm" class="snapshot-browse" data-browse-root="<%-browse.root%>" data-browse-root-name="<%-browse.rootName%>" data-browse-snapshot="<%-selectedPoint.snapshot%>" data-browse-date="<%-selectedPoint.createdMoment.format('D MMM YYYY, HH:mm')%>"><i class="icon-regular icon-folder-open icon-fw"></i>Browse files</u-button>
+						<u-button variant="secondary" size="sm" class="snapshot-browse" data-browse-dataset="<%-browse.dataset || ''%>" data-browse-root="<%-browse.root%>" data-browse-root-name="<%-browse.rootName%>" data-browse-snapshot="<%-selectedPoint.snapshot%>" data-browse-date="<%-selectedPoint.createdMoment.format('D MMM YYYY, HH:mm')%>"><i class="icon-regular icon-folder-open icon-fw"></i>Browse files</u-button>
 					<%}%>
 					<%=actions(selectedPoint)%>
 				</div>
@@ -268,6 +268,9 @@
 
 						const relPath = version.snapshotPath.slice(index + marker.length);
 						const segments = relPath.split('/');
+						if (browse.dataset) {
+							return (item.type === 'dir' ? { path: relPath, focus: '' } : { path: _.initial(segments).join('/'), focus: relPath });
+						}
 						if (segments[1] !== 'data' || segments[3] !== 'files' || _.toLower(segments[2]) === '__groupfolders') {
 							return null;
 						}
@@ -379,13 +382,13 @@
 																	<%=(item.type === 'dir' || _.isUndefined(version.size) ? '' : ` · ${prettyBytes(version.size || 0, { binary: true })}`)%>
 																	<%const versionTarget = (isResultPruned(version.snapshot) ? null : browseTarget(item, version));%>
 																	<%if (versionTarget) {%>
-																		<a href="#" class="snapshot-browse ms-1 text-decoration-none" data-bs-toggle="tooltip" data-bs-original-title="Browse files" data-browse-root="<%-browse.root%>" data-browse-root-name="<%-browse.rootName%>" data-browse-snapshot="<%-version.snapshot%>" data-browse-date="<%-(versionPoint ? versionPoint.createdMoment.format('D MMM YYYY, HH:mm') : resultDate(version.snapshot))%>" data-browse-path="<%-versionTarget.path%>" data-browse-focus="<%-versionTarget.focus%>"><i class="icon-solid icon-folder-open"></i></a>
+																		<a href="#" class="snapshot-browse ms-1 text-decoration-none" data-bs-toggle="tooltip" data-bs-original-title="Browse files" data-browse-dataset="<%-browse.dataset || ''%>" data-browse-root="<%-browse.root%>" data-browse-root-name="<%-browse.rootName%>" data-browse-snapshot="<%-version.snapshot%>" data-browse-date="<%-(versionPoint ? versionPoint.createdMoment.format('D MMM YYYY, HH:mm') : resultDate(version.snapshot))%>" data-browse-path="<%-versionTarget.path%>" data-browse-focus="<%-versionTarget.focus%>"><i class="icon-solid icon-folder-open"></i></a>
 																	<%}%>
 																	<%if (canDownloadSnapshotFiles && _.includes(['file', 'dir'], item.type) && version.snapshotPath && !isResultPruned(version.snapshot)) {%>
 																		<a href="/snapshots/download?path=<%=encodeURIComponent(version.snapshotPath)%>" class="ms-1 text-decoration-none" download data-bs-toggle="tooltip" data-bs-original-title="Download"><i class="icon-solid icon-download"></i></a>
 																	<%}%>
 																	<%if (item.type === 'file' && version.snapshotPath && !isResultPruned(version.snapshot)) {%>
-																		<a href="#" class="snapshot-restore ms-1 text-decoration-none" data-bs-toggle="tooltip" data-bs-original-title="Restore" data-restore-root="<%-browse.root%>" data-restore-root-name="<%-browse.rootName%>" data-path="<%-version.snapshotPath%>" data-date="<%-(versionPoint ? versionPoint.createdMoment.format('D MMM YYYY, HH:mm') : resultDate(version.snapshot))%>"><i class="icon-solid icon-clock-rotate-left"></i></a>
+																		<a href="#" class="snapshot-restore ms-1 text-decoration-none" data-bs-toggle="tooltip" data-bs-original-title="Restore" data-restore-dataset="<%-browse.dataset || ''%>" data-restore-root="<%-browse.root%>" data-restore-root-name="<%-browse.rootName%>" data-path="<%-version.snapshotPath%>" data-date="<%-(versionPoint ? versionPoint.createdMoment.format('D MMM YYYY, HH:mm') : resultDate(version.snapshot))%>"><i class="icon-solid icon-clock-rotate-left"></i></a>
 																	<%}%>
 																</span>
 															<%})%>

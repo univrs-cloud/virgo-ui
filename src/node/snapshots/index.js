@@ -146,7 +146,9 @@ const submitSearch = async (key, value) => {
 	};
 	const days = { '1d': 1, '7d': 7, '30d': 30, '365d': 365 };
 	const query = { term, ...sizes[filter.size] };
-	if (cards[key]?.browse?.root) {
+	if (cards[key]?.browse?.dataset) {
+		query.dataset = cards[key].browse.dataset;
+	} else if (cards[key]?.browse?.root) {
 		query.path = cards[key].browse.root;
 	}
 	if (filter.type) {
