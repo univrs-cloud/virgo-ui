@@ -6,6 +6,7 @@ import * as account from 'node/account';
 import * as appService from 'node/services/app';
 import * as softwareService from 'node/services/software';
 import * as storageService from 'node/services/storage';
+import * as systemService from 'node/services/system';
 import * as nodeService from 'node/services/node';
 import * as windowService from 'node/services/window';
 import page from 'page';
@@ -106,6 +107,11 @@ const reorderWindows = (event) => {
 	windowService.setOrder(_.map(event.to.querySelectorAll('.nav-window'), (link) => { return link.dataset.windowId; }));
 };
 
+const renderNodeTitle = () => {
+	const nodeTitle = _.join(_.compact([systemService.getSystem()?.osInfo?.hostname, _.toLower(systemService.getDomainName())]), ' · ');
+	document.title = (nodeTitle || 'univrs');
+};
+
 const renderNodePicker = (state) => {
 	if (_.isNull(state.nodes)) {
 		return;
@@ -152,4 +158,6 @@ new Sortable(header.querySelector('.navbar .nav .windows'), {
 
 if (runtimeRole === 'fleet') {
 	nodeService.subscribe([renderNodePicker]);
+} else {
+	systemService.subscribe([renderNodeTitle]);
 }
