@@ -114,10 +114,11 @@ const renderNodePicker = (state) => {
 	const nodeId = getNodeViewId();
 	const currentNode = nodeId ? _.find(state.nodes, { nodeId }) : state.nodes[0];
 	const currentNodeLabel = currentNode?.name || currentNode?.nodeId || '';
-	document.title = (currentNodeLabel ? `${currentNodeLabel} | univrs` : 'univrs');
+	const currentNodeTitle = _.join(_.compact([currentNodeLabel, _.toLower(currentNode?.domainName)]), ' · ');
+	document.title = (currentNodeTitle || 'univrs');
 	_.each(document.querySelectorAll('header .navbar > .nodes, .drawer .drawer-title'), (container) => {
 		const isDrawer = !_.isNull(container.closest('.drawer'));
-		morphdom(container, `<div>${nodePickerTemplate({ nodes: state.nodes, currentNodeLabel, currentNodeId: nodeId, isDrawer })}</div>`, { childrenOnly: true });
+		morphdom(container, `<div>${nodePickerTemplate({ nodes: state.nodes, currentNodeLabel, currentNodeTitle, currentNodeId: nodeId, isDrawer })}</div>`, { childrenOnly: true });
 	});
 };
 

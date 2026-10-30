@@ -66,6 +66,10 @@ new bootstrap.Tooltip(header, {
 			return (document.body.classList.contains('menu-collapsed') ? link.dataset.expandTitle : link.dataset.collapseTitle);
 		}
 
+		if (link.dataset.tooltipTitle) {
+			return _.escape(link.dataset.tooltipTitle);
+		}
+
 		return _.escape(_.trim(link.querySelector('.nav-label')?.textContent));
 	}
 });
