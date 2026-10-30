@@ -26,6 +26,7 @@ const toggle = (event) => {
 		return;
 	}
 
+	// Header tooltips open on hover only, so blur() would leave them open; hide() closes them.
 	bootstrap.Tooltip.getInstance(button)?.hide();
 	setCollapsed(!document.body.classList.contains('menu-collapsed'));
 };
@@ -36,6 +37,7 @@ const hideNodesTooltip = (event) => {
 		return;
 	}
 
+	// Header tooltips open on hover only, so blur() would leave them open; hide() closes them.
 	bootstrap.Tooltip.getInstance(button)?.hide();
 };
 

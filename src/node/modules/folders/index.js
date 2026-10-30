@@ -6,6 +6,7 @@ import folderActionsPartial from 'node/modules/folders/partials/folder_actions.h
 import folderDetailsPartial from 'node/modules/folders/partials/folder_details.html';
 import * as folderService from 'node/modules/folders/services/folder';
 import * as userService from 'node/modules/folders/services/user';
+import { renderSnapshots, clearSnapshots } from 'node/snapshots';
 import { filterListByQuery } from 'utils/list_search';
 import { getShareAddress } from 'utils/share_address';
 
@@ -99,6 +100,7 @@ const clearFolderTabs = (name) => {
 			delete folderTabs[key];
 		}
 	});
+	clearSnapshots((key) => { return (_.isUndefined(name) ? _.startsWith(key, 'folder:') : _.toLower(key) === _.toLower(`folder:${name}`)); });
 };
 
 const compress = (event) => {
@@ -149,7 +151,7 @@ const renderFolderDetails = (name) => {
 	const networkMaxBytesPerSec = folderService.getDefaultNetworkInterfaceSpeed();
 	morphdom(
 		details,
-		`<div>${folderDetailsTemplate({ folder, users, jobs, accessOn, networkMaxBytesPerSec, folderTab: folderTabs[name] || 'overview', folderActionsTemplate, prettyBytes })}</div>`,
+		`<div>${folderDetailsTemplate({ folder, users, jobs, accessOn, networkMaxBytesPerSec, folderTab: folderTabs[name] || 'overview', folderActionsTemplate, renderSnapshots, prettyBytes })}</div>`,
 		{ childrenOnly: true }
 	);
 };

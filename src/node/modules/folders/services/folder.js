@@ -1,4 +1,5 @@
 import Job from 'stores/job';
+import Docker from 'stores/docker';
 import Host from 'stores/host';
 import Share from 'stores/share';
 import User from 'stores/user';
@@ -17,6 +18,10 @@ const { subscribe } = createSubscription({
 			propertyNames: ['system', 'snapshots']
 		},
 		{
+			store: Docker,
+			propertyNames: ['configured']
+		},
+		{
 			store: Share,
 			propertyNames: ['shares', 'clients']
 		},
@@ -30,7 +35,7 @@ const { subscribe } = createSubscription({
 	},
 	attachStore: storeAttach.beforeCallbacks,
 	mapState: (properties) => {
-		const folders = composeFolders(properties?.shares, properties?.clients, properties?.snapshots);
+		const folders = composeFolders(properties?.shares, properties?.clients, properties?.snapshots, properties?.configured);
 		const networkInterface = _.find(properties?.system?.networkInterfaces, { default: true });
 		return {
 			folders,
@@ -44,7 +49,7 @@ function isFoldersJob(job) {
 	return _.startsWith(job?.name, 'share');
 }
 
-function composeFolders(shares, clients, snapshots) {
+function composeFolders(shares, clients, snapshots, configured) {
 	const folders = filterFolders(shares);
 	if (_.isNull(folders)) {
 		return null;
@@ -52,14 +57,32 @@ function composeFolders(shares, clients, snapshots) {
 
 	return _.map(folders, (folder) => {
 		const folderClients = getFolderClients(folder, clients);
+		const snapshotSource = getSnapshotSource(folder, configured);
 		return {
 			...folder,
+			...snapshotSource,
 			isCustom: !folder.path?.startsWith('/messier/folders/'),
 			clients: folderClients,
-			snapshots: _.filter(_.values(snapshots), (snapshot) => { return Boolean(folder.dataset) && _.toLower(snapshot.dataset) === _.toLower(folder.dataset); }),
+			snapshots: _.filter(_.values(snapshots), (snapshot) => { return Boolean(snapshotSource.snapshotDataset) && _.toLower(snapshot.dataset) === _.toLower(snapshotSource.snapshotDataset); }),
 			network: { rx: _.sumBy(folderClients, 'rx'), tx: _.sumBy(folderClients, 'tx') }
 		};
 	});
+}
+
+function getSnapshotSource(folder, configured) {
+	if (folder.snapshotPolicy) {
+		return { snapshotDataset: folder.dataset, snapshotSource: null, snapshotBrowseRoot: null, canChangeSnapshots: true };
+	}
+
+	const folderPath = `${_.toLower(folder.path)}/`;
+	const app = _.find(configured, (entry) => { return entry.type === 'app' && Boolean(entry.dataset) && _.startsWith(folderPath, `/${_.toLower(entry.dataset)}/`); });
+	if (!app) {
+		return { snapshotDataset: null, snapshotSource: null, snapshotBrowseRoot: null, canChangeSnapshots: false };
+	}
+
+	const relativePath = folder.path.slice(app.dataset.length + 1);
+	const snapshotBrowseRoot = (_.toLower(app.name) === 'nextcloud' && /^\/data\/[^/]+\/files$/.test(relativePath) ? relativePath : null);
+	return { snapshotPolicy: app.snapshotPolicy || null, snapshotDataset: app.dataset, snapshotSource: app.title, snapshotBrowseRoot, canChangeSnapshots: false };
 }
 
 function getFolderClients(folder, clients) {
@@ -98,7 +121,7 @@ const getSystem = () => {
 };
 
 const getFolders = () => {
-	return composeFolders(Share.getShares(), Share.getClients(), Host.getSnapshots());
+	return composeFolders(Share.getShares(), Share.getClients(), Host.getSnapshots(), Docker.getConfigured());
 };
 
 const getDefaultNetworkInterface = () => {

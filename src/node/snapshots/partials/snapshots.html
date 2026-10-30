@@ -1,0 +1,427 @@
+<div class="snapshot-timeline" data-snapshot-key="<%-key%>">
+	<%
+		const snapshotTierOrder = ['frequently', 'hourly', 'daily', 'monthly', 'yearly', 'update'];
+		const snapshotTierColors = { frequently: 'blue-200', hourly: 'blue-300', daily: 'blue-500', monthly: 'indigo-500', yearly: 'indigo-700', update: 'orange-500' };
+		const snapshotTierHours = { frequently: 0.25, hourly: 1, daily: 24, monthly: 730.5, yearly: 8766, update: 1 };
+		const snapshotNow = moment();
+		const snapshotEntries = _.filter(_.map(snapshots, (snapshot) => {
+			const segments = snapshot.snapshotName.split('_');
+			const isUpdate = (_.toLower(_.first(segments)) === 'update');
+			const stamp = (isUpdate ? _.tail(segments) : segments.slice(1, -1));
+			const createdMoment = moment.utc(stamp.join(' '), 'YYYY-MM-DD HH:mm:ss', true).local();
+			return {
+				name: snapshot.snapshotName,
+				key: stamp.join('_'),
+				tier: (isUpdate ? 'update' : _.toLower(_.last(segments))),
+				createdMoment,
+				age: Math.max(snapshotNow.diff(createdMoment, 'hours', true), 0),
+				size: snapshot.properties?.used?.value || 0,
+				hasImageDigests: !_.isEmpty(_.attempt(JSON.parse, snapshot.properties?.['univrs:images']?.value))
+			};
+		}), (entry) => { return entry.createdMoment.isValid() && _.includes(snapshotTierOrder, entry.tier); });
+		const snapshotPoints = _.orderBy(_.map(_.groupBy(snapshotEntries, 'key'), (entries, key) => {
+			return {
+				key,
+				snapshot: (_.find(entries, { tier: 'update' }) || _.find(entries, 'hasImageDigests') || entries[0]).name,
+				canRollback: _.some(entries, 'hasImageDigests'),
+				createdMoment: entries[0].createdMoment,
+				age: entries[0].age,
+				tiers: _.intersection(snapshotTierOrder, _.map(entries, 'tier')),
+				freed: _.sumBy(entries, 'size')
+			};
+		}), (point) => { return point.createdMoment.valueOf(); }, ['desc']);
+	%>
+	<%if (!_.isEmpty(snapshotPoints)) {%>
+		<%
+			const snapshotTiers = _.filter(snapshotTierOrder, (tier) => { return _.some(snapshotEntries, { tier }); });
+			const snapshotMaxSize = _.max(_.map(snapshotEntries, 'size')) || 0;
+			const snapshotRadius = (size, min, max) => { return (snapshotMaxSize > 0 ? min + Math.sqrt(size / snapshotMaxSize) * (max - min) : min); };
+			const selectedPoint = _.find(snapshotPoints, { key: selectedSnapshot }) || _.first(snapshotPoints);
+			const selectedIndex = _.indexOf(snapshotPoints, selectedPoint);
+			const snapshotSpan = (hours) => {
+				if (hours < 48) {
+					return `${Math.round(hours)}h`;
+				}
+				if (hours < 1461) {
+					return `${Math.round(hours / 24)}d`;
+				}
+				if (hours < 8766) {
+					return `${Math.round(hours / 730.5)}mo`;
+				}
+				return `${Math.round(hours / 8766)}y`;
+			};
+			const snapshotSegments = _.map(_.filter(_.reduce(snapshotTiers, (segments, tier) => {
+				const start = _.last(segments)?.end || 0;
+				return [...segments, { start, end: Math.max(start, _.max(_.map(_.filter(snapshotEntries, { tier }), 'age'))) }];
+			}, []), (segment) => { return segment.end > segment.start; }), (segment, index, segments) => {
+				return { ...segment, from: index / segments.length, to: (index + 1) / segments.length };
+			});
+			const snapshotPosition = (age) => {
+				const segment = _.find(snapshotSegments, (candidate) => { return age <= candidate.end; }) || _.last(snapshotSegments);
+				if (!segment) {
+					return 0;
+				}
+				return segment.from + _.clamp((age - segment.start) / (segment.end - segment.start), 0, 1) * (segment.to - segment.from);
+			};
+			const snapshotTicks = _.map(snapshotSegments, (segment, index) => { return [segment.end, snapshotSpan(segment.end), index === snapshotSegments.length - 1]; });
+			const snapshotLabel = (point) => {
+				const createdMoment = point.createdMoment;
+				const coarsest = _.last(point.tiers);
+				if (createdMoment.isSame(snapshotNow, 'day')) {
+					return `Today ${createdMoment.format('HH:mm')}`;
+				}
+				if (createdMoment.isSame(snapshotNow.clone().subtract(1, 'day'), 'day')) {
+					return `Yesterday ${createdMoment.format('HH:mm')}`;
+				}
+				if (_.includes(['monthly', 'yearly'], coarsest) && createdMoment.clone().utc().date() === 1 && createdMoment.clone().utc().hour() === 0) {
+					return createdMoment.format('MMM YYYY');
+				}
+				if (_.includes(['frequently', 'hourly'], coarsest)) {
+					return createdMoment.format('ddd D MMM, HH:mm');
+				}
+				if (coarsest === 'daily') {
+					return createdMoment.format(createdMoment.isSame(snapshotNow, 'year') ? 'ddd D MMM' : 'ddd D MMM YYYY');
+				}
+				return createdMoment.format('D MMM YYYY, HH:mm');
+			};
+			const snapshotTip = (point) => {
+				return `<div class='text-start'><div class='fw-semibold'>${snapshotLabel(point)}</div><div>${point.createdMoment.format('YYYY-MM-DD HH:mm:ss')} · ${point.createdMoment.fromNow()}</div><div>${_.map(point.tiers, _.startCase).join(' + ')} · ${prettyBytes(point.freed, { binary: true })}</div></div>`;
+			};
+			const orbitCenter = 200;
+			const orbitStep = (snapshotTiers.length > 1 ? Math.min(40, 120 / (snapshotTiers.length - 1)) : 0);
+			const orbits = _.map(snapshotTiers, (tier, index) => {
+				const tierEntries = _.filter(snapshotEntries, { tier });
+				return {
+					tier,
+					radius: 64 + (snapshotTiers.length - 1 - index) * orbitStep,
+					window: Math.max(tierEntries.length * snapshotTierHours[tier], _.max(_.map(tierEntries, 'age')) * 1.02),
+					entries: _.orderBy(tierEntries, ['size'], ['desc'])
+				};
+			});
+			const orbitPoint = (orbit, age) => {
+				const angle = (-84 + Math.min(age / orbit.window, 1) * 348) * Math.PI / 180;
+				return { x: orbitCenter + orbit.radius * Math.cos(angle), y: orbitCenter + orbit.radius * Math.sin(angle) };
+			};
+		%>
+		<div class="card-body">
+			<div class="d-flex flex-wrap align-items-center justify-content-between gap-5">
+				<div class="d-flex flex-wrap align-items-center gap-3 min-w-0 small fg-4">
+					<span class="fs-xl fw-light fg-body"><%=snapshotLabel(selectedPoint)%></span>
+					<%_.each(selectedPoint.tiers, (tier) => {%>
+						<span class="badge bg-transparent rounded-pill border fw-normal fg-<%-snapshotTierColors[tier]%> border-<%-snapshotTierColors[tier]%>"><%=_.startCase(tier)%></span>
+					<%})%>
+				</div>
+				<div class="d-flex gap-3">
+					<%if (browse) {%>
+						<u-button variant="secondary" size="sm" class="snapshot-browse" data-browse-root="<%-browse.root%>" data-browse-root-name="<%-browse.rootName%>" data-browse-snapshot="<%-selectedPoint.snapshot%>" data-browse-date="<%-selectedPoint.createdMoment.format('D MMM YYYY, HH:mm')%>"><i class="icon-regular icon-folder-open icon-fw"></i>Browse files</u-button>
+					<%}%>
+					<%=actions(selectedPoint)%>
+				</div>
+			</div>
+		</div>
+		<div class="card-body border-0 pt-0 d-none md:d-block">
+			<small class="d-block fg-4 text-uppercase mb-3">Timeline</small>
+			<div class="position-relative" style="height: 26px;">
+				<%_.each(_.initial(snapshotTicks), ([hours]) => {%>
+					<span class="position-absolute top-0 bottom-0 border-start" style="left: calc(0.5rem + (100% - 1rem) * <%=snapshotPosition(hours)%>);"></span>
+				<%})%>
+				<%_.each(_.orderBy(snapshotPoints, ['freed'], ['desc']), (point) => {%>
+					<%
+						const color = snapshotTierColors[_.last(point.tiers)];
+						const diameter = snapshotRadius(point.freed, 3, 9) * 2;
+					%>
+					<span class="position-absolute top-50 translate-middle rounded-circle cursor-pointer <%=(point.freed > 0 ? `bg-${color}` : `bg-body border border-2 border-${color}`)%>" style="left: calc(0.5rem + (100% - 1rem) * <%=snapshotPosition(point.age)%>); width: clamp(6px, <%=(diameter / 6).toFixed(2)%>vw, <%=diameter%>px); aspect-ratio: 1; <%=(point === selectedPoint ? 'outline: 2px solid var(--black); outline-offset: 1px;' : '')%>" data-snapshot="<%-point.key%>" data-bs-toggle="tooltip" data-bs-original-title="<%-snapshotTip(point)%>"></span>
+				<%})%>
+			</div>
+			<div class="form-range">
+				<input type="range" class="snapshot-scrubber form-range-input" min="0" max="1000" value="<%=Math.round(snapshotPosition(selectedPoint.age) * 1000)%>" data-selected="<%-selectedPoint.key%>" data-keys="<%-_.map(snapshotPoints, 'key').join(',')%>" data-positions="<%-_.map(snapshotPoints, (point) => { return snapshotPosition(point.age).toFixed(4); }).join(',')%>">
+			</div>
+			<div class="position-relative small fg-4" style="height: 1.25rem;">
+				<%_.each(snapshotTicks, ([hours, label, last]) => {%>
+					<span class="position-absolute <%=(last ? 'end-0' : 'translate-middle-x')%>" style="<%=(last ? '' : `left: calc(0.5rem + (100% - 1rem) * ${snapshotPosition(hours)});`)%>"><%=label%></span>
+				<%})%>
+				<span class="position-absolute start-0 fw-semibold fg-emphasis-secondary">Now</span>
+			</div>
+		</div>
+		<div class="card-body border-0 pt-0 md:d-none">
+			<svg class="d-block mx-auto" viewBox="0 0 400 400" style="width: 100%; max-width: 360px;">
+				<%_.each(orbits, (orbit) => {%>
+					<circle cx="<%=orbitCenter%>" cy="<%=orbitCenter%>" r="<%=orbit.radius%>" fill="none" style="stroke: var(--border-color);"/>
+					<text x="<%=orbitCenter - 6%>" y="<%=orbitCenter - orbit.radius + 4%>" text-anchor="end" font-size="10" class="fg-4" fill="currentColor"><%=snapshotSpan(orbit.window)%></text>
+				<%})%>
+				<line x1="<%=orbitCenter%>" x2="<%=orbitCenter%>" y1="<%=orbitCenter - _.first(orbits).radius - 12%>" y2="<%=orbitCenter - 40%>" style="stroke: var(--border-color);"/>
+				<text x="<%=orbitCenter + 5%>" y="<%=orbitCenter - _.first(orbits).radius - 8%>" font-size="10" font-weight="600" class="fg-emphasis-secondary" fill="currentColor">Now</text>
+				<circle cx="<%=orbitCenter%>" cy="<%=orbitCenter%>" r="30" class="fg-primary" fill="currentColor" fill-opacity="0.1"/>
+				<%if (icon) {%>
+					<image href="<%-icon%>" x="<%=orbitCenter - 18%>" y="<%=orbitCenter - 18%>" width="36" height="36"/>
+				<%}%>
+				<%_.each(orbits, (orbit) => {%>
+					<%_.each(orbit.entries, (entry) => {%>
+						<%
+							const position = orbitPoint(orbit, entry.age);
+							const point = _.find(snapshotPoints, { key: entry.key });
+						%>
+						<circle cx="<%=position.x%>" cy="<%=position.y%>" r="<%=snapshotRadius(entry.size, 3.5, 15) + (point === selectedPoint ? 1.5 : 0)%>" class="cursor-pointer fg-<%-snapshotTierColors[entry.tier]%>" style="fill: <%=(entry.size > 0 ? 'currentColor' : 'var(--bg-body)')%>; stroke: <%=(point === selectedPoint ? 'var(--black)' : (entry.size > 0 ? 'var(--bg-body)' : 'currentColor'))%>; stroke-width: <%=(point === selectedPoint ? 2 : (entry.size > 0 ? 1.2 : 1.5))%>;" data-snapshot="<%-entry.key%>" data-bs-toggle="tooltip" data-bs-original-title="<%-snapshotTip(point)%>"/>
+					<%})%>
+				<%})%>
+			</svg>
+		</div>
+		<div class="card-body border-0 pt-0">
+			<div class="d-flex align-items-center justify-content-between small fg-4">
+				<u-button variant="secondary" size="sm" data-snapshot="<%-snapshotPoints[Math.max(selectedIndex - 1, 0)].key%>"><i class="icon-solid icon-chevron-left icon-fw"></i>Newer</u-button>
+				<span>Restore point <%=selectedIndex + 1%> of <%=_.size(snapshotPoints)%></span>
+				<u-button variant="secondary" size="sm" data-snapshot="<%-snapshotPoints[Math.min(selectedIndex + 1, snapshotPoints.length - 1)].key%>">Older<i class="icon-solid icon-chevron-right icon-fw"></i></u-button>
+			</div>
+		</div>
+		<%if (browse) {%>
+			<div class="card-body border-top pb-0">
+				<div class="row g-3 align-items-center">
+					<div class="col md:col-5 xl:col-4 mb--3">
+						<u-input type="search" name="search" label="Search in snapshots" class="snapshot-search" <%=(snapshotSearching ? 'disabled' : '')%>></u-input>
+					</div>
+					<%
+						const snapshotFilterGroups = [
+							{ key: 'type', label: 'Type', options: [['', 'Any'], ['file', 'Files'], ['dir', 'Folders']] },
+							{ key: 'state', label: 'State', options: [['', 'Any'], ['live', 'Live'], ['modified', 'Modified'], ['renamed', 'Renamed or moved'], ['unchanged', 'Unchanged'], ['deleted', 'Deleted']] },
+							{ key: 'modified', label: 'Modified', options: [['', 'Any'], ['1d', 'Last 24 hours'], ['7d', 'Last 7 days'], ['30d', 'Last 30 days'], ['365d', 'Last year']] },
+							{ key: 'size', label: 'Size', options: [['', 'Any'], ['small', 'Under 1 MiB'], ['medium', '1 MiB – 100 MiB'], ['large', '100 MiB – 1 GiB'], ['huge', 'Over 1 GiB']] }
+						];
+					%>
+					<div class="col-auto">
+						<div class="d-flex align-items-center gap-3 mb-5">
+							<div class="dropdown">
+								<button type="button" class="btn-sm btn-icon btn-outline theme-secondary position-relative" data-bs-toggle="menu" data-bs-auto-close="outside" <%=(snapshotSearching ? 'disabled' : '')%>>
+									<i class="icon-solid icon-filter icon-width-auto"></i>
+									<span class="badge rounded-pill theme-primary position-absolute top-0 start-100 translate-middle"><%=(_.size(_.compact(_.values(snapshotFilter))) || '')%></span>
+								</button>
+								<div class="menu" style="width: 320px;">
+									<%_.each(snapshotFilterGroups, (group) => {%>
+										<h6 class="menu-header text-uppercase"><%-group.label%></h6>
+										<div class="d-flex flex-wrap gap-3 px-3 pb-3">
+											<%_.each(group.options, ([value, label]) => {%>
+												<button type="button" class="chip <%=(_.toLower(value) === _.toLower(snapshotFilter[group.key] || '') ? 'active' : '')%>" data-snapshot-filter="<%-group.key%>" data-value="<%-value%>" <%=(snapshotSearching ? 'disabled' : '')%>><%-label%></button>
+											<%})%>
+										</div>
+										<div class="menu-divider"></div>
+									<%})%>
+									<button type="button" class="menu-item" data-snapshot-filter="clear" <%=(snapshotSearching ? 'disabled' : '')%>>
+										<i class="icon-solid icon-rotate-left icon-fw"></i>
+										Reset filters
+									</button>
+								</div>
+							</div>
+							<%if (snapshotSearching) {%>
+								<div class="spinner-border spinner-sm fg-gray-600"></div>
+							<%}%>
+						</div>
+					</div>
+				</div>
+			</div>
+			<%if (snapshotResults) {%>
+				<%
+					const resultPoint = (snapshotName) => {
+						return _.find(snapshotPoints, { key: snapshotName.split('_').slice(1, -1).join('_') });
+					};
+					const resultMoment = (snapshotName) => {
+						return moment.utc(snapshotName.split('_').slice(1, -1).join(' '), 'YYYY-MM-DD HH:mm:ss', true).local();
+					};
+					const isResultPruned = (snapshotName) => {
+						const createdMoment = resultMoment(snapshotName);
+						return !resultPoint(snapshotName) && createdMoment.isValid() && createdMoment.isBefore(_.first(snapshotPoints).createdMoment);
+					};
+					const resultDate = (snapshotName) => {
+						const createdMoment = resultMoment(snapshotName);
+						return (createdMoment.isValid() ? createdMoment.format('D MMM YYYY, HH:mm') : snapshotName);
+					};
+					const resultTree = { children: {} };
+					_.each(snapshotResults.results, (result) => {
+						let nodePath = '';
+						const node = _.reduce(_.compact(result.path.split('/')), (parent, segment) => {
+							nodePath = `${nodePath}/${segment}`;
+							parent.children[segment] = parent.children[segment] || { name: segment, path: nodePath, mountpoint: result.mountpoint, children: {} };
+							return parent.children[segment];
+						}, resultTree);
+						node.item = result;
+					});
+					const resultRows = [];
+					const walkResults = (parent, depth) => {
+						const children = _.orderBy(_.values(parent.children), [(node) => { return (node.item?.deleted ? 0 : 1); }, (node) => { return _.toLower(node.name); }]);
+						_.each(children, (child, index) => {
+							let node = child;
+							let name = child.name;
+							while (!node.item && _.size(node.children) === 1 && !_.isEmpty(_.head(_.values(node.children)).children)) {
+								node = _.head(_.values(node.children));
+								name = `${name}/${node.name}`;
+							}
+							resultRows.push({ node, name, depth, isLast: (index === children.length - 1), hasChildren: !_.isEmpty(node.children) });
+							walkResults(node, depth + 1);
+							resultRows.push({ close: true });
+						});
+					};
+					walkResults(resultTree, 0);
+					const browseTarget = (item, version) => {
+						const marker = `/.zfs/snapshot/${version.snapshot}`;
+						const index = (version.snapshotPath || '').indexOf(marker);
+						if (index === -1 || !_.includes(['file', 'dir'], item.type)) {
+							return null;
+						}
+
+						const relPath = version.snapshotPath.slice(index + marker.length);
+						const segments = relPath.split('/');
+						if (segments[1] !== 'data' || segments[3] !== 'files' || _.toLower(segments[2]) === '__groupfolders') {
+							return null;
+						}
+						if (item.type === 'dir') {
+							return { path: relPath, focus: '' };
+						}
+
+						return (segments.length > 4 ? { path: _.initial(segments).join('/'), focus: relPath } : null);
+					};
+					const nodeDownloads = (node, folder) => {
+						const item = node.item;
+						const suffix = (item ? item.path.slice(folder.path.length) : '');
+						const versions = _.filter(item?.versions, (version) => {
+							return version.snapshotPath && _.endsWith(version.snapshotPath, suffix) && !_.endsWith(version.snapshotPath.slice(0, -suffix.length), `/.zfs/snapshot/${version.snapshot}`);
+						});
+						return _.concat(
+							_.map(versions, (version) => {
+								return { snapshot: version.snapshot, path: version.snapshotPath.slice(0, -suffix.length) };
+							}),
+							(item?.deleted && item.lastSeenSnap ? [{ snapshot: item.lastSeenSnap, path: `${folder.mountpoint}/.zfs/snapshot/${item.lastSeenSnap}${folder.path}` }] : []),
+							_.flatMap(_.values(node.children), (child) => { return nodeDownloads(child, folder); })
+						);
+					};
+					const folderDownloads = (folder) => {
+						const downloads = _.uniqBy(_.map(nodeDownloads(folder, folder), (download) => {
+							return { ...download, key: download.snapshot.split('_').slice(1, -1).join('_') };
+						}), 'key');
+						return _.map(_.orderBy(_.reject(downloads, ({ snapshot }) => { return isResultPruned(snapshot); }), ['key'], ['asc']), ({ snapshot, path }) => {
+							return {
+								label: resultDate(snapshot),
+								path
+							};
+						});
+					};
+					const resultIcons = { file: 'icon-file', dir: 'icon-folder', link: 'icon-link' };
+				%>
+				<div class="card-body pt-0">
+					<div class="d-flex align-items-center gap-3 mb-3">
+						<small class="fg-4"><%=_.size(snapshotResults.results)%><%=(snapshotResults.hasMore ? '+' : '')%> <%=(_.size(snapshotResults.results) === 1 && !snapshotResults.hasMore ? 'match' : 'matches')%> for “<%-snapshotResults.query.term%>”</small>
+						<button type="button" class="snapshot-search-clear btn-link d-inline-block btn-sm text-decoration-none" <%=(snapshotSearching ? 'disabled' : '')%>>Clear</button>
+					</div>
+					<%if (snapshotResults.message) {%>
+						<div class="small fg-danger mb-3"><%-snapshotResults.message%></div>
+					<%}%>
+					<%if (_.isEmpty(snapshotResults.results) && !snapshotResults.message) {%>
+						<div class="small fg-emphasis-secondary">No files match.</div>
+					<%}%>
+					<div class="tree-rows">
+						<%_.each(resultRows, (row) => {%>
+							<%if (row.close) {%>
+								</div>
+							<%} else {%>
+								<%const item = row.node.item;%>
+								<div class="tree-row <%=(row.depth && !row.isLast ? 'tree-line' : '')%>" data-depth="<%=row.depth%>" style="--tree-elbow-x: 0.55rem; --tree-elbow-height: 1rem; --tree-line-x: 0.55rem; --tree-line-top: 0; <%=(row.depth ? 'padding-left: 1.5rem;' : '')%>">
+									<div class="tree-row py-1 <%=(row.hasChildren ? 'tree-line' : '')%>" data-depth="0" style="--tree-line-x: 0.55rem; --tree-line-top: calc(1rem + var(--tree-icon-radius));">
+										<%if (item) {%>
+											<div class="d-flex gap-3 min-w-0">
+												<i class="icon-light <%-resultIcons[item.type] || 'icon-file'%> icon-fw lh-md fg-4"></i>
+												<div class="min-w-0">
+													<div class="d-flex align-items-center gap-3 min-w-0">
+														<span class="text-truncate <%=(item.deleted ? 'fg-emphasis-secondary' : '')%>"><%-row.name%></span>
+														<%if (item.deleted) {%>
+															<span class="badge bg-transparent rounded-pill border fw-normal fg-red-500 border-red-500">Deleted</span>
+														<%}%>
+													</div>
+													<%if (!_.isEmpty(item.versions)) {%>
+														<%
+															const versionEntries = _.concat(
+																_.map(item.versions, (version, index) => {
+																	const from = version.renamedFrom;
+																	const fromFolder = (from ? from.slice(0, from.lastIndexOf('/')) : null);
+																	const fromName = (from ? from.slice(from.lastIndexOf('/') + 1) : null);
+																	const sameFolder = (fromFolder === item.path.slice(0, item.path.lastIndexOf('/')));
+																	const sameName = (fromName === item.path.slice(item.path.lastIndexOf('/') + 1));
+																	let renamedFrom = from;
+																	if (from && sameFolder) {
+																		renamedFrom = fromName;
+																	} else if (from && sameName) {
+																		renamedFrom = fromFolder || '/';
+																	}
+																	return {
+																		snapshot: version.snapshot,
+																		label: (from && !sameFolder ? 'moved' : (version.change || (index ? 'changed' : 'added'))),
+																		renamedFrom,
+																		lastSeen: (item.deleted && version.snapshot === item.lastSeenSnap),
+																		snapshotPath: version.snapshotPath,
+																		size: version.size
+																	};
+																}),
+																(item.deleted && item.lastSeenSnap && !_.some(item.versions, { snapshot: item.lastSeenSnap }) ? [{ snapshot: item.lastSeenSnap, label: 'last seen' }] : [])
+															);
+														%>
+														<small class="d-flex flex-column fg-4">
+															<%_.each(versionEntries, (version) => {%>
+																<%const versionPoint = resultPoint(version.snapshot);%>
+																<span class="<%=(version.renamedFrom ? 'text-break' : 'text-nowrap')%>">
+																	<%if (versionPoint) {%>
+																		<button type="button" class="btn-link d-inline-block btn-sm p-0 align-baseline text-decoration-none min-h-0" data-snapshot="<%-versionPoint.key%>"><%=versionPoint.createdMoment.format('D MMM YYYY, HH:mm')%></button>
+																	<%} else if (isResultPruned(version.snapshot)) {%>
+																		<span data-bs-toggle="tooltip" data-bs-original-title="This snapshot no longer exists"><%-resultDate(version.snapshot)%></span>
+																	<%} else {%>
+																		<%-resultDate(version.snapshot)%>
+																	<%}%>
+																	<%=` · ${version.label}`%>
+																	<%if (version.renamedFrom) {%>
+																		from <span class="fg-emphasis-secondary"><%-version.renamedFrom%></span>
+																	<%}%>
+																	<%=(version.lastSeen ? ' · last seen' : '')%>
+																	<%=(item.type === 'dir' || _.isUndefined(version.size) ? '' : ` · ${prettyBytes(version.size || 0, { binary: true })}`)%>
+																	<%const versionTarget = (isResultPruned(version.snapshot) ? null : browseTarget(item, version));%>
+																	<%if (versionTarget) {%>
+																		<a href="#" class="snapshot-browse ms-1 text-decoration-none" data-bs-toggle="tooltip" data-bs-original-title="Browse files" data-browse-root="<%-browse.root%>" data-browse-root-name="<%-browse.rootName%>" data-browse-snapshot="<%-version.snapshot%>" data-browse-date="<%-(versionPoint ? versionPoint.createdMoment.format('D MMM YYYY, HH:mm') : resultDate(version.snapshot))%>" data-browse-path="<%-versionTarget.path%>" data-browse-focus="<%-versionTarget.focus%>"><i class="icon-solid icon-folder-open"></i></a>
+																	<%}%>
+																	<%if (canDownloadSnapshotFiles && _.includes(['file', 'dir'], item.type) && version.snapshotPath && !isResultPruned(version.snapshot)) {%>
+																		<a href="/snapshots/download?path=<%=encodeURIComponent(version.snapshotPath)%>" class="ms-1 text-decoration-none" download data-bs-toggle="tooltip" data-bs-original-title="Download"><i class="icon-solid icon-download"></i></a>
+																	<%}%>
+																	<%if (item.type === 'file' && version.snapshotPath && !isResultPruned(version.snapshot)) {%>
+																		<a href="#" class="snapshot-restore ms-1 text-decoration-none" data-bs-toggle="tooltip" data-bs-original-title="Restore" data-restore-root="<%-browse.root%>" data-restore-root-name="<%-browse.rootName%>" data-path="<%-version.snapshotPath%>" data-date="<%-(versionPoint ? versionPoint.createdMoment.format('D MMM YYYY, HH:mm') : resultDate(version.snapshot))%>"><i class="icon-solid icon-clock-rotate-left"></i></a>
+																	<%}%>
+																</span>
+															<%})%>
+														</small>
+													<%} else {%>
+														<small class="d-block fg-4">Live · no versions</small>
+													<%}%>
+												</div>
+											</div>
+										<%} else {%>
+											<div class="d-flex align-items-center gap-3 min-w-0 fg-4">
+												<i class="icon-light icon-folder-open icon-fw"></i>
+												<span class="text-truncate"><%-row.name%></span>
+												<%const downloads = (canDownloadSnapshotFiles && row.node.mountpoint && (row.depth > 0 || _.includes(row.name, '/')) ? folderDownloads(row.node) : []);%>
+												<%if (!_.isEmpty(downloads)) {%>
+													<div class="dropdown">
+														<span class="small fg-primary cursor-pointer" data-bs-toggle="menu"><i class="icon-solid icon-download"></i></span>
+														<div class="menu shadow shadow-opacity-100 overflow-y-auto" style="max-height: 16rem;">
+															<h6 class="menu-header">Download as of<i class="icon-solid icon-triangle-exclamation icon-fw fg-orange-500 ms-1" data-bs-toggle="tooltip" data-bs-original-title="Downloads the entire folder as it was at that date, not just the files shown in the results."></i></h6>
+															<%_.each(downloads, (entry) => {%>
+																<a href="/snapshots/download?path=<%=encodeURIComponent(entry.path)%>" class="menu-item" download><%-entry.label%></a>
+															<%})%>
+														</div>
+													</div>
+												<%}%>
+											</div>
+										<%}%>
+									</div>
+							<%}%>
+						<%})%>
+					</div>
+					<%if (snapshotResults.hasMore) {%>
+						<u-button variant="secondary" size="sm" class="snapshot-search-more mt-5" <%=(snapshotSearching ? 'disabled' : '')%>>Load more</u-button>
+					<%}%>
+				</div>
+			<%}%>
+		<%}%>
+	<%}%>
+</div>

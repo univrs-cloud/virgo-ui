@@ -1,7 +1,6 @@
 import Job from 'stores/job';
 import Docker from 'stores/docker';
 import Host from 'stores/host';
-import Indexer from 'stores/indexer';
 import { createSubscription, storeAttach } from 'libs/services/module_store_subscription';
 
 const DEFAULT_NETWORK_INTERFACE_SPEED_BPS = 1_000_000_000;
@@ -175,34 +174,6 @@ const rollback = (data) => {
 	Docker.rollback(data);
 };
 
-const searchSnapshots = (query) => {
-	return Indexer.search(query);
-};
-
-const browseSnapshot = (config) => {
-	return Indexer.browse(config);
-};
-
-const browseSnapshotChanges = (config) => {
-	return Indexer.browseChanges(config);
-};
-
-const getRestoreFolders = (path) => {
-	return Indexer.getRestoreFolders(path);
-};
-
-const inspectRestore = (config) => {
-	return Indexer.inspectRestore(config);
-};
-
-const restoreSnapshotFile = (config) => {
-	return Indexer.restore(config);
-};
-
-const restoreSnapshotSelection = (config) => {
-	return Indexer.restoreSelection(config);
-};
-
 const getFilters = () => {
 	let stored = null;
 	try {
@@ -243,13 +214,6 @@ export {
 	performServiceAction,
 	updateSnapshots,
 	rollback,
-	searchSnapshots,
-	browseSnapshot,
-	browseSnapshotChanges,
-	getRestoreFolders,
-	inspectRestore,
-	restoreSnapshotFile,
-	restoreSnapshotSelection,
 	getFilters,
 	setFilters
 };

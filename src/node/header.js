@@ -89,6 +89,7 @@ const handleWindowClick = (event) => {
 
 	event.preventDefault();
 	if (event.target.closest('.close-window')) {
+		// Header tooltips open on hover only, so blur() would leave them open; hide() closes them.
 		bootstrap.Tooltip.getInstance(link)?.hide();
 		windowService.close(link.dataset.windowId);
 		return;
