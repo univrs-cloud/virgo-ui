@@ -40,7 +40,7 @@
 								<div class="d-flex align-items-center gap-3 min-w-0">
 									<i class="icon-light <%=(entry.kind === 'file' ? 'icon-file' : 'icon-folder')%> icon-fw fg-4"></i>
 									<div class="min-w-0">
-										<span class="d-block text-truncate"><%-entry.path.slice(dataPrefix.length)%></span>
+										<span class="d-block text-truncate"><%-displayPath(entry.path)%></span>
 										<%if (entry.kind === 'group') {%>
 											<a href="#" class="browse-expand d-block small text-decoration-none" data-path="<%-entry.path%>"><%=_.size(entry.items)%> files<i class="icon-solid <%=(entry.isOpen ? 'icon-caret-up' : 'icon-caret-down')%> icon-xs ms-1"></i></a>
 										<%} else if (entry.kind === 'folder' && !_.isEmpty(entry.items)) {%>
@@ -115,7 +115,7 @@
 								<%if (listing?.isDeleted) {%>
 									<div class="small fg-4 mt-3">This folder was deleted.</div>
 								<%} else if (listing?.movedTo) {%>
-									<div class="small fg-4 text-break mt-3">This folder is now at <%-listing.movedTo.slice(dataPrefix.length)%>.</div>
+									<div class="small fg-4 text-break mt-3">This folder is now at <%-displayPath(listing.movedTo)%>.</div>
 								<%}%>
 								<%if (listing?.isIndexed === false) {%>
 									<div class="small fg-4 mt-3">This restore point is not indexed yet, so changes are not shown.</div>
@@ -185,7 +185,7 @@
 												<span class="d-block text-truncate"><%-row.label%></span>
 											<%}%>
 											<%if (row.currentPath) {%>
-												<small class="d-block fg-4 text-truncate">Now at <%-row.currentPath.slice(dataPrefix.length)%></small>
+												<small class="d-block fg-4 text-truncate">Now at <%-displayPath(row.currentPath)%></small>
 											<%}%>
 										</div>
 									</div>

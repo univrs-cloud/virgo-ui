@@ -1,0 +1,5 @@
+<%if (_.some(appJobs, { name: 'app:rollback' })) {%>
+	<u-button variant="secondary" size="sm" class="snapshot-action" disabled><i class="icon-solid icon-spinner-third icon-fw icon-spin"></i>Roll back</u-button>
+<%} else {%>
+	<u-button variant="<%=(point.canRollback ? 'danger' : 'secondary')%>" size="sm" class="snapshot-action" data-rollback-snapshot="<%-point.snapshot%>" data-rollback-date="<%-point.createdMoment.format('D MMM YYYY, HH:mm')%>" <%=(point.canRollback ? 'subtle' : 'disabled')%>><i class="icon-regular icon-clock-rotate-left icon-fw"></i>Roll back</u-button>
+<%}%>

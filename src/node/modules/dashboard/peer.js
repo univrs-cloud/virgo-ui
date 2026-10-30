@@ -52,5 +52,5 @@ const performActions = (event) => {
 	actions[button.getAttribute('data-action')]?.();
 };
 
-document.addEventListener('click', performActions);
+document.addEventListener('click', performActions, true);
 peerService.subscribe([render]);

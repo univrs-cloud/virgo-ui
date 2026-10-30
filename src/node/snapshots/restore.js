@@ -1,8 +1,8 @@
-import modalPartial from 'node/modules/apps/partials/modals/snapshot_restore.html';
-import contentPartial from 'node/modules/apps/partials/modals/snapshot_restore_content.html';
-import conflictPartial from 'node/modules/apps/partials/modals/snapshot_restore_conflict.html';
-import folderPartial from 'node/modules/apps/partials/modals/snapshot_restore_folder.html';
-import * as appService from 'node/modules/apps/services/app';
+import modalPartial from 'node/snapshots/partials/modals/restore.html';
+import contentPartial from 'node/snapshots/partials/modals/restore_content.html';
+import conflictPartial from 'node/snapshots/partials/modals/restore_conflict.html';
+import folderPartial from 'node/snapshots/partials/modals/restore_folder.html';
+import * as snapshotService from 'node/snapshots/services/snapshot';
 
 const SNAPSHOT_PATH_PATTERN = /^.+?\/\.zfs\/snapshot\/[^/]+(\/.+)$/;
 const DATA_PREFIX = '/data/';
@@ -13,14 +13,13 @@ const folderTemplate = _.template(folderPartial);
 
 document.querySelector('body').insertAdjacentHTML('beforeend', modalPartial);
 
-const module = document.querySelector('#apps');
 const modal = document.querySelector('#snapshot-restore');
 const conflictModal = document.querySelector('#snapshot-restore-conflict');
 const browserModal = () => { return document.querySelector('#snapshot-browser'); };
 let state = null;
 
-const initialState = (file, selection = null) => {
-	return { file, selection, isLoading: true, isShown: false, folders: [], selected: null, draft: null, notice: null, error: null, busy: null, inspection: null };
+const initialState = (file, selection, root, rootName) => {
+	return { file, selection, root, rootName, isLoading: true, isShown: false, folders: [], selected: null, draft: null, notice: null, error: null, busy: null, inspection: null };
 };
 
 const renderContent = (element, html) => {
@@ -32,12 +31,20 @@ const renderContent = (element, html) => {
 	element.querySelector('.dialog-body')?.dispatchEvent(new Event('scroll'));
 };
 
+const displayPath = (path) => {
+	if (state.root && (path === state.root || _.startsWith(path, `${state.root}/`))) {
+		return `${state.rootName}${path.slice(state.root.length)}`;
+	}
+
+	return path.slice(DATA_PREFIX.length);
+};
+
 const render = () => {
 	if (!state) {
 		return;
 	}
 
-	const destination = (state.selected ? state.selected.slice(DATA_PREFIX.length) : '');
+	const destination = (state.selected ? displayPath(state.selected) : '');
 	const isCreating = Boolean(findFolder(state.folders, state.selected)?.isVirtual);
 	renderContent(modal, contentTemplate({ state, isCreating, folderTemplate }));
 	if (state.inspection) {
@@ -83,11 +90,19 @@ const findFolder = (folders, path) => {
 };
 
 const loadFolders = async (path) => {
-	const response = await appService.getRestoreFolders(path);
+	const response = await snapshotService.getRestoreFolders(path);
 	if (response?.status !== 'succeeded') {
 		throw new Error(response?.message || 'Could not load folders.');
 	}
 	return toFolders(response.folders);
+};
+
+const loadRoots = async (session) => {
+	if (!session.root) {
+		return await loadFolders();
+	}
+
+	return toFolders([{ name: session.rootName, path: session.root }]);
 };
 
 const openFolder = async (folder, session) => {
@@ -141,7 +156,7 @@ const open = async (event) => {
 	}
 
 	event.preventDefault();
-	bootstrap.Tooltip.getInstance(link)?.hide();
+	link.blur();
 	const relPath = SNAPSHOT_PATH_PATTERN.exec(link.dataset.path)?.[1];
 	if (!relPath) {
 		return;
@@ -152,12 +167,12 @@ const open = async (event) => {
 		date: link.dataset.date,
 		name: relPath.slice(relPath.lastIndexOf('/') + 1),
 		folder: relPath.slice(0, relPath.lastIndexOf('/'))
-	});
+	}, null, link.dataset.restoreRoot, link.dataset.restoreRootName);
 	state = session;
 	render();
 	bootstrap.Dialog.getOrCreateInstance(modal).show();
 	try {
-		session.folders = await loadFolders();
+		session.folders = await loadRoots(session);
 		if (state !== session) {
 			return;
 		}
@@ -177,13 +192,13 @@ const open = async (event) => {
 };
 
 const openSelection = async (event) => {
-	const session = initialState(null, event.detail);
+	const session = initialState(null, event.detail, event.detail.root, event.detail.rootName);
 	state = session;
 	document.body.append(modal, conflictModal);
 	render();
 	bootstrap.Dialog.getOrCreateInstance(modal).show();
 	try {
-		session.folders = await loadFolders();
+		session.folders = await loadRoots(session);
 	} catch (error) {
 		session.error = error.message;
 	}
@@ -202,7 +217,7 @@ const restoreSelection = async (session) => {
 	render();
 	let response;
 	try {
-		response = await appService.restoreSnapshotSelection({ snapshot: session.selection.snapshot, items: session.selection.items, excluded: session.selection.excluded, destination: session.selected });
+		response = await snapshotService.restoreSnapshotSelection({ snapshot: session.selection.snapshot, items: session.selection.items, excluded: session.selection.excluded, destination: session.selected });
 	} catch (error) {
 		response = { status: 'failed', message: error.message };
 	}
@@ -270,7 +285,7 @@ const addFolder = async (event) => {
 	}
 
 	event.preventDefault();
-	bootstrap.Tooltip.getInstance(link)?.hide();
+	link.blur();
 	const session = state;
 	const folder = findFolder(session.folders, link.closest('.restore-folder').dataset.path);
 	if (!folder) {
@@ -368,7 +383,7 @@ const removeFolder = (event) => {
 	}
 
 	event.preventDefault();
-	bootstrap.Tooltip.getInstance(link)?.hide();
+	link.blur();
 	const path = link.closest('.restore-folder').dataset.path;
 	const parent = findFolder(state.folders, path.slice(0, path.lastIndexOf('/')));
 	if (!parent) {
@@ -391,7 +406,7 @@ const restoreFile = async (session, conflict) => {
 	render();
 	let response;
 	try {
-		response = await appService.restoreSnapshotFile({ snapshotPath: session.file.path, destination: session.selected, conflict });
+		response = await snapshotService.restoreSnapshotFile({ snapshotPath: session.file.path, destination: session.selected, conflict });
 	} catch (error) {
 		response = { status: 'failed', message: error.message };
 	}
@@ -427,7 +442,7 @@ const submit = async (event) => {
 	render();
 	let response;
 	try {
-		response = await appService.inspectRestore({ snapshotPath: session.file.path, destination: session.selected });
+		response = await snapshotService.inspectRestore({ snapshotPath: session.file.path, destination: session.selected });
 	} catch (error) {
 		response = { status: 'failed', message: error.message };
 	}
@@ -489,8 +504,8 @@ const restore = () => {
 	bootstrap.Dialog.getInstance(conflictModal)?.hide();
 };
 
-module.addEventListener('click', open);
-module.addEventListener('snapshot-restore-selection', openSelection);
+document.addEventListener('click', open, true);
+document.addEventListener('snapshot-restore-selection', openSelection);
 modal.addEventListener('click', toggleFolder);
 modal.addEventListener('click', selectFolder);
 modal.addEventListener('click', addFolder);

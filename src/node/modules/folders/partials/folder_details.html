@@ -186,23 +186,33 @@
 												<u-badge color="<%=({ enabled: 'green', paused: 'orange', disabled: 'gray' })[snapshotMode]%>" tint="100" pill><%=_.upperFirst(snapshotMode)%></u-badge>
 												<span><%-({ enabled: `Snapshots are taken automatically${(snapshotRetention ? `, keeping ${snapshotRetention}` : '')}.`, paused: 'No new snapshots are taken. Existing ones are kept.', disabled: 'No snapshots are taken or kept.' })[snapshotMode]%></span>
 											</div>
+											<%if (!folder.canChangeSnapshots) {%>
+												<small class="d-block fg-4"><%-(folder.snapshotSource ? `Follows the snapshots of ${_.escape(folder.snapshotSource)}.` : 'Snapshots are never taken of this folder.')%></small>
+											<%}%>
 										</div>
-										<%if (!_.isEmpty(jobs)) {%>
-											<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-solid icon-gear icon-fw icon-spin"></i></span>
-										<%} else {%>
-											<div class="d-inline-flex align-items-center bg-2 rounded-3 px-1">
-												<%_.each([
-													{ mode: 'enabled', label: (snapshotMode === 'paused' ? 'Resume' : 'Enable'), icon: 'icon-play', color: 'fg-green-400', isAllowed: (snapshotMode !== 'enabled') },
-													{ mode: 'paused', label: 'Pause', icon: 'icon-pause', color: 'fg-orange-400', isAllowed: (snapshotMode === 'enabled') },
-													{ mode: 'disabled', label: 'Disable', icon: 'icon-ban', color: 'fg-red-400', isAllowed: (snapshotMode !== 'disabled') }
-												], ({ mode, label, icon, color, isAllowed }) => {%>
-													<a href="#" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 rounded-3 <%=(isAllowed ? '' : 'disabled')%>" data-action="snapshots" data-mode="<%-mode%>" data-bs-toggle="tooltip" data-bs-original-title="<%-label%>"><i class="icon-solid <%=icon%> icon-fw <%=(isAllowed ? color : 'fg-gray-300')%>"></i></a>
-												<%})%>
-											</div>
+										<%if (folder.canChangeSnapshots) {%>
+											<%if (!_.isEmpty(jobs)) {%>
+												<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-solid icon-gear icon-fw icon-spin"></i></span>
+											<%} else {%>
+												<div class="d-inline-flex align-items-center bg-2 rounded-3 px-1">
+													<%_.each([
+														{ mode: 'enabled', label: (snapshotMode === 'paused' ? 'Resume' : 'Enable'), icon: 'icon-play', color: 'fg-green-400', isAllowed: (snapshotMode !== 'enabled') },
+														{ mode: 'paused', label: 'Pause', icon: 'icon-pause', color: 'fg-orange-400', isAllowed: (snapshotMode === 'enabled') },
+														{ mode: 'disabled', label: 'Disable', icon: 'icon-ban', color: 'fg-red-400', isAllowed: (snapshotMode !== 'disabled') }
+													], ({ mode, label, icon, color, isAllowed }) => {%>
+														<a href="#" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 rounded-3 <%=(isAllowed ? '' : 'disabled')%>" data-action="snapshots" data-mode="<%-mode%>" data-bs-toggle="tooltip" data-bs-original-title="<%-label%>"><i class="icon-solid <%=icon%> icon-fw <%=(isAllowed ? color : 'fg-gray-300')%>"></i></a>
+													<%})%>
+												</div>
+											<%}%>
 										<%}%>
 									</div>
 								</div>
 							</div>
+							<%if (folder.snapshotBrowseRoot) {%>
+								<div class="snapshots card border-0">
+									<%=renderSnapshots(`folder:${folder.name}`, { snapshots: folder.snapshots, browse: { root: folder.snapshotBrowseRoot, rootName: folder.comment } })%>
+								</div>
+							<%}%>
 						</div>
 					<%}%>
 				</div>

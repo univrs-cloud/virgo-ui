@@ -2,19 +2,6 @@
 	<td style="min-width: 210px; max-width: 0;">
 		<div class="d-flex align-items-center mb--1">
 			<div class="text-truncate"><%-folder.comment%></div>
-			<%if (folder.snapshotPolicy) {%>
-				<%
-					const snapshotMode = _.toLower(folder.snapshotPolicy.mode);
-					const snapshotColors = { enabled: 'fg-green-400', paused: 'fg-orange-300', disabled: 'fg-gray-300' };
-					const snapshotRetention = _.map(_.filter(['frequently', 'hourly', 'daily', 'weekly', 'monthly', 'yearly'], (tier) => { return folder.snapshotPolicy.retention[tier] > 0; }), (tier) => { return `${folder.snapshotPolicy.retention[tier]} ${tier}`; }).join(', ');
-					const snapshotTips = {
-						enabled: `Snapshots enabled${(snapshotRetention ? `. Keeps ${snapshotRetention}.` : '')}`,
-						paused: 'Snapshots paused. No new snapshots are taken, existing ones are kept.',
-						disabled: 'Snapshots disabled. No snapshots are taken or kept.'
-					};
-				%>
-				<i class="icon-light icon-clock-rotate-left icon-fw ms-3 <%=snapshotColors[snapshotMode]%>" data-bs-toggle="tooltip" data-bs-original-title="<%-snapshotTips[snapshotMode]%>"></i>
-			<%}%>
 		</div>
 		<div class="d-flex">
 			<div class="text-truncate"><small class="fg-4"><%-folder.path%></small></div>
@@ -86,6 +73,24 @@
 		<u-progress shadow="false">
 			<u-progress-bar width="<%=folder.cap%>"></u-progress-bar>
 		</u-progress>
+	</td>
+	<td class="text-end text-nowrap d-none md:d-table-cell">
+		<%
+			const snapshotMode = _.toLower(folder.snapshotPolicy?.mode || 'disabled');
+			const snapshotSource = (folder.snapshotSource ? ` with ${folder.snapshotSource}` : '');
+		%>
+		<div class="d-flex align-items-center gap-3">
+			<%if (snapshotMode === 'enabled') {%>
+				<i class="icon-solid icon-circle-play icon-width-auto fg-green-200" data-bs-toggle="tooltip" data-bs-original-title="Snapshots enabled<%-snapshotSource%>"></i>
+			<%} else if (snapshotMode === 'paused') {%>
+				<i class="icon-solid icon-circle-pause icon-width-auto fg-orange-200" data-bs-toggle="tooltip" data-bs-original-title="Snapshots paused<%-snapshotSource%>"></i>
+			<%} else {%>
+				<i class="icon-solid icon-ban icon-width-auto fg-gray-200" data-bs-toggle="tooltip" data-bs-original-title="<%-(folder.snapshotDataset ? 'Snapshots disabled' : 'No snapshots are taken of this folder')%>"></i>
+			<%}%>
+			<%if (folder.canChangeSnapshots && snapshotMode !== 'disabled') {%>
+				<small class="fw-light fg-emphasis-secondary ms-auto"><%=prettyBytes(folder.storage?.snapshots || 0, { binary: true })%></small>
+			<%}%>
+		</div>
 	</td>
 	<td class="text-center px-0">
 		<%=folderActionsTemplate({ folder, jobs, inline: false })%>

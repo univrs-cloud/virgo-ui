@@ -1,10 +1,8 @@
-import modalPartial from 'node/modules/apps/partials/modals/snapshot_browser.html';
-import browserPartial from 'node/modules/apps/partials/modals/snapshot_browser_content.html';
-import * as appService from 'node/modules/apps/services/app';
+import modalPartial from 'node/snapshots/partials/modals/browser.html';
+import browserPartial from 'node/snapshots/partials/modals/browser_content.html';
+import * as snapshotService from 'node/snapshots/services/snapshot';
 import { getNodeViewBase } from 'node/view';
 
-const ROOT = '';
-const ROOT_NAME = 'Nextcloud';
 const DATA_PREFIX = '/data/';
 const CHANGES_PAGE = 500;
 const DOWNLOAD_URL = '/snapshots/download';
@@ -14,13 +12,12 @@ const browserTemplate = _.template(browserPartial);
 
 document.querySelector('body').insertAdjacentHTML('beforeend', modalPartial);
 
-const module = document.querySelector('#apps');
 const modal = document.querySelector('#snapshot-browser');
 let state = null;
 
 const parentOf = (path) => {
-	if (_.some(state.listings[ROOT]?.folders, { path })) {
-		return ROOT;
+	if (_.some(state.listings[state.root]?.folders, { path })) {
+		return state.root;
 	}
 
 	return path.slice(0, path.lastIndexOf('/'));
@@ -75,7 +72,7 @@ const fetchListing = async (session, path) => {
 		return;
 	}
 
-	const response = await appService.browseSnapshot({ snapshot: session.snapshot, path });
+	const response = await snapshotService.browseSnapshot({ snapshot: session.snapshot, path });
 	if (response?.status !== 'succeeded') {
 		throw new Error(response?.message || 'Could not load the folder.');
 	}
@@ -136,7 +133,7 @@ const select = async (item) => {
 	session.selected[item.path] = item;
 	const parent = parentOf(item.path);
 	const siblings = childrenOf(parent);
-	if (parent === ROOT || !siblings || !_.every(siblings, isFull)) {
+	if (parent === state.root || !siblings || !_.every(siblings, isFull)) {
 		return;
 	}
 
@@ -218,7 +215,7 @@ const selectMatches = async (item) => {
 		let offset = 0;
 		let hasMore = true;
 		while (hasMore && state === session) {
-			const response = await appService.browseSnapshotChanges({ snapshot: session.snapshot, path: item.path, states, offset });
+			const response = await snapshotService.browseSnapshotChanges({ snapshot: session.snapshot, path: item.path, states, offset });
 			if (response?.status !== 'succeeded') {
 				throw new Error(response?.message || 'Could not load the changes.');
 			}
@@ -281,20 +278,31 @@ const toEntries = () => {
 	return _.sortBy(entries, [byPath]);
 };
 
+const displayPath = (path) => {
+	if (state.root && (path === state.root || isInside(path, state.root))) {
+		return `${state.rootName}${path.slice(state.root.length)}`;
+	}
+
+	return path.slice(DATA_PREFIX.length);
+};
+
 const toCrumbs = () => {
-	const crumbs = [{ path: ROOT, name: ROOT_NAME, siblings: [] }];
-	if (state.path === ROOT) {
+	const crumbs = [{ path: state.root, name: state.rootName, siblings: [] }];
+	if (state.path === state.root) {
 		return crumbs;
 	}
 
-	const root = _.find(state.listings[ROOT]?.folders, (folder) => { return state.path === folder.path || isInside(state.path, folder.path); });
-	if (!root) {
-		return crumbs;
-	}
+	let path = state.root;
+	if (state.root === '') {
+		const root = _.find(state.listings[state.root]?.folders, (folder) => { return state.path === folder.path || isInside(state.path, folder.path); });
+		if (!root) {
+			return crumbs;
+		}
 
-	let path = root.path;
-	crumbs.push({ path, name: root.name, siblings: state.listings[ROOT].folders });
-	_.each(_.compact(state.path.slice(root.path.length).split('/')), (segment) => {
+		path = root.path;
+		crumbs.push({ path, name: root.name, siblings: state.listings[state.root].folders });
+	}
+	_.each(_.compact(state.path.slice(path.length).split('/')), (segment) => {
 		const siblings = state.listings[path]?.folders || [];
 		path = `${path}/${segment}`;
 		crumbs.push({ path, name: segment, siblings });
@@ -315,7 +323,7 @@ const render = () => {
 	if (_.isEmpty(state.selected)) {
 		state.isCollectionOpen = false;
 	}
-	morphdom(modal.querySelector('.dialog-content'), browserTemplate({ state, rows, header, crumbs: toCrumbs(), entries: toEntries(), listing: state.listings[state.path], canDownload: !getNodeViewBase(), dataPrefix: DATA_PREFIX, prettyBytes }), {
+	morphdom(modal.querySelector('.dialog-content'), browserTemplate({ state, rows, header, crumbs: toCrumbs(), entries: toEntries(), listing: state.listings[state.path], canDownload: !getNodeViewBase(), displayPath, prettyBytes }), {
 		onBeforeNodeDiscarded: (node) => {
 			return !node.classList?.contains('scrollbar');
 		}
@@ -327,12 +335,13 @@ const render = () => {
 };
 
 const foldersTo = (path) => {
-	if (path === ROOT) {
-		return [ROOT];
+	if (path === state.root) {
+		return [state.root];
 	}
 
 	const segments = path.split('/');
-	return _.concat([ROOT], _.map(_.range(USER_ROOT_DEPTH, segments.length + 1), (depth) => { return _.take(segments, depth).join('/'); }));
+	const depth = (state.root === '' ? USER_ROOT_DEPTH : state.root.split('/').length + 1);
+	return _.concat([state.root], _.map(_.range(depth, segments.length + 1), (index) => { return _.take(segments, index).join('/'); }));
 };
 
 const reveal = () => {
@@ -374,7 +383,7 @@ const load = async () => {
 const navigate = async (path) => {
 	state.path = path;
 	state.isCollectionOpen = false;
-	if (path === ROOT) {
+	if (path === state.root) {
 		state.filter = [];
 	}
 	await load();
@@ -411,12 +420,13 @@ const open = async (event) => {
 	}
 
 	event.preventDefault();
-	bootstrap.Tooltip.getInstance(button)?.hide();
-	const session = { snapshot: button.dataset.browseSnapshot, date: button.dataset.browseDate, path: ROOT, focusPath: null, listings: {}, selected: {}, excluded: {}, expanded: {}, filter: [], busyPath: null, loadId: 0, isLoading: false, isCollectionOpen: false, error: null };
+	button.blur();
+	const root = button.dataset.browseRoot || '';
+	const session = { snapshot: button.dataset.browseSnapshot, date: button.dataset.browseDate, root, rootName: button.dataset.browseRootName, path: root, focusPath: null, listings: {}, selected: {}, excluded: {}, expanded: {}, filter: [], busyPath: null, loadId: 0, isLoading: false, isCollectionOpen: false, error: null };
 	state = session;
 	render();
 	bootstrap.Dialog.getOrCreateInstance(modal).show();
-	await navigate(button.dataset.browsePath || ROOT);
+	await navigate(button.dataset.browsePath || root);
 	const focus = button.dataset.browseFocus;
 	if (state !== session || session.error || !focus) {
 		return;
@@ -493,7 +503,7 @@ const click = async (event) => {
 
 	if (event.target.closest('.browse-restore')) {
 		if (!_.isEmpty(state.selected)) {
-			module.dispatchEvent(new CustomEvent('snapshot-restore-selection', { detail: { snapshot: state.snapshot, date: state.date, count: _.size(state.selected), items: _.keys(state.selected), excluded: _.keys(state.excluded) } }));
+			document.dispatchEvent(new CustomEvent('snapshot-restore-selection', { detail: { snapshot: state.snapshot, date: state.date, root: state.root, rootName: state.rootName, count: _.size(state.selected), items: _.keys(state.selected), excluded: _.keys(state.excluded) } }));
 		}
 		return;
 	}
@@ -556,7 +566,7 @@ const close = () => {
 	state = null;
 };
 
-module.addEventListener('click', open);
+document.addEventListener('click', open, true);
 modal.addEventListener('click', click);
 modal.addEventListener('change', change);
 modal.addEventListener('shown.bs.dialog', reveal);

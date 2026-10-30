@@ -4,9 +4,10 @@ import appPartial from 'node/modules/apps/partials/app.html';
 import appActionsPartial from 'node/modules/apps/partials/app_actions.html';
 import appDetailsPartial from 'node/modules/apps/partials/app_details.html';
 import appSnapshotsPartial from 'node/modules/apps/partials/app_snapshots.html';
+import appSnapshotActionsPartial from 'node/modules/apps/partials/app_snapshot_actions.html';
 import filtersPartial from 'node/modules/apps/partials/filters.html';
 import * as appService from 'node/modules/apps/services/app';
-import { getNodeViewBase } from 'node/view';
+import { renderSnapshots, clearSnapshots } from 'node/snapshots';
 import { filterListByQuery } from 'utils/list_search';
 
 const moduleTemplate = _.template(modulePartial);
@@ -14,6 +15,7 @@ const appTemplate = _.template(appPartial);
 const appActionsTemplate = _.template(appActionsPartial);
 const appDetailsTemplate = _.template(appDetailsPartial);
 const appSnapshotsTemplate = _.template(appSnapshotsPartial);
+const appSnapshotActionsTemplate = _.template(appSnapshotActionsPartial);
 const filtersTemplate = _.template(filtersPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
 const module = document.querySelector('#apps');
@@ -35,11 +37,7 @@ let tableOrder = {
 	direction: 'asc'
 };
 let apps = [];
-const snapshotSelections = {};
-const snapshotFilters = {};
-const snapshotSearches = {};
 const appTabs = {};
-const snapshotResults = {};
 
 const search = (event) => {
 	clearTimeout(searchTimer);
@@ -221,159 +219,6 @@ const selectTab = (event) => {
 	renderAppDetails(name);
 };
 
-const selectSnapshot = (event) => {
-	const target = event.target.closest('[data-snapshot]');
-	const name = target?.closest('.item')?.dataset?.name;
-	if (!name) {
-		return;
-	}
-
-	snapshotSelections[name] = target.dataset.snapshot;
-	renderAppDetails(name);
-};
-
-const scrubSnapshot = (event) => {
-	if (!event.target.classList.contains('snapshot-scrubber')) {
-		return;
-	}
-
-	const name = event.target.closest('.item')?.dataset?.name;
-	if (!name) {
-		return;
-	}
-
-	const keys = event.target.dataset.keys.split(',');
-	const positions = _.map(event.target.dataset.positions.split(','), Number);
-	const value = event.target.value / 1000;
-	const index = _.minBy(_.range(keys.length), (i) => { return Math.abs(positions[i] - value); });
-	snapshotSelections[name] = keys[index];
-	renderAppDetails(name);
-};
-
-const stepSnapshot = (event) => {
-	if (!event.target.classList.contains('snapshot-scrubber')) {
-		return;
-	}
-
-	const step = { ArrowLeft: -1, ArrowUp: -1, ArrowRight: 1, ArrowDown: 1, Home: -Infinity, End: Infinity }[event.key];
-	const name = event.target.closest('.item')?.dataset?.name;
-	if (!step || !name) {
-		return;
-	}
-
-	event.preventDefault();
-	const keys = event.target.dataset.keys.split(',');
-	const index = _.clamp(_.indexOf(keys, event.target.dataset.selected) + step, 0, keys.length - 1);
-	snapshotSelections[name] = keys[index];
-	renderAppDetails(name);
-};
-
-const filterSnapshots = async (event) => {
-	const option = event.target.closest('[data-snapshot-filter]');
-	const name = option?.closest('.item')?.dataset?.name;
-	if (!name) {
-		return;
-	}
-
-	const { snapshotFilter, value } = option.dataset;
-	const term = option.closest('.item').querySelector('.snapshot-search')?.value;
-	snapshotFilters[name] = (snapshotFilter === 'clear' ? {} : { ...snapshotFilters[name], [snapshotFilter]: value });
-	if (!await submitSnapshotSearch(name, term)) {
-		renderAppDetails(name);
-	}
-};
-
-const searchSnapshots = async (event) => {
-	if (!event.target.classList?.contains('snapshot-search') || _.toLower(event.key) !== 'enter') {
-		return;
-	}
-
-	await submitSnapshotSearch(event.target.closest('.item')?.dataset?.name, event.target.value);
-};
-
-const submitSnapshotSearch = async (name, value) => {
-	const term = _.trim(value);
-	if (!term || snapshotSearches[name]) {
-		return false;
-	}
-
-	const filter = snapshotFilters[name] || {};
-	const sizes = {
-		small: { maxSize: 1048575 },
-		medium: { minSize: 1048576, maxSize: 104857599 },
-		large: { minSize: 104857600, maxSize: 1073741823 },
-		huge: { minSize: 1073741824 }
-	};
-	const days = { '1d': 1, '7d': 7, '30d': 30, '365d': 365 };
-	const query = { term, ...sizes[filter.size] };
-	if (filter.type) {
-		query.type = filter.type;
-	}
-	if (filter.state) {
-		query.state = filter.state;
-	}
-	if (days[filter.modified]) {
-		query.since = moment().subtract(days[filter.modified], 'days').toISOString();
-	}
-
-	await runSnapshotSearch(name, query, false);
-	return true;
-};
-
-const loadMoreSnapshots = async (event) => {
-	const button = event.target.closest('.snapshot-search-more');
-	const name = button?.closest('.item')?.dataset?.name;
-	const current = snapshotResults[name];
-	if (!current || snapshotSearches[name]) {
-		return;
-	}
-
-	await runSnapshotSearch(name, { ...current.query, offset: _.size(current.results) }, true);
-};
-
-const clearSnapshotSearch = (event) => {
-	const button = event.target.closest('.snapshot-search-clear');
-	const name = button?.closest('.item')?.dataset?.name;
-	if (!name) {
-		return;
-	}
-
-	delete snapshotResults[name];
-	delete snapshotFilters[name];
-	button.closest('.item').querySelector('.snapshot-search').value = '';
-	renderAppDetails(name);
-};
-
-const runSnapshotSearch = async (name, query, append) => {
-	const previous = (append ? snapshotResults[name] : null);
-	snapshotSearches[name] = true;
-	renderAppDetails(name);
-	let result;
-	try {
-		const response = await appService.searchSnapshots(query);
-		if (response?.status === 'succeeded') {
-			result = { query, results: [...(previous?.results || []), ...response.results], hasMore: response.hasMore };
-		} else {
-			result = { query, results: previous?.results || [], hasMore: previous?.hasMore || false, message: response?.message || 'Search failed.' };
-		}
-	} catch (error) {
-		result = { query, results: previous?.results || [], hasMore: previous?.hasMore || false, message: error.message };
-	}
-
-	if (_.toLower(routeAppName) !== _.toLower(name)) {
-		return;
-	}
-
-	snapshotResults[name] = result;
-	delete snapshotSearches[name];
-	renderAppDetails(name);
-	if (!append) {
-		const input = details.querySelector(`.item[data-name="${name}"] .snapshot-search`);
-		await input?.updateComplete;
-		input?.focus();
-	}
-};
-
 const updateSnapshots = async (event) => {
 	const button = event.target.closest('[data-snapshot-mode]');
 	const name = button?.closest('.item')?.dataset?.name;
@@ -451,7 +296,7 @@ const renderAppDetails = (name) => {
 	const networkMaxBytesPerSec = appService.getDefaultNetworkInterfaceSpeed();
 	morphdom(
 		details,
-		`<div>${appDetailsTemplate({ app, jobs, appJobs, serviceJobs, appActionsTemplate, appSnapshotsTemplate, networkMaxBytesPerSec, selectedSnapshot: snapshotSelections[name], snapshotFilter: snapshotFilters[name] || {}, snapshotSearching: Boolean(snapshotSearches[name]), appTab: appTabs[name] || 'services', snapshotResults: snapshotResults[name] || null, canDownloadSnapshotFiles: !getNodeViewBase(), prettyBytes, moment })}</div>`,
+		`<div>${appDetailsTemplate({ app, jobs, appJobs, serviceJobs, appActionsTemplate, appSnapshotsTemplate, appSnapshotActionsTemplate, renderSnapshots, networkMaxBytesPerSec, appTab: appTabs[name] || 'services', prettyBytes, moment })}</div>`,
 		{
 			childrenOnly: true,
 			onBeforeElUpdated: (fromEl, toEl) => {
@@ -464,13 +309,12 @@ const renderAppDetails = (name) => {
 };
 
 const clearAppState = (name) => {
-	_.each([snapshotSelections, snapshotFilters, snapshotSearches, appTabs, snapshotResults], (state) => {
-		_.each(_.keys(state), (key) => {
-			if (_.isUndefined(name) || _.toLower(key) === _.toLower(name)) {
-				delete state[key];
-			}
-		});
+	_.each(_.keys(appTabs), (key) => {
+		if (_.isUndefined(name) || _.toLower(key) === _.toLower(name)) {
+			delete appTabs[key];
+		}
 	});
+	clearSnapshots((key) => { return (_.isUndefined(name) ? _.startsWith(key, 'app:') : _.toLower(key) === _.toLower(`app:${name}`)); });
 };
 
 const hideAppDetails = () => {
@@ -582,15 +426,8 @@ module.addEventListener('click', update);
 module.addEventListener('click', performAppAction);
 module.addEventListener('click', performServiceAction);
 module.addEventListener('click', selectTab);
-module.addEventListener('click', loadMoreSnapshots);
-module.addEventListener('click', clearSnapshotSearch);
-module.addEventListener('click', selectSnapshot);
-module.addEventListener('click', filterSnapshots);
 module.addEventListener('click', updateSnapshots);
 module.addEventListener('click', rollback);
-module.addEventListener('input', scrubSnapshot);
-module.addEventListener('keydown', stepSnapshot);
-module.addEventListener('keydown', searchSnapshots);
 module.addEventListener('mouseenter', toggleStateTooltip, true);
 module.addEventListener('mouseleave', toggleStateTooltip, true);
 searchInput.addEventListener('input', search);
@@ -607,5 +444,3 @@ import('node/modules/apps/logs');
 import('node/modules/apps/terminal');
 import('node/modules/apps/app_center');
 import('node/modules/apps/app_install');
-import('node/modules/apps/snapshot_restore');
-import('node/modules/apps/snapshot_browse');
