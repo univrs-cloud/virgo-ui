@@ -37,9 +37,6 @@
 		<%}%>
 	</td>
 	<td class="text-end text-nowrap d-none md:d-table-cell">
-		<small class="fw-light fg-emphasis-secondary tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="<%=snapshotTooltip%>"><%=_.sumBy(timeMachine.timeMachine, (m) => { return _.size(m.snapshots || []); })%></small>
-	</td>
-	<td class="text-end text-nowrap d-none md:d-table-cell">
 		<small class="fw-light fg-emphasis-secondary d-flex">
 			<span class="d-inline-block text-start" style="width: 12px;">
 				<i class="icon-solid icon-arrow-down icon-fw icon-2xs fg-blue-500"></i>
@@ -61,6 +58,9 @@
 		<u-progress shadow="false">
 			<u-progress-bar width="<%=timeMachine.cap%>"></u-progress-bar>
 		</u-progress>
+	</td>
+	<td class="text-end text-nowrap d-none md:d-table-cell">
+		<small class="fw-light fg-emphasis-secondary tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="<%=snapshotTooltip%>"><%=_.sumBy(timeMachine.timeMachine, (m) => { return _.size(m.snapshots || []); })%></small>
 	</td>
 	<td class="text-center px-0">
 		<%=timeMachineActionsTemplate({ timeMachine, jobs, inline: false })%>
