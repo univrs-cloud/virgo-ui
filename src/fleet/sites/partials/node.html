@@ -16,7 +16,7 @@
 	const statusLabel = !node.online ? 'Offline' : (hasCriticalPool ? 'Faulted' : (hasDegradedPool ? 'Degraded' : 'Online'));
 	const isRebuilding = node.online && hasResilveringPool && !hasUnhealthyNonResilver;
 	const statusTip = (node.online && hasCriticalPool) ? 'Online · storage faulted' : ((node.online && hasDegradedPool) ? 'Online · storage degraded' : '');
-	const statusDotColor = !node.online ? 'fg-gray-400' : (hasCriticalPool ? 'fg-red-300' : (hasDegradedPool ? 'fg-orange-300' : 'fg-green-300'));
+	const statusDotColor = !node.online ? 'fg-gray-500' : (hasCriticalPool ? 'fg-red-300' : (hasDegradedPool ? 'fg-orange-300' : 'fg-green-300'));
 	const statusDotTip = statusTip || statusLabel;
 	// UPS reads the same host:ups shape the node dashboard uses: a status object, or one carrying an error when the reading is unusable. Nodes older than that shape send the bare 'remote i/o error' string.
 	const ups = (node.online && _.isObject(node.ups) && !node.ups.error && node.ups.batteryCharge !== false) ? node.ups : null;
