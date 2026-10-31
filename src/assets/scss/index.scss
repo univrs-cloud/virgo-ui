@@ -56,7 +56,8 @@
 		--body-font-family: vars.$font-family-sans-serif
 	),
 	$button-tokens: (
-		--btn-disabled-opacity: .4
+		--btn-disabled-opacity: .4,
+		--btn-transition-property: "color, background-color, border-color, box-shadow, transform"
 	),
 	$button-link-tokens: (
 		--btn-disabled-bg: transparent
