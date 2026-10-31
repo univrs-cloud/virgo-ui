@@ -300,6 +300,9 @@ $card-image-size: 30px;
 	--btn-hover-bg: var(--bg-2);
 	--btn-active-bg: var(--bg-2);
 }
+:is(.btn, .btn-icon, .btn-solid, .btn-outline, .btn-subtle, .btn-text):active:not(:disabled, .disabled) {
+	transform: scale(0.97);
+}
 #weather {
 	.weather-icon {
 		position: relative;
