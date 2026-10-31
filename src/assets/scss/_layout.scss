@@ -26,6 +26,7 @@ body {
 	height: 100%;
 	font-weight: 300;
 	-webkit-font-smoothing: antialiased;
+	text-wrap: pretty;
 	background-color: var(--app-bg);
 	margin-bottom: 56px;
 	.dialog-open & {
