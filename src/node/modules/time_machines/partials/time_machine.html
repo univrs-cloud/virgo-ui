@@ -27,12 +27,6 @@
 			</u-badge>
 		<%}%>
 	</td>
-	<td class="text-center">
-		<a href="#" class="fg-body underline-0" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-original-title="Click to copy the time machine address. In Finder, press ⌘K and paste it to connect. This lets Time Machine use it for backups.">
-			<i class="icon-brands icon-apple icon-fw"></i>
-		</a>
-		<span class="copy d-none">smb://<%-(timeMachine.isPrivate ? `${_.first(timeMachine.validUsers)}@` : '')%><%-accessOn%>/<%-timeMachine.name%></span>
-	</td>
 	<td class="d-none md:d-table-cell">
 		<%if (timeMachine.validUsers) {%>
 			<%_.each(timeMachine.validUsers, (user) => {%>
