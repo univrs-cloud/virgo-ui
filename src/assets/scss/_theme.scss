@@ -469,6 +469,35 @@ $card-image-size: 30px;
 			min-height: 0;
 			margin-bottom: calc(var(--card-spacer-y) * -1);
 		}
+		.snapshot-timeline .table-scroll {
+			margin-bottom: 0;
+		}
+		.snapshot-pane {
+			flex: none;
+		}
+		.snapshot-point:hover {
+			background-color: var(--bg-1);
+		}
+		@media (min-width: 768px) {
+			:has(> .snapshots) {
+				display: flex;
+				flex-direction: column;
+				height: 100%;
+			}
+			.snapshots {
+				flex: 1;
+				min-height: 0;
+			}
+			.snapshot-pane {
+				flex: 1 1 0;
+			}
+			.snapshot-points {
+				flex: 0 0 24rem;
+			}
+			.snapshot-timeline .table-scroll {
+				overflow-y: auto;
+			}
+		}
 		.item:has(.logs-container:not(.d-none)) .overflow-y-scroll,
 		.item:has(.terminal-container:not(.d-none)) .overflow-y-scroll {
 			overflow-y: hidden !important;

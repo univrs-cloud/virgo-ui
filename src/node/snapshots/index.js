@@ -6,7 +6,6 @@ import 'node/snapshots/restore';
 
 const snapshotsTemplate = _.template(snapshotsPartial);
 const cards = {};
-const selections = {};
 const filters = {};
 const searches = {};
 const results = {};
@@ -16,10 +15,8 @@ const renderSnapshots = (key, options) => {
 	return snapshotsTemplate({
 		key,
 		snapshots: options.snapshots,
-		icon: options.icon || null,
 		browse: options.browse || null,
 		actions: options.actions || (() => { return ''; }),
-		selectedSnapshot: selections[key],
 		snapshotFilter: filters[key] || {},
 		snapshotSearching: Boolean(searches[key]),
 		snapshotResults: results[key] || null,
@@ -30,7 +27,7 @@ const renderSnapshots = (key, options) => {
 };
 
 const clearSnapshots = (isCleared) => {
-	_.each([cards, selections, filters, searches, results], (state) => {
+	_.each([cards, filters, searches, results], (state) => {
 		_.each(_.filter(_.keys(state), isCleared), (key) => {
 			delete state[key];
 		});
@@ -52,53 +49,6 @@ const rerender = (key) => {
 
 const keyOf = (element) => {
 	return element?.closest('.snapshot-timeline')?.dataset?.snapshotKey;
-};
-
-const selectSnapshot = (event) => {
-	const target = event.target.closest('[data-snapshot]');
-	const key = keyOf(target);
-	if (!key) {
-		return;
-	}
-
-	selections[key] = target.dataset.snapshot;
-	rerender(key);
-};
-
-const scrubSnapshot = (event) => {
-	if (!event.target.classList?.contains('snapshot-scrubber')) {
-		return;
-	}
-
-	const key = keyOf(event.target);
-	if (!key) {
-		return;
-	}
-
-	const keys = event.target.dataset.keys.split(',');
-	const positions = _.map(event.target.dataset.positions.split(','), Number);
-	const value = event.target.value / 1000;
-	const index = _.minBy(_.range(keys.length), (i) => { return Math.abs(positions[i] - value); });
-	selections[key] = keys[index];
-	rerender(key);
-};
-
-const stepSnapshot = (event) => {
-	if (!event.target.classList?.contains('snapshot-scrubber')) {
-		return;
-	}
-
-	const step = { ArrowLeft: -1, ArrowUp: -1, ArrowRight: 1, ArrowDown: 1, Home: -Infinity, End: Infinity }[event.key];
-	const key = keyOf(event.target);
-	if (!step || !key) {
-		return;
-	}
-
-	event.preventDefault();
-	const keys = event.target.dataset.keys.split(',');
-	const index = _.clamp(_.indexOf(keys, event.target.dataset.selected) + step, 0, keys.length - 1);
-	selections[key] = keys[index];
-	rerender(key);
 };
 
 const runSearch = async (key, query, append) => {
@@ -224,10 +174,7 @@ const releaseDownload = (event) => {
 document.addEventListener('click', releaseDownload);
 document.addEventListener('click', loadMoreSnapshots);
 document.addEventListener('click', clearSearch);
-document.addEventListener('click', selectSnapshot);
 document.addEventListener('click', filterSnapshots);
-document.addEventListener('input', scrubSnapshot);
-document.addEventListener('keydown', stepSnapshot);
 document.addEventListener('keydown', searchSnapshots);
 
 export {

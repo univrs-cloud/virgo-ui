@@ -187,15 +187,14 @@ div:not(.navbar) .nav-pills {
 	--nav-pills-link-active-bg: var(--indigo-500);
 	--nav-link-color: var(--white);
 	--nav-link-hover-color: var(--gray-100);
-	--nav-pills-bg: var(--secondary-bg-subtle);
-	--nav-pills-border-radius: var(--radius-4);
-	--nav-pills-link-border-radius: var(--radius-4);
+	--nav-pills-bg: var(--bg-3);
+	--nav-pills-padding: 0.25rem 0.27rem;
 	--nav-link-border-width: 0;
 	.nav-link {
 		padding-top: 0.2rem;
 		padding-bottom: 0.2rem;
 		&.active {
-			box-shadow: var(--box-shadow);
+			box-shadow: 0 0.0625rem 0.125rem oklch(from var(--shadow-color) l c h / calc(0.35 * var(--shadow-strength)));
 		}
 		&:not(.active) {
 			color: var(--black);

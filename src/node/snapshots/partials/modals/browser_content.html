@@ -80,8 +80,8 @@
 				<colgroup>
 					<col style="width: 2rem;">
 					<col>
-					<col style="width: 11rem;">
-					<col style="width: 6rem;">
+					<col style="width: 5.5rem;">
+					<col style="width: 4.5rem;">
 				</colgroup>
 				<thead class="sticky-top" style="top: -1rem;">
 					<tr>
@@ -196,13 +196,13 @@
 											<span class="badge bg-transparent rounded-pill border fw-normal fg-<%=stateColors[name]%> border-<%=stateColors[name]%>"><%=_.startCase(name)%></span>
 										<%})%>
 										<%if (row.changesInside > 0) {%>
-											<small class="fg-emphasis-secondary"><%=row.changesInside%> <%=(_.isEmpty(state.filter) ? 'changed' : 'matching')%> inside</small>
+											<small class="fg-emphasis-secondary"><%=row.changesInside%> <%=(_.isEmpty(state.filter) ? 'changed' : 'matching')%></small>
 										<%} else if (_.isEmpty(row.states) && !isUsersList && listing?.isIndexed === true) {%>
 											<small class="fg-4">Unchanged</small>
 										<%}%>
 									</div>
 								</td>
-								<td class="text-end text-nowrap fg-emphasis-secondary"><%=(row.isDir ? '' : prettyBytes(row.size || 0, { binary: true }))%></td>
+								<td class="text-end text-nowrap fs-xs fg-emphasis-secondary"><%=(row.isDir ? '' : prettyBytes(row.size || 0, { binary: true }))%></td>
 							</tr>
 						<%})%>
 					<%}%>
