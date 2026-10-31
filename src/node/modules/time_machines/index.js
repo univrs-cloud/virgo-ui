@@ -171,8 +171,8 @@ const render = (state) => {
 	listCount.textContent = (_.trim(searchValue) ? `${_.size(timeMachines)} of ${total} ${noun}` : `${total} ${noun}`);
 	timeMachines = _.orderBy(timeMachines,
 		[
-			(timeMachines) => {
-				const value = _.get(timeMachines, tableOrder.field);
+			(timeMachine) => {
+				const value = (tableOrder.field === 'backups' ? _.sumBy(timeMachine.timeMachine, (machine) => { return _.size(machine.snapshots || []); }) : _.get(timeMachine, tableOrder.field));
 				return typeof value === 'number' ? value : String(value ?? '').toLowerCase();
 			}
 		],
