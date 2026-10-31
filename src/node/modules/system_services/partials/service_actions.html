@@ -16,14 +16,14 @@
 	<%if (inline) {%>
 		<div class="d-inline-flex align-items-center bg-2 rounded-3">
 			<div class="d-inline-flex align-items-center px-1">
-				<a href="#" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 rounded-3 <%=(canStart ? '' : 'disabled')%>" data-action="start" data-bs-toggle="tooltip" data-bs-original-title="Start"><i class="icon-solid icon-play icon-fw <%=(canStart ? 'fg-green-400' : 'fg-gray-300')%>"></i></a>
-				<a href="#" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 rounded-3 <%=(canRestart ? 'confirm' : 'disabled')%>" data-action="restart" data-bs-toggle="tooltip" data-bs-original-title="Restart"><i class="icon-solid icon-arrow-rotate-left icon-fw <%=(canRestart ? 'fg-black' : 'fg-gray-300')%>"></i></a>
-				<a href="#" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 rounded-3 <%=(canStop ? 'confirm' : 'disabled')%>" data-action="stop" data-bs-toggle="tooltip" data-bs-original-title="Stop"><i class="icon-solid icon-stop icon-fw <%=(canStop ? 'fg-red-400' : 'fg-gray-300')%>"></i></a>
+				<a href="#" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 rounded-3 <%=(canStart ? '' : 'disabled')%>" data-action="start" data-bs-toggle="tooltip" data-bs-original-title="Start"><i class="icon-solid icon-play icon-fw <%=(canStart ? 'fg-green-400' : 'fg-gray-500')%>"></i></a>
+				<a href="#" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 rounded-3 <%=(canRestart ? 'confirm' : 'disabled')%>" data-action="restart" data-bs-toggle="tooltip" data-bs-original-title="Restart"><i class="icon-solid icon-arrow-rotate-left icon-fw <%=(canRestart ? 'fg-black' : 'fg-gray-500')%>"></i></a>
+				<a href="#" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 rounded-3 <%=(canStop ? 'confirm' : 'disabled')%>" data-action="stop" data-bs-toggle="tooltip" data-bs-original-title="Stop"><i class="icon-solid icon-stop icon-fw <%=(canStop ? 'fg-red-400' : 'fg-gray-500')%>"></i></a>
 			</div>
 	<%}%>
 	<div class="<%=(inline ? 'dropdown position-relative' : 'dropdown')%>">
 		<%if (inline) {%>
-			<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="actions-toggle btn-icon btn-text theme-secondary btn-sm rounded-3 <%=(isEnableableUnit ? '' : 'disabled')%>"><i class="icon-solid icon-ellipsis-vertical icon-fw <%=(isEnableableUnit ? 'fg-secondary' : 'fg-gray-300')%>"></i></span>
+			<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="actions-toggle btn-icon btn-text theme-secondary btn-sm rounded-3 <%=(isEnableableUnit ? '' : 'disabled')%>"><i class="icon-solid icon-ellipsis-vertical icon-fw"></i></span>
 		<%} else {%>
 			<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw fg-secondary"></i></span>
 		<%}%>

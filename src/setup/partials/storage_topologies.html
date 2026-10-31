@@ -65,7 +65,7 @@
 			<small class="fg-emphasis-secondary"><i class="icon-solid icon-circle fg-blue-500 me-1" style="font-size: 0.5rem; vertical-align: middle;"></i>Capacity: <%=prettyBytes(selected.usableBytes, { binary: true })%></small>
 			<small class="fg-emphasis-secondary"><i class="icon-solid icon-circle fg-pink-400 me-1" style="font-size: 0.5rem; vertical-align: middle;"></i>Protection: <%=_.pluralize('drive', protectionDrives, true)%></small>
 			<%if (unusedPercent > 0) {%>
-				<small class="fg-emphasis-secondary"><i class="icon-solid icon-circle fg-gray-400 me-1" style="font-size: 0.5rem; vertical-align: middle;"></i>Unused: <%=prettyBytes(unusedBytes, { binary: true })%> <span class="fg-4">(larger drives are used up to the smallest one's size)</span></small>
+				<small class="fg-emphasis-secondary"><i class="icon-solid icon-circle fg-gray-500 me-1" style="font-size: 0.5rem; vertical-align: middle;"></i>Unused: <%=prettyBytes(unusedBytes, { binary: true })%> <span class="fg-4">(larger drives are used up to the smallest one's size)</span></small>
 			<%}%>
 		</div>
 	<%}%>

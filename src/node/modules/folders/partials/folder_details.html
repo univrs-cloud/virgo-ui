@@ -36,7 +36,7 @@
 						<button type="button" class="nav-link px-4 <%=(activeTab === 'snapshots' ? 'active border-primary fw-light' : '')%>" data-folder-tab="snapshots">
 							<span class="position-relative d-inline-flex">
 								<i class="icon-light icon-clock-rotate-left icon-fw"></i>
-								<i class="icon-solid icon-circle icon-2xs icon-width-auto lh-1 position-absolute top-100 start-100 translate-middle <%=({ enabled: 'fg-green-300', paused: 'fg-orange-300', disabled: 'fg-gray-400' })[snapshotMode]%>" style="margin: -0.1875rem 0 0 -0.125rem;" data-bs-toggle="tooltip" data-bs-original-title="<%-_.upperFirst(snapshotMode)%>"></i>
+								<i class="icon-solid icon-circle icon-2xs icon-width-auto lh-1 position-absolute top-100 start-100 translate-middle <%=({ enabled: 'fg-green-300', paused: 'fg-orange-300', disabled: 'fg-gray-500' })[snapshotMode]%>" style="margin: -0.1875rem 0 0 -0.125rem;" data-bs-toggle="tooltip" data-bs-original-title="<%-_.upperFirst(snapshotMode)%>"></i>
 							</span>
 							Snapshots
 							<%if (snapshotMode !== 'disabled') {%>
@@ -200,7 +200,7 @@
 														{ mode: 'paused', label: 'Pause', icon: 'icon-pause', color: 'fg-orange-400', isAllowed: (snapshotMode === 'enabled') },
 														{ mode: 'disabled', label: 'Disable', icon: 'icon-ban', color: 'fg-red-400', isAllowed: (snapshotMode !== 'disabled') }
 													], ({ mode, label, icon, color, isAllowed }) => {%>
-														<a href="#" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 rounded-3 <%=(isAllowed ? '' : 'disabled')%>" data-action="snapshots" data-mode="<%-mode%>" data-bs-toggle="tooltip" data-bs-original-title="<%-label%>"><i class="icon-solid <%=icon%> icon-fw <%=(isAllowed ? color : 'fg-gray-300')%>"></i></a>
+														<a href="#" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 rounded-3 <%=(isAllowed ? '' : 'disabled')%>" data-action="snapshots" data-mode="<%-mode%>" data-bs-toggle="tooltip" data-bs-original-title="<%-label%>"><i class="icon-solid <%=icon%> icon-fw <%=(isAllowed ? color : 'fg-gray-500')%>"></i></a>
 													<%})%>
 												</div>
 											<%}%>

@@ -12,7 +12,7 @@
 				</div>
 				<div class="col overflow-hidden">
 					<div class="d-flex align-items-center">
-						<div class="text-truncate <%=(runningContainers === 0 || _.isEmpty(app.urls) ? 'fg-gray-400' : '')%>"><%-app.title%></div>
+						<div class="text-truncate <%=(runningContainers === 0 || _.isEmpty(app.urls) ? 'fg-gray-500' : '')%>"><%-app.title%></div>
 						<%if (app.hasUpdates) {%>
 							<u-badge color="green" class="ms-3" pill>
 								<i class="icon-solid icon-arrow-down icon-fw"></i>

@@ -41,7 +41,7 @@
 				<%} else {%>
 					<div class="d-inline-flex align-items-center bg-2 rounded-3 px-1">
 						<%_.each(snapshotActions, ({ mode, label, icon, color, isAllowed }) => {%>
-							<a href="#" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 rounded-3 <%=(isAllowed ? '' : 'disabled')%>" data-snapshot-mode="<%-mode%>" data-bs-toggle="tooltip" data-bs-original-title="<%-label%>"><i class="icon-solid <%=icon%> icon-fw <%=(isAllowed ? color : 'fg-gray-300')%>"></i></a>
+							<a href="#" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 rounded-3 <%=(isAllowed ? '' : 'disabled')%>" data-snapshot-mode="<%-mode%>" data-bs-toggle="tooltip" data-bs-original-title="<%-label%>"><i class="icon-solid <%=icon%> icon-fw <%=(isAllowed ? color : 'fg-gray-500')%>"></i></a>
 						<%})%>
 					</div>
 				<%}%>
