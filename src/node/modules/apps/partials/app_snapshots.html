@@ -1,4 +1,4 @@
-<div class="snapshots card border-0 mb-3">
+<div class="snapshots card border-0">
 	<%if (app.snapshotPolicy) {%>
 		<%
 			const snapshotMode = _.toLower(app.snapshotPolicy.mode);
@@ -24,7 +24,7 @@
 				snapshotModeNote = 'Required for file search and restore.';
 			}
 		%>
-		<div class="card-body">
+		<div class="card-body flex-grow-0">
 			<div class="d-flex flex-wrap align-items-center justify-content-between gap-5">
 				<div class="min-w-0">
 					<small class="d-block fg-4 text-uppercase">Snapshotting</small>
@@ -48,5 +48,5 @@
 			</div>
 		</div>
 	<%}%>
-	<%=renderSnapshots(`app:${app.name}`, { snapshots: app.snapshots, icon: (_.includes(app.icon, '/') ? app.icon : `assets/img/apps/${app.icon}`), browse: (_.toLower(app.name) === 'nextcloud' ? { root: '', rootName: app.title } : null), actions: (point) => { return appSnapshotActionsTemplate({ appJobs, point }); } })%>
+	<%=renderSnapshots(`app:${app.name}`, { snapshots: app.snapshots, browse: (_.toLower(app.name) === 'nextcloud' ? { root: '', rootName: app.title } : null), actions: (point) => { return appSnapshotActionsTemplate({ appJobs, point }); } })%>
 </div>
