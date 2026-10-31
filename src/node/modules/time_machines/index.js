@@ -164,7 +164,6 @@ const render = (state) => {
 		return;
 	}
 
-	const accessOn = getShareAddress(timeMachineService.getSystem());
 	timeMachines = state.timeMachines;
 	timeMachines = filterListByQuery(timeMachines, searchValue, ['name', 'path', 'comment', 'validUsers']);
 	const total = _.size(state.timeMachines);
@@ -181,7 +180,7 @@ const render = (state) => {
 	);
 	const rows = _.join(_.map(timeMachines, (timeMachine) => {
 		const jobs = filterJobsByTimeMachine(state.jobs, timeMachine);
-		return timeMachineTemplate({ timeMachine, jobs, accessOn, timeMachineActionsTemplate, prettyBytes, moment });
+		return timeMachineTemplate({ timeMachine, jobs, timeMachineActionsTemplate, prettyBytes, moment });
 	}), '');
 	
 	morphdom(

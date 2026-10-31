@@ -20,28 +20,6 @@
 			</u-badge>
 		<%}%>
 	</td>
-	<td>
-		<div class="d-flex flex-row justify-content-center">
-			<div class="d-flex align-items-center">
-				<a href="#" class="fg-body underline-0" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-original-title="Click to copy the folder address. Access the folder using a computer on your local network.">
-					<i class="icon-brands icon-windows icon-fw"></i>
-				</a>
-				<span class="copy d-none">\\<%-accessOn%>\<%-folder.name%></span>
-			</div>
-			<div class="d-flex align-items-center mx-3">
-				<a href="#" class="fg-body underline-0" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-original-title="Click to copy the folder address. Access the folder using a computer on your local network.">
-					<i class="icon-brands icon-apple icon-fw"></i>
-				</a>
-				<span class="copy d-none">smb://<%-accessOn%>/<%-folder.name%></span>
-			</div>
-			<div class="d-flex align-items-center">
-				<a href="#" class="fg-body underline-0" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-original-title="Click to copy the folder address. Access the folder using a computer on your local network.">
-					<i class="icon-brands icon-linux icon-fw"></i>
-				</a>
-				<span class="copy d-none">smb://<%-accessOn%>/<%-folder.name%></span>
-			</div>
-		</div>
-	</td>
 	<td class="d-none md:d-table-cell">
 		<%if (folder.validUsers) {%>
 			<%_.each(folder.validUsers, (user) => {%>

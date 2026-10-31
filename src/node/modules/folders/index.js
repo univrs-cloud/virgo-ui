@@ -166,7 +166,6 @@ const render = (state) => {
 		return;
 	}
 
-	const accessOn = getShareAddress(folderService.getSystem());
 	folders = state.folders;
 	folders = filterListByQuery(folders, searchValue, ['name', 'path', 'comment', 'validUsers']);
 	const total = _.size(state.folders);
@@ -183,7 +182,7 @@ const render = (state) => {
 	);
 	const rows = _.join(_.map(folders, (folder) => {
 		const jobs = filterJobsByFolder(state.jobs, folder);
-		return folderTemplate({ folder, jobs, accessOn, folderActionsTemplate, prettyBytes });
+		return folderTemplate({ folder, jobs, folderActionsTemplate, prettyBytes });
 	}), '');
 	
 	morphdom(
