@@ -1,14 +1,15 @@
+const { version } = require('./package.json');
 const dotenv = require('dotenv').config({ quiet: true });
 const path = require('path');
+const cssnano = require('cssnano');
 const webpack = require('webpack');
+const IconFontPlugin = require('./webpack/icon_font_plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WepackPwaManifest = require('webpack-pwa-manifest');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const cssnano = require('cssnano');
-const { version } = require('./package.json');
 
 module.exports = (env, argv) => {
 	let upstream = '';
@@ -90,6 +91,7 @@ module.exports = (env, argv) => {
 				'prettyBytes': [path.join(__dirname, 'node_modules/pretty-bytes/index.js'), 'default'],
 				'prettyMilliseconds': [path.join(__dirname, 'node_modules/pretty-ms/index.js'), 'default']
 			}),
+			new IconFontPlugin(),
 			new HtmlWebpackPlugin({
 				minify: false,
 				scriptLoading: 'defer',
@@ -146,7 +148,6 @@ module.exports = (env, argv) => {
 				'patterns': [
 					{ from: './src/sw.js', to: 'sw.js' },
 					{ from: './src/assets/img', to: 'assets/img' },
-					{ from: './src/assets/webfonts', to: 'assets/webfonts' },
 					{ from: './node_modules/inter-ui/web', to: 'assets/webfonts/inter/web' },
 					{ from: './node_modules/inter-ui/variable', to: 'assets/webfonts/inter/variable' }
 				]
@@ -174,7 +175,12 @@ module.exports = (env, argv) => {
 							}
 						},
 						'postcss-loader',
-						'sass-loader'
+						{
+							loader: 'sass-loader',
+							options: {
+								sassOptions: IconFontPlugin.sassOptions
+							}
+						}
 					]
 				},
 				{
@@ -206,7 +212,12 @@ module.exports = (env, argv) => {
 								}
 							}
 						},
-						'sass-loader'
+						{
+							loader: 'sass-loader',
+							options: {
+								sassOptions: IconFontPlugin.sassOptions
+							}
+						}
 					]
 				},
 				{

@@ -26,7 +26,7 @@
 	</div>
 	<%if (!_.isEmpty(topology.routed) || !_.isEmpty(topology.proxied)) {%>
 		<div class="topology-stem"></div>
-		<button type="button" class="topology-toggle btn-icon btn-solid theme-primary btn-xs rounded-pill" data-action="toggle" data-key="proxy"><i class="icon-solid icon-<%=(isProxyExpanded ? 'minus' : 'plus')%> icon-xs"></i></button>
+		<button type="button" class="topology-toggle btn-icon btn-solid theme-primary btn-xs rounded-pill" data-action="toggle" data-key="proxy"><i class="icon-solid <%=(isProxyExpanded ? 'icon-minus' : 'icon-plus')%> icon-xs"></i></button>
 		<%if (isProxyExpanded) {%>
 			<ul class="topology-edge-primary">
 				<%_.each(topology.routed, (stack) => {%>

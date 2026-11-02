@@ -6,7 +6,7 @@
 // --------
 // webfonts
 // --------
-@use "webfonts/variables" with (
+@use "fontawesome:/variables" with (
 	$css-prefix: "icon",
 	$icon-property: "--icon"
 );
@@ -87,13 +87,13 @@
 );
 
 @layer vendor {
-	@include meta.load-css("webfonts/fontawesome");
-	@include meta.load-css("webfonts/brands");
-	@include meta.load-css("webfonts/solid");
-	@include meta.load-css("webfonts/regular");
-	@include meta.load-css("webfonts/light");
-	@include meta.load-css("webfonts/duotone");
-	@include meta.load-css("webfonts/duotone-light");
+	@include meta.load-css("fontawesome:/fontawesome");
+	@include meta.load-css("fontawesome:/brands");
+	@include meta.load-css("fontawesome:/solid");
+	@include meta.load-css("fontawesome:/regular");
+	@include meta.load-css("fontawesome:/light");
+	@include meta.load-css("fontawesome:/duotone");
+	@include meta.load-css("fontawesome:/duotone-light");
 
 	// --------
 	// xterm

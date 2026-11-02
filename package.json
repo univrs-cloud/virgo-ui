@@ -50,8 +50,8 @@
 		"socket.io-client": "^4.8.4",
 		"sortablejs": "^1.15.7",
 		"uplot": "^1.6.32",
-		"vanilla-calendar-pro": "^3.4.0",
-		"validator": "^13.15.35"
+		"validator": "^13.15.35",
+		"vanilla-calendar-pro": "^3.4.0"
 	},
 	"devDependencies": {
 		"autoprefixer": "^10.6.2",
@@ -70,6 +70,7 @@
 		"raw-loader": "^4.0.2",
 		"sass": "^1.107.1",
 		"sass-loader": "^17.1.0",
+		"subset-font": "^2.9.0",
 		"webpack": "^5.112.2",
 		"webpack-cli": "^7.3.1",
 		"webpack-dev-server": "^6.1.0",

@@ -114,9 +114,9 @@
 										<%if (!account?.isDisabled) {%>
 											<div class="border-start ps-3 flex-shrink-0">
 												<div class="d-flex align-items-center gap-3">
-													<%_.each([{ icon: 'windows', address: `\\\\${accessOn}\\${folder.name}` }, { icon: 'apple', address: `smb://${(user ? `${user}@` : '')}${accessOn}/${folder.name}` }, { icon: 'linux', address: `smb://${(user ? `${user}@` : '')}${accessOn}/${folder.name}` }], (entry) => {%>
+													<%_.each([{ icon: 'icon-windows', address: `\\\\${accessOn}\\${folder.name}` }, { icon: 'icon-apple', address: `smb://${(user ? `${user}@` : '')}${accessOn}/${folder.name}` }, { icon: 'icon-linux', address: `smb://${(user ? `${user}@` : '')}${accessOn}/${folder.name}` }], (entry) => {%>
 														<div class="d-flex align-items-center">
-															<a href="#" class="fg-body underline-0" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-original-title="Click to copy the folder address. Access the folder using a computer on your local network."><i class="icon-brands icon-<%=entry.icon%> icon-fw"></i></a>
+															<a href="#" class="fg-body underline-0" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-original-title="Click to copy the folder address. Access the folder using a computer on your local network."><i class="icon-brands <%=entry.icon%> icon-fw"></i></a>
 															<span class="copy d-none"><%-entry.address%></span>
 														</div>
 													<%})%>
