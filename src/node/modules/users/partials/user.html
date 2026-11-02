@@ -70,19 +70,19 @@
 			<div class="dropdown">
 				<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw fg-secondary"></i></span>
 				<div class="menu">
-					<a href="#user-update" class="menu-item" data-bs-toggle="dialog"><i class="icon-regular icon-pen icon-fw"></i>Edit</a>
+					<a href="#user-update" class="menu-item" data-bs-toggle="dialog"><i class="icon-solid icon-pen icon-fw"></i>Edit</a>
 					<%if (!user.isOwner && user.username !== account.user) {%>
 						<%if (!user.isDisabled) {%>
-							<a href="#user-password" class="menu-item" data-bs-toggle="dialog"><i class="icon-regular icon-key icon-fw"></i>Change password</a>
+							<a href="#user-password" class="menu-item" data-bs-toggle="dialog"><i class="icon-solid icon-key icon-fw"></i>Change password</a>
 						<%}%>
 						<div class="menu-divider"></div>
 						<%if (user.isDisabled) {%>
-							<a href="#" class="menu-item" data-action="unlock"><i class="icon-regular icon-lock-open icon-fw"></i>Unlock</a>
+							<a href="#" class="menu-item" data-action="unlock"><i class="icon-solid icon-lock-open icon-fw"></i>Unlock</a>
 						<%} else {%>
-							<a href="#" class="menu-item fg-danger confirm" data-action="lock"><i class="icon-regular icon-lock icon-fw"></i>Lock</a>
+							<a href="#" class="menu-item fg-danger confirm" data-action="lock"><i class="icon-solid icon-lock icon-fw"></i>Lock</a>
 						<%}%>
 						<div class="menu-divider"></div>
-						<a href="#" class="menu-item fg-danger confirm" data-action="delete"><i class="icon-regular icon-times icon-fw"></i>Delete</a>
+						<a href="#" class="menu-item fg-danger confirm" data-action="delete"><i class="icon-solid icon-times icon-fw"></i>Delete</a>
 					<%}%>
 				</div>
 			</div>

@@ -35,13 +35,13 @@
 					<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw fg-secondary"></i></span>
 					<div class="menu" style="width: max-content;">
 						<%if (system?.virtualIp?.holding && seen) {%>
-							<a href="#" class="menu-item" data-action="handover" data-peer="<%-node.id%>"><i class="icon-regular icon-right-left icon-fw"></i>Hand over virtual IP</a>
+							<a href="#" class="menu-item" data-action="handover" data-peer="<%-node.id%>"><i class="icon-solid icon-right-left icon-fw"></i>Hand over virtual IP</a>
 							<div class="menu-divider"></div>
 						<%} else if (seen && seen.holdsVirtualIp && seen.virtualIp === system?.virtualIp?.address) {%>
-							<a href="#" class="menu-item" data-action="promote"><i class="icon-regular icon-right-left icon-fw"></i>Take over virtual IP</a>
+							<a href="#" class="menu-item" data-action="promote"><i class="icon-solid icon-right-left icon-fw"></i>Take over virtual IP</a>
 							<div class="menu-divider"></div>
 						<%}%>
-						<a href="#" class="menu-item fg-danger" data-action="remove" data-peer="<%-node?.id%>"><i class="icon-regular icon-times icon-fw"></i>Remove node</a>
+						<a href="#" class="menu-item fg-danger" data-action="remove" data-peer="<%-node?.id%>"><i class="icon-solid icon-times icon-fw"></i>Remove node</a>
 					</div>
 				</div>
 			</div>

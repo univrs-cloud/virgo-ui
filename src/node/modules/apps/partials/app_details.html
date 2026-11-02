@@ -149,13 +149,13 @@
 																	<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw fg-secondary"></i></span>
 																	<div class="menu">
 																		<%if (app.canBeRemoved || isStopped) {%>
-																			<a href="#" class="menu-item <%=(isStopped ? '' : 'disabled')%>" data-action="start"><i class="icon-regular icon-play icon-fw"></i>Start</a>
+																			<a href="#" class="menu-item <%=(isStopped ? '' : 'disabled')%>" data-action="start"><i class="icon-solid icon-play icon-fw <%=(isStopped ? 'fg-green-400' : '')%>"></i>Start</a>
 																			<div class="menu-divider"></div>
 																		<%}%>
-																		<a href="#" class="menu-item <%=(isRunning ? 'confirm' : 'disabled')%>" data-action="restart"><i class="icon-regular icon-arrow-rotate-left icon-fw"></i>Restart</a>
+																		<a href="#" class="menu-item <%=(isRunning ? 'confirm' : 'disabled')%>" data-action="restart"><i class="icon-solid icon-arrow-rotate-left icon-fw"></i>Restart</a>
 																		<%if (app.canBeRemoved) {%>
-																			<a href="#" class="menu-item <%=(isActive ? 'fg-danger confirm' : 'disabled')%>" data-action="stop"><i class="icon-regular icon-stop icon-fw"></i>Stop</a>
-																			<a href="#" class="menu-item <%=(isActive ? 'fg-danger confirm' : 'disabled')%>" data-action="kill"><i class="icon-regular icon-skull icon-fw"></i>Kill</a>
+																			<a href="#" class="menu-item <%=(isActive ? 'fg-danger confirm' : 'disabled')%>" data-action="stop"><i class="icon-solid icon-stop icon-fw"></i>Stop</a>
+																			<a href="#" class="menu-item <%=(isActive ? 'fg-danger confirm' : 'disabled')%>" data-action="kill"><i class="icon-solid icon-skull icon-fw"></i>Kill</a>
 																		<%}%>
 																	</div>
 																</div>
@@ -170,7 +170,7 @@
 																		<div class="dropdown position-relative">
 																			<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="actions-toggle btn-icon btn-text theme-secondary btn-sm rounded-3 <%=(canStop ? '' : 'disabled')%>"><i class="icon-solid icon-ellipsis-vertical icon-fw"></i></span>
 																			<div class="menu">
-																				<a href="#" class="menu-item fg-danger confirm" data-action="kill"><i class="icon-regular icon-skull icon-fw"></i>Kill</a>
+																				<a href="#" class="menu-item fg-danger confirm" data-action="kill"><i class="icon-solid icon-skull icon-fw"></i>Kill</a>
 																			</div>
 																		</div>
 																	</div>
@@ -199,7 +199,7 @@
 															<%if (network.ipAddress) {%>
 																<%const isExternal = !!network.gateway;%>
 																<u-badge color="<%=(isExternal ? 'purple' : 'gray')%>" tint="100" tip="<%-networkName%>: <%-network.ipAddress%> &middot; <%=(isExternal ? 'external' : 'internal')%>" pill>
-																	<i class="icon-light icon-network-wired icon-fw me-1"></i><%-network.ipAddress%>
+																	<i class="icon-light icon-ethernet icon-fw me-1"></i><%-network.ipAddress%>
 																</u-badge>
 															<%}%>
 														<%})%>
@@ -213,7 +213,7 @@
 														<%const hostIp = container.networkSettings?.networks?.host?.ipAddress;%>
 														<%const hostTip = (!hostIp || hostIp === '127.0.0.1' || hostIp.startsWith('127.') || hostIp === '::1') ? 'host: no IP' : `host: ${hostIp}`;%>
 														<u-badge color="purple" tint="100" tip="<%-hostTip%>" pill>
-															<i class="icon-light icon-network-wired icon-fw me-1"></i>1
+															<i class="icon-light icon-ethernet icon-fw me-1"></i>1
 														</u-badge>
 													<%}%>
 												</div>

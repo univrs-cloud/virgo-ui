@@ -92,11 +92,8 @@
 	@include meta.load-css("webfonts/solid");
 	@include meta.load-css("webfonts/regular");
 	@include meta.load-css("webfonts/light");
-	@include meta.load-css("webfonts/thin");
 	@include meta.load-css("webfonts/duotone");
-	@include meta.load-css("webfonts/duotone-regular");
 	@include meta.load-css("webfonts/duotone-light");
-	@include meta.load-css("webfonts/duotone-thin");
 
 	// --------
 	// xterm

@@ -76,19 +76,19 @@
 					<div class="menu">
 						<%if (node.isOwner) {%>
 							<a href="#admin-add" class="menu-item" data-bs-toggle="dialog" data-node-id="<%-node.nodeId%>">
-								<i class="icon-regular icon-user-plus icon-fw"></i>Add admin
+								<i class="icon-solid icon-user-plus icon-fw"></i>Add admin
 							</a>
 							<div class="menu-divider"></div>
 						<%}%>
 						<%if (node.isOwner && node.onFleetZone) {%>
 							<span class="d-block" data-bs-toggle="tooltip" data-bs-original-title="Move this node off univrs.cloud before removing it, its certificates depend on the fleet">
 								<a href="#" class="menu-item disabled">
-									<i class="icon-regular icon-xmark icon-fw"></i>Remove from inventory
+									<i class="icon-solid icon-xmark icon-fw"></i>Remove from inventory
 								</a>
 							</span>
 						<%} else {%>
 							<a href="#" class="menu-item fg-danger confirm" data-action="remove" data-node-id="<%-node.nodeId%>">
-								<i class="icon-regular icon-xmark icon-fw"></i>Remove from inventory
+								<i class="icon-solid icon-xmark icon-fw"></i>Remove from inventory
 							</a>
 						<%}%>
 					</div>
@@ -171,7 +171,7 @@
 						<div class="menu shadow shadow-opacity-100">
 							<%_.each(node.admins, (admin) => {%>
 								<div class="menu-item d-flex align-items-center">
-									<i class="icon-regular icon-user icon-fw me-3"></i>
+									<i class="icon-solid icon-user icon-fw me-3"></i>
 									<div class="lh-1 me-5">
 										<div><%-admin.name%></div>
 										<small class="fg-emphasis-secondary"><%-admin.email%></small>
@@ -183,7 +183,7 @@
 							<%})%>
 							<%_.each(node.groups, (group) => {%>
 								<div class="menu-item d-flex align-items-center">
-									<i class="icon-regular icon-users icon-fw me-3"></i>
+									<i class="icon-solid icon-users icon-fw me-3"></i>
 									<div class="lh-1 me-5">
 										<div><%-group.name%></div>
 										<small class="fg-emphasis-secondary">Group</small>
