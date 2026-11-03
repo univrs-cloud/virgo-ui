@@ -2,17 +2,17 @@
 	<div class="d-flex align-items-center justify-content-between">
 		<div class="d-flex align-items-center">
 			<h5 class="fg-black mb-0 me-2">
-				<i class="icon-regular icon-microchip icon-fw me-1 fg-gray-300"></i>CPU
+				<i class="icon-regular icon-cpu icon-fw me-1 fg-gray-300"></i>CPU
 			</h5>
 			<%if (state.cpuSensors) {%>
 				<u-badge color="gray" tint="050" class="me-1" pill>
-					<i class="icon-regular icon-temperature-half icon-fw fg-gray-300"></i>
+					<i class="icon-regular icon-thermometer-simple icon-fw fg-gray-300"></i>
 					<%=state.cpuSensors.temperature?.main?.toFixed(0)%> °C
 				</u-badge>
 			<%}%>
 			<%if (state.cpuSensors?.fan) {%>
 				<u-badge color="gray" tint="050" class="me-1" pill>
-					<i class="icon-solid icon-fan icon-fw fg-gray-300"></i>
+					<i class="icon-fill icon-fan icon-fw fg-gray-300"></i>
 					<%=state.cpuSensors.fan%> rpm
 				</u-badge>
 			<%}%>

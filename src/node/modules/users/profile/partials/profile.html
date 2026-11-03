@@ -34,7 +34,7 @@
 			<div class="card border-0 mb-0">
 				<div class="card-body">
 					<div class="d-flex align-items-center gap-5">
-						<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-5 bg-subtle-primary fg-primary align-self-start"><i class="icon-duotone icon-solid icon-key"></i></div>
+						<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-5 bg-subtle-primary fg-primary align-self-start"><i class="icon-duotone icon-key"></i></div>
 						<div class="min-w-0 me-auto">Password</div>
 						<a href="#profile-password" class="btn-link d-inline-block text-nowrap align-self-start border-0 px-0 py-3 mt-1 min-h-0" data-bs-toggle="dialog"><i class="icon-regular icon-pen icon-fw me-1"></i>Change</a>
 					</div>
@@ -55,7 +55,7 @@
 				<div class="card-body">
 					<%if (_.some(sessions, { isCurrent: false })) {%>
 						<div class="d-flex mb-1">
-							<a href="#" class="revoke-others btn-link btn-sm p-0 ms-auto fg-danger text-decoration-none min-h-0">Sign out everywhere else<i class="icon-solid icon-right-from-bracket icon-fw ms-1"></i></a>
+							<a href="#" class="revoke-others btn-link btn-sm p-0 ms-auto fg-danger text-decoration-none min-h-0">Sign out everywhere else<i class="icon-regular icon-sign-out icon-fw ms-1"></i></a>
 						</div>
 					<%}%>
 					<%if (_.isEmpty(sessions)) {%>

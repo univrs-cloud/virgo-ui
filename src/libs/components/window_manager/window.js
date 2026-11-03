@@ -265,9 +265,9 @@ export class FloatingWindow extends LitElement {
 					<div class="titlebar card-header flex-row align-items-center border-0 py-1 ps-5 pe-1 user-select-none" @pointerdown=${this.#onTitlePointerDown} @dblclick=${this.#onTitleDoubleClick}>
 						<small class="fw-bold text-truncate me-auto ${classMap({ 'fg-body': !this.active, 'fg-50': !this.active })}">${this.label}</small>
 						<div class="btn-group btn-group-sm">
-							<button type="button" class="btn-text theme-secondary border-0" @click=${() => { this.minimize(); }}><i class="icon-solid icon-minus icon-fw"></i></button>
+							<button type="button" class="btn-text theme-secondary border-0" @click=${() => { this.minimize(); }}><i class="icon-regular icon-minus icon-fw"></i></button>
 							<button type="button" class="btn-text theme-secondary border-0" @click=${() => { this.toggleMaximize(); }}><i class="icon-regular icon-square icon-fw"></i></button>
-							<button type="button" class="btn-text theme-secondary border-0" @click=${() => { this.close(); }}><i class="icon-solid icon-times icon-fw"></i></button>
+							<button type="button" class="btn-text theme-secondary border-0" @click=${() => { this.close(); }}><i class="icon-regular icon-x icon-fw"></i></button>
 						</div>
 					</div>
 				`}
@@ -276,7 +276,7 @@ export class FloatingWindow extends LitElement {
 					${this.loading ? html`
 						<div class="loading position-absolute top-0 start-0 d-flex flex-column justify-content-center align-items-center w-100 h-100">
 							<div class="loading-icon d-flex justify-content-center align-items-center flex-shrink-0 rounded-5 bg-white fg-body shadow-sm mb-6">
-								${this.icon ? html`<img src=${this.icon.includes('/') ? this.icon : `assets/img/${this.type}s/${this.icon}`}>` : html`<i class="icon-light icon-layer-group icon-xl"></i>`}
+								${this.icon ? html`<img src=${this.icon.includes('/') ? this.icon : `assets/img/${this.type}s/${this.icon}`}>` : html`<i class="icon-light icon-stack icon-xl"></i>`}
 							</div>
 							<div class="spinner-border spinner-sm"></div>
 						</div>

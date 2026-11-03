@@ -632,7 +632,7 @@ $card-image-size: 30px;
 		height: 100dvh;
 	}
 }
-.details-toggle[aria-expanded="true"] .icon-solid {
+.details-toggle[aria-expanded="true"] .icon-fill {
 	transform: rotate(180deg);
 }
 #storage {
@@ -959,7 +959,7 @@ $card-image-size: 30px;
 
 .snapshots {
 	.group-toggle {
-		&[aria-expanded="true"] .icon-solid {
+		&[aria-expanded="true"] .icon-fill {
 			transform: rotate(180deg);
 		}
 		td {

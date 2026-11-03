@@ -140,7 +140,7 @@
 								<div class="d-flex align-items-center gap-3 mb-5">
 									<div class="dropdown">
 										<button type="button" class="btn-sm btn-icon btn-outline theme-secondary position-relative" data-bs-toggle="menu" data-bs-auto-close="outside" <%=(snapshotSearching ? 'disabled' : '')%>>
-											<i class="icon-solid icon-filter icon-width-auto"></i>
+											<i class="icon-fill icon-funnel icon-width-auto"></i>
 											<span class="badge rounded-pill theme-primary position-absolute top-0 start-100 translate-middle"><%=(_.size(_.compact(_.values(snapshotFilter))) || '')%></span>
 										</button>
 										<div class="menu" style="width: 320px;">
@@ -154,7 +154,7 @@
 												<div class="menu-divider"></div>
 											<%})%>
 											<button type="button" class="menu-item" data-snapshot-filter="clear" <%=(snapshotSearching ? 'disabled' : '')%>>
-												<i class="icon-solid icon-rotate-left icon-fw"></i>
+												<i class="icon-regular icon-arrow-counter-clockwise icon-fw"></i>
 												Reset filters
 											</button>
 										</div>
@@ -333,13 +333,13 @@
 																			<%=(item.type === 'dir' || _.isUndefined(version.size) ? '' : ` · ${prettyBytes(version.size || 0, { binary: true })}`)%>
 																			<%const versionTarget = (isResultPruned(version.snapshot) ? null : browseTarget(item, version));%>
 																			<%if (versionTarget) {%>
-																				<a href="#" class="snapshot-browse ms-1 text-decoration-none" data-bs-toggle="tooltip" data-bs-original-title="Browse files" data-browse-dataset="<%-browse.dataset || ''%>" data-browse-root="<%-browse.root%>" data-browse-root-name="<%-browse.rootName%>" data-browse-snapshot="<%-version.snapshot%>" data-browse-date="<%-(versionPoint ? versionPoint.createdMoment.format('D MMM YYYY, HH:mm') : resultDate(version.snapshot))%>" data-browse-path="<%-versionTarget.path%>" data-browse-focus="<%-versionTarget.focus%>"><i class="icon-solid icon-folder-open"></i></a>
+																				<a href="#" class="snapshot-browse ms-1 text-decoration-none" data-bs-toggle="tooltip" data-bs-original-title="Browse files" data-browse-dataset="<%-browse.dataset || ''%>" data-browse-root="<%-browse.root%>" data-browse-root-name="<%-browse.rootName%>" data-browse-snapshot="<%-version.snapshot%>" data-browse-date="<%-(versionPoint ? versionPoint.createdMoment.format('D MMM YYYY, HH:mm') : resultDate(version.snapshot))%>" data-browse-path="<%-versionTarget.path%>" data-browse-focus="<%-versionTarget.focus%>"><i class="icon-fill icon-folder-open"></i></a>
 																			<%}%>
 																			<%if (canDownloadSnapshotFiles && _.includes(['file', 'dir'], item.type) && version.snapshotPath && !isResultPruned(version.snapshot)) {%>
-																				<a href="/snapshots/download?path=<%=encodeURIComponent(version.snapshotPath)%>" class="ms-1 text-decoration-none" download data-bs-toggle="tooltip" data-bs-original-title="Download"><i class="icon-solid icon-download"></i></a>
+																				<a href="/snapshots/download?path=<%=encodeURIComponent(version.snapshotPath)%>" class="ms-1 text-decoration-none" download data-bs-toggle="tooltip" data-bs-original-title="Download"><i class="icon-fill icon-download"></i></a>
 																			<%}%>
 																			<%if (item.type === 'file' && version.snapshotPath && !isResultPruned(version.snapshot)) {%>
-																				<a href="#" class="snapshot-restore ms-1 text-decoration-none" data-bs-toggle="tooltip" data-bs-original-title="Restore" data-restore-dataset="<%-browse.dataset || ''%>" data-restore-root="<%-browse.root%>" data-restore-root-name="<%-browse.rootName%>" data-path="<%-version.snapshotPath%>" data-date="<%-(versionPoint ? versionPoint.createdMoment.format('D MMM YYYY, HH:mm') : resultDate(version.snapshot))%>"><i class="icon-solid icon-clock-rotate-left"></i></a>
+																				<a href="#" class="snapshot-restore ms-1 text-decoration-none" data-bs-toggle="tooltip" data-bs-original-title="Restore" data-restore-dataset="<%-browse.dataset || ''%>" data-restore-root="<%-browse.root%>" data-restore-root-name="<%-browse.rootName%>" data-path="<%-version.snapshotPath%>" data-date="<%-(versionPoint ? versionPoint.createdMoment.format('D MMM YYYY, HH:mm') : resultDate(version.snapshot))%>"><i class="icon-regular icon-clock-counter-clockwise"></i></a>
 																			<%}%>
 																		</span>
 																	<%})%>
@@ -356,9 +356,9 @@
 														<%const downloads = (canDownloadSnapshotFiles && row.node.mountpoint && (row.depth > 0 || _.includes(row.name, '/')) ? folderDownloads(row.node) : []);%>
 														<%if (!_.isEmpty(downloads)) {%>
 															<div class="dropdown">
-																<span class="small fg-primary cursor-pointer" data-bs-toggle="menu"><i class="icon-solid icon-download"></i></span>
+																<span class="small fg-primary cursor-pointer" data-bs-toggle="menu"><i class="icon-fill icon-download"></i></span>
 																<div class="menu shadow shadow-opacity-100 overflow-y-auto" style="max-height: 16rem;">
-																	<h6 class="menu-header">Download as of<i class="icon-solid icon-triangle-exclamation icon-fw fg-orange-500 ms-1" data-bs-toggle="tooltip" data-bs-original-title="Downloads the entire folder as it was at that date, not just the files shown in the results."></i></h6>
+																	<h6 class="menu-header">Download as of<i class="icon-fill icon-warning icon-fw fg-orange-500 ms-1" data-bs-toggle="tooltip" data-bs-original-title="Downloads the entire folder as it was at that date, not just the files shown in the results."></i></h6>
 																	<%_.each(downloads, (entry) => {%>
 																		<a href="/snapshots/download?path=<%=encodeURIComponent(entry.path)%>" class="menu-item" download><%-entry.label%></a>
 																	<%})%>

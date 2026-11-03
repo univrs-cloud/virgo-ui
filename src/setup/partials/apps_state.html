@@ -1,9 +1,9 @@
 <%_.each(apps, (app) => {%>
 	<dt class="fw-lighter d-flex align-items-center">
 		<%if (app.isRunning) {%>
-			<i class="icon-duotone icon-solid icon-circle-check icon-fw me-3" style="--icon-secondary-color: var(--green-500);"></i>
+			<i class="icon-duotone icon-check-circle icon-fw me-3" style="--icon-secondary-color: var(--green-500);"></i>
 		<%} else if (app.isFailed) {%>
-			<i class="icon-duotone icon-solid icon-circle-xmark icon-fw me-3" style="--icon-secondary-color: var(--red-500);"></i>
+			<i class="icon-duotone icon-x-circle icon-fw me-3" style="--icon-secondary-color: var(--red-500);"></i>
 		<%} else {%>
 			<div class="spinner-border spinner-sm fg-gray-600 me-3"></div>
 		<%}%>

@@ -23,7 +23,7 @@
 					</button>
 				</div>
 				<div class="col-auto p-3 lh-1">
-					<i class="icon-duotone icon-solid icon-layer-group icon-fw" style="font-size: 1.875rem; width: 2rem; --icon-primary-opacity: 0.4; --icon-secondary-opacity: 1;"></i>
+					<i class="icon-duotone icon-stack icon-fw" style="font-size: 1.875rem; width: 2rem;"></i>
 				</div>
 				<div class="col ps-1 min-w-0">
 					<div class="text-truncate min-w-0 mb--1"><%-pool.name%></div>
@@ -31,7 +31,7 @@
 				</div>
 				<div class="col-auto ps-5 ms-auto">
 					<div class="dropdown">
-						<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw fg-secondary"></i></span>
+						<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i></span>
 						<div class="menu">
 							<button type="button" class="menu-item disabled">No actions</button>
 						</div>
@@ -41,19 +41,19 @@
 
 			<div class="position-relative">
 				<div class="nav nav-underline d-flex gap-0 border-bottom">
-					<button type="button" class="nav-link px-4 active border-primary fw-light"><i class="icon-light icon-circle-info icon-fw"></i>Overview</button>
+					<button type="button" class="nav-link px-4 active border-primary fw-light"><i class="icon-light icon-info icon-fw"></i>Overview</button>
 				</div>
 
 				<div class="table-scroll overflow-y-scroll pe-5 mx-0 me--5">
 					<div class="list-group list-group-flush">
 						<div class="list-group-item pt-5 pb-7">
 							<div class="d-flex flex-column md:flex-row md:align-items-center gap-1 md:gap-5">
-								<small class="fg-4 flex-shrink-0 text-truncate" style="width: 8.5rem;"><i class="icon-solid icon-heart-pulse icon-fw me-1"></i>Health</small>
+								<small class="fg-4 flex-shrink-0 text-truncate" style="width: 8.5rem;"><i class="icon-fill icon-heartbeat icon-fw me-1"></i>Health</small>
 								<h4 class="m-0 flex-grow-1 <%-healthClass%>"><%-health || '—'%></h4>
 							</div>
 							<hr class="my-3 border-0 border-top opacity-50">
 							<div class="d-flex flex-column md:flex-row gap-1 md:gap-5">
-								<small class="fg-4 flex-shrink-0 text-truncate" style="width: 8.5rem;"><i class="icon-solid icon-binary-circle-check icon-fw me-1"></i>Data integrity</small>
+								<small class="fg-4 flex-shrink-0 text-truncate" style="width: 8.5rem;"><i class="icon-fill icon-binary icon-fw me-1"></i>Data integrity</small>
 								<div class="flex-grow-1 min-w-0">
 								<%const scan = pool.scanStats%>
 								<%const scanFunction = _.toUpper(scan?.function || 'NONE')%>
@@ -121,19 +121,19 @@
 							</div>
 							<div class="row g-3 mb-5">
 								<div class="col-6 md:col-3">
-									<small class="fg-4 d-block text-truncate"><i class="icon-solid icon-circle icon-fw me-1"></i>Capacity</small>
+									<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-circle icon-fw me-1"></i>Capacity</small>
 									<h4 class="m-0"><%=prettyBytes(size, { binary: true })%></h4>
 								</div>
 								<div class="col-6 md:col-3">
-									<small class="fg-4 d-block text-truncate"><i class="icon-solid icon-circle-three-quarters-stroke icon-fw me-1"></i>Used</small>
+									<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-chart-pie-slice icon-fw me-1"></i>Used</small>
 									<h4 class="m-0"><%=prettyBytes(allocated, { binary: true })%> <small class="fs-md fw-light fg-4">(<%=capacity.toFixed(2)%>%)</small></h4>
 								</div>
 								<div class="col-6 md:col-3">
-									<small class="fg-4 d-block text-truncate"><i class="icon-solid icon-circle-quarter-stroke icon-flip-horizontal icon-fw me-1"></i>Free</small>
+									<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-chart-pie icon-fw me-1"></i>Free</small>
 									<h4 class="m-0"><%=prettyBytes(free, { binary: true })%></h4>
 								</div>
 								<div class="col-6 md:col-3">
-									<small class="fg-4 d-block text-truncate"><i class="icon-solid icon-compress icon-fw me-1"></i>Space saved</small>
+									<small class="fg-4 d-block text-truncate"><i class="icon-regular icon-arrows-in-simple icon-fw me-1"></i>Space saved</small>
 									<h4 class="m-0">
 										<%if (compressRatio > 0) {%>
 											<%=prettyBytes(saved, { binary: true })%> <small class="fs-md fw-light fg-4">(<%=compressRatio.toFixed(2)%>x compression)</small>
@@ -149,11 +149,11 @@
 							</u-progress>
 							<div class="row g-3 mt-3">
 								<div class="col-6 md:col-3">
-									<small class="fg-4 d-block text-truncate"><i class="icon-solid icon-database icon-fw me-1 fg-blue-500"></i>Data</small>
+									<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-database icon-fw me-1 fg-blue-500"></i>Data</small>
 									<span class="fw-light"><%=prettyBytes(data, { binary: true })%></span>
 								</div>
 								<div class="col-6 md:col-3">
-									<small class="fg-4 d-block text-truncate"><i class="icon-solid icon-clock-rotate-left icon-fw me-1 fg-indigo-500"></i>Snapshots (<%=_.size(pool.snapshots)%>)</small>
+									<small class="fg-4 d-block text-truncate"><i class="icon-regular icon-clock-counter-clockwise icon-fw me-1 fg-indigo-500"></i>Snapshots (<%=_.size(pool.snapshots)%>)</small>
 									<span class="fw-light"><%=prettyBytes(snapshots, { binary: true })%></span>
 								</div>
 							</div>
@@ -162,7 +162,7 @@
 						<div class="list-group-item px-0 pt-5 pb-3">
 							<div class="px-5">
 								<div class="d-flex align-items-center min-w-0">
-									<i class="icon-light icon-list-tree icon-fw fg-4 me-3"></i>
+									<i class="icon-light icon-tree-view icon-fw fg-4 me-3"></i>
 									<span>Topology</span>
 									<small class="fg-4 ms-3">(<%=_.pluralize('group', _.size(groups), true)%>)</small>
 							</div>
@@ -186,12 +186,12 @@
 													<div class="vdev-stem"></div>
 													<div class="position-relative d-flex justify-content-center w-100">
 														<%if (role === 'new') {%>
-															<i class="icon-solid icon-arrow-right icon-xs icon-width-auto lh-1 fg-4 position-absolute top-50 start-0 translate-middle"></i>
+															<i class="icon-regular icon-arrow-right icon-xs icon-width-auto lh-1 fg-4 position-absolute top-50 start-0 translate-middle"></i>
 														<%}%>
 														<span class="position-relative d-inline-flex">
-															<i class="vdev-disk icon-duotone icon-solid icon-hard-drive <%-diskColor%> <%=(activity && activity !== 'awaiting' ? 'icon-fade' : '')%>"<%=(diskTip ? ` data-bs-toggle="tooltip" data-bs-original-title="${diskTip}"` : '')%>></i>
+															<i class="vdev-disk icon-duotone icon-hard-drive <%-diskColor%> <%=(activity && activity !== 'awaiting' ? 'icon-fade' : '')%>"<%=(diskTip ? ` data-bs-toggle="tooltip" data-bs-original-title="${diskTip}"` : '')%>></i>
 															<%if (usedIn) {%>
-																<i class="icon-solid icon-link icon-2xs icon-width-auto lh-1 fg-blue-500 position-absolute top-0 start-100 translate-middle"></i>
+																<i class="icon-regular icon-link icon-2xs icon-width-auto lh-1 fg-blue-500 position-absolute top-0 start-100 translate-middle"></i>
 															<%}%>
 														</span>
 													</div>
@@ -206,7 +206,7 @@
 							</div>
 							<div class="details-toggle d-inline-flex align-items-center cursor-pointer ps-5 pb-3" data-bs-toggle="collapse" data-bs-target="#vdev-details-<%-_.kebabCase(pool.name)%>" aria-expanded="false">
 								<small class="fg-4">Details</small>
-								<i class="icon-solid icon-chevron-down icon-fw icon-xs fg-secondary ms-1"></i>
+								<i class="icon-fill icon-caret-down icon-fw icon-xs fg-secondary ms-1"></i>
 							</div>
 							<div class="tree-rows collapse pb-3" id="vdev-details-<%-_.kebabCase(pool.name)%>">
 								<%_.each(vdevSections, (section) => {%>

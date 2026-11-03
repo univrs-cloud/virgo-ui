@@ -4,14 +4,6 @@
 @use "utilities" as custom;
 
 // --------
-// webfonts
-// --------
-@use "fontawesome:/variables" with (
-	$css-prefix: "icon",
-	$icon-property: "--icon"
-);
-
-// --------
 // Bootstrap 6.0.0-alpha.1
 // --------
 @use "bootstrap/scss/config" with (
@@ -87,13 +79,10 @@
 );
 
 @layer vendor {
-	@include meta.load-css("fontawesome:/fontawesome");
-	@include meta.load-css("fontawesome:/brands");
-	@include meta.load-css("fontawesome:/solid");
-	@include meta.load-css("fontawesome:/regular");
-	@include meta.load-css("fontawesome:/light");
-	@include meta.load-css("fontawesome:/duotone");
-	@include meta.load-css("fontawesome:/duotone-light");
+	// --------
+	// webfonts
+	// --------
+	@include meta.load-css("phosphor:/phosphor");
 
 	// --------
 	// xterm

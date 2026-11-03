@@ -8,18 +8,18 @@
 					</button>
 				</div>
 				<div class="col-auto p-3 lh-1">
-					<i class="icon-duotone icon-solid icon-cube icon-fw" style="font-size: 1.875rem; width: 2rem;"></i>
+					<i class="icon-duotone icon-cube icon-fw" style="font-size: 1.875rem; width: 2rem;"></i>
 				</div>
 				<div class="col ps-1 min-w-0">
 					<div class="d-flex align-items-center mb--2 min-w-0">
 						<div class="text-truncate min-w-0"><%-service.unit%></div>
 						<%if (service.broken) {%>
 							<u-badge color="red" class="ms-3" tip="Service not found or failed to load" pill>
-								<i class="icon-solid icon-triangle-exclamation icon-fw"></i>
+								<i class="icon-fill icon-warning icon-fw"></i>
 							</u-badge>
 						<%} else if (service.unitFileState === 'masked') {%>
 							<u-badge color="orange" class="ms-3" tip="Service is masked and cannot be started or enabled" pill>
-								<i class="icon-solid icon-ban icon-fw"></i>
+								<i class="icon-fill icon-prohibit-inset icon-fw"></i>
 							</u-badge>
 						<%}%>
 					</div>
@@ -38,11 +38,11 @@
 							<i class="icon-light icon-cube icon-fw me-1 fg-gray-300"></i>
 							<span class="name"></span>
 							<small class="fg-gray-300 border-start border-gray-800 ps-3 ms-3">
-								<i class="icon-solid icon-tower-broadcast icon-fw me-1"></i>
+								<i class="icon-fill icon-broadcast icon-fw me-1"></i>
 								Connecting...
 							</small>
 						</div>
-						<a href="#" class="close-logs fg-secondary ms-3"><i class="icon-solid icon-times"></i></a>
+						<a href="#" class="close-logs fg-secondary ms-3"><i class="icon-regular icon-x"></i></a>
 					</div>
 					<ul class="color-scheme-dark"></ul>
 				</div>
@@ -52,7 +52,7 @@
 						<div class="col col-6 md:col-3">
 							<div class="card mb-3">
 								<div class="card-body py-1">
-									<small class="fg-4 pb-1"><i class="icon-solid icon-circle-dot icon-fw me-1"></i>State</small>
+									<small class="fg-4 pb-1"><i class="icon-fill icon-record icon-fw me-1"></i>State</small>
 									<h4><%-service.sub%></h4>
 								</div>
 							</div>
@@ -60,7 +60,7 @@
 						<div class="col col-6 md:col-3">
 							<div class="card mb-3">
 								<div class="card-body py-1">
-									<small class="fg-4 pb-1"><i class="icon-solid icon-circle-half-stroke icon-fw me-1"></i>Activity</small>
+									<small class="fg-4 pb-1"><i class="icon-fill icon-circle-half icon-fw me-1"></i>Activity</small>
 									<h4><%-service.active%></h4>
 								</div>
 							</div>
@@ -68,7 +68,7 @@
 						<div class="col col-6 md:col-3">
 							<div class="card mb-3">
 								<div class="card-body py-1">
-									<small class="fg-4 pb-1"><i class="icon-solid icon-toggle-on icon-fw me-1"></i>Startup</small>
+									<small class="fg-4 pb-1"><i class="icon-fill icon-toggle-right icon-fw me-1"></i>Startup</small>
 									<h4><%-service.unitFileState%></h4>
 								</div>
 							</div>
@@ -76,7 +76,7 @@
 						<div class="col col-6 md:col-3">
 							<div class="card mb-3">
 								<div class="card-body py-1">
-									<small class="fg-4 pb-1"><i class="icon-solid icon-memory icon-fw me-1"></i>RAM</small>
+									<small class="fg-4 pb-1"><i class="icon-fill icon-memory icon-fw me-1"></i>RAM</small>
 									<h4>
 										<%if (service.type === 'service' && service.active === 'active') {%>
 											<span class="tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(service.memory?.usage || 0, { binary: true })%>"><%=service.memory?.percent.toFixed(2)%>%</span>
@@ -92,7 +92,7 @@
 					<div class="services pe-5 me--5">
 						<div class="d-flex align-items-center gap-3 mt-3">
 							<a href="#" class="logs btn-solid theme-secondary btn-xs" data-unit="<%-service.unit%>">
-								<i class="icon-solid icon-memo icon-fw"></i>Logs
+								<i class="icon-fill icon-article icon-fw"></i>Logs
 							</a>
 						</div>
 					</div>

@@ -12,16 +12,16 @@
 			<div class="min-w-0">
 				<%if (!_.isEmpty(shortcut.url)) {%>
 					<a href="<%-shortcut.url%>" target="<%-(shortcut?.target || shortcut.name)%>" referrerpolicy="no-referrer" class="d-inline-flex align-items-center underline-0 hover:underline-80 max-w-100">
-						<small class="text-truncate min-w-0"><%-shortcut.url%></small><i class="icon-solid icon-arrow-up-right-from-square icon-fw icon-2xs ms-1 d-none sm:d-block"></i>
+						<small class="text-truncate min-w-0"><%-shortcut.url%></small><i class="icon-regular icon-arrow-square-out icon-fw icon-2xs ms-1 d-none sm:d-block"></i>
 					</a>
 				<%} else {%>
 					&mdash;
 				<%}%>
 			</div>
 			<%if (shortcut.traefik) {%>
-				<u-badge color="blue" tint="600" class="ms-3 flex-shrink-0" tip="Proxied" pill><i class="icon-duotone icon-solid icon-direction-left-right"></i></u-badge>
+				<u-badge color="blue" tint="600" class="ms-3 flex-shrink-0" tip="Proxied" pill><i class="icon-duotone icon-arrows-left-right"></i></u-badge>
 				<%if (shortcut.traefik.isAuthRequired) {%>
-					<u-badge color="green" tint="600" class="ms-1 flex-shrink-0" tip="Private access enabled" pill><i class="icon-duotone icon-solid icon-key-skeleton"></i></u-badge>
+					<u-badge color="green" tint="600" class="ms-1 flex-shrink-0" tip="Private access enabled" pill><i class="icon-duotone icon-key"></i></u-badge>
 				<%}%>
 			<%}%>
 		</div>
@@ -31,15 +31,15 @@
 	</td>
 	<td class="text-center px-0">
 		<%if (!_.isEmpty(jobs)) {%>
-			<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-solid icon-gear icon-fw icon-spin"></i></span>
+			<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-fill icon-gear icon-fw icon-spin"></i></span>
 		<%}%>
 		<%if (_.isEmpty(jobs)) {%>
 			<div class="dropdown">
-				<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw fg-secondary"></i></span>
+				<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i></span>
 				<div class="menu">
-					<a href="#shortcut-update" class="menu-item" data-bs-toggle="dialog"><i class="icon-solid icon-pen icon-fw"></i>Edit</a>
+					<a href="#shortcut-update" class="menu-item" data-bs-toggle="dialog"><i class="icon-fill icon-pen icon-fw"></i>Edit</a>
 					<div class="menu-divider"></div>
-					<a href="#" class="menu-item fg-danger confirm" data-action="delete"><i class="icon-solid icon-times icon-fw"></i>Delete</a>
+					<a href="#" class="menu-item fg-danger confirm" data-action="delete"><i class="icon-fill icon-x-circle icon-fw"></i>Delete</a>
 				</div>
 			</div>
 		<%}%>

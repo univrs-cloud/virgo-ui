@@ -1,14 +1,14 @@
 <div class="item dropdown chip cursor-default" data-id="<%-trustedProxy%>">
 	<%if (!_.isEmpty(jobs)) {%>
 		<%-trustedProxy%>
-		<span class="chip-icon"><i class="icon-solid icon-gear icon-spin fg-secondary"></i></span>
+		<span class="chip-icon"><i class="icon-fill icon-gear icon-spin fg-secondary"></i></span>
 	<%} else {%>
 		<%-trustedProxy%>
-		<button type="button" class="chip-dismiss" data-bs-toggle="menu"><i class="icon-solid icon-ellipsis-vertical"></i></button>
+		<button type="button" class="chip-dismiss" data-bs-toggle="menu"><i class="icon-fill icon-dots-three-outline-vertical"></i></button>
 		<div class="menu">
-			<a href="#trusted-proxy-edit" class="menu-item" data-bs-toggle="dialog"><i class="icon-solid icon-pen icon-fw"></i>Edit</a>
+			<a href="#trusted-proxy-edit" class="menu-item" data-bs-toggle="dialog"><i class="icon-fill icon-pen icon-fw"></i>Edit</a>
 			<div class="menu-divider"></div>
-			<a href="#" class="menu-item fg-danger confirm" data-action="delete"><i class="icon-solid icon-times icon-fw"></i>Delete</a>
+			<a href="#" class="menu-item fg-danger confirm" data-action="delete"><i class="icon-fill icon-x-circle icon-fw"></i>Delete</a>
 		</div>
 	<%}%>
 </div>

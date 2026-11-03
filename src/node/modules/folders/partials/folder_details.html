@@ -13,7 +13,7 @@
 					</button>
 				</div>
 				<div class="card-image-row-icon card-image card-spacer px-3">
-					<i class="icon-light icon-folder-closed icon-fw fg-emphasis-secondary"></i>
+					<i class="icon-light icon-folder icon-fw fg-emphasis-secondary"></i>
 				</div>
 				<div class="card-image-row-title d-flex align-items-center mb--2 ps-1 min-w-0">
 					<div class="text-truncate min-w-0"><%-folder.comment%></div>
@@ -31,12 +31,12 @@
 
 			<div class="position-relative">
 				<div class="nav nav-underline d-flex gap-0 border-bottom">
-					<button type="button" class="nav-link px-4 <%=(activeTab === 'overview' ? 'active border-primary fw-light' : '')%>" data-folder-tab="overview"><i class="icon-light icon-circle-info icon-fw"></i>Overview</button>
+					<button type="button" class="nav-link px-4 <%=(activeTab === 'overview' ? 'active border-primary fw-light' : '')%>" data-folder-tab="overview"><i class="icon-light icon-info icon-fw"></i>Overview</button>
 					<%if (folder.snapshotPolicy) {%>
 						<button type="button" class="nav-link px-4 <%=(activeTab === 'snapshots' ? 'active border-primary fw-light' : '')%>" data-folder-tab="snapshots">
 							<span class="position-relative d-inline-flex">
-								<i class="icon-light icon-clock-rotate-left icon-fw"></i>
-								<i class="icon-solid icon-circle icon-2xs icon-width-auto lh-1 position-absolute top-100 start-100 translate-middle <%=({ enabled: 'fg-green-300', paused: 'fg-orange-300', disabled: 'fg-gray-500' })[snapshotMode]%>" style="margin: -0.1875rem 0 0 -0.125rem;" data-bs-toggle="tooltip" data-bs-original-title="<%-_.upperFirst(snapshotMode)%>"></i>
+								<i class="icon-light icon-clock-counter-clockwise icon-fw"></i>
+								<i class="icon-fill icon-circle icon-2xs icon-width-auto lh-1 position-absolute top-100 start-100 translate-middle <%=({ enabled: 'fg-green-300', paused: 'fg-orange-300', disabled: 'fg-gray-500' })[snapshotMode]%>" style="margin: -0.1875rem 0 0 -0.125rem;" data-bs-toggle="tooltip" data-bs-original-title="<%-_.upperFirst(snapshotMode)%>"></i>
 							</span>
 							Snapshots
 							<%if (snapshotMode !== 'disabled') {%>
@@ -56,19 +56,19 @@
 								</div>
 								<div class="row g-3 mb-5">
 									<div class="col-6 md:col-3">
-										<small class="fg-4 d-block text-truncate"><i class="icon-solid icon-circle icon-fw me-1"></i>Capacity</small>
+										<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-circle icon-fw me-1"></i>Capacity</small>
 										<h4 class="m-0"><%=prettyBytes(folder.size || 0, { binary: true })%></h4>
 									</div>
 									<div class="col-6 md:col-3">
-										<small class="fg-4 d-block text-truncate"><i class="icon-solid icon-circle-three-quarters-stroke icon-fw me-1"></i>Used</small>
+										<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-chart-pie-slice icon-fw me-1"></i>Used</small>
 										<h4 class="m-0"><%=prettyBytes(folder.alloc || 0, { binary: true })%> <small class="fs-md fw-light fg-4">(<%=folder.cap.toFixed(2)%>%)</small></h4>
 									</div>
 									<div class="col-6 md:col-3">
-										<small class="fg-4 d-block text-truncate"><i class="icon-solid icon-circle-quarter-stroke icon-flip-horizontal icon-fw me-1"></i>Free</small>
+										<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-chart-pie icon-fw me-1"></i>Free</small>
 										<h4 class="m-0"><%=prettyBytes(folder.free || 0, { binary: true })%></h4>
 									</div>
 									<div class="col-6 md:col-3">
-										<small class="fg-4 d-block text-truncate"><i class="icon-solid icon-compress icon-fw me-1"></i>Space saved</small>
+										<small class="fg-4 d-block text-truncate"><i class="icon-regular icon-arrows-in-simple icon-fw me-1"></i>Space saved</small>
 										<h4 class="m-0">
 											<%if (folder.storage.compressratio > 0) {%>
 												<%=prettyBytes(folder.storage.savedbycompression, { binary: true })%> <small class="fs-md fw-light fg-4">(<%=folder.storage.compressratio.toFixed(2)%>x compression)</small>
@@ -85,11 +85,11 @@
 									</u-progress>
 									<div class="row g-3 mt-3">
 										<div class="col-6 md:col-3">
-											<small class="fg-4 d-block text-truncate"><i class="icon-solid icon-database icon-fw me-1 fg-blue-500"></i>Data</small>
+											<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-database icon-fw me-1 fg-blue-500"></i>Data</small>
 											<span class="fw-light"><%=prettyBytes(folder.storage.dataset, { binary: true })%></span>
 										</div>
 										<div class="col-6 md:col-3">
-											<small class="fg-4 d-block text-truncate"><i class="icon-solid icon-clock-rotate-left icon-fw me-1 fg-indigo-500"></i>Snapshots (<%=_.size(folder.snapshots)%>)</small>
+											<small class="fg-4 d-block text-truncate"><i class="icon-regular icon-clock-counter-clockwise icon-fw me-1 fg-indigo-500"></i>Snapshots (<%=_.size(folder.snapshots)%>)</small>
 											<span class="fw-light"><%=prettyBytes(folder.storage.snapshots, { binary: true })%></span>
 										</div>
 									</div>
@@ -114,9 +114,9 @@
 										<%if (!account?.isDisabled) {%>
 											<div class="border-start ps-3 flex-shrink-0">
 												<div class="d-flex align-items-center gap-3">
-													<%_.each([{ icon: 'icon-windows', address: `\\\\${accessOn}\\${folder.name}` }, { icon: 'icon-apple', address: `smb://${(user ? `${user}@` : '')}${accessOn}/${folder.name}` }, { icon: 'icon-linux', address: `smb://${(user ? `${user}@` : '')}${accessOn}/${folder.name}` }], (entry) => {%>
+													<%_.each([{ icon: 'icon-windows-logo', address: `\\\\${accessOn}\\${folder.name}` }, { icon: 'icon-apple-logo', address: `smb://${(user ? `${user}@` : '')}${accessOn}/${folder.name}` }, { icon: 'icon-linux-logo', address: `smb://${(user ? `${user}@` : '')}${accessOn}/${folder.name}` }], (entry) => {%>
 														<div class="d-flex align-items-center">
-															<a href="#" class="fg-body underline-0" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-original-title="Click to copy the folder address. Access the folder using a computer on your local network."><i class="icon-brands <%=entry.icon%> icon-fw"></i></a>
+															<a href="#" class="fg-body underline-0" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-original-title="Click to copy the folder address. Access the folder using a computer on your local network."><i class="icon-fill <%=entry.icon%> icon-fw"></i></a>
 															<span class="copy d-none"><%-entry.address%></span>
 														</div>
 													<%})%>
@@ -142,7 +142,7 @@
 											<div class="d-flex align-items-center min-w-0">
 												<span class="position-relative d-inline-flex flex-shrink-0 me-3">
 													<i class="icon-light icon-laptop icon-fw fg-4"></i>
-													<i class="icon-solid icon-circle icon-2xs icon-width-auto lh-1 position-absolute top-0 start-100 translate-middle fg-green-300"></i>
+													<i class="icon-fill icon-circle icon-2xs icon-width-auto lh-1 position-absolute top-0 start-100 translate-middle fg-green-300"></i>
 												</span>
 												<span class="text-truncate min-w-0"><%-_.join(client.usernames, ', ')%></span>
 												<small class="fg-4 text-nowrap ms-3"><%-client.address%></small>
@@ -152,7 +152,7 @@
 											<div class="row g-3">
 												<div class="col-6">
 													<div class="d-flex align-items-center justify-content-between">
-														<small class="fg-4"><i class="icon-solid icon-arrow-down icon-fw me-1 fg-blue-500"></i>RX</small>
+														<small class="fg-4"><i class="icon-regular icon-arrow-down icon-fw me-1 fg-blue-500"></i>RX</small>
 														<small class="fw-light"><%=_.prettyBitRate(client.rx)%></small>
 													</div>
 													<u-progress shadow="false" class="d-block">
@@ -161,7 +161,7 @@
 												</div>
 												<div class="col-6">
 													<div class="d-flex align-items-center justify-content-between">
-														<small class="fg-4"><i class="icon-solid icon-arrow-up icon-fw me-1 fg-purple-500"></i>TX</small>
+														<small class="fg-4"><i class="icon-regular icon-arrow-up icon-fw me-1 fg-purple-500"></i>TX</small>
 														<small class="fw-light"><%=_.prettyBitRate(client.tx)%></small>
 													</div>
 													<u-progress shadow="false" class="d-block">
@@ -192,15 +192,15 @@
 										</div>
 										<%if (folder.canChangeSnapshots) {%>
 											<%if (!_.isEmpty(jobs)) {%>
-												<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-solid icon-gear icon-fw icon-spin"></i></span>
+												<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-fill icon-gear icon-fw icon-spin"></i></span>
 											<%} else {%>
 												<div class="d-inline-flex align-items-center bg-2 rounded-3 px-1">
 													<%_.each([
 														{ mode: 'enabled', label: (snapshotMode === 'paused' ? 'Resume' : 'Enable'), icon: 'icon-play', color: 'fg-green-400', isAllowed: (snapshotMode !== 'enabled') },
 														{ mode: 'paused', label: 'Pause', icon: 'icon-pause', color: 'fg-orange-400', isAllowed: (snapshotMode === 'enabled') },
-														{ mode: 'disabled', label: 'Disable', icon: 'icon-ban', color: 'fg-red-400', isAllowed: (snapshotMode !== 'disabled') }
+														{ mode: 'disabled', label: 'Disable', icon: 'icon-prohibit-inset', color: 'fg-red-400', isAllowed: (snapshotMode !== 'disabled') }
 													], ({ mode, label, icon, color, isAllowed }) => {%>
-														<a href="#" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 rounded-3 <%=(isAllowed ? '' : 'disabled')%>" data-action="snapshots" data-mode="<%-mode%>" data-bs-toggle="tooltip" data-bs-original-title="<%-label%>"><i class="icon-solid <%=icon%> icon-fw <%=(isAllowed ? color : 'fg-gray-500')%>"></i></a>
+														<a href="#" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 rounded-3 <%=(isAllowed ? '' : 'disabled')%>" data-action="snapshots" data-mode="<%-mode%>" data-bs-toggle="tooltip" data-bs-original-title="<%-label%>"><i class="icon-fill <%=icon%> icon-fw <%=(isAllowed ? color : 'fg-gray-500')%>"></i></a>
 													<%})%>
 												</div>
 											<%}%>

@@ -34,10 +34,10 @@ const availabilityRow = access.querySelector('.availability');
 const availabilityMessage = access.querySelector('.availability-message');
 const availabilityIcon = access.querySelector('.availability-icon');
 const AVAILABILITY_ICONS = {
-	checking: 'icon-solid icon-spinner-third icon-fw icon-spin me-3',
-	available: 'icon-duotone icon-solid icon-circle-check icon-fw me-3',
-	taken: 'icon-duotone icon-solid icon-circle-xmark icon-fw me-3',
-	unknown: 'icon-duotone icon-solid icon-triangle-exclamation icon-fw me-3'
+	checking: 'icon-regular icon-circle-notch icon-fw icon-spin me-3',
+	available: 'icon-duotone icon-check-circle icon-fw me-3',
+	taken: 'icon-duotone icon-x-circle icon-fw me-3',
+	unknown: 'icon-duotone icon-warning icon-fw me-3'
 };
 const AVAILABILITY_COLOURS = {
 	available: 'var(--green-500)',

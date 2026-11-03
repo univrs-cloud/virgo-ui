@@ -4,7 +4,7 @@
 %>
 <li class="topology-edge-primary topology-edge-dashed" data-traffic-subtree="<%-sharesTraffic%>" data-traffic-relay data-sharing>
 	<div class="topology-node">
-		<div class="topology-icon rounded-5 bg-subtle-primary fg-primary"><i class="icon-duotone icon-solid icon-folder-open"></i></div>
+		<div class="topology-icon rounded-5 bg-subtle-primary fg-primary"><i class="icon-duotone icon-folder-open"></i></div>
 		<div class="text-truncate max-w-100 mt-2">Sharing</div>
 		<div class="d-flex flex-wrap justify-content-center gap-1 mt-1">
 			<u-badge class="topology-detail" color="gray" tint="100" tip="445 (tcp)" pill><small>:445</small></u-badge>
@@ -12,14 +12,14 @@
 		<div class="topology-traffic max-w-100" data-traffic-label="<%-sharesTraffic%>"></div>
 	</div>
 	<div class="topology-stem"></div>
-	<button type="button" class="topology-toggle btn-icon btn-solid theme-primary btn-xs rounded-pill" data-action="toggle" data-key="shares"><i class="icon-solid <%=(isSharesExpanded ? 'icon-minus' : 'icon-plus')%> icon-xs"></i></button>
+	<button type="button" class="topology-toggle btn-icon btn-solid theme-primary btn-xs rounded-pill" data-action="toggle" data-key="shares"><i class="icon-regular <%=(isSharesExpanded ? 'icon-minus' : 'icon-plus')%> icon-xs"></i></button>
 	<%if (isSharesExpanded) {%>
 		<ul class="topology-edge-primary topology-edge-dashed">
 			<%_.each(topology.folders, (share) => {%>
-				<%=shareTemplate({ share, icon: 'icon-folder-closed', iconStyle: '' })%>
+				<%=shareTemplate({ share, icon: 'icon-folder' })%>
 			<%})%>
 			<%_.each(topology.timeMachines, (share) => {%>
-				<%=shareTemplate({ share, icon: 'icon-clock-rotate-left', iconStyle: '--icon-primary-opacity: 0.4; --icon-secondary-opacity: 1;' })%>
+				<%=shareTemplate({ share, icon: 'icon-clock-counter-clockwise' })%>
 			<%})%>
 		</ul>
 	<%}%>

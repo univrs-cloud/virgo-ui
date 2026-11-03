@@ -11,14 +11,14 @@
 			<%if (stack.icon) {%>
 				<img src="<%-(_.includes(stack.icon, '/') ? stack.icon : `assets/img/apps/${stack.icon}`)%>" alt="">
 			<%} else {%>
-				<i class="topology-glyph icon-light icon-layer-group fg-emphasis-secondary"></i>
+				<i class="topology-glyph icon-light icon-stack fg-emphasis-secondary"></i>
 			<%}%>
 		</div>
 		<div class="d-flex align-items-center justify-content-center gap-1 max-w-100 mt-2">
-			<i class="icon-solid icon-circle icon-2xs icon-width-auto flex-shrink-0 <%=stateColor%>" data-bs-toggle="tooltip" data-bs-original-title="<%=running%> / <%=_.size(stack.containers)%> running"></i>
+			<i class="icon-fill icon-circle icon-2xs icon-width-auto flex-shrink-0 <%=stateColor%>" data-bs-toggle="tooltip" data-bs-original-title="<%=running%> / <%=_.size(stack.containers)%> running"></i>
 			<span class="text-truncate"<%if (routesTip) {%> data-bs-toggle="tooltip" data-bs-original-title="<%-routesTip%>"<%}%>><%-stack.title%></span>
 			<%if (isAuthRequired) {%>
-				<i class="icon-solid icon-lock icon-xs icon-width-auto fg-4 flex-shrink-0" data-bs-toggle="tooltip" data-bs-original-title="Gated"></i>
+				<i class="icon-fill icon-lock icon-xs icon-width-auto fg-4 flex-shrink-0" data-bs-toggle="tooltip" data-bs-original-title="Gated"></i>
 			<%}%>
 		</div>
 		<%if (!_.isEmpty(stack.ports) || stack.isHostNetwork) {%>

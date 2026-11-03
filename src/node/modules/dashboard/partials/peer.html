@@ -4,7 +4,7 @@
 <div class="card border-0 numeric-tabular mb-5">
 	<div class="card-body py-5 pb-1">
 		<h5 class="d-flex align-items-center fg-black mb-3">
-			<i class="icon-regular icon-nas icon-fw me-1 fg-gray-300"></i>Nodes
+			<i class="icon-regular icon-computer-tower icon-fw me-1 fg-gray-300"></i>Nodes
 		</h5>
 		<div class="d-flex align-items-center justify-content-between gap-3 border-top py-3">
 			<div class="lh-xs fg-4 small">
@@ -12,7 +12,7 @@
 					<%-system?.osInfo?.hostname%>
 					<u-badge color="green" tint="100" class="ms-1" pill>this node</u-badge>
 				</div>
-				<div><i class="icon-regular icon-ethernet icon-fw me-1"></i><%-_.find(_.reject(_.find(system?.networkInterfaces, { 'default': true })?.addrInfo, { local: system?.virtualIp?.address }), { family: 'inet' })?.local%></div>
+				<div><i class="icon-regular icon-network icon-fw me-1"></i><%-_.find(_.reject(_.find(system?.networkInterfaces, { 'default': true })?.addrInfo, { local: system?.virtualIp?.address }), { family: 'inet' })?.local%></div>
 				<%if (system?.virtualIp?.holding) {%>
 					<div><i class="icon-regular icon-ghost icon-fw me-1"></i><%-system?.virtualIp?.address%></div>
 				<%}%>
@@ -26,22 +26,22 @@
 						<%-node?.name || 'unknown'%>
 						<u-badge color="<%=(seen ? 'green' : 'red')%>" tint="100" class="ms-1" pill><%=(seen ? 'ONLINE' : 'OFFLINE')%></u-badge>
 					</div>
-					<div><i class="icon-regular icon-ethernet icon-fw me-1"></i><%-(seen?.address) || node?.address%></div>
+					<div><i class="icon-regular icon-network icon-fw me-1"></i><%-(seen?.address) || node?.address%></div>
 					<%if (seen?.holdsVirtualIp) {%>
 						<div><i class="icon-regular icon-ghost icon-fw me-1"></i><%-seen.virtualIp%></div>
 					<%}%>
 				</div>
 				<div class="dropdown">
-					<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw fg-secondary"></i></span>
+					<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i></span>
 					<div class="menu" style="width: max-content;">
 						<%if (system?.virtualIp?.holding && seen) {%>
-							<a href="#" class="menu-item" data-action="handover" data-peer="<%-node.id%>"><i class="icon-solid icon-right-left icon-fw"></i>Hand over virtual IP</a>
+							<a href="#" class="menu-item" data-action="handover" data-peer="<%-node.id%>"><i class="icon-fill icon-arrows-left-right icon-fw"></i>Hand over virtual IP</a>
 							<div class="menu-divider"></div>
 						<%} else if (seen && seen.holdsVirtualIp && seen.virtualIp === system?.virtualIp?.address) {%>
-							<a href="#" class="menu-item" data-action="promote"><i class="icon-solid icon-right-left icon-fw"></i>Take over virtual IP</a>
+							<a href="#" class="menu-item" data-action="promote"><i class="icon-fill icon-arrows-left-right icon-fw"></i>Take over virtual IP</a>
 							<div class="menu-divider"></div>
 						<%}%>
-						<a href="#" class="menu-item fg-danger" data-action="remove" data-peer="<%-node?.id%>"><i class="icon-solid icon-times icon-fw"></i>Remove node</a>
+						<a href="#" class="menu-item fg-danger" data-action="remove" data-peer="<%-node?.id%>"><i class="icon-fill icon-x-circle icon-fw"></i>Remove node</a>
 					</div>
 				</div>
 			</div>
@@ -50,7 +50,7 @@
 			<div class="d-flex align-items-center justify-content-between gap-3 border-top py-3">
 				<div class="lh-xs fg-4 small">
 					<div class="fg-emphasis-secondary"><%-node?.name || 'unknown'%></div>
-					<div><i class="icon-regular icon-ethernet icon-fw me-1"></i><%-node?.address%></div>
+					<div><i class="icon-regular icon-network icon-fw me-1"></i><%-node?.address%></div>
 					<%if (node?.holdsVirtualIp) {%>
 						<div><i class="icon-regular icon-ghost icon-fw me-1"></i><%-node.virtualIp%></div>
 					<%}%>

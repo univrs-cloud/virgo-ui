@@ -188,7 +188,7 @@ const setStatus = (label, isLive = false) => {
 
 	liveIndicator.classList.toggle('fg-green-500', isLive);
 	liveIndicator.classList.toggle('fg-gray-300', !isLive);
-	liveIndicator.innerHTML = `<i class="icon-solid icon-tower-broadcast icon-fw me-1"></i>${label}`;
+	liveIndicator.innerHTML = `<i class="icon-fill icon-broadcast icon-fw me-1"></i>${label}`;
 };
 
 const escapeHtml = (text) => {

@@ -1,6 +1,6 @@
 <div class="nodes"></div>
 <a href="/dashboard" class="nav-item nav-link <%=((active === '/' || active === '/dashboard') && 'active')%>">
-	<i class="icon-duotone icon-solid icon-objects-column icon-fw"></i>
+	<i class="icon-duotone icon-gauge icon-fw"></i>
 	<span class="nav-label ms-3">Dashboard</span>
 </a>
 <div class="windows"></div>
@@ -8,58 +8,58 @@
 	<div class="nav-title sm:ps-3 mt-3 sm:mt-5"><small>Resources</small></div>
 	<a href="/apps" class="nav-item nav-link d-flex align-items-center <%=(active === '/apps' && 'active')%>">
 		<span>
-			<i class="icon-duotone icon-solid icon-grid-2 icon-fw"></i>
+			<i class="icon-duotone icon-dots-nine icon-fw"></i>
 			<span class="nav-label ms-3">Apps</span>
 		</span>
 		<%if (hasAppUpdates) {%>
-			<u-badge color="green" class="md:ms-auto ms-auto" pill><i class="icon-solid icon-arrow-down icon-fw"></i></u-badge>
+			<u-badge color="green" class="md:ms-auto ms-auto" pill><i class="icon-regular icon-arrow-down icon-fw"></i></u-badge>
 		<%}%>
 	</a>
 	<a href="/shortcuts" class="nav-item nav-link <%=(active === '/shortcuts' && 'active')%>">
-		<i class="icon-duotone icon-solid icon-square-arrow-up-right icon-fw"></i>
+		<i class="icon-duotone icon-arrow-square-up-right icon-fw"></i>
 		<span class="nav-label ms-3">Shortcuts</span>
 	</a>
 	<a href="/folders" class="nav-item nav-link <%=(active === '/folders' && 'active')%>">
-		<i class="icon-duotone icon-solid icon-folder-closed icon-fw"></i>
+		<i class="icon-duotone icon-folder icon-fw"></i>
 		<span class="nav-label ms-3">Folders</span>
 	</a>
 	<a href="/time-machines" class="nav-item nav-link <%=(active === '/time-machines' && 'active')%>">
-		<i class="icon-duotone icon-solid icon-clock-rotate-left icon-fw" style="--icon-primary-opacity: 0.4; --icon-secondary-opacity: 1;"></i>
+		<i class="icon-duotone icon-clock-counter-clockwise icon-fw"></i>
 		<span class="nav-label ms-3">Time machines</span>
 	</a>
 	<div class="nav-title sm:ps-3 mt-3 sm:mt-5"><small>System</small></div>
 	<a href="/storage" class="nav-item nav-link d-flex align-items-center <%=(active === '/storage' && 'active')%>">
 		<span>
-			<i class="icon-duotone icon-solid icon-hard-drive icon-fw"></i>
+			<i class="icon-duotone icon-hard-drive icon-fw"></i>
 			<span class="nav-label ms-3">Storage</span>
 		</span>
 		<%if (hasStorageProblems || isStorageFull) {%>
-			<u-badge color="<%=(hasStorageProblems ? 'red' : 'orange')%>" tint="500" class="md:ms-auto ms-auto" pill><i class="icon-solid icon-triangle-exclamation icon-fw"></i></u-badge>
+			<u-badge color="<%=(hasStorageProblems ? 'red' : 'orange')%>" tint="500" class="md:ms-auto ms-auto" pill><i class="icon-fill icon-warning icon-fw"></i></u-badge>
 		<%}%>
 	</a>
 	<a href="/users" class="nav-item nav-link <%=(active === '/users' && 'active')%>">
-		<i class="icon-duotone icon-solid icon-user icon-fw"></i>
+		<i class="icon-duotone icon-user icon-fw"></i>
 		<span class="nav-label ms-3">Users</span>
 	</a>
 	<a href="/system-services" class="nav-item nav-link <%=(active === '/system-services' && 'active')%>">
-		<i class="icon-duotone icon-solid icon-cube icon-fw"></i>
+		<i class="icon-duotone icon-cube icon-fw"></i>
 		<span class="nav-label ms-3">Services</span>
 	</a>
 	<a href="/network" class="nav-item nav-link <%=(active === '/network' && 'active')%>">
-		<i class="icon-duotone icon-solid icon-ethernet icon-fw"></i>
+		<i class="icon-duotone icon-network icon-fw"></i>
 		<span class="nav-label ms-3">Network</span>
 	</a>
 	<a href="/topology" class="nav-item nav-link <%=(active === '/topology' && 'active')%>">
-		<i class="icon-duotone icon-solid icon-chart-diagram icon-fw"></i>
+		<i class="icon-duotone icon-tree-structure icon-fw"></i>
 		<span class="nav-label ms-3">Topology</span>
 	</a>
 	<a href="/settings" class="nav-item nav-link <%=(active === '/settings' && 'active')%>">
-		<i class="icon-duotone icon-solid icon-sliders-up icon-fw"></i>
+		<i class="icon-duotone icon-sliders icon-fw"></i>
 		<span class="nav-label ms-3">Settings</span>
 	</a>
 	<a href="/system-updates" class="nav-item nav-link d-flex align-items-center <%=(active === '/system-updates' && 'active')%>">
 		<span>
-			<i class="icon-duotone icon-solid icon-download icon-fw"></i>
+			<i class="icon-duotone icon-download icon-fw"></i>
 			<span class="nav-label ms-3">Updates</span>
 		</span>
 		<%if (systemUpdates > 0) {%>
@@ -67,7 +67,7 @@
 		<%}%>
 	</a>
 	<a href="/about" class="nav-item nav-link <%=(active === '/about' && 'active')%>">
-		<i class="icon-duotone icon-solid icon-fingerprint icon-fw"></i>
+		<i class="icon-duotone icon-fingerprint icon-fw"></i>
 		<span class="nav-label ms-3">About</span>
 	</a>
 <%}%>

@@ -4,11 +4,11 @@
 			<div class="text-truncate"><%-service.unit%></div>
 			<%if (service.broken) {%>
 				<u-badge color="red" class="ms-3 flex-shrink-0" tip="Service not found or failed to load" pill>
-					<i class="icon-solid icon-triangle-exclamation icon-fw"></i>
+					<i class="icon-fill icon-warning icon-fw"></i>
 				</u-badge>
 			<%} else if (service.unitFileState === 'masked') {%>
 				<u-badge color="orange" class="ms-3 flex-shrink-0" tip="Service is masked and cannot be started or enabled" pill>
-					<i class="icon-solid icon-ban icon-fw"></i>
+					<i class="icon-fill icon-prohibit-inset icon-fw"></i>
 				</u-badge>
 			<%}%>
 		</div>
@@ -38,6 +38,6 @@
 		<%=serviceActionsTemplate({ service, jobs, inline: false })%>
 	</td>
 	<td class="text-end pe-0">
-		<i class="icon-light icon-angle-right icon-fw fg-4"></i>
+		<i class="icon-light icon-caret-right icon-fw fg-4"></i>
 	</td>
 </tr>

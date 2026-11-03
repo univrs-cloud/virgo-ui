@@ -11,7 +11,7 @@
 						<div class="d-flex justify-content-center"><div class="spinner-border fg-gray-600"></div></div>
 					<%} else if (arc === false) {%>
 						<div class="d-flex align-items-center gap-5">
-							<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-5 bg-gray-200 fg-gray-600"><i class="icon-duotone icon-solid icon-memory"></i></div>
+							<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-5 bg-gray-200 fg-gray-600"><i class="icon-duotone icon-memory"></i></div>
 							<div class="me-auto">Unavailable</div>
 						</div>
 					<%} else {%>
@@ -23,7 +23,7 @@
 						<%const tickGap = (max - min) * 0.15%>
 						<%const ticks = [min, ..._.filter(_.range(tickStep, max, tickStep), (tick) => { return tick - min > tickGap && max - tick > tickGap; }), max]%>
 						<div class="d-flex align-items-center gap-5">
-							<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-5 bg-subtle-primary fg-primary align-self-start"><i class="icon-duotone icon-solid icon-memory"></i></div>
+							<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-5 bg-subtle-primary fg-primary align-self-start"><i class="icon-duotone icon-memory"></i></div>
 							<div class="min-w-0 me-auto">
 								<div class="fs-lg lh-xs">Size limit</div>
 								<small class="d-block fg-4 lh-xs">The most memory the cache may use.</small>

@@ -43,7 +43,7 @@
 		return (_.isEmpty(items) ? '' : `<div class='text-start'>${items.join('')}</div>`);
 	};
 %>
-<dt class="fw-lighter"><small><i class="icon-light icon-list-tree icon-fw me-1"></i>Topology <span class="fg-4">(<%=_.pluralize('group', _.size(groups), true)%>)</span></small></dt>
+<dt class="fw-lighter"><small><i class="icon-light icon-tree-view icon-fw me-1"></i>Topology <span class="fg-4">(<%=_.pluralize('group', _.size(groups), true)%>)</span></small></dt>
 <dd class="vdev-tree m-0">
 	<span class="d-flex flex-wrap justify-content-center gap-5">
 		<%_.each(groups, (group) => {%>
@@ -60,12 +60,12 @@
 								<span class="vdev-stem d-block"></span>
 								<span class="position-relative d-flex justify-content-center w-100">
 									<%if (disk.role === 'new') {%>
-										<i class="icon-solid icon-arrow-right icon-xs icon-width-auto lh-1 fg-4 position-absolute top-50 start-0 translate-middle"></i>
+										<i class="icon-regular icon-arrow-right icon-xs icon-width-auto lh-1 fg-4 position-absolute top-50 start-0 translate-middle"></i>
 									<%}%>
 									<span class="position-relative d-inline-flex">
-										<i class="vdev-disk icon-duotone icon-solid icon-hard-drive <%-diskColor(disk)%> <%=(disk.activity && disk.activity !== 'awaiting' ? 'icon-fade' : '')%>"<%=(tip ? ` data-bs-toggle="tooltip" data-bs-custom-class="storage-device" data-bs-original-title="${tip}"` : '')%>></i>
+										<i class="vdev-disk icon-duotone icon-hard-drive <%-diskColor(disk)%> <%=(disk.activity && disk.activity !== 'awaiting' ? 'icon-fade' : '')%>"<%=(tip ? ` data-bs-toggle="tooltip" data-bs-custom-class="storage-device" data-bs-original-title="${tip}"` : '')%>></i>
 										<%if (disk.usedIn) {%>
-											<i class="icon-solid icon-link icon-2xs icon-width-auto lh-1 fg-blue-500 position-absolute top-0 start-100 translate-middle"></i>
+											<i class="icon-regular icon-link icon-2xs icon-width-auto lh-1 fg-blue-500 position-absolute top-0 start-100 translate-middle"></i>
 										<%}%>
 									</span>
 								</span>

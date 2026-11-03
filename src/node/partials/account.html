@@ -1,6 +1,6 @@
 <%if (!isAuthenticated) {%>
 	<a href="/login?rd=<%=encodeURIComponent(window.location)%>" rel="external" class="btn-sm btn-solid theme-primary me-3 sm:me-0">
-		<i class="icon-duotone icon-solid icon-person-to-portal icon-fw"></i>
+		<i class="icon-duotone icon-sign-in icon-fw"></i>
 		<span class="nav-label ms-3">Sign in</span>
 	</a>
 <%} else {%>
@@ -13,7 +13,7 @@
 					<span class="d-block text-truncate fw-light opacity-75" style="font-size: 0.8125rem;"><%-account.email%></span>
 				<%}%>
 			</span>
-			<i class="icon-light icon-angles-up-down icon-fw d-none sm:d-inline-block flex-shrink-0 opacity-75" style="font-size: 0.8125rem;"></i>
+			<i class="icon-light icon-caret-up-down icon-fw d-none sm:d-inline-block flex-shrink-0 opacity-75" style="font-size: 0.8125rem;"></i>
 		</button>
 		<div class="menu" style="max-width: min(18rem, calc(100vw - 1.5rem));">
 			<h6 class="menu-header">Logged in as</h6>
@@ -21,20 +21,20 @@
 			<%if (!isUpdating || runtimeRole === 'fleet') {%>
 				<div class="menu-divider"></div>
 				<a href="/users/profile" class="menu-item" <%=(runtimeRole === 'fleet' ? 'rel="external"' : '')%>>
-				<i class="icon-duotone icon-solid icon-id-card icon-fw"></i>
+				<i class="icon-duotone icon-identification-card icon-fw"></i>
 				Your profile
 			</a>
 			<%}%>
 			<div class="menu-divider"></div>
 			<a href="https://docs.univrs.cloud" target="_blank" rel="noopener noreferrer" class="menu-item">
-				<i class="icon-duotone icon-solid icon-book-open icon-fw"></i>
+				<i class="icon-duotone icon-book-open icon-fw"></i>
 				Documentation
-				<i class="icon-solid icon-sm icon-arrow-up-right-from-square ms-3"></i>
+				<i class="icon-regular icon-sm icon-arrow-square-out ms-3"></i>
 			</a>
 			<div class="menu-divider"></div>
 			<a href="#" rel=“nofollow“ class="sign-out menu-item">
 				Sign out
-				<i class="icon-duotone icon-solid icon-person-from-portal icon-fw"></i>
+				<i class="icon-duotone icon-sign-out icon-fw"></i>
 			</a>
 		</div>
 	</div>

@@ -9,6 +9,8 @@ let logsContainer = null;
 let logs = null;
 let isScrollEventAttached = false;
 let shouldScroll = true;
+let pendingLines = [];
+let flushFrame = null;
 
 const render = (event) => {
 	if (!event.target.closest('a')?.classList.contains('logs')) {
@@ -43,6 +45,7 @@ const restore = () => {
 	}
 
 	logsContainer.classList.add('d-none');
+	clearPendingLines();
 	socket.emit('host:service:logs:disconnect');
 	if (logs) {
 		logs.removeEventListener('scroll', shouldScrollEvent);
@@ -73,7 +76,7 @@ const setStatus = (label, isLive = false) => {
 
 	liveIndicator.classList.toggle('fg-green-500', isLive);
 	liveIndicator.classList.toggle('fg-gray-300', !isLive);
-	liveIndicator.innerHTML = `<i class="icon-solid icon-tower-broadcast icon-fw me-1"></i>${label}`;
+	liveIndicator.innerHTML = `<i class="icon-fill icon-broadcast icon-fw me-1"></i>${label}`;
 };
 
 const appendLine = (html, level = '') => {
@@ -82,10 +85,36 @@ const appendLine = (html, level = '') => {
 	if (level) {
 		li.classList.add(`log-${level}`);
 	}
-	logs.appendChild(li);
+	pendingLines.push(li);
+	if (_.isNull(flushFrame)) {
+		flushFrame = requestAnimationFrame(flushLines);
+	}
+};
+
+const flushLines = () => {
+	flushFrame = null;
+	if (!logs) {
+		pendingLines = [];
+		return;
+	}
+
+	const fragment = document.createDocumentFragment();
+	for (const li of pendingLines) {
+		fragment.appendChild(li);
+	}
+	pendingLines = [];
+	logs.appendChild(fragment);
 	if (shouldScroll) {
 		logs.scrollTop = logs.scrollHeight;
 	}
+};
+
+const clearPendingLines = () => {
+	if (!_.isNull(flushFrame)) {
+		cancelAnimationFrame(flushFrame);
+		flushFrame = null;
+	}
+	pendingLines = [];
 };
 
 /** The list is resolved lazily because output or an error can arrive before the stream reports connected. */
@@ -157,19 +186,22 @@ const escapeHtml = (text) => {
 socket.on('host:service:logs:connected', () => {
 	// Only a successful connect clears the list, so failed attempts keep accumulating feedback. The
 	// stream replays its backlog on every connect, so keeping the old lines would just duplicate them.
+	clearPendingLines();
 	if (resolveLogs()) {
 		logs.innerHTML = '';
 	}
 	setStatus('Live', true);
 });
 
-socket.on('host:service:logs:output', (data) => {
+socket.on('host:service:logs:output', (lines) => {
 	if (!resolveLogs()) {
 		return;
 	}
 
-	const line = String(data || '');
-	appendLine(formatLogLine(line), resolveLogLevel(line));
+	_.each(lines, (data) => {
+		const line = String(data || '');
+		appendLine(formatLogLine(line), resolveLogLevel(line));
+	});
 });
 
 socket.on('host:service:logs:error', (error) => {

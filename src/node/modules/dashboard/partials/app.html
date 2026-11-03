@@ -5,7 +5,7 @@
 			<div class="row g-0 align-items-center">
 				<div class="card-image card-spacer col-auto p-3">
 					<%if (app.isUnmanaged) {%>
-						<i class="icon-light icon-layer-group"></i>
+						<i class="icon-light icon-stack"></i>
 					<%} else {%>
 						<img src="<%-(_.includes(app.icon, '/') ? app.icon : `assets/img/apps/${app.icon}`)%>">
 					<%}%>
@@ -15,7 +15,7 @@
 						<div class="text-truncate <%=(runningContainers === 0 || _.isEmpty(app.urls) ? 'fg-gray-500' : '')%>"><%-app.title%></div>
 						<%if (app.hasUpdates) {%>
 							<u-badge color="green" class="ms-3" pill>
-								<i class="icon-solid icon-arrow-down icon-fw"></i>
+								<i class="icon-regular icon-arrow-down icon-fw"></i>
 							</u-badge>
 						<%}%>
 					</div>
@@ -24,11 +24,11 @@
 					<div class="col-auto d-none lg:d-block">
 						<%if (_.size(windowUrls) === 1) {%>
 							<a href="#" class="open-window btn-icon btn-text theme-secondary btn-xs fs-sm position-relative z-2" data-url="<%-windowUrls[0]%>" data-label="<%-app.title%>" data-icon="<%-(app.isUnmanaged ? '' : app.icon)%>">
-								<i class="icon-regular icon-window icon-fw fg-secondary"></i>
+								<i class="icon-duotone icon-browser icon-fw fg-secondary"></i>
 							</a>
 						<%} else {%>
 							<div class="dropdown">
-								<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-xs fs-sm position-relative z-2"><i class="icon-regular icon-window icon-fw fg-secondary"></i></span>
+								<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-xs fs-sm position-relative z-2"><i class="icon-duotone icon-browser icon-fw fg-secondary"></i></span>
 								<div class="menu">
 									<%_.each(windowUrls, (url) => {%>
 										<a href="#" class="open-window menu-item" data-url="<%-url%>" data-icon="<%-(app.isUnmanaged ? '' : app.icon)%>" data-label="<%-_.replace(url, /^https?:\/\//, '')%>"><%-_.replace(url, /^https?:\/\//, '')%></a>

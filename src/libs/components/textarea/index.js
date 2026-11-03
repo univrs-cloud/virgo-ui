@@ -97,7 +97,7 @@ export class Textarea extends LitElement {
 				<div class="form-floating">
 					<label>
 						${this.label}
-						${this.tip ? html`<span class="help-inline ms-1" data-bs-toggle="tooltip" data-bs-original-title="${this.tip}"><i class="icon-solid icon-question-circle"></i></span>` : ''}
+						${this.tip ? html`<span class="help-inline ms-1" data-bs-toggle="tooltip" data-bs-original-title="${this.tip}"><i class="icon-fill icon-question"></i></span>` : ''}
 					</label>
 					<textarea
 						name=${this.getAttribute('name') || nothing}

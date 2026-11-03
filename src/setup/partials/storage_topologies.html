@@ -1,6 +1,6 @@
 <%const LABELS = { raidz1: 'Basic Protection (RAID-Z1)', raidz2: 'Advanced Protection (RAID-Z2)', raidz3: 'Ultimate Protection (RAID-Z3)', mirror: 'Low Latency (Mirror)' };%>
 <%const infoItem = (label, value) => { return `<div class='mt-1'><div class='small opacity-75'>${label}</div><div>${_.escape(value)}</div></div>`; };%>
-<dt class="fw-lighter"><small><i class="icon-light icon-list-tree icon-fw me-1"></i>Topology</small></dt>
+<dt class="fw-lighter"><small><i class="icon-light icon-tree-view icon-fw me-1"></i>Topology</small></dt>
 <dd class="vdev-tree m-0">
 	<%_.each(topologies, (topology) => {%>
 		<%const id = `topology-${topology.type}`%>
@@ -33,7 +33,7 @@
 										<%if (topology.width > 1) {%>
 											<span class="vdev-stem d-block"></span>
 										<%}%>
-										<i class="vdev-disk icon-duotone icon-solid icon-hard-drive fg-blue-500"<%=(_.isEmpty(tipItems) ? '' : ` data-bs-toggle="tooltip" data-bs-custom-class="storage-device" data-bs-original-title="<div class='text-start'>${tipItems.join('')}</div>"`)%>></i>
+										<i class="vdev-disk icon-duotone icon-hard-drive fg-blue-500"<%=(_.isEmpty(tipItems) ? '' : ` data-bs-toggle="tooltip" data-bs-custom-class="storage-device" data-bs-original-title="<div class='text-start'>${tipItems.join('')}</div>"`)%>></i>
 										<small class="fg-4 text-truncate w-100 mt-1"><%-drive.name%></small>
 									</span>
 								<%})%>
@@ -62,10 +62,10 @@
 			<%}%>
 		</u-progress>
 		<div class="d-flex flex-wrap gap-5 mt-3">
-			<small class="fg-emphasis-secondary"><i class="icon-solid icon-circle fg-blue-500 me-1" style="font-size: 0.5rem; vertical-align: middle;"></i>Capacity: <%=prettyBytes(selected.usableBytes, { binary: true })%></small>
-			<small class="fg-emphasis-secondary"><i class="icon-solid icon-circle fg-pink-400 me-1" style="font-size: 0.5rem; vertical-align: middle;"></i>Protection: <%=_.pluralize('drive', protectionDrives, true)%></small>
+			<small class="fg-emphasis-secondary"><i class="icon-fill icon-circle fg-blue-500 me-1" style="font-size: 0.5rem; vertical-align: middle;"></i>Capacity: <%=prettyBytes(selected.usableBytes, { binary: true })%></small>
+			<small class="fg-emphasis-secondary"><i class="icon-fill icon-circle fg-pink-400 me-1" style="font-size: 0.5rem; vertical-align: middle;"></i>Protection: <%=_.pluralize('drive', protectionDrives, true)%></small>
 			<%if (unusedPercent > 0) {%>
-				<small class="fg-emphasis-secondary"><i class="icon-solid icon-circle fg-gray-500 me-1" style="font-size: 0.5rem; vertical-align: middle;"></i>Unused: <%=prettyBytes(unusedBytes, { binary: true })%> <span class="fg-4">(larger drives are used up to the smallest one's size)</span></small>
+				<small class="fg-emphasis-secondary"><i class="icon-fill icon-circle fg-gray-500 me-1" style="font-size: 0.5rem; vertical-align: middle;"></i>Unused: <%=prettyBytes(unusedBytes, { binary: true })%> <span class="fg-4">(larger drives are used up to the smallest one's size)</span></small>
 			<%}%>
 		</div>
 	<%}%>

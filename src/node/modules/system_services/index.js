@@ -44,7 +44,7 @@ let services = [];
 const sync = (event) => {
 	event.preventDefault();
 	syncButton.disabled = true;
-	syncButton.querySelector('.icon-arrows-rotate').classList.add('icon-spin');
+	syncButton.querySelector('.icon-arrows-clockwise').classList.add('icon-spin');
 	serviceService.syncServices();
 };
 
@@ -263,7 +263,7 @@ const render = (state) => {
 
 	loading.classList.add('d-none');
 	syncButton.disabled = false;
-	syncButton.querySelector('.icon-arrows-rotate').classList.remove('icon-spin');
+	syncButton.querySelector('.icon-arrows-clockwise').classList.remove('icon-spin');
 	container.classList.remove('d-none');
 };
 

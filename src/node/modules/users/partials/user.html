@@ -6,7 +6,7 @@
 				<div class="d-flex align-items-center mb--1">
 					<div class="text-truncate"><%-user.username%></div>
 					<%if (user.isOwner) {%>
-						<u-badge color="indigo" tint="400" class="ms-3" tip="Owner" pill><i class="icon-solid icon-crown fg-white"></i></u-badge>
+						<u-badge color="indigo" tint="400" class="ms-3" tip="Owner" pill><i class="icon-fill icon-crown fg-white"></i></u-badge>
 					<%}%>
 					<%if (isSameAsLoggedIn) {%>
 						<u-badge class="ms-3" pill><small>YOU</small></u-badge>
@@ -29,25 +29,25 @@
 		<%})%>
 	</td>
 	<td class="text-center text-nowrap d-none md:d-table-cell">
-		<%=(_.includes(user.shell, 'nologin') ? '<i class="icon-solid icon-xmark fg-gray-300"></i>' : '<i class="icon-solid icon-check fg-gray-300"></i>')%>
+		<%=(_.includes(user.shell, 'nologin') ? '<i class="icon-regular icon-x fg-gray-300"></i>' : '<i class="icon-regular icon-check fg-gray-300"></i>')%>
 	</td>
 	<td class="text-nowrap">
 		<%if (_.isEmpty(sessions)) {%>
 			<u-badge color="gray" tint="050" pill>
-				<i class="icon-solid icon-circle icon-2xs fg-4"></i>
+				<i class="icon-fill icon-circle icon-2xs fg-4"></i>
 				<small>0</small>
 			</u-badge>
 		<%} else {%>
 			<a href="#user-sessions" class="d-inline-flex align-items-center gap-1 text-decoration-none" data-bs-toggle="dialog">
 				<%if (_.some(sessions, 'isConnected')) {%>
 					<u-badge color="gray" tint="050" pill>
-						<i class="icon-solid icon-circle icon-2xs fg-green-500"></i>
+						<i class="icon-fill icon-circle icon-2xs fg-green-500"></i>
 						<small><%-_.size(_.filter(sessions, 'isConnected'))%></small>
 					</u-badge>
 				<%}%>
 				<%if (!_.every(sessions, 'isConnected')) {%>
 					<u-badge color="gray" tint="050" pill>
-						<i class="icon-solid icon-circle icon-2xs fg-4"></i>
+						<i class="icon-fill icon-circle icon-2xs fg-4"></i>
 						<small><%-_.size(_.reject(sessions, 'isConnected'))%></small>
 					</u-badge>
 				<%}%>
@@ -63,28 +63,28 @@
 	</td>
 	<td class="<%=(isSameAsLoggedIn ? 'text-end pe-0' : 'text-center px-0')%>">
 		<%if (!_.isEmpty(jobs)) {%>
-			<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-solid icon-gear icon-fw icon-spin"></i></span>
+			<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-fill icon-gear icon-fw icon-spin"></i></span>
 		<%} else if (isSameAsLoggedIn) {%>
 			<a href="/users/profile" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="This is you! Edit your profile or change your password in your <strong><u>Profile</u></strong> page.">
-				<i class="icon-light icon-chevron-right icon-fw fg-4"></i>
+				<i class="icon-light icon-caret-right icon-fw fg-4"></i>
 			</a>
 		<%} else {%>
 			<div class="dropdown">
-				<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw fg-secondary"></i></span>
+				<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i></span>
 				<div class="menu">
-					<a href="#user-update" class="menu-item" data-bs-toggle="dialog"><i class="icon-solid icon-pen icon-fw"></i>Edit</a>
+					<a href="#user-update" class="menu-item" data-bs-toggle="dialog"><i class="icon-fill icon-pen icon-fw"></i>Edit</a>
 					<%if (!user.isOwner && user.username !== account.user) {%>
 						<%if (!user.isDisabled) {%>
-							<a href="#user-password" class="menu-item" data-bs-toggle="dialog"><i class="icon-solid icon-key icon-fw"></i>Change password</a>
+							<a href="#user-password" class="menu-item" data-bs-toggle="dialog"><i class="icon-fill icon-key icon-fw"></i>Change password</a>
 						<%}%>
 						<div class="menu-divider"></div>
 						<%if (user.isDisabled) {%>
-							<a href="#" class="menu-item" data-action="unlock"><i class="icon-solid icon-lock-open icon-fw"></i>Unlock</a>
+							<a href="#" class="menu-item" data-action="unlock"><i class="icon-fill icon-lock-open icon-fw"></i>Unlock</a>
 						<%} else {%>
-							<a href="#" class="menu-item fg-danger confirm" data-action="lock"><i class="icon-solid icon-lock icon-fw"></i>Lock</a>
+							<a href="#" class="menu-item fg-danger confirm" data-action="lock"><i class="icon-fill icon-lock icon-fw"></i>Lock</a>
 						<%}%>
 						<div class="menu-divider"></div>
-						<a href="#" class="menu-item fg-danger confirm" data-action="delete"><i class="icon-solid icon-times icon-fw"></i>Delete</a>
+						<a href="#" class="menu-item fg-danger confirm" data-action="delete"><i class="icon-fill icon-x-circle icon-fw"></i>Delete</a>
 					<%}%>
 				</div>
 			</div>

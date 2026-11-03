@@ -1,7 +1,7 @@
 <%if (!_.isUndefined(pool)) {%>
 	<p>This node's <strong><%-pool.name%></strong> storage pool is imported and in use.</p>
 	<dl class="m-0">
-		<dt class="fw-lighter"><small><i class="icon-light icon-heart-pulse icon-fw me-1"></i>Health</small></dt>
+		<dt class="fw-lighter"><small><i class="icon-light icon-heartbeat icon-fw me-1"></i>Health</small></dt>
 		<dd class="<%=(pool.properties?.health?.value === 'ONLINE' ? '' : 'fg-warning')%>"><%-(pool.properties?.health?.value || '—')%></dd>
 		<dt class="fw-lighter"><small><i class="icon-light icon-chart-pie icon-fw me-1"></i>Capacity</small></dt>
 		<dd<%=(_.isEmpty(poolGroups) ? ' class="m-0"' : '')%>>
@@ -17,10 +17,10 @@
 <%} else if (!_.isUndefined(importablePool)) {%>
 	<p>An existing <strong><%-importablePool.name%></strong> pool was found on this node's drives. Importing keeps everything it holds.</p>
 	<dl class="m-0">
-		<dt class="fw-lighter"><small><i class="icon-light icon-heart-pulse icon-fw me-1"></i>State</small></dt>
+		<dt class="fw-lighter"><small><i class="icon-light icon-heartbeat icon-fw me-1"></i>State</small></dt>
 		<dd class="<%=(importablePool.state === 'ONLINE' ? '' : 'fg-warning')%>"><%-importablePool.state%></dd>
 		<%if (importablePool.status) {%>
-			<dt class="fw-lighter"><small><i class="icon-light icon-circle-info icon-fw me-1"></i>Status</small></dt>
+			<dt class="fw-lighter"><small><i class="icon-light icon-info icon-fw me-1"></i>Status</small></dt>
 			<dd class="fg-warning"><%-importablePool.status%></dd>
 		<%}%>
 		<%if (!_.isEmpty(importableGroups)) {%>
@@ -66,7 +66,7 @@
 			</div>
 		<%}%>
 		<div class="alert theme-danger mt-5 mb-0">
-			<i class="icon-duotone icon-solid icon-triangle-exclamation icon-fw mt-1 me-1"></i>
+			<i class="icon-duotone icon-warning icon-fw mt-1 me-1"></i>
 			Everything currently on these drives will be erased.
 		</div>
 	<%}%>

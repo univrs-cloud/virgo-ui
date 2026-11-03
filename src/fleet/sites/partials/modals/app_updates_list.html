@@ -16,7 +16,7 @@
 				</div>
 			</div>
 			<%if (isUpdating) {%>
-				<i class="icon-solid icon-gear icon-fw icon-spin ms-auto flex-shrink-0"></i>
+				<i class="icon-fill icon-gear icon-fw icon-spin ms-auto flex-shrink-0"></i>
 			<%} else {%>
 				<u-button variant="primary" size="sm" class="update ms-auto flex-shrink-0" data-name="<%-app.name%>" tip="<%=(isUpdatingSystem ? 'A system update is in progress' : '')%>" <%=(isUpdatingSystem ? 'disabled' : '')%>>Update</u-button>
 			<%}%>

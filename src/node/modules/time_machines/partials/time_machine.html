@@ -17,12 +17,12 @@
 	<td class="text-nowrap d-none md:d-table-cell">
 		<%if (_.isEmpty(timeMachine.clients)) {%>
 			<u-badge color="gray" tint="050" pill>
-				<i class="icon-solid icon-user icon-xs fg-4"></i>
+				<i class="icon-fill icon-user icon-xs fg-4"></i>
 				<small>0</small>
 			</u-badge>
 		<%} else {%>
 			<u-badge color="gray" tint="050" tip="<%-_.map(timeMachine.clients, (client) => { return _.escape(`${_.join(client.usernames, ', ')} (${client.address})`); }).join('<br>')%>" pill>
-				<i class="icon-solid icon-user icon-xs fg-green-500"></i>
+				<i class="icon-fill icon-user icon-xs fg-green-500"></i>
 				<small><%-_.size(timeMachine.clients)%></small>
 			</u-badge>
 		<%}%>
@@ -39,13 +39,13 @@
 	<td class="text-end text-nowrap d-none md:d-table-cell">
 		<small class="fw-light fg-emphasis-secondary d-flex">
 			<span class="d-inline-block text-start" style="width: 12px;">
-				<i class="icon-solid icon-arrow-down icon-fw icon-2xs fg-blue-500"></i>
+				<i class="icon-regular icon-arrow-down icon-fw icon-2xs fg-blue-500"></i>
 			</span>
 			<span class="ms-auto"><%=_.prettyBitRate(timeMachine.network.rx)%></span>
 		</small>
 		<small class="fw-light fg-emphasis-secondary d-flex">
 			<span class="d-inline-block text-start" style="width: 12px;">
-				<i class="icon-solid icon-arrow-up icon-fw icon-2xs fg-purple-500"></i>
+				<i class="icon-regular icon-arrow-up icon-fw icon-2xs fg-purple-500"></i>
 			</span>
 			<span class="ms-auto"><%=_.prettyBitRate(timeMachine.network.tx)%></span>
 		</small>
@@ -66,6 +66,6 @@
 		<%=timeMachineActionsTemplate({ timeMachine, jobs, inline: false })%>
 	</td>
 	<td class="text-end pe-0">
-		<i class="icon-light icon-angle-right icon-fw fg-4"></i>
+		<i class="icon-light icon-caret-right icon-fw fg-4"></i>
 	</td>
 </tr>

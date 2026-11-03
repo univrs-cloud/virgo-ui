@@ -50,7 +50,7 @@ class Host extends Store {
 		});
 
 		this.socket.on('host:update', (update) => {
-			// update = { state: 'running', steps: ['Reading package lists...', 'Building dependency tree...', 'Reading state information...', 'Calculating upgrade...', '0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.'], progress: { stage: 'install', percent: 45 } };
+			// update = { state: 'running', steps: ['Reading package lists...', 'Building dependency tree...', 'Reading state information...', 'Calculating upgrade...', '0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.'], progress: { stage: 'download', percent: 45 } };
 			this.setState({ update }, 'get_update');
 		});
 

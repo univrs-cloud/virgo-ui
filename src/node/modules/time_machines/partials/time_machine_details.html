@@ -12,7 +12,7 @@
 					</button>
 				</div>
 				<div class="card-image-row-icon card-image card-spacer px-3">
-					<i class="icon-light icon-clock-rotate-left icon-fw fg-emphasis-secondary"></i>
+					<i class="icon-light icon-clock-counter-clockwise icon-fw fg-emphasis-secondary"></i>
 				</div>
 				<div class="card-image-row-title d-flex align-items-center mb--2 ps-1 min-w-0">
 					<div class="text-truncate min-w-0"><%-timeMachine.comment%></div>
@@ -30,7 +30,7 @@
 
 			<div class="position-relative">
 				<div class="nav nav-underline d-flex gap-0 border-bottom">
-					<button type="button" class="nav-link px-4 <%=(activeTab === 'overview' ? 'active border-primary fw-light' : '')%>" data-time-machine-tab="overview"><i class="icon-light icon-circle-info icon-fw"></i>Overview</button>
+					<button type="button" class="nav-link px-4 <%=(activeTab === 'overview' ? 'active border-primary fw-light' : '')%>" data-time-machine-tab="overview"><i class="icon-light icon-info icon-fw"></i>Overview</button>
 					<%if (!_.isEmpty(machines)) {%>
 						<button type="button" class="nav-link px-4 <%=(activeTab === 'backups' ? 'active border-primary fw-light' : '')%>" data-time-machine-tab="backups"><i class="icon-light icon-laptop icon-fw"></i>Backups <small class="opacity-75"><%=_.size(machines)%></small></button>
 					<%}%>
@@ -46,19 +46,19 @@
 								</div>
 								<div class="row g-3 mb-5">
 									<div class="col-6 md:col-3">
-										<small class="fg-4 d-block text-truncate"><i class="icon-solid icon-circle icon-fw me-1"></i>Capacity</small>
+										<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-circle icon-fw me-1"></i>Capacity</small>
 										<h4 class="m-0"><%=prettyBytes(timeMachine.size || 0, { binary: true })%></h4>
 									</div>
 									<div class="col-6 md:col-3">
-										<small class="fg-4 d-block text-truncate"><i class="icon-solid icon-circle-three-quarters-stroke icon-fw me-1"></i>Used</small>
+										<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-chart-pie-slice icon-fw me-1"></i>Used</small>
 										<h4 class="m-0"><%=prettyBytes(timeMachine.alloc || 0, { binary: true })%> <small class="fs-md fw-light fg-4">(<%=timeMachine.cap.toFixed(2)%>%)</small></h4>
 									</div>
 									<div class="col-6 md:col-3">
-										<small class="fg-4 d-block text-truncate"><i class="icon-solid icon-circle-quarter-stroke icon-flip-horizontal icon-fw me-1"></i>Free</small>
+										<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-chart-pie icon-fw me-1"></i>Free</small>
 										<h4 class="m-0"><%=prettyBytes(timeMachine.free || 0, { binary: true })%></h4>
 									</div>
 									<div class="col-6 md:col-3">
-										<small class="fg-4 d-block text-truncate"><i class="icon-solid icon-compress icon-fw me-1"></i>Space saved</small>
+										<small class="fg-4 d-block text-truncate"><i class="icon-regular icon-arrows-in-simple icon-fw me-1"></i>Space saved</small>
 										<h4 class="m-0">
 											<%if (timeMachine.storage.compressratio > 0) {%>
 												<%=prettyBytes(timeMachine.storage.savedbycompression, { binary: true })%> <small class="fs-md fw-light fg-4">(<%=timeMachine.storage.compressratio.toFixed(2)%>x compression)</small>
@@ -75,11 +75,11 @@
 									</u-progress>
 									<div class="row g-3 mt-3">
 										<div class="col-6 md:col-3">
-											<small class="fg-4 d-block text-truncate"><i class="icon-solid icon-database icon-fw me-1 fg-blue-500"></i>Data</small>
+											<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-database icon-fw me-1 fg-blue-500"></i>Data</small>
 											<span class="fw-light"><%=prettyBytes(timeMachine.storage.dataset, { binary: true })%></span>
 										</div>
 										<div class="col-6 md:col-3">
-											<small class="fg-4 d-block text-truncate"><i class="icon-solid icon-clock-rotate-left icon-fw me-1 fg-indigo-500"></i>Snapshots</small>
+											<small class="fg-4 d-block text-truncate"><i class="icon-regular icon-clock-counter-clockwise icon-fw me-1 fg-indigo-500"></i>Snapshots</small>
 											<span class="fw-light"><%=prettyBytes(timeMachine.storage.snapshots, { binary: true })%></span>
 										</div>
 									</div>
@@ -104,7 +104,7 @@
 										<%if (!account?.isDisabled) {%>
 											<div class="border-start ps-3 flex-shrink-0">
 												<div class="d-flex align-items-center">
-													<a href="#" class="fg-body underline-0" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-original-title="Click to copy the time machine address. In Finder, press ⌘K and paste it to connect. This lets Time Machine use it for backups."><i class="icon-brands icon-apple icon-fw"></i></a>
+													<a href="#" class="fg-body underline-0" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-original-title="Click to copy the time machine address. In Finder, press ⌘K and paste it to connect. This lets Time Machine use it for backups."><i class="icon-fill icon-apple-logo icon-fw"></i></a>
 													<span class="copy d-none">smb://<%-(user ? `${user}@` : '')%><%-accessOn%>/<%-timeMachine.name%></span>
 												</div>
 											</div>
@@ -128,7 +128,7 @@
 											<div class="d-flex align-items-center min-w-0">
 												<span class="position-relative d-inline-flex flex-shrink-0 me-3">
 													<i class="icon-light icon-laptop icon-fw fg-4"></i>
-													<i class="icon-solid icon-circle icon-2xs icon-width-auto lh-1 position-absolute top-0 start-100 translate-middle fg-green-300"></i>
+													<i class="icon-fill icon-circle icon-2xs icon-width-auto lh-1 position-absolute top-0 start-100 translate-middle fg-green-300"></i>
 												</span>
 												<span class="text-truncate min-w-0"><%-_.join(client.usernames, ', ')%></span>
 												<small class="fg-4 text-nowrap ms-3"><%-client.address%></small>
@@ -138,7 +138,7 @@
 											<div class="row g-3">
 												<div class="col-6">
 													<div class="d-flex align-items-center justify-content-between">
-														<small class="fg-4"><i class="icon-solid icon-arrow-down icon-fw me-1 fg-blue-500"></i>RX</small>
+														<small class="fg-4"><i class="icon-regular icon-arrow-down icon-fw me-1 fg-blue-500"></i>RX</small>
 														<small class="fw-light"><%=_.prettyBitRate(client.rx)%></small>
 													</div>
 													<u-progress shadow="false" class="d-block">
@@ -147,7 +147,7 @@
 												</div>
 												<div class="col-6">
 													<div class="d-flex align-items-center justify-content-between">
-														<small class="fg-4"><i class="icon-solid icon-arrow-up icon-fw me-1 fg-purple-500"></i>TX</small>
+														<small class="fg-4"><i class="icon-regular icon-arrow-up icon-fw me-1 fg-purple-500"></i>TX</small>
 														<small class="fw-light"><%=_.prettyBitRate(client.tx)%></small>
 													</div>
 													<u-progress shadow="false" class="d-block">
@@ -181,7 +181,7 @@
 												<i class="icon-light icon-laptop icon-width-auto fg-4 me-3"></i>
 												<div class="text-truncate min-w-0"><%-_.replace(machine.name, /\.(sparsebundle|backupbundle)$/, '')%></div>
 												<u-badge color="gray" tint="050" class="flex-shrink-0 ms-3" pill>
-													<i class="icon-light icon-clock-rotate-left icon-fw"></i>
+													<i class="icon-light icon-clock-counter-clockwise icon-fw"></i>
 													<%=_.pluralize('snapshot', _.size(machine.snapshots), true)%>
 												</u-badge>
 											</div>
@@ -189,7 +189,7 @@
 										<div class="col-12 md:col-6 lg:col-4 pt-3">
 											<div class="row g-3">
 												<div class="col-6">
-													<small class="d-block fg-4 pb-1"><i class="icon-solid icon-arrow-up-to-line icon-width-auto me-1"></i>Latest</small>
+													<small class="d-block fg-4 pb-1"><i class="icon-regular icon-arrow-line-up icon-width-auto me-1"></i>Latest</small>
 													<%if (latest) {%>
 														<span class="fw-light tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="<%-latest.format('D MMM YYYY, HH:mm')%>"><%-latest.fromNow()%></span>
 													<%} else {%>
@@ -197,7 +197,7 @@
 													<%}%>
 												</div>
 												<div class="col-6">
-													<small class="d-block fg-4 pb-1"><i class="icon-solid icon-arrow-down-to-line icon-width-auto me-1"></i>Oldest</small>
+													<small class="d-block fg-4 pb-1"><i class="icon-regular icon-arrow-line-down icon-width-auto me-1"></i>Oldest</small>
 													<%if (oldest) {%>
 														<span class="fw-light tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="<%-oldest.format('D MMM YYYY, HH:mm')%>"><%-oldest.fromNow()%></span>
 													<%} else {%>

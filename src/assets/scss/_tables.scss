@@ -70,24 +70,27 @@
 				.icon {
 					--icon-font-size: 14;
 					--icon-size-scale-base: 16;
-					--icon-primary-opacity: 0.2;
-					--icon-secondary-opacity: 0.2;
 					display: inline-block;
+					position: relative;
 					font-size: calc(var(--icon-font-size) / var(--icon-size-scale-base) * 1em);
-					line-height: calc(1 / var(--icon-font-size) * 1em);
-					vertical-align: calc(((6 / var(--icon-font-size)) - (3 / 8)) * 1em);
-				}
-				&.asc {
-					.icon {
-						--icon-primary-color: var(--primary-base);
-						--icon-primary-opacity: 1;
+					&::before {
+						opacity: 0.2;
 					}
 				}
+				&.asc,
 				&.desc {
-					.icon {
-						--icon-secondary-color: var(--primary-base);
-						--icon-secondary-opacity: 1;
+					.icon::after {
+						content: var(--icon) / "";
+						position: absolute;
+						inset: 0;
+						color: var(--primary-base);
 					}
+				}
+				&.asc .icon::after {
+					clip-path: inset(0 0 50% 0);
+				}
+				&.desc .icon::after {
+					clip-path: inset(50% 0 0 0);
 				}
 			}
 		}

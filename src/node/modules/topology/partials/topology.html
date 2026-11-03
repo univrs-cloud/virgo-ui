@@ -28,10 +28,10 @@
 	<%if (fleetState) {%>
 		<li>
 			<div class="topology-node">
-				<div class="topology-icon rounded-5 bg-subtle-primary fg-primary"><i class="icon-duotone icon-solid icon-cloud"></i></div>
+				<div class="topology-icon rounded-5 bg-subtle-primary fg-primary"><i class="icon-duotone icon-cloud"></i></div>
 				<div class="text-truncate max-w-100 mt-2">Fleet</div>
 				<small class="d-block fg-4 text-truncate max-w-100"><%-fleet.email%></small>
-				<small class="d-flex align-items-center justify-content-center <%=fleetStatus[0]%>"><i class="icon-solid icon-circle icon-2xs icon-width-auto me-1"></i><%=fleetStatus[1]%></small>
+				<small class="d-flex align-items-center justify-content-center <%=fleetStatus[0]%>"><i class="icon-fill icon-circle icon-2xs icon-width-auto me-1"></i><%=fleetStatus[1]%></small>
 				<%if (!_.isEmpty(remoteClients)) {%>
 					<ul class="topology-clients">
 						<%_.each(remoteClients, (client) => {%>
@@ -44,7 +44,7 @@
 	<%}%>
 	<li data-internet>
 		<div class="topology-node">
-			<div class="topology-icon rounded-5 bg-subtle-primary fg-primary"><i class="icon-duotone icon-solid icon-globe"></i></div>
+			<div class="topology-icon rounded-5 bg-subtle-primary fg-primary"><i class="icon-duotone icon-globe"></i></div>
 			<div class="text-truncate max-w-100 mt-2">Internet</div>
 			<%if (domainName) {%>
 				<small class="d-block fg-4 text-truncate max-w-100"><%-domainName%></small>
@@ -60,7 +60,7 @@
 		<ul class="topology-edge-primary" data-no-traffic>
 			<li data-router>
 				<div class="topology-node">
-					<div class="topology-icon rounded-5 bg-subtle-primary fg-primary"><i class="icon-duotone icon-solid icon-router"></i></div>
+					<div class="topology-icon rounded-5 bg-subtle-primary fg-primary"><i class="icon-duotone icon-share-network"></i></div>
 					<div class="text-truncate max-w-100 mt-2">Router</div>
 					<%if (networkInterface?.gateway) {%>
 						<small class="d-block fg-4 text-truncate max-w-100"><%-networkInterface.gateway%></small>
@@ -69,7 +69,7 @@
 				<ul class="topology-edge-primary">
 					<li data-traffic="node">
 						<div class="topology-node">
-							<div class="topology-icon rounded-5 bg-subtle-primary fg-primary"><i class="icon-duotone icon-solid icon-nas"></i></div>
+							<div class="topology-icon rounded-5 bg-subtle-primary fg-primary"><i class="icon-duotone icon-computer-tower"></i></div>
 							<div class="max-w-100 mt-2">
 								<span class="d-inline-block max-w-100 text-truncate align-top"<%if (system?.osInfo?.fqdn) {%> data-bs-toggle="tooltip" data-bs-original-title="<%-system.osInfo.fqdn%>"<%}%>><%-system?.osInfo?.hostname%></span>
 							</div>
@@ -90,7 +90,7 @@
 						</div>
 						<%if (proxy || !_.isEmpty(topology.published) || hasShares || !_.isEmpty(topology.internal)) {%>
 							<div class="topology-stem"></div>
-							<button type="button" class="topology-toggle btn-icon btn-solid theme-primary btn-xs rounded-pill" data-action="toggle" data-key="node"><i class="icon-solid <%=(expanded.has('node') ? 'icon-minus' : 'icon-plus')%> icon-xs"></i></button>
+							<button type="button" class="topology-toggle btn-icon btn-solid theme-primary btn-xs rounded-pill" data-action="toggle" data-key="node"><i class="icon-regular <%=(expanded.has('node') ? 'icon-minus' : 'icon-plus')%> icon-xs"></i></button>
 							<%if (expanded.has('node')) {%>
 								<ul class="topology-edge-primary">
 									<%_.each(apps, (app) => {%>
@@ -106,10 +106,10 @@
 					<%_.each(topology.nodes, (node) => {%>
 						<li class="<%=(node.isAdopted ? 'topology-edge-primary' : 'topology-edge-muted')%>">
 							<div class="topology-node">
-								<div class="topology-icon rounded-5 <%=(node.isAdopted ? 'bg-subtle-primary fg-primary' : 'bg-gray-200 fg-gray-600')%>"><i class="icon-duotone icon-solid icon-nas"></i></div>
+								<div class="topology-icon rounded-5 <%=(node.isAdopted ? 'bg-subtle-primary fg-primary' : 'bg-gray-200 fg-gray-600')%>"><i class="icon-duotone icon-computer-tower"></i></div>
 								<div class="d-flex align-items-center justify-content-center gap-1 max-w-100 mt-2">
 									<%if (node.isAdopted) {%>
-										<i class="icon-solid icon-circle icon-2xs icon-width-auto flex-shrink-0 <%=(node.isOnline ? 'fg-success' : 'fg-danger')%>" data-bs-toggle="tooltip" data-bs-original-title="<%=(node.isOnline ? 'Online' : 'Offline')%>"></i>
+										<i class="icon-fill icon-circle icon-2xs icon-width-auto flex-shrink-0 <%=(node.isOnline ? 'fg-success' : 'fg-danger')%>" data-bs-toggle="tooltip" data-bs-original-title="<%=(node.isOnline ? 'Online' : 'Offline')%>"></i>
 									<%}%>
 									<%const nodeFqdn = (node.isAdopted && node.name && clusterDomain ? _.toLower(`${node.name}.${clusterDomain}`) : null);%>
 									<span class="text-truncate"<%if (nodeFqdn) {%> data-bs-toggle="tooltip" data-bs-original-title="<%-nodeFqdn%>"<%}%>><%-node.name || 'unknown'%></span>

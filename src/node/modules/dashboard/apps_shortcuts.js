@@ -22,7 +22,7 @@ const toggleOrder = (event) => {
 	}
 
 	const group = orderToggle.closest('.group');
-	const icon = orderToggle.querySelector('.icon-solid');
+	const icon = orderToggle.querySelector('.icon-regular');
 
 	if (!group.classList.contains('dragging')) {
 		sortable?.destroy();
@@ -31,9 +31,9 @@ const toggleOrder = (event) => {
 		cards = [];
 		_.each(container.querySelectorAll('.group.dragging'), (group) => {
 			group.classList.remove('dragging');
-			const icon = group.querySelector('.order .icon-solid');
+			const icon = group.querySelector('.order .icon-regular');
 			icon.classList.remove('icon-check', 'fg-green-500');
-			icon.classList.add('icon-bars-staggered', 'fg-gray-300');
+			icon.classList.add('icon-text-align-left', 'fg-gray-300');
 		});
 	}
 
@@ -45,13 +45,13 @@ const toggleOrder = (event) => {
 		hasDraggingStarted = false;
 		group.classList.remove('dragging');
 		icon.classList.remove('icon-check', 'fg-green-500');
-		icon.classList.add('icon-bars-staggered', 'fg-gray-300');
+		icon.classList.add('icon-text-align-left', 'fg-gray-300');
 		return;
 	}
 
 	hasDraggingStarted = true;
 	group.classList.add('dragging');
-	icon.classList.remove('icon-bars-staggered', 'fg-gray-300');
+	icon.classList.remove('icon-text-align-left', 'fg-gray-300');
 	icon.classList.add('icon-check', 'fg-green-500');
 	sortable = new Sortable(group.querySelector(':scope > .row'), {
 		animation: 150,

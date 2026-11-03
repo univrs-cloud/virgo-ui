@@ -1,7 +1,7 @@
 <%const isDisk = (vdev.vdevType === 'disk')%>
 <%const hasChildren = !_.isEmpty(vdev.vdevs)%>
 <%const badgeColor = stateColor(vdev.state)%>
-<%const icon = (isDisk ? 'icon-hard-drive' : 'icon-layer')%>
+<%const icon = (isDisk ? 'icon-hard-drive' : 'icon-stack-simple')%>
 <%const label = (isDisk && drive?.name ? _.last(drive.name.split('/')) : vdev.name)%>
 <%const size = (isDisk ? (vdev.physSpace || vdev.repDevSize) : vdev.totalSpace)%>
 <%const readErrors = (vdev.readErrors || 0)%>
@@ -35,11 +35,11 @@
 	<div class="d-flex align-items-center numeric-tabular min-w-0 <%=(role === 'old' ? 'opacity-50' : '')%>">
 		<span class="state-icon position-relative d-inline-flex me-3 flex-shrink-0">
 			<i class="icon-light <%-icon%> icon-width-auto fg-4"></i>
-			<i class="state-dot icon-solid icon-circle icon-2xs icon-width-auto lh-1 position-absolute top-0 start-100 translate-middle fg-<%-badgeColor%>-300" data-bs-original-title="<%-_.upperFirst(_.toLower(vdev.state))%>"></i>
+			<i class="state-dot icon-fill icon-circle icon-2xs icon-width-auto lh-1 position-absolute top-0 start-100 translate-middle fg-<%-badgeColor%>-300" data-bs-original-title="<%-_.upperFirst(_.toLower(vdev.state))%>"></i>
 		</span>
 		<div class="text-truncate min-w-0"><%-label%></div>
 		<%if (activity) {%>
-			<i class="icon-solid icon-arrows-rotate icon-xs icon-fw lh-1 fg-blue-400 ms-3 flex-shrink-0 <%=(activity === 'awaiting' ? '' : 'icon-spin')%>" data-bs-toggle="tooltip" data-bs-original-title="<%-{ resilvering: 'Resilvering', repairing: 'Repairing', awaiting: 'Awaiting resilver' }[activity]%>"></i>
+			<i class="icon-regular icon-arrows-clockwise icon-xs icon-fw lh-1 fg-blue-400 ms-3 flex-shrink-0 <%=(activity === 'awaiting' ? '' : 'icon-spin')%>" data-bs-toggle="tooltip" data-bs-original-title="<%-{ resilvering: 'Resilvering', repairing: 'Repairing', awaiting: 'Awaiting resilver' }[activity]%>"></i>
 		<%}%>
 		<%if (size) {%>
 			<u-badge color="gray" tint="050" class="ms-3 flex-shrink-0" pill><small><%=prettyBytes(size, { binary: true })%></small></u-badge>
@@ -57,10 +57,10 @@
 		<%}%>
 		<%const healthColorName = (isDisk ? healthColor(drive?.health) : null)%>
 		<%if (healthColorName) {%>
-			<i class="icon-solid icon-triangle-exclamation icon-fw fg-<%-healthColorName%>-300 ms-3 flex-shrink-0" data-bs-toggle="tooltip" data-bs-custom-class="storage-device" data-bs-original-title="<%=driveHealthTip(drive)%>"></i>
+			<i class="icon-fill icon-warning icon-fw fg-<%-healthColorName%>-300 ms-3 flex-shrink-0" data-bs-toggle="tooltip" data-bs-custom-class="storage-device" data-bs-original-title="<%=driveHealthTip(drive)%>"></i>
 		<%}%>
 		<%if (isDisk && (drive?.model || drive?.serialNumber)) {%>
-			<i class="icon-light icon-circle-info icon-xs icon-fw lh-1 fg-4 ms-3 flex-shrink-0" data-bs-toggle="tooltip" data-bs-custom-class="storage-device" data-bs-original-title="<%=tip%>"></i>
+			<i class="icon-light icon-info icon-xs icon-fw lh-1 fg-4 ms-3 flex-shrink-0" data-bs-toggle="tooltip" data-bs-custom-class="storage-device" data-bs-original-title="<%=tip%>"></i>
 		<%}%>
 	</div>
 </div>

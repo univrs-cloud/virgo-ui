@@ -1,0 +1,202 @@
+@use "sass:map";
+@use "sass:string";
+@use "variables" as v;
+
+@font-face {
+	font-family: "Phosphor";
+	font-style: normal;
+	font-weight: normal;
+	font-display: v.$font-display;
+	src: url("#{v.$font-path}/regular/Phosphor.woff2") format("woff2");
+}
+
+@font-face {
+	font-family: "Phosphor-Fill";
+	font-style: normal;
+	font-weight: normal;
+	font-display: v.$font-display;
+	src: url("#{v.$font-path}/fill/Phosphor-Fill.woff2") format("woff2");
+}
+
+@font-face {
+	font-family: "Phosphor-Light";
+	font-style: normal;
+	font-weight: normal;
+	font-display: v.$font-display;
+	src: url("#{v.$font-path}/light/Phosphor-Light.woff2") format("woff2");
+}
+
+@font-face {
+	font-family: "Phosphor-Duotone";
+	font-style: normal;
+	font-weight: normal;
+	font-display: v.$font-display;
+	src: url("#{v.$font-path}/duotone/Phosphor-Duotone.woff2") format("woff2");
+}
+
+.icon-regular,
+.icon-fill,
+.icon-light,
+.icon-duotone {
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	display: var(--icon-display, inline-block);
+	font-family: var(--icon-family);
+	font-feature-settings: normal;
+	font-style: normal;
+	font-synthesis: none;
+	font-variant: normal;
+	font-weight: normal;
+	letter-spacing: normal;
+	line-height: 1;
+	text-align: center;
+	text-rendering: auto;
+	text-transform: none;
+	vertical-align: v.$baseline-shift;
+	width: var(--icon-width, #{v.$fw-width});
+	&::before {
+		content: var(--icon) / "";
+	}
+	&::before,
+	&::after {
+		display: inline-block;
+		transform: scale(v.$glyph-scale);
+	}
+}
+
+.icon-regular {
+	--icon-family: "Phosphor";
+}
+
+.icon-fill {
+	--icon-family: "Phosphor-Fill";
+}
+
+.icon-light {
+	--icon-family: "Phosphor-Light";
+}
+
+.icon-duotone {
+	--icon-family: "Phosphor-Duotone";
+	position: relative;
+	&::before {
+		position: absolute;
+		color: var(--icon-secondary-color, currentColor);
+		opacity: var(--icon-secondary-opacity, #{v.$secondary-opacity});
+	}
+	&::after {
+		content: var(--icon-duotone) / "";
+		color: var(--icon-primary-color, currentColor);
+		opacity: var(--icon-primary-opacity, 1);
+	}
+}
+
+.icon-fw {
+	--icon-width: #{v.$fw-width};
+}
+
+.icon-width-auto {
+	--icon-width: auto;
+}
+
+@for $i from 1 through 10 {
+	.icon-#{$i}x {
+		font-size: $i * 1em;
+	}
+}
+
+@each $size, $value in v.$sizes {
+	.icon-#{$size} {
+		font-size: calc(#{$value} / #{v.$size-scale-base} * 1em);
+		line-height: calc(1 / #{$value} * 1em);
+		vertical-align: calc(((6 / #{$value}) - (3 / 8)) * 1em + #{v.$baseline-shift});
+	}
+}
+
+.icon-spin,
+.icon-fade,
+.icon-beat-fade {
+	animation-delay: var(--icon-animation-delay, 0s);
+	animation-direction: var(--icon-animation-direction, normal);
+	animation-iteration-count: var(--icon-animation-iteration-count, infinite);
+}
+
+.icon-spin {
+	animation-name: icon-spin;
+	animation-duration: var(--icon-animation-duration, 2s);
+	animation-timing-function: var(--icon-animation-timing, linear);
+}
+
+.icon-fade {
+	animation-name: icon-fade;
+	animation-duration: var(--icon-animation-duration, 1s);
+	animation-timing-function: var(--icon-animation-timing, ease-in-out);
+}
+
+.icon-beat-fade {
+	animation-name: icon-beat-fade;
+	animation-duration: var(--icon-animation-duration, 1s);
+	animation-timing-function: var(--icon-animation-timing, ease-in-out);
+}
+
+@keyframes icon-spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes icon-fade {
+	0% {
+		opacity: 1;
+		transform: scale(1);
+		animation-timing-function: cubic-bezier(0.2, 0, 0.4, 1);
+	}
+	40% {
+		opacity: var(--icon-fade-opacity, 0.4);
+		transform: scale(0.98);
+		animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+	}
+	100% {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+@keyframes icon-beat-fade {
+	0% {
+		opacity: var(--icon-beat-fade-opacity, 0.4);
+		transform: scale(1);
+		animation-timing-function: cubic-bezier(0.2, 0, 0.4, 1);
+	}
+	25% {
+		opacity: calc(var(--icon-beat-fade-opacity, 0.4) + 0.4);
+		transform: scale(var(--icon-beat-fade-scale, 1.28));
+		animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+	}
+	45% {
+		opacity: 1;
+		transform: scale(var(--icon-beat-fade-scale, 1.25));
+		animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+	}
+	65% {
+		opacity: calc(var(--icon-beat-fade-opacity, 0.4) + 0.4);
+		transform: scale(var(--icon-beat-fade-scale, 1.28));
+		animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+	}
+	100% {
+		opacity: var(--icon-beat-fade-opacity, 0.4);
+		transform: scale(1);
+	}
+}
+
+@each $name, $icon in v.$icons {
+	.icon-#{$name} {
+		--icon: #{string.unquote("\"#{$icon}\"")};
+		@if map.has-key(v.$duotone-icons, $name) {
+			--icon-duotone: #{string.unquote("\"#{map.get(v.$duotone-icons, $name)}\"")};
+		}
+	}
+}
