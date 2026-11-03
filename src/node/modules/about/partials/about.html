@@ -10,19 +10,19 @@
 					<dl class="row row-cols-2 xl:row-cols-4 g-5 mb-0">
 						<div class="col min-w-0">
 							<dt class="fw-lighter lh-1"><small>UI version</small></dt>
-							<dd class="m-0 fs-lg text-break"><%-VERSION%></dd>
+							<dd class="text-break m-0"><%-VERSION%></dd>
 						</div>
 						<div class="col min-w-0">
 							<dt class="fw-lighter lh-1"><small>API version</small></dt>
-							<dd class="m-0 fs-lg text-break"><%-system?.api?.version%></dd>
+							<dd class="text-break m-0"><%-system?.api?.version%></dd>
 						</div>
 						<div class="col min-w-0">
 							<dt class="fw-lighter lh-1"><small>ZFS version</small></dt>
-							<dd class="m-0 fs-lg text-break"><%-system?.zfs?.version%></dd>
+							<dd class="text-break m-0"><%-system?.zfs?.version%></dd>
 						</div>
 						<div class="col min-w-0">
 							<dt class="fw-lighter lh-1"><small>Kernel version</small></dt>
-							<dd class="m-0 fs-lg text-break"><%-system?.osInfo?.kernel%></dd>
+							<dd class="text-break m-0"><%-system?.osInfo?.kernel%></dd>
 						</div>
 					</dl>
 				</div>
@@ -109,8 +109,8 @@
 											<span class="copy d-none"><%-drive.model%></span>
 										</div>
 										<div class="d-flex align-items-center">
-											<small class="fg-4 text-truncate">SN: <%-drive.serialNumber%></small>
-											<a href="#" class="fg-secondary flex-shrink-0 ms-3" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-original-title="Copy serial number"><i class="icon-regular icon-copy icon-sm"></i></a>
+											<small class="fw-lighter lh-1 text-truncate">SN: <%-drive.serialNumber%></small>
+											<a href="#" class="fg-secondary flex-shrink-0 lh-1 ms-3" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-original-title="Copy serial number"><i class="icon-regular icon-copy icon-sm"></i></a>
 											<span class="copy d-none"><%-drive.serialNumber%></span>
 										</div>
 									</div>

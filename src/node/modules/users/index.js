@@ -1,3 +1,4 @@
+import page from 'page';
 import modulePartial from 'node/modules/users/partials/index.html';
 import userPartial from 'node/modules/users/partials/user.html';
 import * as userService from 'node/modules/users/services/user';
@@ -17,6 +18,17 @@ let searchValue = '';
 let tableOrder = {
 	field: 'username',
 	direction: 'asc'
+};
+
+const openProfile = async (event) => {
+	const link = event.target.closest('a[href="/users/profile"]');
+	if (!link) {
+		return;
+	}
+
+	event.preventDefault();
+	await bootstrap.Tooltip.getInstance(link)?.hide();
+	page(link.getAttribute('href'));
 };
 
 const search = (event) => {
@@ -84,6 +96,7 @@ const render = (state) => {
 
 searchInput.addEventListener('input', search);
 table.querySelector('thead').addEventListener('click', order);
+table.querySelector('tbody').addEventListener('click', openProfile);
 
 userService.subscribe([render]);
 

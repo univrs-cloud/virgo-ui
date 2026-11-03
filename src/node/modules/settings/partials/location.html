@@ -16,16 +16,16 @@
 					<%} else {%>
 						<div class="d-flex align-items-center gap-5">
 							<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-5 bg-subtle-primary fg-primary align-self-start"><i class="icon-duotone icon-solid icon-location-dot"></i></div>
-							<dl class="d-flex flex-column md:flex-row column-gap-7 row-gap-5 min-w-0 me-auto mt-1 md:mt-0 mb-0">
+							<div class="d-flex flex-column md:flex-row column-gap-7 row-gap-5 min-w-0 me-auto mt-1 md:mt-0">
 								<div class="min-w-0">
-									<dt class="fw-lighter lh-1"><small>Latitude</small></dt>
-									<dd class="m-0 text-break"><%-location?.latitude%></dd>
+									<small class="d-block fw-lighter lh-1">Latitude</small>
+									<div class="text-break"><%-location?.latitude%></div>
 								</div>
 								<div class="min-w-0">
-									<dt class="fw-lighter lh-1"><small>Longitude</small></dt>
-									<dd class="m-0 text-break"><%-location?.longitude%></dd>
+									<small class="d-block fw-lighter lh-1">Longitude</small>
+									<div class="text-break"><%-location?.longitude%></div>
 								</div>
-							</dl>
+							</div>
 							<a href="#location" class="btn-link d-inline-block text-nowrap align-self-start border-0 px-0 py-3 mt-1 min-h-0" data-bs-toggle="dialog"><i class="icon-regular icon-pen icon-fw me-1"></i>Edit</a>
 						</div>
 					<%}%>

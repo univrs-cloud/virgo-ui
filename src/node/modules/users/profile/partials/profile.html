@@ -10,7 +10,7 @@
 					<div class="d-flex align-items-center gap-5">
 						<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-circle bg-subtle-primary fg-primary fs-lg text-uppercase align-self-start"><%-_.head(user.fullname || user.username)%></div>
 						<div class="min-w-0 me-auto">
-							<div class="fs-lg lh-1 text-break"><%-user.fullname || user.username%></div>
+							<div class="text-break fs-lg lh-1"><%-user.fullname || user.username%></div>
 							<div class="d-flex flex-wrap gap-3" style="margin-top: 0.3125rem;">
 								<u-badge color="gray" tint="050" pill><small><span class="fw-lighter me-1">Username</span><%-user.username%></small></u-badge>
 								<u-badge color="gray" tint="050" pill><small><span class="fw-lighter me-1">Email address</span><%-user.email || '—'%></small></u-badge>

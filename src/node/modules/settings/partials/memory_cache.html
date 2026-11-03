@@ -22,11 +22,16 @@
 						<%const tickStep = Math.max(1, Math.ceil(max / gib / 4)) * gib%>
 						<%const tickGap = (max - min) * 0.15%>
 						<%const ticks = [min, ..._.filter(_.range(tickStep, max, tickStep), (tick) => { return tick - min > tickGap && max - tick > tickGap; }), max]%>
-						<div class="d-flex gap-5">
+						<div class="d-flex align-items-center gap-5">
 							<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-5 bg-subtle-primary fg-primary align-self-start"><i class="icon-duotone icon-solid icon-memory"></i></div>
+							<div class="min-w-0 me-auto">
+								<div class="fs-lg lh-xs">Size limit</div>
+								<small class="d-block fg-4 lh-xs">The most memory the cache may use.</small>
+							</div>
+						</div>
+						<div class="d-flex gap-5">
+							<div class="flex-shrink-0 size-5"></div>
 							<div class="min-w-0 flex-fill">
-								<div>Size limit</div>
-								<small class="d-block fg-4">The most memory the cache may use.</small>
 								<div class="form-range mt-7">
 									<input type="range" class="arc-max form-range-input" min="<%=min%>" max="<%=max%>" step="<%=step%>" value="<%=arc.max%>" list="arc-ticks">
 									<datalist id="arc-ticks">

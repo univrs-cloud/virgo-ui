@@ -65,7 +65,9 @@
 		<%if (!_.isEmpty(jobs)) {%>
 			<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-solid icon-gear icon-fw icon-spin"></i></span>
 		<%} else if (isSameAsLoggedIn) {%>
-			<a href="/users/profile"><i class="icon-light icon-angle-right icon-fw fg-4" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="This is you! Edit your profile or change your password in your <strong><u>Profile</u></strong> page."></i></a>
+			<a href="/users/profile" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="This is you! Edit your profile or change your password in your <strong><u>Profile</u></strong> page.">
+				<i class="icon-light icon-chevron-right icon-fw fg-4"></i>
+			</a>
 		<%} else {%>
 			<div class="dropdown">
 				<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-solid icon-ellipsis-vertical icon-fw fg-secondary"></i></span>
