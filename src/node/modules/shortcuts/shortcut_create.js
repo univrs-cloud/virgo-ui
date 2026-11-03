@@ -156,7 +156,7 @@ iconBox.addEventListener('click', (event) => {
 iconBox.addEventListener('shown.bs.popover', () => {
 	const popover = bootstrap.Popover.getInstance(iconBox);
 	const tip = popover?.tip;
-	tip?.querySelector('.icon-magnifying-glass')?.focus();
+	tip?.querySelector('.shortcut-icon-search')?.focus();
 	iconPopoverOutsideClick = (event) => {
 		if (tip && !tip.contains(event.target) && !iconBox.contains(event.target)) {
 			popover?.hide();

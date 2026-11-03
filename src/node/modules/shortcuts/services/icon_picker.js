@@ -120,7 +120,7 @@ export const initIconSearch = (iconBox, iconPopoverContent, { getIconImgEl, getI
 		if (!tip) {
 			return;
 		}
-		const searchEl = tip.querySelector('.icon-magnifying-glass');
+		const searchEl = tip.querySelector('.shortcut-icon-search');
 		const resultsEl = tip.querySelector('.shortcut-icon-results');
 		if (!searchEl || !resultsEl) {
 			return;
