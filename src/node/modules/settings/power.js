@@ -1,4 +1,5 @@
 import * as powerService from 'node/services/power';
+import * as systemService from 'node/services/system';
 
 const module = document.querySelector('#settings');
 
@@ -12,7 +13,7 @@ const reboot = async (event) => {
 	}
 
 	event.preventDefault();
-	if (!await confirm('Are you sure you want to reboot?', { buttons: [{ text: 'Reboot', class: 'btn-solid theme-danger' }] })) {
+	if (!await confirm(`Are you sure you want to reboot <strong>${systemService.getFQDN()}</strong>?`, { buttons: [{ text: 'Reboot', class: 'btn-solid theme-danger' }] })) {
 		return;
 	}
 
@@ -30,7 +31,7 @@ const shutdown = async (event) => {
 	}
 
 	event.preventDefault();
-	if (!await confirm('Are you sure you want to shut down?', { buttons: [{ text: 'Shutdown', class: 'btn-solid theme-danger' }] })) {
+	if (!await confirm(`Are you sure you want to shut down <strong>${systemService.getFQDN()}</strong>?`, { buttons: [{ text: 'Shutdown', class: 'btn-solid theme-danger' }] })) {
 		return;
 	}
 	
