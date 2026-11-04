@@ -10,7 +10,7 @@
 	const hasUnhealthyNonResilver = pools.some((pool) => { const health = pool.properties?.health?.value?.toLowerCase(); return !isResilvering(pool) && health && health !== 'online'; });
 	const resilveringPools = pools.filter(isResilvering);
 	const resilverPercent = resilveringPools.length ? Math.round(Math.min(...resilveringPools.map((pool) => { return pool.scanStats?.toExamine ? (pool.scanStats.issued / pool.scanStats.toExamine) * 100 : 0; }))) : null;
-	const cardStateClass = !node.online ? 'border border-white' : (hasCriticalPool ? 'border border-red-300' : (hasDegradedPool ? 'border border-orange-300' : 'border border-white'));
+	const cardStateClass = !node.online ? '' : (hasCriticalPool ? 'border border-red-300' : (hasDegradedPool ? 'border border-orange-300' : ''));
 	// Offline has no pools so it stays a neutral gray Offline.
 	const statusColor = !node.online ? 'gray' : (hasCriticalPool ? 'red' : (hasDegradedPool ? 'orange' : 'green'));
 	const statusLabel = !node.online ? 'Offline' : (hasCriticalPool ? 'Faulted' : (hasDegradedPool ? 'Degraded' : 'Online'));
@@ -214,7 +214,7 @@
 							const healthLabel = properties.health?.value || 'Unknown';
 							const usageTip = `${prettyBytes(properties.allocated?.value || 0, { binary: true })} of ${prettyBytes(properties.size?.value || 0, { binary: true })} used`;
 						%>
-						<div class="d-flex align-items-center border border-gray-100 bd-gray-50 shadow-sm px-3 py-1 rounded-9" style="font-size: 0.75rem;">
+						<div class="d-flex align-items-center border bd-gray-50 shadow-sm px-3 py-1 rounded-9" style="font-size: 0.75rem;">
 							<i class="icon-fill icon-circle icon-fw me-1 <%=healthColor%>" data-bs-toggle="tooltip" data-bs-original-title="<%-healthLabel%>"></i>
 							<span class="fg-emphasis-secondary me-3"><%-pool.name%></span>
 							<%if (scanState === 'scanning') {%>
