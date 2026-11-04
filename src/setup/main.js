@@ -6,6 +6,8 @@ const mainTemplate = _.template(mainPartial);
 const header = document.querySelector('header');
 const container = document.querySelector('main');
 
+document.body.classList.add('menu-collapsed');
+
 morphdom(
 	header,
 	headerTemplate()

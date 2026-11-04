@@ -417,14 +417,22 @@ html:not(:has(head > base[href="/"])) {
 	u-form > form {
 		display: contents;
 	}
-}
-.wizard > .row > .col-12 {
-	height: calc(100dvh - var(--chrome) - #{map.get($spacers, 5) * 2});
-}
-@media (min-width: 576px) {
-	.wizard > .row > .col-12 {
-		height: 824px;
-		max-height: calc(100dvh - var(--chrome) - #{map.get($spacers, 5) * 2});
+	#app & .card {
+		--card-bg: transparent;
+		--card-spacer-y: 0.25rem;
+		--card-spacer-x: 0.25rem;
+		box-shadow: none;
+		> .card-body {
+			margin: -0.25rem -0.25rem 0;
+			overflow-x: hidden;
+		}
+	}
+	> .row > .col-12 {
+		height: calc(100dvh - var(--chrome) - #{map.get($spacers, 5) * 2});
+		@media (min-width: 576px) {
+			height: 824px;
+			max-height: calc(100dvh - var(--chrome) - #{map.get($spacers, 5) * 2});
+		}
 	}
 }
 
@@ -677,14 +685,9 @@ html:not(:has(head > base[href="/"])) {
 				margin-left: -0.375rem;
 			}
 		}
-		// Setup, and the auth screens that leave the header empty, have no sidebar to make room for.
+		// The auth screens leave the header empty, so there is no sidebar to make room for.
 		&:not(:has(nav)) ~ main {
 			margin-left: 0;
-		}
-		&.setup {
-			.navbar {
-				background: var(--primary-base);
-			}
 		}
 	}
 	main,
