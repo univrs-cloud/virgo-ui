@@ -1,5 +1,5 @@
 <div class="item container-fluid numeric-tabular" data-unit="<%-service.unit%>">
-	<div class="card border-0 shadow shadow-opacity-100">
+	<div class="card">
 		<div class="card-body">
 			<div class="row g-0 align-items-center mt--3 mb-3">
 				<div class="col-auto me-3">
@@ -31,53 +31,26 @@
 				</div>
 			</div>
 
-			<div class="position-relative">
-				<div class="logs-container bd-black rounded-5 shadow-sm d-none">
-					<div class="service d-flex align-items-center justify-content-between border-bottom border-gray-800 px-3 py-1">
-						<div class="d-flex align-items-center">
-							<i class="icon-light icon-cube icon-fw me-1 fg-gray-300"></i>
-							<span class="name"></span>
-							<small class="fg-gray-300 border-start border-gray-800 ps-3 ms-3">
-								<i class="icon-fill icon-broadcast icon-fw me-1"></i>
-								Connecting...
-							</small>
-						</div>
-						<a href="#" class="close-logs fg-secondary ms-3"><i class="icon-regular icon-x"></i></a>
-					</div>
-					<ul class="color-scheme-dark"></ul>
-				</div>
-
-				<div class="table-scroll overflow-y-scroll pe-5 mx-0 me--5">
-					<div class="row g-3">
-						<div class="col col-6 md:col-3">
-							<div class="card mb-3">
-								<div class="card-body py-1">
-									<small class="fg-4 pb-1"><i class="icon-fill icon-record icon-fw me-1"></i>State</small>
-									<h4><%-service.sub%></h4>
+			<div class="position-relative detail-split">
+				<div class="detail-facts table-scroll overflow-y-scroll pe-5 mx-0 me--5 <%=(serviceTab === 'overview' ? '' : 'detail-pane-off')%>">
+					<div class="list-group list-group-flush">
+						<div class="list-group-item pt-5 pb-7">
+							<div class="row g-5">
+								<div class="col-6 md:col-3 2xl:col-6">
+									<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-record icon-fw me-1"></i>State</small>
+									<h4 class="m-0"><%-service.sub%></h4>
 								</div>
-							</div>
-						</div>
-						<div class="col col-6 md:col-3">
-							<div class="card mb-3">
-								<div class="card-body py-1">
-									<small class="fg-4 pb-1"><i class="icon-fill icon-circle-half icon-fw me-1"></i>Activity</small>
-									<h4><%-service.active%></h4>
+								<div class="col-6 md:col-3 2xl:col-6">
+									<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-circle-half icon-fw me-1"></i>Activity</small>
+									<h4 class="m-0"><%-service.active%></h4>
 								</div>
-							</div>
-						</div>
-						<div class="col col-6 md:col-3">
-							<div class="card mb-3">
-								<div class="card-body py-1">
-									<small class="fg-4 pb-1"><i class="icon-fill icon-toggle-right icon-fw me-1"></i>Startup</small>
-									<h4><%-service.unitFileState%></h4>
+								<div class="col-6 md:col-3 2xl:col-6">
+									<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-toggle-right icon-fw me-1"></i>Startup</small>
+									<h4 class="m-0"><%-service.unitFileState%></h4>
 								</div>
-							</div>
-						</div>
-						<div class="col col-6 md:col-3">
-							<div class="card mb-3">
-								<div class="card-body py-1">
-									<small class="fg-4 pb-1"><i class="icon-fill icon-memory icon-fw me-1"></i>RAM</small>
-									<h4>
+								<div class="col-6 md:col-3 2xl:col-6">
+									<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-memory icon-fw me-1"></i>RAM</small>
+									<h4 class="m-0">
 										<%if (service.type === 'service' && service.active === 'active') {%>
 											<span class="tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(service.memory?.usage || 0, { binary: true })%>"><%=service.memory?.percent.toFixed(2)%>%</span>
 										<%} else {%>
@@ -88,12 +61,25 @@
 							</div>
 						</div>
 					</div>
-
-					<div class="services pe-5 me--5">
-						<div class="d-flex align-items-center gap-3 mt-3">
-							<a href="#" class="logs btn-solid theme-secondary btn-xs" data-unit="<%-service.unit%>">
-								<i class="icon-fill icon-article icon-fw"></i>Logs
-							</a>
+				</div>
+				<div class="detail-main">
+					<div class="nav nav-underline d-flex gap-0 border-bottom">
+						<button type="button" class="nav-link detail-facts-tab px-4 <%=(serviceTab === 'overview' ? 'active border-primary fw-light' : '')%>" data-service-tab="overview"><i class="icon-light icon-info icon-fw"></i>Overview</button>
+						<button type="button" class="nav-link detail-default-tab px-4 <%=(serviceTab === 'logs' ? 'active border-primary fw-light' : '')%>" data-service-tab="logs"><i class="icon-light icon-article icon-fw"></i>Logs</button>
+					</div>
+					<div class="service-logs <%=(serviceTab === 'logs' ? '' : 'detail-pane-off')%>">
+						<div class="logs-container bd-black rounded-5 shadow-sm">
+							<div class="service d-flex align-items-center justify-content-between border-bottom border-gray-800 px-3 py-1">
+								<div class="d-flex align-items-center">
+									<i class="icon-light icon-cube icon-fw me-1 fg-gray-300"></i>
+									<span class="name"></span>
+									<small class="fg-gray-300 border-start border-gray-800 ps-3 ms-3">
+										<i class="icon-fill icon-broadcast icon-fw me-1"></i>
+										Connecting...
+									</small>
+								</div>
+							</div>
+							<ul class="color-scheme-dark"></ul>
 						</div>
 					</div>
 				</div>

@@ -1,5 +1,5 @@
 <div class="item container-fluid numeric-tabular" data-name="<%-app.name%>">
-	<div class="card border-0 shadow shadow-opacity-100">
+	<div class="card">
 		<div class="card-body">
 			<div class="card-image-row mt--3 mb-3">
 				<div class="card-image-row-back me-3">
@@ -42,278 +42,375 @@
 				</div>
 			</div>
 
-			<div class="position-relative">
-				<div class="nav nav-underline d-flex gap-0 border-bottom">
-					<button type="button" class="nav-link px-4 <%=(appTab === 'snapshots' ? '' : 'active border-primary fw-light')%>" data-app-tab="services"><i class="icon-light icon-cube icon-fw"></i>Services <small class="opacity-75"><%=_.size(app.projectContainers)%></small></button>
-					<%if (!app.isUnmanaged) {%>
-						<button type="button" class="nav-link px-4 <%=(appTab === 'snapshots' ? 'active border-primary fw-light' : '')%>" data-app-tab="snapshots">
-							<span class="position-relative d-inline-flex">
-								<i class="icon-light icon-clock-counter-clockwise icon-fw"></i>
-								<%if (app.snapshotPolicy) {%>
-									<i class="icon-fill icon-circle icon-2xs icon-width-auto lh-1 position-absolute top-100 start-100 translate-middle <%=({ enabled: 'fg-green-300', paused: 'fg-orange-300', disabled: 'fg-gray-500' })[_.toLower(app.snapshotPolicy.mode)]%>" style="margin: -0.1875rem 0 0 -0.125rem;" data-bs-toggle="tooltip" data-bs-original-title="<%-_.upperFirst(app.snapshotPolicy.mode)%>"></i>
+			<div class="position-relative detail-split">
+				<div class="detail-facts detail-facts-wide table-scroll overflow-y-scroll pe-5 mx-0 me--5">
+					<div class="list-group list-group-flush">
+						<div class="list-group-item pt-5 pb-7">
+							<div class="row g-5">
+								<div class="col-6">
+									<small class="fg-4 d-block text-truncate">State</small>
+									<div class="d-flex align-items-center gap-3">
+										<u-badge color="<%=(({ success: 'green', warning: 'yellow' })[app.state] || 'red')%>" pill>
+											<small><%=_.size(_.filter(app.projectContainers, { state: 'running' }))%> / <%=_.size(app.projectContainers)%></small>
+										</u-badge>
+										<span>running</span>
+									</div>
+								</div>
+								<%if (!app.isUnmanaged) {%>
+									<div class="col-6">
+										<small class="fg-4 d-block text-truncate">Updates</small>
+										<%if (app.hasUpdates) {%>
+											<span class="fg-green-500"><i class="icon-regular icon-arrow-down icon-fw me-1"></i>Available</span>
+										<%} else {%>
+											<span>Up to date</span>
+										<%}%>
+									</div>
 								<%}%>
-							</span>
-							Snapshots
-							<%if (_.toLower(app.snapshotPolicy?.mode) !== 'disabled') {%>
-								<small class="opacity-75"><%=_.size(app.snapshots)%></small>
-							<%}%>
-						</button>
-					<%}%>
-					<%if (app.composeFile) {%>
-						<small class="fg-emphasis-secondary text-truncate align-self-center ms-auto px-3"><%-app.composeFile%></small>
-					<%}%>
-				</div>
-
-				<div class="logs-container bd-black rounded-5 shadow-sm d-none">
-					<div class="service d-flex align-items-center justify-content-between border-bottom border-gray-800 px-3 py-1">
-						<div class="d-flex align-items-center">
-							<i class="icon-light icon-cube icon-fw me-1 fg-gray-300"></i>
-							<span class="name"></span>
-							<small class="fg-gray-300 border-start border-gray-800 ps-3 ms-3">
-								<i class="icon-fill icon-broadcast icon-fw me-1"></i>
-								Connecting...
-							</small>
+							</div>
 						</div>
-						<a href="#" class="close-logs fg-secondary ms-3"><i class="icon-regular icon-x"></i></a>
-					</div>
-					<ul class="color-scheme-dark"></ul>
-				</div>
-
-				<div class="terminal-container bd-black rounded-5 shadow-sm d-none">
-					<div class="service d-flex align-items-center justify-content-between border-bottom border-gray-800 px-3 py-1">
-						<div class="d-flex align-items-center">
-							<i class="icon-light icon-cube icon-fw me-1 fg-gray-300"></i>
-							<span class="name"></span>
-							<small class="fg-gray-300 border-start border-gray-800 ps-3 ms-3">
-								<i class="icon-fill icon-broadcast icon-fw me-1"></i>
-								Connecting...
-							</small>
-						</div>
-						<a href="#" class="close-terminal fg-secondary ms-3"><i class="icon-regular icon-x"></i></a>
-					</div>
-					<div class="search position-absolute end-0 z-1 d-none d-flex align-items-center gap-3 bg-body rounded-4 shadow shadow-opacity-100 p-1 mt-3 me-7">
-						<input type="text" class="form-control form-control-sm" placeholder="Find" autocomplete="off" spellcheck="false">
-						<small class="results fg-emphasis-secondary text-nowrap"></small>
-						<div class="btn-group btn-group-sm">
-							<button type="button" class="previous btn-icon btn-solid theme-secondary"><i class="icon-regular icon-arrow-up icon-fw"></i></button>
-							<button type="button" class="next btn-icon btn-solid theme-secondary"><i class="icon-regular icon-arrow-down icon-fw"></i></button>
-							<button type="button" class="close-search btn-icon btn-solid theme-secondary"><i class="icon-regular icon-x icon-fw"></i></button>
-						</div>
-					</div>
-					<div class="wrapper color-scheme-dark"></div>
-				</div>
-
-				<div class="table-scroll overflow-y-scroll pe-5 mx-0 me--5">
-					<div class="<%=(appTab === 'snapshots' ? 'd-none' : '')%>">
-						<div class="services">
-							<div class="list-group list-group-flush">
-								<%_.each(app.projectContainers, (container, index) => {%>
-									<%const resourceMetrics = _.find((app.resourceMetrics?.containers || []), { id: container.id })%>
-									<%const containerJobs = _.filter(serviceJobs, (job) => { return job.data?.config?.id === container.id; });%>
-									<div class="service list-group-item pt-5 pb-7" data-id="<%-container.id%>">
-										<div class="row g-3 align-items-center">
-											<div class="col-12">
-												<%const stateColor = (container.state === 'running' ? 'fg-green-300' : (_.includes(['restarting', 'paused'], container.state) ? 'fg-orange-300' : (_.includes(['exited', 'dead'], container.state) ? 'fg-red-400' : 'fg-gray-500')));%>
-												<div class="d-flex align-items-center justify-content-between w-100 mb-3">
-													<div class="d-flex align-items-center min-w-0">
-														<span class="state-icon position-relative d-inline-flex me-3">
-															<i class="icon-light icon-cube icon-width-auto fg-4"></i>
-															<i class="state-dot icon-fill icon-circle icon-2xs icon-width-auto lh-1 position-absolute top-0 start-100 translate-middle <%=stateColor%>" data-bs-original-title="<%-_.upperFirst(container.state)%>"></i>
-														</span>
-														<div class="text-truncate min-w-0"><%-(container.labels?.comDockerComposeService || app.title)%>
-															<%if (container.state !== 'running') {%>
-																<small class="fg-4">(<%-container.state%>)</small>
-															<%}%>
-															<%if (container.hasUpdates) {%>
-																<u-badge color="green" class="ms-1" tip="Updates available" pill>
-																	<i class="icon-regular icon-arrow-down icon-fw"></i>
-																</u-badge>
-															<%}%>
-														</div>
-													</div>
-													<div class="d-flex flex-shrink-0 align-items-center gap-3 ms-3">
-														<a href="#" class="logs btn-solid theme-secondary btn-xs" data-id="<%-container.id%>">
-															<i class="icon-fill icon-article icon-fw"></i><span class="d-none md:d-inline">Logs</span>
-														</a>
-														<a href="#" class="terminal btn-solid theme-secondary btn-xs <%=(container.state === 'running' ? '' : 'disabled')%>" data-id="<%-container.id%>">
-															<i class="icon-fill icon-terminal-window icon-fw <%=(container.state === 'running' ? '' : 'fg-gray-500')%>"></i><span class="d-none md:d-inline">Terminal</span>
-														</a>
-														<div class="d-flex align-items-center gap-3">
-															<%if (!_.isEmpty(appJobs) || !_.isEmpty(containerJobs)) {%>
-																<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-fill icon-gear icon-fw icon-spin"></i></span>
-															<%} else {%>
-																<%const isStopped = _.includes(['created', 'exited'], container.state);%>
-																<%const isRunning = _.includes(['running', 'paused'], container.state);%>
-																<%const isActive = _.includes(['running', 'paused', 'restarting'], container.state);%>
-																<div class="dropdown md:d-none">
-																	<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i></span>
-																	<div class="menu">
-																		<%if (app.canBeRemoved || isStopped) {%>
-																			<a href="#" class="menu-item <%=(isStopped ? '' : 'disabled')%>" data-action="start"><i class="icon-fill icon-play icon-fw <%=(isStopped ? 'fg-green-400' : '')%>"></i>Start</a>
-																			<div class="menu-divider"></div>
-																		<%}%>
-																		<a href="#" class="menu-item <%=(isRunning ? 'confirm' : 'disabled')%>" data-action="restart"><i class="icon-fill icon-arrow-counter-clockwise icon-fw"></i>Restart</a>
-																		<%if (app.canBeRemoved) {%>
-																			<a href="#" class="menu-item <%=(isActive ? 'fg-danger confirm' : 'disabled')%>" data-action="stop"><i class="icon-fill icon-stop icon-fw"></i>Stop</a>
-																			<a href="#" class="menu-item <%=(isActive ? 'fg-danger confirm' : 'disabled')%>" data-action="kill"><i class="icon-fill icon-skull icon-fw"></i>Kill</a>
-																		<%}%>
-																	</div>
-																</div>
-																<div class="d-none md:d-block">
-																	<div class="d-inline-flex align-items-center bg-2 rounded-3">
-																		<%const canStop = (app.canBeRemoved && isActive);%>
-																		<div class="d-inline-flex align-items-center px-1">
-																			<a href="#" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 rounded-3 <%=(isStopped ? '' : 'disabled')%>" data-action="start" data-bs-toggle="tooltip" data-bs-original-title="Start"><i class="icon-fill icon-play icon-fw <%=(isStopped ? 'fg-green-400' : 'fg-gray-500')%>"></i></a>
-																			<a href="#" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 rounded-3 <%=(isRunning ? 'confirm' : 'disabled')%>" data-action="restart" data-bs-toggle="tooltip" data-bs-original-title="Restart"><i class="icon-regular icon-arrow-counter-clockwise icon-fw <%=(isRunning ? 'fg-black' : 'fg-gray-500')%>"></i></a>
-																			<a href="#" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 rounded-3 <%=(canStop ? 'confirm' : 'disabled')%>" data-action="stop" data-bs-toggle="tooltip" data-bs-original-title="Stop"><i class="icon-fill icon-stop icon-fw <%=(canStop ? 'fg-red-400' : 'fg-gray-500')%>"></i></a>
-																		</div>
-																		<div class="dropdown position-relative">
-																			<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="actions-toggle btn-icon btn-text theme-secondary btn-sm rounded-3 <%=(canStop ? '' : 'disabled')%>"><i class="icon-fill icon-dots-three-outline-vertical icon-fw"></i></span>
-																			<div class="menu">
-																				<a href="#" class="menu-item fg-danger confirm" data-action="kill"><i class="icon-fill icon-skull icon-fw"></i>Kill</a>
-																			</div>
-																		</div>
-																	</div>
-																</div>
-															<%}%>
-														</div>
-													</div>
-												</div>
+						<div class="list-group-item pt-5 pb-7">
+							<div class="d-flex align-items-center min-w-0 mb-3">
+								<i class="icon-light icon-gauge icon-fw fg-4 me-3"></i>
+								<div class="text-truncate min-w-0">Resource usage</div>
+							</div>
+							<%if (!app.resourceMetrics) {%>
+								<i class="icon-regular icon-circle-notch icon-fw icon-spin"></i>
+							<%} else {%>
+								<div class="row g-5">
+									<div class="col-6">
+										<div class="d-flex align-items-center justify-content-between">
+											<small class="fg-4"><i class="icon-fill icon-cpu icon-fw me-1"></i>CPU</small>
+											<small><%=app.resourceMetrics.cpu?.percent.toFixed(2)%>%</small>
+										</div>
+										<u-progress shadow="false" class="d-block">
+											<u-progress-bar width="<%=app.resourceMetrics.cpu?.percent%>"></u-progress-bar>
+										</u-progress>
+									</div>
+									<div class="col-6">
+										<div class="d-flex align-items-center justify-content-between">
+											<small class="fg-4"><i class="icon-fill icon-memory icon-fw me-1"></i>RAM</small>
+											<small class="tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(app.resourceMetrics.memory?.usage || 0, { binary: true })%>"><%=app.resourceMetrics.memory?.percent.toFixed(2)%>%</small>
+										</div>
+										<u-progress shadow="false" class="d-block">
+											<u-progress-bar width="<%=app.resourceMetrics.memory?.percent%>"></u-progress-bar>
+										</u-progress>
+									</div>
+									<div class="col-6">
+										<div class="d-flex align-items-center justify-content-between">
+											<small class="fg-4"><i class="icon-regular icon-arrow-down icon-fw me-1 fg-blue-500"></i>RX</small>
+											<small><%=_.prettyBitRate(app.resourceMetrics.network?.rx || 0)%></small>
+										</div>
+										<u-progress shadow="false" class="d-block">
+											<u-progress-bar width="<%=(networkMaxBytesPerSec > 0 ? _.min([(app.resourceMetrics.network?.rx || 0) / networkMaxBytesPerSec * 100, 100]) : 0)%>"></u-progress-bar>
+										</u-progress>
+									</div>
+									<div class="col-6">
+										<div class="d-flex align-items-center justify-content-between">
+											<small class="fg-4"><i class="icon-regular icon-arrow-up icon-fw me-1 fg-purple-500"></i>TX</small>
+											<small><%=_.prettyBitRate(app.resourceMetrics.network?.tx || 0)%></small>
+										</div>
+										<u-progress shadow="false" class="d-block">
+											<u-progress-bar width="<%=(networkMaxBytesPerSec > 0 ? _.min([(app.resourceMetrics.network?.tx || 0) / networkMaxBytesPerSec * 100, 100]) : 0)%>"></u-progress-bar>
+										</u-progress>
+									</div>
+									<div class="col-12 pt-3">
+										<%if (!app.isUnmanaged && _.toLower(app.snapshotPolicy?.mode) !== 'disabled') {%>
+											<u-progress shadow="false">
+												<u-progress-bar width="<%=((app.resourceMetrics.storage?.dataset || 0) + (app.resourceMetrics.storage?.snapshots || 0) > 0 ? (app.resourceMetrics.storage?.dataset || 0) / ((app.resourceMetrics.storage?.dataset || 0) + (app.resourceMetrics.storage?.snapshots || 0)) * 100 : 0)%>" warning-threshold="999" danger-threshold="999" tip="Data: <%=prettyBytes(app.resourceMetrics.storage?.dataset || 0, { binary: true })%>"></u-progress-bar>
+												<u-progress-bar color="indigo" tint="100" width="<%=((app.resourceMetrics.storage?.dataset || 0) + (app.resourceMetrics.storage?.snapshots || 0) > 0 ? (app.resourceMetrics.storage?.snapshots || 0) / ((app.resourceMetrics.storage?.dataset || 0) + (app.resourceMetrics.storage?.snapshots || 0)) * 100 : 0)%>" warning-threshold="999" danger-threshold="999" tip="Snapshots: <%=prettyBytes(app.resourceMetrics.storage?.snapshots || 0, { binary: true })%>"></u-progress-bar>
+											</u-progress>
+										<%}%>
+										<div class="row gx-3 mt-1">
+											<div class="col-6">
+												<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-database icon-fw me-1 fg-blue-500"></i>Data</small>
+												<span class="fw-light"><%=prettyBytes(app.resourceMetrics.storage?.dataset || 0, { binary: true })%></span>
 											</div>
-
-											<div class="col-12">
-												<div class="d-flex flex-wrap align-items-center gap-1">
-													<u-badge color="blue" tint="100" pill class="max-w-100" tip="<%-container.image%>"><i class="icon-light icon-stack icon-fw flex-shrink-0 me-1"></i><span class="d-flex min-w-0"><span class="text-truncate"><%-container.image.slice(0, container.image.lastIndexOf('/') + 1)%></span><span class="text-truncate flex-shrink-0 max-w-100"><%-container.image.slice(container.image.lastIndexOf('/') + 1)%></span></span></u-badge>
-													<%if (!_.isEmpty(container.mounts)) {%>
-														<%const mountLines = _.map(_.sortBy(container.mounts, 'destination'), (mount) => {
-															const source = (mount.type === 'volume' ? mount.name : mount.source);
-															const readOnly = (mount.rw === false ? ' <span class=\'opacity-75\'>&middot; read-only</span>' : '');
-															return `<div class='mt-1'><div>${_.escape(mount.destination)}${readOnly}</div><div class='small opacity-75'>${_.escape(source)}</div></div>`;
-														});%>
-														<u-badge color="orange" tint="100" tip="<div class='text-start'><div class='fw-semibold'><%=_.pluralize('volume', _.size(container.mounts), true)%> mounted</div><%=mountLines.join('')%></div>" pill>
-															<i class="icon-light icon-hard-drive icon-fw me-1"></i><%=_.size(container.mounts)%>
-														</u-badge>
-													<%}%>
-													<%if (container.hostConfig?.networkMode !== 'host') {%>
-														<%_.each(container.networkSettings?.networks, (network, networkName) => {%>
-															<%if (network.ipAddress) {%>
-																<%const isExternal = !!network.gateway;%>
-																<u-badge color="<%=(isExternal ? 'purple' : 'gray')%>" tint="100" tip="<%-networkName%>: <%-network.ipAddress%> &middot; <%=(isExternal ? 'external' : 'internal')%>" pill>
-																	<i class="icon-light icon-network icon-fw me-1"></i><%-network.ipAddress%>
-																</u-badge>
-															<%}%>
-														<%})%>
-														<%if (container.state === 'running') {%>
-															<%const publishedPorts = _.uniqBy(_.filter(container.ports, (p) => p.publicPort), (p) => `${p.publicPort}:${p.privatePort}:${p.type}`);%>
-															<%_.each(_.orderBy(publishedPorts, ['privatePort'], ['asc']), (port, index) => {%>
-																<u-badge color="gray" tint="100" tip="<%=`${port.publicPort} &rlarr; ${port.privatePort} (${port.type})`%>" pill>:<%=port.publicPort%></u-badge>
-															<%})%>
-														<%}%>
-													<%} else {%>
-														<%const hostIp = container.networkSettings?.networks?.host?.ipAddress;%>
-														<%const hostTip = (!hostIp || hostIp === '127.0.0.1' || hostIp.startsWith('127.') || hostIp === '::1') ? 'host: no IP' : `host: ${hostIp}`;%>
-														<u-badge color="purple" tint="100" tip="<%-hostTip%>" pill>
-															<i class="icon-light icon-network icon-fw me-1"></i>1
-														</u-badge>
-													<%}%>
-												</div>
-												<%if (!_.isEmpty(container.urls)) {%>
-													<div class="d-flex flex-wrap align-items-center gap-1 mt-1">
-														<%_.each(container.urls, (url) => {%>
-															<u-badge color="blue" tint="050" pill>
-																<a href="<%-url%>" target="<%-(app?.target || app.name)%>" referrerpolicy="no-referrer" class="d-inline-flex align-items-center underline-0 hover:underline-80">
-																	<i class="icon-light icon-globe icon-fw me-1"></i><span class="d-inline-block text-truncate" style="max-width: 14rem;"><%-_.replace(url, /^https?:\/\//, '')%></span><i class="icon-regular icon-arrow-square-out icon-fw icon-2xs ms-1"></i>
-																</a>
-															</u-badge>
-														<%})%>
-													</div>
-												<%}%>
-											</div>
-
-											<%if (_.includes(['running', 'restarting'], container.state)) {%>
-												<div class="col-12 md:col-6 lg:col-4 pt-3">
-													<div class="row g-3">
-														<div class="col-6">
-															<div class="d-flex align-items-center justify-content-between">
-																<small class="fg-4"><i class="icon-fill icon-cpu icon-fw me-1"></i>CPU</small>
-																<%if (!resourceMetrics) {%>
-																	<i class="icon-regular icon-circle-notch icon-fw icon-spin"></i>
-																<%} else {%>
-																	<small class="fw-light"><%-resourceMetrics?.cpu?.percent.toFixed(2)%>%</small>
-																<%}%>
-															</div>
-															<%if (resourceMetrics) {%>
-																<u-progress shadow="false" class="d-block">
-																	<u-progress-bar width="<%-resourceMetrics?.cpu?.percent%>"></u-progress-bar>
-																</u-progress>
-															<%}%>
-														</div>
-
-														<div class="col-6">
-															<div class="d-flex align-items-center justify-content-between">
-																<small class="fg-4"><i class="icon-fill icon-memory icon-fw me-1"></i>RAM</small>
-																<%if (!resourceMetrics) {%>
-																	<i class="icon-regular icon-circle-notch icon-fw icon-spin"></i>
-																<%} else {%>
-																	<small class="fw-light tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(resourceMetrics?.memory?.usage || 0, { binary: true })%>"><%=resourceMetrics?.memory?.percent.toFixed(2)%>%</small>
-																<%}%>
-															</div>
-															<%if (resourceMetrics) {%>
-																<u-progress shadow="false" class="d-block">
-																	<u-progress-bar width="<%-resourceMetrics?.memory?.percent%>"></u-progress-bar>
-																</u-progress>
-															<%}%>
-														</div>
-														<div class="col-6">
-															<div class="d-flex align-items-center justify-content-between">
-																<small class="fg-4"><i class="icon-regular icon-arrow-down icon-fw me-1 fg-blue-500"></i>RX</small>
-																<%if (!resourceMetrics) {%>
-																	<i class="icon-regular icon-circle-notch icon-fw icon-spin"></i>
-																<%} else {%>
-																	<small class="fw-light"><%=_.prettyBitRate(resourceMetrics?.network?.rx || 0)%></small>
-																<%}%>
-															</div>
-															<%if (resourceMetrics) {%>
-																<%
-																	const rxValue = resourceMetrics?.network?.rx || 0;
-																	const rxPercent = networkMaxBytesPerSec > 0 ? _.min([(rxValue / networkMaxBytesPerSec) * 100, 100]) : 0;
-																%>
-																<u-progress shadow="false" class="d-block">
-																	<u-progress-bar width="<%=rxPercent%>"></u-progress-bar>
-																</u-progress>
-															<%}%>
-														</div>
-
-														<div class="col-6">
-															<div class="d-flex align-items-center justify-content-between">
-																<small class="fg-4"><i class="icon-regular icon-arrow-up icon-fw me-1 fg-purple-500"></i>TX</small>
-																<%if (!resourceMetrics) {%>
-																	<i class="icon-regular icon-circle-notch icon-fw icon-spin"></i>
-																<%} else {%>
-																	<small class="fw-light"><%=_.prettyBitRate(resourceMetrics?.network?.tx || 0)%></small>
-																<%}%>
-															</div>
-															<%if (resourceMetrics) {%>
-																<%
-																	const txValue = resourceMetrics?.network?.tx || 0;
-																	const txPercent = networkMaxBytesPerSec > 0 ? _.min([(txValue / networkMaxBytesPerSec) * 100, 100]) : 0;
-																%>
-																<u-progress shadow="false" class="d-block">
-																	<u-progress-bar width="<%=txPercent%>"></u-progress-bar>
-																</u-progress>
-															<%}%>
-														</div>
-													</div>
+											<%if (!app.isUnmanaged && _.toLower(app.snapshotPolicy?.mode) !== 'disabled') {%>
+												<div class="col-6">
+													<small class="fg-4 d-block text-truncate"><i class="icon-regular icon-clock-counter-clockwise icon-fw me-1 fg-indigo-500"></i>Snapshots</small>
+													<span class="fw-light"><%=prettyBytes(app.resourceMetrics.storage?.snapshots || 0, { binary: true })%></span>
 												</div>
 											<%}%>
 										</div>
 									</div>
-								<%})%>
-							</div>
+								</div>
+							<%}%>
 						</div>
 					</div>
-					<div class="<%=(appTab === 'snapshots' ? '' : 'd-none')%>">
-						<%=appSnapshotsTemplate({ app, appJobs, appSnapshotActionsTemplate, renderSnapshots })%>
+				</div>
+				<div class="detail-main">
+					<div class="nav nav-underline d-flex gap-0 border-bottom">
+						<button type="button" class="nav-link detail-default-tab px-4 <%=(appTab === 'snapshots' ? '' : 'active border-primary fw-light')%>" data-app-tab="services"><i class="icon-light icon-cube icon-fw"></i>Services <small class="opacity-75"><%=_.size(app.projectContainers)%></small></button>
+						<%if (!app.isUnmanaged) {%>
+							<button type="button" class="nav-link px-4 <%=(appTab === 'snapshots' ? 'active border-primary fw-light' : '')%>" data-app-tab="snapshots">
+								<span class="position-relative d-inline-flex">
+									<i class="icon-light icon-clock-counter-clockwise icon-fw"></i>
+									<%if (app.snapshotPolicy) {%>
+										<i class="icon-fill icon-circle icon-2xs icon-width-auto lh-1 position-absolute top-100 start-100 translate-middle <%=({ enabled: 'fg-green-300', paused: 'fg-orange-300', disabled: 'fg-gray-500' })[_.toLower(app.snapshotPolicy.mode)]%>" style="margin: -0.1875rem 0 0 -0.125rem;" data-bs-toggle="tooltip" data-bs-original-title="<%-_.upperFirst(app.snapshotPolicy.mode)%>"></i>
+									<%}%>
+								</span>
+								Snapshots
+								<%if (_.toLower(app.snapshotPolicy?.mode) !== 'disabled') {%>
+									<small class="opacity-75"><%=_.size(app.snapshots)%></small>
+								<%}%>
+							</button>
+						<%}%>
+						<%if (app.composeFile) {%>
+							<small class="fg-emphasis-secondary text-truncate align-self-center ms-auto px-3"><%-app.composeFile%></small>
+						<%}%>
+					</div>
+
+					<div class="logs-container bd-black rounded-5 shadow-sm d-none">
+						<div class="service d-flex align-items-center justify-content-between border-bottom border-gray-800 px-3 py-1">
+							<div class="d-flex align-items-center">
+								<i class="icon-light icon-cube icon-fw me-1 fg-gray-300"></i>
+								<span class="name"></span>
+								<small class="fg-gray-300 border-start border-gray-800 ps-3 ms-3">
+									<i class="icon-fill icon-broadcast icon-fw me-1"></i>
+									Connecting...
+								</small>
+							</div>
+							<a href="#" class="close-logs fg-secondary ms-3"><i class="icon-regular icon-x"></i></a>
+						</div>
+						<ul class="color-scheme-dark"></ul>
+					</div>
+
+					<div class="terminal-container bd-black rounded-5 shadow-sm d-none">
+						<div class="service d-flex align-items-center justify-content-between border-bottom border-gray-800 px-3 py-1">
+							<div class="d-flex align-items-center">
+								<i class="icon-light icon-cube icon-fw me-1 fg-gray-300"></i>
+								<span class="name"></span>
+								<small class="fg-gray-300 border-start border-gray-800 ps-3 ms-3">
+									<i class="icon-fill icon-broadcast icon-fw me-1"></i>
+									Connecting...
+								</small>
+							</div>
+							<a href="#" class="close-terminal fg-secondary ms-3"><i class="icon-regular icon-x"></i></a>
+						</div>
+						<div class="search position-absolute end-0 z-1 d-none d-flex align-items-center gap-3 bg-body rounded-4 shadow shadow-opacity-100 p-1 mt-3 me-7">
+							<input type="text" class="form-control form-control-sm" placeholder="Find" autocomplete="off" spellcheck="false">
+							<small class="results fg-emphasis-secondary text-nowrap"></small>
+							<div class="btn-group btn-group-sm">
+								<button type="button" class="previous btn-icon btn-solid theme-secondary"><i class="icon-regular icon-arrow-up icon-fw"></i></button>
+								<button type="button" class="next btn-icon btn-solid theme-secondary"><i class="icon-regular icon-arrow-down icon-fw"></i></button>
+								<button type="button" class="close-search btn-icon btn-solid theme-secondary"><i class="icon-regular icon-x icon-fw"></i></button>
+							</div>
+						</div>
+						<div class="wrapper color-scheme-dark"></div>
+					</div>
+
+					<div class="table-scroll overflow-y-scroll pe-5 mx-0 me--5">
+						<div class="<%=(appTab === 'snapshots' ? 'd-none' : '')%>">
+							<div class="services">
+								<div class="list-group list-group-flush">
+									<%_.each(app.projectContainers, (container, index) => {%>
+										<%const resourceMetrics = _.find((app.resourceMetrics?.containers || []), { id: container.id })%>
+										<%const containerJobs = _.filter(serviceJobs, (job) => { return job.data?.config?.id === container.id; });%>
+										<div class="service list-group-item pt-5 pb-7" data-id="<%-container.id%>">
+											<div class="row g-3 align-items-center">
+												<div class="col-12">
+													<%const stateColor = (container.state === 'running' ? 'fg-green-300' : (_.includes(['restarting', 'paused'], container.state) ? 'fg-orange-300' : (_.includes(['exited', 'dead'], container.state) ? 'fg-red-400' : 'fg-gray-500')));%>
+													<div class="d-flex align-items-center justify-content-between w-100 mb-3">
+														<div class="d-flex align-items-center min-w-0">
+															<span class="state-icon position-relative d-inline-flex me-3">
+																<i class="icon-light icon-cube icon-width-auto fg-4"></i>
+																<i class="state-dot icon-fill icon-circle icon-2xs icon-width-auto lh-1 position-absolute top-0 start-100 translate-middle <%=stateColor%>" data-bs-original-title="<%-_.upperFirst(container.state)%>"></i>
+															</span>
+															<div class="text-truncate min-w-0"><%-(container.labels?.comDockerComposeService || app.title)%>
+																<%if (container.state !== 'running') {%>
+																	<small class="fg-4">(<%-container.state%>)</small>
+																<%}%>
+																<%if (container.hasUpdates) {%>
+																	<u-badge color="green" class="ms-1" tip="Updates available" pill>
+																		<i class="icon-regular icon-arrow-down icon-fw"></i>
+																	</u-badge>
+																<%}%>
+															</div>
+														</div>
+														<div class="d-flex flex-shrink-0 align-items-center gap-3 ms-3">
+															<a href="#" class="logs btn-solid theme-secondary btn-xs" data-id="<%-container.id%>">
+																<i class="icon-fill icon-article icon-fw"></i><span class="d-none md:d-inline">Logs</span>
+															</a>
+															<a href="#" class="terminal btn-solid theme-secondary btn-xs <%=(container.state === 'running' ? '' : 'disabled')%>" data-id="<%-container.id%>">
+																<i class="icon-fill icon-terminal-window icon-fw <%=(container.state === 'running' ? '' : 'fg-gray-500')%>"></i><span class="d-none md:d-inline">Terminal</span>
+															</a>
+															<div class="d-flex align-items-center gap-3">
+																<%if (!_.isEmpty(appJobs) || !_.isEmpty(containerJobs)) {%>
+																	<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-fill icon-gear icon-fw icon-spin"></i></span>
+																<%} else {%>
+																	<%const isStopped = _.includes(['created', 'exited'], container.state);%>
+																	<%const isRunning = _.includes(['running', 'paused'], container.state);%>
+																	<%const isActive = _.includes(['running', 'paused', 'restarting'], container.state);%>
+																	<div class="dropdown md:d-none">
+																		<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i></span>
+																		<div class="menu">
+																			<%if (app.canBeRemoved || isStopped) {%>
+																				<a href="#" class="menu-item <%=(isStopped ? '' : 'disabled')%>" data-action="start"><i class="icon-fill icon-play icon-fw <%=(isStopped ? 'fg-green-400' : '')%>"></i>Start</a>
+																				<div class="menu-divider"></div>
+																			<%}%>
+																			<a href="#" class="menu-item <%=(isRunning ? 'confirm' : 'disabled')%>" data-action="restart"><i class="icon-fill icon-arrow-counter-clockwise icon-fw"></i>Restart</a>
+																			<%if (app.canBeRemoved) {%>
+																				<a href="#" class="menu-item <%=(isActive ? 'fg-danger confirm' : 'disabled')%>" data-action="stop"><i class="icon-fill icon-stop icon-fw"></i>Stop</a>
+																				<a href="#" class="menu-item <%=(isActive ? 'fg-danger confirm' : 'disabled')%>" data-action="kill"><i class="icon-fill icon-skull icon-fw"></i>Kill</a>
+																			<%}%>
+																		</div>
+																	</div>
+																	<div class="d-none md:d-block">
+																		<div class="d-inline-flex align-items-center bg-2 rounded-3">
+																			<%const canStop = (app.canBeRemoved && isActive);%>
+																			<div class="d-inline-flex align-items-center px-1">
+																				<a href="#" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 rounded-3 <%=(isStopped ? '' : 'disabled')%>" data-action="start" data-bs-toggle="tooltip" data-bs-original-title="Start"><i class="icon-fill icon-play icon-fw <%=(isStopped ? 'fg-green-400' : 'fg-gray-500')%>"></i></a>
+																				<a href="#" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 rounded-3 <%=(isRunning ? 'confirm' : 'disabled')%>" data-action="restart" data-bs-toggle="tooltip" data-bs-original-title="Restart"><i class="icon-regular icon-arrow-counter-clockwise icon-fw <%=(isRunning ? 'fg-body' : 'fg-gray-500')%>"></i></a>
+																				<a href="#" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 rounded-3 <%=(canStop ? 'confirm' : 'disabled')%>" data-action="stop" data-bs-toggle="tooltip" data-bs-original-title="Stop"><i class="icon-fill icon-stop icon-fw <%=(canStop ? 'fg-red-400' : 'fg-gray-500')%>"></i></a>
+																			</div>
+																			<div class="dropdown position-relative">
+																				<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="actions-toggle btn-icon btn-text theme-secondary btn-sm rounded-3 <%=(canStop ? '' : 'disabled')%>"><i class="icon-fill icon-dots-three-outline-vertical icon-fw"></i></span>
+																				<div class="menu">
+																					<a href="#" class="menu-item fg-danger confirm" data-action="kill"><i class="icon-fill icon-skull icon-fw"></i>Kill</a>
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+																<%}%>
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="col-12">
+													<div class="d-flex flex-wrap align-items-center gap-1">
+														<u-badge color="blue" tint="100" pill class="max-w-100" tip="<%-container.image%>"><i class="icon-light icon-stack icon-fw flex-shrink-0 me-1"></i><span class="d-flex min-w-0"><span class="text-truncate"><%-container.image.slice(0, container.image.lastIndexOf('/') + 1)%></span><span class="text-truncate flex-shrink-0 max-w-100"><%-container.image.slice(container.image.lastIndexOf('/') + 1)%></span></span></u-badge>
+														<%if (!_.isEmpty(container.mounts)) {%>
+															<%const mountLines = _.map(_.sortBy(container.mounts, 'destination'), (mount) => {
+																const source = (mount.type === 'volume' ? mount.name : mount.source);
+																const readOnly = (mount.rw === false ? ' <span class=\'opacity-75\'>&middot; read-only</span>' : '');
+																return `<div class='mt-1'><div>${_.escape(mount.destination)}${readOnly}</div><div class='small opacity-75'>${_.escape(source)}</div></div>`;
+															});%>
+															<u-badge color="orange" tint="100" tip="<div class='text-start'><div class='fw-semibold'><%=_.pluralize('volume', _.size(container.mounts), true)%> mounted</div><%=mountLines.join('')%></div>" pill>
+																<i class="icon-light icon-hard-drive icon-fw me-1"></i><%=_.size(container.mounts)%>
+															</u-badge>
+														<%}%>
+														<%if (container.hostConfig?.networkMode !== 'host') {%>
+															<%_.each(container.networkSettings?.networks, (network, networkName) => {%>
+																<%if (network.ipAddress) {%>
+																	<%const isExternal = !!network.gateway;%>
+																	<u-badge color="<%=(isExternal ? 'purple' : 'gray')%>" tint="100" tip="<%-networkName%>: <%-network.ipAddress%> &middot; <%=(isExternal ? 'external' : 'internal')%>" pill>
+																		<i class="icon-light icon-network icon-fw me-1"></i><%-network.ipAddress%>
+																	</u-badge>
+																<%}%>
+															<%})%>
+															<%if (container.state === 'running') {%>
+																<%const publishedPorts = _.uniqBy(_.filter(container.ports, (p) => p.publicPort), (p) => `${p.publicPort}:${p.privatePort}:${p.type}`);%>
+																<%_.each(_.orderBy(publishedPorts, ['privatePort'], ['asc']), (port, index) => {%>
+																	<u-badge color="gray" tint="100" tip="<%=`${port.publicPort} &rlarr; ${port.privatePort} (${port.type})`%>" pill>:<%=port.publicPort%></u-badge>
+																<%})%>
+															<%}%>
+														<%} else {%>
+															<%const hostIp = container.networkSettings?.networks?.host?.ipAddress;%>
+															<%const hostTip = (!hostIp || hostIp === '127.0.0.1' || hostIp.startsWith('127.') || hostIp === '::1') ? 'host: no IP' : `host: ${hostIp}`;%>
+															<u-badge color="purple" tint="100" tip="<%-hostTip%>" pill>
+																<i class="icon-light icon-network icon-fw me-1"></i>1
+															</u-badge>
+														<%}%>
+													</div>
+													<%if (!_.isEmpty(container.urls)) {%>
+														<div class="d-flex flex-wrap align-items-center gap-1 mt-1">
+															<%_.each(container.urls, (url) => {%>
+																<u-badge color="blue" tint="050" pill>
+																	<a href="<%-url%>" target="<%-(app?.target || app.name)%>" referrerpolicy="no-referrer" class="d-inline-flex align-items-center underline-0 hover:underline-80">
+																		<i class="icon-light icon-globe icon-fw me-1"></i><span class="d-inline-block text-truncate" style="max-width: 14rem;"><%-_.replace(url, /^https?:\/\//, '')%></span><i class="icon-regular icon-arrow-square-out icon-fw icon-2xs ms-1"></i>
+																	</a>
+																</u-badge>
+															<%})%>
+														</div>
+													<%}%>
+												</div>
+
+												<%if (_.includes(['running', 'restarting'], container.state)) {%>
+													<div class="col-12 md:col-6 lg:col-4 pt-3">
+														<div class="row g-3">
+															<div class="col-6">
+																<div class="d-flex align-items-center justify-content-between">
+																	<small class="fg-4"><i class="icon-fill icon-cpu icon-fw me-1"></i>CPU</small>
+																	<%if (!resourceMetrics) {%>
+																		<i class="icon-regular icon-circle-notch icon-fw icon-spin"></i>
+																	<%} else {%>
+																		<small class="fw-light"><%-resourceMetrics?.cpu?.percent.toFixed(2)%>%</small>
+																	<%}%>
+																</div>
+																<%if (resourceMetrics) {%>
+																	<u-progress shadow="false" class="d-block">
+																		<u-progress-bar width="<%-resourceMetrics?.cpu?.percent%>"></u-progress-bar>
+																	</u-progress>
+																<%}%>
+															</div>
+
+															<div class="col-6">
+																<div class="d-flex align-items-center justify-content-between">
+																	<small class="fg-4"><i class="icon-fill icon-memory icon-fw me-1"></i>RAM</small>
+																	<%if (!resourceMetrics) {%>
+																		<i class="icon-regular icon-circle-notch icon-fw icon-spin"></i>
+																	<%} else {%>
+																		<small class="fw-light tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(resourceMetrics?.memory?.usage || 0, { binary: true })%>"><%=resourceMetrics?.memory?.percent.toFixed(2)%>%</small>
+																	<%}%>
+																</div>
+																<%if (resourceMetrics) {%>
+																	<u-progress shadow="false" class="d-block">
+																		<u-progress-bar width="<%-resourceMetrics?.memory?.percent%>"></u-progress-bar>
+																	</u-progress>
+																<%}%>
+															</div>
+															<div class="col-6">
+																<div class="d-flex align-items-center justify-content-between">
+																	<small class="fg-4"><i class="icon-regular icon-arrow-down icon-fw me-1 fg-blue-500"></i>RX</small>
+																	<%if (!resourceMetrics) {%>
+																		<i class="icon-regular icon-circle-notch icon-fw icon-spin"></i>
+																	<%} else {%>
+																		<small class="fw-light"><%=_.prettyBitRate(resourceMetrics?.network?.rx || 0)%></small>
+																	<%}%>
+																</div>
+																<%if (resourceMetrics) {%>
+																	<%
+																		const rxValue = resourceMetrics?.network?.rx || 0;
+																		const rxPercent = networkMaxBytesPerSec > 0 ? _.min([(rxValue / networkMaxBytesPerSec) * 100, 100]) : 0;
+																	%>
+																	<u-progress shadow="false" class="d-block">
+																		<u-progress-bar width="<%=rxPercent%>"></u-progress-bar>
+																	</u-progress>
+																<%}%>
+															</div>
+
+															<div class="col-6">
+																<div class="d-flex align-items-center justify-content-between">
+																	<small class="fg-4"><i class="icon-regular icon-arrow-up icon-fw me-1 fg-purple-500"></i>TX</small>
+																	<%if (!resourceMetrics) {%>
+																		<i class="icon-regular icon-circle-notch icon-fw icon-spin"></i>
+																	<%} else {%>
+																		<small class="fw-light"><%=_.prettyBitRate(resourceMetrics?.network?.tx || 0)%></small>
+																	<%}%>
+																</div>
+																<%if (resourceMetrics) {%>
+																	<%
+																		const txValue = resourceMetrics?.network?.tx || 0;
+																		const txPercent = networkMaxBytesPerSec > 0 ? _.min([(txValue / networkMaxBytesPerSec) * 100, 100]) : 0;
+																	%>
+																	<u-progress shadow="false" class="d-block">
+																		<u-progress-bar width="<%=txPercent%>"></u-progress-bar>
+																	</u-progress>
+																<%}%>
+															</div>
+														</div>
+													</div>
+												<%}%>
+											</div>
+										</div>
+									<%})%>
+								</div>
+							</div>
+						</div>
+						<div class="<%=(appTab === 'snapshots' ? '' : 'd-none')%>">
+							<%=appSnapshotsTemplate({ app, appJobs, appSnapshotActionsTemplate, renderSnapshots })%>
+						</div>
 					</div>
 				</div>
 			</div>

@@ -1,22 +1,9 @@
 <div id="weather">
-	<div class="row">
-		<div class="col xl:col-4 lg:col-4 md:col-12 sm:col-12 col-12 pt-3">
-			<div class="d-flex align-items-center pb-3">
-				<u-badge color="gray" tint="100" pill>Weather</u-badge>
-			</div>
-			<div class="card border-0 cursor-pointer mb-5" tabindex="0">
-				<div class="card-body p-3">
-					<div class="row g-0 align-items-center" style="height: 38px;">
-						<div class="col-auto" style="width: 55px;">
-							<div class="weather-icon"><%=weather.icon%></div>
-						</div>
-						<div class="col lh-1">
-							<small class="temperature fw-bold fg-body fg-80"><%-weather.temperature%></small><br>
-							<small class="condition d-inline-block fg-body fg-80 text-truncate"><%=_.capitalize(weather.condition)%></small>
-						</div>
-					</div>
-				</div>
-			</div>
+	<div class="card border-0 cursor-pointer mb-0" tabindex="0">
+		<div class="d-flex align-items-center gap-3 ps-1 pe-4 py-1">
+			<div class="weather-icon"><%=weather.icon%></div>
+			<span class="temperature fw-medium text-nowrap"><%-weather.temperature%></span>
+			<span class="condition fg-3 text-nowrap d-none md:d-inline"><%=_.capitalize(weather.condition)%></span>
 		</div>
 	</div>
 </div>

@@ -2,6 +2,7 @@ import 'assets/scss/index.scss';
 import 'libs/lodash';
 import 'libs/bootstrap';
 import 'libs/primary_menu';
+import 'libs/color_mode';
 import 'libs/dialog';
 import 'libs/table_scrollbar';
 import 'libs/components';

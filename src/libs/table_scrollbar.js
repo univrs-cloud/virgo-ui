@@ -27,10 +27,13 @@ const attach = (scroller) => {
 
 		const headHeight = getHeadHeight();
 		const scrollRange = (getComputedStyle(scroller).overflowY === 'hidden' ? 0 : getScrollRange());
-		overlay.style.top = `${scroller.offsetTop}px`;
-		overlay.style.left = `${scroller.offsetLeft}px`;
-		overlay.style.width = `${scroller.offsetWidth}px`;
-		overlay.style.height = `${scroller.clientHeight}px`;
+		const parent = scroller.offsetParent;
+		const rect = scroller.getBoundingClientRect();
+		const parentRect = parent?.getBoundingClientRect();
+		overlay.style.top = `${(parent ? rect.top - parentRect.top - parent.clientTop + parent.scrollTop : scroller.offsetTop)}px`;
+		overlay.style.left = `${(parent ? rect.left - parentRect.left - parent.clientLeft + parent.scrollLeft : scroller.offsetLeft)}px`;
+		overlay.style.width = `${rect.width}px`;
+		overlay.style.height = `${rect.height - (scroller.offsetHeight - scroller.clientHeight)}px`;
 		overlay.style.setProperty('--table-scroll-head-height', `${headHeight}px`);
 		overlay.style.setProperty('--table-scroll-padding-right', getComputedStyle(scroller).paddingRight);
 		overlay.classList.toggle('has-scroll-above', scroller.scrollTop > 0);

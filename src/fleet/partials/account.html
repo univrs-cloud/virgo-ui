@@ -1,5 +1,5 @@
 <div class="dropdown d-flex align-items-center">
-	<button type="button" class="account-toggle d-flex align-items-center gap-3 w-100 border-0 bg-transparent rounded-4 p-3 fg-white" data-bs-toggle="menu" data-bs-placement="top-end">
+	<button type="button" class="account-toggle d-flex align-items-center gap-3 w-100 border-0 bg-transparent rounded-4 p-3" data-bs-toggle="menu" data-bs-placement="top-end">
 		<span class="avatar avatar-sm avatar-subtle theme-primary flex-shrink-0"><%-_.join(_.map(_.take(_.words(account.name || account.email), 2), _.head), '')%></span>
 		<span class="d-none sm:d-block text-start min-w-0 flex-grow-1" style="line-height: 1.2;">
 			<span class="d-block text-truncate fw-medium" style="font-size: 0.875rem;" title="<%-account.name || account.email || '—'%>"><%-account.name || account.email || '—'%></span>
@@ -14,12 +14,18 @@
 		<p class="text-truncate fw-medium px-3 pb-3 mt--1 mb-0" title="<%-account.name || '—'%>"><%-account.name || '—'%></p>
 		<div class="menu-divider"></div>
 		<a href="/users/profile" class="menu-item">
-			<i class="icon-duotone icon-identification-card icon-fw me-3"></i>
+			<i class="icon-duotone icon-identification-card icon-fw"></i>
 			Your profile
 		</a>
 		<div class="menu-divider"></div>
+		<div class="menu-item">
+			<i class="icon-duotone icon-moon icon-fw"></i>
+			Dark mode
+			<u-switch class="color-mode-switch ms-auto" <%=(document.documentElement.dataset.bsTheme === 'dark' ? 'checked' : '')%>></u-switch>
+		</div>
+		<div class="menu-divider"></div>
 		<a href="https://docs.univrs.cloud" target="_blank" rel="noopener noreferrer" class="menu-item">
-			<i class="icon-duotone icon-book-open icon-fw me-3"></i>
+			<i class="icon-duotone icon-book-open icon-fw"></i>
 			Documentation
 			<i class="icon-regular icon-sm icon-arrow-square-out ms-3"></i>
 		</a>

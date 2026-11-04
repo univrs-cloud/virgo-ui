@@ -60,15 +60,15 @@ const revoke = async (link) => {
 	}
 };
 
-const revokeAll = async () => {
-	const isSameAsLoggedIn = (username === account?.user);
-	const question = (isSameAsLoggedIn ? 'Are you sure you want to sign out all other sessions?' : `Are you sure you want to sign out all sessions of ${username}?`);
+const revokeAll = async (name) => {
+	const isSameAsLoggedIn = (name === account?.user);
+	const question = (isSameAsLoggedIn ? 'Are you sure you want to sign out all other sessions?' : `Are you sure you want to sign out all sessions of ${name}?`);
 	if (!await confirm(question, { buttons: [{ text: 'Sign out', class: 'btn-solid theme-danger' }] })) {
 		return;
 	}
 
 	try {
-		const result = await userService.revokeAllSessions({ username });
+		const result = await userService.revokeAllSessions({ username: name });
 		if (result?.status === 'succeeded') {
 			notifier.add({ title: `${result.count} ${_.pluralize('session', result.count)} ended.`, type: 'success' });
 			return;
@@ -93,7 +93,29 @@ const onClick = (event) => {
 
 	if (link.classList.contains('revoke-all')) {
 		event.preventDefault();
-		revokeAll();
+		revokeAll(username);
+	}
+};
+
+const onDetailsClick = (event) => {
+	const link = event.target.closest('.details a');
+	if (_.isNull(link)) {
+		return;
+	}
+
+	if (link.classList.contains('revoke')) {
+		event.preventDefault();
+		revoke(link);
+		return;
+	}
+
+	if (link.classList.contains('revoke-all')) {
+		event.preventDefault();
+		const uid = Number(link.closest('.item').dataset.uid);
+		const name = _.find(userService.getUsers(), { uid })?.username;
+		if (name) {
+			revokeAll(name);
+		}
 	}
 };
 
@@ -105,10 +127,10 @@ userService.subscribe([render]);
 
 refresh();
 
-module.onRoute = refresh;
 modal.addEventListener('show.bs.dialog', open);
 modal.addEventListener('hidden.bs.dialog', restore);
 modal.addEventListener('click', onClick);
+module.addEventListener('click', onDetailsClick);
 
 setInterval(() => {
 	if (!module.classList.contains('d-none')) {

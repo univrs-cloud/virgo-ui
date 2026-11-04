@@ -1,11 +1,20 @@
 @use "utilities" as custom;
 
+$gray-dark-stops: ("025": "950", "050": "900", "100": "800", "200": "700", "300": "600", "400": "500");
+
 @each $name in custom.$color-names {
 	@each $stop in custom.$color-stops {
 		.bd-#{$name}-#{$stop} {
 			color: if(sass($stop == "025" or $stop == "050" or $stop == "100" or $stop == "200" or $stop == "300" or $stop == "400"): var(--black); else: var(--white));
 			background-color: var(--#{$name}-#{$stop});
 		}
+	}
+}
+
+@each $stop, $dark-stop in $gray-dark-stops {
+	.bd-gray-#{$stop} {
+		color: light-dark(var(--black), var(--white));
+		background-color: light-dark(var(--gray-#{$stop}), var(--gray-#{$dark-stop}));
 	}
 }
 

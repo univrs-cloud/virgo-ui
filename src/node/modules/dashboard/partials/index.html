@@ -1,6 +1,17 @@
 <div id="dashboard" class="d-none">
 	<div class="row">
-		<div class="col xl:col-3 lg:col-4 md:col-6 sm:col-12 col-12 order-last sm:order-first pt-3">
+		<div class="col-12 position-relative mb-5">
+			<h4 class="m-0 ps-1">
+				<i class="icon-duotone icon-gauge icon-width-auto me-3"></i>
+				Dashboard
+			</h4>
+			<div class="position-absolute end-0 pe-4">
+				<div id="weather"></div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col xl:col-3 lg:col-4 md:col-6 sm:col-12 col-12 order-last sm:order-first">
 			<div class="d-flex align-items-center pb-3">
 				<u-badge color="gray" tint="100" pill>Status</u-badge>
 			</div>
@@ -16,7 +27,6 @@
 			</div>
 		</div>
 		<div class="col xl:col-9 lg:col-8 md:col-6 sm:col-12 col-12 order-first sm:order-last">
-			<div id="weather"></div>
 			<div id="apps-shortcuts"></div>
 			<div id="shares"></div>
 		</div>

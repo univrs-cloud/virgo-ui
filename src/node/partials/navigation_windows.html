@@ -1,6 +1,6 @@
 <%_.each(windows, (item) => {%>
 	<div class="d-flex align-items-center">
-		<a href="#" class="nav-window nav-item nav-link d-flex align-items-center flex-grow-1 min-w-0 fg-white <%=(item.maximized ? (item.minimized ? 'fg-80' : 'active') : (item.minimized ? 'fg-50 fst-italic' : (item.active ? '' : 'fg-80')))%>" data-window-id="<%-item.id%>">
+		<a href="#" class="nav-window nav-item nav-link d-flex align-items-center flex-grow-1 min-w-0 <%=(item.maximized ? (item.minimized ? 'fg-80' : 'active') : (item.minimized ? 'fg-50 fst-italic' : (item.active ? '' : 'fg-80')))%>" data-window-id="<%-item.id%>">
 			<span class="window-icon d-flex justify-content-center align-items-center flex-shrink-0 rounded-3 bg-white fg-body <%=(item.minimized ? 'opacity-50' : '')%>">
 				<%if (!item.icon) {%>
 					<i class="icon-light icon-stack icon-sm"></i>

@@ -17,14 +17,20 @@ html {
 }
 
 body {
-	// Vertical chrome the viewport-height calcs have to allow for: the bottom bar below sm,
-	// the top bar above it. Sidebar shells drop to 0 at sm — see the min-width block below.
 	--chrome: 56px;
-	--app-bg: rgba(237, 242, 249, 0.96);
+	--app-bg: light-dark(var(--bg-1), #000000);
+	--shell-fg: light-dark(var(--gray-900), var(--gray-050));
+	--shell-fg-muted: light-dark(var(--gray-500), var(--gray-400));
+	--shell-icon: light-dark(var(--gray-600), var(--gray-400));
+	--shell-tint: light-dark(color-mix(in oklch, var(--white) 40%, transparent), color-mix(in oklch, var(--black) 70%, transparent));
+	--shell-hover-bg: var(--bg-4);
+	--shell-active-bg: var(--secondary-bg-muted);
+	--shell-border: var(--border-color);
+	--panel-inset: 0.5rem;
 	overflow-y: scroll;
 	width: 100%;
 	height: 100%;
-	font-weight: 300;
+	font-weight: 400;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	text-wrap: pretty;
@@ -90,7 +96,7 @@ header {
 		}
 		.navbar-glass {
 			min-height: 3.5rem;
-			background-color: rgba(237, 242, 249, 0.25);
+			background-color: color-mix(in oklch, var(--app-bg) 25%, transparent);
 			backdrop-filter: blur(8px);
 		}
 		.menu {
@@ -124,7 +130,8 @@ header {
 header,
 .drawer {
 	.nav-title {
-		color: var(--gray-100);
+		color: var(--shell-fg-muted);
+		font-weight: 500;
 	}
 	.rail-only {
 		display: none;
@@ -160,31 +167,37 @@ header,
 	.nav-link {
 		display: block;
 		font-weight: 400;
-		color: var(--white);
+		color: var(--shell-fg);
+		.icon-duotone {
+			color: var(--shell-icon);
+		}
 		&:not(.active):hover {
-			color: var(--white);
+			color: var(--shell-fg);
 		}
 		&.active {
-			font-weight: 400;
+			font-weight: 500;
 		}
 		&.active,
 		&:hover {
-			color: var(--white) !important;
+			color: var(--shell-fg) !important;
+			.icon-duotone {
+				color: var(--shell-fg);
+			}
 			svg {
-				fill: var(--white);
+				fill: var(--shell-fg);
 			}
 		}
 		svg {
-			fill: var(--white);
+			fill: var(--shell-fg);
 		}
 	}
 }
 div:not(.navbar) .nav-pills {
-	--nav-pills-link-active-color: var(--white);
-	--nav-pills-link-active-bg: var(--indigo-500);
-	--nav-link-color: var(--white);
-	--nav-link-hover-color: var(--gray-100);
-	--nav-pills-bg: var(--bg-3);
+	--nav-pills-link-active-color: var(--fg-body);
+	--nav-pills-link-active-bg: light-dark(var(--bg-body), #2a2a2a);
+	--nav-link-color: var(--fg-body);
+	--nav-link-hover-color: var(--fg-body);
+	--nav-pills-bg: var(--bg-2);
 	--nav-pills-padding: 0.25rem 0.27rem;
 	--nav-link-border-width: 0;
 	.nav-link {
@@ -194,15 +207,14 @@ div:not(.navbar) .nav-pills {
 			box-shadow: 0 0.0625rem 0.125rem oklch(from var(--shadow-color) l c h / calc(0.35 * var(--shadow-strength)));
 		}
 		&:not(.active) {
-			color: var(--black);
+			color: var(--fg-3);
 			background-color: none;
 		}
 	}
 }
 .drawer {
-	background-color: rgba(237, 242, 249, 0.96);
+	background-color: color-mix(in oklch, var(--app-bg) 96%, transparent);
 	backdrop-filter: blur(6px) grayscale(0.8);
-  	opacity: 0.9;
 	.menu {
 		--menu-bg: var(--bg-body);
 	}
@@ -232,12 +244,30 @@ main,
 #update {
 	padding-top: map.get($spacers, 5);
 }
+body:has(header nav) :is(main:not(:has(.booting)), #update) {
+	--card-ring: 0 0 0 var(--border-width) var(--shell-border);
+	min-height: calc(100dvh - var(--chrome));
+	background-color: var(--bg-body);
+	.card {
+		--card-border-color: transparent;
+		box-shadow: var(--card-ring), 0 1px 3px -1px rgba(0, 0, 0, 0.08);
+		.card {
+			box-shadow: none;
+		}
+	}
+}
 
 .loading {
 	min-height: calc(100vh - 56px - var(--chrome));
+	body:has(header nav) & {
+		min-height: calc(100dvh - var(--chrome) - (#{map.get($spacers, 5)} - var(--top-lift, 0px)) - var(--top-row-height, 1.5rem) - #{map.get($spacers, 5)});
+	}
 	.dialog & {
 		min-height: unset;
 	}
+}
+body:has(> main .booting) {
+	overflow: hidden;
 }
 
 .progress.booting {
@@ -420,7 +450,7 @@ html:not(:has(head > base[href="/"])) {
 			font-weight: bold;
 		}
 		.navbar {
-			background-color: rgba(237, 242, 249, 0.96);
+			background-color: color-mix(in oklch, var(--app-bg) 96%, transparent);
 			padding-left: 0;
 			padding-right: 0;
 			.navbar-glass {
@@ -447,10 +477,73 @@ html:not(:has(head > base[href="/"])) {
 		&.menu-collapsed {
 			--menu-width: 3.75rem;
 		}
-		// Sidebar shells put their top bar over the sidebar, so nothing has to clear it.
 		&:has(header nav) {
-			--chrome: 0px;
+			--chrome: calc(var(--panel-inset) * 2);
+			--top-lift: 0.25rem;
+			--page-inset-extra: calc(var(--font-size-lg) * 0.25);
+			--top-row-height: 2.75rem;
+			--brand-bar-height: calc((var(--panel-inset) + #{map.get($spacers, 5)} - var(--top-lift)) * 2 + var(--top-row-height));
+			height: 100dvh;
 			margin-top: 0;
+			overflow-y: hidden;
+			background-image:
+				linear-gradient(var(--shell-tint), var(--shell-tint)),
+				radial-gradient(28rem 40rem at 0% 45%, color-mix(in oklch, var(--pink-200) 45%, transparent), transparent),
+				radial-gradient(32rem 28rem at 8% 0%, color-mix(in oklch, var(--blue-100) 50%, transparent), transparent),
+				radial-gradient(40rem 30rem at 100% 100%, color-mix(in oklch, var(--purple-100) 35%, transparent), transparent);
+			background-attachment: fixed;
+			.dialog-open &,
+			:root:has(u-window[maximized]:not([minimized], [closing])) & {
+				padding-right: 0;
+				header .navbar-position {
+					padding-right: 0 !important;
+				}
+			}
+			&::after {
+				content: "";
+				z-index: -1;
+				position: fixed;
+				top: var(--panel-inset);
+				right: var(--panel-inset);
+				bottom: var(--panel-inset);
+				left: var(--menu-width);
+				border-radius: var(--radius-7);
+				box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 6px 16px -4px rgba(0, 0, 0, 0.1);
+				pointer-events: none;
+			}
+			:is(main:not(:has(.booting)), #update) {
+				height: calc(100dvh - var(--panel-inset) * 2);
+				padding-top: calc(#{map.get($spacers, 5)} - var(--top-lift));
+				margin: var(--panel-inset) var(--panel-inset) var(--panel-inset) var(--menu-width);
+				overflow-y: auto;
+				box-shadow: inset 0 0 0 var(--border-width) var(--shell-border);
+				border-radius: var(--radius-7);
+				clip-path: inset(0 round var(--radius-7));
+				> .container {
+					max-width: none;
+					padding-inline: calc(#{map.get($spacers, 4)} + var(--page-inset-extra));
+				}
+				&::-webkit-scrollbar {
+					width: 0.75rem;
+				}
+				&::-webkit-scrollbar-track {
+					margin-block: var(--radius-7);
+					background-color: transparent;
+				}
+				&::-webkit-scrollbar-thumb {
+					border: 0.1875rem solid transparent;
+					border-radius: 0.75rem;
+					background-clip: padding-box;
+					background-color: color-mix(in oklch, var(--black) 20%, transparent);
+					&:hover {
+						background-color: color-mix(in oklch, var(--black) 35%, transparent);
+					}
+				}
+				@supports not selector(::-webkit-scrollbar) {
+					scrollbar-width: thin;
+					scrollbar-color: color-mix(in oklch, var(--black) 20%, transparent) transparent;
+				}
+			}
 		}
 	}
 	header {
@@ -462,7 +555,7 @@ html:not(:has(head > base[href="/"])) {
 			height: 100dvh;
 			.navbar {
 				height: 100%;
-				padding: 3.5rem 0.75rem 1rem 0.75rem;
+				padding: calc(var(--brand-bar-height) / 2 + 2.125rem) 0.75rem 1rem 0.75rem;
 			}
 			.account,
 			.account .dropdown {
@@ -479,7 +572,7 @@ html:not(:has(head > base[href="/"])) {
 				padding-left: 0.125rem !important;
 				@media (hover: hover) {
 					&:hover {
-						background-color: color-mix(in oklch, var(--white) 20%, var(--primary-base)) !important;
+						background-color: var(--shell-hover-bg) !important;
 					}
 				}
 			}
@@ -506,12 +599,12 @@ html:not(:has(head > base[href="/"])) {
 				&::before {
 					top: 0;
 					margin-bottom: 0.25rem;
-					background: radial-gradient(farthest-side at 50% 0, rgba(0, 0, 0, 0.3), transparent);
+					background: radial-gradient(farthest-side at 50% 0, rgba(0, 0, 0, 0.12), transparent);
 				}
 				&::after {
 					bottom: 0;
 					margin-top: -0.75rem;
-					background: radial-gradient(farthest-side at 50% 100%, rgba(0, 0, 0, 0.3), transparent);
+					background: radial-gradient(farthest-side at 50% 100%, rgba(0, 0, 0, 0.12), transparent);
 				}
 				&.has-scroll-above::before,
 				&.has-scroll-below::after {
@@ -528,21 +621,17 @@ html:not(:has(head > base[href="/"])) {
 					margin-top: 1px;
 				}
 				.nav-link {
-					&.active {
-						box-shadow: var(--box-shadow-sm);
-					}
 					&:not(.active):hover {
-						background-color: #82a7ff;
+						background-color: var(--shell-hover-bg);
 					}
-					&.active,
-					&:hover {
-						background-color: #407cfc;
+					&.active {
+						background-color: var(--shell-active-bg);
 					}
 				}
 			}
 		}
 		.navbar-brand {
-			color: var(--white);
+			color: var(--shell-fg);
 		}
 		.navbar {
 			flex-flow: row nowrap;
@@ -573,8 +662,8 @@ html:not(:has(head > base[href="/"])) {
 					padding-right: map.get($spacers, 3);
 					padding-left: map.get($spacers, 3);
 					&:hover {
-						color: var(--white);
-						background-color: #82a7ff;
+						color: var(--shell-fg);
+						background-color: var(--shell-hover-bg);
 						border-radius: var(--radius-4);
 					}
 				}
@@ -583,6 +672,7 @@ html:not(:has(head > base[href="/"])) {
 		&:has(nav) .navbar.navbar-position {
 			right: auto;
 			width: var(--menu-width);
+			height: var(--brand-bar-height);
 			.navbar-brand {
 				margin-left: -0.375rem;
 			}
@@ -618,10 +708,9 @@ html:not(:has(head > base[href="/"])) {
 				display: inline-block;
 			}
 			.nav-title {
-				border-top: var(--border-width) solid var(--gray-200);
+				border-top: var(--border-width) solid var(--shell-border);
 				margin-top: map.get($spacers, 3) !important;
 				margin-bottom: map.get($spacers, 3);
-				opacity: 0.25;
 			}
 			.nodes:empty + .nav-title {
 				display: none;
@@ -672,7 +761,7 @@ html:not(:has(head > base[href="/"])) {
 				}
 				.menu {
 					position: fixed !important;
-					top: 4.5rem !important;
+					top: calc(var(--brand-bar-height) / 2 + 3.125rem) !important;
 					left: 3.25rem !important;
 					width: auto !important;
 				}

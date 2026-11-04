@@ -1,6 +1,7 @@
 import * as appService from 'node/modules/apps/services/app';
 
-const DISCONNECTED_LABEL = 'Disconnected <a href="#" class="reconnect-logs underline-0 hover:underline-80 ms-1">Connect</a>';
+const DISCONNECTED_LABEL = 'Disconnected';
+const CONNECT_LINK = '<a href="#" class="reconnect-logs underline-0 hover:underline-80 ms-1">Connect</a>';
 
 const socket = appService.getSocket();
 const module = document.querySelector('#apps');
@@ -12,6 +13,7 @@ let isScrollEventAttached = false;
 let shouldScroll = true;
 let pendingLines = [];
 let flushFrame = null;
+let isDisconnected = false;
 
 const render = (event) => {
 	if (!event.target.closest('a')?.classList.contains('logs')) {
@@ -64,6 +66,7 @@ const restore = () => {
 	serviceName = '';
 	logsContainer = null;
 	isScrollEventAttached = false;
+	isDisconnected = false;
 };
 
 const reconnect = (event) => {
@@ -73,9 +76,29 @@ const reconnect = (event) => {
 	
 	event.preventDefault();
 	if (containerId && logsContainer) {
+		isDisconnected = false;
 		setStatus('Connecting...');
 		socket.emit('docker:container:logs:connect', containerId);
 	}
+};
+
+const setDisconnected = () => {
+	isDisconnected = true;
+	syncDisconnected();
+};
+
+const syncDisconnected = () => {
+	if (!isDisconnected) {
+		return;
+	}
+
+	const isRunning = _.some(appService.getApps(), (app) => { return _.some(app.projectContainers, { id: containerId, state: 'running' }); });
+	const label = (isRunning ? `${DISCONNECTED_LABEL} ${CONNECT_LINK}` : DISCONNECTED_LABEL);
+	if (logsContainer?.querySelector('.service small')?.innerHTML.endsWith(label)) {
+		return;
+	}
+
+	setStatus(label);
 };
 
 const setStatus = (label, isLive = false) => {
@@ -201,6 +224,7 @@ socket.on('docker:container:logs:connected', () => {
 	if (resolveLogs()) {
 		logs.innerHTML = '';
 	}
+	isDisconnected = false;
 	setStatus('Live', true);
 });
 socket.on('docker:container:logs:output', (lines) => {
@@ -219,18 +243,19 @@ socket.on('docker:container:logs:error', (error) => {
 	}
 
 	appendLine(`<span class="log-content fg-red-500">${escapeHtml(error?.message || error)}</span>`);
-	setStatus(DISCONNECTED_LABEL);
+	setDisconnected();
 });
 // The stream ending on its own — the container stopped or restarted — as opposed to this browser
 // losing the socket.
 socket.on('docker:container:logs:disconnected', () => {
-	setStatus(DISCONNECTED_LABEL);
+	setDisconnected();
 });
 socket.on('disconnect', () => {
-	setStatus(DISCONNECTED_LABEL);
+	setDisconnected();
 });
 
 module.addEventListener('click', render);
 module.addEventListener('click', reconnect);
 module.addEventListener('click', closeLogs);
 module.addEventListener('details:hide', restore);
+appService.subscribe([syncDisconnected]);

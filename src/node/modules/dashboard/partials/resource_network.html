@@ -1,5 +1,5 @@
 <li class="list-group-item network py-5">
-	<h5 class="fg-black mb-0">
+	<h5 class="fg-body mb-0">
 		<i class="icon-regular icon-network icon-fw me-1 fg-gray-300"></i>Network
 		<small class="fg-emphasis-secondary"> &middot; <%-_.find(state.system?.networkInterfaces, { default: true })?.ifname%> &middot; <%=_.prettyBitRate((_.find(state.system?.networkInterfaces, { default: true })?.speed || 0) * 1000 * 1000 / 8, { minimumFractionDigits: 0 })%></small>
 	</h5>

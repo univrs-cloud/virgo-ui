@@ -26,6 +26,7 @@ const filterCount = module.querySelector('.filter-count');
 const filterTypeNav = module.querySelector('.filter-type');
 const table = container.querySelector('.table');
 let routeServiceUnit = null;
+const serviceTabs = {};
 let searchTimer;
 let searchValue = '';
 const storedFilters = serviceService.getFilters();
@@ -204,7 +205,7 @@ const renderServiceDetails = (unit) => {
 	const jobs = _.filter(serviceService.getJobs(), (job) => { return job.data?.config?.unit === service.unit; });
 	morphdom(
 		details,
-		`<div>${serviceDetailsTemplate({ service, jobs, serviceActionsTemplate, prettyBytes })}</div>`,
+		`<div>${serviceDetailsTemplate({ service, jobs, serviceTab: serviceTabs[unit] || 'overview', serviceActionsTemplate, prettyBytes })}</div>`,
 		{
 			childrenOnly: true,
 			onBeforeElUpdated: (fromEl, toEl) => {
@@ -214,6 +215,18 @@ const renderServiceDetails = (unit) => {
 			}
 		}
 	);
+	module.dispatchEvent(new CustomEvent('details:render', { detail: { unit } }));
+};
+
+const selectTab = (event) => {
+	const button = event.target.closest('[data-service-tab]');
+	const unit = button?.closest('.item')?.dataset?.unit;
+	if (!unit) {
+		return;
+	}
+
+	serviceTabs[unit] = button.dataset.serviceTab;
+	renderServiceDetails(unit);
 };
 
 const hideServiceDetails = () => {
@@ -270,6 +283,11 @@ const render = (state) => {
 const handleRoute = (ctx) => {
 	const unit = ctx?.params?.serviceUnit;
 	routeServiceUnit = (_.isEmpty(unit) ? null : unit);
+	_.each(_.keys(serviceTabs), (key) => {
+		if (_.toLower(key) !== _.toLower(unit || '')) {
+			delete serviceTabs[key];
+		}
+	});
 	if (_.isEmpty(unit)) {
 		hideServiceDetails();
 		return;
@@ -283,6 +301,7 @@ _.each(filterTypeNav.querySelectorAll('.nav-link'), (link) => { link.classList.t
 
 module.onRoute = handleRoute;
 module.addEventListener('click', compress);
+module.addEventListener('click', selectTab);
 module.addEventListener('click', performServiceAction);
 syncButton.addEventListener('click', sync);
 searchInput.addEventListener('input', search);

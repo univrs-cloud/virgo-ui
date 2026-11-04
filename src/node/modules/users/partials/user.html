@@ -1,4 +1,4 @@
-<tr class="item" data-uid="<%-user.uid%>">
+<tr class="item cursor-pointer" data-uid="<%-user.uid%>">
 	<td style="min-width: 210px; max-width: 0;">
 		<div class="d-flex align-items-center gap-5">
 			<span class="avatar avatar-sm avatar-subtle theme-primary flex-shrink-0 d-none md:d-flex"><%-_.join(_.map(_.take(_.words(user.fullname || user.username), 2), _.head), '')%></span>
@@ -69,25 +69,7 @@
 				<i class="icon-light icon-caret-right icon-fw fg-4"></i>
 			</a>
 		<%} else {%>
-			<div class="dropdown">
-				<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i></span>
-				<div class="menu">
-					<a href="#user-update" class="menu-item" data-bs-toggle="dialog"><i class="icon-fill icon-pen icon-fw"></i>Edit</a>
-					<%if (!user.isOwner && user.username !== account.user) {%>
-						<%if (!user.isDisabled) {%>
-							<a href="#user-password" class="menu-item" data-bs-toggle="dialog"><i class="icon-fill icon-key icon-fw"></i>Change password</a>
-						<%}%>
-						<div class="menu-divider"></div>
-						<%if (user.isDisabled) {%>
-							<a href="#" class="menu-item" data-action="unlock"><i class="icon-fill icon-lock-open icon-fw"></i>Unlock</a>
-						<%} else {%>
-							<a href="#" class="menu-item fg-danger confirm" data-action="lock"><i class="icon-fill icon-lock icon-fw"></i>Lock</a>
-						<%}%>
-						<div class="menu-divider"></div>
-						<a href="#" class="menu-item fg-danger confirm" data-action="delete"><i class="icon-fill icon-x-circle icon-fw"></i>Delete</a>
-					<%}%>
-				</div>
-			</div>
+			<%=userActionsTemplate({ user })%>
 		<%}%>
 	</td>
 </tr>

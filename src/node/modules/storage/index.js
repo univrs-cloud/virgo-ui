@@ -19,6 +19,7 @@ const searchInput = module.querySelector('.search');
 const listCount = module.querySelector('.list-count');
 const table = container.querySelector('.table');
 let routePoolName = null;
+const poolTabs = {};
 let searchTimer;
 let searchValue = '';
 let pools = [];
@@ -57,6 +58,17 @@ const compress = (event) => {
 
 	event.preventDefault();
 	page('/storage');
+};
+
+const selectTab = (event) => {
+	const button = event.target.closest('[data-pool-tab]');
+	const name = button?.closest('.item')?.dataset?.name;
+	if (!name) {
+		return;
+	}
+
+	poolTabs[name] = button.dataset.poolTab;
+	renderPoolDetails(name);
 };
 
 const stateColor = (state) => {
@@ -233,7 +245,7 @@ const renderPoolDetails = (name) => {
 
 	morphdom(
 		details,
-		`<div>${poolDetailsTemplate({ pool, groups, vdevSections, faultTolerance, poolVdevTemplate, stateColor, healthColor, driveHealthTip, prettyBytes, moment })}</div>`,
+		`<div>${poolDetailsTemplate({ pool, groups, vdevSections, faultTolerance, poolTab: poolTabs[name] || 'overview', poolVdevTemplate, stateColor, healthColor, driveHealthTip, prettyBytes, moment })}</div>`,
 		{
 			childrenOnly: true,
 			onBeforeElUpdated: (fromEl, toEl) => {
@@ -294,6 +306,11 @@ const render = (state) => {
 const handleRoute = (ctx) => {
 	const name = ctx?.params?.poolName;
 	routePoolName = (_.isEmpty(name) ? null : name);
+	_.each(_.keys(poolTabs), (key) => {
+		if (_.toLower(key) !== _.toLower(name || '')) {
+			delete poolTabs[key];
+		}
+	});
 	if (_.isEmpty(name)) {
 		hidePoolDetails();
 		return;
@@ -319,6 +336,7 @@ const toggleStateTooltip = (event) => {
 
 module.onRoute = handleRoute;
 module.addEventListener('click', compress);
+module.addEventListener('click', selectTab);
 module.addEventListener('mouseenter', toggleStateTooltip, true);
 module.addEventListener('mouseleave', toggleStateTooltip, true);
 searchInput.addEventListener('input', search);

@@ -14,7 +14,7 @@
 <%const dataWidth = (size > 0 ? data / size * 100 : 0)%>
 <%const snapshotsWidth = (size > 0 ? snapshots / size * 100 : 0)%>
 <div class="item container-fluid numeric-tabular" data-name="<%-pool.name%>">
-	<div class="card border-0 shadow shadow-opacity-100">
+	<div class="card">
 		<div class="card-body">
 			<div class="row g-0 align-items-center mt--3 mb-3">
 				<div class="col-auto me-3">
@@ -39,20 +39,16 @@
 				</div>
 			</div>
 
-			<div class="position-relative">
-				<div class="nav nav-underline d-flex gap-0 border-bottom">
-					<button type="button" class="nav-link px-4 active border-primary fw-light"><i class="icon-light icon-info icon-fw"></i>Overview</button>
-				</div>
-
-				<div class="table-scroll overflow-y-scroll pe-5 mx-0 me--5">
+			<div class="position-relative detail-split">
+				<div class="detail-facts table-scroll overflow-y-scroll pe-5 mx-0 me--5 <%=(poolTab === 'overview' ? '' : 'detail-pane-off')%>">
 					<div class="list-group list-group-flush">
 						<div class="list-group-item pt-5 pb-7">
-							<div class="d-flex flex-column md:flex-row md:align-items-center gap-1 md:gap-5">
+							<div class="d-flex flex-column md:flex-row md:align-items-center 2xl:flex-column 2xl:align-items-start gap-1 md:gap-5 2xl:gap-1">
 								<small class="fg-4 flex-shrink-0 text-truncate" style="width: 8.5rem;"><i class="icon-fill icon-heartbeat icon-fw me-1"></i>Health</small>
 								<h4 class="m-0 flex-grow-1 <%-healthClass%>"><%-health || '—'%></h4>
 							</div>
 							<hr class="my-3 border-0 border-top opacity-50">
-							<div class="d-flex flex-column md:flex-row gap-1 md:gap-5">
+							<div class="d-flex flex-column md:flex-row 2xl:flex-column gap-1 md:gap-5 2xl:gap-1">
 								<small class="fg-4 flex-shrink-0 text-truncate" style="width: 8.5rem;"><i class="icon-fill icon-binary icon-fw me-1"></i>Data integrity</small>
 								<div class="flex-grow-1 min-w-0">
 								<%const scan = pool.scanStats%>
@@ -120,19 +116,19 @@
 								<span>Usage</span>
 							</div>
 							<div class="row g-3 mb-5">
-								<div class="col-6 md:col-3">
+								<div class="col-6 md:col-3 2xl:col-6">
 									<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-circle icon-fw me-1"></i>Capacity</small>
 									<h4 class="m-0"><%=prettyBytes(size, { binary: true })%></h4>
 								</div>
-								<div class="col-6 md:col-3">
+								<div class="col-6 md:col-3 2xl:col-6">
 									<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-chart-pie-slice icon-fw me-1"></i>Used</small>
 									<h4 class="m-0"><%=prettyBytes(allocated, { binary: true })%> <small class="fs-md fw-light fg-4">(<%=capacity.toFixed(2)%>%)</small></h4>
 								</div>
-								<div class="col-6 md:col-3">
+								<div class="col-6 md:col-3 2xl:col-6">
 									<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-chart-pie icon-fw me-1"></i>Free</small>
 									<h4 class="m-0"><%=prettyBytes(free, { binary: true })%></h4>
 								</div>
-								<div class="col-6 md:col-3">
+								<div class="col-6 md:col-3 2xl:col-6">
 									<small class="fg-4 d-block text-truncate"><i class="icon-regular icon-arrows-in-simple icon-fw me-1"></i>Space saved</small>
 									<h4 class="m-0">
 										<%if (compressRatio > 0) {%>
@@ -148,77 +144,81 @@
 								<u-progress-bar color="indigo" tint="100" width="<%=snapshotsWidth%>" warning-threshold="999" danger-threshold="999" tip="Snapshots: <%=prettyBytes(snapshots, { binary: true })%>"></u-progress-bar>
 							</u-progress>
 							<div class="row g-3 mt-3">
-								<div class="col-6 md:col-3">
+								<div class="col-6 md:col-3 2xl:col-6">
 									<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-database icon-fw me-1 fg-blue-500"></i>Data</small>
 									<span class="fw-light"><%=prettyBytes(data, { binary: true })%></span>
 								</div>
-								<div class="col-6 md:col-3">
+								<div class="col-6 md:col-3 2xl:col-6">
 									<small class="fg-4 d-block text-truncate"><i class="icon-regular icon-clock-counter-clockwise icon-fw me-1 fg-indigo-500"></i>Snapshots (<%=_.size(pool.snapshots)%>)</small>
 									<span class="fw-light"><%=prettyBytes(snapshots, { binary: true })%></span>
 								</div>
 							</div>
 						</div>
-
-						<div class="list-group-item px-0 pt-5 pb-3">
-							<div class="px-5">
-								<div class="d-flex align-items-center min-w-0">
-									<i class="icon-light icon-tree-view icon-fw fg-4 me-3"></i>
-									<span>Topology</span>
-									<small class="fg-4 ms-3">(<%=_.pluralize('group', _.size(groups), true)%>)</small>
-							</div>
-							<div class="vdev-tree d-flex flex-wrap justify-content-center gap-7 py-5">
-								<%_.each(groups, (group) => {%>
-									<%const groupColor = stateColor(group.vdev.state)%>
-									<div class="text-center">
-										<div>
-											<u-badge color="<%-groupColor%>" pill><small><%-_.compact([SECTION_LABELS[group.section], group.name]).join(' · ')%></small></u-badge>
-										</div>
-										<div class="d-inline-block">
-											<div class="vdev-bar"></div>
-											<div class="vdev-slots">
-											<%_.each(group.disks, ({ vdev, drive, role, pair, activity, usedIn }) => {%>
-												<%const diskHealthColor = healthColor(drive?.health)%>
-												<%const diskColor = (activity ? 'fg-blue-300' : (diskHealthColor ? `fg-${diskHealthColor}-300` : { green: 'fg-blue-500', yellow: 'fg-yellow-500', red: 'fg-red-300' }[stateColor(vdev.state)]))%>
-												<%const diskLabel = (drive?.name ? _.last(drive.name.split('/')) : `…${vdev.name.slice(-6)}`)%>
-												<%const diskSize = (vdev.physSpace || vdev.repDevSize)%>
-												<%const diskTip = (diskSize ? prettyBytes(diskSize, { binary: true }) : '')%>
-												<div class="vdev-slot <%=(role === 'old' ? 'opacity-50' : '')%>">
-													<div class="vdev-stem"></div>
-													<div class="position-relative d-flex justify-content-center w-100">
-														<%if (role === 'new') {%>
-															<i class="icon-regular icon-arrow-right icon-xs icon-width-auto lh-1 fg-4 position-absolute top-50 start-0 translate-middle"></i>
-														<%}%>
-														<span class="position-relative d-inline-flex">
-															<i class="vdev-disk icon-duotone icon-hard-drive <%-diskColor%> <%=(activity && activity !== 'awaiting' ? 'icon-fade' : '')%>"<%=(diskTip ? ` data-bs-toggle="tooltip" data-bs-original-title="${diskTip}"` : '')%>></i>
-															<%if (usedIn) {%>
-																<i class="icon-regular icon-link icon-2xs icon-width-auto lh-1 fg-blue-500 position-absolute top-0 start-100 translate-middle"></i>
+					</div>
+				</div>
+				<div class="detail-main">
+					<div class="nav nav-underline d-flex gap-0 border-bottom">
+						<button type="button" class="nav-link detail-facts-tab px-4 <%=(poolTab === 'overview' ? 'active border-primary fw-light' : '')%>" data-pool-tab="overview"><i class="icon-light icon-info icon-fw"></i>Overview</button>
+						<button type="button" class="nav-link detail-default-tab px-4 <%=(poolTab === 'topology' ? 'active border-primary fw-light' : '')%>" data-pool-tab="topology"><i class="icon-light icon-tree-view icon-fw"></i>Topology <small class="opacity-75"><%=_.size(groups)%></small></button>
+					</div>
+					<div class="table-scroll overflow-y-scroll pe-5 mx-0 me--5 <%=(poolTab === 'topology' ? '' : 'detail-pane-off')%>">
+						<div class="list-group list-group-flush">
+							<div class="list-group-item px-0 pt-5 pb-3">
+								<div class="px-5">
+								<div class="vdev-tree d-flex flex-wrap justify-content-center gap-7 py-5">
+									<%_.each(groups, (group) => {%>
+										<%const groupColor = stateColor(group.vdev.state)%>
+										<div class="text-center">
+											<div>
+												<u-badge color="<%-groupColor%>" pill><small><%-_.compact([SECTION_LABELS[group.section], group.name]).join(' · ')%></small></u-badge>
+											</div>
+											<div class="d-inline-block">
+												<div class="vdev-bar"></div>
+												<div class="vdev-slots">
+												<%_.each(group.disks, ({ vdev, drive, role, pair, activity, usedIn }) => {%>
+													<%const diskHealthColor = healthColor(drive?.health)%>
+													<%const diskColor = (activity ? 'fg-blue-300' : (diskHealthColor ? `fg-${diskHealthColor}-300` : { green: 'fg-blue-500', yellow: 'fg-yellow-500', red: 'fg-red-300' }[stateColor(vdev.state)]))%>
+													<%const diskLabel = (drive?.name ? _.last(drive.name.split('/')) : `…${vdev.name.slice(-6)}`)%>
+													<%const diskSize = (vdev.physSpace || vdev.repDevSize)%>
+													<%const diskTip = (diskSize ? prettyBytes(diskSize, { binary: true }) : '')%>
+													<div class="vdev-slot <%=(role === 'old' ? 'opacity-50' : '')%>">
+														<div class="vdev-stem"></div>
+														<div class="position-relative d-flex justify-content-center w-100">
+															<%if (role === 'new') {%>
+																<i class="icon-regular icon-arrow-right icon-xs icon-width-auto lh-1 fg-4 position-absolute top-50 start-0 translate-middle"></i>
 															<%}%>
-														</span>
+															<span class="position-relative d-inline-flex">
+																<i class="vdev-disk icon-duotone icon-hard-drive <%-diskColor%> <%=(activity && activity !== 'awaiting' ? 'icon-fade' : '')%>"<%=(diskTip ? ` data-bs-toggle="tooltip" data-bs-original-title="${diskTip}"` : '')%>></i>
+																<%if (usedIn) {%>
+																	<i class="icon-regular icon-link icon-2xs icon-width-auto lh-1 fg-blue-500 position-absolute top-0 start-100 translate-middle"></i>
+																<%}%>
+															</span>
+														</div>
+														<small class="fg-4 text-truncate w-100 mt-1"><%-diskLabel%></small>
 													</div>
-													<small class="fg-4 text-truncate w-100 mt-1"><%-diskLabel%></small>
+												<%})%>
 												</div>
-											<%})%>
 											</div>
 										</div>
-									</div>
-								<%})%>
-							</div>
-							</div>
-							<div class="details-toggle d-inline-flex align-items-center cursor-pointer ps-5 pb-3" data-bs-toggle="collapse" data-bs-target="#vdev-details-<%-_.kebabCase(pool.name)%>" aria-expanded="false">
-								<small class="fg-4">Details</small>
-								<i class="icon-fill icon-caret-down icon-fw icon-xs fg-secondary ms-1"></i>
-							</div>
-							<div class="tree-rows collapse pb-3" id="vdev-details-<%-_.kebabCase(pool.name)%>">
-								<%_.each(vdevSections, (section) => {%>
-									<small class="d-block fg-4 ps-5 mt-3"><%-SECTION_LABELS[section.key]%></small>
-									<%_.each(section.rows, ({ vdev, drive, depth, isLast, role, pair, activity, close }) => {%>
-										<%if (close) {%>
-											</div>
-										<%} else {%>
-											<%=poolVdevTemplate({ vdev, drive, depth, isLast, role, pair, activity, stateColor, healthColor, driveHealthTip, prettyBytes })%>
-										<%}%>
 									<%})%>
-								<%})%>
+								</div>
+								</div>
+								<div class="details-toggle d-inline-flex align-items-center cursor-pointer ps-5 pb-3" data-bs-toggle="collapse" data-bs-target="#vdev-details-<%-_.kebabCase(pool.name)%>" aria-expanded="false">
+									<small class="fg-4">Details</small>
+									<i class="icon-fill icon-caret-down icon-fw icon-xs fg-secondary ms-1"></i>
+								</div>
+								<div class="tree-rows collapse pb-3" id="vdev-details-<%-_.kebabCase(pool.name)%>">
+									<%_.each(vdevSections, (section) => {%>
+										<small class="d-block fg-4 ps-5 mt-3"><%-SECTION_LABELS[section.key]%></small>
+										<%_.each(section.rows, ({ vdev, drive, depth, isLast, role, pair, activity, close }) => {%>
+											<%if (close) {%>
+												</div>
+											<%} else {%>
+												<%=poolVdevTemplate({ vdev, drive, depth, isLast, role, pair, activity, stateColor, healthColor, driveHealthTip, prettyBytes })%>
+											<%}%>
+										<%})%>
+									<%})%>
+								</div>
 							</div>
 						</div>
 					</div>

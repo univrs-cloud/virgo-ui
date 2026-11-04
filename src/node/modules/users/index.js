@@ -1,11 +1,17 @@
 import page from 'page';
 import modulePartial from 'node/modules/users/partials/index.html';
 import userPartial from 'node/modules/users/partials/user.html';
+import userActionsPartial from 'node/modules/users/partials/user_actions.html';
+import userDetailsPartial from 'node/modules/users/partials/user_details.html';
+import sessionsPartial from 'node/modules/users/partials/sessions.html';
 import * as userService from 'node/modules/users/services/user';
 import { filterListByQuery } from 'utils/list_search';
 
 const moduleTemplate = _.template(modulePartial);
 const userTemplate = _.template(userPartial);
+const userActionsTemplate = _.template(userActionsPartial);
+const userDetailsTemplate = _.template(userDetailsPartial);
+const sessionsTemplate = _.template(sessionsPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
 const module = document.querySelector('#users');
 const loading = module.querySelector('.loading');
@@ -13,12 +19,15 @@ const container = module.querySelector('.container-fluid');
 const searchInput = module.querySelector('.search');
 const listCount = module.querySelector('.list-count');
 const table = container.querySelector('.table');
+const details = container.querySelector('.details');
+let routeUid = null;
 let searchTimer;
 let searchValue = '';
 let tableOrder = {
 	field: 'username',
 	direction: 'asc'
 };
+const userTabs = {};
 
 const openProfile = async (event) => {
 	const link = event.target.closest('a[href="/users/profile"]');
@@ -29,6 +38,84 @@ const openProfile = async (event) => {
 	event.preventDefault();
 	await bootstrap.Tooltip.getInstance(link)?.hide();
 	page(link.getAttribute('href'));
+};
+
+const expand = (event) => {
+	if (event.target.closest('a, .dropdown')) {
+		return;
+	}
+
+	const row = event.target.closest('.item');
+	if (_.isNull(row)) {
+		return;
+	}
+
+	event.preventDefault();
+	page(`/users/${row.dataset.uid}`);
+};
+
+const compress = (event) => {
+	if (!event.target.closest('button')?.classList.contains('compress')) {
+		return;
+	}
+
+	event.preventDefault();
+	page('/users');
+};
+
+const selectTab = (event) => {
+	const button = event.target.closest('[data-user-tab]');
+	const uid = button?.closest('.item')?.dataset?.uid;
+	if (!uid) {
+		return;
+	}
+
+	userTabs[uid] = button.dataset.userTab;
+	renderUserDetails(uid);
+};
+
+const renderUserDetails = (uid) => {
+	if (!uid) {
+		return;
+	}
+
+	const user = _.find(userService.getUsers(), { uid: Number(uid) });
+	if (!user) {
+		return;
+	}
+
+	const jobs = _.filter(userService.getJobs(), (job) => { return job.data?.config?.username === user.username; });
+	const sessions = _.filter(userService.getSessions(), (session) => { return _.toLower(session.username) === _.toLower(user.username); });
+	const isSameAsLoggedIn = (user.username === account?.user);
+	const sessionsList = sessionsTemplate({ sessions, moment });
+	morphdom(
+		details,
+		`<div>${userDetailsTemplate({ user, jobs, sessions, isSameAsLoggedIn, sessionsList, userActionsTemplate, userTab: userTabs[uid] || 'overview' })}</div>`,
+		{ childrenOnly: true }
+	);
+};
+
+const hideUserDetails = () => {
+	details.classList.remove('d-block');
+	details.innerHTML = '';
+};
+
+const handleRoute = (ctx) => {
+	userService.listSessions().catch(() => {});
+	const uid = ctx?.params?.uid;
+	routeUid = (_.isEmpty(uid) ? null : uid);
+	_.each(_.keys(userTabs), (key) => {
+		if (key !== routeUid) {
+			delete userTabs[key];
+		}
+	});
+	if (_.isNull(routeUid)) {
+		hideUserDetails();
+		return;
+	}
+
+	renderUserDetails(routeUid);
+	details.classList.add('d-block');
 };
 
 const search = (event) => {
@@ -81,7 +168,7 @@ const render = (state) => {
 		const jobs = _.filter(state.jobs, (job) => { return job.data?.config?.username === user.username; });
 		const sessions = _.filter(state.sessions, (session) => { return _.toLower(session.username) === _.toLower(user.username); });
 		const isSameAsLoggedIn = (user.username === account?.user);
-		return userTemplate({ user, sessions, jobs, isSameAsLoggedIn });
+		return userTemplate({ user, sessions, jobs, isSameAsLoggedIn, userActionsTemplate });
 	}), '');
 	
 	morphdom(
@@ -90,6 +177,15 @@ const render = (state) => {
 		{ childrenOnly: true }
 	);
 
+	if (routeUid && !_.some(state.users, { uid: Number(routeUid) })) {
+		page('/users');
+	}
+
+	const detailsUid = routeUid || container.querySelector('.details .item')?.dataset.uid;
+	if (detailsUid) {
+		renderUserDetails(detailsUid);
+	}
+
 	loading.classList.add('d-none');
 	container.classList.remove('d-none');
 };
@@ -97,6 +193,10 @@ const render = (state) => {
 searchInput.addEventListener('input', search);
 table.querySelector('thead').addEventListener('click', order);
 table.querySelector('tbody').addEventListener('click', openProfile);
+table.querySelector('tbody').addEventListener('click', expand);
+module.addEventListener('click', compress);
+module.addEventListener('click', selectTab);
+module.onRoute = handleRoute;
 
 userService.subscribe([render]);
 

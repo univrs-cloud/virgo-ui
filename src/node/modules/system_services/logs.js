@@ -11,32 +11,24 @@ let isScrollEventAttached = false;
 let shouldScroll = true;
 let pendingLines = [];
 let flushFrame = null;
+let isWatchingLogs = false;
 
 const render = (event) => {
-	if (!event.target.closest('a')?.classList.contains('logs')) {
+	const container = module.querySelector('.details .logs-container');
+	if (!isWatchingLogs || !container) {
 		return;
 	}
 
-	event.preventDefault();
-	restore();
+	const nextUnit = event.detail?.unit;
+	if (nextUnit === unit && container === logsContainer) {
+		return;
+	}
 
-	const link = event.target.closest('a');
-	unit = link.dataset.unit;
-	const item = link.closest('.item');
-	logsContainer = item.querySelector('.logs-container');
+	restore();
+	unit = nextUnit;
+	logsContainer = container;
 	logsContainer.querySelector('.service .name').textContent = unit;
-	logsContainer.classList.remove('d-none');
-	setStatus('Connecting...');
-	socket.emit('host:service:logs:connect', unit);
-};
-
-const closeLogs = (event) => {
-	if (!event.target.closest('a')?.classList.contains('close-logs') && !event.target.closest('button')?.classList.contains('compress')) {
-		return;
-	}
-
-	event.preventDefault();
-	restore();
+	reconnect();
 };
 
 const restore = () => {
@@ -44,7 +36,6 @@ const restore = () => {
 		return;
 	}
 
-	logsContainer.classList.add('d-none');
 	clearPendingLines();
 	socket.emit('host:service:logs:disconnect');
 	if (logs) {
@@ -57,15 +48,17 @@ const restore = () => {
 };
 
 const reconnect = (event) => {
-	if (!event.target.closest('a')?.classList.contains('reconnect-logs')) {
+	if (event && !event.target.closest('a')?.classList.contains('reconnect-logs')) {
 		return;
 	}
 
-	event.preventDefault();
-	if (unit && logsContainer) {
-		setStatus('Connecting...');
-		socket.emit('host:service:logs:connect', unit);
+	event?.preventDefault();
+	if (!unit || !logsContainer) {
+		return;
 	}
+
+	setStatus('Connecting...');
+	socket.emit('host:service:logs:connect', unit);
 };
 
 const setStatus = (label, isLive = false) => {
@@ -183,6 +176,24 @@ const escapeHtml = (text) => {
 	return div.innerHTML;
 };
 
+const syncLogs = () => {
+	const shouldWatch = (!module.classList.contains('d-none') && document.visibilityState === 'visible');
+	if (shouldWatch === isWatchingLogs) {
+		return;
+	}
+
+	isWatchingLogs = shouldWatch;
+	if (!shouldWatch) {
+		restore();
+		return;
+	}
+
+	const item = module.querySelector('.details .item');
+	if (item) {
+		render({ detail: { unit: item.dataset.unit } });
+	}
+};
+
 socket.on('host:service:logs:connected', () => {
 	// Only a successful connect clears the list, so failed attempts keep accumulating feedback. The
 	// stream replays its backlog on every connect, so keeping the old lines would just duplicate them.
@@ -213,11 +224,21 @@ socket.on('host:service:logs:error', (error) => {
 	setStatus(DISCONNECTED_LABEL);
 });
 
+socket.on('host:service:logs:disconnected', () => {
+	setStatus(DISCONNECTED_LABEL);
+});
+
 socket.on('disconnect', () => {
 	setStatus(DISCONNECTED_LABEL);
 });
 
-module.addEventListener('click', render);
+socket.on('connect', () => {
+	reconnect();
+});
+
+module.addEventListener('details:render', render);
 module.addEventListener('click', reconnect);
-module.addEventListener('click', closeLogs);
 module.addEventListener('details:hide', restore);
+new MutationObserver(syncLogs).observe(module, { attributes: true, attributeFilter: ['class'] });
+document.addEventListener('visibilitychange', syncLogs);
+syncLogs();

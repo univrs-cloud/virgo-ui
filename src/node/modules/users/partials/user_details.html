@@ -1,0 +1,111 @@
+<div class="item container-fluid" data-uid="<%-user.uid%>">
+	<div class="card">
+		<div class="card-body">
+			<div class="card-image-row mt--3 mb-3">
+				<div class="card-image-row-back me-3">
+					<button class="compress btn-icon btn-solid theme-secondary btn-sm">
+						<i class="icon-light icon-arrow-left icon-fw"></i>
+					</button>
+				</div>
+				<div class="card-image-row-icon card-spacer px-3">
+					<span class="avatar avatar-sm avatar-subtle theme-primary"><%-_.join(_.map(_.take(_.words(user.fullname || user.username), 2), _.head), '')%></span>
+				</div>
+				<div class="card-image-row-title d-flex align-items-center mb--2 ps-1 min-w-0">
+					<div class="text-truncate min-w-0"><%-user.username%></div>
+					<%if (user.isOwner) {%>
+						<u-badge color="indigo" tint="400" class="ms-3" tip="Owner" pill><i class="icon-fill icon-crown fg-white"></i></u-badge>
+					<%}%>
+					<%if (isSameAsLoggedIn) {%>
+						<u-badge class="ms-3" pill><small>YOU</small></u-badge>
+					<%}%>
+				</div>
+				<div class="card-image-row-urls ps-1 min-w-0">
+					<small class="d-block text-truncate min-w-0 fg-emphasis-secondary"><%-user.email || '—'%></small>
+				</div>
+				<div class="card-image-row-menu ps-5">
+					<%if (!_.isEmpty(jobs)) {%>
+						<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-fill icon-gear icon-fw icon-spin"></i></span>
+					<%} else if (isSameAsLoggedIn) {%>
+						<a href="/users/profile" class="btn-sm btn-outline theme-secondary py-1 min-h-0">Your profile</a>
+					<%} else {%>
+						<%=userActionsTemplate({ user })%>
+					<%}%>
+				</div>
+			</div>
+
+			<div class="position-relative detail-split">
+				<div class="detail-facts table-scroll overflow-y-scroll pe-5 mx-0 me--5 <%=(userTab === 'overview' ? '' : 'detail-pane-off')%>">
+					<div class="list-group list-group-flush">
+						<div class="list-group-item pt-5 pb-7">
+							<div class="row g-5">
+								<div class="col-6 md:col-3 2xl:col-6">
+									<small class="fg-4 d-block text-truncate">Name</small>
+									<div class="text-truncate"><%-user.fullname || '—'%></div>
+								</div>
+								<div class="col-6 md:col-3 2xl:col-6">
+									<small class="fg-4 d-block text-truncate">Email</small>
+									<div class="text-truncate"><%-user.email || '—'%></div>
+								</div>
+								<div class="col-6 md:col-3 2xl:col-6">
+									<small class="fg-4 d-block text-truncate">State</small>
+									<%if (user.isDisabled) {%>
+										<u-badge color="red" pill>locked</u-badge>
+									<%} else {%>
+										<u-badge color="green" pill>unlocked</u-badge>
+									<%}%>
+								</div>
+								<div class="col-6 md:col-3 2xl:col-6">
+									<small class="fg-4 d-block text-truncate">Shell access</small>
+									<%if (_.includes(user.shell, 'nologin')) {%>
+										<span>No</span>
+									<%} else {%>
+										<span>Yes</span>
+									<%}%>
+								</div>
+								<div class="col-12">
+									<small class="fg-4 d-block text-truncate">Groups</small>
+									<%if (_.isEmpty(user.groups)) {%>
+										<span>&mdash;</span>
+									<%} else {%>
+										<div class="d-flex flex-wrap gap-1">
+											<%_.each(user.groups, (group) => {%>
+												<u-badge color="purple" pill><%-group%></u-badge>
+											<%})%>
+										</div>
+									<%}%>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="detail-main">
+					<div class="nav nav-underline d-flex gap-0 border-bottom">
+						<button type="button" class="nav-link detail-facts-tab px-4 <%=(userTab === 'overview' ? 'active border-primary fw-light' : '')%>" data-user-tab="overview"><i class="icon-light icon-info icon-fw"></i>Overview</button>
+						<button type="button" class="nav-link detail-default-tab px-4 <%=(userTab === 'sessions' ? 'active border-primary fw-light' : '')%>" data-user-tab="sessions"><i class="icon-light icon-devices icon-fw"></i>Sessions <small class="opacity-75"><%=_.size(sessions)%></small></button>
+					</div>
+					<div class="table-scroll overflow-y-scroll pe-5 mx-0 me--5 <%=(userTab === 'sessions' ? '' : 'detail-pane-off')%>">
+						<div class="pt-5 pb-7">
+							<%if (_.isEmpty(sessions)) {%>
+								<small class="fg-4">No sessions.</small>
+							<%} else {%>
+								<%if (_.some(sessions, { isCurrent: false })) {%>
+									<div class="d-flex justify-content-end mb-3">
+										<a href="#" class="revoke-all btn-link btn-sm p-0 fg-danger text-decoration-none text-nowrap min-h-0">
+											<%if (isSameAsLoggedIn) {%>
+												Sign out everywhere else
+											<%} else {%>
+												Sign out all sessions
+											<%}%>
+											<i class="icon-regular icon-sign-out icon-fw ms-1"></i>
+										</a>
+									</div>
+								<%}%>
+								<%=sessionsList%>
+							<%}%>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,6 +1,13 @@
 @use "sass:map";
 @use "bootstrap/scss/config" as *;
 
+@mixin fill-column {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	min-height: 0;
+}
+
 img {
 	max-width: 100%;
 }
@@ -22,7 +29,7 @@ u-toast {
 	backdrop-filter: blur(18px) grayscale(0.8) saturate(180%);
 }
 .menu-item {
-	--menu-item-hover-bg: rgba(0, 0, 0, 0.1);
+	--menu-item-hover-bg: color-mix(in oklch, var(--fg-body) 10%, transparent);
 	&.fg-danger:hover {
 		background-color: color-mix(in oklab, lab(48.4493% 77.4328 61.5452)10%, transparent);
 	}
@@ -107,7 +114,7 @@ u-badge:hover .hover-reveal-text {
 		top: 66px;
 		bottom: 0;
 		width: 8px;
-		background: rgba(0, 0, 0, 0.05);
+		background: color-mix(in oklch, var(--fg-body) 5%, transparent);
 		border-radius: 4px;
 	}
 	.scrollbar-thumb {
@@ -116,14 +123,14 @@ u-badge:hover .hover-reveal-text {
 		top: 0;
 		left: 0;
 		width: 100%;
-		background: rgba(0, 0, 0, 0.3);
+		background: color-mix(in oklch, var(--fg-body) 30%, transparent);
 		border-radius: 4px;
 		cursor: pointer;
 		transition: background 0.2s;
 	}
 	.scrollbar-thumb:hover,
 	.scrollbar-thumb.dragging {
-		background: rgba(0, 0, 0, 0.5);
+		background: color-mix(in oklch, var(--fg-body) 50%, transparent);
 	}
 }
 .dialog-header {
@@ -132,7 +139,7 @@ u-badge:hover .hover-reveal-text {
 	top: 0;
 	left: 0;
 	right: 0;
-	background-color: rgba(255, 255, 255, 0.25);
+	background-color: color-mix(in oklch, var(--dialog-bg) 25%, transparent);
 	backdrop-filter: blur(8px);
 	border-radius: var(--dialog-border-radius);
 }
@@ -157,7 +164,7 @@ u-badge:hover .hover-reveal-text {
 	left: 0;
 	right: 0;
 	z-index: 2000;
-	background-color: rgba(255, 255, 255, 0.25);
+	background-color: color-mix(in oklch, var(--dialog-bg) 25%, transparent);
 	backdrop-filter: blur(8px);
 	border-radius: var(--dialog-border-radius);
 	~ .scrollbar {
@@ -168,7 +175,7 @@ u-badge:hover .hover-reveal-text {
 $card-image-size: 30px;
 
 .card {
-	--card-border-color: var(--gray-100);
+	--card-border-color: var(--border-color);
 	position: relative;
 	margin-bottom: 1rem;
 	.card-spacer {
@@ -234,8 +241,8 @@ $card-image-size: 30px;
 	[data-bs-toggle="menu"],
 	.btn-icon {
 		--btn-active-border-color: transparent;
-		--btn-hover-bg: var(--gray-100);
-		--btn-active-bg: var(--gray-200);
+		--btn-hover-bg: var(--bg-4);
+		--btn-active-bg: var(--secondary-bg-muted);
 	}
 	.indicator {
 		z-index: 1;
@@ -292,8 +299,8 @@ $card-image-size: 30px;
 	}
 }
 .actions-toggle {
-	--btn-bg: var(--gray-100);
-	--btn-disabled-bg: var(--gray-100);
+	--btn-bg: var(--bg-3);
+	--btn-disabled-bg: var(--bg-3);
 }
 .actions-button {
 	--btn-min-height: calc(var(--btn-input-sm-min-height) - 2px);
@@ -303,20 +310,94 @@ $card-image-size: 30px;
 :is(.btn, .btn-icon, .btn-solid, .btn-outline, .btn-subtle, .btn-text):active:not(:disabled, .disabled) {
 	transform: scale(0.97);
 }
-#weather {
-	.weather-icon {
-		position: relative;
-		svg {
-			position: absolute;
-			top: -28px;
-			left: 0;
-			width: 100%;
-			height: 56px;
+@media (min-width: 1200px) {
+	#dashboard .group > .row {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+		> * {
+			width: auto;
+			max-width: none;
 		}
 	}
-	.condition {
-		max-width: 10rem;
-		line-height: 1.1;
+}
+@media (min-width: 1400px) {
+	#dashboard > .row:last-child {
+		flex-wrap: nowrap;
+		> .col:first-child {
+			flex: 0 0 24rem;
+			width: 24rem;
+			max-width: 24rem;
+		}
+		> .col:last-child {
+			flex: 1 1 0;
+			width: auto;
+			min-width: 0;
+			max-width: none;
+		}
+	}
+}
+#dashboard > .row:first-child > .col-12:first-child,
+:is(#network, #settings, #system-updates, #about, #profile) > .row > .col-12:first-child,
+#sites > .row > .container-fluid > .row > .col-12:first-child,
+#update > .container > .row > .col-12:first-child {
+	display: flex;
+	align-items: center;
+	height: var(--top-row-height, auto);
+	> .position-absolute.end-0 {
+		top: 50%;
+		transform: translateY(-50%);
+	}
+}
+:is(#network, #settings, #system-updates, #about, #profile) > .row > .container-fluid {
+	max-width: 87.5rem;
+	margin-inline: 0;
+}
+#system-services .details {
+	.service-logs {
+		display: flex;
+		flex-direction: column;
+		flex: 1;
+		min-height: 0;
+		padding-top: map.get($spacers, 3);
+		> .logs-container {
+			position: relative;
+			inset: auto;
+			z-index: auto;
+			flex: 1;
+			min-height: 0;
+		}
+	}
+	@media (min-width: 1400px) {
+		.detail-split:has(.detail-default-tab) > .detail-main {
+			> .nav {
+				display: none !important;
+			}
+			> .service-logs {
+				display: flex;
+				margin-left: calc(#{map.get($spacers, 5)} * -1);
+				padding-top: 0;
+			}
+		}
+	}
+}
+#weather {
+	.card {
+		--card-bg: transparent;
+		border-radius: var(--radius-5);
+		box-shadow: none;
+		&:hover,
+		&:focus-visible {
+			background-color: var(--bg-2);
+		}
+	}
+	.weather-icon {
+		width: 2.25rem;
+		height: 2.25rem;
+		svg {
+			display: block;
+			width: 100%;
+			height: 100%;
+		}
 	}
 }
 #notifications {
@@ -331,7 +412,7 @@ $card-image-size: 30px;
 			height: 0.85rem;
 			border-radius: 50%;
 			background-color: var(--primary-base);
-			border: 2px solid #ecf2f8;
+			border: 2px solid var(--bg-body);
 		}
 		.icon-bell {
 			font-size: 1.6em;
@@ -347,11 +428,52 @@ $card-image-size: 30px;
 		}
 	}
 }
+@media (min-width: 576px) {
+	body:has(header nav) main:has(> .modules > :is(#apps, #shortcuts, #folders, #time-machines, #users, #storage, #system-services, #topology, #nodes):not(.d-none)) {
+		display: flex;
+		flex-direction: column;
+		> .modules,
+		> .modules > :not(.d-none),
+		> .modules > :not(.d-none) > .row,
+		> .modules > :not(.d-none) > .row > .container-fluid,
+		> .modules > :not(.d-none) > .row > .container-fluid > .card,
+		> .modules > :not(.d-none) > .row > .container-fluid > .card > .card-body {
+			@include fill-column;
+			flex-wrap: nowrap;
+			height: auto;
+		}
+	}
+}
 #update {
+	.steps > .card {
+		--card-bg: transparent;
+		--card-border-width: 0px;
+		--card-spacer-x: 0px;
+		margin-bottom: 0;
+		box-shadow: none;
+		> .card-body {
+			padding-top: 0;
+		}
+	}
+	@media (min-width: 576px) {
+		body:has(header nav) & {
+			display: flex;
+			flex-direction: column;
+			> .container,
+			> .container > .row,
+			> .container > .row > .steps,
+			> .container > .row > .steps > .card,
+			> .container > .row > .steps > .card > .card-body {
+				@include fill-column;
+				flex-wrap: nowrap;
+				height: auto;
+			}
+		}
+	}
 	.card-body {
 		--table-scrollbar-inset-bottom: var(--card-border-radius);
 		gap: 0;
-		height: calc(100dvh - 72px - var(--chrome));
+		height: calc(100dvh - var(--chrome) - (#{map.get($spacers, 5)} - var(--top-lift, 0px)) - var(--top-row-height, 1.5rem) - #{map.get($spacers, 5)} - var(--card-border-width) * 2);
 		> .table-scroll {
 			margin-bottom: calc(var(--card-spacer-y) * -1);
 		}
@@ -378,7 +500,7 @@ $card-image-size: 30px;
 		.card {
 			transition: box-shadow 0.3s ease-in-out;
 			&:hover {
-				box-shadow: var(--box-shadow-sm);
+				box-shadow: var(--card-ring, 0 0 0 transparent), var(--box-shadow-sm);
 			}
 			&.stopped .card-image {
 				filter: grayscale(1);
@@ -401,6 +523,9 @@ $card-image-size: 30px;
 }
 #resources-monitor {
 	padding-bottom: map.get($spacers, 1);
+	.list-group-item {
+		background-color: transparent;
+	}
 }
 #apps,
 #shortcuts,
@@ -411,20 +536,53 @@ $card-image-size: 30px;
 #system-services,
 #topology,
 #nodes {
+	--list-inset-right: 0px;
 	.overflow-y-scroll {
 		height: calc(100dvh - 170px - var(--chrome));
+	}
+	> .row > .col-12:first-child {
+		display: flex;
+		align-items: center;
+		height: var(--top-row-height, auto);
+		> .position-absolute.end-0 {
+			top: 50% !important;
+			margin-top: 0 !important;
+			transform: translateY(-50%);
+		}
+	}
+	> .row > .col-12 > .position-absolute.end-0 {
+		padding-right: calc(#{map.get($spacers, 4)} + var(--list-inset-right)) !important;
+	}
+	> .row > .container-fluid > .card {
+		--card-bg: transparent;
+		--card-border-width: 0px;
+		--card-spacer-x: 0px;
+		--card-spacer-y: 0px;
+		box-shadow: none;
+		margin-bottom: 0;
 	}
 	> .row > .container-fluid > .card > .card-body {
 		--table-scrollbar-inset-bottom: var(--card-border-radius);
 		display: flex;
 		flex-direction: column;
-		height: calc(100dvh - 72px - var(--chrome) - var(--card-border-width) * 2);
+		height: calc(100dvh - var(--chrome) - (#{map.get($spacers, 5)} - var(--top-lift, 0px)) - var(--top-row-height, 1.5rem) - #{map.get($spacers, 5)} - var(--card-border-width) * 2);
+		padding-right: var(--list-inset-right);
 		> .overflow-y-scroll {
+			--list-edge: calc(var(--card-spacer-x) + #{map.get($spacers, 4)} + var(--page-inset-extra, 0px) + var(--list-inset-right) + var(--card-border-width));
 			flex: 1;
 			min-height: 0;
+			margin-right: calc(var(--list-edge) * -1) !important;
+			padding-right: var(--list-edge) !important;
 		}
 		> .table-scroll {
-			margin-bottom: calc(var(--card-spacer-y) * -1);
+			margin-bottom: calc((var(--card-spacer-y) + var(--card-border-width)) * -1);
+			> .table {
+				width: calc(100% + var(--table-cell-padding-x));
+				margin-left: calc(var(--table-cell-padding-x) * -1) !important;
+			}
+			+ .table-scroll-overlay .table-scrollbar {
+				right: 0;
+			}
 		}
 	}
 	.table {
@@ -439,6 +597,7 @@ $card-image-size: 30px;
 #apps,
 #folders,
 #time-machines,
+#users,
 #storage,
 #system-services {
 	.details {
@@ -447,10 +606,35 @@ $card-image-size: 30px;
 			flex-direction: column;
 			height: 100%;
 			> .card {
+				--card-bg: transparent;
+				--card-border-color: transparent;
+				--card-border-width: 0px;
+				--card-spacer-x: 0px;
 				flex: 1;
 				min-height: 0;
+				margin-bottom: 0;
+				box-shadow: none;
 				> .card-body {
 					--table-scrollbar-inset-bottom: var(--card-border-radius);
+					padding-top: 0;
+					> .row:first-child {
+						height: var(--top-row-height, auto);
+						margin-top: 0 !important;
+					}
+					> .card-image-row {
+						grid-template-areas: "back icon title menu" "back icon urls menu";
+						min-height: var(--top-row-height, auto);
+						margin-top: 0 !important;
+						> .card-image-row-back,
+						> .card-image-row-icon,
+						> .card-image-row-menu {
+							align-self: center;
+							height: auto;
+							margin-top: 0;
+						}
+					}
+					padding-left: 0;
+					padding-right: var(--list-inset-right, 0px);
 					display: flex;
 					flex-direction: column;
 					gap: 0;
@@ -498,10 +682,67 @@ $card-image-size: 30px;
 				overflow-y: auto;
 			}
 		}
-		.item:has(.logs-container:not(.d-none)) .overflow-y-scroll,
-		.item:has(.terminal-container:not(.d-none)) .overflow-y-scroll {
+		.item:has(.logs-container:not(.d-none)) .detail-main > .table-scroll,
+		.item:has(.terminal-container:not(.d-none)) .detail-main > .table-scroll {
+			visibility: hidden;
+		}
+		.item:has(.logs-container:not(.d-none)) .detail-facts,
+		.item:has(.terminal-container:not(.d-none)) .detail-facts {
+			border-right-color: transparent;
+		}
+		.item:has(.logs-container:not(.d-none)) .overflow-y-scroll:not(.detail-facts),
+		.item:has(.terminal-container:not(.d-none)) .overflow-y-scroll:not(.detail-facts) {
 			overflow-y: hidden !important;
 			margin-right: calc(var(--scrollbar-width) + map.get($spacers, 5) * -1) !important;
+		}
+		.detail-split {
+			> .detail-facts .list-group-item {
+				padding-inline: 0;
+			}
+			> .detail-main {
+				display: contents;
+				> .nav {
+					order: -1;
+				}
+			}
+			.detail-pane-off,
+			.detail-facts-wide {
+				display: none;
+			}
+		}
+		@media (min-width: 1400px) {
+			> .item > .card > .card-body > .detail-split:has(.detail-default-tab) {
+				flex-direction: row;
+			}
+			.detail-split:has(.detail-default-tab) {
+				> .detail-facts {
+					display: block;
+					flex: 0 0 22rem;
+					height: auto;
+					margin-right: 0 !important;
+					border-right: var(--border-width) solid var(--border-color);
+				}
+				> .detail-main {
+					position: relative;
+					display: flex;
+					flex-direction: column;
+					flex: 1;
+					min-width: 0;
+					min-height: 0;
+					padding-left: map.get($spacers, 5);
+					> .table-scroll {
+						display: block;
+						height: auto;
+					}
+				}
+				.detail-facts-tab {
+					display: none;
+				}
+				&:has(.detail-facts-tab.active) .detail-default-tab {
+					border-block-end-color: var(--primary-bg);
+					color: var(--nav-underline-link-active-color);
+				}
+			}
 		}
 	}
 }
@@ -528,18 +769,17 @@ $card-image-size: 30px;
 #apps,
 #folders,
 #time-machines,
+#users,
 #storage,
 #system-services {
-	&:has(.details .item) > .row > .container-fluid > .card {
-		background-color: var(--gray-200);
-		margin-top: map.get($spacers, 3) * -1;
-		margin-left: map.get($spacers, 7);
-		margin-right: map.get($spacers, 7);
-		> .card-body {
-			height: calc(100dvh - 64px - var(--chrome) - var(--card-border-width) * 2);
-			> .table-scroll {
-				margin-bottom: 0;
-			}
+	&:has(.details .item) > .row {
+		position: relative;
+		> .col-12:first-child,
+		> .container-fluid > .card {
+			visibility: hidden;
+		}
+		> .container-fluid {
+			position: static !important;
 		}
 	}
 	.details {

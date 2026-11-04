@@ -260,7 +260,7 @@ export class FloatingWindow extends LitElement {
 
 	render() {
 		return html`
-			<div class="card h-100 overflow-hidden ${classMap({ 'rounded-0': this.maximized, 'border-0': this.maximized, 'shadow': this.active && !this.maximized, 'shadow-opacity-100': this.active && !this.maximized, 'shadow-sm': !this.active && !this.maximized })}">
+			<div class="card h-100 overflow-hidden ${classMap({ 'shadow': this.active && !this.maximized, 'shadow-opacity-100': this.active && !this.maximized, 'shadow-sm': !this.active && !this.maximized })}" style=${(this.maximized ? '--card-border-color: var(--shell-border, var(--border-color));' : '')}>
 				${this.maximized ? '' : html`
 					<div class="titlebar card-header flex-row align-items-center border-0 py-1 ps-5 pe-1 user-select-none" @pointerdown=${this.#onTitlePointerDown} @dblclick=${this.#onTitleDoubleClick}>
 						<small class="fw-bold text-truncate me-auto ${classMap({ 'fg-body': !this.active, 'fg-50': !this.active })}">${this.label}</small>

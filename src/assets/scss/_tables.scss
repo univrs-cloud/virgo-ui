@@ -7,6 +7,7 @@
 }
 .table-scroll-overlay {
 	--table-scroll-shadow: oklch(from var(--shadow-color) l c h / calc(0.15 * var(--shadow-strength)));
+	--table-scroll-shadow-bottom: oklch(from var(--shadow-color) l c h / calc(0.2 * var(--shadow-strength)));
 	position: absolute;
 	pointer-events: none;
 	&::before,
@@ -15,17 +16,17 @@
 		position: absolute;
 		left: 0;
 		right: var(--table-scroll-padding-right, 0);
-		height: 12px;
+		height: 14px;
 		opacity: 0;
 		transition: opacity 0.2s;
 	}
 	&::before {
-		top: var(--table-scroll-head-height, 0);
+		top: calc(var(--table-scroll-head-height, 0px) - var(--border-width));
 		background: radial-gradient(farthest-side at 50% 0, var(--table-scroll-shadow), transparent);
 	}
 	&::after {
 		bottom: 0;
-		background: radial-gradient(farthest-side at 50% 100%, var(--table-scroll-shadow), transparent);
+		background: radial-gradient(farthest-side at 50% 100%, var(--table-scroll-shadow-bottom), transparent), linear-gradient(to top, var(--border-color) var(--border-width), transparent var(--border-width));
 	}
 	&.has-scroll-above::before,
 	&.has-scroll-below::after {
@@ -76,6 +77,9 @@
 					&::before {
 						opacity: 0.2;
 					}
+				}
+				&.text-end {
+					padding-right: 0;
 				}
 				&.asc,
 				&.desc {

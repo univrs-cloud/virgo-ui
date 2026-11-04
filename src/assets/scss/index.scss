@@ -40,10 +40,29 @@
 			"border": light-dark(var(--brand-300), var(--brand-600)),
 			"focus-ring": light-dark(color-mix(in oklch, var(--brand-500) 50%, var(--bg-body)), color-mix(in oklch, var(--brand-500) 75%, var(--bg-body))),
 			"contrast": var(--white)
+		),
+		"secondary": (
+			"base": var(--gray-200),
+			"fg": light-dark(var(--gray-600), var(--gray-400)),
+			"fg-emphasis": light-dark(var(--gray-800), var(--gray-200)),
+			"bg": light-dark(#ececec, #222222),
+			"bg-subtle": light-dark(#f6f6f6, #191919),
+			"bg-muted": light-dark(#dedede, #303030),
+			"border": light-dark(#e5e5e5, #232323),
+			"focus-ring": color-mix(in oklch, light-dark(var(--gray-500), var(--gray-300)) 50%, var(--bg-body)),
+			"contrast": light-dark(var(--gray-900), var(--white))
 		)
 	),
+	$theme-bgs: (
+		"body": light-dark(var(--white), #111111),
+		"1": light-dark(#f6f6f6, #191919),
+		"2": light-dark(#efefef, #0a0a0a),
+		"3": light-dark(#ececec, #222222),
+		"4": light-dark(#e5e5e5, #2a2a2a)
+	),
 	$root-tokens: (
-		--border-color: var(--gray-100),
+		--btn-input-bg: light-dark(var(--white), #191919),
+		--border-color: light-dark(#e5e5e5, #232323),
 		--toast-spacing: .5rem,
 		--body-font-family: vars.$font-family-sans-serif
 	),
@@ -58,12 +77,15 @@
 		--form-floating-label-opacity: 65%
 	),
 	$card-tokens: (
+		--card-bg: light-dark(#f6f6f6, #191919),
 		--card-spacer-y: 1rem,
 		--card-spacer-x: 1rem,
 		--card-cap-padding-y: .5rem,
 		--card-cap-padding-x: 1rem
 	),
 	$tooltip-tokens: (
+		--tooltip-color: light-dark(var(--white), var(--fg-body)),
+		--tooltip-bg: light-dark(#202020, #222222),
 		--tooltip-max-width: 400px
 	),
 	$table-tokens: (
@@ -73,10 +95,15 @@
 		--stepper-align-items: start,
 		--stepper-bg: var(--bg-4)
 	),
+	$dialog-tokens: (
+		--dialog-bg: light-dark(var(--bg-body), #222222)
+	),
 	$dialog-sizes: (
 		sm: 300px
 	)
 );
+
+@use "bootstrap/scss/mixins/color-mode" as *;
 
 @layer vendor {
 	// --------
@@ -113,10 +140,19 @@
 	@include meta.load-css("theme");
 }
 
-:root,
-:host {
+:root {
 	--shadow-strength: 1;
 	color-scheme: light;
+}
+
+:host {
+	--shadow-strength: inherit;
+	color-scheme: inherit;
+}
+
+@include color-mode(dark, true) {
+	--shadow-strength: 2.4;
+	color-scheme: dark;
 }
 
 // Bootstrap's root gutter is unlayered; this override must be unlayered too.
@@ -126,6 +162,16 @@
 
 @media (min-width: 992px) {
 	:root:has(u-window[maximized]:not([minimized], [closing])) {
+		scrollbar-gutter: auto;
+	}
+}
+
+:root:has(body > main .booting) {
+	scrollbar-gutter: auto;
+}
+
+@media (min-width: 576px) {
+	:root:has(header nav) {
 		scrollbar-gutter: auto;
 	}
 }

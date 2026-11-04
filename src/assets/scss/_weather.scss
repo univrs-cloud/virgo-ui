@@ -5,7 +5,6 @@
 	--bgl: 9%;
 	--cm: 1;
 	--tsm: 1;
-
 	--ths: var(--bgh), calc(var(--bgs) * var(--tsm));
 	--color-text-highlight: hsl(var(--ths), calc(var(--scheme) var(--cm) * 85%));
 }

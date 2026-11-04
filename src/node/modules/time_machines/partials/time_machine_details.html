@@ -3,7 +3,7 @@
 	const activeTab = (_.isEmpty(machines) ? 'overview' : timeMachineTab);
 %>
 <div class="item container-fluid numeric-tabular" data-id="<%-timeMachine.name%>">
-	<div class="card border-0 shadow shadow-opacity-100">
+	<div class="card">
 		<div class="card-body">
 			<div class="card-image-row mt--3 mb-3">
 				<div class="card-image-row-back me-3">
@@ -28,182 +28,123 @@
 				</div>
 			</div>
 
-			<div class="position-relative">
-				<div class="nav nav-underline d-flex gap-0 border-bottom">
-					<button type="button" class="nav-link px-4 <%=(activeTab === 'overview' ? 'active border-primary fw-light' : '')%>" data-time-machine-tab="overview"><i class="icon-light icon-info icon-fw"></i>Overview</button>
-					<%if (!_.isEmpty(machines)) {%>
-						<button type="button" class="nav-link px-4 <%=(activeTab === 'backups' ? 'active border-primary fw-light' : '')%>" data-time-machine-tab="backups"><i class="icon-light icon-laptop icon-fw"></i>Backups <small class="opacity-75"><%=_.size(machines)%></small></button>
-					<%}%>
-				</div>
-
-				<div class="table-scroll overflow-y-scroll pe-5 mx-0 me--5">
-					<div class="<%=(activeTab === 'overview' ? '' : 'd-none')%>">
-						<div class="list-group list-group-flush">
-							<div class="list-group-item pt-5 pb-7">
-								<div class="d-flex align-items-center min-w-0 mb-3">
-									<i class="icon-light icon-chart-pie icon-fw fg-4 me-3"></i>
-									<div class="text-truncate min-w-0">Usage</div>
-								</div>
-								<div class="row g-3 mb-5">
-									<div class="col-6 md:col-3">
-										<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-circle icon-fw me-1"></i>Capacity</small>
-										<h4 class="m-0"><%=prettyBytes(timeMachine.size || 0, { binary: true })%></h4>
-									</div>
-									<div class="col-6 md:col-3">
-										<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-chart-pie-slice icon-fw me-1"></i>Used</small>
-										<h4 class="m-0"><%=prettyBytes(timeMachine.alloc || 0, { binary: true })%> <small class="fs-md fw-light fg-4">(<%=timeMachine.cap.toFixed(2)%>%)</small></h4>
-									</div>
-									<div class="col-6 md:col-3">
-										<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-chart-pie icon-fw me-1"></i>Free</small>
-										<h4 class="m-0"><%=prettyBytes(timeMachine.free || 0, { binary: true })%></h4>
-									</div>
-									<div class="col-6 md:col-3">
-										<small class="fg-4 d-block text-truncate"><i class="icon-regular icon-arrows-in-simple icon-fw me-1"></i>Space saved</small>
-										<h4 class="m-0">
-											<%if (timeMachine.storage.compressratio > 0) {%>
-												<%=prettyBytes(timeMachine.storage.savedbycompression, { binary: true })%> <small class="fs-md fw-light fg-4">(<%=timeMachine.storage.compressratio.toFixed(2)%>x compression)</small>
-											<%} else {%>
-												&mdash;
-											<%}%>
-										</h4>
-									</div>
-								</div>
-								<%if (timeMachine.storage.snapshots > 0) {%>
-									<u-progress shadow="false">
-										<u-progress-bar width="<%=(timeMachine.size > 0 ? timeMachine.storage.dataset / timeMachine.size * 100 : 0)%>" warning-threshold="999" danger-threshold="999" tip="Data: <%=prettyBytes(timeMachine.storage.dataset, { binary: true })%>"></u-progress-bar>
-										<u-progress-bar color="indigo" tint="100" width="<%=(timeMachine.size > 0 ? _.min([timeMachine.storage.snapshots / timeMachine.size * 100, 100 - (timeMachine.storage.dataset / timeMachine.size * 100)]) : 0)%>" warning-threshold="999" danger-threshold="999" tip="Snapshots: <%=prettyBytes(timeMachine.storage.snapshots, { binary: true })%>"></u-progress-bar>
-									</u-progress>
-									<div class="row g-3 mt-3">
-										<div class="col-6 md:col-3">
-											<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-database icon-fw me-1 fg-blue-500"></i>Data</small>
-											<span class="fw-light"><%=prettyBytes(timeMachine.storage.dataset, { binary: true })%></span>
-										</div>
-										<div class="col-6 md:col-3">
-											<small class="fg-4 d-block text-truncate"><i class="icon-regular icon-clock-counter-clockwise icon-fw me-1 fg-indigo-500"></i>Snapshots</small>
-											<span class="fw-light"><%=prettyBytes(timeMachine.storage.snapshots, { binary: true })%></span>
-										</div>
-									</div>
-								<%} else {%>
-									<u-progress shadow="false">
-										<u-progress-bar width="<%=timeMachine.cap%>"></u-progress-bar>
-									</u-progress>
-								<%}%>
+			<div class="position-relative detail-split">
+				<div class="detail-facts table-scroll overflow-y-scroll pe-5 mx-0 me--5 <%=(activeTab === 'overview' ? '' : 'detail-pane-off')%>">
+					<div class="list-group list-group-flush">
+						<div class="list-group-item pt-5 pb-7">
+							<div class="d-flex align-items-center min-w-0 mb-3">
+								<i class="icon-light icon-chart-pie icon-fw fg-4 me-3"></i>
+								<div class="text-truncate min-w-0">Usage</div>
 							</div>
-
-							<div class="list-group-item pt-5 pb-7">
-								<div class="d-flex align-items-center min-w-0 mb-3">
-									<i class="icon-light icon-user icon-fw fg-4 me-3"></i>
-									<div class="text-truncate min-w-0">Authorized users</div>
+							<div class="row g-3 mb-5">
+								<div class="col-6 md:col-3 2xl:col-6">
+									<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-circle icon-fw me-1"></i>Capacity</small>
+									<h4 class="m-0"><%=prettyBytes(timeMachine.size || 0, { binary: true })%></h4>
 								</div>
-								<%_.each((timeMachine.validUsers || [null]), (user) => {%>
-									<%const account = _.find(users, { username: user });%>
-									<div class="d-flex flex-wrap align-items-center gap-3 mt-3">
-										<div class="min-w-0">
-											<u-badge color="<%=(account?.isDisabled ? 'gray' : 'purple')%>" pill><%-(account?.fullname || user || 'Guest') + (account?.isDisabled ? ' (locked)' : '')%></u-badge>
-										</div>
-										<%if (!account?.isDisabled) {%>
-											<div class="border-start ps-3 flex-shrink-0">
-												<div class="d-flex align-items-center">
-													<a href="#" class="fg-body underline-0" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-original-title="Click to copy the time machine address. In Finder, press ⌘K and paste it to connect. This lets Time Machine use it for backups."><i class="icon-fill icon-apple-logo icon-fw"></i></a>
-													<span class="copy d-none">smb://<%-(user ? `${user}@` : '')%><%-accessOn%>/<%-timeMachine.name%></span>
-												</div>
-											</div>
+								<div class="col-6 md:col-3 2xl:col-6">
+									<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-chart-pie-slice icon-fw me-1"></i>Used</small>
+									<h4 class="m-0"><%=prettyBytes(timeMachine.alloc || 0, { binary: true })%> <small class="fs-md fw-light fg-4">(<%=timeMachine.cap.toFixed(2)%>%)</small></h4>
+								</div>
+								<div class="col-6 md:col-3 2xl:col-6">
+									<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-chart-pie icon-fw me-1"></i>Free</small>
+									<h4 class="m-0"><%=prettyBytes(timeMachine.free || 0, { binary: true })%></h4>
+								</div>
+								<div class="col-6 md:col-3 2xl:col-6">
+									<small class="fg-4 d-block text-truncate"><i class="icon-regular icon-arrows-in-simple icon-fw me-1"></i>Space saved</small>
+									<h4 class="m-0">
+										<%if (timeMachine.storage.compressratio > 0) {%>
+											<%=prettyBytes(timeMachine.storage.savedbycompression, { binary: true })%> <small class="fs-md fw-light fg-4">(<%=timeMachine.storage.compressratio.toFixed(2)%>x compression)</small>
+										<%} else {%>
+											&mdash;
 										<%}%>
-									</div>
-								<%})%>
-							</div>
-
-							<div class="list-group-item pt-5 pb-7">
-								<div class="d-flex align-items-center min-w-0 mb-3">
-									<i class="icon-light icon-users icon-fw fg-4 me-3"></i>
-									<div class="text-truncate min-w-0">Clients</div>
-									<small class="fg-4 ms-3">(<%=_.size(timeMachine.clients)%>)</small>
+									</h4>
 								</div>
-								<%if (_.isEmpty(timeMachine.clients)) {%>
-									<small class="fg-4">No clients connected.</small>
-								<%}%>
-								<%_.each(timeMachine.clients, (client, index) => {%>
-									<div class="row g-3 align-items-center <%=(index > 0 ? 'mt-3' : '')%>">
-										<div class="col-12">
-											<div class="d-flex align-items-center min-w-0">
-												<span class="position-relative d-inline-flex flex-shrink-0 me-3">
-													<i class="icon-light icon-laptop icon-fw fg-4"></i>
-													<i class="icon-fill icon-circle icon-2xs icon-width-auto lh-1 position-absolute top-0 start-100 translate-middle fg-green-300"></i>
-												</span>
-												<span class="text-truncate min-w-0"><%-_.join(client.usernames, ', ')%></span>
-												<small class="fg-4 text-nowrap ms-3"><%-client.address%></small>
-											</div>
-										</div>
-										<div class="col-12 md:col-6 lg:col-4">
-											<div class="row g-3">
-												<div class="col-6">
-													<div class="d-flex align-items-center justify-content-between">
-														<small class="fg-4"><i class="icon-regular icon-arrow-down icon-fw me-1 fg-blue-500"></i>RX</small>
-														<small class="fw-light"><%=_.prettyBitRate(client.rx)%></small>
-													</div>
-													<u-progress shadow="false" class="d-block">
-														<u-progress-bar width="<%=(networkMaxBytesPerSec > 0 ? _.min([(client.rx / networkMaxBytesPerSec) * 100, 100]) : 0)%>"></u-progress-bar>
-													</u-progress>
-												</div>
-												<div class="col-6">
-													<div class="d-flex align-items-center justify-content-between">
-														<small class="fg-4"><i class="icon-regular icon-arrow-up icon-fw me-1 fg-purple-500"></i>TX</small>
-														<small class="fw-light"><%=_.prettyBitRate(client.tx)%></small>
-													</div>
-													<u-progress shadow="false" class="d-block">
-														<u-progress-bar width="<%=(networkMaxBytesPerSec > 0 ? _.min([(client.tx / networkMaxBytesPerSec) * 100, 100]) : 0)%>"></u-progress-bar>
-													</u-progress>
-												</div>
-											</div>
-										</div>
-									</div>
-								<%})%>
 							</div>
-						</div>
-					</div>
-					<div class="<%=(activeTab === 'backups' ? '' : 'd-none')%>">
-						<div class="list-group list-group-flush">
-							<%if (_.isEmpty(machines)) {%>
-								<div class="list-group-item pt-5 pb-7">
-									<small class="fg-4">No Mac has backed up here yet.</small>
+							<%if (timeMachine.storage.snapshots > 0) {%>
+								<u-progress shadow="false">
+									<u-progress-bar width="<%=(timeMachine.size > 0 ? timeMachine.storage.dataset / timeMachine.size * 100 : 0)%>" warning-threshold="999" danger-threshold="999" tip="Data: <%=prettyBytes(timeMachine.storage.dataset, { binary: true })%>"></u-progress-bar>
+									<u-progress-bar color="indigo" tint="100" width="<%=(timeMachine.size > 0 ? _.min([timeMachine.storage.snapshots / timeMachine.size * 100, 100 - (timeMachine.storage.dataset / timeMachine.size * 100)]) : 0)%>" warning-threshold="999" danger-threshold="999" tip="Snapshots: <%=prettyBytes(timeMachine.storage.snapshots, { binary: true })%>"></u-progress-bar>
+								</u-progress>
+								<div class="row g-3 mt-3">
+									<div class="col-6 md:col-3 2xl:col-6">
+										<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-database icon-fw me-1 fg-blue-500"></i>Data</small>
+										<span class="fw-light"><%=prettyBytes(timeMachine.storage.dataset, { binary: true })%></span>
+									</div>
+									<div class="col-6 md:col-3 2xl:col-6">
+										<small class="fg-4 d-block text-truncate"><i class="icon-regular icon-clock-counter-clockwise icon-fw me-1 fg-indigo-500"></i>Snapshots</small>
+										<span class="fw-light"><%=prettyBytes(timeMachine.storage.snapshots, { binary: true })%></span>
+									</div>
 								</div>
+							<%} else {%>
+								<u-progress shadow="false">
+									<u-progress-bar width="<%=timeMachine.cap%>"></u-progress-bar>
+								</u-progress>
 							<%}%>
-							<%_.each(machines, (machine) => {%>
-								<%
-									const moments = _.map(machine.snapshots, (snapshot) => { return moment(snapshot.createdAt); });
-									const latest = (_.isEmpty(moments) ? null : moment.max(moments));
-									const oldest = (_.isEmpty(moments) ? null : moment.min(moments));
-								%>
-								<div class="list-group-item pt-5 pb-7">
-									<div class="row g-3 align-items-center">
-										<div class="col-12">
-											<div class="d-flex align-items-center min-w-0">
-												<i class="icon-light icon-laptop icon-width-auto fg-4 me-3"></i>
-												<div class="text-truncate min-w-0"><%-_.replace(machine.name, /\.(sparsebundle|backupbundle)$/, '')%></div>
-												<u-badge color="gray" tint="050" class="flex-shrink-0 ms-3" pill>
-													<i class="icon-light icon-clock-counter-clockwise icon-fw"></i>
-													<%=_.pluralize('snapshot', _.size(machine.snapshots), true)%>
-												</u-badge>
+						</div>
+
+						<div class="list-group-item pt-5 pb-7">
+							<div class="d-flex align-items-center min-w-0 mb-3">
+								<i class="icon-light icon-user icon-fw fg-4 me-3"></i>
+								<div class="text-truncate min-w-0">Authorized users</div>
+							</div>
+							<%_.each((timeMachine.validUsers || [null]), (user) => {%>
+								<%const account = _.find(users, { username: user });%>
+								<div class="d-flex flex-wrap align-items-center gap-3 mt-3">
+									<div class="min-w-0">
+										<u-badge color="<%=(account?.isDisabled ? 'gray' : 'purple')%>" pill><%-(account?.fullname || user || 'Guest') + (account?.isDisabled ? ' (locked)' : '')%></u-badge>
+									</div>
+									<%if (!account?.isDisabled) {%>
+										<div class="border-start ps-3 flex-shrink-0">
+											<div class="d-flex align-items-center">
+												<a href="#" class="fg-body underline-0" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-original-title="Click to copy the time machine address. In Finder, press ⌘K and paste it to connect. This lets Time Machine use it for backups."><i class="icon-fill icon-apple-logo icon-fw"></i></a>
+												<span class="copy d-none">smb://<%-(user ? `${user}@` : '')%><%-accessOn%>/<%-timeMachine.name%></span>
 											</div>
 										</div>
-										<div class="col-12 md:col-6 lg:col-4 pt-3">
-											<div class="row g-3">
-												<div class="col-6">
-													<small class="d-block fg-4 pb-1"><i class="icon-regular icon-arrow-line-up icon-width-auto me-1"></i>Latest</small>
-													<%if (latest) {%>
-														<span class="fw-light tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="<%-latest.format('D MMM YYYY, HH:mm')%>"><%-latest.fromNow()%></span>
-													<%} else {%>
-														<span class="fw-light">None</span>
-													<%}%>
+									<%}%>
+								</div>
+							<%})%>
+						</div>
+
+						<div class="list-group-item pt-5 pb-7">
+							<div class="d-flex align-items-center min-w-0 mb-3">
+								<i class="icon-light icon-users icon-fw fg-4 me-3"></i>
+								<div class="text-truncate min-w-0">Clients</div>
+								<small class="fg-4 ms-3">(<%=_.size(timeMachine.clients)%>)</small>
+							</div>
+							<%if (_.isEmpty(timeMachine.clients)) {%>
+								<small class="fg-4">No clients connected.</small>
+							<%}%>
+							<%_.each(timeMachine.clients, (client, index) => {%>
+								<div class="row g-3 align-items-center <%=(index > 0 ? 'mt-3' : '')%>">
+									<div class="col-12">
+										<div class="d-flex align-items-center min-w-0">
+											<span class="position-relative d-inline-flex flex-shrink-0 me-3">
+												<i class="icon-light icon-laptop icon-fw fg-4"></i>
+												<i class="icon-fill icon-circle icon-2xs icon-width-auto lh-1 position-absolute top-0 start-100 translate-middle fg-green-300"></i>
+											</span>
+											<span class="text-truncate min-w-0"><%-_.join(client.usernames, ', ')%></span>
+											<small class="fg-4 text-nowrap ms-3"><%-client.address%></small>
+										</div>
+									</div>
+									<div class="col-12 md:col-6 lg:col-4 2xl:col-12">
+										<div class="row g-3">
+											<div class="col-6">
+												<div class="d-flex align-items-center justify-content-between">
+													<small class="fg-4"><i class="icon-regular icon-arrow-down icon-fw me-1 fg-blue-500"></i>RX</small>
+													<small class="fw-light"><%=_.prettyBitRate(client.rx)%></small>
 												</div>
-												<div class="col-6">
-													<small class="d-block fg-4 pb-1"><i class="icon-regular icon-arrow-line-down icon-width-auto me-1"></i>Oldest</small>
-													<%if (oldest) {%>
-														<span class="fw-light tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="<%-oldest.format('D MMM YYYY, HH:mm')%>"><%-oldest.fromNow()%></span>
-													<%} else {%>
-														<span class="fw-light">None</span>
-													<%}%>
+												<u-progress shadow="false" class="d-block">
+													<u-progress-bar width="<%=(networkMaxBytesPerSec > 0 ? _.min([(client.rx / networkMaxBytesPerSec) * 100, 100]) : 0)%>"></u-progress-bar>
+												</u-progress>
+											</div>
+											<div class="col-6">
+												<div class="d-flex align-items-center justify-content-between">
+													<small class="fg-4"><i class="icon-regular icon-arrow-up icon-fw me-1 fg-purple-500"></i>TX</small>
+													<small class="fw-light"><%=_.prettyBitRate(client.tx)%></small>
 												</div>
+												<u-progress shadow="false" class="d-block">
+													<u-progress-bar width="<%=(networkMaxBytesPerSec > 0 ? _.min([(client.tx / networkMaxBytesPerSec) * 100, 100]) : 0)%>"></u-progress-bar>
+												</u-progress>
 											</div>
 										</div>
 									</div>
@@ -211,6 +152,66 @@
 							<%})%>
 						</div>
 					</div>
+				</div>
+				<div class="detail-main">
+					<div class="nav nav-underline d-flex gap-0 border-bottom">
+						<button type="button" class="nav-link detail-facts-tab px-4 <%=(activeTab === 'overview' ? 'active border-primary fw-light' : '')%>" data-time-machine-tab="overview"><i class="icon-light icon-info icon-fw"></i>Overview</button>
+						<%if (!_.isEmpty(machines)) {%>
+							<button type="button" class="nav-link detail-default-tab px-4 <%=(activeTab === 'backups' ? 'active border-primary fw-light' : '')%>" data-time-machine-tab="backups"><i class="icon-light icon-laptop icon-fw"></i>Backups <small class="opacity-75"><%=_.size(machines)%></small></button>
+						<%}%>
+					</div>
+					<%if (!_.isEmpty(machines)) {%>
+						<div class="table-scroll overflow-y-scroll pe-5 mx-0 me--5 <%=(activeTab === 'backups' ? '' : 'detail-pane-off')%>">
+							<div class="list-group list-group-flush">
+								<%if (_.isEmpty(machines)) {%>
+									<div class="list-group-item pt-5 pb-7">
+										<small class="fg-4">No Mac has backed up here yet.</small>
+									</div>
+								<%}%>
+								<%_.each(machines, (machine) => {%>
+									<%
+										const moments = _.map(machine.snapshots, (snapshot) => { return moment(snapshot.createdAt); });
+										const latest = (_.isEmpty(moments) ? null : moment.max(moments));
+										const oldest = (_.isEmpty(moments) ? null : moment.min(moments));
+									%>
+									<div class="list-group-item pt-5 pb-7">
+										<div class="row g-3 align-items-center">
+											<div class="col-12">
+												<div class="d-flex align-items-center min-w-0">
+													<i class="icon-light icon-laptop icon-width-auto fg-4 me-3"></i>
+													<div class="text-truncate min-w-0"><%-_.replace(machine.name, /\.(sparsebundle|backupbundle)$/, '')%></div>
+													<u-badge color="gray" tint="050" class="flex-shrink-0 ms-3" pill>
+														<i class="icon-light icon-clock-counter-clockwise icon-fw"></i>
+														<%=_.pluralize('snapshot', _.size(machine.snapshots), true)%>
+													</u-badge>
+												</div>
+											</div>
+											<div class="col-12 md:col-6 lg:col-4 pt-3">
+												<div class="row g-3">
+													<div class="col-6">
+														<small class="d-block fg-4 pb-1"><i class="icon-regular icon-arrow-line-up icon-width-auto me-1"></i>Latest</small>
+														<%if (latest) {%>
+															<span class="fw-light tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="<%-latest.format('D MMM YYYY, HH:mm')%>"><%-latest.fromNow()%></span>
+														<%} else {%>
+															<span class="fw-light">None</span>
+														<%}%>
+													</div>
+													<div class="col-6">
+														<small class="d-block fg-4 pb-1"><i class="icon-regular icon-arrow-line-down icon-width-auto me-1"></i>Oldest</small>
+														<%if (oldest) {%>
+															<span class="fw-light tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="<%-oldest.format('D MMM YYYY, HH:mm')%>"><%-oldest.fromNow()%></span>
+														<%} else {%>
+															<span class="fw-light">None</span>
+														<%}%>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								<%})%>
+							</div>
+						</div>
+					<%}%>
 				</div>
 			</div>
 		</div>

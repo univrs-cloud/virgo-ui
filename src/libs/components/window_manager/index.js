@@ -112,7 +112,11 @@ export class WindowManager extends LitElement {
 	}
 
 	#layout = () => {
-		this.style.left = `${document.querySelector('main')?.getBoundingClientRect().left ?? 0}px`;
+		const rect = document.querySelector('main')?.getBoundingClientRect();
+		this.style.left = `${rect?.left ?? 0}px`;
+		this.style.top = `${Math.max(rect?.top ?? 0, 0)}px`;
+		this.style.right = `${Math.max(window.innerWidth - (rect?.right ?? window.innerWidth), 0)}px`;
+		this.style.bottom = `${Math.max(window.innerHeight - (rect?.bottom ?? window.innerHeight), 0)}px`;
 		if (this.available) {
 			this.windows.forEach((item) => { item.fit(); });
 		}
