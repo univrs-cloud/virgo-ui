@@ -1,10 +1,12 @@
 @use "sass:map";
 @use "bootstrap/scss/config" as *;
+@use "bootstrap/scss/layout/breakpoints" as *;
+@use "variables" as vars;
 
 ::selection {
 	color: #ffffff;
 	text-shadow: none;
-	background: #658ffc;
+	background: vars.$primary;
 }
 .otp-input::selection {
 	color: transparent;
@@ -35,7 +37,7 @@ body {
 	-moz-osx-font-smoothing: grayscale;
 	text-wrap: pretty;
 	background-color: var(--app-bg);
-	margin-bottom: 56px;
+	margin-bottom: 64px;
 	.dialog-open & {
 		overflow-y: hidden;
 		padding-right: var(--scrollbar-width, 0px);
@@ -43,7 +45,7 @@ body {
 			padding-right: var(--scrollbar-width, 0px) !important;
 		}
 	}
-	@media (min-width: 992px) {
+	@include media-breakpoint-up(lg) {
 		:root:has(u-window[maximized]:not([minimized], [closing])) & {
 			overflow-y: hidden;
 			padding-right: var(--scrollbar-width, 0px);
@@ -429,7 +431,7 @@ html:not(:has(head > base[href="/"])) {
 	}
 	> .row > .col-12 {
 		height: calc(100dvh - var(--chrome) - #{map.get($spacers, 5) * 2});
-		@media (min-width: 576px) {
+		@include media-breakpoint-up(sm) {
 			height: 824px;
 			max-height: calc(100dvh - var(--chrome) - #{map.get($spacers, 5) * 2});
 		}
@@ -440,11 +442,6 @@ html:not(:has(head > base[href="/"])) {
 	overflow: hidden;
 	display: -webkit-box;
 	-webkit-box-orient: vertical;
-	&.two-line {
-		min-height: 3rem;
-		line-clamp: 2;
-		-webkit-line-clamp: 2;
-	}
 	&.three-line {
 		min-height: 4.5rem;
 		line-clamp: 3;
@@ -452,7 +449,7 @@ html:not(:has(head > base[href="/"])) {
 	}
 }
 
-@media (max-width: 575px) {
+@include media-breakpoint-down(sm) {
 	header {
 		.navbar-brand {
 			font-weight: bold;
@@ -477,7 +474,7 @@ html:not(:has(head > base[href="/"])) {
 	}
 }
 
-@media (min-width: 576px) {
+@include media-breakpoint-up(sm) {
 	body {
 		--menu-width: 15rem;
 		margin-top: 3.5rem;

@@ -10,7 +10,7 @@
 		<%const [rxValue, rxUnit] = _.prettyBitRate(_.last(state.stats)?.rx || 0).split(' ')%>
 		<%const [txValue, txUnit] = _.prettyBitRate(_.last(state.stats)?.tx || 0).split(' ')%>
 		<div class="resource-chart" data-chart="network"></div>
-		<div class="resource-legend d-flex align-items-center justify-content-between gap-3 lh-1 fs-xs fg-4 text-nowrap">
+		<div class="resource-legend d-flex flex-wrap align-items-center justify-content-between column-gap-3 row-gap-1 lh-1 fs-xs fg-4 text-nowrap">
 			<span>
 				<i class="icon-regular icon-arrow-down icon-fw me-1 fg-blue-500"></i><%=rxValue%> <%=rxUnit%>
 			</span>

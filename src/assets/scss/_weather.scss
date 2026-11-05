@@ -139,3 +139,22 @@
 	--popover-border-color: var(--gray-900);
 	width: 350px;
 }
+
+#weather {
+	.card {
+		--card-bg: transparent;
+		&:hover,
+		&:focus-visible {
+			background-color: var(--bg-2);
+		}
+	}
+	.weather-icon {
+		width: 2.25rem;
+		height: 2.25rem;
+		svg {
+			display: block;
+			width: 100%;
+			height: 100%;
+		}
+	}
+}

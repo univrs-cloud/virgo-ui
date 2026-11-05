@@ -18,7 +18,7 @@ const CHARTS = {
 	},
 	memory: {
 		series: [
-			{ value: (sample) => { return Math.max((sample?.memory || 0) - (sample?.arc || 0), 0); }, label: 'In use', color: '--blue-500', alertColor: '--red-500' },
+			{ value: (sample) => { return Math.max((sample?.memory || 0) - (sample?.arc || 0), 0); }, label: 'RAM in use', color: '--blue-500', alertColor: '--red-500' },
 			{ key: 'arc', label: 'Cache', color: '--purple-500' }
 		],
 		stacked: true,

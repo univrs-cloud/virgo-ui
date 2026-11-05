@@ -1,3 +1,7 @@
+@use "sass:map";
+@use "bootstrap/scss/config" as *;
+@use "bootstrap/scss/layout/breakpoints" as *;
+
 #resources-monitor {
 	.resource-chart {
 		position: relative;
@@ -22,8 +26,104 @@
 		height: 66%;
 		cursor: ew-resize;
 	}
+	@include media-breakpoint-down(sm) {
+		.resources-toolbar .timeline {
+			width: 100%;
+		}
+		.resource-timeline-track {
+			flex: 1 1 auto;
+			width: auto;
+		}
+		.resource-timeline-label {
+			min-width: 6rem;
+		}
+	}
 }
 .uplot-tooltip {
 	z-index: 10000;
 	width: 10rem;
+}
+
+.status-band {
+	--resource-height: calc(9.8125rem + clamp(1.5rem, 1.1rem + .75vw, 1.75rem) + var(--border-width));
+	--resource-rows: 3;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: map.get($spacers, 5);
+	#resources-monitor > .card {
+		min-height: calc(var(--resource-height) * var(--resource-rows));
+	}
+	#peer .node {
+		min-height: 2.75rem;
+		@include media-breakpoint-down(sm) {
+			width: 100%;
+			grid-template-columns: auto minmax(0, 1fr) auto;
+			> :not(.node-info) {
+				grid-row: 1;
+				grid-column: 3;
+			}
+			> :is(.dropdown, u-button) {
+				margin-block: calc((1.5rem - var(--btn-input-sm-min-height)) / 2);
+			}
+			.node-addresses {
+				grid-column: 2;
+			}
+		}
+		&.adoptable {
+			--card-bg: transparent;
+			border-style: dashed;
+		}
+	}
+	#resources-monitor {
+		display: contents;
+	}
+	.resources-toolbar {
+		min-height: 1.5rem;
+		.list-group-item {
+			padding: 0;
+			border: 0;
+			background-color: transparent;
+		}
+		.timeline {
+			max-width: 100%;
+		}
+	}
+	.card-body {
+		overflow: hidden;
+		border-radius: inherit;
+	}
+	.list-group {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		margin: calc(var(--list-group-border-width) * -1) 0 0 calc(var(--list-group-border-width) * -1);
+		> .list-group-item {
+			min-height: var(--resource-height);
+			border-radius: 0;
+			background-color: transparent;
+			border-width: var(--list-group-border-width) 0 0 var(--list-group-border-width);
+			&.tint-yellow {
+				background-color: color-mix(in oklch, var(--yellow-500) 10%, transparent);
+			}
+			&.tint-orange {
+				background-color: color-mix(in oklch, var(--orange-500) 10%, transparent);
+			}
+			&.tint-red {
+				background-color: color-mix(in oklch, var(--red-500) 10%, transparent);
+			}
+		}
+	}
+	@include media-breakpoint-up(lg) {
+		--resource-rows: 2;
+		.list-group {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+	}
+	@include media-breakpoint-up(2xl) {
+		--resource-rows: 1;
+		.list-group {
+			grid-template-columns: none;
+			grid-auto-flow: column;
+			grid-auto-columns: minmax(0, 1fr);
+		}
+	}
 }

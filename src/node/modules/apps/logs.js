@@ -61,12 +61,16 @@ const restore = () => {
 	if (logs) {
 		logs.removeEventListener('scroll', shouldScrollEvent);
 	}
+	logsContainer.querySelector('ul')?.replaceChildren();
+	logsContainer.querySelector('.service .name').textContent = '';
+	setStatus('Connecting...');
 	logs = null;
 	containerId = null;
 	serviceName = '';
 	logsContainer = null;
 	isScrollEventAttached = false;
 	isDisconnected = false;
+	shouldScroll = true;
 };
 
 const reconnect = (event) => {

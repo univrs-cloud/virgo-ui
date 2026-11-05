@@ -1,27 +1,42 @@
 <%if (_.isEmpty(adopted) && _.isEmpty(available)) {%>
 	<%return ''%>
 <%}%>
-<div class="d-flex flex-wrap align-items-center gap-3 numeric-tabular">
-	<div class="node card border-0 mb-0 flex-row align-items-center gap-3 px-4">
-		<i class="icon-fill icon-circle icon-2xs icon-width-auto fg-green-400"></i>
-		<span class="fg-emphasis-secondary"><%-system?.osInfo?.hostname%></span>
-		<span class="d-inline-flex align-items-center gap-1 font-monospace fs-sm fg-4"><i class="icon-regular icon-network icon-fw"></i><%-_.find(_.reject(_.find(system?.networkInterfaces, { 'default': true })?.addrInfo, { local: system?.virtualIp?.address }), { family: 'inet' })?.local%></span>
-		<%if (system?.virtualIp?.holding) {%>
-			<span class="d-inline-flex align-items-center gap-1 font-monospace fs-sm fg-4"><i class="icon-regular icon-ghost icon-fw"></i><%-system?.virtualIp?.address%></span>
-		<%}%>
+<div class="d-flex sm:d-none align-items-center pb-3">
+	<u-badge color="gray" tint="100" pill>Nodes</u-badge>
+</div>
+<div class="node-list d-flex flex-wrap align-items-center gap-3 numeric-tabular">
+	<div class="node card border-0 mb-0 d-grid sm:d-flex flex-row align-items-center column-gap-3 row-gap-1 px-4 py-2">
+		<div class="node-info d-contents sm:d-flex flex-wrap flex-grow-1 align-items-center column-gap-3 row-gap-1">
+			<div class="d-contents sm:d-flex align-items-center gap-3">
+				<i class="icon-fill icon-circle icon-2xs icon-width-auto fg-green-400"></i>
+				<span class="fg-emphasis-secondary"><%-system?.osInfo?.hostname%></span>
+			</div>
+			<div class="node-addresses d-flex flex-column sm:flex-row sm:flex-wrap align-items-start sm:align-items-center column-gap-3 row-gap-1">
+				<span class="d-inline-flex align-items-center gap-1 font-monospace fs-sm fg-4"><i class="icon-regular icon-network icon-fw"></i><%-_.find(_.reject(_.find(system?.networkInterfaces, { 'default': true })?.addrInfo, { local: system?.virtualIp?.address }), { family: 'inet' })?.local%></span>
+				<%if (system?.virtualIp?.holding) {%>
+					<span class="d-inline-flex align-items-center gap-1 font-monospace fs-sm fg-4"><i class="icon-regular icon-ghost icon-fw"></i><%-system?.virtualIp?.address%></span>
+				<%}%>
+			</div>
+		</div>
 		<u-badge color="blue" tint="100">this node</u-badge>
 	</div>
 	<%_.each(adopted, (node) => {%>
 		<%const seen = _.find(discovered, { id: node?.id })%>
-		<div class="node card border-0 mb-0 flex-row align-items-center gap-3 ps-4 pe-2">
-			<i class="icon-fill icon-circle icon-2xs icon-width-auto <%=(seen ? 'fg-green-400' : 'fg-red-400')%>" data-bs-toggle="tooltip" data-bs-original-title="<%=(seen ? 'Online' : 'Offline')%>"></i>
-			<span class="fg-emphasis-secondary"><%-node?.name || 'unknown'%></span>
-			<span class="d-inline-flex align-items-center gap-1 font-monospace fs-sm fg-4"><i class="icon-regular icon-network icon-fw"></i><%-(seen?.address) || node?.address%></span>
-			<%if (seen?.holdsVirtualIp) {%>
-				<span class="d-inline-flex align-items-center gap-1 font-monospace fs-sm fg-4"><i class="icon-regular icon-ghost icon-fw"></i><%-seen.virtualIp%></span>
-			<%}%>
+		<div class="node card border-0 mb-0 d-grid sm:d-flex flex-row align-items-center column-gap-3 row-gap-1 ps-4 pe-2 py-2">
+			<div class="node-info d-contents sm:d-flex flex-wrap flex-grow-1 align-items-center column-gap-3 row-gap-1">
+				<div class="d-contents sm:d-flex align-items-center gap-3">
+					<i class="icon-fill icon-circle icon-2xs icon-width-auto <%=(seen ? 'fg-green-400' : 'fg-red-400')%>" data-bs-toggle="tooltip" data-bs-original-title="<%=(seen ? 'Online' : 'Offline')%>"></i>
+					<span class="fg-emphasis-secondary"><%-node?.name || 'unknown'%></span>
+				</div>
+				<div class="node-addresses d-flex flex-column sm:flex-row sm:flex-wrap align-items-start sm:align-items-center column-gap-3 row-gap-1">
+					<span class="d-inline-flex align-items-center gap-1 font-monospace fs-sm fg-4"><i class="icon-regular icon-network icon-fw"></i><%-(seen?.address) || node?.address%></span>
+					<%if (seen?.holdsVirtualIp) {%>
+						<span class="d-inline-flex align-items-center gap-1 font-monospace fs-sm fg-4"><i class="icon-regular icon-ghost icon-fw"></i><%-seen.virtualIp%></span>
+					<%}%>
+				</div>
+			</div>
 			<div class="dropdown">
-				<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i></span>
+				<span data-bs-toggle="menu" data-bs-placement="top-end sm:bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i></span>
 				<div class="menu" style="width: max-content;">
 					<%if (system?.virtualIp?.holding && seen) {%>
 						<a href="#" class="menu-item" data-action="handover" data-peer="<%-node.id%>"><i class="icon-fill icon-arrows-left-right icon-fw"></i>Hand over virtual IP</a>
@@ -36,13 +51,19 @@
 		</div>
 	<%})%>
 	<%_.each(available, (node) => {%>
-		<div class="node adoptable card mb-0 flex-row align-items-center gap-3 ps-4 pe-2">
-			<i class="icon-regular icon-circle-dashed icon-xs icon-width-auto fg-4"></i>
-			<span class="fg-emphasis-secondary"><%-node?.name || 'unknown'%></span>
-			<span class="d-inline-flex align-items-center gap-1 font-monospace fs-sm fg-4"><i class="icon-regular icon-network icon-fw"></i><%-node?.address%></span>
-			<%if (node?.holdsVirtualIp) {%>
-				<span class="d-inline-flex align-items-center gap-1 font-monospace fs-sm fg-4"><i class="icon-regular icon-ghost icon-fw"></i><%-node.virtualIp%></span>
-			<%}%>
+		<div class="node adoptable card mb-0 d-grid sm:d-flex flex-row align-items-center column-gap-3 row-gap-1 ps-4 pe-2 py-2">
+			<div class="node-info d-contents sm:d-flex flex-wrap flex-grow-1 align-items-center column-gap-3 row-gap-1">
+				<div class="d-contents sm:d-flex align-items-center gap-3">
+					<i class="icon-regular icon-circle-dashed icon-xs icon-width-auto fg-4"></i>
+					<span class="fg-emphasis-secondary"><%-node?.name || 'unknown'%></span>
+				</div>
+				<div class="node-addresses d-flex flex-column sm:flex-row sm:flex-wrap align-items-start sm:align-items-center column-gap-3 row-gap-1">
+					<span class="d-inline-flex align-items-center gap-1 font-monospace fs-sm fg-4"><i class="icon-regular icon-network icon-fw"></i><%-node?.address%></span>
+					<%if (node?.holdsVirtualIp) {%>
+						<span class="d-inline-flex align-items-center gap-1 font-monospace fs-sm fg-4"><i class="icon-regular icon-ghost icon-fw"></i><%-node.virtualIp%></span>
+					<%}%>
+				</div>
+			</div>
 			<u-button color="blue" size="sm" data-action="adopt" data-peer="<%-node?.id%>" <%=(!isVirtualIpConfigured ? 'tip="To adopt another node a <u>virtual IP</u> must be configured.<br>It can be configured on <strong>System > Network > Interface</strong>." disabled' : (!system?.virtualIp?.holding ? 'tip="Only the virtual IP holder can adopt another node." disabled' : ''))%>>Adopt</u-button>
 		</div>
 	<%})%>

@@ -104,6 +104,7 @@
 );
 
 @use "bootstrap/scss/mixins/color-mode" as *;
+@use "bootstrap/scss/layout/breakpoints" as *;
 
 @layer vendor {
 	// --------
@@ -160,7 +161,7 @@
 	scrollbar-gutter: auto;
 }
 
-@media (min-width: 992px) {
+@include media-breakpoint-up(lg) {
 	:root:has(u-window[maximized]:not([minimized], [closing])) {
 		scrollbar-gutter: auto;
 	}
@@ -170,7 +171,7 @@
 	scrollbar-gutter: auto;
 }
 
-@media (min-width: 576px) {
+@include media-breakpoint-up(sm) {
 	:root:has(header nav) {
 		scrollbar-gutter: auto;
 	}
