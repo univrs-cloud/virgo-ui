@@ -106,6 +106,7 @@ u-badge:hover .hover-reveal-text {
 }
 
 .dialog {
+	--form-floating-label-surface: var(--dialog-bg);
 	--dialog-border-width: 0;
 	--dialog-header-border-width: 0;
 	--dialog-footer-border-width: 0;

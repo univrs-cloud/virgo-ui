@@ -12,9 +12,7 @@ input:-webkit-autofill:focus {
 	-webkit-appearance: searchfield-cancel-button;
 }
 textarea {
-	box-sizing: content-box;
-	width: calc(100% - 2 * var(--btn-input-padding-x) + var(--border-width)) !important;
-	height: 3lh;
+	height: calc(3lh + var(--form-floating-input-padding-t, 0px) + var(--textarea-label-offset, 0px) + var(--form-floating-input-padding-b, 0px) + var(--border-width) * 2);
 }
 
 .form-text,
@@ -36,18 +34,15 @@ textarea {
 }
 
 .form-floating {
-	&:not(.form-control:disabled)::before {
-		display: none;
+	--textarea-label-offset: calc((var(--form-floating-height) - var(--form-floating-input-padding-t) - var(--form-floating-input-padding-b) - var(--border-width) * 2 - var(--form-floating-line-height) * var(--btn-input-font-size)) / 2);
+	> textarea:is(:focus, :not(:placeholder-shown)) {
+		padding-top: calc(var(--form-floating-input-padding-t) + var(--textarea-label-offset));
 	}
 	label {
 		transition: transform .1s ease-in-out;
 		.help-inline {
 			pointer-events: all;
 		}
-	}
-	> label:has(~ :disabled),
-	> label:has(~ .form-control[readonly]) {
-		background-color: transparent !important;
 	}
 	> .form-adorn:not(:focus-within):has(.form-ghost:placeholder-shown) {
 		padding-top: var(--form-floating-padding-y);
@@ -58,6 +53,19 @@ textarea {
 	}
 	> label:has(~ .form-adorn:not(:focus-within) .form-ghost:placeholder-shown) {
 		transform: none;
+	}
+	&:has(> textarea:not(:disabled, [readonly]):is(:focus, :not(:placeholder-shown)))::before {
+		content: "";
+		position: absolute;
+		z-index: 1;
+		top: var(--border-width);
+		left: var(--border-width);
+		right: calc(var(--border-width) + 1rem);
+		height: calc(var(--form-floating-input-padding-t) + var(--textarea-label-offset));
+		background-color: var(--form-floating-label-surface, var(--bg-body));
+		background-image: linear-gradient(var(--btn-input-bg), var(--btn-input-bg));
+		border-top-left-radius: var(--btn-input-border-radius);
+		pointer-events: none;
 	}
 	> label:has(~ input.form-control:placeholder-shown:not(:focus)),
 	> label:has(~ .form-adorn:not(:focus-within) .form-ghost:placeholder-shown) {
@@ -75,8 +83,6 @@ textarea {
 	> label:has(~ .form-control:not(:placeholder-shown)):not(:has(~ .form-adorn:not(:focus-within) .form-ghost:placeholder-shown)) {
 		opacity: 1;
 		color: var(--fg-4);
-		background-color: var(--btn-input-bg);
-		border-radius: var(--radius-5);
 	}
 	.form-control {
 		&:focus::placeholder {

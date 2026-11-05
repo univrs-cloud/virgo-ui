@@ -99,7 +99,9 @@
 		--btn-disabled-bg: transparent
 	),
 	$form-floating-tokens: (
-		--form-floating-label-opacity: 65%
+		--form-floating-label-opacity: 65%,
+		--form-floating-label-bg: transparent,
+		--form-floating-label-disabled-bg: transparent
 	),
 	$card-tokens: (
 		--card-bg: var(--surface-card),
