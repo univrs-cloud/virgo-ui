@@ -17,7 +17,7 @@
 				<div class="card-image-row-title d-flex align-items-center mb--2 ps-1 min-w-0">
 					<div class="text-truncate min-w-0"><%-app.title%></div>
 					<%if (app.isUnmanaged) {%>
-						<u-badge color="gray" tint="050" class="ms-3" pill>Unmanaged</u-badge>
+						<u-badge color="gray" tint="100" class="ms-3" pill>Unmanaged</u-badge>
 					<%}%>
 					<%if (app.hasUpdates) {%>
 						<u-badge color="green" class="ms-3" tip="Updates available" pill>
@@ -316,7 +316,7 @@
 													<%if (!_.isEmpty(container.urls)) {%>
 														<div class="d-flex flex-wrap align-items-center gap-1 mt-1">
 															<%_.each(container.urls, (url) => {%>
-																<u-badge color="blue" tint="050" pill>
+																<u-badge color="blue" tint="100" pill>
 																	<a href="<%-url%>" target="<%-(app?.target || app.name)%>" referrerpolicy="no-referrer" class="d-inline-flex align-items-center underline-0 hover:underline-80">
 																		<i class="icon-light icon-globe icon-fw me-1"></i><span class="d-inline-block text-truncate" style="max-width: 14rem;"><%-_.replace(url, /^https?:\/\//, '')%></span><i class="icon-regular icon-arrow-square-out icon-fw icon-2xs ms-1"></i>
 																	</a>

@@ -19,7 +19,7 @@
 %>
 <%
 	let temperatureColor = 'gray';
-	let temperatureTint = '050';
+	let temperatureTint = '100';
 	if (drive?.temperature >= drive?.temperatureWarningThreshold) {
 		temperatureColor = 'yellow';
 		temperatureTint = '100';
@@ -42,7 +42,7 @@
 			<i class="icon-regular icon-arrows-clockwise icon-xs icon-fw lh-1 fg-blue-400 ms-3 flex-shrink-0 <%=(activity === 'awaiting' ? '' : 'icon-spin')%>" data-bs-toggle="tooltip" data-bs-original-title="<%-{ resilvering: 'Resilvering', repairing: 'Repairing', awaiting: 'Awaiting resilver' }[activity]%>"></i>
 		<%}%>
 		<%if (size) {%>
-			<u-badge color="gray" tint="050" class="ms-3 flex-shrink-0" pill><small><%=prettyBytes(size, { binary: true })%></small></u-badge>
+			<u-badge color="gray" tint="100" class="ms-3 flex-shrink-0" pill><small><%=prettyBytes(size, { binary: true })%></small></u-badge>
 		<%}%>
 		<%if (errors > 0) {%>
 			<u-badge color="red" tint="100" class="ms-3 flex-shrink-0" tip="Errors: <%-errorsTip%>" pill><small><%-readErrors%> / <%-writeErrors%> / <%-checksumErrors%></small></u-badge>

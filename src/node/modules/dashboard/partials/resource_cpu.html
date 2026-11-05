@@ -5,14 +5,14 @@
 				<i class="icon-regular icon-cpu icon-fw me-1 fg-gray-300"></i>CPU
 			</h5>
 			<%if (state.cpuSensors) {%>
-				<u-badge color="gray" tint="050" class="me-1" pill>
-					<i class="icon-regular icon-thermometer-simple icon-fw fg-gray-300"></i>
+				<u-badge color="gray" tint="100" class="me-1" pill>
+					<i class="icon-regular icon-thermometer-simple icon-fw"></i>
 					<%=state.cpuSensors.temperature?.main?.toFixed(0)%> °C
 				</u-badge>
 			<%}%>
 			<%if (state.cpuSensors?.fan) {%>
-				<u-badge color="gray" tint="050" class="me-1" pill>
-					<i class="icon-fill icon-fan icon-fw fg-gray-300"></i>
+				<u-badge color="gray" tint="100" class="me-1" pill>
+					<i class="icon-fill icon-fan icon-fw"></i>
 					<%=state.cpuSensors.fan%> rpm
 				</u-badge>
 			<%}%>
