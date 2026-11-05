@@ -1,20 +1,21 @@
 #resources-monitor {
 	.resource-chart {
-		height: 90px;
+		position: relative;
+		flex: 1 1 0;
+		min-height: 80px;
+		> .uplot {
+			position: absolute;
+			inset: 0;
+		}
+	}
+	.resource-legend {
+		min-height: 0.75rem;
 	}
 	.resource-timeline-track {
-		height: 1.2rem;
+		flex: none;
+		width: min(18rem, 50vw);
+		height: 0.875rem;
 		touch-action: none;
-	}
-	.resource-timeline-tick {
-		width: 1px;
-		height: 50%;
-	}
-	.resource-rate {
-		min-width: 7ch;
-	}
-	.resource-unit {
-		min-width: 5ch;
 	}
 	.resource-timeline-handle {
 		width: 4px;

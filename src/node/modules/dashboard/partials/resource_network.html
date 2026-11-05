@@ -1,23 +1,22 @@
-<li class="list-group-item network py-5">
-	<h5 class="fg-body mb-0">
-		<i class="icon-regular icon-network icon-fw me-1 fg-gray-300"></i>Network
-		<small class="fg-emphasis-secondary"> &middot; <%-_.find(state.system?.networkInterfaces, { default: true })?.ifname%> &middot; <%=_.prettyBitRate((_.find(state.system?.networkInterfaces, { default: true })?.speed || 0) * 1000 * 1000 / 8, { minimumFractionDigits: 0 })%></small>
-	</h5>
+<%const networkInterface = _.find(state.system?.networkInterfaces, { default: true })%>
+<li class="list-group-item network numeric-tabular d-flex flex-column gap-2 px-4 pt-4 pb-3">
+	<div class="d-flex align-items-center justify-content-between gap-2 fs-sm fg-4">
+		<span>Network</span>
+		<span class="text-truncate"><%-networkInterface?.ifname%> &middot; <%=_.prettyBitRate((networkInterface?.speed || 0) * 1000 * 1000 / 8, { minimumFractionDigits: 0 })%></span>
+	</div>
 	<%if (state.stats === null) {%>
 		<div class="spinner-border spinner-sm fg-gray-600"></div>
 	<%} else {%>
-		<div class="resource-chart" data-chart="network"></div>
 		<%const [rxValue, rxUnit] = _.prettyBitRate(_.last(state.stats)?.rx || 0).split(' ')%>
 		<%const [txValue, txUnit] = _.prettyBitRate(_.last(state.stats)?.tx || 0).split(' ')%>
-		<div class="d-flex justify-content-between lh-1 numeric-tabular fg-4 mt-1">
-			<div class="d-flex align-items-center fs-xs">
-				<i class="icon-regular icon-arrow-down icon-fw fg-blue-500"></i>RX
-				<span class="resource-rate d-inline-block text-end ms-1"><%=rxValue%></span><span class="resource-unit d-inline-block ms-1"><%=rxUnit%></span>
-			</div>
-			<div class="d-flex align-items-center fs-xs">
-				<i class="icon-regular icon-arrow-up icon-fw fg-purple-500"></i>TX
-				<span class="resource-rate d-inline-block text-end ms-1"><%=txValue%></span><span class="resource-unit d-inline-block ms-1"><%=txUnit%></span>
-			</div>
+		<div class="resource-chart" data-chart="network"></div>
+		<div class="resource-legend d-flex align-items-center justify-content-between gap-3 lh-1 fs-xs fg-4 text-nowrap">
+			<span>
+				<i class="icon-regular icon-arrow-down icon-fw me-1 fg-blue-500"></i><%=rxValue%> <%=rxUnit%>
+			</span>
+			<span>
+				<i class="icon-regular icon-arrow-up icon-fw me-1 fg-purple-500"></i><%=txValue%> <%=txUnit%>
+			</span>
 		</div>
 	<%}%>
 </li>

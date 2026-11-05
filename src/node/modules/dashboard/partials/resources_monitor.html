@@ -1,15 +1,17 @@
 <div id="resources-monitor">
-	<div class="card border-0">
+	<ul class="resources-toolbar list-unstyled d-flex flex-wrap align-items-center justify-content-between gap-6 m-0">
+		<%=timeline%>
+		<%=time%>
+	</ul>
+	<div class="card border-0 mt--3 mb-0">
 		<div class="card-body p-0">
 			<ul class="list-group list-group-flush rounded-9 mb-0">
-				<%=timeline%>
 				<%=cpu%>
 				<%=memory%>
 				<%=network%>
 				<%=storageSystem%>
 				<%=storageData%>
 				<%=ups%>
-				<%=time%>
 			</ul>
 		</div>
 	</div>

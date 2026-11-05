@@ -16,6 +16,10 @@ $gray-dark-stops: ("025": "950", "050": "900", "100": "800", "200": "700", "300"
 		color: light-dark(var(--black), var(--white));
 		background-color: light-dark(var(--gray-#{$stop}), var(--gray-#{$dark-stop}));
 	}
+	.badge.bd-blue-#{$stop} {
+		color: light-dark(var(--blue-800), var(--blue-300));
+		background-color: light-dark(var(--blue-#{$stop}), var(--blue-#{$dark-stop}));
+	}
 }
 
 .bd-white { color: var(--black); background-color: var(--white); }

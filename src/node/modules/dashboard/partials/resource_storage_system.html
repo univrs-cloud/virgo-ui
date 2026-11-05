@@ -1,21 +1,69 @@
 <%const pool = (state.storage === false ? false : _.find(state.storage, (pool) => { return pool.name === 'system'; }))%>
-<li class="list-group-item storage-system py-5">
-	<h5 class="fg-body mb-0">
-		<i class="icon-regular icon-sim-card icon-fw me-1 fg-gray-300"></i>VirgoOS
-	</h5>
+<li class="list-group-item storage-system numeric-tabular d-flex flex-column gap-2 px-4 pt-4 pb-3">
+	<%const flaggedDrives = []%>
+	<%_.each(_.filter(state.drives, 'system'), (drive) => {%>
+		<%let color = ''%>
+		<%if (drive.temperature >= drive.temperatureWarningThreshold && drive.temperature < drive.temperatureCriticalThreshold) {%>
+			<%color = 'yellow'%>
+		<%}%>
+		<%if (drive.temperature >= drive.temperatureCriticalThreshold) {%>
+			<%color = 'red'%>
+		<%}%>
+		<%if (drive.health?.status === 'warning' && color !== 'red') {%>
+			<%color = 'orange'%>
+		<%}%>
+		<%if (drive.health?.status === 'critical') {%>
+			<%color = 'red'%>
+		<%}%>
+		<%if (color) {%>
+			<%flaggedDrives.push({ name: _.last(drive.name.split('/')), temperature: drive.temperature, temperatureLevel: (drive.temperature >= drive.temperatureCriticalThreshold ? 'critical' : (drive.temperature >= drive.temperatureWarningThreshold ? 'warning' : null)), healthStatus: _.toLower(drive.health?.status), message: drive.health?.message, color })%>
+		<%}%>
+	<%})%>
+	<div class="d-flex align-items-center justify-content-between gap-2 fs-sm fg-4">
+		<span>VirgoOS</span>
+		<%if (!_.isEmpty(flaggedDrives)) {%>
+			<%const worstColor = (_.some(flaggedDrives, { color: 'red' }) ? 'red' : (_.some(flaggedDrives, { color: 'orange' }) ? 'orange' : 'yellow'))%>
+			<%
+				const tipGroup = (title, lines) => { return (_.isEmpty(lines) ? '' : `<div class='mt-1'><div class='small opacity-75'>${title}</div>${_.join(lines, '<br>')}</div>`); };
+				const tipLine = (color, drive, detail) => { return `<span class='fg-${color}-400'>${_.escape(drive.name)} · ${detail}</span>`; };
+				const drivesTip = `<div class='text-start'>${_.join([
+					tipGroup('Temperature', [
+						..._.map(_.filter(flaggedDrives, { temperatureLevel: 'critical' }), (drive) => { return tipLine('red', drive, `${drive.temperature} °C`); }),
+						..._.map(_.filter(flaggedDrives, { temperatureLevel: 'warning' }), (drive) => { return tipLine('yellow', drive, `${drive.temperature} °C`); })
+					]),
+					tipGroup('SMART', [
+						..._.map(_.filter(flaggedDrives, { healthStatus: 'critical' }), (drive) => { return tipLine('red', drive, _.escape(drive.message || 'critical')); }),
+						..._.map(_.filter(flaggedDrives, { healthStatus: 'warning' }), (drive) => { return tipLine('orange', drive, _.escape(drive.message || 'warning')); })
+					])
+				], '')}</div>`;
+			%>
+			<%if (isAdmin) {%>
+				<a href="/storage" class="underline-0" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="<%=drivesTip%>">
+					<u-badge color="<%=worstColor%>" tint="100">
+						<small><i class="icon-regular icon-hard-drive icon-fw me-1"></i><%=_.size(flaggedDrives)%></small>
+					</u-badge>
+				</a>
+			<%} else {%>
+				<span data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="<%=drivesTip%>">
+					<u-badge color="<%=worstColor%>" tint="100">
+						<small><i class="icon-regular icon-hard-drive icon-fw me-1"></i><%=_.size(flaggedDrives)%></small>
+					</u-badge>
+				</span>
+			<%}%>
+		<%}%>
+	</div>
 	<%if (state.storage === null) {%>
 		<div class="spinner-border spinner-sm fg-gray-600"></div>
 	<%} else if (pool === false) {%>
 		<span class="fg-red-300">Error fetching data</span>
 	<%} else {%>
-		<div class="text-end mt--5 mb-1">
-			<small class="fw-light fg-4"><%=pool.properties.capacity.value?.toFixed(0)%>%</small>
-			<u-progress>
-				<u-progress-bar width="<%=pool.properties.capacity.value%>"></u-progress-bar>
-			</u-progress>
-		</div>
-		<div class="lh-1 fg-4 mt-1">
-			<span class="fs-xs"><strong class="fw-semibold"><%=prettyBytes(pool.properties.allocated.value || 0, { binary: true })%></strong> used from <%=prettyBytes(pool.properties.size.value || 0, { binary: true })%></span>
+		<%const capacity = (pool.properties.capacity.value ?? 0)%>
+		<div class="fs-xl fw-medium lh-1 text-nowrap <%=(capacity >= 90 ? 'fg-red-400' : (capacity >= 80 ? 'fg-orange-400' : ''))%>"><%=capacity.toFixed(0)%><span class="fs-sm fg-4">%</span></div>
+		<u-progress class="mt-auto">
+			<u-progress-bar width="<%=capacity%>"></u-progress-bar>
+		</u-progress>
+		<div class="resource-legend d-flex align-items-center">
+			<div class="lh-1 fs-xs fg-4 text-nowrap"><%=prettyBytes(pool.properties.allocated.value || 0, { binary: true })%> / <%=prettyBytes(pool.properties.size.value || 0, { binary: true })%></div>
 		</div>
 	<%}%>
 </li>

@@ -5,7 +5,7 @@ const HISTORY_MS = 60 * 60 * 1000;
 const DEFAULT_WINDOW_MS = 10 * 60 * 1000;
 const MINIMUM_WINDOW_MS = 60 * 1000;
 const SAMPLE_INTERVAL_MS = 1000;
-const CHART_HEIGHT = 90;
+const CHART_HEIGHT = 80;
 const FRAMES_PER_SECOND = 10;
 const LIVE_SNAP_PX = 4;
 const HANDLE_HIT_PX = 8;
@@ -61,6 +61,10 @@ const getComputedColor = (cssVariableName) => {
 
 const getElementWidth = (element) => {
 	return Math.max(1, element.offsetWidth || element.clientWidth);
+};
+
+const getElementHeight = (element) => {
+	return Math.max(CHART_HEIGHT, element.offsetHeight || element.clientHeight);
 };
 
 const getNow = () => {
@@ -245,7 +249,7 @@ const createChart = (name, element) => {
 	const lines = makeSeries(CHARTS[name].series);
 	return new uPlot({
 		width: getElementWidth(element),
-		height: CHART_HEIGHT,
+		height: getElementHeight(element),
 		pxAlign: 0,
 		ms: 1,
 		plugins: [
@@ -445,8 +449,9 @@ const resizeObserver = new ResizeObserver(() => {
 	let isResized = false;
 	_.each(charts, (chart) => {
 		const width = getElementWidth(chart.root.parentElement);
-		if (width !== chart.width) {
-			chart.setSize({ width, height: CHART_HEIGHT });
+		const height = getElementHeight(chart.root.parentElement);
+		if (width !== chart.width || height !== chart.height) {
+			chart.setSize({ width, height });
 			isResized = true;
 		}
 	});

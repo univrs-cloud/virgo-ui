@@ -1,3 +1,4 @@
+import page from 'page';
 import resourcesMonitorPartial from 'node/modules/dashboard/partials/resources_monitor.html';
 import resourceCpuPartial from 'node/modules/dashboard/partials/resource_cpu.html';
 import resourceMemoryPartial from 'node/modules/dashboard/partials/resource_memory.html';
@@ -70,4 +71,16 @@ const render = (state) => {
 	});
 };
 
+const openStorage = async (event) => {
+	const link = event.target.closest('a[href="/storage"]');
+	if (!link || !container.contains(link)) {
+		return;
+	}
+
+	event.preventDefault();
+	await bootstrap.Tooltip.getInstance(link)?.hide();
+	page(link.getAttribute('href'));
+};
+
+container.addEventListener('click', openStorage);
 resourceMonitorService.subscribe([render]);

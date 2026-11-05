@@ -1,10 +1,8 @@
-<li class="list-group-item memory py-5">
-	<div class="d-flex align-items-center justify-content-between">
-		<h5 class="fg-body mb-0">
-			<i class="icon-regular icon-memory icon-fw me-1 fg-gray-300"></i>RAM
-		</h5>
-		<%if (state.stats !== null && state.memory) {%>
-			<small class="fw-light fg-4"><%=((Math.max((_.last(state.stats)?.memory || 0) - (_.last(state.stats)?.arc || 0), 0) / state.memory.total) * 100).toFixed(0)%>%</small>
+<li class="list-group-item memory numeric-tabular d-flex flex-column gap-2 px-4 pt-4 pb-3">
+	<div class="d-flex align-items-center justify-content-between gap-2 fs-sm fg-4">
+		<span>RAM</span>
+		<%if (state.arc?.hits + state.arc?.misses > 0) {%>
+			<span class="tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="Reads of files and folders served<br>from memory instead of the drives.<br><br>Higher is better."><%=Math.floor((state.arc.hits / (state.arc.hits + state.arc.misses)) * 100)%>% cache hit</span>
 		<%}%>
 	</div>
 	<%if (state.stats === null || state.memory === null) {%>
@@ -12,33 +10,17 @@
 	<%} else if (state.memory === false) {%>
 		<span class="fg-red-300">Error fetching data</span>
 	<%} else {%>
-		<div class="resource-chart" data-chart="memory"></div>
+		<%const inUse = Math.max((_.last(state.stats)?.memory || 0) - (_.last(state.stats)?.arc || 0), 0)%>
 		<%const totalExponent = Math.max(Math.floor(Math.log(state.memory.total || 1) / Math.log(1024)), 0)%>
 		<%const cacheMaxExponent = Math.max(Math.floor(Math.log(state.arc?.max || 1) / Math.log(1024)), 0)%>
-		<div class="d-flex justify-content-between gap-3 lh-1 numeric-tabular text-nowrap fg-4 mt-1">
-			<div class="d-flex">
-				<i class="icon-fill icon-circle icon-fw fs-xs me-1 fg-blue-500"></i>
-				<div>
-					<div class="fs-xs mb-1">In use</div>
-					<span class="fs-xs"><strong class="fw-semibold"><%=(Math.floor((Math.max((_.last(state.stats)?.memory || 0) - (_.last(state.stats)?.arc || 0), 0) / 1024 ** totalExponent) * 100) / 100).toFixed(2)%></strong> / <%=prettyBytes(state.memory.total || 0, { binary: true, minimumFractionDigits: 2, maximumFractionDigits: 2 })%></span>
-				</div>
-			</div>
-			<div class="d-flex">
-				<i class="icon-fill icon-circle icon-fw fs-xs me-1 fg-purple-500"></i>
-				<div>
-					<div class="fs-xs mb-1">
-						<span class="tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="ZFS ARC.<br>Gives memory back when apps need it.">Cache</span>
-						<%if (state.arc?.hits + state.arc?.misses > 0) {%>
-							- <span class="tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="Reads of files and folders served<br>from memory instead of the drives.<br><br>Higher is better."><%=(Math.floor((state.arc.hits / (state.arc.hits + state.arc.misses)) * 10000) / 100).toFixed(2)%>% hit</span>
-						<%}%>
-					</div>
-					<%if (state.arc?.max) {%>
-						<span class="fs-xs"><strong class="fw-semibold"><%=(Math.floor(((_.last(state.stats)?.arc || 0) / 1024 ** cacheMaxExponent) * 100) / 100).toFixed(2)%></strong> / <span class="tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="Limit set in Settings, RAM cache."><%=prettyBytes(state.arc.max, { binary: true })%></span></span>
-					<%} else {%>
-						<span class="fs-xs"><strong class="fw-semibold"><%=prettyBytes(_.last(state.stats)?.arc || 0, { binary: true, minimumFractionDigits: 2, maximumFractionDigits: 2 })%></strong></span>
-					<%}%>
-				</div>
-			</div>
+		<%const memoryUsage = ((inUse / state.memory.total) * 100)%>
+		<div class="fs-xl fw-medium lh-1 text-nowrap <%=(memoryUsage >= 90 ? 'fg-red-400' : (memoryUsage >= 80 ? 'fg-orange-400' : ''))%>"><%=memoryUsage.toFixed(0)%><span class="fs-sm fg-4">%</span></div>
+		<div class="resource-chart" data-chart="memory"></div>
+		<%const inUseLabel = `${(Math.floor((inUse / 1024 ** totalExponent) * 100) / 100).toFixed(2)} / ${prettyBytes(state.memory.total || 0, { binary: true, minimumFractionDigits: 2, maximumFractionDigits: 2 })}`%>
+		<%const cacheLabel = (state.arc?.max ? `${(Math.floor(((_.last(state.stats)?.arc || 0) / 1024 ** cacheMaxExponent) * 100) / 100).toFixed(2)} / ${prettyBytes(state.arc.max, { binary: true })}` : prettyBytes(_.last(state.stats)?.arc || 0, { binary: true, minimumFractionDigits: 2, maximumFractionDigits: 2 }))%>
+		<div class="resource-legend d-flex align-items-center justify-content-between gap-3 lh-1 fs-xs fg-4 text-nowrap">
+			<span data-bs-toggle="tooltip" data-bs-original-title="<%=inUseLabel%>"><i class="icon-fill icon-circle icon-2xs icon-fw me-1 fg-blue-500"></i><span class="tooltip-hint">In use</span></span>
+			<span data-bs-toggle="tooltip" data-bs-original-title="ZFS ARC<br>Gives memory back when apps need it.<%=(state.arc?.max ? '<br>Limit set in Settings, RAM cache.' : '')%><br><br><%=cacheLabel%>"><i class="icon-fill icon-circle icon-2xs icon-fw me-1 fg-purple-500"></i><span class="tooltip-hint">Cache</span></span>
 		</div>
 	<%}%>
 </li>

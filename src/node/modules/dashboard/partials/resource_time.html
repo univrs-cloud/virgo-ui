@@ -1,11 +1,11 @@
-<li class="list-group-item time py-5">
+<li class="list-group-item time">
 	<%if (state.time === null) {%>
 		<div class="spinner-border spinner-sm fg-gray-600"></div>
 	<%} else if (state.time === false) {%>
 		<span class="fg-red-300">Error fetching data</span>
 	<%} else {%>
-		<small class="fg-4">
-			<i class="icon-regular icon-timer icon-fw me-1 fg-gray-300"></i>Uptime: <%=prettyMilliseconds(state.time.uptime * 1000, { secondsDecimalDigits: 0 })%>
+		<small class="fg-4 text-nowrap">
+			Uptime: <%=prettyMilliseconds(state.time.uptime * 1000, { secondsDecimalDigits: 0 })%>
 		</small>
 	<%}%>
 </li>
