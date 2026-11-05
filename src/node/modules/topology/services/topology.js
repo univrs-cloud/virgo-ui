@@ -191,9 +191,9 @@ function composeProxied(configured) {
 	);
 }
 
-function composeShares(shares, isTimeMachine) {
+function composeShares(shares, isBackupDisk) {
 	return _.orderBy(
-		_.map(_.filter(shares, { isTimeMachine }), (share) => {
+		_.map(_.filter(shares, { isBackupDisk }), (share) => {
 			return {
 				name: share.name,
 				title: share.comment || share.name,
@@ -299,7 +299,7 @@ function composeTopology(configured, containers, shares, peers, discovery, clien
 		published: _.filter(unrouted, (stack) => { return !_.isEmpty(stack.ports) || stack.isHostNetwork; }),
 		internal: _.filter(unrouted, (stack) => { return _.isEmpty(stack.ports) && !stack.isHostNetwork; }),
 		folders: composeShares(shares, false),
-		timeMachines: composeShares(shares, true),
+		backupDisks: composeShares(shares, true),
 		nodes: composeNodes(peers, discovery),
 		clients: composeClients(clients, system)
 	};

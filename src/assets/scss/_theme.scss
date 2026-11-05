@@ -2,8 +2,8 @@
 @use "bootstrap/scss/config" as *;
 @use "bootstrap/scss/layout/breakpoints" as *;
 
-$list-pages: "#apps, #shortcuts, #folders, #time-machines, #users, #storage, #system-services, #topology";
-$detail-pages: "#apps, #folders, #time-machines, #users, #storage, #system-services";
+$list-pages: "#apps, #shortcuts, #folders, #time-capsule, #users, #storage, #system-services, #topology";
+$detail-pages: "#apps, #folders, #time-capsule, #users, #storage, #system-services";
 
 @mixin fill-column {
 	display: flex;

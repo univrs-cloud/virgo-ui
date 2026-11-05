@@ -1,6 +1,6 @@
 <%
 	const isSharesExpanded = expanded.has('shares');
-	const sharesTraffic = _.map(_.concat(topology.folders, topology.timeMachines), (share) => { return `smbshare:${_.toLower(share.name)}`; }).join(' ');
+	const sharesTraffic = _.map(_.concat(topology.folders, topology.backupDisks), (share) => { return `smbshare:${_.toLower(share.name)}`; }).join(' ');
 %>
 <li class="topology-edge-primary topology-edge-dashed" data-traffic-subtree="<%-sharesTraffic%>" data-traffic-relay data-sharing>
 	<div class="topology-node">
@@ -18,7 +18,7 @@
 			<%_.each(topology.folders, (share) => {%>
 				<%=shareTemplate({ share, icon: 'icon-folder' })%>
 			<%})%>
-			<%_.each(topology.timeMachines, (share) => {%>
+			<%_.each(topology.backupDisks, (share) => {%>
 				<%=shareTemplate({ share, icon: 'icon-clock-counter-clockwise' })%>
 			<%})%>
 		</ul>

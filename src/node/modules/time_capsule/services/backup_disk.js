@@ -26,42 +26,42 @@ const { subscribe } = createSubscription({
 		}
 	],
 	filters: {
-		jobs: isTimeMachinesJob
+		jobs: isBackupDisksJob
 	},
 	attachStore: storeAttach.beforeCallbacks,
 	mapState: (properties) => {
-		const timeMachines = composeTimeMachines(properties?.shares, properties?.clients);
+		const backupDisks = composeBackupDisks(properties?.shares, properties?.clients);
 		const networkInterface = _.find(properties?.system?.networkInterfaces, { default: true });
 		return {
-			timeMachines,
+			backupDisks,
 			networkInterface,
 			jobs: properties?.jobs || []
 		};
 	}
 });
 
-function isTimeMachinesJob(job) {
+function isBackupDisksJob(job) {
 	return _.startsWith(job?.name, 'share');
 }
 
-function composeTimeMachines(shares, clients) {
-	const timeMachines = filterTimeMachines(shares);
-	if (_.isNull(timeMachines)) {
+function composeBackupDisks(shares, clients) {
+	const backupDisks = filterBackupDisks(shares);
+	if (_.isNull(backupDisks)) {
 		return null;
 	}
 
-	return _.map(timeMachines, (timeMachine) => {
-		const timeMachineClients = getTimeMachineClients(timeMachine, clients);
+	return _.map(backupDisks, (backupDisk) => {
+		const backupDiskClients = getBackupDiskClients(backupDisk, clients);
 		return {
-			...timeMachine,
-			clients: timeMachineClients,
-			network: { rx: _.sumBy(timeMachineClients, 'rx'), tx: _.sumBy(timeMachineClients, 'tx') }
+			...backupDisk,
+			clients: backupDiskClients,
+			network: { rx: _.sumBy(backupDiskClients, 'rx'), tx: _.sumBy(backupDiskClients, 'tx') }
 		};
 	});
 }
 
-function getTimeMachineClients(timeMachine, clients) {
-	const name = _.toLower(timeMachine.name);
+function getBackupDiskClients(backupDisk, clients) {
+	const name = _.toLower(backupDisk.name);
 	const sessions = _.map((_.isArray(clients) ? clients : []), (session) => {
 		return { ...session, shares: _.uniq(_.map(session.shares, _.toLower)) };
 	});
@@ -75,28 +75,28 @@ function getTimeMachineClients(timeMachine, clients) {
 	}), 'address');
 }
 
-function filterTimeMachines(shares) {
+function filterBackupDisks(shares) {
 	if (_.isNull(shares)) {
 		return null;
 	}
 
 	return _.orderBy(
-		_.filter(shares, { isTimeMachine: true }),
+		_.filter(shares, { isBackupDisk: true }),
 		[(entity) => { return entity.name.toLowerCase(); }],
 		['asc']
 	);
 }
 
 const getJobs = () => {
-	return _.filter(Job.getJobs() || [], isTimeMachinesJob);
+	return _.filter(Job.getJobs() || [], isBackupDisksJob);
 };
 
 const getSystem = () => {
 	return Host.getSystem();
 };
 
-const getTimeMachines = () => {
-	return composeTimeMachines(Share.getShares(), Share.getClients());
+const getBackupDisks = () => {
+	return composeBackupDisks(Share.getShares(), Share.getClients());
 };
 
 const getDefaultNetworkInterface = () => {
@@ -107,18 +107,18 @@ const getDefaultNetworkInterfaceSpeed = () => {
 	return ((getDefaultNetworkInterface()?.speed || (DEFAULT_NETWORK_INTERFACE_SPEED_BPS / 1_000_000)) * 1_000_000 / 8);
 };
 
-const createTimeMachine = (data) => {
-	data.type = 'timeMachine';
+const createBackupDisk = (data) => {
+	data.type = 'backupDisk';
 	Share.createShare(data);
 };
 
-const updateTimeMachine = (data) => {
-	data.type = 'timeMachine';
+const updateBackupDisk = (data) => {
+	data.type = 'backupDisk';
 	Share.updateShare(data);
 };
 
-const deleteTimeMachine = (data) => {
-	data.type = 'timeMachine';
+const deleteBackupDisk = (data) => {
+	data.type = 'backupDisk';
 	Share.deleteShare(data);
 };
 
@@ -126,10 +126,10 @@ export {
 	subscribe,
 	getJobs,
 	getSystem,
-	getTimeMachines,
+	getBackupDisks,
 	getDefaultNetworkInterface,
 	getDefaultNetworkInterfaceSpeed,
-	createTimeMachine,
-	updateTimeMachine,
-	deleteTimeMachine
+	createBackupDisk,
+	updateBackupDisk,
+	deleteBackupDisk
 };

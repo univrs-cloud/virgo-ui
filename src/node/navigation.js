@@ -110,7 +110,7 @@ const routes = [
 	{ path: '/apps/:appName?', module: 'apps', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/shortcuts', module: 'shortcuts', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/folders/:folderName?', module: 'folders', middleware: [requireAuth, requiresAdmin] },
-	{ path: '/time-machines/:timeMachineName?', module: 'time-machines', middleware: [requireAuth, requiresAdmin] },
+	{ path: '/time-capsule/:backupDiskName?', module: 'time-capsule', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/users/:uid(\\d+)?', module: 'users', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/storage/:poolName?', module: 'storage', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/network', module: 'network', middleware: [requireAuth, requiresAdmin] },

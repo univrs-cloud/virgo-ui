@@ -1,8 +1,8 @@
 <%
-	const machines = _.sortBy(timeMachine.timeMachine || [], (machine) => { return _.toLower(machine.name); });
-	const activeTab = (_.isEmpty(machines) ? 'overview' : timeMachineTab);
+	const machines = _.sortBy(backupDisk.backups || [], (machine) => { return _.toLower(machine.name); });
+	const activeTab = (_.isEmpty(machines) ? 'overview' : backupDiskTab);
 %>
-<div class="item container-fluid numeric-tabular" data-id="<%-timeMachine.name%>">
+<div class="item container-fluid numeric-tabular" data-id="<%-backupDisk.name%>">
 	<div class="card">
 		<div class="card-body">
 			<div class="card-image-row mt--3 mb-3">
@@ -15,16 +15,16 @@
 					<i class="icon-light icon-clock-counter-clockwise icon-fw fg-emphasis-secondary"></i>
 				</div>
 				<div class="card-image-row-title d-flex align-items-center mb--2 ps-1 min-w-0">
-					<div class="text-truncate min-w-0"><%-timeMachine.comment%></div>
+					<div class="text-truncate min-w-0"><%-backupDisk.comment%></div>
 				</div>
 				<div class="card-image-row-urls ps-1 min-w-0">
 					<div class="d-inline-flex align-items-center max-w-100">
-						<small class="text-truncate min-w-0 fg-emphasis-secondary"><%-timeMachine.path%></small>
+						<small class="text-truncate min-w-0 fg-emphasis-secondary"><%-backupDisk.path%></small>
 					</div>
 				</div>
 				<div class="card-image-row-menu ps-5">
-					<div class="d-none md:d-block"><%=timeMachineActionsTemplate({ timeMachine, jobs, inline: true })%></div>
-					<div class="md:d-none"><%=timeMachineActionsTemplate({ timeMachine, jobs, inline: false })%></div>
+					<div class="d-none md:d-block"><%=backupDiskActionsTemplate({ backupDisk, jobs, inline: true })%></div>
+					<div class="md:d-none"><%=backupDiskActionsTemplate({ backupDisk, jobs, inline: false })%></div>
 				</div>
 			</div>
 
@@ -39,45 +39,45 @@
 							<div class="row g-3 mb-5">
 								<div class="col-6 md:col-3 2xl:col-6">
 									<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-circle icon-fw me-1"></i>Capacity</small>
-									<h4 class="m-0"><%=prettyBytes(timeMachine.size || 0, { binary: true })%></h4>
+									<h4 class="m-0"><%=prettyBytes(backupDisk.size || 0, { binary: true })%></h4>
 								</div>
 								<div class="col-6 md:col-3 2xl:col-6">
 									<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-chart-pie-slice icon-fw me-1"></i>Used</small>
-									<h4 class="m-0"><%=prettyBytes(timeMachine.alloc || 0, { binary: true })%> <small class="fs-md fw-light fg-4">(<%=timeMachine.cap.toFixed(2)%>%)</small></h4>
+									<h4 class="m-0"><%=prettyBytes(backupDisk.alloc || 0, { binary: true })%> <small class="fs-md fw-light fg-4">(<%=backupDisk.cap.toFixed(2)%>%)</small></h4>
 								</div>
 								<div class="col-6 md:col-3 2xl:col-6">
 									<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-chart-pie icon-fw me-1"></i>Free</small>
-									<h4 class="m-0"><%=prettyBytes(timeMachine.free || 0, { binary: true })%></h4>
+									<h4 class="m-0"><%=prettyBytes(backupDisk.free || 0, { binary: true })%></h4>
 								</div>
 								<div class="col-6 md:col-3 2xl:col-6">
 									<small class="fg-4 d-block text-truncate"><i class="icon-regular icon-arrows-in-simple icon-fw me-1"></i>Space saved</small>
 									<h4 class="m-0">
-										<%if (timeMachine.storage.compressratio > 0) {%>
-											<%=prettyBytes(timeMachine.storage.savedbycompression, { binary: true })%> <small class="fs-md fw-light fg-4">(<%=timeMachine.storage.compressratio.toFixed(2)%>x compression)</small>
+										<%if (backupDisk.storage.compressratio > 0) {%>
+											<%=prettyBytes(backupDisk.storage.savedbycompression, { binary: true })%> <small class="fs-md fw-light fg-4">(<%=backupDisk.storage.compressratio.toFixed(2)%>x compression)</small>
 										<%} else {%>
 											&mdash;
 										<%}%>
 									</h4>
 								</div>
 							</div>
-							<%if (timeMachine.storage.snapshots > 0) {%>
+							<%if (backupDisk.storage.snapshots > 0) {%>
 								<u-progress shadow="false">
-									<u-progress-bar width="<%=(timeMachine.size > 0 ? timeMachine.storage.dataset / timeMachine.size * 100 : 0)%>" warning-threshold="999" danger-threshold="999" tip="Data: <%=prettyBytes(timeMachine.storage.dataset, { binary: true })%>"></u-progress-bar>
-									<u-progress-bar color="indigo" tint="100" width="<%=(timeMachine.size > 0 ? _.min([timeMachine.storage.snapshots / timeMachine.size * 100, 100 - (timeMachine.storage.dataset / timeMachine.size * 100)]) : 0)%>" warning-threshold="999" danger-threshold="999" tip="Snapshots: <%=prettyBytes(timeMachine.storage.snapshots, { binary: true })%>"></u-progress-bar>
+									<u-progress-bar width="<%=(backupDisk.size > 0 ? backupDisk.storage.dataset / backupDisk.size * 100 : 0)%>" warning-threshold="999" danger-threshold="999" tip="Data: <%=prettyBytes(backupDisk.storage.dataset, { binary: true })%>"></u-progress-bar>
+									<u-progress-bar color="indigo" tint="100" width="<%=(backupDisk.size > 0 ? _.min([backupDisk.storage.snapshots / backupDisk.size * 100, 100 - (backupDisk.storage.dataset / backupDisk.size * 100)]) : 0)%>" warning-threshold="999" danger-threshold="999" tip="Snapshots: <%=prettyBytes(backupDisk.storage.snapshots, { binary: true })%>"></u-progress-bar>
 								</u-progress>
 								<div class="row g-3 mt-3">
 									<div class="col-6 md:col-3 2xl:col-6">
 										<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-database icon-fw me-1 fg-blue-500"></i>Data</small>
-										<span class="fw-light"><%=prettyBytes(timeMachine.storage.dataset, { binary: true })%></span>
+										<span class="fw-light"><%=prettyBytes(backupDisk.storage.dataset, { binary: true })%></span>
 									</div>
 									<div class="col-6 md:col-3 2xl:col-6">
 										<small class="fg-4 d-block text-truncate"><i class="icon-regular icon-clock-counter-clockwise icon-fw me-1 fg-indigo-500"></i>Snapshots</small>
-										<span class="fw-light"><%=prettyBytes(timeMachine.storage.snapshots, { binary: true })%></span>
+										<span class="fw-light"><%=prettyBytes(backupDisk.storage.snapshots, { binary: true })%></span>
 									</div>
 								</div>
 							<%} else {%>
 								<u-progress shadow="false">
-									<u-progress-bar width="<%=timeMachine.cap%>"></u-progress-bar>
+									<u-progress-bar width="<%=backupDisk.cap%>"></u-progress-bar>
 								</u-progress>
 							<%}%>
 						</div>
@@ -87,7 +87,7 @@
 								<i class="icon-light icon-user icon-fw fg-4 me-3"></i>
 								<div class="text-truncate min-w-0">Authorized users</div>
 							</div>
-							<%_.each((timeMachine.validUsers || [null]), (user) => {%>
+							<%_.each((backupDisk.validUsers || [null]), (user) => {%>
 								<%const account = _.find(users, { username: user });%>
 								<div class="d-flex flex-wrap align-items-center gap-3 mt-3">
 									<div class="min-w-0">
@@ -96,8 +96,8 @@
 									<%if (!account?.isDisabled) {%>
 										<div class="border-start ps-3 flex-shrink-0">
 											<div class="d-flex align-items-center">
-												<a href="#" class="fg-body underline-0" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-original-title="Click to copy the time machine address. In Finder, press ⌘K and paste it to connect. This lets Time Machine use it for backups."><i class="icon-fill icon-apple-logo icon-fw"></i></a>
-												<span class="copy d-none">smb://<%-(user ? `${user}@` : '')%><%-accessOn%>/<%-timeMachine.name%></span>
+												<a href="#" class="fg-body underline-0" data-action="copy-to-clipboard" data-bs-toggle="tooltip" data-bs-original-title="Click to copy the backup disk address. In Finder, press ⌘K and paste it to connect. This lets Time Machine use it for backups."><i class="icon-fill icon-apple-logo icon-fw"></i></a>
+												<span class="copy d-none">smb://<%-(user ? `${user}@` : '')%><%-accessOn%>/<%-backupDisk.name%></span>
 											</div>
 										</div>
 									<%}%>
@@ -109,12 +109,12 @@
 							<div class="d-flex align-items-center min-w-0 mb-3">
 								<i class="icon-light icon-users icon-fw fg-4 me-3"></i>
 								<div class="text-truncate min-w-0">Clients</div>
-								<small class="fg-4 ms-3">(<%=_.size(timeMachine.clients)%>)</small>
+								<small class="fg-4 ms-3">(<%=_.size(backupDisk.clients)%>)</small>
 							</div>
-							<%if (_.isEmpty(timeMachine.clients)) {%>
+							<%if (_.isEmpty(backupDisk.clients)) {%>
 								<small class="fg-4">No clients connected.</small>
 							<%}%>
-							<%_.each(timeMachine.clients, (client, index) => {%>
+							<%_.each(backupDisk.clients, (client, index) => {%>
 								<div class="row g-3 align-items-center <%=(index > 0 ? 'mt-3' : '')%>">
 									<div class="col-12">
 										<div class="d-flex align-items-center min-w-0">
@@ -155,9 +155,9 @@
 				</div>
 				<div class="detail-main">
 					<div class="nav nav-underline d-flex gap-0 border-bottom">
-						<button type="button" class="nav-link detail-facts-tab px-4 <%=(activeTab === 'overview' ? 'active border-primary fw-light' : '')%>" data-time-machine-tab="overview"><i class="icon-light icon-info icon-fw"></i>Overview</button>
+						<button type="button" class="nav-link detail-facts-tab px-4 <%=(activeTab === 'overview' ? 'active border-primary fw-light' : '')%>" data-backup-disk-tab="overview"><i class="icon-light icon-info icon-fw"></i>Overview</button>
 						<%if (!_.isEmpty(machines)) {%>
-							<button type="button" class="nav-link detail-default-tab px-4 <%=(activeTab === 'backups' ? 'active border-primary fw-light' : '')%>" data-time-machine-tab="backups"><i class="icon-light icon-laptop icon-fw"></i>Backups <small class="opacity-75"><%=_.size(machines)%></small></button>
+							<button type="button" class="nav-link detail-default-tab px-4 <%=(activeTab === 'backups' ? 'active border-primary fw-light' : '')%>" data-backup-disk-tab="backups"><i class="icon-light icon-laptop icon-fw"></i>Backups <small class="opacity-75"><%=_.size(machines)%></small></button>
 						<%}%>
 					</div>
 					<%if (!_.isEmpty(machines)) {%>

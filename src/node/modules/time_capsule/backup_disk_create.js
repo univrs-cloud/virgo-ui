@@ -1,10 +1,10 @@
-import timeMachineModalPartial from 'node/modules/time_machines/partials/modals/time_machine_create.html';
-import * as timeMachineService from 'node/modules/time_machines/services/time_machine';
-import * as userService from 'node/modules/time_machines/services/user';
+import backupDiskModalPartial from 'node/modules/time_capsule/partials/modals/backup_disk_create.html';
+import * as backupDiskService from 'node/modules/time_capsule/services/backup_disk';
+import * as userService from 'node/modules/time_capsule/services/user';
 
-document.querySelector('body').insertAdjacentHTML('beforeend', timeMachineModalPartial);
+document.querySelector('body').insertAdjacentHTML('beforeend', backupDiskModalPartial);
 
-const modal = document.querySelector('#time-machine-create');
+const modal = document.querySelector('#backup-disk-create');
 const form = modal.querySelector('u-form');
 
 const render = () => {
@@ -24,7 +24,7 @@ const render = () => {
 	form.querySelector('.valid-users').options = options;
 };
 
-const createTimeMachine = (event) => {
+const createBackupDisk = (event) => {
 	_.each(form.querySelectorAll('.dialog-footer u-button'), (button) => { button.disabled = true; });
 	const data = form.getData();
 	const config = {
@@ -32,7 +32,7 @@ const createTimeMachine = (event) => {
 		validUsers: data.validUsers ? [data.validUsers] : [],
 		refquota: Number(data.refquota) * 1024 * 1024 * 1024
 	};
-	timeMachineService.createTimeMachine(config);
+	backupDiskService.createBackupDisk(config);
 	bootstrap.Dialog.getInstance(modal)?.hide();
 };
 
@@ -47,10 +47,10 @@ form.validation = [
 			isEmpty: `Can't be empty`,
 			custom: {
 				validate: (value) => {
-					const timeMachines = timeMachineService.getTimeMachines() || [];
+					const backupDisks = backupDiskService.getBackupDisks() || [];
 					const normalizedValue = value?.toString().trim().toLowerCase();
-					return !_.some(timeMachines, (timeMachine) => {
-						return timeMachine.comment && timeMachine.comment.toString().trim().toLowerCase() === normalizedValue;
+					return !_.some(backupDisks, (backupDisk) => {
+						return backupDisk.comment && backupDisk.comment.toString().trim().toLowerCase() === normalizedValue;
 					});
 				},
 				message: `Must be unique`
@@ -72,6 +72,6 @@ form.validation = [
 	}
 ];
 
-form.addEventListener('valid', createTimeMachine);
+form.addEventListener('valid', createBackupDisk);
 modal.addEventListener('show.bs.dialog', render);
 modal.addEventListener('hidden.bs.dialog', restore);

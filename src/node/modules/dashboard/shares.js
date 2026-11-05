@@ -1,15 +1,15 @@
 import foldersEmptyPartial from 'node/modules/dashboard/partials/folders_empty.html';
-import timeMachineEmptyPartial from 'node/modules/dashboard/partials/time_machine_empty.html';
+import timeCapsuleEmptyPartial from 'node/modules/dashboard/partials/time_capsule_empty.html';
 import foldersPartial from 'node/modules/dashboard/partials/shares.html';
 import folderPartial from 'node/modules/dashboard/partials/folder.html';
-import timeMachinePartial from 'node/modules/dashboard/partials/time_machine.html';
+import backupDiskPartial from 'node/modules/dashboard/partials/backup_disk.html';
 import * as shareService from 'node/modules/dashboard/services/share';
 
 const foldersEmptyTemplate = _.template(foldersEmptyPartial);
-const timeMachineEmptyTemplate = _.template(timeMachineEmptyPartial);
+const timeCapsuleEmptyTemplate = _.template(timeCapsuleEmptyPartial);
 const foldersTemplate = _.template(foldersPartial);
 const folderTemplate = _.template(folderPartial);
-const timeMachineTemplate = _.template(timeMachinePartial);
+const backupDiskTemplate = _.template(backupDiskPartial);
 const container = document.querySelector('#shares');
 
 const render = (state) => {
@@ -17,20 +17,20 @@ const render = (state) => {
 		return;
 	}
 
-	const foldersCollection = _.filter(state.shares, { isTimeMachine: false });
+	const foldersCollection = _.filter(state.shares, { isBackupDisk: false });
 	const foldersRowInner = (_.isEmpty(foldersCollection)
 		? foldersEmptyTemplate()
 		: _.join(_.map(foldersCollection, (entity) => folderTemplate({ entity })), ''));
 
-	const timeMachineCollection = _.filter(state.shares, { isTimeMachine: true });
-	const timeMachinesRowInner = (_.isEmpty(timeMachineCollection)
-		? timeMachineEmptyTemplate()
-		: _.join(_.map(timeMachineCollection, (entity) => timeMachineTemplate({ entity })), ''));
+	const backupDiskCollection = _.filter(state.shares, { isBackupDisk: true });
+	const backupDisksRowInner = (_.isEmpty(backupDiskCollection)
+		? timeCapsuleEmptyTemplate()
+		: _.join(_.map(backupDiskCollection, (entity) => backupDiskTemplate({ entity })), ''));
 
 	const rowSlot = /\s*<div class="row"><\/div>/;
 	let html = foldersTemplate();
 	html = html.replace(rowSlot, `<div class="row">${foldersRowInner}</div>`);
-	html = html.replace(rowSlot, `<div class="row">${timeMachinesRowInner}</div>`);
+	html = html.replace(rowSlot, `<div class="row">${backupDisksRowInner}</div>`);
 
 	morphdom(
 		container,

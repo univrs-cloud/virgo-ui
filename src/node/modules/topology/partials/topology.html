@@ -7,7 +7,7 @@
 	const fleetStatus = { connected: ['fg-success', 'Connected'], reconnecting: ['fg-warning', 'Reconnecting...'], expired: ['fg-danger', 'Registration expired'], disabled: ['fg-4', 'Disabled'] }[fleetState];
 	const proxy = topology.proxy;
 	const auth = topology.auth;
-	const hasShares = (!_.isEmpty(topology.folders) || !_.isEmpty(topology.timeMachines));
+	const hasShares = (!_.isEmpty(topology.folders) || !_.isEmpty(topology.backupDisks));
 	const apps = _.sortBy(_.concat(
 		_.map(topology.internal, (stack) => { return { title: stack.title, html: stackTemplate({ stack, edge: 'topology-edge-muted topology-edge-dotted' }) }; }),
 		(auth ? [{ title: auth.title, html: stackTemplate({ stack: auth, edge: 'topology-edge-muted topology-edge-dotted' }) }] : []),

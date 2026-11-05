@@ -106,7 +106,7 @@ function filterFolders(shares) {
 	}
 
 	return _.orderBy(
-		_.filter(shares, { isTimeMachine: false }),
+		_.filter(shares, { isBackupDisk: false }),
 		[(entity) => { return entity.name.toLowerCase(); }],
 		['asc']
 	);

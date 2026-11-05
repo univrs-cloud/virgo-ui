@@ -1,35 +1,35 @@
 <%
-	const snapshots = _.flatMap(timeMachine.timeMachine || [], (machine) => machine.snapshots || []);
+	const snapshots = _.flatMap(backupDisk.backups || [], (machine) => machine.snapshots || []);
 	const moments = _.map(snapshots, (snapshot) => moment(snapshot.createdAt));
 	const oldestStr = (moments.length ? moment.min(moments).format('YYYY-MM-DD HH:mm') : '—');
 	const newestStr = (moments.length ? moment.max(moments).format('YYYY-MM-DD HH:mm') : '—');
 	const snapshotTooltip = (moments.length ? `Latest: ${newestStr}<br>Oldest: ${oldestStr}` : '');
 %>
-<tr class="item cursor-pointer" data-id="<%-timeMachine.name%>">
+<tr class="item cursor-pointer" data-id="<%-backupDisk.name%>">
 	<td style="min-width: 210px; max-width: 0;">
 		<div class="d-flex align-items-center mb--1">
-			<div class="text-truncate"><%-timeMachine.comment%></div>
+			<div class="text-truncate"><%-backupDisk.comment%></div>
 		</div>
 		<div class="d-flex">
-			<div class="text-truncate"><small class="fg-4"><%-timeMachine.path%></small></div>
+			<div class="text-truncate"><small class="fg-4"><%-backupDisk.path%></small></div>
 		</div>
 	</td>
 	<td class="text-nowrap d-none md:d-table-cell">
-		<%if (_.isEmpty(timeMachine.clients)) {%>
+		<%if (_.isEmpty(backupDisk.clients)) {%>
 			<u-badge color="gray" tint="100" pill>
 				<i class="icon-fill icon-user icon-xs"></i>
 				<small>0</small>
 			</u-badge>
 		<%} else {%>
-			<u-badge color="gray" tint="100" tip="<%-_.map(timeMachine.clients, (client) => { return _.escape(`${_.join(client.usernames, ', ')} (${client.address})`); }).join('<br>')%>" pill>
+			<u-badge color="gray" tint="100" tip="<%-_.map(backupDisk.clients, (client) => { return _.escape(`${_.join(client.usernames, ', ')} (${client.address})`); }).join('<br>')%>" pill>
 				<i class="icon-fill icon-user icon-xs fg-green-500"></i>
-				<small><%-_.size(timeMachine.clients)%></small>
+				<small><%-_.size(backupDisk.clients)%></small>
 			</u-badge>
 		<%}%>
 	</td>
 	<td class="d-none md:d-table-cell">
-		<%if (timeMachine.validUsers) {%>
-			<%_.each(timeMachine.validUsers, (user) => {%>
+		<%if (backupDisk.validUsers) {%>
+			<%_.each(backupDisk.validUsers, (user) => {%>
 				<u-badge color="purple" pill><%-user%></u-badge>
 			<%})%>
 		<%} else {%>
@@ -41,29 +41,29 @@
 			<span class="d-inline-block text-start" style="width: 12px;">
 				<i class="icon-regular icon-arrow-down icon-fw icon-2xs fg-blue-500"></i>
 			</span>
-			<span class="ms-auto"><%=_.prettyBitRate(timeMachine.network.rx)%></span>
+			<span class="ms-auto"><%=_.prettyBitRate(backupDisk.network.rx)%></span>
 		</small>
 		<small class="fw-light fg-emphasis-secondary d-flex">
 			<span class="d-inline-block text-start" style="width: 12px;">
 				<i class="icon-regular icon-arrow-up icon-fw icon-2xs fg-purple-500"></i>
 			</span>
-			<span class="ms-auto"><%=_.prettyBitRate(timeMachine.network.tx)%></span>
+			<span class="ms-auto"><%=_.prettyBitRate(backupDisk.network.tx)%></span>
 		</small>
 	</td>
 	<td class="text-end text-nowrap d-none md:d-table-cell">
-		<small class="fw-light fg-emphasis-secondary"><%=prettyBytes(timeMachine.size || 0, { binary: true })%></small>
+		<small class="fw-light fg-emphasis-secondary"><%=prettyBytes(backupDisk.size || 0, { binary: true })%></small>
 	</td>
 	<td class="text-end text-nowrap d-none md:d-table-cell">
-		<small class="fw-light fg-emphasis-secondary tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(timeMachine.alloc || 0, { binary: true })%>"><%=timeMachine.cap.toFixed(2)%>%</small>
+		<small class="fw-light fg-emphasis-secondary tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(backupDisk.alloc || 0, { binary: true })%>"><%=backupDisk.cap.toFixed(2)%>%</small>
 		<u-progress shadow="false">
-			<u-progress-bar width="<%=timeMachine.cap%>"></u-progress-bar>
+			<u-progress-bar width="<%=backupDisk.cap%>"></u-progress-bar>
 		</u-progress>
 	</td>
 	<td class="text-end text-nowrap d-none md:d-table-cell">
-		<small class="fw-light fg-emphasis-secondary tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="<%=snapshotTooltip%>"><%=_.sumBy(timeMachine.timeMachine, (m) => { return _.size(m.snapshots || []); })%></small>
+		<small class="fw-light fg-emphasis-secondary tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="<%=snapshotTooltip%>"><%=_.sumBy(backupDisk.backups, (m) => { return _.size(m.snapshots || []); })%></small>
 	</td>
 	<td class="text-center px-0">
-		<%=timeMachineActionsTemplate({ timeMachine, jobs, inline: false })%>
+		<%=backupDiskActionsTemplate({ backupDisk, jobs, inline: false })%>
 	</td>
 	<td class="text-end pe-0">
 		<i class="icon-light icon-caret-right icon-fw fg-4"></i>
