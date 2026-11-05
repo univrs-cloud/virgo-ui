@@ -62,11 +62,11 @@
 	height: calc(20px + var(--weather-bar-height) * 40px);
 	width: 6px;
 	background-color: hsl(var(--ths), calc(var(--scheme) ((var(--scheme) var(--bgl)) + 18%)));
-	border: 1px solid hsl(var(--ths), calc(var(--scheme) ((var(--scheme) var(--bgl)) + 24%)));
+	border: var(--border-width) solid hsl(var(--ths), calc(var(--scheme) ((var(--scheme) var(--bgl)) + 24%)));
 	border-bottom: 0;
-	border-radius: 6px 6px 0 0;
-	mask-image: linear-gradient(0deg, transparent 0, #000 10px);
-	-webkit-mask-image: linear-gradient(0deg, transparent 0, #000 10px);
+	border-radius: var(--radius-4) var(--radius-4) 0 0;
+	mask-image: linear-gradient(0deg, transparent 0, var(--black) 10px);
+	-webkit-mask-image: linear-gradient(0deg, transparent 0, var(--black) 10px);
 	transition: background-color .2s, border-color .2s, width .2s;
 }
 
@@ -74,7 +74,7 @@
 .weather-column:hover .weather-bar {
 	width: 10px;
 	background-color: hsl(var(--ths), calc(var(--scheme) ((var(--scheme) var(--bgl)) + 40%)));
-	border: 1px solid hsl(var(--ths), calc(var(--scheme) ((var(--scheme) var(--bgl)) + 50%)));
+	border: var(--border-width) solid hsl(var(--ths), calc(var(--scheme) ((var(--scheme) var(--bgl)) + 50%)));
 }
 
 .weather-column-rain {
@@ -82,8 +82,8 @@
 	inset: 0;
 	bottom: 20%;
 	overflow: hidden;
-	mask-image: linear-gradient(0deg, transparent 40%, #000);
-	-webkit-mask-image: linear-gradient(0deg, transparent 40%, #000);
+	mask-image: linear-gradient(0deg, transparent 40%, var(--black));
+	-webkit-mask-image: linear-gradient(0deg, transparent 40%, var(--black));
 }
 
 .weather-column-rain::before {

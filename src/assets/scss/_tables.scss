@@ -40,21 +40,21 @@
 	right: 4px;
 	width: 8px;
 	pointer-events: auto;
-	background: rgba(0, 0, 0, 0.05);
-	border-radius: 4px;
+	background: var(--scrollbar-track-bg);
+	border-radius: var(--radius-3);
 }
 .table-scrollbar-thumb {
 	position: absolute;
 	top: 0;
 	left: 0;
 	width: 100%;
-	background: rgba(0, 0, 0, 0.3);
-	border-radius: 4px;
+	background: var(--scrollbar-thumb-bg);
+	border-radius: var(--radius-3);
 	cursor: pointer;
 	transition: background 0.2s;
 	&:hover,
 	&.dragging {
-		background: rgba(0, 0, 0, 0.5);
+		background: var(--scrollbar-thumb-hover-bg);
 	}
 }
 .table {

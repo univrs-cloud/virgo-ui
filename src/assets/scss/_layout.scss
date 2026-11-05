@@ -4,7 +4,7 @@
 @use "variables" as vars;
 
 ::selection {
-	color: #ffffff;
+	color: var(--white);
 	text-shadow: none;
 	background: vars.$primary;
 }
@@ -20,7 +20,7 @@ html {
 
 body {
 	--chrome: 56px;
-	--app-bg: light-dark(var(--bg-1), #000000);
+	--app-bg: var(--surface-shell);
 	--shell-fg: light-dark(var(--gray-900), var(--gray-050));
 	--shell-fg-muted: light-dark(var(--gray-500), var(--gray-400));
 	--shell-icon: light-dark(var(--gray-600), var(--gray-400));
@@ -68,7 +68,7 @@ header {
 	.navbar {
 		--navbar-bg: transparent;
 		--navbar-brand-font-size: 1.25rem;
-		box-shadow: 0 -0.5rem 0.5rem -0.5rem rgba(0, 0, 0, 0.2);
+		box-shadow: 0 -0.5rem 0.5rem -0.5rem var(--bar-shadow-color);
 		&.navbar-position {
 			z-index: 1030;
 			position: fixed;
@@ -196,7 +196,7 @@ header,
 }
 div:not(.navbar) .nav-pills {
 	--nav-pills-link-active-color: var(--fg-body);
-	--nav-pills-link-active-bg: light-dark(var(--bg-body), #2a2a2a);
+	--nav-pills-link-active-bg: var(--component-on-sunken);
 	--nav-link-color: var(--fg-body);
 	--nav-link-hover-color: var(--fg-body);
 	--nav-pills-bg: var(--bg-2);
@@ -231,7 +231,7 @@ div:not(.navbar) .nav-pills {
 	--navbar-toggler-font-size: 1.25rem;
 	--navbar-toggler-padding-y: 0.25rem;
 	--navbar-toggler-padding-x: 0.75rem;
-	box-shadow: 0 -0.5rem 0.5rem -0.5rem rgba(0, 0, 0, 0.2);
+	box-shadow: 0 -0.5rem 0.5rem -0.5rem var(--bar-shadow-color);
 }
 .drawer-title {
 	line-height: 1.15;
@@ -239,7 +239,7 @@ div:not(.navbar) .nav-pills {
 .drawer:not(.hiding)::backdrop {
 	backdrop-filter: blur(6px) grayscale(0.8);
 	background-color: transparent;
-	background-image: linear-gradient(to bottom right, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.1));
+	background-image: linear-gradient(to bottom right, color-mix(in oklch, var(--black) 20%, transparent), color-mix(in oklch, var(--black) 10%, transparent));
 }
 
 main,
@@ -252,7 +252,7 @@ body:has(header nav) :is(main:not(:has(.booting)), #update) {
 	background-color: var(--bg-body);
 	.card {
 		--card-border-color: transparent;
-		box-shadow: var(--card-ring), 0 1px 3px -1px rgba(0, 0, 0, 0.08);
+		box-shadow: var(--card-ring), 0 1px 3px -1px color-mix(in oklch, var(--black) 8%, transparent);
 		.card {
 			box-shadow: none;
 		}
@@ -513,7 +513,7 @@ html:not(:has(head > base[href="/"])) {
 				bottom: var(--panel-inset);
 				left: var(--menu-width);
 				border-radius: var(--radius-7);
-				box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 6px 16px -4px rgba(0, 0, 0, 0.1);
+				box-shadow: 0 1px 2px color-mix(in oklch, var(--black) 5%, transparent), 0 6px 16px -4px color-mix(in oklch, var(--black) 10%, transparent);
 				pointer-events: none;
 			}
 			:is(main:not(:has(.booting)), #update) {
@@ -537,7 +537,7 @@ html:not(:has(head > base[href="/"])) {
 				}
 				&::-webkit-scrollbar-thumb {
 					border: 0.1875rem solid transparent;
-					border-radius: 0.75rem;
+					border-radius: var(--radius-7);
 					background-clip: padding-box;
 					background-color: color-mix(in oklch, var(--black) 20%, transparent);
 					&:hover {
@@ -591,7 +591,7 @@ html:not(:has(head > base[href="/"])) {
 				&::before,
 				&::after {
 					content: "";
-					z-index: 1;
+					z-index: var(--z-1);
 					position: sticky;
 					display: block;
 					height: 0.75rem;
@@ -604,12 +604,12 @@ html:not(:has(head > base[href="/"])) {
 				&::before {
 					top: 0;
 					margin-bottom: 0.25rem;
-					background: radial-gradient(farthest-side at 50% 0, rgba(0, 0, 0, 0.12), transparent);
+					background: radial-gradient(farthest-side at 50% 0, var(--scroll-edge-shadow-color), transparent);
 				}
 				&::after {
 					bottom: 0;
 					margin-top: -0.75rem;
-					background: radial-gradient(farthest-side at 50% 100%, rgba(0, 0, 0, 0.12), transparent);
+					background: radial-gradient(farthest-side at 50% 100%, var(--scroll-edge-shadow-color), transparent);
 				}
 				&.has-scroll-above::before,
 				&.has-scroll-below::after {
@@ -653,7 +653,7 @@ html:not(:has(head > base[href="/"])) {
 				box-shadow: none;
 			}
 			.navbar-glass-shadow {
-				box-shadow: 0 0.5rem 0.5rem -0.5rem rgba(0, 0, 0, 0.2);
+				box-shadow: 0 0.5rem 0.5rem -0.5rem var(--bar-shadow-color);
 			}
 			.navbar-toggler {
 				display: none;

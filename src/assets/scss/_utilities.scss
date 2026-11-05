@@ -51,7 +51,7 @@ $utilities: (
 		class: bg,
 		values: (
 			gradient: var(--gradient),
-			gradient-top: linear-gradient(180deg, rgb(0 0 0 / 5%), rgb(0 0 0 / 0%) 2.5rem)
+			gradient-top: linear-gradient(180deg, color-mix(in oklch, var(--black) 5%, transparent), transparent 2.5rem)
 		)
 	),
 	"underline-transparent": (

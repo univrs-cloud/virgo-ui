@@ -45,24 +45,44 @@
 			"base": var(--gray-200),
 			"fg": light-dark(var(--gray-600), var(--gray-400)),
 			"fg-emphasis": light-dark(var(--gray-800), var(--gray-200)),
-			"bg": light-dark(#ececec, #222222),
-			"bg-subtle": light-dark(#f6f6f6, #191919),
-			"bg-muted": light-dark(#dedede, #303030),
-			"border": light-dark(#e5e5e5, #232323),
+			"bg": var(--component),
+			"bg-subtle": var(--surface-card),
+			"bg-muted": var(--component-active),
+			"border": var(--border-color),
 			"focus-ring": color-mix(in oklch, light-dark(var(--gray-500), var(--gray-300)) 50%, var(--bg-body)),
 			"contrast": light-dark(var(--gray-900), var(--white))
 		)
 	),
 	$theme-bgs: (
-		"body": light-dark(var(--white), #111111),
-		"1": light-dark(#f6f6f6, #191919),
-		"2": light-dark(#efefef, #0a0a0a),
-		"3": light-dark(#ececec, #222222),
-		"4": light-dark(#e5e5e5, #2a2a2a)
+		"body": var(--surface-page),
+		"1": var(--surface-card),
+		"2": var(--surface-sunken),
+		"3": var(--component),
+		"4": var(--component-hover)
 	),
 	$root-tokens: (
-		--btn-input-bg: light-dark(var(--white), #191919),
-		--border-color: light-dark(#e5e5e5, #232323),
+		--surface-page: light-dark(var(--white), #111111),
+		--surface-shell: light-dark(#f6f6f6, var(--black)),
+		--surface-card: light-dark(#f6f6f6, #191919),
+		--surface-sunken: light-dark(#efefef, #0a0a0a),
+		--surface-modal: light-dark(var(--white), #222222),
+		--surface-standout: light-dark(#202020, #222222),
+		--component: light-dark(#ececec, #222222),
+		--component-hover: light-dark(#e5e5e5, #2a2a2a),
+		--component-active: light-dark(#dedede, #303030),
+		--component-on-sunken: light-dark(var(--white), #2a2a2a),
+		--component-on-container-subtle: light-dark(var(--white), #191919),
+		--border-default: light-dark(#ececec, #222222),
+		--border-subtle: light-dark(#f6f6f6, #1a1a1a),
+		--border-strong: light-dark(#d6d6d6, #3a3a3a),
+		--border-inverted: light-dark(var(--black), var(--white)),
+		--border-color: var(--border-default),
+		--bar-shadow-color: color-mix(in oklch, var(--black) 20%, transparent),
+		--scroll-edge-shadow-color: color-mix(in oklch, var(--black) 12%, transparent),
+		--scrollbar-track-bg: color-mix(in oklch, var(--fg-body) 5%, transparent),
+		--scrollbar-thumb-bg: color-mix(in oklch, var(--fg-body) 30%, transparent),
+		--scrollbar-thumb-hover-bg: color-mix(in oklch, var(--fg-body) 50%, transparent),
+		--btn-input-bg: var(--component-on-container-subtle),
 		--toast-spacing: .5rem,
 		--body-font-family: vars.$font-family-sans-serif
 	),
@@ -77,7 +97,7 @@
 		--form-floating-label-opacity: 65%
 	),
 	$card-tokens: (
-		--card-bg: light-dark(#f6f6f6, #191919),
+		--card-bg: var(--surface-card),
 		--card-spacer-y: 1rem,
 		--card-spacer-x: 1rem,
 		--card-cap-padding-y: .5rem,
@@ -85,7 +105,7 @@
 	),
 	$tooltip-tokens: (
 		--tooltip-color: light-dark(var(--white), var(--fg-body)),
-		--tooltip-bg: light-dark(#202020, #222222),
+		--tooltip-bg: var(--surface-standout),
 		--tooltip-max-width: 400px
 	),
 	$table-tokens: (
@@ -96,7 +116,7 @@
 		--stepper-bg: var(--bg-4)
 	),
 	$dialog-tokens: (
-		--dialog-bg: light-dark(var(--bg-body), #222222)
+		--dialog-bg: var(--surface-modal)
 	),
 	$dialog-sizes: (
 		sm: 300px

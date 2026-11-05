@@ -118,8 +118,8 @@ u-badge:hover .hover-reveal-text {
 		top: 66px;
 		bottom: 0;
 		width: 8px;
-		background: color-mix(in oklch, var(--fg-body) 5%, transparent);
-		border-radius: 4px;
+		background: var(--scrollbar-track-bg);
+		border-radius: var(--radius-3);
 	}
 	.scrollbar-thumb {
 		z-index: 2000;
@@ -127,14 +127,14 @@ u-badge:hover .hover-reveal-text {
 		top: 0;
 		left: 0;
 		width: 100%;
-		background: color-mix(in oklch, var(--fg-body) 30%, transparent);
-		border-radius: 4px;
+		background: var(--scrollbar-thumb-bg);
+		border-radius: var(--radius-3);
 		cursor: pointer;
 		transition: background 0.2s;
 	}
 	.scrollbar-thumb:hover,
 	.scrollbar-thumb.dragging {
-		background: color-mix(in oklch, var(--fg-body) 50%, transparent);
+		background: var(--scrollbar-thumb-hover-bg);
 	}
 }
 .dialog-header,
@@ -244,7 +244,7 @@ $card-image-size: 30px;
 		--btn-active-bg: var(--secondary-bg-muted);
 	}
 	.indicator {
-		z-index: 1;
+		z-index: var(--z-1);
 		position: absolute;
 		top: 0.15rem;
 		right: -1.35rem;
@@ -269,7 +269,7 @@ $card-image-size: 30px;
 
 .progress {
 	height: 8px;
-	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+	box-shadow: inset 0 1px 2px color-mix(in oklch, var(--black) 20%, transparent);
 }
 
 .stepper-item {
@@ -364,7 +364,7 @@ $card-image-size: 30px;
 	[data-bs-toggle="menu"] {
 		&.icon-dot::before {
 			content: '';
-			z-index: 1;
+			z-index: var(--z-1);
 			position: absolute;
 			top: 0.25rem;
 			right: 0rem;
@@ -745,7 +745,7 @@ $card-image-size: 30px;
 		}
 		li {
 			font-family: var(--font-mono);
-			font-size: 12px;
+			font-size: var(--font-size-xs);
 			line-height: 18px;
 			color: var(--white);
 			display: flex;
@@ -1053,12 +1053,12 @@ $card-image-size: 30px;
 	.tree-row.tree-line:has(~ .tree-selected)::after,
 	.tree-row.tree-line:has(~ .tree-row .tree-selected)::after {
 		border-color: var(--tree-selected-color);
-		z-index: 1;
+		z-index: var(--z-1);
 	}
 	.tree-row:hover::before,
 	.tree-row.tree-line:has(~ .tree-row:hover)::after {
 		border-color: var(--tree-path-color);
-		z-index: 2;
+		z-index: var(--z-2);
 	}
 }
 
@@ -1133,12 +1133,12 @@ $card-image-size: 30px;
 }
 
 .tooltip .tooltip-inner {
-	box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+	box-shadow: 0px 2px 4px -1px color-mix(in oklch, var(--black) 20%, transparent), 0px 4px 5px 0px color-mix(in oklch, var(--black) 14%, transparent), 0px 1px 10px 0px color-mix(in oklch, var(--black) 12%, transparent);
 }
 .menu,
 .popover {
-	box-shadow: 0px 8px 10px -5px rgba(0, 0, 0, 0.2), 0px 16px 24px 2px rgba(0, 0, 0, 0.14), 0px 6px 30px 5px rgba(0, 0, 0, 0.12);
+	box-shadow: 0px 8px 10px -5px color-mix(in oklch, var(--black) 20%, transparent), 0px 16px 24px 2px color-mix(in oklch, var(--black) 14%, transparent), 0px 6px 30px 5px color-mix(in oklch, var(--black) 12%, transparent);
 }
 .dialog {
-	box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12);
+	box-shadow: 0px 11px 15px -7px color-mix(in oklch, var(--black) 20%, transparent), 0px 24px 38px 3px color-mix(in oklch, var(--black) 14%, transparent), 0px 9px 46px 8px color-mix(in oklch, var(--black) 12%, transparent);
 }
