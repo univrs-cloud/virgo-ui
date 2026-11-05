@@ -77,13 +77,17 @@ export class Select extends LitElement {
 		this.error = '';
 	}
 
+	willUpdate() {
+		if (!this.hasUpdated) {
+			this.#updateOptionsFromLightDOM();
+		}
+	}
+
 	firstUpdated() {
 		const label = this.renderRoot.querySelector('label');
 		if (label) {
 			this.#tooltip = new bootstrap.Tooltip(label, { container: this.closest('dialog') ?? 'body' });
 		}
-
-		this.#updateOptionsFromLightDOM();
 	}
 
 	renderOptGroup(group) {
