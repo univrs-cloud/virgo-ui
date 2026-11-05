@@ -380,11 +380,11 @@ container.addEventListener('click', (event) => {
 	}
 	
 	event.stopPropagation();
-	popover.toggle();
+	popover?.toggle();
 });
 document.addEventListener('click', (event) => {
 	if (!event.target.closest('#weather .card') && !document.querySelector('.popover')?.contains(event.target)) {
-		popover.hide();
+		popover?.hide();
 	}
 });
 

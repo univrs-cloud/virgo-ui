@@ -545,6 +545,7 @@ $card-image-size: 30px;
 		margin: calc(var(--list-group-border-width) * -1) 0 0 calc(var(--list-group-border-width) * -1);
 		> .list-group-item {
 			min-height: var(--resource-height);
+			border-radius: 0;
 			background-color: transparent;
 			border-width: var(--list-group-border-width) 0 0 var(--list-group-border-width);
 			&.tint-yellow {
