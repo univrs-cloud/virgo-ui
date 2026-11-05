@@ -240,8 +240,8 @@ $card-image-size: 30px;
 	[data-bs-toggle="menu"],
 	.btn-icon {
 		--btn-active-border-color: transparent;
-		--btn-hover-bg: var(--bg-4);
-		--btn-active-bg: var(--secondary-bg-muted);
+		--btn-hover-bg: var(--transparent-hover);
+		--btn-active-bg: var(--transparent-active);
 	}
 	.indicator {
 		z-index: var(--z-1);

@@ -25,8 +25,8 @@ body {
 	--shell-fg-muted: light-dark(var(--gray-500), var(--gray-400));
 	--shell-icon: light-dark(var(--gray-600), var(--gray-400));
 	--shell-tint: light-dark(color-mix(in oklch, var(--white) 40%, transparent), color-mix(in oklch, var(--black) 70%, transparent));
-	--shell-hover-bg: var(--bg-4);
-	--shell-active-bg: var(--secondary-bg-muted);
+	--shell-hover-bg: var(--transparent-hover);
+	--shell-active-bg: var(--transparent-active);
 	--shell-border: var(--border-color);
 	--panel-inset: 0.5rem;
 	overflow-y: scroll;

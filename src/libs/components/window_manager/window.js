@@ -55,8 +55,9 @@ export class FloatingWindow extends LitElement {
 		:host([minimized]:not([hiding])) { display: none; }
 		:host([hiding]), :host([closing]) { pointer-events: none; }
 		:host([interacting]) ::slotted(*) { pointer-events: none; }
+		:host(:not([dragging])) .card { background-color: var(--bg-body); background-image: linear-gradient(var(--card-bg), var(--card-bg)); }
 		:host([dragging]) .card { background-color: transparent; }
-		:host([dragging]) .titlebar { background: linear-gradient(var(--card-cap-bg), var(--card-cap-bg)), var(--card-bg); }
+		:host([dragging]) .titlebar { background: linear-gradient(var(--card-cap-bg), var(--card-cap-bg)), linear-gradient(var(--card-bg), var(--card-bg)), var(--bg-body); }
 		:host([dragging]) .card-body { opacity: 0.75; }
 		:host(:not([maximized])) ::slotted(iframe) { border-radius: 0 0 var(--card-inner-border-radius) var(--card-inner-border-radius); }
 		.card-body { min-height: 0; }
