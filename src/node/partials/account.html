@@ -27,9 +27,19 @@
 			<%}%>
 			<div class="menu-divider"></div>
 			<div class="menu-item">
-				<i class="icon-duotone icon-moon icon-fw"></i>
-				Dark mode
-				<u-switch class="color-mode-switch ms-auto" <%=(document.documentElement.dataset.bsTheme === 'dark' ? 'checked' : '')%>></u-switch>
+				<i class="icon-duotone icon-circle-half icon-fw"></i>
+				Theme
+				<div class="color-mode d-flex align-items-center gap-1 ms-auto">
+					<button type="button" class="btn-text theme-secondary btn-xs rounded-pill <%=(document.documentElement.dataset.colorMode === 'auto' ? 'active' : '')%>" data-color-mode="auto">
+						<i class="icon-regular icon-circle-half icon-fw"></i><span class="color-mode-label">Auto</span>
+					</button>
+					<button type="button" class="btn-text theme-secondary btn-xs rounded-pill <%=(document.documentElement.dataset.colorMode === 'light' ? 'active' : '')%>" data-color-mode="light">
+						<i class="icon-regular icon-sun icon-fw"></i><span class="color-mode-label">Light</span>
+					</button>
+					<button type="button" class="btn-text theme-secondary btn-xs rounded-pill <%=(document.documentElement.dataset.colorMode === 'dark' ? 'active' : '')%>" data-color-mode="dark">
+						<i class="icon-regular icon-moon icon-fw"></i><span class="color-mode-label">Dark</span>
+					</button>
+				</div>
 			</div>
 			<div class="menu-divider"></div>
 			<a href="https://docs.univrs.cloud" target="_blank" rel="noopener noreferrer" class="menu-item">

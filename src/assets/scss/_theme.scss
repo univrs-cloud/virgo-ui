@@ -67,6 +67,24 @@ u-badge:hover .hover-reveal-text {
 	opacity: 1;
 }
 
+.color-mode {
+	.color-mode-label {
+		display: inline-block;
+		width: 0;
+		overflow: hidden;
+		opacity: 0;
+		white-space: nowrap;
+		text-align: center;
+		vertical-align: bottom;
+		transition: width 0.25s ease, margin-left 0.25s ease, opacity 0.25s ease;
+	}
+	.active .color-mode-label {
+		width: 2.25rem;
+		margin-left: map.get($spacers, 1);
+		opacity: 1;
+	}
+}
+
 .tooltip {
 	--tooltip-zindex: 99999;
 	&.storage-scan-progress {
