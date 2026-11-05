@@ -324,9 +324,9 @@ $card-image-size: 30px;
 	#dashboard > .row:last-child {
 		flex-wrap: nowrap;
 		> .col:first-child {
-			flex: 0 0 24rem;
-			width: 24rem;
-			max-width: 24rem;
+			flex: 0 0 21rem;
+			width: 21rem;
+			max-width: 21rem;
 		}
 		> .col:last-child {
 			flex: 1 1 0;
@@ -491,7 +491,7 @@ $card-image-size: 30px;
 #dashboard {
 	.group {
 		border-radius: var(--radius-9);
-		padding: map.get($spacers, 3) 0 map.get($spacers, 1);
+		padding: 0 0 map.get($spacers, 4);
 		.order {
 			display: flex;
 			align-items: center;
