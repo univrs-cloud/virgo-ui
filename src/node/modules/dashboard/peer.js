@@ -4,9 +4,7 @@ import * as peerService from 'node/modules/dashboard/services/peer';
 const peerTemplate = _.template(peerPartial);
 const container = document.querySelector('#peer');
 
-/** Hidden only when there is nothing to say: nothing adopted and nothing discovered.
- *
- * Adopted and adoptable are shown together — adopting one node does not stop another appearing, and a
+/** Adopted and adoptable are shown together — adopting one node does not stop another appearing, and a
  * node that is adopted but no longer advertising is exactly what an operator needs to see. Reachability
  * comes from mDNS rather than a link between the nodes, since avahi already reports a node appearing
  * and disappearing. */
