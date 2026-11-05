@@ -1,4 +1,5 @@
-const STORAGE_KEY = 'color-mode';
+const viewedNodeId = new URL(document.baseURI).pathname.match(/^\/nodes\/([^/]+)\//)?.[1] ?? null;
+const STORAGE_KEY = (viewedNodeId ? `color-mode:${viewedNodeId}` : 'color-mode');
 
 const getColorMode = () => {
 	try {
