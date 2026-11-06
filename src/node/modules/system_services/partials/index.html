@@ -39,7 +39,11 @@
 						<table class="table table-hover align-middle numeric-tabular m-0">
 							<thead class="sticky-top">
 								<tr>
-									<th class="orderable text-nowrap" data-field="unit">
+									<th class="orderable text-nowrap d-table-cell md:d-none" data-field="unit">
+										Unit
+										<i class="icon icon-fill icon-caret-up-down icon-fw"></i>
+									</th>
+									<th class="orderable text-nowrap d-none md:d-table-cell" data-field="unit" colspan="2">
 										Unit
 										<i class="icon icon-fill icon-caret-up-down icon-fw"></i>
 									</th>
@@ -51,7 +55,7 @@
 										Automatic startup
 										<i class="icon icon-fill icon-caret-up-down icon-fw"></i>
 									</th>
-									<th class="orderable text-nowrap" data-field="sub" style="width: 85px; min-width: 85px;">
+									<th class="orderable text-nowrap d-none md:d-table-cell" data-field="sub" style="width: 85px; min-width: 85px;">
 										State
 										<i class="icon icon-fill icon-caret-up-down icon-fw"></i>
 									</th>

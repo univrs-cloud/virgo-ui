@@ -8,7 +8,7 @@
 					</button>
 				</div>
 				<div class="col-auto p-3 lh-1">
-					<i class="icon-duotone icon-cube icon-fw" style="font-size: 1.875rem; width: 2rem;"></i>
+					<i class="icon-duotone <%=({ timer: 'icon-timer', socket: 'icon-plugs-connected', target: 'icon-target', path: 'icon-path' }[_.toLower(service.type)] || 'icon-cube')%> icon-fw" style="font-size: 1.875rem; width: 2rem;"></i>
 				</div>
 				<div class="col ps-1 min-w-0">
 					<div class="d-flex align-items-center mb--2 min-w-0">

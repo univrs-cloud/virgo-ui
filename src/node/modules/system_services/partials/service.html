@@ -1,4 +1,9 @@
 <tr class="item cursor-pointer <%=(service.active === 'failed' ? 'theme-danger' : (service.broken ? 'theme-warning' : ''))%>" data-unit="<%-service.unit%>">
+	<td class="d-none md:d-table-cell" style="width: 1px;">
+		<div class="row-image">
+			<i class="icon-light <%=({ timer: 'icon-timer', socket: 'icon-plugs-connected', target: 'icon-target', path: 'icon-path' }[_.toLower(service.type)] || 'icon-cube')%> icon-fw fg-emphasis-secondary"></i>
+		</div>
+	</td>
 	<td style="min-width: 200px; max-width: 0;">
 		<div class="d-flex align-items-center mb--1">
 			<div class="text-truncate"><%-service.unit%></div>
@@ -27,7 +32,7 @@
 		<%}%>
 	</td>
 	<td class="d-none md:d-table-cell fg-emphasis-secondary"><%-service.unitFileState%></td>
-	<td class="text-nowrap">
+	<td class="text-nowrap d-none md:d-table-cell">
 		<%
 			const stateBadgeColor = (service.active === 'active' ? (service.sub === 'running' ? 'green' : 'blue') : (service.active === 'failed' ? 'red' : 'gray'));
 			const stateBadgeTint = (service.active === 'failed' ? 200 : 100);

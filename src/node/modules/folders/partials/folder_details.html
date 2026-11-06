@@ -13,7 +13,7 @@
 					</button>
 				</div>
 				<div class="card-image-row-icon card-image card-spacer px-3">
-					<i class="icon-light icon-folder icon-fw fg-emphasis-secondary"></i>
+					<i class="icon-light <%=(folder.validUsers ? 'icon-folder-lock' : 'icon-folder')%> icon-fw fg-emphasis-secondary"></i>
 				</div>
 				<div class="card-image-row-title d-flex align-items-center mb--2 ps-1 min-w-0">
 					<div class="text-truncate min-w-0"><%-folder.comment%></div>

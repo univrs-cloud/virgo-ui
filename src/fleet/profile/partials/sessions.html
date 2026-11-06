@@ -14,34 +14,40 @@
 					<%} else {%>
 						<div class="list-group list-group-flush">
 							<%_.each(sessions, (session) => {%>
-								<div class="list-group-item bg-transparent px-0 small d-flex align-items-center gap-3">
-									<i class="icon-fill icon-circle icon-fw icon-2xs flex-shrink-0 <%=(session.connected ? 'fg-green-500' : 'fg-4')%>"></i>
-									<span class="text-nowrap numeric-tabular flex-shrink-0"><%-session.ipAddress || 'Unknown address'%></span>
-									<span class="fw-light text-truncate md:flex-shrink-0">
-										&middot;
-										<%if (session.connected) {%>
-											active now
-										<%} else if (session.lastSeenAt) {%>
-											active <%=moment(session.lastSeenAt).fromNow()%>
-										<%} else {%>
-											no activity recorded
-										<%}%>
-										&middot;
-										<span class="tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="Signed in on <%=moment(session.createdAt).format('MMM D, YYYY [at] HH:mm')%>. Expires <%=moment(session.expiresAt).format('MMM D, YYYY')%>.">signed in <%=moment(session.createdAt).fromNow()%></span>
+								<div class="list-group-item bg-transparent px-0 small d-flex align-items-start md:align-items-center gap-3">
+									<span class="d-flex align-items-center flex-shrink-0" style="height: 1lh;">
+										<i class="icon-fill icon-circle icon-fw icon-2xs <%=(session.connected ? 'fg-green-500' : 'fg-4')%>"></i>
 									</span>
-									<span class="fw-lighter fg-4 text-truncate" style="flex-shrink: 999;" data-bs-toggle="tooltip" data-bs-original-title="<%-session.userAgent || 'No user agent recorded'%>"><%-session.userAgent || 'Unknown device'%></span>
-									<span class="ms-auto d-flex align-items-center gap-3 flex-shrink-0">
-										<%if (session.pending) {%>
-											<u-badge color="yellow" tint="100" pill tip="Signed in but hasn't passed the code challenge yet — it can't reach anything until it does.">Awaiting code</u-badge>
-										<%}%>
-										<%if (session.current) {%>
-											<span class="current-session fg-primary d-flex align-items-center"><i></i>Current session</span>
-										<%} else {%>
-											<a href="#" class="fg-danger revoke" data-session-id="<%-session.id%>" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="Sign this session out">
-												<i class="icon-regular icon-sign-out"></i>
-											</a>
-										<%}%>
-									</span>
+									<div class="d-flex flex-wrap md:flex-nowrap align-items-center column-gap-3 flex-grow-1 min-w-0">
+										<span class="text-nowrap numeric-tabular flex-shrink-0"><%-session.ipAddress || 'Unknown address'%></span>
+										<span class="w-100 order-2 md:d-none"></span>
+										<span class="fw-light text-truncate order-2 md:order-0 md:flex-shrink-0">
+											<span class="d-none md:d-inline">&middot;</span>
+											<%if (session.connected) {%>
+												active now
+											<%} else if (session.lastSeenAt) {%>
+												active <%=moment(session.lastSeenAt).fromNow()%>
+											<%} else {%>
+												no activity recorded
+											<%}%>
+											&middot;
+											<span class="tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="Signed in on <%=moment(session.createdAt).format('MMM D, YYYY [at] HH:mm')%>. Expires <%=moment(session.expiresAt).format('MMM D, YYYY')%>.">signed in <%=moment(session.createdAt).fromNow()%></span>
+										</span>
+										<span class="w-100 order-2 md:d-none"></span>
+										<span class="fw-lighter fg-4 text-truncate order-2 md:order-0" style="flex-shrink: 999;" data-bs-toggle="tooltip" data-bs-original-title="<%-session.userAgent || 'No user agent recorded'%>"><%-session.userAgent || 'Unknown device'%></span>
+										<span class="ms-auto d-flex align-items-center gap-3 flex-shrink-0 order-1 md:order-0">
+											<%if (session.pending) {%>
+												<u-badge color="yellow" tint="100" pill tip="Signed in but hasn't passed the code challenge yet — it can't reach anything until it does.">Awaiting code</u-badge>
+											<%}%>
+											<%if (session.current) {%>
+												<span class="current-session fg-primary d-flex align-items-center"><i></i><span class="d-none md:d-inline">Current session</span></span>
+											<%} else {%>
+												<a href="#" class="fg-danger revoke" data-session-id="<%-session.id%>" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="Sign this session out">
+													<i class="icon-regular icon-sign-out"></i>
+												</a>
+											<%}%>
+										</span>
+									</div>
 								</div>
 							<%})%>
 						</div>

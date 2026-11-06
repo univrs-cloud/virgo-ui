@@ -1,5 +1,10 @@
 <%const isPool = (pool.type?.toLowerCase() === 'pool')%>
 <tr class="item <%=(isPool ? 'cursor-pointer' : '')%>" data-id="<%-pool.poolGuid%>"<%=(isPool ? ` data-name="${_.escape(pool.name)}"` : '')%>>
+	<td class="d-none md:d-table-cell" style="width: 1px;">
+		<div class="row-image">
+			<i class="icon-light <%=(isPool ? 'icon-stack' : 'icon-hard-drive')%> icon-fw fg-emphasis-secondary"></i>
+		</div>
+	</td>
 	<td style="min-width: 210px; max-width: 0;">
 		<div class="d-flex align-items-center mb--1">
 			<div class="text-truncate">

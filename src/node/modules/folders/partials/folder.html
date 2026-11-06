@@ -1,4 +1,9 @@
 <tr class="item cursor-pointer" data-id="<%-folder.name%>">
+	<td class="d-none md:d-table-cell" style="width: 1px;">
+		<div class="row-image">
+			<i class="icon-light <%=(folder.validUsers ? 'icon-folder-lock' : 'icon-folder')%> icon-fw fg-emphasis-secondary"></i>
+		</div>
+	</td>
 	<td style="min-width: 210px; max-width: 0;">
 		<div class="d-flex align-items-center mb--1">
 			<div class="text-truncate"><%-folder.comment%></div>

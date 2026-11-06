@@ -689,7 +689,10 @@ $card-image-size: 30px;
 }
 #apps,
 #shortcuts,
-#system-services {
+#system-services,
+#folders,
+#time-capsule,
+#storage {
 	.row-image {
 		display: flex;
 		justify-content: center;
