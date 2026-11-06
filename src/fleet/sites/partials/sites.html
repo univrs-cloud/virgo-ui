@@ -36,21 +36,29 @@
 			});
 		});
 	%>
-	<div class="row">
+	<div class="row <%=(view === 'table' ? 'flex-column flex-nowrap flex-grow-1 min-h-0' : '')%>">
 		<div class="col-12 page-title">
 			<h4 class="m-0 ps-1">
 				<i class="icon-duotone icon-computer-tower icon-width-auto me-3"></i>
 				Sites
 			</h4>
+			<div class="nav nav-pills d-none md:d-flex view-toggle ms-6">
+				<button type="button" class="nav-link px-3 py-1 <%=(view === 'cards' ? 'active' : '')%>" data-view="cards">
+					<i class="icon-fill icon-squares-four icon-fw"></i>
+				</button>
+				<button type="button" class="nav-link px-3 py-1 <%=(view === 'table' ? 'active' : '')%>" data-view="table">
+					<i class="icon-fill icon-table icon-fw"></i>
+				</button>
+			</div>
 		</div>
 		<%if (!_.isEmpty(badPools)) {%>
 			<div class="col-12">
-				<div class="alert theme-danger mb-5">
+				<div class="alert theme-danger flex-column mb-5">
 					<div class="d-flex align-items-center">
 						<i class="icon-fill icon-warning icon-fw me-3"></i>
 						<strong>Storage needs attention</strong>
 					</div>
-					<div class="small ps-7 ms-1 mt-1">
+					<div class="small ps-7 ms-1">
 						Replace the faulty <%=_.pluralize('drive', badPools.length)%> as soon as possible to avoid data loss:
 						<ul class="mb-0 mt-1">
 							<%_.each(badPools, (bad) => {%>
@@ -78,15 +86,44 @@
 			];
 			const showLabels = (!_.isEmpty(named) || !_.isEmpty(clusters));
 		%>
-		<%_.each(groups, (group, index) => {%>
-			<%if (showLabels) {%>
-				<div class="col-12">
-					<h5 class="fg-4 ps-1 mb-3 <%=index > 0 ? 'mt-5' : ''%>"><%-group.label%> &middot; <%=_.pluralize('node', group.members.length, true)%></h5>
+		<%if (view === 'table') {%>
+			<div class="col-12 d-flex flex-column flex-grow-1 min-h-0">
+				<div class="table-scroll overflow-y-scroll flex-grow-1 min-h-0 pe-5 mx-0 me--5">
+					<table class="table table-hover align-middle numeric-tabular m-0">
+						<thead class="sticky-top">
+							<tr>
+								<th class="text-nowrap">Node</th>
+								<th class="text-nowrap">Activity</th>
+								<th class="text-nowrap">Storage</th>
+								<th style="width: 30px; min-width: 30px;"></th>
+							</tr>
+						</thead>
+						<%_.each(groups, (group) => {%>
+							<tbody>
+								<%if (showLabels) {%>
+									<tr>
+										<th colspan="4" class="fg-4 fw-normal"><%-group.label%> &middot; <%=_.pluralize('node', group.members.length, true)%></th>
+									</tr>
+								<%}%>
+								<%_.each(group.members, (node) => {%>
+									<%=nodeTemplate({ node, view, isGrouped: showLabels, badgesTemplate, storageTemplate, menuTemplate, moment, prettyBytes })%>
+								<%})%>
+							</tbody>
+						<%})%>
+					</table>
 				</div>
-			<%}%>
-			<%_.each(group.members, (node) => {%>
-				<%=nodeTemplate({ node, moment, prettyBytes })%>
+			</div>
+		<%} else {%>
+			<%_.each(groups, (group, index) => {%>
+				<%if (showLabels) {%>
+					<div class="col-12">
+						<h5 class="fg-4 ps-1 mb-3 <%=index > 0 ? 'mt-5' : ''%>"><%-group.label%> &middot; <%=_.pluralize('node', group.members.length, true)%></h5>
+					</div>
+				<%}%>
+				<%_.each(group.members, (node) => {%>
+					<%=nodeTemplate({ node, view, badgesTemplate, storageTemplate, menuTemplate, moment, prettyBytes })%>
+				<%})%>
 			<%})%>
-		<%})%>
+		<%}%>
 	</div>
 <%}%>

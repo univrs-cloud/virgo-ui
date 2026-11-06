@@ -2,7 +2,7 @@
 	<button type="button" class="account-toggle d-flex align-items-center gap-3 w-100 border-0 bg-transparent rounded-4 p-3" data-bs-toggle="menu" data-bs-placement="top-end">
 		<span class="avatar avatar-sm avatar-subtle theme-primary flex-shrink-0"><%-_.join(_.map(_.take(_.words(account.name || account.email), 2), _.head), '')%></span>
 		<span class="d-none sm:d-block text-start min-w-0 flex-grow-1" style="line-height: 1.2;">
-			<span class="d-block text-truncate fw-medium" style="font-size: 0.875rem;" title="<%-account.name || account.email || '—'%>"><%-account.name || account.email || '—'%></span>
+			<span class="d-block text-truncate fw-medium fs-sm" title="<%-account.name || account.email || '—'%>"><%-account.name || account.email || '—'%></span>
 			<%if (account.name && account.email) {%>
 				<span class="d-block text-truncate fw-light opacity-75" style="font-size: 0.8125rem;"><%-account.email%></span>
 			<%}%>

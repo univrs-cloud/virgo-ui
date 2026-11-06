@@ -1,0 +1,24 @@
+<div class="dropdown">
+	<span class="btn-icon btn-text theme-secondary btn-sm z-1 position-relative" data-bs-toggle="menu" data-bs-placement="bottom-end">
+		<i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i>
+	</span>
+	<div class="menu">
+		<%if (node.isOwner) {%>
+			<a href="#admin-add" class="menu-item" data-bs-toggle="dialog" data-node-id="<%-node.nodeId%>">
+				<i class="icon-fill icon-user-plus icon-fw"></i>Add admin
+			</a>
+			<div class="menu-divider"></div>
+		<%}%>
+		<%if (node.isOwner && node.onFleetZone) {%>
+			<span class="d-block" data-bs-toggle="tooltip" data-bs-original-title="Move this node off univrs.cloud before removing it, its certificates depend on the fleet">
+				<a href="#" class="menu-item disabled">
+					<i class="icon-fill icon-x-circle icon-fw"></i>Remove from inventory
+				</a>
+			</span>
+		<%} else {%>
+			<a href="#" class="menu-item fg-danger confirm" data-action="remove" data-node-id="<%-node.nodeId%>">
+				<i class="icon-fill icon-x-circle icon-fw"></i>Remove from inventory
+			</a>
+		<%}%>
+	</div>
+</div>

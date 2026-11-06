@@ -1,5 +1,15 @@
 <div class="d-flex align-items-center justify-content-center h-100 p-5">
-	<div class="card shadow border-0" style="width: 100%; max-width: 24rem;">
+	<svg class="login-background position-fixed top-0 start-0 w-100 h-100" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+		<defs>
+			<linearGradient id="login-base" x1="0" y1="0" x2="1" y2="1">
+				<stop offset="0%"/>
+				<stop offset="55%"/>
+				<stop offset="100%"/>
+			</linearGradient>
+		</defs>
+		<rect width="1440" height="900" fill="url(#login-base)"/>
+	</svg>
+	<div class="card position-relative bg-body shadow border-0 w-100" style="max-width: 24rem;">
 		<div class="card-body p-7">
 			<div class="text-center mb-7">
 				<svg class="login-logo fleet-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="60" height="60">
@@ -140,10 +150,10 @@
 				<div class="text-center">
 					<u-button class="biometrics-action" variant="primary"><i class="icon-fill icon-fingerprint-simple icon-fw"></i>Sign in with biometrics</u-button>
 				</div>
-				<small class="d-block text-center fw-lighter fg-4 mt-3 biometrics-hint"></small>
+				<small class="d-block text-center fg-emphasis-secondary mt-3 biometrics-hint"></small>
 				<div class="d-flex align-items-center my-5">
 					<hr class="flex-grow-1 border-gray-200 my-0 opacity-25">
-					<small class="px-3 fw-lighter fg-4">or</small>
+					<small class="px-3 fg-emphasis-secondary">or</small>
 					<hr class="flex-grow-1 border-gray-200 my-0 opacity-25">
 				</div>
 			</div>

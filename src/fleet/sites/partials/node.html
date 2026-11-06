@@ -11,6 +11,7 @@
 	const resilveringPools = pools.filter(isResilvering);
 	const resilverPercent = resilveringPools.length ? Math.round(Math.min(...resilveringPools.map((pool) => { return pool.scanStats?.toExamine ? (pool.scanStats.issued / pool.scanStats.toExamine) * 100 : 0; }))) : null;
 	const cardStateClass = !node.online ? '' : (hasCriticalPool ? 'border border-red-300' : (hasDegradedPool ? 'border border-orange-300' : ''));
+	const cellStateClass = !node.online ? '' : (hasCriticalPool ? 'bg-danger bg-10' : (hasDegradedPool ? 'bg-warning bg-10' : ''));
 	// Offline has no pools so it stays a neutral gray Offline.
 	const statusColor = !node.online ? 'gray' : (hasCriticalPool ? 'red' : (hasDegradedPool ? 'orange' : 'green'));
 	const statusLabel = !node.online ? 'Offline' : (hasCriticalPool ? 'Faulted' : (hasDegradedPool ? 'Degraded' : 'Online'));
@@ -55,203 +56,73 @@
 		return null;
 	})();
 %>
-<div class="col-12 sm:col-6 xl:col-3">
-	<div class="card <%=cardStateClass%>">
-		<div class="card-body py-3 px-5">
-			<div class="d-flex align-items-center justify-content-between">
-				<div class="flex-grow-1 me-3 min-w-0">
-					<h5 class="mb-0 d-flex align-items-center">
-						<i class="icon-fill icon-circle icon-fw z-2 position-relative me-1 <%=statusDotColor%>" data-bs-toggle="tooltip" data-bs-original-title="<%-statusDotTip%>"></i>
-						<%if (node.online) {%>
-							<a href="/nodes/<%-node.nodeId%>" rel="external" class="stretched-link text-decoration-none fg-body text-truncate min-w-0"><%-node.name%></a>
-						<%} else {%>
-							<span class="fg-body text-truncate min-w-0"><%-node.name%></span>
-						<%}%>
-					</h5>
+<%if (view === 'table') {%>
+	<tr>
+		<td class="<%=cellStateClass%> <%=(isGrouped ? 'ps-7' : '')%>" style="min-width: 180px; max-width: 0;">
+			<div class="d-flex align-items-center">
+				<div class="text-truncate min-w-0">
+					<i class="icon-fill icon-circle icon-fw me-1 <%=statusDotColor%>" data-bs-toggle="tooltip" data-bs-original-title="<%-statusDotTip%>"></i><%if (node.online) {%><a href="/nodes/<%-node.nodeId%>" rel="external" class="text-decoration-none fg-body"><%-node.name%></a><%} else {%><span class="fg-body"><%-node.name%></span><%}%>
 				</div>
-				<div class="dropdown">
-					<span class="btn-icon btn-text theme-secondary btn-sm z-1 position-relative" data-bs-toggle="menu" data-bs-placement="bottom-end">
-						<i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i>
-					</span>
-					<div class="menu">
-						<%if (node.isOwner) {%>
-							<a href="#admin-add" class="menu-item" data-bs-toggle="dialog" data-node-id="<%-node.nodeId%>">
-								<i class="icon-fill icon-user-plus icon-fw"></i>Add admin
-							</a>
-							<div class="menu-divider"></div>
-						<%}%>
-						<%if (node.isOwner && node.onFleetZone) {%>
-							<span class="d-block" data-bs-toggle="tooltip" data-bs-original-title="Move this node off univrs.cloud before removing it, its certificates depend on the fleet">
-								<a href="#" class="menu-item disabled">
-									<i class="icon-fill icon-x-circle icon-fw"></i>Remove from inventory
-								</a>
-							</span>
-						<%} else {%>
-							<a href="#" class="menu-item fg-danger confirm" data-action="remove" data-node-id="<%-node.nodeId%>">
-								<i class="icon-fill icon-x-circle icon-fw"></i>Remove from inventory
-							</a>
-						<%}%>
-					</div>
-				</div>
-			</div>
-
-			<div class="d-flex align-items-center mt-3 pt-1 mb-5">
-				<%if (isRebuilding) {%>
-					<u-badge color="<%=statusColor%>" tint="100" class="z-1 position-relative me-1" pill>
-						Rebuilding <%=resilverPercent != null ? `${resilverPercent}%` : ''%>
-						<i class="icon-fill icon-warning fg-orange-700 ms-1" data-bs-toggle="tooltip" data-bs-original-title="Reduced redundancy until the rebuild completes"></i>
-					</u-badge>
-				<%}%>
-				<%if (upsBadge) {%>
-					<u-badge color="<%=upsBadge.color%>" tint="<%=upsBadge.tint%>" class="z-1 position-relative me-1" pill tip="<%=upsBadge.tip%>">
-						<i class="icon-fill <%=upsBadge.icon%>" style="<%=upsBadge.animation%>"></i><%=upsBadge.label%>
-					</u-badge>
-				<%}%>
-				<%if (node.update?.state === 'running' && node.update.stage) {%>
-					<u-badge color="blue" tint="500" class="z-1 position-relative me-1" pill tip="<%=(node.update.stage === 'download' ? 'Downloading' : 'Installing')%> system updates">
-						<%if (node.update.stage === 'download') {%>
-							<span class="d-inline-flex overflow-hidden"><i class="icon-regular icon-arrow-down icon-fall"></i></span>
-						<%} else {%>
-							<i class="icon-fill icon-gear icon-spin"></i>
-						<%}%>
-						<%=node.update.percent%>%
-					</u-badge>
-				<%} else if (node.update?.state === 'running') {%>
-					<u-badge color="blue" tint="500" class="z-1 position-relative me-1" pill tip="Updating system">
-						<i class="icon-regular icon-arrows-clockwise icon-spin"></i>
-					</u-badge>
-				<%} else if (node.update?.state === 'succeeded') {%>
-					<a href="#" data-action="complete-update" data-node-id="<%-node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
-						<u-badge color="green" tint="500" pill tip="System update complete">
-							<i class="icon-fill icon-check-circle"></i>
-							<span class="hover-reveal-text">Finish</span>
-						</u-badge>
-					</a>
-				<%} else if (node.update?.state === 'failed') {%>
-					<a href="#" data-action="complete-update" data-node-id="<%-node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
-						<u-badge color="red" tint="500" pill tip="System update failed">
-							<i class="icon-fill icon-x-circle"></i>
-							<span class="hover-reveal-text">Dismiss</span>
-						</u-badge>
-					</a>
-				<%}%>
-				<%if (!node.update && !_.isEmpty(node.updates?.system)) {%>
-					<a href="#node-system-updates" data-bs-toggle="dialog" data-node-id="<%-node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
-						<u-badge color="blue" pill tip="<%=_.pluralize('system update', _.size(node.updates.system), true)%>">
-							<i class="icon-regular icon-arrow-down"></i>
-						</u-badge>
-					</a>
-				<%}%>
-				<%if (!_.isEmpty(node.updates?.apps)) {%>
-					<%
-						const updating = _.filter(node.updates.apps, (app) => {
-							return _.some(node.appUpdateJobs, (job) => { return job.data?.config?.name === app.name; });
-						});
-					%>
-					<a href="#node-app-updates" data-bs-toggle="dialog" data-node-id="<%-node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
-						<%if (!_.isEmpty(updating)) {%>
-							<u-badge color="blue" pill tip="Updating <%-_.join(_.map(updating, (app) => { return app.title; }), ', ')%>">
-								<i class="icon-fill icon-gear icon-spin"></i><%=_.size(updating)%>
-							</u-badge>
-						<%} else {%>
-							<u-badge color="blue" pill tip="<%=_.pluralize('app update', _.size(node.updates.apps), true)%>">
-								<i class="icon-fill icon-circles-three-plus"></i>
-							</u-badge>
-						<%}%>
-					</a>
-				<%}%>
-				<%if (node.isOwner && (!_.isEmpty(node.admins) || !_.isEmpty(node.groups))) {%>
-					<div class="dropdown invited">
-						<span class="d-flex z-1 position-relative" data-bs-toggle="menu">
-							<u-badge color="gray" tint="100" class="cursor-pointer">
-								<%=_.size(node.admins) + _.size(node.groups)%> invited
-								<i class="icon-fill icon-caret-down icon-xs ms-1"></i>
-							</u-badge>
-						</span>
-						<div class="menu shadow shadow-opacity-100">
-							<%_.each(node.admins, (admin) => {%>
-								<div class="menu-item d-flex align-items-center">
-									<i class="icon-fill icon-user icon-fw me-3"></i>
-									<div class="lh-1 me-5">
-										<div><%-admin.name%></div>
-										<small class="fg-emphasis-secondary"><%-admin.email%></small>
-									</div>
-									<a href="#" class="fg-danger ms-auto confirm" data-action="revoke" data-node-id="<%-node.nodeId%>" data-email="<%-admin.email%>" data-bs-toggle="tooltip" data-bs-original-title="Revoke access">
-										<i class="icon-fill icon-x-circle"></i>
-									</a>
-								</div>
-							<%})%>
-							<%_.each(node.groups, (group) => {%>
-								<div class="menu-item d-flex align-items-center">
-									<i class="icon-fill icon-users icon-fw me-3"></i>
-									<div class="lh-1 me-5">
-										<div><%-group.name%></div>
-										<small class="fg-emphasis-secondary">Group</small>
-									</div>
-									<a href="#" class="fg-danger ms-auto confirm" data-action="revoke-group" data-node-id="<%-node.nodeId%>" data-group-id="<%-group.id%>" data-group-name="<%-group.name%>" data-bs-toggle="tooltip" data-bs-original-title="Revoke group access">
-										<i class="icon-fill icon-x-circle"></i>
-									</a>
-								</div>
-							<%})%>
-						</div>
-					</div>
+				<%if (!node.isOwner) {%>
+					<u-badge color="gray" tint="100" class="ms-3" pill>Invited</u-badge>
 				<%}%>
 			</div>
 			<%if (!node.online && node.lastSeenAt) {%>
-				<div class="fg-4 mt-5" style="font-size: 0.75rem;">
-					Last seen <%=moment(node.lastSeenAt).fromNow()%>, on <%=moment(node.lastSeenAt).format('MMM D, YYYY [at] HH:mm')%>.
-				</div>
+				<small class="d-block fg-4 text-truncate" data-bs-toggle="tooltip" data-bs-original-title="<%=moment(node.lastSeenAt).format('MMM D, YYYY [at] HH:mm')%>">Last seen <%=moment(node.lastSeenAt).fromNow()%></small>
 			<%}%>
+		</td>
+		<td class="<%=cellStateClass%>">
+			<div class="d-flex align-items-center">
+				<%=badgesTemplate({ node, isRebuilding, statusColor, resilverPercent, upsBadge })%>
+			</div>
+		</td>
+		<td class="<%=cellStateClass%>" style="min-width: 280px;">
 			<%if (node.online && !_.isEmpty(pools)) {%>
-				<div class="storage position-relative z-1 mt-5">
-					<%_.each(pools, (pool) => {%>
-						<%
-							const properties = pool.properties || {};
-							const scan = pool.scanStats;
-							const scanState = scan?.state?.toLowerCase();
-							const health = properties.health?.value?.toLowerCase();
-							const healthColor = (health === 'online' ? 'fg-green-300' : (health === 'degraded' ? 'fg-orange-300' : 'fg-red-300'));
-							const healthLabel = properties.health?.value || 'Unknown';
-							const usageTip = `${prettyBytes(properties.allocated?.value || 0, { binary: true })} of ${prettyBytes(properties.size?.value || 0, { binary: true })} used`;
-						%>
-						<div class="d-flex align-items-center border bd-gray-50 shadow-sm px-3 py-1 rounded-9" style="font-size: 0.75rem;">
-							<i class="icon-fill icon-circle icon-fw me-1 <%=healthColor%>" data-bs-toggle="tooltip" data-bs-original-title="<%-healthLabel%>"></i>
-							<span class="fg-emphasis-secondary me-3"><%-pool.name%></span>
-							<%if (scanState === 'scanning') {%>
-								<%
-									const isPaused = (scan.scrubPause > 0);
-									const total = prettyBytes(scan.toExamine || 0, { binary: true });
-									const scanned = `${prettyBytes(scan.examined || 0, { binary: true })} / ${total}`;
-									const issued = `${prettyBytes(scan.issued || 0, { binary: true })} / ${total}`;
-									const tip = (isPaused ? `<strong>Data integrity check is paused</strong> since ${moment.unix(scan.scrubPause).fromNow()}.<br>` : ``) + `Data integrity check started ${moment.unix(scan.startTime).fromNow()}.<br>Scanned ${scanned}.<br>Issued ${issued}.<br>Repaired <strong>${prettyBytes(scan.processed || 0, { binary: true })}</strong>, ${scan.errors || 0} errors.`;
-								%>
-								<i class="<%=(isPaused ? 'icon-fill icon-pause fg-4' : 'icon-regular icon-arrows-clockwise icon-spin fg-cyan-600')%> me-3" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
-							<%} else if (scanState === 'finished') {%>
-								<%
-									const duration = moment.duration(moment.unix(scan.endTime).diff(moment.unix(scan.startTime))).humanize();
-									const tip = `Data integrity check completed ${moment.unix(scan.endTime).fromNow()}.<br>Took ${duration} to scan <strong>${prettyBytes(scan.toExamine || 0, { binary: true })}</strong>.<br>Repaired <strong>${prettyBytes(scan.processed || 0, { binary: true })}</strong>, ${scan.errors || 0} errors.`;
-								%>
-								<%if (scan.errors > 0) {%>
-									<i class="icon-fill icon-warning icon-fw fg-red-300 me-3" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
-								<%} else {%>
-									<i class="icon-fill icon-binary icon-fw fg-green-300 me-3" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
-								<%}%>
-							<%} else {%>
-								<i class="icon-fill icon-binary icon-fw fg-gray-300 me-3" data-bs-toggle="tooltip" data-bs-original-title="Data integrity check has not run yet"></i>
-							<%}%>
-							<div class="flex-grow-1 me-3" data-bs-toggle="tooltip" data-bs-original-title="<%=usageTip%>">
-								<u-progress shadow="false">
-									<u-progress-bar width="<%=pool.properties.capacity.value ?? 0%>"></u-progress-bar>
-								</u-progress>
-							</div>
-							<span class="fg-4 text-end" style="min-width: 2.25rem; font-variant-numeric: tabular-nums;"><%=pool.properties.capacity.value?.toFixed(0)%>%</span>
-						</div>
-					<%})%>
+				<div class="d-flex flex-column gap-1">
+					<%=storageTemplate({ pools, view, moment, prettyBytes })%>
 				</div>
+			<%} else {%>
+				<small class="fg-4">&mdash;</small>
+			<%}%>
+		</td>
+		<td class="<%=cellStateClass%>" style="width: 30px; min-width: 30px;">
+			<%=menuTemplate({ node })%>
+		</td>
+	</tr>
+<%} else {%>
+	<div class="col-12 sm:col-6 xl:col-3">
+		<div class="card <%=cardStateClass%>">
+			<div class="card-body py-3 px-5">
+				<div class="d-flex align-items-center justify-content-between">
+					<div class="flex-grow-1 me-3 min-w-0">
+						<h5 class="mb-0 d-flex align-items-center">
+							<i class="icon-fill icon-circle icon-fw z-2 position-relative me-1 <%=statusDotColor%>" data-bs-toggle="tooltip" data-bs-original-title="<%-statusDotTip%>"></i>
+							<%if (node.online) {%>
+								<a href="/nodes/<%-node.nodeId%>" rel="external" class="stretched-link text-decoration-none fg-body text-truncate min-w-0"><%-node.name%></a>
+							<%} else {%>
+								<span class="fg-body text-truncate min-w-0"><%-node.name%></span>
+							<%}%>
+						</h5>
+					</div>
+					<%=menuTemplate({ node })%>
+				</div>
+				<div class="d-flex align-items-center mt-3 pt-1 mb-5">
+					<%=badgesTemplate({ node, isRebuilding, statusColor, resilverPercent, upsBadge })%>
+				</div>
+				<%if (!node.online && node.lastSeenAt) {%>
+					<div class="fg-4 fs-xs mt-5">
+						Last seen <%=moment(node.lastSeenAt).fromNow()%>, on <%=moment(node.lastSeenAt).format('MMM D, YYYY [at] HH:mm')%>.
+					</div>
+				<%}%>
+				<%if (node.online && !_.isEmpty(pools)) {%>
+					<div class="storage position-relative z-1 mt-5">
+						<%=storageTemplate({ pools, view, moment, prettyBytes })%>
+					</div>
+				<%}%>
+			</div>
+			<%if (!node.isOwner) {%>
+				<u-badge color="gray" tint="100" class="indicator" style="top: auto; bottom: -1.65rem;" pill>Invited</u-badge>
 			<%}%>
 		</div>
-		<%if (!node.isOwner) {%>
-			<u-badge color="gray" tint="100" class="indicator" style="top: auto; bottom: -1.65rem;" pill>Invited</u-badge>
-		<%}%>
 	</div>
-</div>
+<%}%>

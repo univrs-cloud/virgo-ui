@@ -26,9 +26,9 @@ u-toast {
 .menu {
 	--menu-zindex: 1029;
 	--menu-bg: color-mix(in oklch, var(--bg-body) 20%, transparent);
-	--menu-padding-x: 0.5rem;
-	--menu-header-padding-x: 0.5rem;
-	--menu-item-padding-x: 0.5rem;
+	--menu-padding-x: #{map.get($spacers, 3)};
+	--menu-header-padding-x: #{map.get($spacers, 3)};
+	--menu-item-padding-x: #{map.get($spacers, 3)};
 	--menu-border-width: 0;
 	backdrop-filter: blur(18px) grayscale(0.8) saturate(180%);
 }
@@ -195,7 +195,7 @@ $card-image-size: 30px;
 .card {
 	--card-border-color: var(--border-color);
 	position: relative;
-	margin-bottom: 1rem;
+	margin-bottom: map.get($spacers, 5);
 	.card-spacer {
 		min-width: 3rem;
 		max-width: 3rem;
@@ -273,10 +273,10 @@ $card-image-size: 30px;
 .card-body {
 	display: block;
 	> :is(h1, h2, h3, h4, h5, h6) {
-		margin-bottom: 0.5rem;
+		margin-bottom: map.get($spacers, 3);
 	}
 	> :is(p, ul, ol, dl, pre, blockquote, figure, .table) {
-		margin-bottom: 1rem;
+		margin-bottom: map.get($spacers, 5);
 	}
 	> .row {
 		margin-top: calc(-1 * var(--gutter-y));
@@ -385,7 +385,7 @@ $card-image-size: 30px;
 			content: '';
 			z-index: var(--z-1);
 			position: absolute;
-			top: 0.25rem;
+			top: map.get($spacers, 1);
 			right: 0rem;
 			width: 0.85rem;
 			height: 0.85rem;
@@ -534,8 +534,8 @@ $card-image-size: 30px;
 	.table {
 		tbody {
 			td {
-				padding-top: .25rem;
-				padding-bottom: .25rem;
+				padding-top: map.get($spacers, 1);
+				padding-bottom: map.get($spacers, 1);
 			}
 		}
 	}
@@ -854,7 +854,7 @@ $card-image-size: 30px;
 		}
 	}
 	.topology-tree {
-		--topology-gap: 1.25rem;
+		--topology-gap: #{map.get($spacers, 6)};
 		--topology-line: calc(var(--border-width) * 1.5);
 		position: absolute;
 		top: 0;
@@ -1082,7 +1082,7 @@ $card-image-size: 30px;
 		width: calc(3.75rem + var(--border-width) * 2);
 		height: calc(3.75rem + var(--border-width) * 2);
 		box-sizing: border-box;
-		padding: 0.75rem;
+		padding: map.get($spacers, 4);
 		border: var(--border-width) solid var(--border-color);
 		border-radius: var(--radius-5);
 		background-color: var(--bg-body);
@@ -1100,17 +1100,17 @@ $card-image-size: 30px;
 .shortcut-icon-results {
 	display: grid;
 	grid-template-columns: repeat(6, 1fr);
-	gap: 0.25rem;
+	gap: map.get($spacers, 1);
 	max-height: 12rem;
 	overflow-y: auto;
-	margin-top: 0.5rem;
-	padding: 0.25rem 0;
+	margin-top: map.get($spacers, 3);
+	padding: map.get($spacers, 1) 0;
 
 	.shortcut-icon-result-item {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		padding: 0.25rem;
+		padding: map.get($spacers, 1);
 		border: var(--border-width) solid transparent;
 		border-radius: var(--radius-5);
 		background: transparent;
@@ -1130,6 +1130,21 @@ $card-image-size: 30px;
 	}
 }
 
+@include media-breakpoint-up(md) {
+	body:has(header nav) main:has(> .modules > #sites:not(.d-none) .table-scroll) {
+		display: flex;
+		flex-direction: column;
+		height: calc(100dvh - var(--chrome));
+		> .modules,
+		> .modules > #sites,
+		> .modules > #sites > .row,
+		> .modules > #sites > .row > .container-fluid {
+			@include fill-column;
+			flex-wrap: nowrap;
+			height: auto;
+		}
+	}
+}
 #sites {
 	.card-body {
 		min-height: 8rem;

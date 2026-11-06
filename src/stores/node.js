@@ -74,6 +74,8 @@ class Node extends Store {
 		// 			online: true,
 		// 			isOwner: true,
 		// 			nodeId: '789',
+		// 			clusterId: 'c1',
+		// 			domainName: 'origin.univrs.cloud',
 		// 			connectivity: track([{ from: 24, online: true }]),
 		// 			storage: [
 		// 				pool('messier', 'ONLINE', 72, 8e12, scrubbed(3))
@@ -108,6 +110,8 @@ class Node extends Store {
 		// 			online: true,
 		// 			isOwner: true,
 		// 			nodeId: '234',
+		// 			clusterId: 'c1',
+		// 			domainName: 'origin.univrs.cloud',
 		// 			connectivity: track([{ from: 24, online: true }]),
 		// 			storage: [
 		// 				pool('messier', 'FAULTED', 45, 2e12, null, ['ONLINE', 'UNAVAIL'])
@@ -118,6 +122,7 @@ class Node extends Store {
 		// 			online: true,
 		// 			isOwner: true,
 		// 			nodeId: '345',
+		// 			clusterId: 'c2',
 		// 			update: { state: 'running', stage: 'download', percent: 45 },
 		// 			connectivity: track([{ from: 24, online: true }]),
 		// 			storage: [pool('messier', 'ONLINE', 88, 500e9)]
@@ -135,6 +140,7 @@ class Node extends Store {
 		// 			online: true,
 		// 			isOwner: true,
 		// 			nodeId: '567',
+		// 			clusterId: 'c2',
 		// 			connectivity: track([{ from: 24, online: true }, { from: 14, online: false }, { from: 13, online: true }, { from: 6, online: null }, { from: 5, online: true }]),
 		// 			storage: [pool('messier', 'ONLINE', 91, 12e12, scanning('SCRUB', 8))]
 		// 		}

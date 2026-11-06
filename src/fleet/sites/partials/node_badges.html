@@ -1,0 +1,100 @@
+<%if (isRebuilding) {%>
+	<u-badge color="<%=statusColor%>" tint="100" class="z-1 position-relative me-1" pill>
+		Rebuilding <%=resilverPercent != null ? `${resilverPercent}%` : ''%>
+		<i class="icon-fill icon-warning fg-orange-700 ms-1" data-bs-toggle="tooltip" data-bs-original-title="Reduced redundancy until the rebuild completes"></i>
+	</u-badge>
+<%}%>
+<%if (upsBadge) {%>
+	<u-badge color="<%=upsBadge.color%>" tint="<%=upsBadge.tint%>" class="z-1 position-relative me-1" pill tip="<%=upsBadge.tip%>">
+		<i class="icon-fill <%=upsBadge.icon%>" style="<%=upsBadge.animation%>"></i><%=upsBadge.label%>
+	</u-badge>
+<%}%>
+<%if (node.update?.state === 'running' && node.update.stage) {%>
+	<u-badge color="blue" tint="500" class="z-1 position-relative me-1" pill tip="<%=(node.update.stage === 'download' ? 'Downloading' : 'Installing')%> system updates">
+		<%if (node.update.stage === 'download') {%>
+			<span class="d-inline-flex overflow-hidden"><i class="icon-regular icon-arrow-down icon-fall"></i></span>
+		<%} else {%>
+			<i class="icon-fill icon-gear icon-spin"></i>
+		<%}%>
+		<%=node.update.percent%>%
+	</u-badge>
+<%} else if (node.update?.state === 'running') {%>
+	<u-badge color="blue" tint="500" class="z-1 position-relative me-1" pill tip="Updating system">
+		<i class="icon-regular icon-arrows-clockwise icon-spin"></i>
+	</u-badge>
+<%} else if (node.update?.state === 'succeeded') {%>
+	<a href="#" data-action="complete-update" data-node-id="<%-node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
+		<u-badge color="green" tint="500" pill tip="System update complete">
+			<i class="icon-fill icon-check-circle"></i>
+			<span class="hover-reveal-text">Finish</span>
+		</u-badge>
+	</a>
+<%} else if (node.update?.state === 'failed') {%>
+	<a href="#" data-action="complete-update" data-node-id="<%-node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
+		<u-badge color="red" tint="500" pill tip="System update failed">
+			<i class="icon-fill icon-x-circle"></i>
+			<span class="hover-reveal-text">Dismiss</span>
+		</u-badge>
+	</a>
+<%}%>
+<%if (!node.update && !_.isEmpty(node.updates?.system)) {%>
+	<a href="#node-system-updates" data-bs-toggle="dialog" data-node-id="<%-node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
+		<u-badge color="blue" pill tip="<%=_.pluralize('system update', _.size(node.updates.system), true)%>">
+			<i class="icon-regular icon-arrow-down"></i>
+		</u-badge>
+	</a>
+<%}%>
+<%if (!_.isEmpty(node.updates?.apps)) {%>
+	<%
+		const updating = _.filter(node.updates.apps, (app) => {
+			return _.some(node.appUpdateJobs, (job) => { return job.data?.config?.name === app.name; });
+		});
+	%>
+	<a href="#node-app-updates" data-bs-toggle="dialog" data-node-id="<%-node.nodeId%>" class="z-1 position-relative lh-1 text-decoration-none me-1">
+		<%if (!_.isEmpty(updating)) {%>
+			<u-badge color="blue" pill tip="Updating <%-_.join(_.map(updating, (app) => { return app.title; }), ', ')%>">
+				<i class="icon-fill icon-gear icon-spin"></i><%=_.size(updating)%>
+			</u-badge>
+		<%} else {%>
+			<u-badge color="blue" pill tip="<%=_.pluralize('app update', _.size(node.updates.apps), true)%>">
+				<i class="icon-fill icon-circles-three-plus"></i>
+			</u-badge>
+		<%}%>
+	</a>
+<%}%>
+<%if (node.isOwner && (!_.isEmpty(node.admins) || !_.isEmpty(node.groups))) {%>
+	<div class="dropdown invited">
+		<span class="d-flex z-1 position-relative" data-bs-toggle="menu">
+			<u-badge color="gray" tint="100" class="cursor-pointer">
+				<%=_.size(node.admins) + _.size(node.groups)%> invited
+				<i class="icon-fill icon-caret-down icon-xs ms-1"></i>
+			</u-badge>
+		</span>
+		<div class="menu shadow shadow-opacity-100">
+			<%_.each(node.admins, (admin) => {%>
+				<div class="menu-item d-flex align-items-center">
+					<i class="icon-fill icon-user icon-fw me-3"></i>
+					<div class="lh-1 me-5">
+						<div><%-admin.name%></div>
+						<small class="fg-emphasis-secondary"><%-admin.email%></small>
+					</div>
+					<a href="#" class="fg-danger ms-auto confirm" data-action="revoke" data-node-id="<%-node.nodeId%>" data-email="<%-admin.email%>" data-bs-toggle="tooltip" data-bs-original-title="Revoke access">
+						<i class="icon-fill icon-x-circle"></i>
+					</a>
+				</div>
+			<%})%>
+			<%_.each(node.groups, (group) => {%>
+				<div class="menu-item d-flex align-items-center">
+					<i class="icon-fill icon-users icon-fw me-3"></i>
+					<div class="lh-1 me-5">
+						<div><%-group.name%></div>
+						<small class="fg-emphasis-secondary">Group</small>
+					</div>
+					<a href="#" class="fg-danger ms-auto confirm" data-action="revoke-group" data-node-id="<%-node.nodeId%>" data-group-id="<%-group.id%>" data-group-name="<%-group.name%>" data-bs-toggle="tooltip" data-bs-original-title="Revoke group access">
+						<i class="icon-fill icon-x-circle"></i>
+					</a>
+				</div>
+			<%})%>
+		</div>
+	</div>
+<%}%>

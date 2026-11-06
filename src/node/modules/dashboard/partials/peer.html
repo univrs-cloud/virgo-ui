@@ -37,7 +37,7 @@
 			</div>
 			<div class="dropdown">
 				<span data-bs-toggle="menu" data-bs-placement="top-end sm:bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i></span>
-				<div class="menu" style="width: max-content;">
+				<div class="menu w-max">
 					<%if (system?.virtualIp?.holding && seen) {%>
 						<a href="#" class="menu-item" data-action="handover" data-peer="<%-node.id%>"><i class="icon-fill icon-arrows-left-right icon-fw"></i>Hand over virtual IP</a>
 						<div class="menu-divider"></div>

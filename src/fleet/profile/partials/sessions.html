@@ -1,14 +1,17 @@
-<div class="sessions">
-	<div class="row gx-7 gy-5 mb-5">
-		<div class="col col-12">
+<div class="sessions mt-5 mb-5">
+	<div class="row gx-7 gy-3">
+		<div class="col-12 lg:col-4 2xl:col-3 lg:pt-5">
+			<h5 class="m-0">Sessions</h5>
+			<p class="fg-emphasis-secondary small mt-1 mb-0">The browsers and devices signed in to your account.</p>
+		</div>
+		<div class="col-12 lg:col-8 2xl:col-9">
 			<div class="card border-0 mb-0">
 				<div class="card-body">
-					<div class="d-flex align-items-center mb-3">
-						<h5 class="card-title m-0">Sessions</h5>
-						<%if (_.size(sessions) > 1) {%>
+					<%if (_.size(sessions) > 1) {%>
+						<div class="d-flex mb-1">
 							<a href="#" class="revoke-others btn-link btn-sm p-0 ms-auto fg-danger text-decoration-none min-h-0">Sign out everywhere else<i class="icon-regular icon-sign-out icon-fw ms-1"></i></a>
-						<%}%>
-					</div>
+						</div>
+					<%}%>
 					<%if (_.isNull(sessions)) {%>
 						<div class="fg-4">Loading…</div>
 					<%} else {%>

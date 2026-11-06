@@ -38,7 +38,7 @@
 			</div>
 		<%}%>
 		<%if (!hasRows) {%>
-			<small class="d-block fg-4 py-1" style="padding-left: 2rem;">No folders</small>
+			<small class="d-block fg-4 py-1 ps-9">No folders</small>
 		<%}%>
 		<%_.each(folder.children, (child, index) => {%>
 			<%=folderTemplate({ folder: child, selected, isBusy, draft, depth: depth + 1, isLast: (index === folder.children.length - 1), folderTemplate })%>
