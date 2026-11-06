@@ -13,6 +13,7 @@ export class Input extends LitElement {
 			value: { type: String },
 			label: { type: String, reflect: true },
 			placeholder: { type: String, reflect: true },
+			noFloating: { type: Boolean, reflect: true, attribute: 'no-floating' },
 			tip: { type: String, reflect: true },
 			disabled: { type: Boolean, reflect: true },
 			readonly: { type: Boolean, reflect: true },
@@ -39,6 +40,7 @@ export class Input extends LitElement {
 		this.showPassword = false;
 		this.type = 'text';
 		this.label = '';
+		this.noFloating = false;
 		this.placeholder = '';
 		this.tip = '';
 		this.autocomplete = '';
@@ -166,11 +168,13 @@ export class Input extends LitElement {
 
 		return html`
 			<div class="mb-7">
-				<div class="form-floating">
-					<label>
-						${this.label}
-						${this.tip ? html`<span class="help-inline ms-1" data-bs-toggle="tooltip" data-bs-original-title="${this.tip}"><i class="icon-fill icon-question"></i></span>` : ''}
-					</label>
+				<div class="${classMap({ 'form-floating': !this.noFloating, 'position-relative': this.noFloating })}">
+					${!this.noFloating || this.label ? html`
+						<label class="${classMap({ 'form-label': this.noFloating })}">
+							${this.label}
+							${this.tip ? html`<span class="help-inline ms-1" data-bs-toggle="tooltip" data-bs-original-title="${this.tip}"><i class="icon-fill icon-question"></i></span>` : ''}
+						</label>
+					` : ''}
 					${hasAdorn ? html`
 						<div class="form-control form-adorn ${classMap({ 'is-invalid': this.error })}" @click=${() => { this.focus(); }}>
 							${this.#hasPrefix ? html`<span class="form-adorn-text"><slot name="prefix" @slotchange=${this.#onSlotChange}></slot></span>` : ''}

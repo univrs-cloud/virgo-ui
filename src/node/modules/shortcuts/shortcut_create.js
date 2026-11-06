@@ -149,11 +149,22 @@ form.querySelector('.shortcut-icon').value = defaultIconUrl;
 updateValidation(false);
 
 iconBox.addEventListener('click', (event) => {
-	event.preventDefault();
 	const popover = bootstrap.Popover.getInstance(iconBox);
+	if (popover?.tip?.contains(event.target)) {
+		return;
+	}
+
+	event.preventDefault();
 	popover?.toggle();
 });
-iconBox.addEventListener('shown.bs.popover', () => {
+modal.addEventListener('focusin', (event) => {
+	if (iconBox.contains(event.target)) {
+		return;
+	}
+
+	bootstrap.Popover.getInstance(iconBox)?.hide();
+});
+iconBox.addEventListener('shown.bs.popover', (event) => {
 	const popover = bootstrap.Popover.getInstance(iconBox);
 	const tip = popover?.tip;
 	tip?.querySelector('.shortcut-icon-search')?.focus();
@@ -169,7 +180,7 @@ iconBox.addEventListener('shown.bs.popover', () => {
 iconBox.addEventListener('hide.bs.popover', (event) => {
 	const popover = bootstrap.Popover.getInstance(iconBox);
 	if (popover?.tip?.contains(document.activeElement)) {
-		event.preventDefault();
+		iconBox.focus();
 	}
 	if (iconPopoverOutsideClick) {
 		document.removeEventListener('click', iconPopoverOutsideClick);

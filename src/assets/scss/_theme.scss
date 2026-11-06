@@ -1077,6 +1077,7 @@ $card-image-size: 30px;
 .shortcut-icon-field {
 	.popover {
 		--popover-zindex: 2001;
+		width: var(--popover-max-width);
 	}
 	.shortcut-icon-box {
 		width: calc(3.75rem + var(--border-width) * 2);
