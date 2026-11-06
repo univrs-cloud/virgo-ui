@@ -1,11 +1,35 @@
 <%if (!_.isEmpty(jobs)) {%>
 	<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-fill icon-gear icon-fw icon-spin"></i></span>
 <%} else {%>
-	<%const isActive = _.includes(['success', 'warning'], app.state);%>
+	<%
+		const isActive = _.includes(['success', 'warning'], app.state);
+		const canStop = (app.canBeRemoved && isActive);
+		const menuGroups = _.filter(_.map([
+			[
+				{ action: 'update', label: 'Update', icon: 'icon-arrow-down', className: '', iconClassName: '', isAllowed: (app.hasUpdates && !app.isUnmanaged) }
+			],
+			[
+				{ action: 'start', label: 'Start', icon: 'icon-play', className: '', iconClassName: 'fg-green-400', isAllowed: (!inline && app.state !== 'success') }
+			],
+			[
+				{ action: 'restart', label: 'Restart', icon: 'icon-arrow-counter-clockwise', className: 'confirm', iconClassName: '', isAllowed: (!inline && isActive) },
+				{ action: 'stop', label: 'Stop', icon: 'icon-stop', className: 'fg-danger confirm', iconClassName: '', isAllowed: (!inline && canStop) },
+				{ action: 'kill', label: 'Kill', icon: 'icon-skull', className: 'fg-danger confirm', iconClassName: '', isAllowed: canStop }
+			],
+			[
+				{ action: 'remove', label: 'Remove', icon: 'icon-x-circle', className: 'fg-danger confirm', iconClassName: '', isAllowed: (app.isUnmanaged && !app.isStack) }
+			],
+			[
+				{ action: 'recreate', label: 'Recreate', icon: 'icon-recycle', className: 'fg-danger confirm', iconClassName: '', isAllowed: !app.isUnmanaged }
+			],
+			[
+				{ action: 'uninstall', label: 'Uninstall', icon: 'icon-x-circle', className: 'fg-danger confirm', iconClassName: '', isAllowed: (!app.isUnmanaged && app.canBeRemoved) }
+			]
+		], (items) => { return _.filter(items, 'isAllowed'); }), (items) => { return !_.isEmpty(items); });
+	%>
 	<%if (inline) {%>
 		<div class="d-inline-flex align-items-center bg-2 rounded-3">
 			<div class="d-inline-flex align-items-center px-1">
-				<%const canStop = (app.canBeRemoved && isActive);%>
 				<a href="#" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 rounded-3 <%=(app.state === 'success' ? 'disabled' : '')%>" data-action="start" data-bs-toggle="tooltip" data-bs-original-title="Start"><i class="icon-fill icon-play icon-fw <%=(app.state === 'success' ? 'fg-gray-500' : 'fg-green-400')%>"></i></a>
 				<a href="#" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 rounded-3 <%=(isActive ? 'confirm' : 'disabled')%>" data-action="restart" data-bs-toggle="tooltip" data-bs-original-title="Restart"><i class="icon-regular icon-arrow-counter-clockwise icon-fw <%=(isActive ? 'fg-body' : 'fg-gray-500')%>"></i></a>
 				<a href="#" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 rounded-3 <%=(canStop ? 'confirm' : 'disabled')%>" data-action="stop" data-bs-toggle="tooltip" data-bs-original-title="Stop"><i class="icon-fill icon-stop icon-fw <%=(canStop ? 'fg-red-400' : 'fg-gray-500')%>"></i></a>
@@ -13,42 +37,19 @@
 	<%}%>
 	<div class="<%=(inline ? 'dropdown position-relative' : 'dropdown')%>">
 		<%if (inline) {%>
-			<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="actions-toggle btn-icon btn-text theme-secondary btn-sm rounded-3"><i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i></span>
+			<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="actions-toggle btn-icon btn-text theme-secondary btn-sm rounded-3 <%=(_.isEmpty(menuGroups) ? 'disabled' : '')%>"><i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i></span>
 		<%} else {%>
-			<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i></span>
+			<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm <%=(_.isEmpty(menuGroups) ? 'disabled' : '')%>"><i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i></span>
 		<%}%>
 		<div class="menu">
-			<%if (app.hasUpdates && !app.isUnmanaged) {%>
-				<a href="#" class="menu-item" data-action="update"><i class="icon-fill icon-arrow-down icon-fw"></i>Update</a>
-				<div class="menu-divider"></div>
-			<%}%>
-			<%if (!inline) {%>
-				<a href="#" class="menu-item <%=(app.state === 'success' ? 'disabled' : '')%>" data-action="start"><i class="icon-fill icon-play icon-fw <%=(app.state === 'success' ? '' : 'fg-green-400')%>"></i>Start</a>
-				<div class="menu-divider"></div>
-				<a href="#" class="menu-item <%=(isActive ? 'confirm' : 'disabled')%>" data-action="restart"><i class="icon-fill icon-arrow-counter-clockwise icon-fw"></i>Restart</a>
-			<%}%>
-			<%if (app.canBeRemoved) {%>
-				<%if (!inline) {%>
-					<a href="#" class="menu-item <%=(isActive ? 'fg-danger confirm' : 'disabled')%>" data-action="stop"><i class="icon-fill icon-stop icon-fw"></i>Stop</a>
-				<%}%>
-				<a href="#" class="menu-item <%=(isActive ? 'fg-danger confirm' : 'disabled')%>" data-action="kill"><i class="icon-fill icon-skull icon-fw"></i>Kill</a>
-				<%if (!app.isUnmanaged) {%>
+			<%_.each(menuGroups, (items, index) => {%>
+				<%if (index > 0) {%>
 					<div class="menu-divider"></div>
 				<%}%>
-			<%} else if (!inline) {%>
-				<div class="menu-divider"></div>
-			<%}%>
-			<%if (app.isUnmanaged && !app.isStack) {%>
-				<div class="menu-divider"></div>
-				<a href="#" class="menu-item fg-danger confirm" data-action="remove"><i class="icon-fill icon-x-circle icon-fw"></i>Remove</a>
-			<%}%>
-			<%if (!app.isUnmanaged) {%>
-				<a href="#" class="menu-item fg-danger confirm" data-action="recreate"><i class="icon-fill icon-recycle icon-fw"></i>Recreate</a>
-				<%if (app.canBeRemoved) {%>
-					<div class="menu-divider"></div>
-					<a href="#" class="menu-item fg-danger confirm" data-action="uninstall"><i class="icon-fill icon-x-circle icon-fw"></i>Uninstall</a>
-				<%}%>
-			<%}%>
+				<%_.each(items, ({ action, label, icon, className, iconClassName }) => {%>
+					<a href="#" class="menu-item <%=className%>" data-action="<%-action%>"><i class="icon-fill <%=icon%> icon-fw <%=iconClassName%>"></i><%-label%></a>
+				<%})%>
+			<%})%>
 		</div>
 	</div>
 	<%if (inline) {%>

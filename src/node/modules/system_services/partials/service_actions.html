@@ -6,13 +6,27 @@
 	const isEnableableUnit = (service.unitFileState !== 'static' && service.unitFileState !== 'masked' && service.unitFileState !== 'indirect');
 	const canEnable = (isEnableableUnit && service.unitFileState !== 'enabled' && service.unitFileState !== 'enabled-runtime');
 	const canDisable = (service.unitFileState === 'enabled' || service.unitFileState === 'enabled-runtime');
-	const hasAnyAction = (hasStartStop || isEnableableUnit);
 	const isActive = (service.active === 'active');
 	const isTransitioning = (service.active === 'activating' || service.active === 'deactivating' || service.active === 'reloading');
+	const canStart = (hasStartStop && !isActive && !isTransitioning);
+	const canRestart = (hasStartStop && isActive);
+	const canStop = (hasStartStop && isActive);
+	const menuGroups = _.filter(_.map([
+		[
+			{ action: 'start', label: 'Start', icon: 'icon-play', className: '', iconClassName: 'fg-green-400', isAllowed: (!inline && canStart) },
+			{ action: 'restart', label: 'Restart', icon: 'icon-arrow-counter-clockwise', className: 'confirm', iconClassName: '', isAllowed: (!inline && canRestart) },
+			{ action: 'stop', label: 'Stop', icon: 'icon-stop', className: 'fg-danger confirm', iconClassName: '', isAllowed: (!inline && canStop) }
+		],
+		[
+			{ action: 'enable', label: 'Enable', icon: 'icon-toggle-right', className: '', iconClassName: '', isAllowed: canEnable },
+			{ action: 'enable-start', label: 'Enable & start', icon: 'icon-toggle-right', className: '', iconClassName: '', isAllowed: (canEnable && hasStartStop) }
+		],
+		[
+			{ action: 'disable', label: 'Disable', icon: 'icon-toggle-left', className: 'fg-danger confirm', iconClassName: '', isAllowed: canDisable },
+			{ action: 'disable-stop', label: 'Disable & stop', icon: 'icon-toggle-left', className: 'fg-danger confirm', iconClassName: '', isAllowed: (canDisable && hasStartStop) }
+		]
+	], (items) => { return _.filter(items, 'isAllowed'); }), (items) => { return !_.isEmpty(items); });
 	%>
-	<%const canStart = (hasStartStop && !isActive && !isTransitioning);%>
-	<%const canRestart = (hasStartStop && isActive);%>
-	<%const canStop = (hasStartStop && isActive);%>
 	<%if (inline) {%>
 		<div class="d-inline-flex align-items-center bg-2 rounded-3">
 			<div class="d-inline-flex align-items-center px-1">
@@ -23,34 +37,19 @@
 	<%}%>
 	<div class="<%=(inline ? 'dropdown position-relative' : 'dropdown')%>">
 		<%if (inline) {%>
-			<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="actions-toggle btn-icon btn-text theme-secondary btn-sm rounded-3 <%=(isEnableableUnit ? '' : 'disabled')%>"><i class="icon-fill icon-dots-three-outline-vertical icon-fw"></i></span>
+			<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="actions-toggle btn-icon btn-text theme-secondary btn-sm rounded-3 <%=(_.isEmpty(menuGroups) ? 'disabled' : '')%>"><i class="icon-fill icon-dots-three-outline-vertical icon-fw"></i></span>
 		<%} else {%>
-			<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i></span>
+			<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm <%=(_.isEmpty(menuGroups) ? 'disabled' : '')%>"><i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i></span>
 		<%}%>
 		<div class="menu">
-			<%if (!hasAnyAction) {%>
-				<button type="button" class="menu-item disabled">No actions</button>
-			<%} else {%>
-				<%if (hasStartStop && !inline) {%>
-					<a href="#" class="menu-item <%=(!isActive && !isTransitioning ? '' : 'disabled')%>" data-action="start"><i class="icon-fill icon-play icon-fw <%=(!isActive && !isTransitioning ? 'fg-green-400' : '')%>"></i>Start</a>
-					<a href="#" class="menu-item <%=(isActive ? 'confirm' : 'disabled')%>" data-action="restart"><i class="icon-fill icon-arrow-counter-clockwise icon-fw"></i>Restart</a>
-					<a href="#" class="menu-item <%=(isActive ? 'fg-danger confirm' : 'disabled')%>" data-action="stop"><i class="icon-fill icon-stop icon-fw"></i>Stop</a>
-					<%if (isEnableableUnit) {%>
-						<div class="menu-divider"></div>
-					<%}%>
-				<%}%>
-				<%if (isEnableableUnit) {%>
-					<a href="#" class="menu-item <%=(canEnable ? '' : 'disabled')%>" data-action="enable"><i class="icon-fill icon-toggle-right icon-fw"></i>Enable</a>
-					<%if (hasStartStop) {%>
-						<a href="#" class="menu-item <%=(canEnable ? '' : 'disabled')%>" data-action="enable-start"><i class="icon-fill icon-toggle-right icon-fw"></i>Enable &amp; start</a>
-					<%}%>
+			<%_.each(menuGroups, (items, index) => {%>
+				<%if (index > 0) {%>
 					<div class="menu-divider"></div>
-					<a href="#" class="menu-item <%=(canDisable ? 'fg-danger confirm' : 'disabled')%>" data-action="disable"><i class="icon-fill icon-toggle-left icon-fw"></i>Disable</a>
-					<%if (hasStartStop) {%>
-						<a href="#" class="menu-item <%=(canDisable ? 'fg-danger confirm' : 'disabled')%>" data-action="disable-stop"><i class="icon-fill icon-toggle-left icon-fw"></i>Disable &amp; stop</a>
-					<%}%>
 				<%}%>
-			<%}%>
+				<%_.each(items, ({ action, label, icon, className, iconClassName }) => {%>
+					<a href="#" class="menu-item <%=className%>" data-action="<%-action%>"><i class="icon-fill <%=icon%> icon-fw <%=iconClassName%>"></i><%-label%></a>
+				<%})%>
+			<%})%>
 		</div>
 	</div>
 	<%if (inline) {%>

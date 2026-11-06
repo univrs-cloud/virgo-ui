@@ -241,23 +241,25 @@
 																	<%const isStopped = _.includes(['created', 'exited'], container.state);%>
 																	<%const isRunning = _.includes(['running', 'paused'], container.state);%>
 																	<%const isActive = _.includes(['running', 'paused', 'restarting'], container.state);%>
+																	<%const canStop = (app.canBeRemoved && isActive);%>
+																	<%const hasMenuItems = (isStopped || isRunning || canStop);%>
 																	<div class="dropdown md:d-none">
-																		<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i></span>
+																		<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm <%=(hasMenuItems ? '' : 'disabled')%>"><i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i></span>
 																		<div class="menu">
-																			<%if (app.canBeRemoved || isStopped) {%>
-																				<a href="#" class="menu-item <%=(isStopped ? '' : 'disabled')%>" data-action="start"><i class="icon-fill icon-play icon-fw <%=(isStopped ? 'fg-green-400' : '')%>"></i>Start</a>
-																				<div class="menu-divider"></div>
+																			<%if (isStopped) {%>
+																				<a href="#" class="menu-item" data-action="start"><i class="icon-fill icon-play icon-fw fg-green-400"></i>Start</a>
 																			<%}%>
-																			<a href="#" class="menu-item <%=(isRunning ? 'confirm' : 'disabled')%>" data-action="restart"><i class="icon-fill icon-arrow-counter-clockwise icon-fw"></i>Restart</a>
-																			<%if (app.canBeRemoved) {%>
-																				<a href="#" class="menu-item <%=(isActive ? 'fg-danger confirm' : 'disabled')%>" data-action="stop"><i class="icon-fill icon-stop icon-fw"></i>Stop</a>
-																				<a href="#" class="menu-item <%=(isActive ? 'fg-danger confirm' : 'disabled')%>" data-action="kill"><i class="icon-fill icon-skull icon-fw"></i>Kill</a>
+																			<%if (isRunning) {%>
+																				<a href="#" class="menu-item confirm" data-action="restart"><i class="icon-fill icon-arrow-counter-clockwise icon-fw"></i>Restart</a>
+																			<%}%>
+																			<%if (canStop) {%>
+																				<a href="#" class="menu-item fg-danger confirm" data-action="stop"><i class="icon-fill icon-stop icon-fw"></i>Stop</a>
+																				<a href="#" class="menu-item fg-danger confirm" data-action="kill"><i class="icon-fill icon-skull icon-fw"></i>Kill</a>
 																			<%}%>
 																		</div>
 																	</div>
 																	<div class="d-none md:d-block">
 																		<div class="d-inline-flex align-items-center bg-2 rounded-3">
-																			<%const canStop = (app.canBeRemoved && isActive);%>
 																			<div class="d-inline-flex align-items-center px-1">
 																				<a href="#" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 rounded-3 <%=(isStopped ? '' : 'disabled')%>" data-action="start" data-bs-toggle="tooltip" data-bs-original-title="Start"><i class="icon-fill icon-play icon-fw <%=(isStopped ? 'fg-green-400' : 'fg-gray-500')%>"></i></a>
 																				<a href="#" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 rounded-3 <%=(isRunning ? 'confirm' : 'disabled')%>" data-action="restart" data-bs-toggle="tooltip" data-bs-original-title="Restart"><i class="icon-regular icon-arrow-counter-clockwise icon-fw <%=(isRunning ? 'fg-body' : 'fg-gray-500')%>"></i></a>
