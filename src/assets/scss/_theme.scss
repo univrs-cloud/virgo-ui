@@ -740,10 +740,44 @@ $card-image-size: 30px;
 		inset: 0;
 	}
 	.terminal-container {
+		display: flex;
+		flex-direction: column;
 		.wrapper {
-			height: calc(100% - 40px);
+			box-sizing: content-box;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			flex: 1;
+			min-height: 0;
 			isolation: isolate;
 			padding: map.get($spacers, 3) map.get($spacers, 1) map.get($spacers, 3) map.get($spacers, 5);
+		}
+		.xterm .xterm-scrollable-element > .scrollbar.vertical {
+			&.fade {
+				opacity: 1;
+				pointer-events: auto;
+			}
+			&::before {
+				content: "";
+				position: absolute;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				width: 8px;
+				background: var(--scrollbar-track-bg);
+				border-radius: var(--radius-3);
+			}
+			> .slider {
+				left: auto !important;
+				right: 0;
+				width: 8px !important;
+				background: var(--scrollbar-thumb-bg) !important;
+				border-radius: var(--radius-3);
+				&:hover,
+				&.active {
+					background: var(--scrollbar-thumb-hover-bg) !important;
+				}
+			}
 		}
 	}
 	.logs-container {

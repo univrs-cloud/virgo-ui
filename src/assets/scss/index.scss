@@ -194,7 +194,7 @@
 	}
 }
 
-:root:has(.full-screen:not(.d-none)) {
+:root:has(.full-screen:not(.d-none), body > main > .modules:empty) {
 	scrollbar-gutter: auto;
 	> body {
 		overflow: hidden;
