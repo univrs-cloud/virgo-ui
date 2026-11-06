@@ -421,6 +421,9 @@ $card-image-size: 30px;
 			flex-wrap: nowrap;
 			height: auto;
 		}
+		> .modules > :not(.d-none) > .row > :is(.loading, .oops) {
+			flex: 1 1 0;
+		}
 	}
 }
 #update {

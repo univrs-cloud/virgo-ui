@@ -268,9 +268,6 @@ body:has(header nav) :is(main:not(:has(.booting)), #update) {
 		min-height: unset;
 	}
 }
-body:has(> main .booting) {
-	overflow: hidden;
-}
 
 .progress.booting {
 	width: 2.5rem;
@@ -540,24 +537,27 @@ html:not(:has(head > base[href="/"])) {
 					padding-inline: calc(#{map.get($spacers, 4)} + var(--page-inset-extra));
 				}
 				&::-webkit-scrollbar {
-					width: 0.75rem;
+					width: 12px;
+				}
+				&::-webkit-scrollbar-track,
+				&::-webkit-scrollbar-thumb {
+					border-right: 4px solid transparent;
+					border-radius: var(--radius-3) calc(var(--radius-3) + 4px) calc(var(--radius-3) + 4px) var(--radius-3) / var(--radius-3);
+					background-clip: padding-box;
 				}
 				&::-webkit-scrollbar-track {
 					margin-block: var(--radius-7);
-					background-color: transparent;
+					background-color: var(--scrollbar-track-bg);
 				}
 				&::-webkit-scrollbar-thumb {
-					border: 0.1875rem solid transparent;
-					border-radius: var(--radius-7);
-					background-clip: padding-box;
-					background-color: color-mix(in oklch, var(--black) 20%, transparent);
+					background-color: var(--scrollbar-thumb-bg);
 					&:hover {
-						background-color: color-mix(in oklch, var(--black) 35%, transparent);
+						background-color: var(--scrollbar-thumb-hover-bg);
 					}
 				}
 				@supports not selector(::-webkit-scrollbar) {
 					scrollbar-width: thin;
-					scrollbar-color: color-mix(in oklch, var(--black) 20%, transparent) transparent;
+					scrollbar-color: var(--scrollbar-thumb-bg) var(--scrollbar-track-bg);
 				}
 			}
 		}

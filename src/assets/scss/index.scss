@@ -194,8 +194,11 @@
 	}
 }
 
-:root:has(body > main .booting) {
+:root:has(.full-screen:not(.d-none)) {
 	scrollbar-gutter: auto;
+	> body {
+		overflow: hidden;
+	}
 }
 
 @include media-breakpoint-up(sm) {
