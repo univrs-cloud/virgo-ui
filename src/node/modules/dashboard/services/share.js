@@ -10,9 +10,15 @@ const { subscribe } = createSubscription({
 	],
 	attachStore: storeAttach.beforeCallbacks,
 	mapState: (properties) => {
+		if (_.isNil(properties?.shares)) {
+			return {
+				shares: null
+			};
+		}
+
 		return {
 			shares: _.orderBy(
-				properties?.shares || [],
+				properties.shares,
 				[(entity) => { return entity.comment.toLowerCase(); }],
 				['asc']
 			)

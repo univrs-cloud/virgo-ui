@@ -478,11 +478,11 @@ $card-image-size: 30px;
 		}
 	}
 	.dragging {
-		background: var(--purple-100) !important;
+		background: light-dark(var(--purple-050), var(--purple-900)) !important;
 		border-radius: var(--radius-9) !important;
 		padding: 0 map.get($spacers, 4);
 		margin: 0 map.get($spacers, 4) * -1 map.get($spacers, 4);
-		box-shadow: 0 map.get($spacers, 4) * -1 0 0 var(--purple-100);
+		box-shadow: 0 map.get($spacers, 4) * -1 0 0 light-dark(var(--purple-050), var(--purple-900));
 		.card {
 			pointer-events: auto !important;
 			* {
