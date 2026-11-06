@@ -338,15 +338,15 @@ $card-image-size: 30px;
 		}
 	}
 }
-#dashboard > .row:first-child > .col-12:first-child,
-:is(#network, #settings, #system-updates, #about, #profile) > .row > .col-12:first-child,
-#sites > .row > .container-fluid > .row > .col-12:first-child,
-#update > .container > .row > .col-12:first-child {
+.page-title {
+	position: relative;
 	display: flex;
 	align-items: center;
 	height: var(--top-row-height, auto);
+	margin-bottom: calc(#{map.get($spacers, 5)} - var(--top-lift, 0px));
 	> .position-absolute.end-0 {
-		top: 50%;
+		top: 50% !important;
+		margin-top: 0 !important;
 		transform: translateY(-50%);
 	}
 }
@@ -495,16 +495,6 @@ $card-image-size: 30px;
 	--list-inset-right: 0px;
 	.overflow-y-scroll {
 		height: calc(100dvh - 170px - var(--chrome));
-	}
-	> .row > .col-12:first-child {
-		display: flex;
-		align-items: center;
-		height: var(--top-row-height, auto);
-		> .position-absolute.end-0 {
-			top: 50% !important;
-			margin-top: 0 !important;
-			transform: translateY(-50%);
-		}
 	}
 	> .row > .col-12 > .position-absolute.end-0 {
 		padding-right: calc(#{map.get($spacers, 4)} + var(--list-inset-right)) !important;
