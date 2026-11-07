@@ -69,7 +69,7 @@
 		"postcss-cli": "^12.0.0",
 		"postcss-loader": "^8.2.1",
 		"raw-loader": "^4.0.2",
-		"sass": "^1.108.0",
+		"sass": "^1.108.1",
 		"sass-loader": "^17.1.0",
 		"subset-font": "^2.9.0",
 		"webpack": "^5.112.2",
