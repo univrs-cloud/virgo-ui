@@ -14,6 +14,7 @@ class Host extends Store {
 			checkUpdates: false,
 			updates: null,
 			update: -1,
+			rebootRequired: null,
 			cpuSensors: null,
 			memory: null,
 			arc: null,
@@ -51,8 +52,18 @@ class Host extends Store {
 
 		this.socket.on('host:update', (update) => {
 			// update = { state: 'running', steps: ['Reading package lists...', 'Building dependency tree...', 'Reading state information...', 'Calculating upgrade...', '0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.'], progress: { stage: 'download', percent: 45 } };
+			// update = { state: 'succeeded', isRebootRequired: true, steps: ['Reading package lists...', 'Building dependency tree...', 'Reading state information...', 'Calculating upgrade...', 'The following packages will be upgraded:', '  linux-image-amd64 zfs-dkms zfsutils-linux', '3 upgraded, 1 newly installed, 0 to remove and 0 not upgraded.', 'Setting up linux-image-6.12.57+deb13-amd64 (6.12.57-1) ...', 'Setting up zfs-dkms (2.3.5-1) ...', 'Setting up zfsutils-linux (2.3.5-1) ...'] };
 			this.setState({ update }, 'get_update');
 		});
+
+		this.socket.on('host:rebootRequired', (rebootRequired) => {
+			this.setState({ rebootRequired }, 'get_reboot_required');
+		});
+
+		// setTimeout(() => {
+		// 	let rebootRequired = [{ reason: 'kernel', running: '6.12.48+deb13-amd64', installed: '6.12.57+deb13-amd64' }, { reason: 'zfs', running: '2.3.4-1', installed: '2.3.5-1' }];
+		// 	this.setState({ rebootRequired }, 'get_reboot_required');
+		// }, 2000);
 
 		this.socket.on('host:reboot', (reboot) => {
 			this.setState({ reboot }, 'get_reboot');

@@ -37,11 +37,14 @@
 						<div class="fs-lg lh-xs">Updating...</div>
 					<%}%>
 				</div>
-				<%if (update.isRebootRequired) {%>
-					<u-button variant="danger" class="flex-shrink-0 <%=(!_.includes(['succeeded', 'failed'], update.state) ? 'd-none' : '')%>" data-action="reboot">Reboot</u-button>
-				<%} else {%>
-					<u-button variant="primary" class="flex-shrink-0 <%=(!_.includes(['succeeded', 'failed'], update.state) ? 'd-none' : '')%>" data-action="complete">Continue</u-button>
-				<%}%>
+				<div class="d-flex gap-3 flex-shrink-0 <%=(!_.includes(['succeeded', 'failed'], update.state) ? 'd-none' : '')%>">
+					<%if (update.isRebootRequired) {%>
+						<u-button variant="secondary" data-action="complete" outline>Later</u-button>
+						<u-button variant="danger" data-action="reboot">Reboot now</u-button>
+					<%} else {%>
+						<u-button variant="primary" data-action="complete">Continue</u-button>
+					<%}%>
+				</div>
 			</div>
 
 			<hr class="border-gray-200 flex-shrink-0 mt-5 mb-0 opacity-25">

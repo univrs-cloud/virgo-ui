@@ -36,7 +36,7 @@ const complete = (event) => {
 	softwareService.completeUpdate();
 };
 
-const reboot = async (event) => {
+const reboot = (event) => {
 	if (event.target.dataset.action !== 'reboot') {
 		return;
 	}
@@ -46,10 +46,6 @@ const reboot = async (event) => {
 	}
 
 	event.preventDefault();
-	if (!await alert('A reboot is necessary to make recent changes take effect. The system will now reboot.')) {
-		return;
-	}
-
 	event.target.disabled = true;
 	powerService.reboot();
 };

@@ -14,6 +14,19 @@ const { subscribe } = createSubscription({
 	}
 });
 
+const { subscribe: subscribeToRebootRequired } = createSubscription({
+	stores: [
+		{
+			store: Host,
+			propertyNames: ['rebootRequired', 'reboot']
+		}
+	],
+	attachStore: storeAttach.afterCallbacks,
+	mapState: (properties) => {
+		return properties;
+	}
+});
+
 const reboot = () => {
 	return Host.reboot();
 };
@@ -24,6 +37,7 @@ const shutDown = () => {
 
 export {
 	subscribe,
+	subscribeToRebootRequired,
 	reboot,
 	shutDown
 };
