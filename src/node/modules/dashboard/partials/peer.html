@@ -26,7 +26,11 @@
 			<div class="node-info d-contents sm:d-flex flex-wrap flex-grow-1 align-items-center column-gap-3 row-gap-1">
 				<div class="d-contents sm:d-flex align-items-center gap-3">
 					<i class="icon-fill icon-circle icon-2xs icon-width-auto <%=(seen ? 'fg-green-400' : 'fg-red-400')%>" data-bs-toggle="tooltip" data-bs-original-title="<%=(seen ? 'Online' : 'Offline')%>"></i>
-					<span class="fg-emphasis-secondary"><%-node?.name || 'unknown'%></span>
+					<%if (seen?.name && seen?.cluster) {%>
+						<a href="https://<%-_.toLower(`${seen.name}.${seen.cluster}`)%>" target="_blank" rel="noopener noreferrer" class="fg-emphasis-secondary underline-0 hover:underline-80"><%-node.name%></a>
+					<%} else {%>
+						<span class="fg-emphasis-secondary"><%-node?.name || 'unknown'%></span>
+					<%}%>
 				</div>
 				<div class="node-addresses d-flex flex-column sm:flex-row sm:flex-wrap align-items-start sm:align-items-center column-gap-3 row-gap-1">
 					<span class="d-inline-flex align-items-center gap-1 font-monospace fs-sm fg-4"><i class="icon-regular icon-network icon-fw"></i><%-(seen?.address) || node?.address%></span>
@@ -55,7 +59,11 @@
 			<div class="node-info d-contents sm:d-flex flex-wrap flex-grow-1 align-items-center column-gap-3 row-gap-1">
 				<div class="d-contents sm:d-flex align-items-center gap-3">
 					<i class="icon-regular icon-circle-dashed icon-xs icon-width-auto fg-4"></i>
-					<span class="fg-emphasis-secondary"><%-node?.name || 'unknown'%></span>
+					<%if (node?.name && node?.cluster) {%>
+						<a href="https://<%-_.toLower(`${node.name}.${node.cluster}`)%>" target="_blank" rel="noopener noreferrer" class="fg-emphasis-secondary underline-0 hover:underline-80"><%-node.name%></a>
+					<%} else {%>
+						<span class="fg-emphasis-secondary"><%-node?.name || 'unknown'%></span>
+					<%}%>
 				</div>
 				<div class="node-addresses d-flex flex-column sm:flex-row sm:flex-wrap align-items-start sm:align-items-center column-gap-3 row-gap-1">
 					<span class="d-inline-flex align-items-center gap-1 font-monospace fs-sm fg-4"><i class="icon-regular icon-network icon-fw"></i><%-node?.address%></span>

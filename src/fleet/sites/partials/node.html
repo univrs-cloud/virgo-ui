@@ -72,7 +72,7 @@
 			<%}%>
 		</td>
 		<td class="<%=cellStateClass%>">
-			<div class="d-flex align-items-center">
+			<div class="d-flex flex-wrap align-items-center row-gap-1">
 				<%=badgesTemplate({ node, isRebuilding, statusColor, resilverPercent, upsBadge })%>
 			</div>
 		</td>
@@ -85,7 +85,7 @@
 				<small class="fg-4">&mdash;</small>
 			<%}%>
 		</td>
-		<td class="<%=cellStateClass%>" style="width: 30px; min-width: 30px;">
+		<td class="<%=cellStateClass%> ps-0" style="width: 30px; min-width: 30px;">
 			<%=menuTemplate({ node })%>
 		</td>
 	</tr>
@@ -106,7 +106,7 @@
 					</div>
 					<%=menuTemplate({ node })%>
 				</div>
-				<div class="d-flex align-items-center mt-3 pt-1 mb-5">
+				<div class="d-flex align-items-center numeric-tabular mt-3 pt-1 mb-5">
 					<%=badgesTemplate({ node, isRebuilding, statusColor, resilverPercent, upsBadge })%>
 				</div>
 				<%if (!node.online && node.lastSeenAt) {%>

@@ -94,10 +94,11 @@ class Node extends Store {
 		// 				],
 		// 				apps: [
 		// 					{ name: 'plex', title: 'Plex', services: ['plex', 'transcoder'] },
-		// 					{ name: 'nextcloud', title: 'Nextcloud', services: ['app'] }
+		// 					{ name: 'nextcloud', title: 'Nextcloud', services: ['app'] },
+		// 					...Array.from({ length: 66 }, (value, index) => { return { name: `app-${index + 1}`, title: `App ${index + 1}`, services: ['app'] }; })
 		// 				]
 		// 			},
-		// 			appUpdateJobs: [{ data: { config: { name: 'plex' } } }],
+		// 			appUpdateJobs: [{ data: { config: { name: 'plex' } } }, ...Array.from({ length: 66 }, (value, index) => { return { data: { config: { name: `app-${index + 1}` } } }; })],
 		// 			admins: [
 		// 				{ "email": "john.doe@gmail.com", "name": "John Doe" },
 		// 				{ "email": "jane.doe@gmail.com", "name": "Jane Doe" }
