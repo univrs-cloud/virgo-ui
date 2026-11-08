@@ -45,7 +45,7 @@
 						</span>
 						<small class="d-block fg-4">
 							<%=prettyBytes(topology.usableBytes, { binary: true })%> usable &middot;
-							survives <%-topology.tolerance%> drive <%-(topology.tolerance === 1 ? 'failure' : 'failures')%><%-(topology.vdevs > 1 ? ' per group' : '')%>
+							survives <%-topology.tolerance%> drive <%-(topology.tolerance === 1 ? 'failure' : 'failures')%><%-(topology.vdevs > 1 ? (topology.type === 'mirror' ? ' per pair' : ' per group') : '')%>
 						</small>
 					</span>
 					<%if (_.size(option.layouts) > 1) {%>
