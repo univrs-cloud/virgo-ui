@@ -2,19 +2,23 @@ import page from 'page';
 import jobProgressPartial from 'setup/partials/job_progress.html';
 import appsPartial from 'setup/partials/apps.html';
 import statePartial from 'setup/partials/apps_state.html';
+import certificateReasonPartial from 'setup/partials/certificate_reason.html';
 import * as appsService from 'setup/services/apps';
 import { completeStep, nextStepPath, previousStepPath } from 'setup/wizard';
 
 const appsTemplate = _.template(appsPartial);
 const stateTemplate = _.template(statePartial);
 const jobProgressTemplate = _.template(jobProgressPartial);
+const certificateReasonTemplate = _.template(certificateReasonPartial);
 document.querySelector('main .wizard').insertAdjacentHTML('beforeend', appsTemplate());
 const step = document.querySelector('#apps');
 const core = step.querySelector('.core');
 const backButton = step.querySelector('[data-action="back"]');
 const continueButton = step.querySelector('[data-action="continue"]');
 const checkingRow = step.querySelector('.certificate-checking');
-const checkingFqdn = step.querySelector('.certificate-fqdn');
+const checkingFqdns = step.querySelectorAll('.certificate-fqdn');
+const waitingLabel = step.querySelector('.certificate-waiting');
+const stillCheckingLabel = step.querySelector('.certificate-still-checking');
 const warningRow = step.querySelector('.certificate-warning');
 const warningReason = step.querySelector('.certificate-reason');
 const CERTIFICATE_GRACE_MS = 60000;
@@ -32,14 +36,6 @@ const goBack = (event) => {
 	page(previousStepPath('apps'));
 };
 
-const certificateReason = (certificate) => {
-	if (!certificate?.resolves) {
-		return `${certificate?.fqdn} does not resolve yet. DNS may still be propagating, or the record was not created.`;
-	}
-
-	return `${certificate.fqdn} resolves, but no certificate has been issued yet. Check port forwarding and the node's logs.`;
-};
-
 // Waiting for a certificate is the one state the node has nothing new to say about, so the grace
 // period cannot be measured on the next delivery — there may not be one. It gets its own timer, which
 // re-renders the state it was given so the warning appears on time and the step stops being a dead end.
@@ -54,29 +50,31 @@ const renderWaiting = (fqdn) => {
 		}, remaining);
 	}
 
-	checkingFqdn.textContent = fqdn || 'this node';
-	checkingRow.classList.toggle('d-none', expired);
-	checkingRow.classList.toggle('d-flex', !expired);
+	_.each(checkingFqdns, (checkingFqdn) => { checkingFqdn.textContent = fqdn || 'this node'; });
+	checkingRow.classList.remove('d-none');
+	checkingRow.classList.add('d-flex');
+	waitingLabel.classList.toggle('d-none', expired);
+	stillCheckingLabel.classList.toggle('d-none', !expired);
 	warningRow.classList.toggle('d-none', !expired);
 	return expired;
 };
 
 const renderCertificate = (certificate) => {
-	if (!_.isNil(certificate) && (!certificate.required || certificate.hasCertificate)) {
+	if (_.toLower(certificate?.status) === 'issued') {
 		clearTimeout(graceTimeout);
 		graceTimeout = null;
 		waitStartedAt = null;
 		gaveUp = false;
 		checkingRow.classList.add('d-none');
+		checkingRow.classList.remove('d-flex');
 		warningRow.classList.add('d-none');
 		return true;
 	}
 
-	warningReason.textContent = (_.isNil(certificate)
-		? 'The node has not reported its certificate state yet.'
-		: certificateReason(certificate));
+	const canSkip = (_.isNil(certificate) || certificate.canSkip);
+	warningReason.innerHTML = certificateReasonTemplate({ certificate });
 	gaveUp = renderWaiting(certificate?.fqdn);
-	return gaveUp;
+	return (gaveUp && canSkip);
 };
 
 // The node installs these on its own once the pool is ready, so this step only reports what it is
@@ -99,7 +97,7 @@ const render = (state) => {
 	}
 
 	const isReady = renderCertificate(appsService.getCertificate(state.certificate));
-	backButton.disabled = !isReady;
+	backButton.disabled = !(isReady || gaveUp);
 	continueButton.disabled = !isReady;
 };
 

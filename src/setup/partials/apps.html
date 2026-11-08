@@ -7,15 +7,16 @@
 		<div class="card border-0 flex-grow-1 min-h-0 mb-0">
 			<div class="card-body min-h-0 overflow-y-auto pb-0">
 				<dl class="core m-0"></dl>
-				<div class="certificate-checking d-none align-items-center fg-emphasis-secondary mt-5">
-					<i class="icon-regular icon-circle-notch icon-fw icon-spin me-3"></i>
-					<small>Waiting for the certificate for <span class="certificate-fqdn fg-body"></span>...</small>
-				</div>
 				<div class="certificate-warning alert theme-warning d-none mt-5 mb-0">
 					<div>
 						<div class="fw-semibold">The certificate is not ready yet</div>
 						<small class="certificate-reason"></small>
 					</div>
+				</div>
+				<div class="certificate-checking d-none align-items-center fg-emphasis-secondary mt-5">
+					<i class="icon-regular icon-circle-notch icon-fw icon-spin me-3"></i>
+					<small class="certificate-waiting">Waiting for the certificate for <span class="certificate-fqdn fg-body"></span>...</small>
+					<small class="certificate-still-checking d-none">Still checking for the certificate for <span class="certificate-fqdn fg-body"></span>...</small>
 				</div>
 			</div>
 			<div class="d-flex justify-content-end gap-3 pb-5 mt-7">

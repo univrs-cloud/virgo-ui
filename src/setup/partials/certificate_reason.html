@@ -1,0 +1,5 @@
+<%if (_.isNil(certificate)) {%>
+	The node has not reported its certificate state yet.
+<%} else {%>
+	<%-certificate.reason%>
+<%}%>
