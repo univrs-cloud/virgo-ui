@@ -1,3 +1,30 @@
 $primary: #658ffc;
 
 $font-family-sans-serif: "'InterVariable', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";
+
+@mixin styled-scrollbar($gap: 0px, $track-margin: 0) {
+	&::-webkit-scrollbar {
+		width: calc(12px + #{$gap});
+	}
+	&::-webkit-scrollbar-track,
+	&::-webkit-scrollbar-thumb {
+		border-left: $gap solid transparent;
+		border-right: 4px solid transparent;
+		border-radius: calc(var(--radius-3) + #{$gap}) calc(var(--radius-3) + 4px) calc(var(--radius-3) + 4px) calc(var(--radius-3) + #{$gap}) / var(--radius-3);
+		background-clip: padding-box;
+	}
+	&::-webkit-scrollbar-track {
+		margin-block: $track-margin;
+		background-color: var(--scrollbar-track-bg);
+	}
+	&::-webkit-scrollbar-thumb {
+		background-color: var(--scrollbar-thumb-bg);
+		&:hover {
+			background-color: var(--scrollbar-thumb-hover-bg);
+		}
+	}
+	@supports not selector(::-webkit-scrollbar) {
+		scrollbar-width: thin;
+		scrollbar-color: var(--scrollbar-thumb-bg) var(--scrollbar-track-bg);
+	}
+}

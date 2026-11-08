@@ -53,8 +53,8 @@ const getUsableDrives = (drives) => {
 	return _.filter(drives, (drive) => { return Boolean(drive.id) && !drive.system; });
 };
 
-/** The layouts the node says these drives can be built into, one per redundancy type. Empty with
- * drives present means their sizes differ too much. */
+/** The layouts the node says these drives can be built into. Empty with drives present means no
+ * drive type has enough drives of a similar size. */
 const getTopologies = (topologies = Host.getTopologies()) => {
 	return (topologies || []);
 };

@@ -44,12 +44,12 @@
 			</dd>
 		</dl>
 	<%} else if (_.isEmpty(topologies)) {%>
-		<p class="fg-danger">These drives differ too much in size, so no pool structure can be offered. Use drives within 10% of each other in size, and remove any that should not be part of the pool.</p>
+		<p class="fg-danger">No pool structure can be offered for these drives. A pool needs at least 2 drives of the same type (hard drive, SATA SSD or NVMe), within 10% of each other in size.</p>
 		<dl class="m-0">
 			<dt class="fw-lighter"><small><i class="icon-light icon-hard-drive icon-fw me-1"></i>Drives</small></dt>
 			<dd class="m-0">
 				<%_.each(drives, (drive) => {%>
-					<div><%-(drive.model || drive.name)%> @ <strong><%=prettyBytes(drive.size || 0, { binary: true })%></strong></div>
+					<div><%-(drive.model || drive.name)%> @ <strong><%=prettyBytes(drive.size || 0, { binary: true })%></strong> <small class="fg-4"><%-({ hdd: 'Hard drive', ssd: 'SATA SSD', nvme: 'NVMe' }[drive.type] || '')%></small></div>
 					<%if (drive.serialNumber) {%>
 						<small class="d-block fg-4 mt--1">SN: <%-drive.serialNumber%></small>
 					<%}%>
@@ -57,8 +57,8 @@
 			</dd>
 		</dl>
 	<%} else {%>
-		<dl class="m-0">
-			<%=topologiesPartial({ topologies, selectedType, drives, prettyBytes })%>
+		<dl class="d-flex flex-column min-h-0 m-0">
+			<%=topologiesPartial({ topologyGroups, selectedKey, prettyBytes })%>
 		</dl>
 		<%if (!_.isEmpty(foreignPools)) {%>
 			<div class="alert theme-warning mt-5 mb-0">

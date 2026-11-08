@@ -1,72 +1,120 @@
-<%const LABELS = { raidz1: 'Basic Protection (RAID-Z1)', raidz2: 'Advanced Protection (RAID-Z2)', raidz3: 'Ultimate Protection (RAID-Z3)', mirror: 'Low Latency (Mirror)' };%>
+<%const LABELS = { mirror: 'Low latency (Mirror)', raidz1: 'Basic protection (RAID-Z1)', raidz2: 'Advanced protection (RAID-Z2)', raidz3: 'Ultimate protection (RAID-Z3)' };%>
+<%const MEDIA_LABELS = { hdd: 'Hard drives', ssd: 'SATA SSDs', nvme: 'NVMe drives' };%>
 <%const infoItem = (label, value) => { return `<div class='mt-1'><div class='small opacity-75'>${label}</div><div>${_.escape(value)}</div></div>`; };%>
-<dt class="fw-lighter"><small><i class="icon-light icon-tree-view icon-fw me-1"></i>Topology</small></dt>
-<dd class="vdev-tree m-0">
-	<%_.each(topologies, (topology) => {%>
-		<%const id = `topology-${topology.type}`%>
-		<%const groups = _.chunk(drives, topology.width)%>
-		<label class="topology d-block border rounded-5 p-5 mb-3 <%=(topology.type === selectedType ? 'border-primary' : '')%>" for="<%-id%>">
-			<span class="d-flex align-items-start gap-5">
-				<input type="radio" class="radio m-0 mt-1 flex-shrink-0" name="topology" id="<%-id%>" value="<%-topology.type%>" <%=(topology.type === selectedType ? 'checked' : '')%>>
-				<span class="flex-grow-1">
-					<span class="d-block"><%-LABELS[topology.type]%></span>
-					<small class="d-block fg-4">
-						<%=prettyBytes(topology.usableBytes, { binary: true })%> usable &middot;
-						survives <%-topology.tolerance%> drive <%-(topology.tolerance === 1 ? 'failure' : 'failures')%><%-(topology.vdevs > 1 ? ' per group' : '')%>
-					</small>
-				</span>
-			</span>
-			<span class="d-flex flex-wrap justify-content-center gap-5 mt-5">
-				<%_.each(groups, (group, index) => {%>
-					<span class="text-center">
-						<span class="d-block">
-							<u-badge color="gray" pill><small>Data · <%-topology.type%>-<%-index%></small></u-badge>
-						</span>
-						<span class="d-inline-block">
-							<%if (topology.width > 1) {%>
-								<span class="vdev-bar d-block"></span>
+<%const driveTip = (drive) => {
+	const items = _.compact([
+		(drive.model ? infoItem('Model', drive.model) : null),
+		(drive.serialNumber ? infoItem('Serial', drive.serialNumber) : null),
+		(drive.size ? infoItem('Size', prettyBytes(drive.size, { binary: true })) : null)
+	]);
+	return (_.isEmpty(items) ? '' : ` data-bs-toggle="tooltip" data-bs-custom-class="storage-device" data-bs-original-title="<div class='text-start'>${items.join('')}</div>"`);
+};%>
+<dt class="fw-lighter mb-3"><small><i class="icon-light icon-tree-view icon-fw me-1"></i>Topology</small></dt>
+<dd class="vdev-tree overflow-y-auto min-h-0 m-0">
+	<%_.each(topologyGroups, (group, groupIndex) => {%>
+		<%if (_.size(topologyGroups) > 1) {%>
+			<div class="d-flex align-items-center gap-3 mb-3 <%=(groupIndex > 0 ? 'mt-5' : '')%>">
+				<span><%-MEDIA_LABELS[group.media]%></span>
+				<small class="fg-4"><%=_.size(group.drives)%> × <%=prettyBytes(_.minBy(group.drives, 'size')?.size || 0, { binary: true })%></small>
+			</div>
+		<%}%>
+		<%_.each(group.options, (option) => {%>
+			<%const topology = option.topology%>
+			<%const id = `topology-${group.media}-${option.type}`%>
+			<%const isSelected = option.key === selectedKey%>
+			<%const topologyDrives = _.compact(_.map(topology.drives, (driveId) => { return _.find(group.drives, { id: driveId }); }))%>
+			<%const usedDrives = _.take(topologyDrives, topology.vdevs * topology.width)%>
+			<%const unusedDrives = _.drop(topologyDrives, topology.vdevs * topology.width)%>
+			<%const totalBytes = _.sumBy(topologyDrives, 'size')%>
+			<%const smallestBytes = (_.minBy(topologyDrives, 'size')?.size || 0)%>
+			<%const protectionDrives = topology.vdevs * topology.parity%>
+			<%const protectionBytes = protectionDrives * smallestBytes%>
+			<%const unusedBytes = Math.max(totalBytes - topology.usableBytes - protectionBytes, 0)%>
+			<%const toPercent = (bytes) => { return _.round((totalBytes > 0 ? (bytes / totalBytes) * 100 : 0), 2); }%>
+			<%const usablePercent = toPercent(topology.usableBytes)%>
+			<%const unusedPercent = toPercent(unusedBytes)%>
+			<label class="topology d-block border rounded-5 p-5 mb-3 <%=(isSelected ? 'border-primary bg-subtle-primary' : '')%>" for="<%-id%>">
+				<span class="d-flex align-items-start gap-5">
+					<input type="radio" class="radio m-0 mt-1 flex-shrink-0" name="topology" id="<%-id%>" value="<%-option.key%>" <%=(isSelected ? 'checked' : '')%>>
+					<span class="flex-grow-1 min-w-0">
+						<span class="d-flex flex-wrap align-items-center gap-3">
+							<span><%-LABELS[option.type]%></span>
+							<%if (topology.recommended) {%>
+								<u-badge color="green" pill><small>Recommended</small></u-badge>
 							<%}%>
-							<span class="vdev-slots">
-								<%_.each(group, (drive) => {%>
-									<%const tipItems = _.compact([(drive.model ? infoItem('Model', drive.model) : null), (drive.serialNumber ? infoItem('Serial', drive.serialNumber) : null), (drive.size ? infoItem('Size', prettyBytes(drive.size, { binary: true })) : null)])%>
-									<span class="vdev-slot">
-										<%if (topology.width > 1) {%>
+						</span>
+						<small class="d-block fg-4">
+							<%=prettyBytes(topology.usableBytes, { binary: true })%> usable &middot;
+							survives <%-topology.tolerance%> drive <%-(topology.tolerance === 1 ? 'failure' : 'failures')%><%-(topology.vdevs > 1 ? ' per group' : '')%>
+						</small>
+					</span>
+					<%if (_.size(option.layouts) > 1) {%>
+						<span class="nav nav-pills rounded-6 flex-shrink-0">
+							<button type="button" class="nav-link rounded-5 px-3 py-1 <%=(topology.variant === 'performance' ? 'active' : '')%>" data-topology="<%-option.key%>" data-variant="performance"><small>Faster</small></button>
+							<button type="button" class="nav-link rounded-5 px-3 py-1 <%=(topology.variant === 'capacity' ? 'active' : '')%>" data-topology="<%-option.key%>" data-variant="capacity"><small>More space</small></button>
+						</span>
+					<%}%>
+				</span>
+				<span class="d-flex flex-wrap justify-content-center align-items-end gap-5 mt-5">
+					<%_.each(_.chunk(usedDrives, topology.width), (vdevDrives, index) => {%>
+						<span class="vdev-group text-center">
+							<span class="d-block">
+								<u-badge color="gray" pill><small><%-topology.type%>-<%=index%></small></u-badge>
+							</span>
+							<span class="d-block mt-2">
+								<span class="vdev-slots">
+									<%_.each(vdevDrives, (drive) => {%>
+										<span class="vdev-slot">
 											<span class="vdev-stem d-block"></span>
-										<%}%>
-										<i class="vdev-disk icon-duotone icon-hard-drive fg-blue-500"<%=(_.isEmpty(tipItems) ? '' : ` data-bs-toggle="tooltip" data-bs-custom-class="storage-device" data-bs-original-title="<div class='text-start'>${tipItems.join('')}</div>"`)%>></i>
-										<small class="fg-4 text-truncate w-100 mt-1"><%-drive.name%></small>
-									</span>
-								<%})%>
+											<i class="vdev-disk icon-duotone icon-hard-drive fg-blue-500"<%=driveTip(drive)%>></i>
+											<small class="fg-4 text-truncate w-100 mt-1"><%-drive.name%></small>
+										</span>
+									<%})%>
+								</span>
 							</span>
 						</span>
-					</span>
-				<%})%>
-			</span>
-		</label>
+					<%})%>
+					<%if (!_.isEmpty(unusedDrives)) {%>
+						<span class="vdev-group vdev-group-unused text-center">
+							<span class="d-block">
+								<u-badge color="gray" pill><small>Unused</small></u-badge>
+							</span>
+							<span class="d-block mt-2">
+								<span class="vdev-slots">
+									<%_.each(unusedDrives, (drive) => {%>
+										<span class="vdev-slot">
+											<span class="vdev-stem d-block invisible"></span>
+											<i class="vdev-disk icon-duotone icon-hard-drive fg-4"<%=driveTip(drive)%>></i>
+											<small class="fg-4 text-truncate w-100 mt-1"><%-drive.name%></small>
+										</span>
+									<%})%>
+								</span>
+							</span>
+						</span>
+					<%}%>
+				</span>
+				<u-progress class="mt-5" shadow="false">
+					<u-progress-bar color="blue" tint="500" width="<%=usablePercent%>" warning-threshold="999" danger-threshold="999" tip="Capacity: <%=prettyBytes(topology.usableBytes, { binary: true })%>"></u-progress-bar>
+					<u-progress-bar color="pink" tint="400" width="<%=(100 - usablePercent - unusedPercent)%>" warning-threshold="999" danger-threshold="999" tip="Protection: <%=_.pluralize('drive', protectionDrives, true)%>"></u-progress-bar>
+					<%if (unusedPercent > 0) {%>
+						<u-progress-bar color="gray" tint="400" width="<%=unusedPercent%>" warning-threshold="999" danger-threshold="999" tip="Unused: <%=prettyBytes(unusedBytes, { binary: true })%>"></u-progress-bar>
+					<%}%>
+				</u-progress>
+				<span class="d-flex flex-wrap gap-5 mt-3">
+					<small class="fg-emphasis-secondary"><i class="icon-fill icon-circle icon-2xs fg-blue-500 me-1 align-middle"></i>Capacity: <%=prettyBytes(topology.usableBytes, { binary: true })%></small>
+					<small class="fg-emphasis-secondary"><i class="icon-fill icon-circle icon-2xs fg-pink-400 me-1 align-middle"></i>Protection: <%=_.pluralize('drive', protectionDrives, true)%></small>
+					<%if (unusedPercent > 0) {%>
+						<small class="fg-emphasis-secondary">
+							<i class="icon-fill icon-circle icon-2xs fg-gray-500 me-1 align-middle"></i>Unused: <%=prettyBytes(unusedBytes, { binary: true })%>
+							<%if (!_.isEmpty(unusedDrives)) {%>
+								<span class="fg-4">(<%=_.pluralize('drive', _.size(unusedDrives), true)%> left out of the pool)</span>
+							<%} else {%>
+								<span class="fg-4">(larger drives are used up to the smallest one's size)</span>
+							<%}%>
+						</small>
+					<%}%>
+				</span>
+			</label>
+		<%})%>
 	<%})%>
-	<%const selected = _.find(topologies, { type: selectedType })%>
-	<%if (selected) {%>
-		<%const totalBytes = _.sumBy(drives, 'size')%>
-		<%const smallestBytes = (_.minBy(drives, 'size')?.size || 0)%>
-		<%const protectionDrives = selected.vdevs * selected.parity%>
-		<%const protectionBytes = protectionDrives * smallestBytes%>
-		<%const unusedBytes = Math.max(totalBytes - selected.usableBytes - protectionBytes, 0)%>
-		<%const toPercent = (bytes) => { return _.round((totalBytes > 0 ? (bytes / totalBytes) * 100 : 0), 2); }%>
-		<%const usablePercent = toPercent(selected.usableBytes)%>
-		<%const unusedPercent = toPercent(unusedBytes)%>
-		<u-progress class="mt-5" shadow="false">
-			<u-progress-bar color="blue" tint="500" width="<%=usablePercent%>" warning-threshold="999" danger-threshold="999" tip="Capacity: <%=prettyBytes(selected.usableBytes, { binary: true })%>"></u-progress-bar>
-			<u-progress-bar color="pink" tint="400" width="<%=(100 - usablePercent - unusedPercent)%>" warning-threshold="999" danger-threshold="999" tip="Protection: <%=_.pluralize('drive', protectionDrives, true)%>"></u-progress-bar>
-			<%if (unusedPercent > 0) {%>
-				<u-progress-bar color="gray" tint="400" width="<%=unusedPercent%>" warning-threshold="999" danger-threshold="999" tip="Unused: <%=prettyBytes(unusedBytes, { binary: true })%>"></u-progress-bar>
-			<%}%>
-		</u-progress>
-		<div class="d-flex flex-wrap gap-5 mt-3">
-			<small class="fg-emphasis-secondary"><i class="icon-fill icon-circle fg-blue-500 me-1 align-middle" style="font-size: 0.5rem;"></i>Capacity: <%=prettyBytes(selected.usableBytes, { binary: true })%></small>
-			<small class="fg-emphasis-secondary"><i class="icon-fill icon-circle fg-pink-400 me-1 align-middle" style="font-size: 0.5rem;"></i>Protection: <%=_.pluralize('drive', protectionDrives, true)%></small>
-			<%if (unusedPercent > 0) {%>
-				<small class="fg-emphasis-secondary"><i class="icon-fill icon-circle fg-gray-500 me-1 align-middle" style="font-size: 0.5rem;"></i>Unused: <%=prettyBytes(unusedBytes, { binary: true })%> <span class="fg-4">(larger drives are used up to the smallest one's size)</span></small>
-			<%}%>
-		</div>
-	<%}%>
 </dd>

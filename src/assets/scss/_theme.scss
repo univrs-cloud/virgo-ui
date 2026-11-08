@@ -1,6 +1,7 @@
 @use "sass:map";
 @use "bootstrap/scss/config" as *;
 @use "bootstrap/scss/layout/breakpoints" as *;
+@use "variables" as vars;
 
 $list-pages: "#apps, #shortcuts, #folders, #time-capsule, #users, #storage, #system-services, #topology";
 $detail-pages: "#apps, #folders, #time-capsule, #users, #storage, #system-services";
@@ -849,6 +850,7 @@ $card-image-size: 30px;
 	--vdev-line-color: var(--border-color);
 	.vdev-tree {
 		--vdev-slot-width: 4.25rem;
+		@include vars.styled-scrollbar($gap: map.get($spacers, 3));
 		.vdev-bar {
 			width: calc(100% - var(--vdev-slot-width));
 			height: 0;
@@ -874,6 +876,29 @@ $card-image-size: 30px;
 		.vdev-disk {
 			font-size: 1.75rem;
 			line-height: 1;
+		}
+		.vdev-group {
+			max-width: 100%;
+			.vdev-slot {
+				position: relative;
+				&::before {
+					content: "";
+					position: absolute;
+					top: 0;
+					right: 0;
+					left: 0;
+					border-top: var(--border-width) solid var(--vdev-line-color);
+				}
+				&:first-child::before {
+					left: 50%;
+				}
+				&:last-child::before {
+					right: 50%;
+				}
+			}
+			&.vdev-group-unused .vdev-slot::before {
+				content: none;
+			}
 		}
 	}
 }

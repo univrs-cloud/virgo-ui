@@ -11,7 +11,9 @@ const stateTemplate = _.template(statePartial);
 const topologiesTemplate = _.template(topologiesPartial);
 const poolTopologyTemplate = _.template(poolTopologyPartial);
 // The layout the user picked, kept across renders because the drive list re-renders under it.
-let selectedType = null;
+let selectedKey = null;
+let selectedTopology = null;
+const choices = {};
 // Picking a layout changes the summary under it, and no store update follows a click.
 let lastState = null;
 document.querySelector('main .wizard').insertAdjacentHTML('beforeend', storageTemplate());
@@ -28,6 +30,21 @@ const backButton = step.querySelector('[data-action="back"]');
 const goNext = () => {
 	completeStep('storage');
 	page(nextStepPath('storage'));
+};
+
+const getTopologyGroups = (topologies, drives) => {
+	return _.map(_.groupBy(topologies, 'media'), (mediaTopologies, media) => {
+		const options = _.map(_.groupBy(mediaTopologies, 'type'), (layouts, type) => {
+			const key = `${media}:${type}`;
+			const topology = (_.find(layouts, { variant: choices[key] }) || _.find(layouts, (layout) => { return layout.variant !== 'performance'; }));
+			return { key, type, layouts, topology };
+		});
+		return {
+			media,
+			drives: _.filter(drives, (drive) => { return _.includes(_.first(mediaTopologies).drives, drive.id); }),
+			options: _.sortBy(options, (option) => { return (_.some(option.layouts, 'recommended') ? 0 : 1); })
+		};
+	});
 };
 
 const idle = () => {
@@ -77,9 +94,15 @@ const render = (state) => {
 	const importablePool = storageService.getImportablePool(state.importablePools);
 	const usableDrives = storageService.getUsableDrives(state.drives);
 	const topologies = storageService.getTopologies(state.topologies);
-	if (!_.find(topologies, { type: selectedType })) {
-		selectedType = _.get(_.first(topologies), 'type', null);
+	if (!_.some(topologies, (topology) => { return `${topology.media}:${topology.type}` === selectedKey; })) {
+		const recommended = (_.find(topologies, { recommended: true }) || _.first(topologies));
+		selectedKey = (recommended ? `${recommended.media}:${recommended.type}` : null);
+		if (recommended?.variant) {
+			choices[selectedKey] = recommended.variant;
+		}
 	}
+	const topologyGroups = getTopologyGroups(topologies, usableDrives);
+	selectedTopology = (_.find(_.flatMap(topologyGroups, 'options'), { key: selectedKey })?.topology || null);
 
 	const template = stateTemplate({
 		pool,
@@ -88,7 +111,8 @@ const render = (state) => {
 		foreignPools: storageService.getForeignPools(state.importablePools),
 		drives: usableDrives,
 		topologies,
-		selectedType,
+		topologyGroups,
+		selectedKey,
 		topologiesPartial: topologiesTemplate,
 		poolGroups: storageService.getPoolGroups(pool, state.drives),
 		importableGroups: storageService.getImportableGroups(importablePool, state.drives),
@@ -104,7 +128,7 @@ const render = (state) => {
 
 	// A pool that is already imported leaves nothing to do; otherwise it is adopt-or-create, and
 	// creating needs a layout the drives can actually be built into.
-	const canCreate = (_.isUndefined(pool) && _.isUndefined(importablePool) && Boolean(selectedType));
+	const canCreate = (_.isUndefined(pool) && _.isUndefined(importablePool) && Boolean(selectedTopology));
 	continueButton.classList.toggle('d-none', _.isUndefined(pool));
 	importButton.classList.toggle('d-none', !_.isUndefined(pool) || _.isUndefined(importablePool));
 	createButton.classList.toggle('d-none', !canCreate);
@@ -127,17 +151,28 @@ const importPool = (event) => {
 const selectTopology = (event) => {
 	const input = event.target.closest('input[name="topology"]');
 	if (input) {
-		selectedType = input.value;
+		selectedKey = input.value;
 		render(lastState);
 	}
 };
 
-const createPool = async (event) => {
-	if (!selectedType) {
+const chooseVariant = (event) => {
+	const button = event.target.closest('[data-variant]');
+	if (!button) {
 		return;
 	}
 
-	const drives = storageService.getUsableDrives(storageService.getDrives());
+	event.preventDefault();
+	choices[button.dataset.topology] = button.dataset.variant;
+	selectedKey = button.dataset.topology;
+	render(lastState);
+};
+
+const createPool = async (event) => {
+	if (!selectedTopology) {
+		return;
+	}
+
 	const message = `All data on the selected drives will be erased during formatting. This action cannot be undone. The selected RAID type cannot be changed after setup.`;
 	if (!await confirm(message, {
 		buttons: [{ text: 'Format and proceed', class: 'btn-solid theme-danger' }],
@@ -148,8 +183,10 @@ const createPool = async (event) => {
 
 	start(createButton);
 	storageService.createPool({
-		type: selectedType,
-		drives: _.map(drives, 'id')
+		media: selectedTopology.media,
+		type: selectedTopology.type,
+		width: selectedTopology.width,
+		drives: selectedTopology.drives
 	});
 };
 
@@ -166,6 +203,7 @@ const goBack = (event) => {
 };
 
 summary.addEventListener('change', selectTopology);
+summary.addEventListener('click', chooseVariant);
 rescanLink.addEventListener('click', scanAgain);
 importButton.addEventListener('click', importPool);
 createButton.addEventListener('click', createPool);

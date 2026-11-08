@@ -536,29 +536,7 @@ html:not(:has(head > base[href="/"])) {
 					max-width: none;
 					padding-inline: calc(#{map.get($spacers, 4)} + var(--page-inset-extra));
 				}
-				&::-webkit-scrollbar {
-					width: 12px;
-				}
-				&::-webkit-scrollbar-track,
-				&::-webkit-scrollbar-thumb {
-					border-right: 4px solid transparent;
-					border-radius: var(--radius-3) calc(var(--radius-3) + 4px) calc(var(--radius-3) + 4px) var(--radius-3) / var(--radius-3);
-					background-clip: padding-box;
-				}
-				&::-webkit-scrollbar-track {
-					margin-block: var(--radius-7);
-					background-color: var(--scrollbar-track-bg);
-				}
-				&::-webkit-scrollbar-thumb {
-					background-color: var(--scrollbar-thumb-bg);
-					&:hover {
-						background-color: var(--scrollbar-thumb-hover-bg);
-					}
-				}
-				@supports not selector(::-webkit-scrollbar) {
-					scrollbar-width: thin;
-					scrollbar-color: var(--scrollbar-thumb-bg) var(--scrollbar-track-bg);
-				}
+				@include vars.styled-scrollbar($track-margin: var(--radius-7));
 			}
 		}
 	}
