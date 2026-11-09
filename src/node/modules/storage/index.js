@@ -19,6 +19,7 @@ const container = module.querySelector('.container-fluid');
 const details = container.querySelector('.details');
 const searchInput = module.querySelector('.search');
 const listCount = module.querySelector('.list-count');
+const syncButton = module.querySelector('button[data-action="sync"]');
 const table = container.querySelector('.table');
 let routePoolName = null;
 const poolTabs = {};
@@ -27,6 +28,13 @@ let searchValue = '';
 let pools = [];
 let drives = [];
 let jobs = [];
+
+const sync = (event) => {
+	event.preventDefault();
+	syncButton.disabled = true;
+	syncButton.querySelector('.icon-arrows-clockwise').classList.add('icon-spin');
+	storageService.syncStorage();
+};
 
 const search = (event) => {
 	clearTimeout(searchTimer);
@@ -310,6 +318,8 @@ const render = (state) => {
 	}
 
 	loading.classList.add('d-none');
+	syncButton.disabled = false;
+	syncButton.querySelector('.icon-arrows-clockwise').classList.remove('icon-spin');
 	container.classList.remove('d-none');
 };
 
@@ -349,6 +359,7 @@ module.addEventListener('click', compress);
 module.addEventListener('click', selectTab);
 module.addEventListener('mouseenter', toggleStateTooltip, true);
 module.addEventListener('mouseleave', toggleStateTooltip, true);
+syncButton.addEventListener('click', sync);
 searchInput.addEventListener('input', search);
 table.querySelector('tbody').addEventListener('click', expand);
 

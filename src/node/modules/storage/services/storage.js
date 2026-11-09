@@ -42,6 +42,10 @@ const getJobs = () => {
 	return _.filter(Job.getJobs() || [], isExpandJob);
 };
 
+const syncStorage = () => {
+	Host.syncStorage();
+};
+
 const expandPool = (data) => {
 	Host.expandPool(data);
 };
@@ -52,5 +56,6 @@ export {
 	getStorage,
 	getSnapshots,
 	getJobs,
+	syncStorage,
 	expandPool
 };

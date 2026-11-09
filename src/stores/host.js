@@ -221,6 +221,10 @@ class Host extends Store {
 		this.socket.emit('host:storage:pool:expand', data);
 	}
 
+	syncStorage() {
+		this.socket.emit('host:storage:fetch');
+	}
+
 	installCoreApps() {
 		this.socket.emit('host:apps:core:install');
 	}
