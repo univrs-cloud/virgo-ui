@@ -225,7 +225,7 @@ const renderPoolDetails = (name) => {
 	const groups = _.flatMap(sections, (section) => {
 		const vdevs = _.values(section.vdevs);
 		if (section.key === 'data') {
-			return _.map(vdevs, (vdev) => { return { vdev, isData: true, section: section.key, name: (vdev.vdevType === 'disk' ? null : vdev.name), disks: groupDisks(vdev) }; });
+			return _.map(vdevs, (vdev) => { return { vdev, isData: true, section: section.key, name: (vdev.vdevType === 'disk' ? 'stripe' : vdev.name), disks: groupDisks(vdev) }; });
 		}
 
 		const bare = _.filter(vdevs, { vdevType: 'disk' });

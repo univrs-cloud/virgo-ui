@@ -147,7 +147,7 @@ const getPoolGroups = (pool, drives = Host.getDrives()) => {
 		const vdevs = _.values(section.vdevs);
 		if (section.key === 'data') {
 			return _.map(vdevs, (vdev) => {
-				return { section: section.key, name: (vdev.vdevType === 'disk' ? null : vdev.name), state: vdev.state, disks: groupDisks(vdev) };
+				return { section: section.key, name: (vdev.vdevType === 'disk' ? 'stripe' : vdev.name), state: vdev.state, disks: groupDisks(vdev) };
 			});
 		}
 

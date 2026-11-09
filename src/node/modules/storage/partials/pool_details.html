@@ -145,11 +145,11 @@
 							</u-progress>
 							<div class="row g-3 mt-3">
 								<div class="col-6 md:col-3 2xl:col-6">
-									<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-database icon-fw me-1 fg-blue-500"></i>Data</small>
+									<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-database icon-fw me-1 fg-blue-300"></i>Data</small>
 									<span class="fw-light"><%=prettyBytes(data, { binary: true })%></span>
 								</div>
 								<div class="col-6 md:col-3 2xl:col-6">
-									<small class="fg-4 d-block text-truncate"><i class="icon-regular icon-clock-counter-clockwise icon-fw me-1 fg-indigo-500"></i>Snapshots (<%=_.size(pool.snapshots)%>)</small>
+									<small class="fg-4 d-block text-truncate"><i class="icon-regular icon-clock-counter-clockwise icon-fw me-1 fg-indigo-100"></i>Snapshots (<%=_.size(pool.snapshots)%>)</small>
 									<span class="fw-light"><%=prettyBytes(snapshots, { binary: true })%></span>
 								</div>
 							</div>
@@ -159,7 +159,7 @@
 				<div class="detail-main">
 					<div class="nav nav-underline d-flex gap-0 border-bottom">
 						<button type="button" class="nav-link detail-facts-tab px-4 <%=(poolTab === 'overview' ? 'active border-primary fw-light' : '')%>" data-pool-tab="overview"><i class="icon-light icon-info icon-fw"></i>Overview</button>
-						<button type="button" class="nav-link detail-default-tab px-4 <%=(poolTab === 'topology' ? 'active border-primary fw-light' : '')%>" data-pool-tab="topology"><i class="icon-light icon-tree-view icon-fw"></i>Topology <small class="opacity-75"><%=_.size(groups)%></small></button>
+						<button type="button" class="nav-link detail-default-tab px-4 <%=(poolTab === 'topology' ? 'active border-primary fw-light' : '')%>" data-pool-tab="topology"><i class="icon-light icon-tree-view icon-fw"></i>Topology</button>
 					</div>
 					<div class="table-scroll overflow-y-scroll pe-5 mx-0 me--5 <%=(poolTab === 'topology' ? '' : 'detail-pane-off')%>">
 						<div class="list-group list-group-flush">
@@ -170,7 +170,7 @@
 										<%const groupColor = stateColor(group.vdev.state)%>
 										<div class="text-center">
 											<div>
-												<u-badge color="<%-groupColor%>" pill><small><%-_.compact([SECTION_LABELS[group.section], group.name]).join(' · ')%></small></u-badge>
+												<u-badge color="<%-groupColor%>" pill><small><%-_.compact([_.omit(SECTION_LABELS, 'data')[group.section], group.name]).join(' · ')%></small></u-badge>
 											</div>
 											<div class="d-inline-block">
 												<div class="vdev-bar"></div>

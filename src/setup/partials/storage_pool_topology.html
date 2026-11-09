@@ -49,7 +49,7 @@
 		<%_.each(groups, (group) => {%>
 			<span class="text-center">
 				<span class="d-block">
-					<u-badge color="<%-stateColor(group.state)%>" pill><small><%-_.compact([SECTION_LABELS[group.section], group.name]).join(' · ')%></small></u-badge>
+					<u-badge color="<%-stateColor(group.state)%>" pill><small><%-_.compact([_.omit(SECTION_LABELS, 'data')[group.section], group.name]).join(' · ')%></small></u-badge>
 				</span>
 				<span class="d-inline-block">
 					<span class="vdev-bar d-block"></span>

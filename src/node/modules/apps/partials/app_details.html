@@ -122,12 +122,12 @@
 										<%}%>
 										<div class="row gx-3 mt-1">
 											<div class="col-6">
-												<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-database icon-fw me-1 fg-blue-500"></i>Data</small>
+												<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-database icon-fw me-1 fg-blue-300"></i>Data</small>
 												<span class="fw-light"><%=prettyBytes(app.resourceMetrics.storage?.dataset || 0, { binary: true })%></span>
 											</div>
 											<%if (!app.isUnmanaged && _.toLower(app.snapshotPolicy?.mode) !== 'disabled') {%>
 												<div class="col-6">
-													<small class="fg-4 d-block text-truncate"><i class="icon-regular icon-clock-counter-clockwise icon-fw me-1 fg-indigo-500"></i>Snapshots</small>
+													<small class="fg-4 d-block text-truncate"><i class="icon-regular icon-clock-counter-clockwise icon-fw me-1 fg-indigo-100"></i>Snapshots</small>
 													<span class="fw-light"><%=prettyBytes(app.resourceMetrics.storage?.snapshots || 0, { binary: true })%></span>
 												</div>
 											<%}%>
