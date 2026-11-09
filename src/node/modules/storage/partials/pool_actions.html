@@ -1,0 +1,45 @@
+<%const MEDIA_LABELS = { hdd: 'hard drive', ssd: 'SATA SSD', nvme: 'NVMe drive' };%>
+<%const isSystem = (_.toLower(pool.name) === 'system')%>
+<%const expansion = pool.expansion%>
+<%let expandTip = null%>
+<%if (expandJob) {%>
+	<%expandTip = 'The pool is being expanded'%>
+<%} else if (!expansion) {%>
+	<%expandTip = 'Checking for unused drives'%>
+<%} else if (expansion.reason === 'health') {%>
+	<%expandTip = `The pool is ${pool.properties.health?.value}, fix its health first`%>
+<%} else if (expansion.reason === 'layout') {%>
+	<%expandTip = 'Only pools whose groups all share one layout can be expanded'%>
+<%} else if (expansion.reason === 'members') {%>
+	<%expandTip = `The pool's drives couldn't be matched to the drive list`%>
+<%} else if (expansion.reason === 'media') {%>
+	<%expandTip = 'The pool mixes drive types'%>
+<%} else if (expansion.reason === 'drives') {%>
+	<%expandTip = `Needs ${expansion.width} unused ${_.pluralize(MEDIA_LABELS[expansion.media], expansion.width)} of at least ${prettyBytes(expansion.minSize, { binary: true })} each${(expansion.available > 0 ? ` (${expansion.available} found)` : '')}`%>
+<%}%>
+<%if (inline) {%>
+	<div class="d-inline-flex align-items-center bg-2 rounded-3">
+		<div class="d-inline-flex align-items-center px-1">
+			<span class="d-inline-flex" data-bs-toggle="tooltip" data-bs-original-title="Expand pool<%=(expandTip ? `<br>${_.escape(expandTip)}` : '')%>">
+				<%if (expandTip) {%>
+					<a href="#" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 rounded-3 disabled"><i class="icon-regular icon-stack-plus icon-fw fg-gray-500"></i></a>
+				<%} else {%>
+					<a href="#pool-expand" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 rounded-3" data-bs-toggle="dialog"><i class="icon-regular icon-stack-plus icon-fw fg-body"></i></a>
+				<%}%>
+			</span>
+		</div>
+	</div>
+<%} else {%>
+	<div class="dropdown">
+		<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i></span>
+		<div class="menu">
+			<%if (isSystem) {%>
+				<button type="button" class="menu-item disabled">No actions</button>
+			<%} else if (expandTip) {%>
+				<span class="d-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="<%-expandTip%>"><button type="button" class="menu-item disabled"><i class="icon-regular icon-stack-plus icon-fw"></i>Expand pool</button></span>
+			<%} else {%>
+				<a href="#pool-expand" class="menu-item" data-bs-toggle="dialog"><i class="icon-regular icon-stack-plus icon-fw"></i>Expand pool</a>
+			<%}%>
+		</div>
+	</div>
+<%}%>

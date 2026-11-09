@@ -14,7 +14,7 @@ export class Badge extends LitElement {
 				fromAttribute: (value) => { return value ?? 100; }
 			}},
 			pill: { type: Boolean, reflect: true },
-			border: { type: Boolean, reflect: true },
+			outline: { type: Boolean, reflect: true },
 			tip: { type: String, reflect: true }
 		};
 	}
@@ -26,7 +26,7 @@ export class Badge extends LitElement {
 		this.color = 'blue';
 		this.tint = 100;
 		this.pill = false;
-		this.border = false;
+		this.outline = false;
 		this.tip = '';
 		this.addEventListener('mouseleave', () => { this.#tooltip?.hide(); });
 	}
@@ -44,10 +44,13 @@ export class Badge extends LitElement {
 
 	render() {
 		const hasTint = !['white', 'black'].includes(this.color);
+		const tone = `${this.color}${hasTint ? `-${this.tint}` : ''}`;
 		const classes = {
-			[`bd-${this.color}${hasTint ? `-${this.tint}` : ''}`]: true,
+			[`bd-${tone}`]: !this.outline,
+			[`fg-${tone}`]: this.outline,
+			[`border-${tone}`]: this.outline,
 			'rounded-pill': this.pill,
-			'border border-white': this.border
+			'border': this.outline
 		};
 		return html`
 			<div class="d-flex align-items-center badge ${classMap(classes)} fw-normal">

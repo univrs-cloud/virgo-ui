@@ -28,7 +28,7 @@ const render = () => {
 	const isSameAsLoggedIn = (user.username === account?.user);
 	const sessionsList = sessionsTemplate({ sessions, moment });
 	morphdom(
-		modal.querySelector('.dialog-content'),
+		modal.querySelector('.dialog-body'),
 		userSessionsContentTemplate({ user, sessions, isSameAsLoggedIn, sessionsList })
 	);
 };

@@ -30,12 +30,7 @@
 					<small class="fg-4 text-truncate d-block min-w-0"><%-tolerance%></small>
 				</div>
 				<div class="col-auto ps-5 ms-auto">
-					<div class="dropdown">
-						<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i></span>
-						<div class="menu">
-							<button type="button" class="menu-item disabled">No actions</button>
-						</div>
-					</div>
+					<%=poolActionsTemplate({ pool, expandJob, inline: true, prettyBytes })%>
 				</div>
 			</div>
 

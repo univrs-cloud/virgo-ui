@@ -846,7 +846,8 @@ $card-image-size: 30px;
 .details-toggle[aria-expanded="true"] .icon-fill {
 	transform: rotate(180deg);
 }
-#storage {
+#storage,
+#pool-expand {
 	--vdev-line-color: var(--border-color);
 	.vdev-tree {
 		--vdev-slot-width: 4.25rem;

@@ -1,0 +1,103 @@
+<%const totalBytes = capacityBytes + addedBytes%>
+<%const capacityWidth = (totalBytes > 0 ? capacityBytes / totalBytes * 100 : 0)%>
+<div class="dialog-body">
+	<div class="alert theme-secondary mb-5">
+		<dl class="m-0">
+			<dt class="fw-light fg-4"><small>Name</small></dt>
+			<dd class="m-0"><%-pool.name%></dd>
+		</dl>
+	</div>
+	<div class="vdev-tree d-flex flex-wrap justify-content-center gap-7 pt-5">
+		<%_.each(existingGroups, (group) => {%>
+			<div class="text-center">
+				<div>
+					<u-badge color="<%-stateColor(group.vdev.state)%>" pill><small><%-group.name%></small></u-badge>
+				</div>
+				<div class="d-inline-block">
+					<div class="vdev-bar"></div>
+					<div class="vdev-slots">
+					<%_.each(group.disks, ({ vdev, drive, role, activity }) => {%>
+						<%const diskHealthColor = healthColor(drive?.health)%>
+						<%const diskColor = (activity ? 'fg-blue-300' : (diskHealthColor ? `fg-${diskHealthColor}-300` : { green: 'fg-blue-500', yellow: 'fg-yellow-500', red: 'fg-red-300' }[stateColor(vdev.state)]))%>
+						<%const diskLabel = (drive?.name ? _.last(drive.name.split('/')) : `…${vdev.name.slice(-6)}`)%>
+						<%const diskSize = (vdev.physSpace || vdev.repDevSize)%>
+						<%const diskTip = (diskSize ? prettyBytes(diskSize, { binary: true }) : '')%>
+						<div class="vdev-slot <%=(role === 'old' ? 'opacity-50' : '')%>">
+							<div class="vdev-stem"></div>
+							<div class="position-relative d-flex justify-content-center w-100">
+								<%if (role === 'new') {%>
+									<i class="icon-regular icon-arrow-right icon-xs icon-width-auto lh-1 fg-4 position-absolute top-50 start-0 translate-middle"></i>
+								<%}%>
+								<span class="position-relative d-inline-flex">
+									<i class="vdev-disk icon-duotone icon-hard-drive <%-diskColor%> <%=(activity && activity !== 'awaiting' ? 'icon-fade' : '')%>"<%=(diskTip ? ` data-bs-toggle="tooltip" data-bs-original-title="${diskTip}"` : '')%>></i>
+								</span>
+							</div>
+							<small class="fg-4 text-truncate w-100 mt-1"><%-diskLabel%></small>
+						</div>
+					<%})%>
+					</div>
+				</div>
+			</div>
+		<%})%>
+	</div>
+	<div class="vdev-tree d-flex flex-wrap justify-content-center gap-7 pt-7 pb-5">
+		<%_.each(newGroups, (group) => {%>
+			<div class="text-center">
+				<div>
+					<u-badge color="green" tint="400" pill outline><small>New <%-expansion.type%></small></u-badge>
+				</div>
+				<div class="d-inline-block">
+					<div class="vdev-bar"></div>
+					<div class="vdev-slots">
+					<%_.each(group.disks, (disk) => {%>
+						<div class="vdev-slot">
+							<div class="vdev-stem"></div>
+							<div class="position-relative d-flex justify-content-center w-100">
+								<span class="position-relative d-inline-flex">
+									<i class="vdev-disk icon-duotone icon-hard-drive fg-green-400" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(disk.size, { binary: true })%>"></i>
+								</span>
+							</div>
+							<small class="fg-4 text-truncate w-100 mt-1"><%-disk.name%></small>
+						</div>
+					<%})%>
+					</div>
+				</div>
+			</div>
+		<%})%>
+		<%if (!_.isEmpty(unusedDisks)) {%>
+			<div class="text-center">
+				<div>
+					<u-badge color="gray" pill><small>Unused</small></u-badge>
+				</div>
+				<div class="d-inline-block">
+					<div class="vdev-slots">
+					<%_.each(unusedDisks, (disk) => {%>
+						<div class="vdev-slot">
+							<div class="vdev-stem invisible"></div>
+							<div class="position-relative d-flex justify-content-center w-100">
+								<span class="position-relative d-inline-flex">
+									<i class="vdev-disk icon-duotone icon-hard-drive fg-4" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(disk.size, { binary: true })%>"></i>
+								</span>
+							</div>
+							<small class="fg-4 text-truncate w-100 mt-1"><%-disk.name%></small>
+						</div>
+					<%})%>
+					</div>
+				</div>
+			</div>
+		<%}%>
+	</div>
+	<u-progress class="mt-5" shadow="false">
+		<u-progress-bar width="<%=capacityWidth%>" warning-threshold="999" danger-threshold="999" tip="Capacity now: <%=prettyBytes(capacityBytes, { binary: true })%>"></u-progress-bar>
+		<u-progress-bar color="green" tint="400" width="<%=(100 - capacityWidth)%>" warning-threshold="999" danger-threshold="999" tip="Added: <%=prettyBytes(addedBytes, { binary: true })%>"></u-progress-bar>
+	</u-progress>
+	<div class="d-flex flex-wrap gap-5 mt-3">
+		<small class="fg-emphasis-secondary"><i class="icon-fill icon-circle icon-2xs fg-blue-300 me-1 align-middle"></i>Capacity now: <%=prettyBytes(capacityBytes, { binary: true })%></small>
+		<small class="fg-emphasis-secondary"><i class="icon-fill icon-circle icon-2xs fg-green-400 me-1 align-middle"></i>Added: <%=prettyBytes(addedBytes, { binary: true })%></small>
+		<small class="fg-emphasis-secondary ms-auto">New capacity: <%=prettyBytes(totalBytes, { binary: true })%></small>
+	</div>
+	<div class="alert theme-danger mt-5 mb-0">
+		<i class="icon-duotone icon-warning icon-fw mt-1 me-1"></i>
+		Everything currently on the new drives will be erased.
+	</div>
+</div>

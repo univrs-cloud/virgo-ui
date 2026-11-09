@@ -85,12 +85,7 @@
 		<u-badge color="<%=stateColor(pool.properties.health.value)%>" pill><small><%-pool.properties.health.value%></small></u-badge>
 	</td>
 	<td class="text-center px-0">
-		<div class="dropdown">
-			<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i></span>
-			<div class="menu">
-				<button type="button" class="menu-item disabled">No actions</button>
-			</div>
-		</div>
+		<%=poolActionsTemplate({ pool, expandJob, inline: false, prettyBytes })%>
 	</td>
 	<td class="text-end pe-0">
 		<%if (isPool) {%>

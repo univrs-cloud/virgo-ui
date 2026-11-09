@@ -3,6 +3,7 @@ import modulePartial from 'node/modules/storage/partials/index.html';
 import storagePartial from 'node/modules/storage/partials/storage.html';
 import poolDetailsPartial from 'node/modules/storage/partials/pool_details.html';
 import poolVdevPartial from 'node/modules/storage/partials/pool_vdev.html';
+import poolActionsPartial from 'node/modules/storage/partials/pool_actions.html';
 import * as storageService from 'node/modules/storage/services/storage';
 import { filterListByQuery } from 'utils/list_search';
 
@@ -10,6 +11,7 @@ const moduleTemplate = _.template(modulePartial);
 const storageTemplate = _.template(storagePartial);
 const poolDetailsTemplate = _.template(poolDetailsPartial);
 const poolVdevTemplate = _.template(poolVdevPartial);
+const poolActionsTemplate = _.template(poolActionsPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
 const module = document.querySelector('#storage');
 const loading = module.querySelector('.loading');
@@ -24,6 +26,7 @@ let searchTimer;
 let searchValue = '';
 let pools = [];
 let drives = [];
+let jobs = [];
 
 const search = (event) => {
 	clearTimeout(searchTimer);
@@ -32,7 +35,8 @@ const search = (event) => {
 		const storage = storageService.getStorage();
 		const snapshots = storageService.getSnapshots();
 		const drives = storageService.getDrives();
-		render({ storage, snapshots, drives });
+		const jobs = storageService.getJobs();
+		render({ storage, snapshots, drives, jobs });
 	}, 300);
 };
 
@@ -188,6 +192,10 @@ const poolHealth = (pool) => {
 	};
 };
 
+const findExpandJob = (name) => {
+	return _.find(jobs, (job) => { return _.toLower(job.data?.config?.name) === _.toLower(name); });
+};
+
 const renderPoolDetails = (name) => {
 	if (!name) {
 		return;
@@ -242,10 +250,11 @@ const renderPoolDetails = (name) => {
 
 	const dataGroups = _.filter(groups, 'isData');
 	const faultTolerance = (_.isEmpty(dataGroups) ? 0 : _.min(_.map(dataGroups, ({ vdev }) => { return vdevFaultTolerance(vdev); })));
+	const expandJob = findExpandJob(pool.name);
 
 	morphdom(
 		details,
-		`<div>${poolDetailsTemplate({ pool, groups, vdevSections, faultTolerance, poolTab: poolTabs[name] || 'overview', poolVdevTemplate, stateColor, healthColor, driveHealthTip, prettyBytes, moment })}</div>`,
+		`<div>${poolDetailsTemplate({ pool, groups, vdevSections, faultTolerance, expandJob, poolTab: poolTabs[name] || 'overview', poolVdevTemplate, poolActionsTemplate, stateColor, healthColor, driveHealthTip, prettyBytes, moment })}</div>`,
 		{
 			childrenOnly: true,
 			onBeforeElUpdated: (fromEl, toEl) => {
@@ -269,6 +278,7 @@ const render = (state) => {
 	}
 
 	drives = (state.drives || []);
+	jobs = (state.jobs || []);
 	pools = _.map(state.storage, (pool) => {
 		if (pool.name !== 'system') {
 			pool.properties.usedbydatasets.percent = (pool.properties.usedbydatasets.value / pool.properties.size.value * 100);
@@ -285,7 +295,7 @@ const render = (state) => {
 	const noun = (total === 1 ? 'pool' : 'pools');
 	listCount.textContent = (_.trim(searchValue) ? `${_.size(searchedPools)} of ${total} ${noun}` : `${total} ${noun}`);
 	const rows = _.join(_.map(searchedPools, (pool) => {
-		return storageTemplate({ pool, stateColor, poolHealth, prettyBytes, moment });
+		return storageTemplate({ pool, expandJob: findExpandJob(pool.name), poolActionsTemplate, stateColor, poolHealth, prettyBytes, moment });
 	}), '');
 
 	morphdom(
@@ -343,3 +353,5 @@ searchInput.addEventListener('input', search);
 table.querySelector('tbody').addEventListener('click', expand);
 
 storageService.subscribe([render]);
+
+import('node/modules/storage/pool_expand');
