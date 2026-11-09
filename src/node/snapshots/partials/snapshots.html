@@ -321,7 +321,7 @@
 																			<%if (versionPoint) {%>
 																				<%=versionPoint.createdMoment.format('D MMM YYYY, HH:mm')%>
 																			<%} else if (isResultPruned(version.snapshot)) {%>
-																				<span data-bs-toggle="tooltip" data-bs-original-title="This snapshot no longer exists"><%-resultDate(version.snapshot)%></span>
+																				<span data-bs-toggle="tooltip" data-bs-original-title="This snapshot no longer exists."><%-resultDate(version.snapshot)%></span>
 																			<%} else {%>
 																				<%-resultDate(version.snapshot)%>
 																			<%}%>

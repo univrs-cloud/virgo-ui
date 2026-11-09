@@ -16,7 +16,7 @@
 						<a href="#" class="check-updates btn-link d-inline-block text-nowrap align-self-start border-0 text-decoration-none px-0 py-3 mt-1 min-h-0 <%=(checkUpdates ? 'disabled' : '')%>">
 							<i class="icon-regular icon-arrows-clockwise icon-fw <%=(checkUpdates ? 'icon-spin' : '')%>"></i><span class="d-none md:d-inline ms-1"><%=(checkUpdates ? 'Checking for updates...' : 'Check for new updates')%></span>
 						</a>
-						<u-button variant="primary" class="install flex-shrink-0 align-self-start mt-1" tip="<%=(hasUpdatingApps ? 'An app update is in progress' : '')%>" <%=(checkUpdates || hasUpdatingApps ? 'disabled' : '')%>>Install</u-button>
+						<u-button variant="primary" class="install flex-shrink-0 align-self-start mt-1" tip="<%=(hasUpdatingApps ? 'An app update is in progress.' : '')%>" <%=(checkUpdates || hasUpdatingApps ? 'disabled' : '')%>>Install</u-button>
 					</div>
 
 					<hr class="border-gray-200 flex-shrink-0 mt-3 opacity-25">

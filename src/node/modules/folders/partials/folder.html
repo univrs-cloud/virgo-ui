@@ -68,7 +68,7 @@
 			<%} else if (snapshotMode === 'paused') {%>
 				<i class="icon-fill icon-pause-circle icon-width-auto fg-orange-200" data-bs-toggle="tooltip" data-bs-original-title="Snapshots paused<%-snapshotSource%>"></i>
 			<%} else {%>
-				<i class="icon-fill icon-prohibit-inset icon-width-auto fg-gray-200" data-bs-toggle="tooltip" data-bs-original-title="<%-(folder.snapshotDataset ? 'Snapshots disabled' : 'No snapshots are taken of this folder')%>"></i>
+				<i class="icon-fill icon-prohibit-inset icon-width-auto fg-gray-200" data-bs-toggle="tooltip" data-bs-original-title="<%-(folder.snapshotDataset ? 'Snapshots disabled' : 'No snapshots are taken of this folder.')%>"></i>
 			<%}%>
 			<%if (folder.canChangeSnapshots && snapshotMode !== 'disabled') {%>
 				<small class="fw-light fg-emphasis-secondary ms-auto"><%=prettyBytes(folder.storage?.snapshots || 0, { binary: true })%></small>

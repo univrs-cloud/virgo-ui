@@ -24,7 +24,7 @@ const render = () => {
 	// subscription has to keep evaluating this for as long as the modal stays open.
 	const hasUpdatingApps = !_.isEmpty(node?.appUpdateJobs);
 	installButton.disabled = (installing || hasUpdatingApps);
-	installButton.tip = (hasUpdatingApps ? 'An app update is in progress' : '');
+	installButton.tip = (hasUpdatingApps ? 'An app update is in progress.' : '');
 };
 
 const show = (event) => {

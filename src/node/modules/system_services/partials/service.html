@@ -8,11 +8,11 @@
 		<div class="d-flex align-items-center mb--1">
 			<div class="text-truncate"><%-service.unit%></div>
 			<%if (service.broken) {%>
-				<u-badge color="red" class="ms-3 flex-shrink-0" tip="Service not found or failed to load" pill>
+				<u-badge color="red" class="ms-3 flex-shrink-0" tip="Service not found or failed to load." pill>
 					<i class="icon-fill icon-warning icon-fw"></i>
 				</u-badge>
 			<%} else if (service.unitFileState === 'masked') {%>
-				<u-badge color="orange" class="ms-3 flex-shrink-0" tip="Service is masked and cannot be started or enabled" pill>
+				<u-badge color="orange" class="ms-3 flex-shrink-0" tip="Service is masked and cannot be started or enabled." pill>
 					<i class="icon-fill icon-prohibit-inset icon-fw"></i>
 				</u-badge>
 			<%}%>

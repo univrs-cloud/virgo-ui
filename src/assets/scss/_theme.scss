@@ -321,10 +321,15 @@ $card-image-size: 30px;
 	--btn-bg: var(--bg-3);
 	--btn-disabled-bg: var(--bg-3);
 }
-.actions-button {
+.actions-button,
+:host(.actions-button) .btn-icon {
 	--btn-min-height: calc(var(--btn-input-sm-min-height) - 2px);
 	--btn-hover-bg: var(--bg-2);
 	--btn-active-bg: var(--bg-2);
+}
+:host(.actions-button) .btn-icon {
+	border-width: 0;
+	border-radius: var(--radius-3);
 }
 :is(.btn, .btn-icon, .btn-solid, .btn-outline, .btn-subtle, .btn-text):active:not(:disabled, .disabled) {
 	transform: scale(0.97);

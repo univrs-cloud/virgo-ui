@@ -14,6 +14,8 @@ export class Button extends LitElement {
 			size: { type: String, reflect: true },
 			outline: { type: Boolean, reflect: true },
 			subtle: { type: Boolean, reflect: true },
+			text: { type: Boolean, reflect: true },
+			icon: { type: Boolean, reflect: true },
 			tip: { type: String, reflect: true },
 			disabled: { type: Boolean, reflect: true },
 			loadingText: { type: String, reflect: true, attribute: 'loading-text' },
@@ -33,6 +35,8 @@ export class Button extends LitElement {
 		this.size = '';
 		this.outline = false;
 		this.subtle = false;
+		this.text = false;
+		this.icon = false;
 		this.tip = '';
 		this.disabled = false;
 		this.addEventListener('mouseleave', () => { this.#tooltip?.hide(); });
@@ -75,7 +79,9 @@ export class Button extends LitElement {
 		const classes = {
 			'btn-outline': this.outline,
 			'btn-subtle': !this.outline && this.subtle,
-			'btn-solid': !this.outline && !this.subtle,
+			'btn-text': !this.outline && !this.subtle && this.text,
+			'btn-solid': !this.outline && !this.subtle && !this.text,
+			'btn-icon': this.icon,
 			[`theme-${this.variant}`]: true,
 			[`btn-${this.size}`]: !!this.size
 		};
