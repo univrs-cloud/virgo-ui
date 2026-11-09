@@ -3,7 +3,7 @@ import * as folderService from 'node/modules/folders/services/folder';
 const module = document.querySelector('#folders');
 
 const updateSnapshots = async (event) => {
-	const button = event.target.closest('a');
+	const button = event.target.closest('a, u-button');
 	if (button?.dataset.action !== 'snapshots') {
 		return;
 	}

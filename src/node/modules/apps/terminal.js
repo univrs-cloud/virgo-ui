@@ -27,14 +27,14 @@ let fitAddon = null;
 let searchAddon = null;
 
 const render = (event) => {
-	if (!event.target.closest('a')?.classList.contains('terminal')) {
+	if (!event.target.closest('.open-terminal')) {
 		return;
 	}
 
 	event.preventDefault();
 	restore();
 
-	const link = event.target.closest('a');
+	const link = event.target.closest('.open-terminal');
 	let service;
 	_.each(appService.getApps(), (app) => {
 		service = _.find(app.projectContainers, { id: link.dataset.id });

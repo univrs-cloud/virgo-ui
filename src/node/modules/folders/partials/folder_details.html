@@ -200,7 +200,7 @@
 															{ mode: 'paused', label: 'Pause', icon: 'icon-pause', color: 'fg-orange-400', isAllowed: (snapshotMode === 'enabled') },
 															{ mode: 'disabled', label: 'Disable', icon: 'icon-prohibit-inset', color: 'fg-red-400', isAllowed: (snapshotMode !== 'disabled') }
 														], ({ mode, label, icon, color, isAllowed }) => {%>
-															<a href="#" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 rounded-3 <%=(isAllowed ? '' : 'disabled')%>" data-action="snapshots" data-mode="<%-mode%>" data-bs-toggle="tooltip" data-bs-original-title="<%-label%>"><i class="icon-fill <%=icon%> icon-fw <%=(isAllowed ? color : 'fg-gray-500')%>"></i></a>
+															<u-button variant="secondary" size="sm" class="actions-button" text icon tip="<%-label%>" data-action="snapshots" data-mode="<%-mode%>" <%=(isAllowed ? '' : 'disabled')%>><i class="icon-fill <%=icon%> icon-fw <%=(isAllowed ? color : 'fg-gray-500')%>"></i></u-button>
 														<%})%>
 													</div>
 												<%}%>

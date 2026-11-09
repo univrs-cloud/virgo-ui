@@ -228,12 +228,12 @@
 															</div>
 														</div>
 														<div class="d-flex flex-shrink-0 align-items-center gap-3 ms-3">
-															<a href="#" class="logs btn-solid theme-secondary btn-xs" data-id="<%-container.id%>">
+															<u-button variant="secondary" size="xs" class="open-logs" data-id="<%-container.id%>">
 																<i class="icon-fill icon-article icon-fw"></i><span class="d-none md:d-inline">Logs</span>
-															</a>
-															<a href="#" class="terminal btn-solid theme-secondary btn-xs <%=(container.state === 'running' ? '' : 'disabled')%>" data-id="<%-container.id%>">
+															</u-button>
+															<u-button variant="secondary" size="xs" class="open-terminal" data-id="<%-container.id%>" <%=(container.state === 'running' ? '' : 'disabled')%>>
 																<i class="icon-fill icon-terminal-window icon-fw <%=(container.state === 'running' ? '' : 'fg-gray-500')%>"></i><span class="d-none md:d-inline">Terminal</span>
-															</a>
+															</u-button>
 															<div class="d-flex align-items-center gap-3">
 																<%if (!_.isEmpty(appJobs) || !_.isEmpty(containerJobs)) {%>
 																	<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-fill icon-gear icon-fw icon-spin"></i></span>
@@ -261,9 +261,9 @@
 																	<div class="d-none md:d-block">
 																		<div class="d-inline-flex align-items-center bg-2 rounded-3">
 																			<div class="d-inline-flex align-items-center px-1">
-																				<a href="#" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 rounded-3 <%=(isStopped ? '' : 'disabled')%>" data-action="start" data-bs-toggle="tooltip" data-bs-original-title="Start"><i class="icon-fill icon-play icon-fw <%=(isStopped ? 'fg-green-400' : 'fg-gray-500')%>"></i></a>
-																				<a href="#" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 rounded-3 <%=(isRunning ? 'confirm' : 'disabled')%>" data-action="restart" data-bs-toggle="tooltip" data-bs-original-title="Restart"><i class="icon-regular icon-arrow-counter-clockwise icon-fw <%=(isRunning ? 'fg-body' : 'fg-gray-500')%>"></i></a>
-																				<a href="#" class="actions-button btn-icon btn-text theme-secondary btn-sm border-0 rounded-3 <%=(canStop ? 'confirm' : 'disabled')%>" data-action="stop" data-bs-toggle="tooltip" data-bs-original-title="Stop"><i class="icon-fill icon-stop icon-fw <%=(canStop ? 'fg-red-400' : 'fg-gray-500')%>"></i></a>
+																				<u-button variant="secondary" size="sm" class="actions-button" text icon tip="Start" data-action="start" <%=(isStopped ? '' : 'disabled')%>><i class="icon-fill icon-play icon-fw <%=(isStopped ? 'fg-green-400' : 'fg-gray-500')%>"></i></u-button>
+																				<u-button variant="secondary" size="sm" class="actions-button <%=(isRunning ? 'confirm' : '')%>" text icon tip="Restart" data-action="restart" <%=(isRunning ? '' : 'disabled')%>><i class="icon-regular icon-arrow-counter-clockwise icon-fw <%=(isRunning ? 'fg-body' : 'fg-gray-500')%>"></i></u-button>
+																				<u-button variant="secondary" size="sm" class="actions-button <%=(canStop ? 'confirm' : '')%>" text icon tip="Stop" data-action="stop" <%=(canStop ? '' : 'disabled')%>><i class="icon-fill icon-stop icon-fw <%=(canStop ? 'fg-red-400' : 'fg-gray-500')%>"></i></u-button>
 																			</div>
 																			<div class="dropdown position-relative">
 																				<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="actions-toggle btn-icon btn-text theme-secondary btn-sm rounded-3 <%=(canStop ? '' : 'disabled')%>"><i class="icon-fill icon-dots-three-outline-vertical icon-fw"></i></span>

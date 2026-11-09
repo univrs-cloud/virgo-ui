@@ -222,7 +222,7 @@ class Host extends Store {
 	}
 
 	syncStorage() {
-		this.socket.emit('host:storage:fetch');
+		return this.socket.timeout(30000).emitWithAck('host:storage:fetch');
 	}
 
 	installCoreApps() {
@@ -231,7 +231,7 @@ class Host extends Store {
 
 	syncServices() {
 		this.setState({ services: null }, 'services_fetch_start');
-		this.socket.emit('host:system:services:fetch');
+		return this.socket.timeout(30000).emitWithAck('host:system:services:fetch');
 	}
 
 	syncFirewall() {

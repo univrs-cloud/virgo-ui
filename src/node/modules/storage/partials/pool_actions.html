@@ -19,11 +19,18 @@
 <%}%>
 <%if (inline) {%>
 	<div class="d-inline-flex align-items-center bg-2 rounded-3">
-		<%if (expandTip) {%>
-			<u-button variant="secondary" size="sm" class="actions-button" text icon tip="<div class='text-start'><div class='fw-semibold'>Expand pool</div><%-expandTip%></div>" disabled><i class="icon-regular icon-stack-plus icon-fw fg-gray-500"></i></u-button>
-		<%} else {%>
-			<u-button variant="secondary" size="sm" class="actions-button" text icon tip="Expand pool" data-bs-toggle="dialog" data-bs-target="#pool-expand"><i class="icon-regular icon-stack-plus icon-fw fg-body"></i></u-button>
-		<%}%>
+		<div class="d-inline-flex align-items-center px-1">
+			<u-button variant="secondary" size="sm" class="actions-button" text icon data-action="sync"><i class="icon-regular icon-arrows-clockwise icon-fw fg-body"></i></u-button>
+			<%if (expandTip) {%>
+				<u-button variant="secondary" size="sm" class="actions-button" text icon tip="<div class='text-start'><div class='fw-semibold'>Expand pool</div><%-expandTip%></div>" disabled><i class="icon-regular icon-stack-plus icon-fw fg-gray-500"></i></u-button>
+			<%} else {%>
+				<u-button variant="secondary" size="sm" class="actions-button" text icon tip="Expand pool" data-bs-toggle="dialog" data-bs-target="#pool-expand"><i class="icon-regular icon-stack-plus icon-fw fg-body"></i></u-button>
+			<%}%>
+		</div>
+		<div class="dropdown position-relative">
+			<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="actions-toggle btn-icon btn-text theme-secondary btn-sm rounded-3 disabled"><i class="icon-fill icon-dots-three-outline-vertical icon-fw"></i></span>
+			<div class="menu"></div>
+		</div>
 	</div>
 <%} else {%>
 	<div class="dropdown">

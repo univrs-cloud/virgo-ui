@@ -4,6 +4,7 @@ document.body.style.setProperty(
 );
 
 bootstrap.Tooltip.Default.container = 'body';
+bootstrap.Tooltip.Default.fallbackPlacements = ['top', 'bottom'];
 bootstrap.Tooltip.Default.html = true;
 bootstrap.Tooltip.Default.sanitize = false;
 bootstrap.Tooltip.Default.selector = '[data-bs-toggle="tooltip"]';

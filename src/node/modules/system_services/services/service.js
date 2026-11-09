@@ -41,7 +41,7 @@ const getServices = () => {
 };
 
 const syncServices = () => {
-	Host.syncServices();
+	return Host.syncServices();
 };
 
 const performServiceAction = (data) => {

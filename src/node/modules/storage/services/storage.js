@@ -43,7 +43,7 @@ const getJobs = () => {
 };
 
 const syncStorage = () => {
-	Host.syncStorage();
+	return Host.syncStorage();
 };
 
 const expandPool = (data) => {

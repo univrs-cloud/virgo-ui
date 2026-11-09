@@ -26,12 +26,10 @@ u-toast {
 }
 .menu {
 	--menu-zindex: 1029;
-	--menu-bg: color-mix(in oklch, var(--bg-body) 20%, transparent);
+	--menu-bg: var(--surface-modal);
 	--menu-padding-x: #{map.get($spacers, 3)};
 	--menu-header-padding-x: #{map.get($spacers, 3)};
 	--menu-item-padding-x: #{map.get($spacers, 3)};
-	--menu-border-width: 0;
-	backdrop-filter: blur(18px) grayscale(0.8) saturate(180%);
 }
 .menu-item {
 	--menu-item-hover-bg: color-mix(in oklch, var(--fg-body) 10%, transparent);
@@ -321,13 +319,18 @@ $card-image-size: 30px;
 	--btn-bg: var(--bg-3);
 	--btn-disabled-bg: var(--bg-3);
 }
-.actions-button,
-:host(.actions-button) .btn-icon {
+.actions-button {
 	--btn-min-height: calc(var(--btn-input-sm-min-height) - 2px);
 	--btn-hover-bg: var(--bg-2);
 	--btn-active-bg: var(--bg-2);
 }
+:host([text][icon]) .btn-icon {
+	--btn-active-border-color: transparent;
+	--btn-hover-bg: var(--transparent-hover);
+	--btn-active-bg: var(--transparent-active);
+}
 :host(.actions-button) .btn-icon {
+	--btn-min-height: calc(var(--btn-input-sm-min-height) - 2px);
 	border-width: 0;
 	border-radius: var(--radius-3);
 }

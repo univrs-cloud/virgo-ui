@@ -19,7 +19,6 @@ const container = module.querySelector('.container-fluid');
 const details = container.querySelector('.details');
 const searchInput = module.querySelector('.search');
 const listCount = module.querySelector('.list-count');
-const syncButton = module.querySelector('button[data-action="sync"]');
 const table = container.querySelector('.table');
 let routePoolName = null;
 const poolTabs = {};
@@ -28,12 +27,26 @@ let searchValue = '';
 let pools = [];
 let drives = [];
 let jobs = [];
+let isSyncing = false;
 
-const sync = (event) => {
+const renderSyncButtons = () => {
+	_.each(module.querySelectorAll('[data-action="sync"]'), (button) => {
+		button.disabled = isSyncing;
+		button.querySelector('.icon-arrows-clockwise').classList.toggle('icon-spin', isSyncing);
+	});
+};
+
+const sync = async (event) => {
+	if (!event.target.closest('[data-action="sync"]')) {
+		return;
+	}
+
 	event.preventDefault();
-	syncButton.disabled = true;
-	syncButton.querySelector('.icon-arrows-clockwise').classList.add('icon-spin');
-	storageService.syncStorage();
+	isSyncing = true;
+	renderSyncButtons();
+	await storageService.syncStorage().catch(() => {});
+	isSyncing = false;
+	renderSyncButtons();
 };
 
 const search = (event) => {
@@ -273,6 +286,7 @@ const renderPoolDetails = (name) => {
 			}
 		}
 	);
+	renderSyncButtons();
 };
 
 const hidePoolDetails = () => {
@@ -318,8 +332,7 @@ const render = (state) => {
 	}
 
 	loading.classList.add('d-none');
-	syncButton.disabled = false;
-	syncButton.querySelector('.icon-arrows-clockwise').classList.remove('icon-spin');
+	renderSyncButtons();
 	container.classList.remove('d-none');
 };
 
@@ -357,9 +370,9 @@ const toggleStateTooltip = (event) => {
 module.onRoute = handleRoute;
 module.addEventListener('click', compress);
 module.addEventListener('click', selectTab);
+module.addEventListener('click', sync);
 module.addEventListener('mouseenter', toggleStateTooltip, true);
 module.addEventListener('mouseleave', toggleStateTooltip, true);
-syncButton.addEventListener('click', sync);
 searchInput.addEventListener('input', search);
 table.querySelector('tbody').addEventListener('click', expand);
 

@@ -16,7 +16,6 @@ const filterOptionsTemplate = _.template(filterOptionsPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate({ filterPartial }));
 const module = document.querySelector('#system-services');
 const loading = module.querySelector('.loading');
-const syncButton = module.querySelector('button[data-action="sync"]');
 const container = module.querySelector('.container-fluid');
 const details = container.querySelector('.details');
 const searchInput = module.querySelector('.search');
@@ -41,12 +40,26 @@ let tableOrder = {
 	direction: 'desc'
 };
 let services = [];
+let isSyncing = false;
 
-const sync = (event) => {
+const renderSyncButtons = () => {
+	_.each(module.querySelectorAll('[data-action="sync"]'), (button) => {
+		button.disabled = isSyncing;
+		button.querySelector('.icon-arrows-clockwise').classList.toggle('icon-spin', isSyncing);
+	});
+};
+
+const sync = async (event) => {
+	if (!event.target.closest('[data-action="sync"]')) {
+		return;
+	}
+
 	event.preventDefault();
-	syncButton.disabled = true;
-	syncButton.querySelector('.icon-arrows-clockwise').classList.add('icon-spin');
-	serviceService.syncServices();
+	isSyncing = true;
+	renderSyncButtons();
+	await serviceService.syncServices().catch(() => {});
+	isSyncing = false;
+	renderSyncButtons();
 };
 
 const search = (event) => {
@@ -172,8 +185,8 @@ const compress = (event) => {
 };
 
 const performServiceAction = async (event) => {
-	const button = event.target.closest('a[data-action]');
-	if (!button || button.classList.contains('disabled')) {
+	const button = event.target.closest('[data-action]:not([data-action="sync"], [data-action="reset-filters"])');
+	if (!button) {
 		return;
 	}
 
@@ -215,6 +228,7 @@ const renderServiceDetails = (unit) => {
 			}
 		}
 	);
+	renderSyncButtons();
 	module.dispatchEvent(new CustomEvent('details:render', { detail: { unit } }));
 };
 
@@ -275,8 +289,7 @@ const render = (state) => {
 	}
 
 	loading.classList.add('d-none');
-	syncButton.disabled = false;
-	syncButton.querySelector('.icon-arrows-clockwise').classList.remove('icon-spin');
+	renderSyncButtons();
 	container.classList.remove('d-none');
 };
 
@@ -303,7 +316,7 @@ module.onRoute = handleRoute;
 module.addEventListener('click', compress);
 module.addEventListener('click', selectTab);
 module.addEventListener('click', performServiceAction);
-syncButton.addEventListener('click', sync);
+module.addEventListener('click', sync);
 searchInput.addEventListener('input', search);
 filterTypeNav.addEventListener('click', selectType);
 filterMenu.addEventListener('click', toggleFilter);

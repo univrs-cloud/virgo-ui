@@ -16,14 +16,14 @@ let flushFrame = null;
 let isDisconnected = false;
 
 const render = (event) => {
-	if (!event.target.closest('a')?.classList.contains('logs')) {
+	if (!event.target.closest('.open-logs')) {
 		return;
 	}
 
 	event.preventDefault();
 	restore();
 
-	const link = event.target.closest('a');
+	const link = event.target.closest('.open-logs');
 	containerId = link.dataset.id;
 	let service;
 	_.each(appService.getApps(), (app) => {

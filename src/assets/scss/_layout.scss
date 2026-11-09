@@ -101,9 +101,6 @@ header {
 			background-color: color-mix(in oklch, var(--app-bg) 25%, transparent);
 			backdrop-filter: blur(8px);
 		}
-		.menu {
-			--menu-bg: var(--bg-body);
-		}
 		.sign-in,
 		.sign-out {
 			margin-top: 0.28rem;
@@ -217,9 +214,6 @@ div:not(.navbar) .nav-pills {
 .drawer {
 	background-color: color-mix(in oklch, var(--app-bg) 96%, transparent);
 	backdrop-filter: blur(6px) grayscale(0.8);
-	.menu {
-		--menu-bg: var(--bg-body);
-	}
 	.navbar-nav {
 		--nav-gap: 0;
 		--nav-link-gap: 0;

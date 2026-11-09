@@ -137,8 +137,8 @@ const performAppAction = async (event) => {
 		return;
 	}
 
-	const button = event.target.closest('a[data-action]');
-	if (!button || button.classList.contains('disabled') || button.dataset.action === 'update') {
+	const button = event.target.closest('[data-action]:not([data-action="reset-filters"])');
+	if (!button || button.dataset.action === 'update') {
 		return;
 	}
 
@@ -171,8 +171,8 @@ const performServiceAction = async (event) => {
 		return;
 	}
 
-	const button = event.target.closest('a[data-action]');
-	if (!button || button.classList.contains('disabled')) {
+	const button = event.target.closest('[data-action]:not([data-action="reset-filters"])');
+	if (!button) {
 		return;
 	}
 
@@ -227,10 +227,6 @@ const updateSnapshots = async (event) => {
 	}
 
 	event.preventDefault();
-	if (button.classList.contains('disabled')) {
-		return;
-	}
-
 	const app = _.find(appService.getApps(), { name });
 	const mode = button.dataset.snapshotMode;
 	if (!app || _.toLower(app.snapshotPolicy?.mode) === _.toLower(mode)) {
@@ -254,7 +250,7 @@ const updateSnapshots = async (event) => {
 const rollback = async (event) => {
 	const button = event.target.closest('[data-rollback-snapshot]');
 	const name = button?.closest('.item')?.dataset?.name;
-	if (!name || button.disabled) {
+	if (!name) {
 		return;
 	}
 
