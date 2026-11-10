@@ -1,3 +1,4 @@
+<%const MEDIA_LABELS = { hdd: 'hard drive', ssd: 'SATA SSD', nvme: 'NVMe drive' };%>
 <%const isDisk = (vdev.vdevType === 'disk')%>
 <%const hasChildren = !_.isEmpty(vdev.vdevs)%>
 <%const badgeColor = stateColor(vdev.state)%>
@@ -38,8 +39,37 @@
 			<i class="state-dot icon-fill icon-circle icon-2xs icon-width-auto lh-1 position-absolute top-0 start-100 translate-middle fg-<%-badgeColor%>-300" data-bs-original-title="<%-_.upperFirst(_.toLower(vdev.state))%>"></i>
 		</span>
 		<div class="text-truncate min-w-0"><%-label%></div>
+		<%if (isDisk && replacement && replacement.reason !== 'replacing') {%>
+			<%let replaceTip = null%>
+			<%if (replacement.reason === 'health') {%>
+				<%replaceTip = `The pool can't be repaired.`%>
+			<%} else if (replacement.reason === 'queued') {%>
+				<%replaceTip = 'A replacement for this drive is starting.'%>
+			<%} else if (replacement.reason === 'degraded') {%>
+				<%replaceTip = `Healthy drives can't be replaced while the pool is degraded.`%>
+			<%} else if (replacement.reason === 'unhealthy') {%>
+				<%replaceTip = `Healthy drives can't be replaced while another drive reports problems.`%>
+			<%} else if (replacement.reason === 'replacing-other') {%>
+				<%replaceTip = 'Another drive is being replaced.'%>
+			<%} else if (replacement.reason === 'resilvering') {%>
+				<%replaceTip = 'The pool is still copying data onto a drive.'%>
+			<%} else if (replacement.reason === 'scrubbing') {%>
+				<%replaceTip = 'A data integrity check is running.'%>
+			<%} else if (replacement.reason === 'members') {%>
+				<%replaceTip = `This drive's size or type couldn't be read.`%>
+			<%} else if (replacement.reason === 'drives') {%>
+				<%replaceTip = `Needs an unused ${MEDIA_LABELS[replacement.media] || 'drive'} of at least ${prettyBytes(replacement.size, { binary: true })}.`%>
+			<%}%>
+			<div class="d-inline-flex align-items-center bg-2 rounded-3 ms-3 mt--1 mb--1 flex-shrink-0">
+				<%if (replaceTip) {%>
+					<u-button variant="secondary" size="sm" class="actions-button" text icon tip="<div class='text-start'><div class='fw-semibold'>Replace drive</div><%-replaceTip%></div>" disabled><i class="icon-regular icon-swap icon-fw fg-gray-500"></i></u-button>
+				<%} else {%>
+					<u-button variant="secondary" size="sm" class="actions-button" text icon tip="Replace drive" data-bs-toggle="dialog" data-bs-target="#pool-drive-replace" data-replace="<%-vdev.name%>"><i class="icon-regular icon-swap icon-fw fg-body"></i></u-button>
+				<%}%>
+			</div>
+		<%}%>
 		<%if (activity) {%>
-			<span class="d-inline-flex ms-3 flex-shrink-0" data-bs-toggle="tooltip" data-bs-original-title="<%-{ resilvering: 'Resilvering', repairing: 'Repairing', awaiting: 'Awaiting resilver' }[activity]%>"><i class="icon-regular icon-arrows-clockwise icon-xs icon-fw lh-1 fg-blue-400 <%=(activity === 'awaiting' ? '' : 'icon-spin')%>"></i></span>
+			<span class="d-inline-flex ms-3 flex-shrink-0" data-bs-toggle="tooltip" data-bs-original-title="<%-{ resilvering: 'Resilvering', repairing: 'Repairing', awaiting: 'Awaiting resilver' }[activity]%>"><i class="icon-regular icon-disc icon-fw lh-1 fg-blue-400 <%=(activity === 'awaiting' ? '' : 'icon-spin')%>"></i></span>
 		<%}%>
 		<%if (size) {%>
 			<u-badge color="gray" tint="100" class="ms-3 flex-shrink-0" pill><small><%=prettyBytes(size, { binary: true })%></small></u-badge>

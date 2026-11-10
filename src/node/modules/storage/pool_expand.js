@@ -116,12 +116,25 @@ const render = (event) => {
 	}));
 };
 
-const expand = (event) => {
+const expand = async (event) => {
 	if (!event.target.closest('.pool-expand-confirm') || !request) {
 		return;
 	}
 
-	storageService.expandPool(request);
+	const data = request;
+	const labels = _.map(data.drives, (id) => {
+		const drive = _.find(drives, { id });
+		return `<strong>${_.escape(drive?.name ? _.last(drive.name.split('/')) : id)}</strong>`;
+	});
+	const list = (_.size(labels) > 1 ? `${_.join(_.initial(labels), ', ')} and ${_.last(labels)}` : _.first(labels));
+	if (!await confirm(`Everything currently on ${list} will be erased. This action cannot be undone.`, {
+		buttons: [{ text: 'Expand', class: 'btn-solid theme-danger' }],
+		acknowledge: 'I understand and want to proceed'
+	})) {
+		return;
+	}
+
+	storageService.expandPool(data);
 	bootstrap.Dialog.getInstance(modal)?.hide();
 };
 

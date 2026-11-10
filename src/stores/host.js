@@ -221,6 +221,10 @@ class Host extends Store {
 		this.socket.emit('host:storage:pool:expand', data);
 	}
 
+	replaceDrive(data) {
+		this.socket.emit('host:storage:pool:replace', data);
+	}
+
 	syncStorage() {
 		return this.socket.timeout(30000).emitWithAck('host:storage:fetch');
 	}

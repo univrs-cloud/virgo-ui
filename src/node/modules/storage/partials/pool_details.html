@@ -176,13 +176,15 @@
 													<%const diskLabel = (drive?.name ? _.last(drive.name.split('/')) : `…${vdev.name.slice(-6)}`)%>
 													<%const diskSize = (vdev.physSpace || vdev.repDevSize)%>
 													<%const diskTip = (diskSize ? prettyBytes(diskSize, { binary: true }) : '')%>
+													<%const replacement = replacements[_.toLower(vdev.name)]%>
+													<%const canReplace = (replacement && !replacement.reason)%>
 													<div class="vdev-slot <%=(role === 'old' ? 'opacity-50' : '')%>">
 														<div class="vdev-stem"></div>
 														<div class="position-relative d-flex justify-content-center w-100">
 															<%if (role === 'new') {%>
 																<i class="icon-regular icon-arrow-right icon-xs icon-width-auto lh-1 fg-4 position-absolute top-50 start-0 translate-middle"></i>
 															<%}%>
-															<span class="position-relative d-inline-flex">
+															<span class="position-relative d-inline-flex <%=(canReplace ? 'cursor-pointer' : '')%>"<%=(canReplace ? ` data-bs-toggle="dialog" data-bs-target="#pool-drive-replace" data-replace="${_.escape(vdev.name)}"` : '')%>>
 																<i class="vdev-disk icon-duotone icon-hard-drive <%-diskColor%> <%=(activity && activity !== 'awaiting' ? 'icon-fade' : '')%>"<%=(diskTip ? ` data-bs-toggle="tooltip" data-bs-original-title="${diskTip}"` : '')%>></i>
 																<%if (usedIn) {%>
 																	<i class="icon-regular icon-link icon-2xs icon-width-auto lh-1 fg-blue-500 position-absolute top-0 start-100 translate-middle"></i>
@@ -209,7 +211,7 @@
 											<%if (close) {%>
 												</div>
 											<%} else {%>
-												<%=poolVdevTemplate({ vdev, drive, depth, isLast, role, pair, activity, stateColor, healthColor, driveHealthTip, prettyBytes })%>
+												<%=poolVdevTemplate({ vdev, drive, depth, isLast, role, pair, activity, replacement: replacements[_.toLower(vdev.name)], stateColor, healthColor, driveHealthTip, prettyBytes })%>
 											<%}%>
 										<%})%>
 									<%})%>

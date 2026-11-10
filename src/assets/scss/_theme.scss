@@ -855,8 +855,9 @@ $card-image-size: 30px;
 	transform: rotate(180deg);
 }
 #storage,
-#pool-expand {
-	--vdev-line-color: var(--border-color);
+#pool-expand,
+#pool-drive-replace {
+	--vdev-line-color: var(--border-strong);
 	.vdev-tree {
 		--vdev-slot-width: 4.25rem;
 		@include vars.styled-scrollbar($gap: map.get($spacers, 3));

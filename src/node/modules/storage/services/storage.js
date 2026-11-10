@@ -14,7 +14,7 @@ const { subscribe } = createSubscription({
 		}
 	],
 	filters: {
-		jobs: isExpandJob
+		jobs: isPoolJob
 	},
 	attachStore: storeAttach.beforeCallbacks,
 	mapState: (properties) => {
@@ -22,8 +22,8 @@ const { subscribe } = createSubscription({
 	}
 });
 
-function isExpandJob(job) {
-	return job?.name === 'host:storage:pool:expand';
+function isPoolJob(job) {
+	return _.includes(['host:storage:pool:expand', 'host:storage:pool:replace'], job?.name);
 }
 
 const getDrives = () => {
@@ -39,7 +39,7 @@ const getSnapshots = () => {
 };
 
 const getJobs = () => {
-	return _.filter(Job.getJobs() || [], isExpandJob);
+	return _.filter(Job.getJobs() || [], isPoolJob);
 };
 
 const syncStorage = () => {
@@ -50,6 +50,10 @@ const expandPool = (data) => {
 	Host.expandPool(data);
 };
 
+const replaceDrive = (data) => {
+	Host.replaceDrive(data);
+};
+
 export {
 	subscribe,
 	getDrives,
@@ -57,5 +61,6 @@ export {
 	getSnapshots,
 	getJobs,
 	syncStorage,
-	expandPool
+	expandPool,
+	replaceDrive
 };

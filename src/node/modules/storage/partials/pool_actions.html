@@ -38,10 +38,12 @@
 		<div class="menu">
 			<%if (isSystem) {%>
 				<button type="button" class="menu-item disabled">No actions</button>
-			<%} else if (expandTip) {%>
-				<span class="d-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="<%-expandTip%>"><button type="button" class="menu-item disabled"><i class="icon-regular icon-stack-plus icon-fw"></i>Expand pool</button></span>
 			<%} else {%>
-				<a href="#pool-expand" class="menu-item" data-bs-toggle="dialog"><i class="icon-regular icon-stack-plus icon-fw"></i>Expand pool</a>
+				<%if (expandTip) {%>
+					<span class="d-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="<%-expandTip%>"><button type="button" class="menu-item disabled"><i class="icon-regular icon-stack-plus icon-fw"></i>Expand pool</button></span>
+				<%} else {%>
+					<a href="#pool-expand" class="menu-item" data-bs-toggle="dialog"><i class="icon-regular icon-stack-plus icon-fw"></i>Expand pool</a>
+				<%}%>
 			<%}%>
 		</div>
 	</div>

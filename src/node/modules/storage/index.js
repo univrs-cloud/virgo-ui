@@ -214,7 +214,29 @@ const poolHealth = (pool) => {
 };
 
 const findExpandJob = (name) => {
-	return _.find(jobs, (job) => { return _.toLower(job.data?.config?.name) === _.toLower(name); });
+	return _.find(jobs, (job) => { return job.name === 'host:storage:pool:expand' && _.toLower(job.data?.config?.name) === _.toLower(name); });
+};
+
+const getReplacements = (pool) => {
+	const replaceJobs = _.filter(jobs, (job) => { return job.name === 'host:storage:pool:replace' && _.toLower(job.data?.config?.name) === _.toLower(pool.name); });
+	const pendingOld = _.map(replaceJobs, (job) => { return _.toLower(job.data?.config?.old); });
+	const pendingNew = _.map(replaceJobs, (job) => { return _.toLower(job.data?.config?.new); });
+	return _.keyBy(_.map(pool.replacements, (replacement) => {
+		if (_.includes(pendingOld, _.toLower(replacement.name))) {
+			return { ...replacement, candidates: [], reason: 'queued' };
+		}
+
+		if (replacement.reason) {
+			return replacement;
+		}
+
+		if (replacement.kind === 'healthy' && !_.isEmpty(replaceJobs)) {
+			return { ...replacement, candidates: [], reason: 'replacing-other' };
+		}
+
+		const candidates = _.reject(replacement.candidates, (id) => { return _.includes(pendingNew, _.toLower(id)); });
+		return { ...replacement, candidates, reason: (_.isEmpty(candidates) ? 'drives' : null) };
+	}), (replacement) => { return _.toLower(replacement.name); });
 };
 
 const renderPoolDetails = (name) => {
@@ -272,10 +294,11 @@ const renderPoolDetails = (name) => {
 	const dataGroups = _.filter(groups, 'isData');
 	const faultTolerance = (_.isEmpty(dataGroups) ? 0 : _.min(_.map(dataGroups, ({ vdev }) => { return vdevFaultTolerance(vdev); })));
 	const expandJob = findExpandJob(pool.name);
+	const replacements = getReplacements(pool);
 
 	morphdom(
 		details,
-		`<div>${poolDetailsTemplate({ pool, groups, vdevSections, faultTolerance, expandJob, poolTab: poolTabs[name] || 'overview', poolVdevTemplate, poolActionsTemplate, stateColor, healthColor, driveHealthTip, prettyBytes, moment })}</div>`,
+		`<div>${poolDetailsTemplate({ pool, groups, vdevSections, faultTolerance, expandJob, replacements, poolTab: poolTabs[name] || 'overview', poolVdevTemplate, poolActionsTemplate, stateColor, healthColor, driveHealthTip, prettyBytes, moment })}</div>`,
 		{
 			childrenOnly: true,
 			onBeforeElUpdated: (fromEl, toEl) => {
@@ -379,3 +402,4 @@ table.querySelector('tbody').addEventListener('click', expand);
 storageService.subscribe([render]);
 
 import('node/modules/storage/pool_expand');
+import('node/modules/storage/pool_drive_replace');

@@ -1,0 +1,79 @@
+<%const KIND_COLORS = { failed: 'fg-red-300', failing: 'fg-orange-300', healthy: 'fg-blue-500' };%>
+<%const KIND_LABELS = { failed: 'Failed', failing: 'Failing', healthy: 'Healthy' };%>
+<%const driveTip = (drive, status) => {
+	const lines = _.compact([
+		_.compact([drive.model, (drive.serialNumber ? `S/N ${drive.serialNumber}` : null)]).join(' · ') || drive.name || drive.id,
+		_.compact([status, prettyBytes(drive.size, { binary: true })]).join(' · ')
+	]);
+	return `<div class='text-start'><div class='fw-semibold'>${_.escape(drive.label)}</div>${_.map(lines, _.escape).join('<br>')}</div>`;
+};%>
+<div class="dialog-body">
+	<div class="alert theme-secondary mb-5">
+		<dl class="m-0">
+			<dt class="fw-light fg-4"><small>Pool</small></dt>
+			<dd class="m-0"><%-pool.name%></dd>
+		</dl>
+	</div>
+	<small class="d-block fw-light fg-4 mb-3">Replace with</small>
+	<%_.each(candidates, (candidate) => {%>
+		<%const isSelected = (candidate.id === selected)%>
+		<label class="d-flex align-items-center gap-3 border rounded-5 p-3 mb-2 cursor-pointer <%=(isSelected ? 'border-primary bg-subtle-primary' : '')%>">
+			<input type="radio" class="radio m-0 flex-shrink-0" name="replacement" value="<%-candidate.id%>" <%=(isSelected ? 'checked' : '')%>>
+			<span class="flex-grow-1 min-w-0">
+				<span class="d-block text-truncate"><%-candidate.label%></span>
+				<small class="d-block fg-4 text-truncate"><%-_.compact([candidate.model, (candidate.serialNumber ? `S/N ${candidate.serialNumber}` : null)]).join(' · ') || candidate.id%></small>
+			</span>
+			<u-badge color="gray" tint="100" class="flex-shrink-0" pill><small><%=prettyBytes(candidate.size, { binary: true })%></small></u-badge>
+		</label>
+	<%})%>
+	<div class="vdev-tree d-flex justify-content-center py-5">
+		<div class="text-center">
+			<div>
+				<u-badge color="<%-stateColor(group.state)%>" pill><small><%-group.name%></small></u-badge>
+			</div>
+			<div class="d-inline-block">
+				<div class="vdev-bar"></div>
+				<div class="vdev-slots">
+				<%_.each(group.disks, (disk) => {%>
+					<%if (disk.isOld) {%>
+						<div class="vdev-slot opacity-50">
+							<div class="vdev-stem"></div>
+							<div class="position-relative d-flex justify-content-center w-100">
+								<span class="position-relative d-inline-flex" data-bs-toggle="tooltip" data-bs-original-title="<%-driveTip(disk, KIND_LABELS[disk.kind])%>">
+									<i class="vdev-disk icon-duotone icon-hard-drive <%-KIND_COLORS[disk.kind]%>"></i>
+								</span>
+							</div>
+							<small class="fg-4 text-truncate w-100 mt-1"><%-disk.label%></small>
+						</div>
+						<div class="vdev-slot">
+							<div class="vdev-stem"></div>
+							<div class="position-relative d-flex justify-content-center w-100">
+								<i class="icon-regular icon-arrow-right icon-xs icon-width-auto lh-1 fg-4 position-absolute top-50 start-0 translate-middle"></i>
+								<span class="position-relative d-inline-flex" data-bs-toggle="tooltip" data-bs-original-title="<%-driveTip(selectedDrive, 'Replacement')%>">
+									<i class="vdev-disk icon-duotone icon-hard-drive fg-green-400"></i>
+								</span>
+							</div>
+							<small class="fg-4 text-truncate w-100 mt-1"><%-selectedDrive.label%></small>
+						</div>
+					<%} else {%>
+						<div class="vdev-slot">
+							<div class="vdev-stem"></div>
+							<div class="position-relative d-flex justify-content-center w-100">
+								<span class="position-relative d-inline-flex" data-bs-toggle="tooltip" data-bs-original-title="<%-driveTip(disk, null)%>">
+									<i class="vdev-disk icon-duotone icon-hard-drive fg-blue-500"></i>
+								</span>
+							</div>
+							<small class="fg-4 text-truncate w-100 mt-1"><%-disk.label%></small>
+						</div>
+					<%}%>
+				<%})%>
+				</div>
+			</div>
+		</div>
+	</div>
+	<%if (growth === 'now') {%>
+		<small class="d-block fg-emphasis-secondary">The pool grows once the new drive is filled.</small>
+	<%} else if (growth === 'later') {%>
+		<small class="d-block fg-emphasis-secondary">The pool only grows once every drive in <%-group.name%> is bigger than <%=prettyBytes(currentMin, { binary: true })%>.</small>
+	<%}%>
+</div>
