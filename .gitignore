@@ -5,3 +5,4 @@ dist
 *.deb
 ARCHITECTURE_IMPROVEMENTS.md
 deb-extra
+release-notes.md

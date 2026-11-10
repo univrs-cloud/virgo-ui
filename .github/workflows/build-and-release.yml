@@ -56,12 +56,6 @@ jobs:
 
       - run: npm run changelog
 
-      - name: Write the release notes
-        run: |
-          gzip -dc "deb-extra/usr/share/doc/$(jq -r .name package.json)/changelog.gz" \
-            | awk 'NR > 2 && /^ -- /{exit} NR > 2' \
-            | sed -e 's/^  \* /- /' -e 's/^  \([A-Z][a-z]*\)$/### \1/' > release-notes.md
-
       - uses: actions/download-artifact@v7
         with:
           pattern: deb-package-*
