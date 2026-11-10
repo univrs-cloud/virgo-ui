@@ -1,6 +1,7 @@
 import modulePartial from 'node/modules/system_updates/partials/index.html';
 import emptyPartial from 'node/modules/system_updates/partials/empty.html';
 import updatesPartial from 'node/modules/system_updates/partials/updates.html';
+import upToDateImage from 'assets/img/empty/up-to-date.svg';
 import * as softwareService from 'node/modules/system_updates/services/software';
 
 const moduleTemplate = _.template(modulePartial);
@@ -9,6 +10,7 @@ const updatesTemplate = _.template(updatesPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
 const module = document.querySelector('#system-updates');
 const loading = module.querySelector('.loading');
+const emptyList = module.querySelector('.empty-list');
 const container = module.querySelector('.container-fluid');
 const row = container.querySelector('.row');
 
@@ -41,21 +43,27 @@ const render = (state) => {
 		return;
 	}
 
-	const inner = (_.isEmpty(state.updates)
-		? emptyTemplate({ checkUpdates: state.checkUpdates })
-		: updatesTemplate({ checkUpdates: state.checkUpdates, updates: state.updates, hasUpdatingApps: state.hasUpdatingApps }));
-
-	morphdom(
-		row,
-		`<div>${inner}</div>`,
-		{ childrenOnly: true }
-	);
+	const isEmpty = _.isEmpty(state.updates);
+	if (isEmpty) {
+		morphdom(
+			emptyList,
+			`<div>${emptyTemplate({ checkUpdates: state.checkUpdates, upToDateImage })}</div>`,
+			{ childrenOnly: true }
+		);
+	} else {
+		morphdom(
+			row,
+			`<div>${updatesTemplate({ checkUpdates: state.checkUpdates, updates: state.updates, hasUpdatingApps: state.hasUpdatingApps })}</div>`,
+			{ childrenOnly: true }
+		);
+	}
 
 	loading.classList.add('d-none');
-	container.classList.remove('d-none');
+	emptyList.classList.toggle('d-none', !isEmpty);
+	container.classList.toggle('d-none', isEmpty);
 };
 
-container.addEventListener('click', checkUpdates);
+module.addEventListener('click', checkUpdates);
 container.addEventListener('click', update);
 
 softwareService.subscribe([render]);

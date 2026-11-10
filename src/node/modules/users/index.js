@@ -4,6 +4,7 @@ import userPartial from 'node/modules/users/partials/user.html';
 import userActionsPartial from 'node/modules/users/partials/user_actions.html';
 import userDetailsPartial from 'node/modules/users/partials/user_details.html';
 import sessionsPartial from 'node/modules/users/partials/sessions.html';
+import noResultsImage from 'assets/img/empty/no-results.svg';
 import * as userService from 'node/modules/users/services/user';
 import { filterListByQuery } from 'utils/list_search';
 
@@ -12,13 +13,15 @@ const userTemplate = _.template(userPartial);
 const userActionsTemplate = _.template(userActionsPartial);
 const userDetailsTemplate = _.template(userDetailsPartial);
 const sessionsTemplate = _.template(sessionsPartial);
-document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
+document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate({ noResultsImage }));
 const module = document.querySelector('#users');
 const loading = module.querySelector('.loading');
 const container = module.querySelector('.container-fluid');
 const searchInput = module.querySelector('.search');
 const listCount = module.querySelector('.list-count');
 const table = container.querySelector('.table');
+const tableScroll = container.querySelector('.table-scroll');
+const noResults = container.querySelector('.no-results');
 const details = container.querySelector('.details');
 let routeUid = null;
 let searchTimer;
@@ -186,6 +189,9 @@ const render = (state) => {
 		renderUserDetails(detailsUid);
 	}
 
+	const hasNoMatch = (!_.isEmpty(state.users) && _.isEmpty(users));
+	tableScroll.classList.toggle('d-none', hasNoMatch);
+	noResults.classList.toggle('d-none', !hasNoMatch);
 	loading.classList.add('d-none');
 	container.classList.remove('d-none');
 };

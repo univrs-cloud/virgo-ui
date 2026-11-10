@@ -1,4 +1,5 @@
 import snapshotsPartial from 'node/snapshots/partials/snapshots.html';
+import snapshotsImage from 'assets/img/empty/snapshots.svg';
 import * as snapshotService from 'node/snapshots/services/snapshot';
 import { getNodeViewBase } from 'node/view';
 import 'node/snapshots/browse';
@@ -21,6 +22,7 @@ const renderSnapshots = (key, options) => {
 		snapshotSearching: Boolean(searches[key]),
 		snapshotResults: results[key] || null,
 		canDownloadSnapshotFiles: !getNodeViewBase(),
+		snapshotsImage,
 		prettyBytes,
 		moment
 	});

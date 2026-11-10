@@ -6,6 +6,8 @@ import appDetailsPartial from 'node/modules/apps/partials/app_details.html';
 import appSnapshotsPartial from 'node/modules/apps/partials/app_snapshots.html';
 import appSnapshotActionsPartial from 'node/modules/apps/partials/app_snapshot_actions.html';
 import filtersPartial from 'node/modules/apps/partials/filters.html';
+import appsImage from 'assets/img/empty/apps.svg';
+import noResultsImage from 'assets/img/empty/no-results.svg';
 import * as appService from 'node/modules/apps/services/app';
 import { renderSnapshots, clearSnapshots } from 'node/snapshots';
 import { filterListByQuery } from 'utils/list_search';
@@ -17,9 +19,10 @@ const appDetailsTemplate = _.template(appDetailsPartial);
 const appSnapshotsTemplate = _.template(appSnapshotsPartial);
 const appSnapshotActionsTemplate = _.template(appSnapshotActionsPartial);
 const filtersTemplate = _.template(filtersPartial);
-document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
+document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate({ appsImage, noResultsImage }));
 const module = document.querySelector('#apps');
 const loading = module.querySelector('.loading');
+const emptyList = module.querySelector('.empty-list');
 const container = module.querySelector('.container-fluid');
 const details = container.querySelector('.details');
 const searchInput = module.querySelector('.search');
@@ -27,6 +30,8 @@ const listCount = module.querySelector('.list-count');
 const filterMenu = module.querySelector('.filter-menu');
 const filterCount = module.querySelector('.filter-count');
 const table = container.querySelector('.table');
+const tableScroll = container.querySelector('.table-scroll');
+const noResults = container.querySelector('.no-results');
 let routeAppName = null;
 let isWatchingResourceMetrics = false;
 let searchTimer;
@@ -388,8 +393,13 @@ const render = (state) => {
 		renderAppDetails(detailsAppName);
 	}
 	
+	const isEmpty = _.isEmpty(state.apps);
+	const hasNoMatch = (!isEmpty && _.isEmpty(apps));
+	tableScroll.classList.toggle('d-none', hasNoMatch);
+	noResults.classList.toggle('d-none', !hasNoMatch);
 	loading.classList.add('d-none');
-	container.classList.remove('d-none');
+	emptyList.classList.toggle('d-none', !isEmpty);
+	container.classList.toggle('d-none', isEmpty);
 };
 
 const handleRoute = (ctx) => {

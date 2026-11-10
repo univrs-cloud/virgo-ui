@@ -4,6 +4,8 @@ import storagePartial from 'node/modules/storage/partials/storage.html';
 import poolDetailsPartial from 'node/modules/storage/partials/pool_details.html';
 import poolVdevPartial from 'node/modules/storage/partials/pool_vdev.html';
 import poolActionsPartial from 'node/modules/storage/partials/pool_actions.html';
+import storageImage from 'assets/img/empty/storage.svg';
+import noResultsImage from 'assets/img/empty/no-results.svg';
 import * as storageService from 'node/modules/storage/services/storage';
 import { filterListByQuery } from 'utils/list_search';
 
@@ -12,7 +14,7 @@ const storageTemplate = _.template(storagePartial);
 const poolDetailsTemplate = _.template(poolDetailsPartial);
 const poolVdevTemplate = _.template(poolVdevPartial);
 const poolActionsTemplate = _.template(poolActionsPartial);
-document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
+document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate({ storageImage, noResultsImage }));
 const module = document.querySelector('#storage');
 const loading = module.querySelector('.loading');
 const container = module.querySelector('.container-fluid');
@@ -20,6 +22,9 @@ const details = container.querySelector('.details');
 const searchInput = module.querySelector('.search');
 const listCount = module.querySelector('.list-count');
 const table = container.querySelector('.table');
+const tableScroll = container.querySelector('.table-scroll');
+const noPool = container.querySelector('.no-pool');
+const noResults = container.querySelector('.no-results');
 let routePoolName = null;
 const poolTabs = {};
 let searchTimer;
@@ -354,6 +359,11 @@ const render = (state) => {
 		renderPoolDetails(detailsPoolName);
 	}
 
+	const hasPool = _.some(pools, (pool) => { return pool.name !== 'system'; });
+	const hasNoMatch = (!_.isEmpty(pools) && _.isEmpty(searchedPools));
+	tableScroll.classList.toggle('d-none', hasNoMatch);
+	noPool.classList.toggle('d-none', hasPool || hasNoMatch);
+	noResults.classList.toggle('d-none', !hasNoMatch);
 	loading.classList.add('d-none');
 	renderSyncButtons();
 	container.classList.remove('d-none');

@@ -311,8 +311,21 @@ $card-image-size: 30px;
 
 .no-content {
 	height: calc(100dvh - 72px - var(--chrome));
-	#not-found & {
+	:is(#not-found, #sites) & {
 		height: calc(100dvh - 32px - var(--chrome));
+	}
+}
+#storage > .row > .container-fluid > .card > .card-body > .overflow-y-scroll:has(~ .no-pool:not(.d-none)) {
+	flex: none;
+	height: auto;
+}
+.no-content-image {
+	width: 20rem;
+	max-width: 100%;
+	svg {
+		display: block;
+		width: 100%;
+		height: auto;
 	}
 }
 .actions-toggle {
@@ -430,7 +443,7 @@ $card-image-size: 30px;
 			flex-wrap: nowrap;
 			height: auto;
 		}
-		> .modules > :not(.d-none) > .row > :is(.loading, .oops) {
+		> .modules > :not(.d-none) > .row > :is(.loading, .oops, .empty-list) {
 			flex: 1 1 0;
 		}
 	}

@@ -222,7 +222,10 @@ module.exports = (env, argv) => {
 				},
 				{
 					test: /\.svg$/,
-					include: path.resolve(__dirname, 'src/assets/img/weather'),
+					include: [
+						path.resolve(__dirname, 'src/assets/img/weather'),
+						path.resolve(__dirname, 'src/assets/img/empty')
+					],
 					use: {
 						loader: 'raw-loader'
 					}

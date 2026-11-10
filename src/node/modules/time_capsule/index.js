@@ -4,6 +4,8 @@ import modulePartial from 'node/modules/time_capsule/partials/index.html';
 import backupDiskPartial from 'node/modules/time_capsule/partials/backup_disk.html';
 import backupDiskActionsPartial from 'node/modules/time_capsule/partials/backup_disk_actions.html';
 import backupDiskDetailsPartial from 'node/modules/time_capsule/partials/backup_disk_details.html';
+import backupDisksImage from 'assets/img/empty/backup-disks.svg';
+import noResultsImage from 'assets/img/empty/no-results.svg';
 import * as backupDiskService from 'node/modules/time_capsule/services/backup_disk';
 import * as userService from 'node/modules/time_capsule/services/user';
 import { filterListByQuery } from 'utils/list_search';
@@ -13,13 +15,16 @@ const moduleTemplate = _.template(modulePartial);
 const backupDiskTemplate = _.template(backupDiskPartial);
 const backupDiskActionsTemplate = _.template(backupDiskActionsPartial);
 const backupDiskDetailsTemplate = _.template(backupDiskDetailsPartial);
-document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
+document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate({ backupDisksImage, noResultsImage }));
 const module = document.querySelector('#time-capsule');
 const loading = module.querySelector('.loading');
+const emptyList = module.querySelector('.empty-list');
 const container = module.querySelector('.container-fluid');
 const searchInput = module.querySelector('.search');
 const listCount = module.querySelector('.list-count');
 const table = container.querySelector('.table');
+const tableScroll = container.querySelector('.table-scroll');
+const noResults = container.querySelector('.no-results');
 const details = container.querySelector('.details');
 let routeBackupDiskName = null;
 let searchTimer;
@@ -198,8 +203,13 @@ const render = (state) => {
 		renderBackupDiskDetails(detailsBackupDiskName);
 	}
 
+	const isEmpty = _.isEmpty(state.backupDisks);
+	const hasNoMatch = (!isEmpty && _.isEmpty(backupDisks));
+	tableScroll.classList.toggle('d-none', hasNoMatch);
+	noResults.classList.toggle('d-none', !hasNoMatch);
 	loading.classList.add('d-none');
-	container.classList.remove('d-none');
+	emptyList.classList.toggle('d-none', !isEmpty);
+	container.classList.toggle('d-none', isEmpty);
 };
 
 const handleRoute = (ctx) => {

@@ -168,7 +168,7 @@
 									<i class="icon-fill icon-circle icon-2xs icon-width-auto lh-1 position-absolute top-100 start-100 translate-middle <%=({ enabled: 'fg-green-300', paused: 'fg-orange-300', disabled: 'fg-gray-500' })[snapshotMode]%>" style="margin: -0.1875rem 0 0 -0.125rem;" data-bs-toggle="tooltip" data-bs-original-title="<%-_.upperFirst(snapshotMode)%>"></i>
 								</span>
 								Snapshots
-								<%if (snapshotMode !== 'disabled') {%>
+								<%if (!_.isEmpty(folder.snapshots)) {%>
 									<small class="opacity-75"><%=_.size(folder.snapshots)%></small>
 								<%}%>
 							</button>
@@ -208,11 +208,9 @@
 										</div>
 									</div>
 								</div>
-								<%if (!_.isEmpty(folder.snapshots)) {%>
-									<div class="snapshots card border-0">
-										<%=renderSnapshots(`folder:${folder.name}`, { snapshots: folder.snapshots, browse: (folder.snapshotBrowse ? { ...folder.snapshotBrowse, rootName: folder.comment } : null) })%>
-									</div>
-								<%}%>
+								<div class="snapshots card border-0">
+									<%=renderSnapshots(`folder:${folder.name}`, { snapshots: folder.snapshots, browse: (folder.snapshotBrowse ? { ...folder.snapshotBrowse, rootName: folder.comment } : null) })%>
+								</div>
 							</div>
 						</div>
 					<%}%>

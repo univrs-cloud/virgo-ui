@@ -5,6 +5,7 @@ import serviceActionsPartial from 'node/modules/system_services/partials/service
 import serviceDetailsPartial from 'node/modules/system_services/partials/service_details.html';
 import filterPartial from 'node/modules/system_services/partials/service_filter.html';
 import filterOptionsPartial from 'node/modules/system_services/partials/service_filter_options.html';
+import noResultsImage from 'assets/img/empty/no-results.svg';
 import * as serviceService from 'node/modules/system_services/services/service';
 import { filterListByQuery } from 'utils/list_search';
 
@@ -13,7 +14,7 @@ const serviceTemplate = _.template(servicePartial);
 const serviceActionsTemplate = _.template(serviceActionsPartial);
 const serviceDetailsTemplate = _.template(serviceDetailsPartial);
 const filterOptionsTemplate = _.template(filterOptionsPartial);
-document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate({ filterPartial }));
+document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate({ filterPartial, noResultsImage }));
 const module = document.querySelector('#system-services');
 const loading = module.querySelector('.loading');
 const container = module.querySelector('.container-fluid');
@@ -24,6 +25,8 @@ const filterMenu = module.querySelector('.filter-menu');
 const filterCount = module.querySelector('.filter-count');
 const filterTypeNav = module.querySelector('.filter-type');
 const table = container.querySelector('.table');
+const tableScroll = container.querySelector('.table-scroll');
+const noResults = container.querySelector('.no-results');
 let routeServiceUnit = null;
 const serviceTabs = {};
 let searchTimer;
@@ -288,6 +291,9 @@ const render = (state) => {
 		renderServiceDetails(detailsServiceUnit);
 	}
 
+	const hasNoMatch = (!_.isEmpty(state.services) && _.isEmpty(services));
+	tableScroll.classList.toggle('d-none', hasNoMatch);
+	noResults.classList.toggle('d-none', !hasNoMatch);
 	loading.classList.add('d-none');
 	renderSyncButtons();
 	container.classList.remove('d-none');

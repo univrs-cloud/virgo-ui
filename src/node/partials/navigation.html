@@ -53,10 +53,7 @@
 		<i class="icon-duotone icon-tree-structure icon-fw"></i>
 		<span class="nav-label ms-3">Topology</span>
 	</a>
-	<a href="/settings" class="nav-item nav-link <%=(active === '/settings' && 'active')%>">
-		<i class="icon-duotone icon-sliders icon-fw"></i>
-		<span class="nav-label ms-3">Settings</span>
-	</a>
+	<div class="nav-title sm:ps-3 mt-3 sm:mt-5"><small>Node</small></div>
 	<a href="/system-updates" class="nav-item nav-link d-flex align-items-center <%=(active === '/system-updates' && 'active')%>">
 		<span>
 			<i class="icon-duotone icon-download icon-fw"></i>
@@ -65,6 +62,10 @@
 		<%if (systemUpdates > 0) {%>
 			<u-badge color="white" class="md:ms-auto ms-auto" pill><small><%=systemUpdates%></small></u-badge>
 		<%}%>
+	</a>
+	<a href="/settings" class="nav-item nav-link <%=(active === '/settings' && 'active')%>">
+		<i class="icon-duotone icon-sliders icon-fw"></i>
+		<span class="nav-label ms-3">Settings</span>
 	</a>
 	<a href="/about" class="nav-item nav-link <%=(active === '/about' && 'active')%>">
 		<i class="icon-duotone icon-fingerprint-simple icon-fw"></i>

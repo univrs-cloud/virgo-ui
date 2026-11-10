@@ -4,6 +4,7 @@ import nodePartial from 'fleet/sites/partials/node.html';
 import badgesPartial from 'fleet/sites/partials/node_badges.html';
 import storagePartial from 'fleet/sites/partials/node_storage.html';
 import menuPartial from 'fleet/sites/partials/node_menu.html';
+import sitesImage from 'assets/img/empty/sites.svg';
 import * as nodeService from 'fleet/sites/services/node';
 
 const moduleTemplate = _.template(modulePartial);
@@ -25,7 +26,7 @@ const render = (state) => {
 
 	morphdom(
 		container,
-		`<div>${sitesTemplate({ nodes: state.nodes, view: (desktopQuery.matches ? nodeService.getView() : 'cards'), nodeTemplate, badgesTemplate, storageTemplate, menuTemplate, moment, prettyBytes })}</div>`,
+		`<div>${sitesTemplate({ nodes: state.nodes, view: (desktopQuery.matches ? nodeService.getView() : 'cards'), nodeTemplate, badgesTemplate, storageTemplate, menuTemplate, sitesImage, moment, prettyBytes })}</div>`,
 		{ childrenOnly: true }
 	);
 

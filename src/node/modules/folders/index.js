@@ -4,6 +4,8 @@ import modulePartial from 'node/modules/folders/partials/index.html';
 import folderPartial from 'node/modules/folders/partials/folder.html';
 import folderActionsPartial from 'node/modules/folders/partials/folder_actions.html';
 import folderDetailsPartial from 'node/modules/folders/partials/folder_details.html';
+import foldersImage from 'assets/img/empty/folders.svg';
+import noResultsImage from 'assets/img/empty/no-results.svg';
 import * as folderService from 'node/modules/folders/services/folder';
 import * as userService from 'node/modules/folders/services/user';
 import { renderSnapshots, clearSnapshots } from 'node/snapshots';
@@ -14,13 +16,16 @@ const moduleTemplate = _.template(modulePartial);
 const folderTemplate = _.template(folderPartial);
 const folderActionsTemplate = _.template(folderActionsPartial);
 const folderDetailsTemplate = _.template(folderDetailsPartial);
-document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
+document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate({ foldersImage, noResultsImage }));
 const module = document.querySelector('#folders');
 const loading = module.querySelector('.loading');
+const emptyList = module.querySelector('.empty-list');
 const container = module.querySelector('.container-fluid');
 const searchInput = module.querySelector('.search');
 const listCount = module.querySelector('.list-count');
 const table = container.querySelector('.table');
+const tableScroll = container.querySelector('.table-scroll');
+const noResults = container.querySelector('.no-results');
 const details = container.querySelector('.details');
 let routeFolderName = null;
 let searchTimer;
@@ -200,8 +205,13 @@ const render = (state) => {
 		renderFolderDetails(detailsFolderName);
 	}
 
+	const isEmpty = _.isEmpty(state.folders);
+	const hasNoMatch = (!isEmpty && _.isEmpty(folders));
+	tableScroll.classList.toggle('d-none', hasNoMatch);
+	noResults.classList.toggle('d-none', !hasNoMatch);
 	loading.classList.add('d-none');
-	container.classList.remove('d-none');
+	emptyList.classList.toggle('d-none', !isEmpty);
+	container.classList.toggle('d-none', isEmpty);
 };
 
 const handleRoute = (ctx) => {

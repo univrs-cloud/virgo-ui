@@ -11,6 +11,10 @@
 		</div>
 		<div class="loading d-flex justify-content-center align-items-center h-100"><div class="spinner-border fg-gray-600"></div></div>
 		<div class="oops d-flex justify-content-center align-items-center h-100 d-none"><span class="fg-red-300">Error fetching data</span></div>
+		<div class="empty-list no-content d-flex flex-column justify-content-center align-items-center d-none">
+			<div class="no-content-image"><%=foldersImage%></div>
+			<h5 class="fg-4 mt-7">No folders created</h5>
+		</div>
 		<div class="container-fluid position-relative d-none">
 			<div class="card">
 				<div class="card-body">
@@ -58,6 +62,10 @@
 							</thead>
 							<tbody></tbody>
 						</table>
+					</div>
+					<div class="no-results d-flex flex-column justify-content-center align-items-center flex-grow-1 py-7 d-none">
+						<div class="no-content-image"><%=noResultsImage%></div>
+						<h5 class="fg-4 mt-7 mb-0">Nothing matches the search</h5>
 					</div>
 				</div>
 			</div>

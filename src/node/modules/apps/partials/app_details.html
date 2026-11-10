@@ -150,7 +150,7 @@
 									<%}%>
 								</span>
 								Snapshots
-								<%if (_.toLower(app.snapshotPolicy?.mode) !== 'disabled') {%>
+								<%if (!_.isEmpty(app.snapshots)) {%>
 									<small class="opacity-75"><%=_.size(app.snapshots)%></small>
 								<%}%>
 							</button>

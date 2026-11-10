@@ -258,6 +258,9 @@ body:has(header nav) :is(main:not(:has(.booting)), #update) {
 	body:has(header nav) & {
 		min-height: calc(100dvh - var(--chrome) - (#{map.get($spacers, 5)} - var(--top-lift, 0px)) - var(--top-row-height, 1.5rem) - #{map.get($spacers, 5)});
 	}
+	#sites & {
+		min-height: calc(100dvh - 32px - var(--chrome));
+	}
 	.dialog & {
 		min-height: unset;
 	}

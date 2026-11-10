@@ -1,17 +1,22 @@
 import modulePartial from 'node/modules/shortcuts/partials/index.html';
 import shortcutPartial from 'node/modules/shortcuts/partials/shortcut.html';
+import shortcutsImage from 'assets/img/empty/shortcuts.svg';
+import noResultsImage from 'assets/img/empty/no-results.svg';
 import * as shortcutService from 'node/modules/shortcuts/services/shortcut';
 import { filterListByQuery } from 'utils/list_search';
 
 const moduleTemplate = _.template(modulePartial);
 const shortcutTemplate = _.template(shortcutPartial);
-document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
+document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate({ shortcutsImage, noResultsImage }));
 const module = document.querySelector('#shortcuts');
 const loading = module.querySelector('.loading');
+const emptyList = module.querySelector('.empty-list');
 const container = module.querySelector('.container-fluid');
 const searchInput = module.querySelector('.search');
 const listCount = module.querySelector('.list-count');
 const table = container.querySelector('.table');
+const tableScroll = container.querySelector('.table-scroll');
+const noResults = container.querySelector('.no-results');
 let searchTimer;
 let searchValue = '';
 let tableOrder = {
@@ -74,8 +79,13 @@ const render = (state) => {
 		{ childrenOnly: true }
 	);
 
+	const isEmpty = _.isEmpty(state.shortcuts);
+	const hasNoMatch = (!isEmpty && _.isEmpty(shortcuts));
+	tableScroll.classList.toggle('d-none', hasNoMatch);
+	noResults.classList.toggle('d-none', !hasNoMatch);
 	loading.classList.add('d-none');
-	container.classList.remove('d-none');
+	emptyList.classList.toggle('d-none', !isEmpty);
+	container.classList.toggle('d-none', isEmpty);
 };
 
 searchInput.addEventListener('input', search);
