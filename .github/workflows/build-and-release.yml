@@ -50,6 +50,18 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - run: npm run changelog
+
+      - name: Write the release notes
+        run: |
+          gzip -dc "deb-extra/usr/share/doc/$(jq -r .name package.json)/changelog.gz" \
+            | awk 'NR > 2 && /^ -- /{exit} NR > 2' \
+            | sed -e 's/^  \* /- /' -e 's/^  \([A-Z][a-z]*\)$/### \1/' > release-notes.md
+
       - uses: actions/download-artifact@v7
         with:
           pattern: deb-package-*
@@ -59,6 +71,7 @@ jobs:
       - uses: softprops/action-gh-release@v2
         with:
           files: deb/*.deb
+          body_path: release-notes.md
           tag_name: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.tag || github.ref_name }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
