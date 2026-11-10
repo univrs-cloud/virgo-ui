@@ -7,12 +7,14 @@
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"build": "webpack --mode production",
-		"deb": "node-deb --no-default-package-dependencies --no-rebuild --install-strategy auto ${DEB_ARCH:+--architecture $DEB_ARCH} -- dist/",
+		"changelog": "bash scripts/changelog.sh",
+		"deb": "npm run changelog && node-deb --no-default-package-dependencies --no-rebuild --install-strategy auto ${DEB_ARCH:+--architecture $DEB_ARCH} -- dist/",
 		"serve": "webpack serve --mode development --env=upstream=$npm_config_upstream"
 	},
 	"node_deb": {
 		"init": "none",
-		"install_dir": "/var/www"
+		"install_dir": "/var/www",
+		"extra_files": "deb-extra"
 	},
 	"engines": {
 		"node": ">=24.22.1",

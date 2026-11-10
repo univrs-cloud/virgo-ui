@@ -4,3 +4,4 @@ dist
 .env
 *.deb
 ARCHITECTURE_IMPROVEMENTS.md
+deb-extra
