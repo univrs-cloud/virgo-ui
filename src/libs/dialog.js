@@ -9,7 +9,7 @@
 								</div>
 			` : '');
 			const modalHtml = `
-				<dialog id="${modalId}" class="dialog dialog-sm dialog-scrollable" tabindex="-1" data-bs-keyboard="true">
+				<dialog id="${modalId}" class="dialog dialog-sm dialog-scrollable" tabindex="-1" data-bs-keyboard="true" data-attention>
 					<div class="dialog-header">
 						<h1 class="dialog-title">${title}</h1>
 					</div>

@@ -47,6 +47,8 @@ export class Toast extends LitElement {
 	updateOptions(options = {}) {
 		const durationChanged = options.duration !== undefined && options.duration !== this.duration;
 		
+		const typeChanged = options.type !== undefined && options.type !== this.type;
+
 		// Update properties
 		if (options.type !== undefined) this.type = options.type;
 		if (options.title !== undefined) this.title = options.title;
@@ -60,6 +62,9 @@ export class Toast extends LitElement {
 			if (this.duration > 0) {
 				this.#startAutoHide();
 			}
+		}
+		if (typeChanged) {
+			this.#dispatchShown();
 		}
 		this.requestUpdate();
 	}
@@ -133,7 +138,8 @@ export class Toast extends LitElement {
 		
 		// Show the toast
 		this.#bsToast.show();
-		
+		this.#dispatchShown();
+
 		// Start our own timer if has duration
 		if (this.duration > 0) {
 			this.#startAutoHide();
@@ -164,6 +170,14 @@ export class Toast extends LitElement {
 			clearTimeout(this.#hideTimeout);
 			this.#hideTimeout = null;
 		}
+	}
+
+	#dispatchShown() {
+		this.dispatchEvent(new CustomEvent('toast-shown', {
+			detail: { id: this.toastId, type: this.type },
+			bubbles: true,
+			composed: true
+		}));
 	}
 
 	// Arrow functions for event handlers (auto-bound)
