@@ -19,7 +19,7 @@ html {
 }
 
 body {
-	--chrome: 56px;
+	--chrome: 64px;
 	--app-bg: var(--surface-shell);
 	--shell-fg: light-dark(var(--gray-900), var(--gray-050));
 	--shell-fg-muted: light-dark(var(--gray-500), var(--gray-400));
@@ -37,7 +37,7 @@ body {
 	-moz-osx-font-smoothing: grayscale;
 	text-wrap: pretty;
 	background-color: var(--app-bg);
-	margin-bottom: 64px;
+	margin-bottom: var(--chrome);
 	.dialog-open & {
 		overflow-y: hidden;
 		padding-right: var(--scrollbar-width, 0px);
