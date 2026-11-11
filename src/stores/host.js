@@ -46,7 +46,7 @@ class Host extends Store {
 		});
 
 		this.socket.on('host:updates', (updates) => {
-			// updates = [{ package: 'samba', version: { installed: '1.0.0', updatableTo: '2.0.0' } }, { package: 'zfs-linux', version: { installed: '2.3.0', updatableTo: '2.4.4' } }];
+			// updates = [{ package: 'samba', version: { installed: '1.0.0', updatableTo: '2.0.0' }, changelog: 'samba (2:2.0.0+dfsg-1) trixie-security; urgency=medium\n\n  * Fix CVE-2026-1234: smbd crash on malformed SMB2 lease break\n  * Fix CVE-2026-1301: winbind leaks credentials in debug logs\n\n -- Debian Samba Maintainers <pkg-samba-maint@lists.alioth.debian.org>  Mon, 09 Nov 2026 10:12:44 +0100\n\nsamba (2:1.1.0+dfsg-1) trixie; urgency=medium\n\n  * New upstream release\n  * d/control: drop obsolete python3-crypto dependency\n\n -- Debian Samba Maintainers <pkg-samba-maint@lists.alioth.debian.org>  Tue, 20 Oct 2026 16:05:01 +0200' }, { package: 'zfs-linux', version: { installed: '2.3.0', updatableTo: '2.4.4' }, changelog: 'zfs-linux (2.4.4-1) trixie; urgency=medium\n\n  * New upstream release\n    - Faster scrub on large RAIDZ pools\n    - Fix ARC shrinking too aggressively under memory pressure\n  * Support Linux 6.17 kernels\n\n -- Debian ZFS on Linux maintainers <pkg-zfsonlinux-devel@alioth-lists.debian.net>  Thu, 05 Nov 2026 21:40:12 +0800' }, { package: 'tzdata', version: { installed: '2026a-1', updatableTo: '2026b-1' } }];
 			this.setState({ updates }, 'get_updates');
 		});
 

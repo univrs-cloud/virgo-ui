@@ -376,6 +376,9 @@ $card-image-size: 30px;
 	max-width: 87.5rem;
 	margin-inline: 0;
 }
+#update > .container > .row {
+	max-width: 87.5rem;
+}
 #system-services .details {
 	.service-logs {
 		@include fill-column;
@@ -478,7 +481,7 @@ $card-image-size: 30px;
 		--table-scrollbar-inset-bottom: var(--card-border-radius);
 		gap: 0;
 		height: calc(100dvh - var(--chrome) - (#{map.get($spacers, 5)} - var(--top-lift, 0px)) - var(--top-row-height, 1.5rem) - #{map.get($spacers, 5)} - var(--card-border-width) * 2);
-		> .table-scroll {
+		.table-scroll {
 			margin-bottom: calc(var(--card-spacer-y) * -1);
 		}
 	}

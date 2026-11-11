@@ -1,36 +1,20 @@
-<div class="col col-12 lg:mt-0">
-	<div class="row gx-7 gy-3">
-		<div class="col-12 lg:col-4 2xl:col-3 lg:pt-5">
-			<h5 class="m-0">virgoOS</h5>
-			<p class="fg-emphasis-secondary small mt-1 mb-0">The node checks for updates every day at midnight.</p>
+<div class="col col-12">
+	<div class="d-flex align-items-center gap-5">
+		<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-5 bg-subtle-primary fg-primary"><i class="icon-regular icon-arrow-down"></i></div>
+		<div class="min-w-0 me-auto">
+			<div class="fs-lg lh-xs"><%=_.pluralize('update', _.size(updates), true)%> available</div>
+			<small class="d-block fg-4 lh-xs">Ready to install</small>
 		</div>
-		<div class="col-12 lg:col-8 2xl:col-9">
-			<div class="card border-0 mb-0">
-				<div class="card-body d-flex flex-column">
-					<div class="d-flex align-items-center gap-5">
-						<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-5 bg-subtle-primary fg-primary align-self-start"><i class="icon-regular icon-arrow-down"></i></div>
-						<div class="min-w-0 me-auto">
-							<div class="fs-lg lh-xs"><%=_.pluralize('update', _.size(updates), true)%> available</div>
-							<small class="d-block fg-4 lh-xs">Ready to install</small>
-						</div>
-						<a href="#" class="check-updates btn-link d-inline-block text-nowrap align-self-start border-0 text-decoration-none px-0 py-3 mt-1 min-h-0 <%=(checkUpdates ? 'disabled' : '')%>">
-							<i class="icon-regular icon-arrows-clockwise icon-fw <%=(checkUpdates ? 'icon-spin' : '')%>"></i><span class="d-none md:d-inline ms-1"><%=(checkUpdates ? 'Checking for updates...' : 'Check for new updates')%></span>
-						</a>
-						<u-button variant="primary" class="install flex-shrink-0 align-self-start mt-1" tip="<%=(hasUpdatingApps ? 'An app update is in progress.' : '')%>" <%=(checkUpdates || hasUpdatingApps ? 'disabled' : '')%>>Install</u-button>
-					</div>
+		<a href="#" class="check-updates btn-link d-inline-block text-nowrap border-0 text-decoration-none px-0 py-3 min-h-0 <%=(checkUpdates ? 'disabled' : '')%>" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="<%=(checkUpdates ? 'Checking for updates...' : 'Check for new updates')%>">
+			<i class="icon-regular icon-arrows-clockwise icon-fw <%=(checkUpdates ? 'icon-spin' : '')%>"></i>
+		</a>
+		<u-button variant="primary" size="sm" class="install flex-shrink-0" tip="<%=(hasUpdatingApps ? 'An app update is in progress.' : '')%>" <%=(checkUpdates || hasUpdatingApps ? 'disabled' : '')%>>Install</u-button>
+	</div>
 
-					<hr class="border-gray-200 flex-shrink-0 mt-3 opacity-25">
-
-					<div class="overflow-y-auto pe-5 me--5">
-						<%_.each(updates, (update, index) => {%>
-							<div class="py-3 <%=(index > 0 ? 'border-top' : '')%>">
-								<div class="text-break"><%-update.package%></div>
-								<small class="d-block fg-4 text-break"><%-update.version.installed%> &rarr; <%-update.version.updatableTo%></small>
-							</div>
-						<%})%>
-					</div>
-				</div>
-			</div>
+	<div class="d-flex gap-5 mt-5">
+		<div class="flex-shrink-0 size-5"></div>
+		<div class="flex-fill min-w-0">
+			<%=updatesListTemplate({ updates })%>
 		</div>
 	</div>
 </div>

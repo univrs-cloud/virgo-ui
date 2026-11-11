@@ -1,0 +1,38 @@
+<%if (_.some(updates, 'changelog')) {%>
+	<div class="pb-3">
+		<div class="details-toggle changelogs-toggle d-inline-flex align-items-center gap-3 cursor-pointer text-nowrap" aria-expanded="false">
+			<i class="icon-fill icon-caret-down icon-fw icon-xs fg-secondary"></i>
+			<small class="expand-label fg-4">Show changelogs</small>
+			<small class="collapse-label fg-4 d-none">Hide changelogs</small>
+		</div>
+	</div>
+<%}%>
+<div class="border-top">
+	<%_.each(updates, (update) => {%>
+		<div class="border-bottom">
+			<%if (update.changelog) {%>
+				<div class="details-toggle changelog-toggle d-flex flex-wrap align-items-center gap-3 py-3 cursor-pointer" data-bs-toggle="collapse" data-bs-target="#changelog-<%-_.kebabCase(update.package)%>" aria-expanded="false">
+			<%} else {%>
+				<div class="d-flex flex-wrap align-items-center gap-3 py-3">
+			<%}%>
+				<%if (update.changelog) {%>
+					<i class="icon-fill icon-caret-down icon-fw icon-xs fg-secondary"></i>
+				<%} else {%>
+					<i class="icon-fill icon-fw icon-xs"></i>
+				<%}%>
+				<span class="text-break"><%-update.package%></span>
+				<span class="badge bg-transparent rounded-pill border fw-normal fg-gray-500 border-gray-500"><%-update.version.installed%></span>
+				<i class="icon-regular icon-arrow-right fg-4"></i>
+				<span class="badge bg-transparent rounded-pill border fw-normal fg-blue-500 border-blue-500"><%-update.version.updatableTo%></span>
+			</div>
+			<%if (update.changelog) {%>
+				<div class="changelog collapse" id="changelog-<%-_.kebabCase(update.package)%>">
+					<div class="d-flex gap-3">
+						<i class="icon-fill icon-fw icon-xs flex-shrink-0"></i>
+						<pre class="small fg-secondary flex-fill min-w-0 mb-0 pb-3"><%-update.changelog%></pre>
+					</div>
+				</div>
+			<%}%>
+		</div>
+	<%})%>
+</div>
