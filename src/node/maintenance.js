@@ -1,6 +1,9 @@
 import maintenancePartial from 'node/partials/maintenance.html';
+import maintenanceImage from 'assets/img/empty/maintenance.svg';
 import * as maintenanceService from 'node/services/maintenance';
 import * as updateMode from 'libs/update_mode';
+
+const maintenanceTemplate = _.template(maintenancePartial);
 
 let isShown = false;
 
@@ -11,7 +14,7 @@ const show = () => {
 
 	isShown = true;
 	updateMode.enter();
-	document.body.insertAdjacentHTML('beforeend', maintenancePartial);
+	document.body.insertAdjacentHTML('beforeend', maintenanceTemplate({ maintenanceImage }));
 	document.body.classList.add('maintenance');
 };
 

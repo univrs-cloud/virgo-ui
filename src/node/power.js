@@ -1,7 +1,11 @@
 import * as powerService from 'node/services/power';
 import * as windowService from 'node/services/window';
+import rebootImage from 'assets/img/empty/reboot.svg';
+import shutdownImage from 'assets/img/empty/shutdown.svg';
 
 const container = document.querySelector('#power');
+container.querySelector('.rebooting .no-content-image').innerHTML = rebootImage;
+container.querySelector('.powered-off .no-content-image').innerHTML = shutdownImage;
 let wasRebooting = false;
 
 const render = (state) => {

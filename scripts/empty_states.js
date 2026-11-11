@@ -482,6 +482,48 @@ scenes.sites = () => {
 	return svg(`.es-si-g{animation:es-si-g 2.4s ease-in-out infinite}@keyframes es-si-g{0%,100%{opacity:1}50%{opacity:.3}}`, body);
 };
 
+const nas = (led, empty = -1) => {
+	const fy = 2.5;
+	let bays = '';
+	for (let i = 0; i < 4; i++) {
+		const x = -4.1 + i * 2.2;
+		bays += poly('es-dl', [[x, fy, 0.6], [x + 1.8, fy, 0.6], [x + 1.8, fy, 4.6], [x, fy, 4.6]])
+			+ (i === empty ? poly('es-dr es-ns', [[x + 0.05, fy, 4.25], [x + 1.75, fy, 4.25], [x + 1.75, fy, 4.55], [x + 0.05, fy, 4.55]]) : poly('es-al', [[x + 0.06, fy, 0.66], [x + 1.74, fy, 0.66], [x + 1.74, fy, 4.54], [x + 0.06, fy, 4.54]])
+			+ line('es-ws es-thin', [x + 0.4, fy, 1.2], [x + 1.4, fy, 1.2]))
+			+ poly('es-lnf', [[x + 0.65, fy, 5.05], [x + 1.15, fy, 5.05], [x + 1.15, fy, 5.35], [x + 0.65, fy, 5.35]])
+			+ `<g class="${led(i)}">${poly('es-ok', [[x + 0.65, fy, 5.05], [x + 1.15, fy, 5.05], [x + 1.15, fy, 5.35], [x + 0.65, fy, 5.35]])}</g>`;
+	}
+	return diamond(-5, -3.4, 0, 10, 6.3, 'es-sh') + box(-4.6, -3, 0, 9.2, 5.5, 6, '') + bays;
+};
+
+const at = (x, y, z, inner, cls = '') => { const [X, Y] = P(x, y, z); return `<g class="${cls}"><g transform="translate(${r(X)} ${r(Y)})">${inner}</g></g>`; };
+
+scenes.maintenance = () => {
+	K = 0.8;
+	const body = nas((i) => (i === 2 ? 'es-mt-warn' : ''), 2);
+	const drive = diamond(5.4, 1.2, 0, 4.28, 4.2, 'es-sh')
+		+ box(5.6, 1.4, 0, 3.88, 3.8, 1.68, 'a')
+		+ line('es-ws es-thin', [6.14, 5.2, 0.34], [6.14, 5.2, 1.34]);
+	K = 1;
+	return svg('.es-mt-warn polygon{animation:es-mt-warn 1.2s steps(1) infinite}@keyframes es-mt-warn{0%{fill:#f5a524}50%{fill:#f0616d}}', platform() + body + drive);
+};
+
+scenes.reboot = () => {
+	const ring = (cls, extra = '') => ellipse(0, 0, 0, 5.6, cls, ` pathLength="100"${extra}`);
+	K = 0.8;
+	const body = nas((i) => `es-rb-led es-rb-led${i}`);
+	K = 1;
+	return svg('.es-rb-track{fill:none;stroke:light-dark(#dfe5ee,#2e2f34);stroke-width:3}.es-rb-fill{fill:none;stroke:#658ffc;stroke-width:3;stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:100;animation:es-rb-fill 4s ease-in-out infinite}@keyframes es-rb-fill{0%{stroke-dashoffset:100;opacity:1}80%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:0;opacity:0}}.es-rb-led{opacity:0;animation:es-rb-led 4s ease-in-out infinite}.es-rb-led1{animation-delay:.25s}.es-rb-led2{animation-delay:.5s}.es-rb-led3{animation-delay:.75s}@keyframes es-rb-led{0%,35%{opacity:0}50%,85%{opacity:1}95%,100%{opacity:0}}', platform() + ring('es-rb-track') + ring('es-rb-fill') + body);
+};
+
+scenes.shutdown = () => {
+	K = 0.8;
+	const body = nas(() => 'es-sd-dark');
+	K = 1;
+	const moon = '<path class="es-sd-moon" d="M4 -14A14 14 0 1 0 15 3A11 11 0 0 1 4 -14Z"/><text x="16" y="-12" class="es-lnf" font-family="system-ui,-apple-system,sans-serif" font-weight="700" font-size="11">z</text><text x="24" y="-21" class="es-lnf" font-family="system-ui,-apple-system,sans-serif" font-weight="700" font-size="8">z</text>';
+	return svg('.es-sd-moon{fill:#8eaafc}.es-sd-dark{opacity:0}', platform() + body + at(0, 0, 9.2, moon, 'es-float'));
+};
+
 const labels = {
 	apps: ['Apps', 'No apps installed'],
 	folders: ['Folders', 'No folders created'],
@@ -493,7 +535,10 @@ const labels = {
 	'no-results': ['Any searchable list', 'Nothing matches the search'],
 	'not-found': ['Not found', 'Page not found'],
 	error: ['Any page', 'Error fetching data'],
-	sites: ['Fleet: Sites', 'No sites yet']
+	sites: ['Fleet: Sites', 'No sites yet'],
+	maintenance: ['Maintenance', 'Maintenance in progress'],
+	reboot: ['Reboot', 'Restarting'],
+	shutdown: ['Shutdown', 'Shutting down']
 };
 
 const overview = (rendered) => `<!doctype html>
