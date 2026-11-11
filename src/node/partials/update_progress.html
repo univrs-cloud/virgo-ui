@@ -49,7 +49,7 @@
 
 			<div class="d-flex gap-5 flex-fill min-h-0 mt-3">
 				<div class="flex-shrink-0 size-5"></div>
-				<ul class="table-scroll list-unstyled overflow-y-scroll flex-fill min-w-0 font-monospace small fg-secondary py-3 pe-5 me--5">
+				<ul class="table-scroll list-unstyled overflow-y-scroll flex-fill min-w-0 font-monospace small fg-secondary pb-3 pe-5 me--5">
 					<%_.each(update.steps, (step) => {%>
 						<%if (_.includes(step, '\r')) {%>
 							<%step = _.last(_.initial(_.split(step, '\r')))%>
