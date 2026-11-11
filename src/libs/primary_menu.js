@@ -9,6 +9,7 @@ const isCollapsed = () => {
 };
 
 const setCollapsed = (collapsed) => {
+	document.body.classList.add('menu-animating');
 	document.body.classList.toggle('menu-collapsed', collapsed);
 	try {
 		if (collapsed) {
@@ -17,6 +18,14 @@ const setCollapsed = (collapsed) => {
 			localStorage.removeItem(STORAGE_KEY);
 		}
 	} catch (error) {}
+};
+
+const finishAnimation = (event) => {
+	if (event.target !== document.body || event.propertyName !== '--menu-width') {
+		return;
+	}
+
+	document.body.classList.remove('menu-animating');
 	window.dispatchEvent(new Event('resize'));
 };
 
@@ -56,6 +65,7 @@ const header = document.querySelector('header');
 document.body.classList.toggle('menu-collapsed', isCollapsed());
 header.addEventListener('click', toggle);
 header.addEventListener('click', hideNodesTooltip);
+document.body.addEventListener('transitionend', finishAnimation);
 header.addEventListener('scroll', updateScrollShadows, true);
 window.addEventListener('resize', updateScrollShadows);
 new MutationObserver(updateScrollShadows).observe(header, { childList: true, subtree: true });

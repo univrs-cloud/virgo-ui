@@ -479,6 +479,12 @@ html:not(:has(head > base[href="/"])) {
 	}
 }
 
+@property --menu-width {
+	syntax: "<length>";
+	inherits: true;
+	initial-value: 0px;
+}
+
 @include media-breakpoint-up(sm) {
 	body {
 		--menu-width: 15rem;
@@ -486,6 +492,9 @@ html:not(:has(head > base[href="/"])) {
 		margin-bottom: 0;
 		&.menu-collapsed {
 			--menu-width: 3.75rem;
+		}
+		&.menu-animating {
+			transition: --menu-width 0.3s var(--transition-timing-overlay);
 		}
 		&:has(header nav) {
 			--chrome: calc(var(--panel-inset) * 2);
@@ -602,6 +611,18 @@ html:not(:has(head > base[href="/"])) {
 					opacity: 1;
 				}
 			}
+			.nav-title {
+				position: relative;
+				&::before {
+					content: "";
+					position: absolute;
+					top: calc(50% - #{map.get($spacers, 4)} / 2);
+					right: 0;
+					left: 0;
+					border-top: var(--border-width) solid var(--shell-border);
+					opacity: 0;
+				}
+			}
 			.nav {
 				width: 100%;
 				&.nav-pills {
@@ -686,17 +707,19 @@ html:not(:has(head > base[href="/"])) {
 		}
 		nav {
 			z-index: 1041;
-			.nav-label,
-			.nav-title small {
+			.nav-label {
 				display: none;
 			}
 			.rail-only {
 				display: inline-block;
 			}
 			.nav-title {
-				border-top: var(--border-width) solid var(--shell-border);
-				margin-top: map.get($spacers, 3) !important;
-				margin-bottom: map.get($spacers, 3);
+				&::before {
+					opacity: 1;
+				}
+				small {
+					opacity: 0;
+				}
 			}
 			.nodes:empty + .nav-title {
 				display: none;
@@ -767,6 +790,28 @@ html:not(:has(head > base[href="/"])) {
 					background-color: transparent !important;
 				}
 			}
+		}
+	}
+	.menu-animating header:has(nav) {
+		white-space: nowrap;
+		nav,
+		.navbar-position {
+			overflow: hidden;
+		}
+		nav .nav-title::before {
+			transition: opacity 0.3s ease;
+		}
+		:is(.navbar-brand span, .nav-label, .nav-title small, .account-toggle > span:not(.avatar), .account-toggle > i) {
+			transition: opacity 0.3s ease;
+			@starting-style {
+				opacity: 0;
+			}
+		}
+	}
+	.menu-animating.menu-collapsed header:has(nav) {
+		:is(.navbar-brand span, .nav-label, .nav-title small, .account-toggle > span:not(.avatar), .account-toggle > i) {
+			opacity: 0;
+			transition: opacity 0.15s ease, display 0.3s allow-discrete, width 0s 0.3s allow-discrete;
 		}
 	}
 }
