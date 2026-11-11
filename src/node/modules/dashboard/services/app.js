@@ -1,7 +1,7 @@
 import Docker from 'stores/docker';
 import { createSubscription, storeAttach } from 'libs/services/module_store_subscription';
 
-const CATEGORY_ORDER = ['Productivity', 'Networking', 'System'];
+const CATEGORY_ORDER = ['Productivity', 'Media', 'Dev', 'Networking', 'System'];
 
 const { subscribe } = createSubscription({
 	stores: [
