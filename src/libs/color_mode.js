@@ -17,17 +17,35 @@ const applyColorMode = (mode) => {
 	root.dataset.bsTheme = (mode === 'auto' ? (darkQuery.matches ? 'dark' : 'light') : mode);
 };
 
-const setColorMode = (mode) => {
-	applyColorMode(mode);
-	try {
-		if (mode === 'auto') {
-			localStorage.removeItem(STORAGE_KEY);
-		} else {
-			localStorage.setItem(STORAGE_KEY, mode);
-		}
-	} catch (error) {}
-	document.querySelectorAll('.color-mode [data-color-mode]').forEach((option) => {
-		option.classList.toggle('active', option.dataset.colorMode === mode);
+const setColorMode = (mode, origin) => {
+	const update = () => {
+		applyColorMode(mode);
+		try {
+			if (mode === 'auto') {
+				localStorage.removeItem(STORAGE_KEY);
+			} else {
+				localStorage.setItem(STORAGE_KEY, mode);
+			}
+		} catch (error) {}
+		document.querySelectorAll('.color-mode [data-color-mode]').forEach((option) => {
+			option.classList.toggle('active', option.dataset.colorMode === mode);
+		});
+	};
+	const theme = (mode === 'auto' ? (darkQuery.matches ? 'dark' : 'light') : mode);
+	if (!document.startViewTransition || theme === root.dataset.bsTheme) {
+		update();
+		return;
+	}
+
+	const rect = origin.getBoundingClientRect();
+	const x = rect.left + rect.width / 2;
+	const y = rect.top + rect.height / 2;
+	const radius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
+	document.startViewTransition(update).ready.then(() => {
+		root.animate(
+			{ clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+			{ duration: 500, easing: 'ease-in-out', fill: 'forwards', pseudoElement: '::view-transition-new(root)' }
+		);
 	});
 };
 
@@ -39,7 +57,7 @@ const select = (event) => {
 
 	event.preventDefault();
 	event.stopPropagation();
-	setColorMode(option.dataset.colorMode);
+	setColorMode(option.dataset.colorMode, option);
 };
 
 applyColorMode(getColorMode());

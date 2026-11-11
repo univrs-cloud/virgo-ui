@@ -84,6 +84,17 @@ u-badge:hover .hover-reveal-text {
 	}
 }
 
+.menu-item:has(> .color-mode):active {
+	color: var(--menu-item-hover-color);
+	background-color: var(--menu-item-hover-bg);
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+	animation: none;
+	mix-blend-mode: normal;
+}
+
 .tooltip {
 	--tooltip-zindex: 99999;
 	&.storage-scan-progress {
