@@ -372,17 +372,13 @@ scenes.snapshots = () => {
 };
 
 scenes['up-to-date'] = () => {
-	const [cx, cy] = P(0, 0, 10.2);
+	const [cx, cy] = P(0, 0, 9.6);
 	const badge = `<g transform="translate(${r(cx)} ${r(cy)})"><circle class="es-ok" r="17"/><path class="es-ws" d="M-7.5 0.5L-2.5 5.5L8 -5"/></g>`;
-	const body = platform()
-		+ `<g class="es-c es-pulse">${ellipse(0, 0, 0, 6, 'es-path')}</g>`
-		+ `<g class="es-c es-pulse es-d3">${ellipse(0, 0, 0, 6, 'es-path')}</g>`
-		+ diamond(-3.4, -3.4, 0, 6.8, 6.8, 'es-sh')
-		+ box(-3, -3, 0, 6, 6, 5, '')
-		+ poly('es-al es-ns', [[-3, 3, 3.6], [3, 3, 3.6], [3, 3, 4.2], [-3, 3, 4.2]])
-		+ poly('es-ar es-ns', [[3, -3, 3.6], [3, 3, 3.6], [3, 3, 4.2], [3, -3, 4.2]])
-		+ `<g class="es-float">${badge}</g>`;
-	return svg('', body);
+	const rings = `<g class="es-c es-pulse">${ellipse(0, 0, 0, 6.4, 'es-path')}</g><g class="es-c es-pulse es-d3">${ellipse(0, 0, 0, 6.4, 'es-path')}</g>`;
+	K = 0.8;
+	const body = nas(() => '');
+	K = 1;
+	return svg('', platform() + rings + body + `<g class="es-float">${badge}</g>`);
 };
 
 scenes['no-results'] = () => {
