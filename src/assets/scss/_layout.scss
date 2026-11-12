@@ -546,7 +546,7 @@ html:not(:has(head > base[href="/"])) {
 	}
 	header {
 		nav {
-			z-index: 1029;
+			z-index: 1041;
 			position: fixed;
 			top: 0;
 			width: var(--menu-width);
@@ -704,7 +704,6 @@ html:not(:has(head > base[href="/"])) {
 			}
 		}
 		nav {
-			z-index: 1041;
 			.nav-label {
 				display: none;
 			}
