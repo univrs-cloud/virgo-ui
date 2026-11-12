@@ -520,21 +520,31 @@ scenes.shutdown = () => {
 	return svg('.es-sd-moon{fill:#8eaafc}.es-sd-dark{opacity:0}', platform() + body + at(0, 0, 9.2, moon, 'es-float'));
 };
 
+scenes.welcome = () => {
+	const hand = '<g class="es-wk-h"><path class="es-w" transform="translate(-12.3 -12.3) scale(.024)" d="M877.24 393.84c31.026 51.387 49.383 113.448 49.383 179.796 0 194.404-157.596 352-352 352-130.638 0-244.655-71.166-305.396-176.845l-0.907-1.711-163.72-283.56c-4.72-8.702-7.495-19.054-7.495-30.053 0-35.346 28.654-64 64-64 22.765 0 42.755 11.886 54.1 29.791l0.155 0.262 74.24 128.48c5.637 9.636 15.934 16.006 27.72 16.006 17.677 0 32.006-14.33 32.006-32.006 0-5.891-1.592-11.41-4.368-16.151l0.082 0.151-157.040-272c-4.72-8.702-7.495-19.054-7.495-30.053 0-35.346 28.654-64 64-64 22.765 0 42.755 11.886 54.1 29.791l0.155 0.262 157.24 272c5.532 10.040 16.045 16.73 28.121 16.73 17.673 0 32-14.327 32-32 0-6.19-1.757-11.969-4.8-16.866l0.079 0.136-120-208c-5.149-9.014-8.185-19.811-8.185-31.316 0-35.346 28.654-64 64-64 23.286 0 43.667 12.436 54.864 31.028l0.161 0.288 161.76 280.48c-34.514 34.775-55.881 82.641-56 135.497l-0 0.023c-0.001 0.162-0.001 0.355-0.001 0.547 0 43.262 14.431 83.153 38.742 115.122l-0.342-0.469c5.886 8.029 15.283 13.184 25.883 13.184 17.673 0 32-14.327 32-32 0-7.428-2.531-14.264-6.777-19.694l0.053 0.070c-15.951-21.113-25.549-47.802-25.549-76.733 0-42.078 20.304-79.414 51.649-102.745l0.341-0.242c7.903-5.894 12.965-15.218 12.965-25.723 0-5.89-1.591-11.408-4.367-16.148l0.082 0.151-45.84-79.32c-5.149-9.014-8.185-19.811-8.185-31.316 0-35.346 28.654-64 64-64 23.286 0 43.667 12.436 54.864 31.028l0.161 0.288 79.56 137.84zM759.76 165.84c46.136 12.433 83.881 42.018 106.752 81.325l0.448 0.835 1.32 2.28c5.637 9.636 15.934 16.006 27.72 16.006 17.677 0 32.006-14.33 32.006-32.006 0-5.891-1.592-11.41-4.368-16.151l0.082 0.151-1.32-2.28c-31.798-54.723-83.261-95.052-144.489-111.615l-1.671-0.385c-2.404-0.647-5.164-1.019-8.011-1.019-17.673 0-32 14.327-32 32 0 14.66 9.858 27.017 23.306 30.805l0.225 0.054zM318.32 902.88c-41.208-32.715-75.449-72.145-101.539-116.909l-1.061-1.971c-5.637-9.636-15.934-16.006-27.72-16.006-17.677 0-32.006 14.33-32.006 32.006 0 5.891 1.592 11.41 4.368 16.151l-0.082-0.151c31.341 53.904 70.853 99.383 117.417 136.366l0.983 0.754c5.34 4.141 12.135 6.638 19.513 6.638 17.673 0 32-14.327 32-32 0-10.020-4.605-18.964-11.814-24.831l-0.059-0.046z"/></g>';
+	const badge = `<circle class="es-acc" r="17"/>${hand}`;
+	K = 0.8;
+	const body = nas((i) => `es-wk-led es-wk-led${i}`);
+	K = 1;
+	return svg('.es-wk-h{transform-box:fill-box;transform-origin:50% 100%;animation:es-wk-h 2.4s ease-in-out infinite}@keyframes es-wk-h{0%,40%,100%{transform:rotate(0)}10%,30%{transform:rotate(-14deg)}20%{transform:rotate(12deg)}}.es-wk-led{opacity:0;animation:es-wk-led 4.8s ease-in-out infinite}.es-wk-led1{animation-delay:.3s}.es-wk-led2{animation-delay:.6s}.es-wk-led3{animation-delay:.9s}@keyframes es-wk-led{0%,8%{opacity:0}14%,86%{opacity:1}94%,100%{opacity:0}}', platform() + `<g class="es-c es-pulse">${ellipse(0, 0, 0, 6.4, 'es-path')}</g><g class="es-c es-pulse es-d3">${ellipse(0, 0, 0, 6.4, 'es-path')}</g>` + body + at(0, 0, 9.6, badge, 'es-float'));
+};
+
 const labels = {
+	welcome: ['Setup', 'Welcome to virgoOS'],
+	maintenance: ['Maintenance', 'Maintenance in progress'],
+	reboot: ['Reboot', 'Restarting'],
+	shutdown: ['Shutdown', 'Shutting down'],
+	storage: ['Storage', 'No storage pool'],
+	'up-to-date': ['System updates', 'Up to date'],
 	apps: ['Apps', 'No apps installed'],
 	folders: ['Folders', 'No folders created'],
 	'backup-disks': ['Time capsule', 'No backup disks created'],
 	shortcuts: ['Shortcuts', 'No shortcuts added'],
-	storage: ['Storage', 'No storage pool'],
 	snapshots: ['Snapshots', 'No snapshots yet'],
-	'up-to-date': ['System updates', 'Up to date'],
 	'no-results': ['Any searchable list', 'Nothing matches the search'],
 	'not-found': ['Not found', 'Page not found'],
 	error: ['Any page', 'Error fetching data'],
-	sites: ['Fleet: Sites', 'No sites yet'],
-	maintenance: ['Maintenance', 'Maintenance in progress'],
-	reboot: ['Reboot', 'Restarting'],
-	shutdown: ['Shutdown', 'Shutting down']
+	sites: ['Fleet: Sites', 'No sites yet']
 };
 
 const overview = (rendered) => `<!doctype html>
@@ -542,7 +552,7 @@ const overview = (rendered) => `<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Empty states | virgoOS</title>
+<title>Illustrations | virgoOS</title>
 <style>
 :root{color-scheme:light}
 :root[data-mode="dark"]{color-scheme:dark}
@@ -562,7 +572,7 @@ code{font-size:12px}
 </head>
 <body>
 <header>
-<h1>Empty states</h1>
+<h1>Illustrations</h1>
 <div class="modes"><button type="button" data-mode="light" class="active">Light</button><button type="button" data-mode="dark">Dark</button></div>
 </header>
 <main>
@@ -581,10 +591,10 @@ document.querySelectorAll('.modes button').forEach((button) => {
 `;
 
 const root = path.resolve(__dirname, '..');
-const outDir = path.join(root, 'src/assets/img/empty');
+const outDir = path.join(root, 'src/assets/img/illustrations');
 fs.mkdirSync(outDir, { recursive: true });
-const rendered = Object.entries(scenes).map(([name, fn]) => { K = 1; return [name, fn()]; });
+const rendered = Object.keys(labels).map((name) => { K = 1; return [name, scenes[name]()]; });
 for (const [name, markup] of rendered) {
 	fs.writeFileSync(path.join(outDir, `${name}.svg`), markup);
 }
-fs.writeFileSync(path.join(__dirname, 'empty_states.html'), overview(rendered));
+fs.writeFileSync(path.join(__dirname, 'illustrations.html'), overview(rendered));

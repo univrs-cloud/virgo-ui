@@ -1,7 +1,7 @@
 import modulePartial from 'node/modules/shortcuts/partials/index.html';
 import shortcutPartial from 'node/modules/shortcuts/partials/shortcut.html';
-import shortcutsImage from 'assets/img/empty/shortcuts.svg';
-import noResultsImage from 'assets/img/empty/no-results.svg';
+import shortcutsImage from 'assets/img/illustrations/shortcuts.svg';
+import noResultsImage from 'assets/img/illustrations/no-results.svg';
 import * as shortcutService from 'node/modules/shortcuts/services/shortcut';
 import { filterListByQuery } from 'utils/list_search';
 

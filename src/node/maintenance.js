@@ -1,5 +1,5 @@
 import maintenancePartial from 'node/partials/maintenance.html';
-import maintenanceImage from 'assets/img/empty/maintenance.svg';
+import maintenanceImage from 'assets/img/illustrations/maintenance.svg';
 import * as maintenanceService from 'node/services/maintenance';
 import * as updateMode from 'libs/update_mode';
 

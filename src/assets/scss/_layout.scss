@@ -439,6 +439,11 @@ html:not(:has(head > base[href="/"])) {
 			max-height: calc(100dvh - var(--chrome) - #{map.get($spacers, 5) * 2});
 		}
 	}
+	> #welcome > .col-12 {
+		@include media-breakpoint-up(sm) {
+			height: calc(100dvh - var(--chrome) - #{map.get($spacers, 5) * 2});
+		}
+	}
 }
 
 .line-clamp {
@@ -463,6 +468,7 @@ html:not(:has(head > base[href="/"])) {
 			padding-right: 0;
 			.navbar-glass {
 				width: auto !important;
+				min-height: 4rem;
 				padding: map.get($spacers, 3);
 			}
 		}

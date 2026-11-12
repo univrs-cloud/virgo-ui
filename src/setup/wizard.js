@@ -1,5 +1,5 @@
 const STEPS = [
-	{ name: 'welcome', path: '/', label: 'Welcome' },
+	{ name: 'eula', path: '/eula', label: 'EULA' },
 	{ name: 'interface', path: '/network/interface', label: 'Network interface' },
 	{ name: 'host', path: '/network/host', label: 'Network host' },
 	{ name: 'ports', path: '/network/ports', label: 'Port forwarding' },

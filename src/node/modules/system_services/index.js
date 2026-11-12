@@ -5,7 +5,7 @@ import serviceActionsPartial from 'node/modules/system_services/partials/service
 import serviceDetailsPartial from 'node/modules/system_services/partials/service_details.html';
 import filterPartial from 'node/modules/system_services/partials/service_filter.html';
 import filterOptionsPartial from 'node/modules/system_services/partials/service_filter_options.html';
-import noResultsImage from 'assets/img/empty/no-results.svg';
+import noResultsImage from 'assets/img/illustrations/no-results.svg';
 import * as serviceService from 'node/modules/system_services/services/service';
 import { filterListByQuery } from 'utils/list_search';
 

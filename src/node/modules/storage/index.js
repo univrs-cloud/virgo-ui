@@ -4,8 +4,8 @@ import storagePartial from 'node/modules/storage/partials/storage.html';
 import poolDetailsPartial from 'node/modules/storage/partials/pool_details.html';
 import poolVdevPartial from 'node/modules/storage/partials/pool_vdev.html';
 import poolActionsPartial from 'node/modules/storage/partials/pool_actions.html';
-import storageImage from 'assets/img/empty/storage.svg';
-import noResultsImage from 'assets/img/empty/no-results.svg';
+import storageImage from 'assets/img/illustrations/storage.svg';
+import noResultsImage from 'assets/img/illustrations/no-results.svg';
 import * as storageService from 'node/modules/storage/services/storage';
 import { filterListByQuery } from 'utils/list_search';
 

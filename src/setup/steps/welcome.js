@@ -1,35 +1,18 @@
 import page from 'page';
-import welcomePartial from 'setup/partials/welcome.html';
-import eulaPartial from 'setup/partials/eula.html';
-import { completeStep, isStepCompleted, nextStepPath } from 'setup/wizard';
+import { stepPath } from 'setup/wizard';
 
-const welcomeTemplate = _.template(welcomePartial);
-document.querySelector('main .wizard').insertAdjacentHTML('beforeend', welcomeTemplate({ eula: eulaPartial }));
 const step = document.querySelector('#welcome');
-const eula = step.querySelector('.eula');
-const accept = step.querySelector('[data-action="accept"]');
+const start = step.querySelector('[data-action="start"]');
+const waiting = step.querySelector('.waiting');
 
-const unlockAccept = () => {
-	if (!isStepCompleted('welcome') && Math.abs(eula.scrollHeight - eula.scrollTop - eula.clientHeight) > 1) {
-		return;
-	}
-
-	accept.disabled = false;
-	eula.removeEventListener('scroll', unlockAccept);
+const proceed = () => {
+	page(stepPath('eula'));
 };
 
-const proceed = (event) => {
-	if (accept.disabled) {
-		return;
-	}
-
-	completeStep('welcome');
-	page(nextStepPath('welcome'));
+const enableStart = () => {
+	start.classList.remove('invisible');
+	waiting.classList.add('d-none');
 };
 
-eula.addEventListener('scroll', unlockAccept);
-accept.addEventListener('click', proceed);
-
-// A viewport tall enough to show the whole agreement never fires a scroll event, so re-check on
-// every entry to the step — the measurement is only meaningful once the step is visible.
-step.onRoute = unlockAccept;
+start.addEventListener('click', proceed);
+step.onRoute = enableStart;

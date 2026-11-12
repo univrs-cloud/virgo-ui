@@ -2,6 +2,7 @@ import page from 'page';
 // Steps render themselves into `main .wizard` on import, so this module must load after `setup/main`.
 import 'setup/jobs';
 import 'setup/steps/welcome';
+import 'setup/steps/eula';
 import 'setup/steps/host';
 import 'setup/steps/interface';
 import 'setup/steps/ports';
@@ -19,14 +20,16 @@ import { STEPS, completeStepsBefore, stepPath, stepperItems } from 'setup/wizard
 
 const stepperTemplate = _.template(stepperPartial);
 const container = document.querySelector('main');
-const loading = container.querySelector('.loading');
 const wizard = container.querySelector('.wizard');
 const stepper = container.querySelector('.stepper');
 let isStarted = false;
 const bootSubscriptions = [];
 
+_.each(wizard.querySelectorAll(':scope > :not(#welcome)'), (element) => { element.classList.add('d-none'); });
+
 const showStep = (ctx) => {
 	_.each(container.querySelectorAll('.wizard > div'), (element) => { element.classList.add('d-none'); });
+	stepper.parentElement.classList.toggle('md:d-block', _.some(STEPS, { name: ctx.step }));
 	morphdom(stepper, stepperTemplate({ items: stepperItems(ctx.step) }));
 
 	const step = container.querySelector(`#${ctx.step}`);
@@ -60,6 +63,11 @@ const hasFleetRegistration = () => {
 const hasCoreAppsRunning = () => {
 	return _.every(appsService.getCoreApps(), 'isRunning');
 };
+
+page('/', (ctx) => {
+	ctx.step = 'welcome';
+	showStep(ctx);
+});
 
 _.each(STEPS, ({ name, path }) => {
 	page(path, (ctx) => {
@@ -123,9 +131,7 @@ const start = () => {
 
 	isStarted = true;
 	_.each(bootSubscriptions, (unsubscribe) => { unsubscribe(); });
-	loading.remove();
 	container.removeAttribute('class');
-	wizard.classList.remove('d-none');
 	page.start();
 };
 

@@ -2,7 +2,7 @@ import modulePartial from 'node/modules/system_updates/partials/index.html';
 import emptyPartial from 'node/modules/system_updates/partials/empty.html';
 import updatesPartial from 'node/modules/system_updates/partials/updates.html';
 import updatesListPartial from 'node/modules/system_updates/partials/updates_list.html';
-import upToDateImage from 'assets/img/empty/up-to-date.svg';
+import upToDateImage from 'assets/img/illustrations/up-to-date.svg';
 import * as softwareService from 'node/modules/system_updates/services/software';
 
 const moduleTemplate = _.template(modulePartial);

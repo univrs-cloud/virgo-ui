@@ -4,7 +4,7 @@ import userPartial from 'node/modules/users/partials/user.html';
 import userActionsPartial from 'node/modules/users/partials/user_actions.html';
 import userDetailsPartial from 'node/modules/users/partials/user_details.html';
 import sessionsPartial from 'node/modules/users/partials/sessions.html';
-import noResultsImage from 'assets/img/empty/no-results.svg';
+import noResultsImage from 'assets/img/illustrations/no-results.svg';
 import * as userService from 'node/modules/users/services/user';
 import { filterListByQuery } from 'utils/list_search';
 

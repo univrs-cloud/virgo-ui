@@ -1,5 +1,5 @@
 import snapshotsPartial from 'node/snapshots/partials/snapshots.html';
-import snapshotsImage from 'assets/img/empty/snapshots.svg';
+import snapshotsImage from 'assets/img/illustrations/snapshots.svg';
 import * as snapshotService from 'node/snapshots/services/snapshot';
 import { getNodeViewBase } from 'node/view';
 import 'node/snapshots/browse';
