@@ -1,5 +1,16 @@
 <div class="full-screen d-flex align-items-center justify-content-center h-100 p-5">
-	<div class="card shadow-sm border-0 w-100" style="max-width: 24rem;">
+	<svg class="login-background position-fixed top-0 start-0 w-100 h-100" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+		<defs>
+			<linearGradient id="login-base" x1="0" y1="0" x2="1" y2="1">
+				<stop offset="0%"/>
+				<stop offset="55%"/>
+				<stop offset="100%"/>
+			</linearGradient>
+		</defs>
+		<rect width="1440" height="900" fill="url(#login-base)"/>
+	</svg>
+	<u-particles class="login-particles position-fixed top-0 start-0 w-100 h-100"></u-particles>
+	<div class="card login-card position-relative shadow w-100" style="max-width: 24rem;">
 		<div class="card-body p-7 text-center">
 			<div class="mb-7">
 				<img src="assets/img/fleet.svg" width="60" alt="">

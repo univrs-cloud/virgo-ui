@@ -358,9 +358,12 @@ html:not(:has(head > base[href="/"])) {
 			stop-color: light-dark(#f3e6f3, #1c1226);
 		}
 	}
-	path {
-		animation: login-slide infinite;
-	}
+}
+.login-particles {
+	color: light-dark(#3a5fe0, #92aaf4);
+}
+.login-card {
+	background: linear-gradient(var(--card-bg), var(--card-bg)), var(--surface-container);
 }
 .login-logo {
 	filter: drop-shadow(0 8px 6px rgba(56, 96, 224, 0.18));
@@ -371,11 +374,6 @@ html:not(:has(head > base[href="/"])) {
 .fleet-logo {
 	.fleet-logo-cube {
 		animation: fleet-logo-drop 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) calc(0.4s + var(--fleet-logo-cube) * 0.09s) backwards;
-	}
-}
-@keyframes login-slide {
-	to {
-		transform: translateX(var(--login-period));
 	}
 }
 @keyframes fleet-logo-drop {
