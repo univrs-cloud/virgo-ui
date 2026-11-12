@@ -19,7 +19,7 @@
 			<%flaggedDrives.push({ name: _.last(drive.name.split('/')), temperature: drive.temperature, temperatureLevel: (drive.temperature >= drive.temperatureCriticalThreshold ? 'critical' : (drive.temperature >= drive.temperatureWarningThreshold ? 'warning' : null)), healthStatus: _.toLower(drive.health?.status), message: drive.health?.message, color })%>
 		<%}%>
 	<%})%>
-	<div class="d-flex align-items-center justify-content-between gap-2 fs-sm fg-4">
+	<div class="d-flex align-items-center justify-content-between gap-2 fs-sm fg-gray-500">
 		<span>VirgoOS</span>
 		<%if (!_.isEmpty(flaggedDrives)) {%>
 			<%const worstColor = (_.some(flaggedDrives, { color: 'red' }) ? 'red' : (_.some(flaggedDrives, { color: 'orange' }) ? 'orange' : 'yellow'))%>
@@ -58,12 +58,12 @@
 		<span class="fg-red-300">Error fetching data</span>
 	<%} else {%>
 		<%const capacity = (pool.properties.capacity.value ?? 0)%>
-		<div class="fs-xl fw-medium lh-1 text-nowrap <%=(capacity >= 90 ? 'fg-red-400' : (capacity >= 80 ? 'fg-orange-400' : ''))%>"><%=capacity.toFixed(0)%><span class="fs-sm fg-4">%</span></div>
+		<div class="fs-xl fw-medium lh-1 text-nowrap <%=(capacity >= 90 ? 'fg-red-400' : (capacity >= 80 ? 'fg-orange-400' : ''))%>"><%=capacity.toFixed(0)%><span class="fs-sm fg-gray-500">%</span></div>
 		<u-progress class="mt-auto">
 			<u-progress-bar width="<%=capacity%>"></u-progress-bar>
 		</u-progress>
 		<div class="resource-legend d-flex align-items-center">
-			<div class="lh-1 fs-xs fg-4 text-nowrap"><%=prettyBytes(pool.properties.allocated.value || 0, { binary: true })%> / <%=prettyBytes(pool.properties.size.value || 0, { binary: true })%></div>
+			<div class="lh-1 fs-xs fg-gray-500 text-nowrap"><%=prettyBytes(pool.properties.allocated.value || 0, { binary: true })%> / <%=prettyBytes(pool.properties.size.value || 0, { binary: true })%></div>
 		</div>
 	<%}%>
 </li>

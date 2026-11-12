@@ -1,16 +1,16 @@
 <li class="list-group-item cpu numeric-tabular d-flex flex-column gap-2 px-4 pt-4 pb-3">
-	<div class="d-flex align-items-center justify-content-between gap-2 fs-sm fg-4">
+	<div class="d-flex align-items-center justify-content-between gap-2 fs-sm fg-gray-500">
 		<span>CPU</span>
 	</div>
 	<%if (state.stats === null) {%>
 		<div class="spinner-border spinner-sm fg-gray-600"></div>
 	<%} else {%>
 		<%const cpuUsage = (_.last(state.stats)?.cpu || 0)%>
-		<div class="fs-xl fw-medium lh-1 <%=(cpuUsage >= 90 ? 'fg-red-400' : (cpuUsage >= 80 ? 'fg-orange-400' : ''))%>"><%=cpuUsage.toFixed(0)%><span class="fs-sm fg-4">%</span></div>
+		<div class="fs-xl fw-medium lh-1 <%=(cpuUsage >= 90 ? 'fg-red-400' : (cpuUsage >= 80 ? 'fg-orange-400' : ''))%>"><%=cpuUsage.toFixed(0)%><span class="fs-sm fg-gray-500">%</span></div>
 		<div class="resource-chart" data-chart="cpu"></div>
 	<%}%>
 	<%if (state.cpuSensors) {%>
-		<div class="resource-legend d-flex align-items-center justify-content-between gap-3 lh-1 fs-xs fg-4 text-nowrap">
+		<div class="resource-legend d-flex align-items-center justify-content-between gap-3 lh-1 fs-xs fg-gray-500 text-nowrap">
 			<span class="d-inline-flex align-items-center gap-1"><i class="icon-regular icon-thermometer-simple icon-fw"></i><%=state.cpuSensors.temperature?.main?.toFixed(0)%> °C</span>
 			<%if (state.cpuSensors.fan) {%>
 				<span class="d-inline-flex align-items-center gap-1"><i class="icon-regular icon-fan icon-fw"></i><%=state.cpuSensors.fan%> rpm</span>

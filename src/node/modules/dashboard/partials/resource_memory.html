@@ -1,5 +1,5 @@
 <li class="list-group-item memory numeric-tabular d-flex flex-column gap-2 px-4 pt-4 pb-3">
-	<div class="d-flex align-items-center justify-content-between gap-2 fs-sm fg-4">
+	<div class="d-flex align-items-center justify-content-between gap-2 fs-sm fg-gray-500">
 		<span>RAM</span>
 		<%if (state.arc?.hits + state.arc?.misses > 0) {%>
 			<span class="tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="Reads of files and folders served<br>from memory instead of the drives.<br><br>Higher is better."><%=Math.floor((state.arc.hits / (state.arc.hits + state.arc.misses)) * 100)%>% cache hit</span>
@@ -14,11 +14,11 @@
 		<%const totalExponent = Math.max(Math.floor(Math.log(state.memory.total || 1) / Math.log(1024)), 0)%>
 		<%const cacheMaxExponent = Math.max(Math.floor(Math.log(state.arc?.max || 1) / Math.log(1024)), 0)%>
 		<%const memoryUsage = ((inUse / state.memory.total) * 100)%>
-		<div class="fs-xl fw-medium lh-1 text-nowrap <%=(memoryUsage >= 90 ? 'fg-red-400' : (memoryUsage >= 80 ? 'fg-orange-400' : ''))%>"><%=memoryUsage.toFixed(0)%><span class="fs-sm fg-4">%</span></div>
+		<div class="fs-xl fw-medium lh-1 text-nowrap <%=(memoryUsage >= 90 ? 'fg-red-400' : (memoryUsage >= 80 ? 'fg-orange-400' : ''))%>"><%=memoryUsage.toFixed(0)%><span class="fs-sm fg-gray-500">%</span></div>
 		<div class="resource-chart" data-chart="memory"></div>
 		<%const inUseLabel = `${(Math.floor((inUse / 1024 ** totalExponent) * 100) / 100).toFixed(2)} / ${prettyBytes(state.memory.total || 0, { binary: true, minimumFractionDigits: 2, maximumFractionDigits: 2 })}`%>
 		<%const cacheLabel = (state.arc?.max ? `${(Math.floor(((_.last(state.stats)?.arc || 0) / 1024 ** cacheMaxExponent) * 100) / 100).toFixed(2)} / ${prettyBytes(state.arc.max, { binary: true })}` : prettyBytes(_.last(state.stats)?.arc || 0, { binary: true, minimumFractionDigits: 2, maximumFractionDigits: 2 }))%>
-		<div class="resource-legend d-flex align-items-center justify-content-between gap-3 lh-1 fs-xs fg-4 text-nowrap">
+		<div class="resource-legend d-flex align-items-center justify-content-between gap-3 lh-1 fs-xs fg-gray-500 text-nowrap">
 			<span data-bs-toggle="tooltip" data-bs-original-title="<%=inUseLabel%>"><i class="icon-fill icon-circle icon-2xs icon-fw me-1 fg-blue-500"></i><span class="tooltip-hint">In use</span></span>
 			<span data-bs-toggle="tooltip" data-bs-original-title="ZFS ARC<br>Gives memory back when apps need it.<%=(state.arc?.max ? '<br>Limit set in Settings, RAM cache.' : '')%><br><br><%=cacheLabel%>"><i class="icon-fill icon-circle icon-2xs icon-fw me-1 fg-purple-500"></i><span class="tooltip-hint">Cache</span></span>
 		</div>

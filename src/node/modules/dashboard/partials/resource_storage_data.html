@@ -35,7 +35,7 @@
 			<%flaggedDrives.push({ name: disk.name, disk, color: 'red' })%>
 		<%}%>
 	<%})%>
-	<div class="d-flex align-items-center justify-content-between gap-2 fs-sm fg-4">
+	<div class="d-flex align-items-center justify-content-between gap-2 fs-sm fg-gray-500">
 		<span>Data</span>
 		<%if (state.storage !== null && pool) {%>
 			<div class="d-flex align-items-center gap-1">
@@ -83,13 +83,13 @@
 		<span class="fg-red-300">Error fetching data</span>
 	<%} else {%>
 		<%const capacity = (pool.properties.capacity.value ?? 0)%>
-		<div class="fs-xl fw-medium lh-1 text-nowrap <%=(capacity >= 90 ? 'fg-red-400' : (capacity >= 80 ? 'fg-orange-400' : ''))%>"><%=capacity.toFixed(0)%><span class="fs-sm fg-4">%</span></div>
+		<div class="fs-xl fw-medium lh-1 text-nowrap <%=(capacity >= 90 ? 'fg-red-400' : (capacity >= 80 ? 'fg-orange-400' : ''))%>"><%=capacity.toFixed(0)%><span class="fs-sm fg-gray-500">%</span></div>
 		<div class="d-flex flex-column gap-4 mt-auto">
 			<%if (pool.scanStats && pool.scanStats?.state?.toLowerCase() !== 'finished') {%>
 				<%const isPaused = (pool.scanStats.scrubPause > 0)%>
 				<%const progress = (pool.scanStats.toExamine === 0 ? 0 : (pool.scanStats.issued / pool.scanStats.toExamine) * 100)%>
 				<div class="d-flex flex-column gap-2">
-					<div class="d-flex align-items-center justify-content-between gap-2 lh-1 fs-xs fg-4">
+					<div class="d-flex align-items-center justify-content-between gap-2 lh-1 fs-xs fg-gray-500">
 						<span>
 							<%if (isPaused) {%>
 								Data integrity check paused
@@ -109,7 +109,7 @@
 			</u-progress>
 		</div>
 		<div class="resource-legend d-flex align-items-center">
-			<div class="lh-1 fs-xs fg-4 text-nowrap"><%=prettyBytes(pool.properties.allocated.value || 0, { binary: true })%> / <%=prettyBytes(pool.properties.size.value || 0, { binary: true })%></div>
+			<div class="lh-1 fs-xs fg-gray-500 text-nowrap"><%=prettyBytes(pool.properties.allocated.value || 0, { binary: true })%> / <%=prettyBytes(pool.properties.size.value || 0, { binary: true })%></div>
 		</div>
 	<%}%>
 </li>

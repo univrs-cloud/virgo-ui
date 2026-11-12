@@ -12,9 +12,9 @@
 				<span class="fg-emphasis-secondary"><%-system?.osInfo?.hostname%></span>
 			</div>
 			<div class="node-addresses d-flex flex-column sm:flex-row sm:flex-wrap align-items-start sm:align-items-center column-gap-3 row-gap-1">
-				<span class="d-inline-flex align-items-center gap-1 font-monospace fs-sm fg-4"><i class="icon-regular icon-network icon-fw"></i><%-_.find(_.reject(_.find(system?.networkInterfaces, { 'default': true })?.addrInfo, { local: system?.virtualIp?.address }), { family: 'inet' })?.local%></span>
+				<span class="d-inline-flex align-items-center gap-1 font-monospace fs-sm fg-gray-500"><i class="icon-regular icon-network icon-fw"></i><%-_.find(_.reject(_.find(system?.networkInterfaces, { 'default': true })?.addrInfo, { local: system?.virtualIp?.address }), { family: 'inet' })?.local%></span>
 				<%if (system?.virtualIp?.holding) {%>
-					<span class="d-inline-flex align-items-center gap-1 font-monospace fs-sm fg-4"><i class="icon-regular icon-ghost icon-fw"></i><%-system?.virtualIp?.address%></span>
+					<span class="d-inline-flex align-items-center gap-1 font-monospace fs-sm fg-gray-500"><i class="icon-regular icon-ghost icon-fw"></i><%-system?.virtualIp?.address%></span>
 				<%}%>
 			</div>
 		</div>
@@ -33,9 +33,9 @@
 					<%}%>
 				</div>
 				<div class="node-addresses d-flex flex-column sm:flex-row sm:flex-wrap align-items-start sm:align-items-center column-gap-3 row-gap-1">
-					<span class="d-inline-flex align-items-center gap-1 font-monospace fs-sm fg-4"><i class="icon-regular icon-network icon-fw"></i><%-(seen?.address) || node?.address%></span>
+					<span class="d-inline-flex align-items-center gap-1 font-monospace fs-sm fg-gray-500"><i class="icon-regular icon-network icon-fw"></i><%-(seen?.address) || node?.address%></span>
 					<%if (seen?.holdsVirtualIp) {%>
-						<span class="d-inline-flex align-items-center gap-1 font-monospace fs-sm fg-4"><i class="icon-regular icon-ghost icon-fw"></i><%-seen.virtualIp%></span>
+						<span class="d-inline-flex align-items-center gap-1 font-monospace fs-sm fg-gray-500"><i class="icon-regular icon-ghost icon-fw"></i><%-seen.virtualIp%></span>
 					<%}%>
 				</div>
 			</div>
@@ -58,7 +58,7 @@
 		<div class="node adoptable card mb-0 d-grid sm:d-flex flex-row align-items-center column-gap-3 row-gap-1 ps-4 pe-2 py-2">
 			<div class="node-info d-contents sm:d-flex flex-wrap flex-grow-1 align-items-center column-gap-3 row-gap-1">
 				<div class="d-contents sm:d-flex align-items-center gap-3">
-					<i class="icon-regular icon-circle-dashed icon-xs icon-width-auto fg-4"></i>
+					<i class="icon-regular icon-circle-dashed icon-xs icon-width-auto fg-gray-500"></i>
 					<%if (node?.name && node?.cluster) {%>
 						<a href="https://<%-_.toLower(`${node.name}.${node.cluster}`)%>" target="_blank" rel="noopener noreferrer" class="fg-emphasis-secondary underline-0 hover:underline-80"><%-node.name%></a>
 					<%} else {%>
@@ -66,9 +66,9 @@
 					<%}%>
 				</div>
 				<div class="node-addresses d-flex flex-column sm:flex-row sm:flex-wrap align-items-start sm:align-items-center column-gap-3 row-gap-1">
-					<span class="d-inline-flex align-items-center gap-1 font-monospace fs-sm fg-4"><i class="icon-regular icon-network icon-fw"></i><%-node?.address%></span>
+					<span class="d-inline-flex align-items-center gap-1 font-monospace fs-sm fg-gray-500"><i class="icon-regular icon-network icon-fw"></i><%-node?.address%></span>
 					<%if (node?.holdsVirtualIp) {%>
-						<span class="d-inline-flex align-items-center gap-1 font-monospace fs-sm fg-4"><i class="icon-regular icon-ghost icon-fw"></i><%-node.virtualIp%></span>
+						<span class="d-inline-flex align-items-center gap-1 font-monospace fs-sm fg-gray-500"><i class="icon-regular icon-ghost icon-fw"></i><%-node.virtualIp%></span>
 					<%}%>
 				</div>
 			</div>

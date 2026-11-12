@@ -6,7 +6,7 @@
 	const fault = (mode === 'unreachable' ? "can't connect" : (mode === 'missing' ? 'not found' : (state.ups?.message || 'error')));
 %>
 <li class="list-group-item ups numeric-tabular d-flex flex-column gap-2 px-4 pt-4 pb-3 <%=(mode === 'missing' ? 'tint-red' : (mode === 'failed' || (mode === 'reading' && state.ups.powerSource === 'battery') ? 'tint-orange' : ''))%>">
-	<div class="d-flex align-items-center justify-content-between gap-2 fs-sm fg-4">
+	<div class="d-flex align-items-center justify-content-between gap-2 fs-sm fg-gray-500">
 		<span>UPS</span>
 		<%if (mode === 'missing') {%>
 			<u-badge color="red" tint="100">
@@ -23,7 +23,7 @@
 	<%if (mode === 'loading') {%>
 		<div class="spinner-border spinner-sm fg-gray-600"></div>
 	<%} else if (mode === 'reading') {%>
-		<div class="fs-xl fw-medium lh-1"><%=state.ups?.capacity?.toFixed(0)%><span class="fs-sm fg-4">%</span></div>
+		<div class="fs-xl fw-medium lh-1"><%=state.ups?.capacity?.toFixed(0)%><span class="fs-sm fg-gray-500">%</span></div>
 		<u-progress class="mt-auto">
 			<u-progress-bar color="<%=(state.ups?.powerSource === 'grid' ? 'green' : 'orange')%>" width="<%=state.ups?.capacity%>" striped="<%=(state.ups?.powerSource === 'battery' || state.ups?.isCharging)%>" animated="<%=(state.ups?.powerSource === 'battery' || state.ups?.isCharging)%>" warning-threshold="999" danger-threshold="999"></u-progress-bar>
 		</u-progress>
