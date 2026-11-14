@@ -4,7 +4,9 @@ const RESERVED_EVENTS = ['connect', 'disconnect', 'connect_error'];
 const DRAIN_GRACE_MS = 1500;
 
 class SocketTransport {
-	#io;
+	#io = null;
+	#namespace;
+	#options;
 	#rtc = null;
 	#listeners = new Map();
 	#bound = null;
@@ -14,17 +16,30 @@ class SocketTransport {
 	#switchGeneration = 0;
 	#state = 'SOCKET_IO';
 
-	constructor(namespace, options) {
+	constructor(namespace, options, { deferred = false } = {}) {
 		this.#anyHandler = (event, ...args) => { this.#dispatch(event, args); };
 		RESERVED_EVENTS.forEach((event) => {
 			this.#reservedHandlers.set(event, (...args) => { this.#dispatch(event, args); });
 		});
-		this.#io = io(namespace, options);
-		this.#bind(this.#io);
+		this.#namespace = namespace;
+		this.#options = options;
+		if (!deferred) {
+			this.#socketIo();
+		}
+	}
+
+	#socketIo() {
+		if (!this.#io) {
+			this.#io = io(this.#namespace, this.#options);
+			if (!this.#rtc) {
+				this.#bind(this.#io);
+			}
+		}
+		return this.#io;
 	}
 
 	get connected() {
-		return Boolean(this.#target.connected);
+		return Boolean(this.#target?.connected);
 	}
 
 	get usingWebrtc() {
@@ -92,7 +107,7 @@ class SocketTransport {
 
 	emit(event, ...args) {
 		if (!this.#rtc || !this.#rtc.emit(event, ...args)) {
-			this.#io.emit(event, ...args);
+			this.#socketIo().emit(event, ...args);
 		}
 		return this;
 	}
@@ -104,7 +119,7 @@ class SocketTransport {
 	}
 
 	timeout(ms) {
-		const target = this.#target;
+		const target = this.#rtc ?? this.#socketIo();
 		return {
 			emitWithAck: (event, ...args) => {
 				const pending = target.timeout(ms).emitWithAck(event, ...args);
@@ -116,7 +131,11 @@ class SocketTransport {
 	connect() {
 		if (!this.#rtc) {
 			this.#state = 'SOCKET_IO';
-			this.#io.connect();
+			if (this.#io) {
+				this.#io.connect();
+			} else {
+				this.#socketIo();
+			}
 		}
 		return this;
 	}
@@ -124,7 +143,7 @@ class SocketTransport {
 	disconnect() {
 		this.#switchGeneration += 1;
 		this.#revert();
-		this.#io.disconnect();
+		this.#io?.disconnect();
 		this.#state = 'CLOSED';
 		return this;
 	}
@@ -171,7 +190,7 @@ class SocketTransport {
 			await Promise.allSettled(calls);
 		}
 		if (this.#switchGeneration === generation && this.#rtc) {
-			this.#io.disconnect();
+			this.#io?.disconnect();
 		}
 	}
 
@@ -183,18 +202,25 @@ class SocketTransport {
 		const channel = this.#rtc;
 		this.#unbind();
 		this.#rtc = null;
-		this.#bind(this.#io);
+		if (this.#io) {
+			this.#bind(this.#io);
+		}
 		this.#state = 'SOCKET_IO';
 		channel.close({ notify: true });
 	}
 
 	useSocketIo() {
 		if (!this.#rtc) {
+			this.#socketIo();
 			return;
 		}
 
 		this.#switchGeneration += 1;
 		this.#revert();
+		if (!this.#io) {
+			this.#socketIo();
+			return;
+		}
 		if (this.#io.connected) {
 			this.#io.disconnect();
 		}

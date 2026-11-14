@@ -1,10 +1,20 @@
 import SocketTransport from 'libs/socket_transport';
-import { forNode, isAvailable, CONNECT_TIMEOUT_MS } from 'libs/webrtc_transport';
+import { forNode, isAvailable, onTransportChange, CONNECT_TIMEOUT_MS } from 'libs/webrtc_transport';
 
 const PREPARE_BUDGET_MS = 5000;
 const ACTIVATE_BUDGET_MS = 5000;
 const UPGRADE_DEADLINE_MS = CONNECT_TIMEOUT_MS + PREPARE_BUDGET_MS + ACTIVATE_BUDGET_MS;
+const DIRECT_DEADLINE_MS = PREPARE_BUDGET_MS + ACTIVATE_BUDGET_MS;
 const RETRY_DELAY_MS = 5000;
+
+const readyNodes = new Set();
+onTransportChange((nodeId, ready) => {
+	if (ready) {
+		readyNodes.add(nodeId);
+	} else {
+		readyNodes.delete(nodeId);
+	}
+});
 
 const remaining = (deadline) => {
 	return Math.max(0, deadline - Date.now());
@@ -23,11 +33,13 @@ class RemoteNodeConnection {
 	#generation = 0;
 	#retryTimer = null;
 	#upgrading = false;
+	#direct = false;
 	#unsubscribeLost = null;
 	#unsubscribeChannelLost = null;
 
 	constructor(fallbackNamespace, options, { nodeId = null, namespace = null } = {}) {
-		this.#connection = new SocketTransport(fallbackNamespace, options);
+		this.#direct = Boolean(nodeId && namespace && isAvailable() && readyNodes.has(nodeId));
+		this.#connection = new SocketTransport(fallbackNamespace, options, { deferred: this.#direct });
 		this.#nodeId = nodeId;
 		this.#namespace = namespace;
 		this.#scheduleUpgrade(0);
@@ -57,22 +69,25 @@ class RemoteNodeConnection {
 			this.#retryTimer = null;
 			this.#upgrading = true;
 			const generation = this.#generation;
+			const budget = this.#direct ? DIRECT_DEADLINE_MS : UPGRADE_DEADLINE_MS;
+			this.#direct = false;
 			let retryAfter = 0;
 			try {
-				await this.#upgrade(generation);
+				await this.#upgrade(generation, budget);
 			} catch (error) {
 				retryAfter = error.retryAfterMs || 0;
 			} finally {
 				this.#upgrading = false;
 				if (!this.#closed && !this.#connection.usingWebrtc) {
+					this.#connection.useSocketIo();
 					this.#scheduleUpgrade(Math.max(RETRY_DELAY_MS, retryAfter));
 				}
 			}
 		}, delay);
 	}
 
-	async #upgrade(generation) {
-		const deadline = Date.now() + UPGRADE_DEADLINE_MS;
+	async #upgrade(generation, budget) {
+		const deadline = Date.now() + budget;
 		const transport = await forNode(this.#nodeId);
 		if (this.#closed || generation !== this.#generation) {
 			throw new Error('WebRTC upgrade was cancelled');
@@ -140,6 +155,7 @@ class RemoteNodeConnection {
 
 	disconnect() {
 		this.#closed = true;
+		this.#direct = false;
 		this.#generation += 1;
 		clearTimeout(this.#retryTimer);
 		this.#retryTimer = null;
