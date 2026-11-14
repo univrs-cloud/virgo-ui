@@ -219,6 +219,8 @@
 															<div class="text-truncate min-w-0"><%-(container.labels?.comDockerComposeService || app.title)%>
 																<%if (container.state !== 'running') {%>
 																	<small class="fg-4">(<%-container.state%>)</small>
+																<%} else if (container.startedAt) {%>
+																	<small class="fg-4">(up <%=prettyMilliseconds(Math.max(moment().diff(container.startedAt), 0), { secondsDecimalDigits: 0 })%>)</small>
 																<%}%>
 																<%if (container.hasUpdates) {%>
 																	<u-badge color="green" class="ms-1" tip="Updates available" pill>
