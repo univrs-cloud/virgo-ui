@@ -19,6 +19,7 @@
 		flex: none;
 		width: min(18rem, 50vw);
 		height: 0.875rem;
+		background-color: light-dark(var(--gray-050), var(--gray-800));
 		touch-action: none;
 	}
 	.resource-timeline-handle {
