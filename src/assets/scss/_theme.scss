@@ -824,6 +824,7 @@ $card-image-size: 30px;
 			min-height: 0;
 			list-style: none;
 			overflow-y: scroll;
+			@include vars.styled-scrollbar;
 			background-color: var(--black);
 			padding: 0 map.get($spacers, 5) 0 0;
 			margin: map.get($spacers, 3) map.get($spacers, 1) map.get($spacers, 3) map.get($spacers, 5);
