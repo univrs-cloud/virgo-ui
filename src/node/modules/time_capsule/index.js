@@ -115,15 +115,15 @@ const compress = (event) => {
 	page('/time-capsule');
 };
 
-const copyToClipboard = (event) => {
+const copyToClipboard = async (event) => {
 	if (event.target.closest('a')?.dataset.action !== 'copy-to-clipboard') {
 		return;
 	}
 
 	event.preventDefault();
 	const button = event.target.closest('a');
-	const text = button.nextElementSibling.innerHTML;
-	if (copy(text)) {
+	const text = button.nextElementSibling.textContent;
+	if (await copy(text)) {
 		const tooltip = bootstrap.Tooltip.getInstance(button);
 		const originalTitle = button.dataset.bsOriginalTitle;
 		tooltip.setContent({ '.tooltip-inner': 'Copied!' });

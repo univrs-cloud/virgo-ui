@@ -34,7 +34,7 @@ const render = (state) => {
 	container.classList.remove('d-none');
 };
 
-const copyToClipboard = (event) => {
+const copyToClipboard = async (event) => {
 	if (event.target.closest('a')?.dataset.action !== 'copy-to-clipboard') {
 		return;
 	}
@@ -42,7 +42,7 @@ const copyToClipboard = (event) => {
 	event.preventDefault();
 	const button = event.target.closest('a');
 	const text = button.nextElementSibling.textContent;
-	if (copy(text)) {
+	if (await copy(text)) {
 		const tooltip = bootstrap.Tooltip.getInstance(button);
 		const originalTitle = button.dataset.bsOriginalTitle;
 		tooltip.setContent({ '.tooltip-inner': 'Copied!' });
