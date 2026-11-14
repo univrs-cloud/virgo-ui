@@ -4,6 +4,7 @@ import modulePartial from 'node/modules/folders/partials/index.html';
 import folderPartial from 'node/modules/folders/partials/folder.html';
 import folderActionsPartial from 'node/modules/folders/partials/folder_actions.html';
 import folderDetailsPartial from 'node/modules/folders/partials/folder_details.html';
+import folderSnapshotActionsPartial from 'node/modules/folders/partials/folder_snapshot_actions.html';
 import foldersImage from 'assets/img/illustrations/folders.svg';
 import noResultsImage from 'assets/img/illustrations/no-results.svg';
 import * as folderService from 'node/modules/folders/services/folder';
@@ -16,6 +17,7 @@ const moduleTemplate = _.template(modulePartial);
 const folderTemplate = _.template(folderPartial);
 const folderActionsTemplate = _.template(folderActionsPartial);
 const folderDetailsTemplate = _.template(folderDetailsPartial);
+const folderSnapshotActionsTemplate = _.template(folderSnapshotActionsPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate({ foldersImage, noResultsImage }));
 const module = document.querySelector('#folders');
 const loading = module.querySelector('.loading');
@@ -156,7 +158,7 @@ const renderFolderDetails = (name) => {
 	const networkMaxBytesPerSec = folderService.getDefaultNetworkInterfaceSpeed();
 	morphdom(
 		details,
-		`<div>${folderDetailsTemplate({ folder, users, jobs, accessOn, networkMaxBytesPerSec, folderTab: folderTabs[name] || 'overview', folderActionsTemplate, renderSnapshots, prettyBytes })}</div>`,
+		`<div>${folderDetailsTemplate({ folder, users, jobs, accessOn, networkMaxBytesPerSec, folderTab: folderTabs[name] || 'overview', folderActionsTemplate, folderSnapshotActionsTemplate, renderSnapshots, prettyBytes })}</div>`,
 		{ childrenOnly: true }
 	);
 };

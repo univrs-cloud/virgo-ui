@@ -1,0 +1,5 @@
+<%if (_.some(jobs, { name: 'share:rollback' })) {%>
+	<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-regular icon-circle-notch icon-fw icon-spin"></i></span>
+<%} else {%>
+	<u-button variant="danger" size="sm" class="snapshot-action" text icon tip="Roll back" data-rollback-snapshot="<%-point.snapshot%>" data-rollback-date="<%-point.createdMoment.format('D MMM YYYY, HH:mm')%>"><i class="icon-regular icon-clock-counter-clockwise icon-fw"></i></u-button>
+<%}%>

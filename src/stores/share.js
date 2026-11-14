@@ -44,6 +44,10 @@ class Share extends Store {
 	updateSnapshots(data) {
 		this.socket.emit('share:snapshots:update', data);
 	}
+
+	rollback(data) {
+		this.socket.emit('share:rollback', data);
+	}
 }
 
 export default new Share();

@@ -158,6 +158,10 @@ const updateFolderSnapshots = (data) => {
 	Share.updateSnapshots(data);
 };
 
+const rollbackFolder = (data) => {
+	Share.rollback(data);
+};
+
 export {
 	subscribe,
 	getJobs,
@@ -169,5 +173,6 @@ export {
 	createFolder,
 	updateFolder,
 	deleteFolder,
-	updateFolderSnapshots
+	updateFolderSnapshots,
+	rollbackFolder
 };

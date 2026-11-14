@@ -265,7 +265,7 @@ const rollback = async (event) => {
 	}
 
 	const date = button.dataset.rollbackDate;
-	if (!await confirm(`Are you sure you want to roll back ${app.title} to ${date}?<br><br>${app.title} will be stopped, its data and settings will be put back as they were on ${date}, and it will be started again with the versions it ran then.<br><br>Everything ${app.title} saved after ${date} will be <strong>permanently lost</strong>, together with the snapshots taken since then.`, { buttons: [{ text: 'Roll back', class: 'btn-solid theme-danger' }] })) {
+	if (!await confirm(`Are you sure you want to roll back ${app.title} to ${date}?<br><br>${app.title} will be stopped, its data and settings will be put back as they were on ${date}, and it will be started again with the versions it ran then.<br><br>Everything ${app.title} saved after ${date} will be <strong>permanently lost</strong>, together with the snapshots taken since then.`, { buttons: [{ text: 'Roll back', class: 'btn-solid theme-danger' }], acknowledge: 'I understand this permanently erases data and this cannot be undone' })) {
 		return;
 	}
 
