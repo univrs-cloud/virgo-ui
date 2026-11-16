@@ -1,0 +1,2109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>virgoOS design guide</title>
+<link rel="icon" href="../src/assets/img/univrs.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.2/src/regular/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.2/src/fill/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.2/src/duotone/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.2/src/light/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.2/src/bold/style.css">
+<style>
+:root {
+	color-scheme: light dark;
+	--white: #fff;
+	--black: #000;
+	--brand: #658ffc;
+	--blue: oklch(60% 0.24 240);
+	--indigo: oklch(56% 0.26 288);
+	--purple: oklch(56% 0.24 320);
+	--red: oklch(60% 0.22 20);
+	--orange: oklch(70% 0.22 52);
+	--yellow: oklch(88% 0.24 88);
+	--green: oklch(64% 0.22 160);
+	--cyan: oklch(69% 0.22 220);
+	--gray: oklch(60% 0.02 245);
+
+	--gray-025: color-mix(in oklch, var(--white) 94%, var(--gray));
+	--gray-050: color-mix(in oklch, var(--white) 90%, var(--gray));
+	--gray-100: color-mix(in oklch, var(--white) 80%, var(--gray));
+	--gray-200: color-mix(in oklch, var(--white) 60%, var(--gray));
+	--gray-300: color-mix(in oklch, var(--white) 40%, var(--gray));
+	--gray-400: color-mix(in oklch, var(--white) 20%, var(--gray));
+	--gray-500: var(--gray);
+	--gray-600: color-mix(in oklch, var(--black) 16%, var(--gray));
+	--gray-700: color-mix(in oklch, var(--black) 32%, var(--gray));
+	--gray-800: color-mix(in oklch, var(--black) 48%, var(--gray));
+	--gray-900: color-mix(in oklch, var(--black) 64%, var(--gray));
+	--brand-100: color-mix(in oklch, var(--white) 80%, var(--brand));
+	--brand-400: color-mix(in oklch, var(--white) 20%, var(--brand));
+	--brand-600: color-mix(in oklch, var(--black) 16%, var(--brand));
+	--brand-900: color-mix(in oklch, var(--black) 64%, var(--brand));
+	--blue-100: color-mix(in oklch, var(--white) 80%, var(--blue));
+	--blue-500: var(--blue);
+	--purple-100: color-mix(in oklch, var(--white) 80%, var(--purple));
+	--purple-500: var(--purple);
+	--indigo-400: color-mix(in oklch, var(--white) 20%, var(--indigo));
+	--red-100: color-mix(in oklch, var(--white) 80%, var(--red));
+	--red-300: color-mix(in oklch, var(--white) 40%, var(--red));
+	--red-400: color-mix(in oklch, var(--white) 20%, var(--red));
+	--red-500: var(--red);
+	--red-600: color-mix(in oklch, var(--black) 16%, var(--red));
+	--orange-100: color-mix(in oklch, var(--white) 80%, var(--orange));
+	--orange-400: color-mix(in oklch, var(--white) 20%, var(--orange));
+	--orange-500: var(--orange);
+	--yellow-100: color-mix(in oklch, var(--white) 80%, var(--yellow));
+	--yellow-500: var(--yellow);
+	--green-100: color-mix(in oklch, var(--white) 80%, var(--green));
+	--green-200: color-mix(in oklch, var(--white) 60%, var(--green));
+	--green-400: color-mix(in oklch, var(--white) 20%, var(--green));
+	--green-500: var(--green);
+	--green-600: color-mix(in oklch, var(--black) 16%, var(--green));
+	--cyan-300: color-mix(in oklch, var(--white) 40%, var(--cyan));
+
+	--surface-shell: light-dark(oklch(97.3% 0 0), var(--black));
+	--surface-container: light-dark(var(--white), #111111);
+	--surface-card: light-dark(color-mix(in oklch, var(--black) 2.4%, transparent), color-mix(in oklch, var(--white) 3.4%, transparent));
+	--surface-sunken: light-dark(color-mix(in oklch, var(--black) 5%, transparent), color-mix(in oklch, var(--black) 40%, transparent));
+	--surface-modal: light-dark(var(--white), oklch(25.2% 0 0));
+	--surface-standout: light-dark(#202020, #222222);
+	--component: light-dark(color-mix(in oklch, var(--black) 6.3%, transparent), color-mix(in oklch, var(--white) 7.1%, transparent));
+	--component-hover: light-dark(color-mix(in oklch, var(--black) 9%, transparent), color-mix(in oklch, var(--white) 10.5%, transparent));
+	--component-active: light-dark(color-mix(in oklch, var(--black) 12.2%, transparent), color-mix(in oklch, var(--white) 13.4%, transparent));
+	--border-default: light-dark(color-mix(in oklch, var(--black) 6.3%, transparent), color-mix(in oklch, var(--white) 7.1%, transparent));
+	--border-strong: light-dark(color-mix(in oklch, var(--black) 15.3%, transparent), color-mix(in oklch, var(--white) 17.2%, transparent));
+	--fg-body: light-dark(var(--gray-900), var(--gray-050));
+	--fg-2: light-dark(var(--gray-700), var(--gray-300));
+	--fg-3: light-dark(var(--gray-600), var(--gray-500));
+	--fg-4: light-dark(var(--gray-500), var(--gray-600));
+	--primary-fg: light-dark(var(--brand-600), var(--brand-400));
+	--primary-subtle: light-dark(var(--brand-100), var(--brand-900));
+	--danger-fg: light-dark(var(--red-600), var(--red-400));
+	--success-fg: light-dark(var(--green-600), var(--green-400));
+	--link: light-dark(var(--brand), var(--brand-400));
+	--tooltip-fg: light-dark(var(--white), var(--fg-body));
+	--do: light-dark(oklch(55% 0.16 160), oklch(72% 0.15 160));
+	--dont: light-dark(oklch(55% 0.2 20), oklch(70% 0.17 20));
+
+	--font: "Inter", "InterVariable", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+	--mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+	--r1: .125rem;
+	--r3: .25rem;
+	--r5: .5rem;
+	--r7: .75rem;
+	--r9: 1rem;
+	--shadow-menu: 0 8px 10px -5px rgb(0 0 0 / .2), 0 16px 24px 2px rgb(0 0 0 / .14), 0 6px 30px 5px rgb(0 0 0 / .12);
+	--shadow-dialog: 0 11px 15px -7px rgb(0 0 0 / .2), 0 24px 38px 3px rgb(0 0 0 / .14), 0 9px 46px 8px rgb(0 0 0 / .12);
+	--shadow-tooltip: 0 2px 4px -1px rgb(0 0 0 / .2), 0 4px 5px 0 rgb(0 0 0 / .14), 0 1px 10px 0 rgb(0 0 0 / .12);
+	--side-width: 16rem;
+}
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
+.force-light { color-scheme: light; }
+.force-dark { color-scheme: dark; }
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: 5rem; }
+body { margin: 0; font-family: var(--font); font-size: 16px; line-height: 1.5; color: var(--fg-body); background: var(--surface-shell); -webkit-font-smoothing: antialiased; }
+a { color: var(--link); }
+code { font-family: var(--mono); font-size: .85em; padding: .1em .35em; border-radius: var(--r3); background: var(--component); }
+hr { border: 0; border-top: 1px solid var(--border-default); margin: 0; }
+img { max-width: 100%; }
+table { border-collapse: collapse; }
+
+/* ---------- guide chrome ---------- */
+.topbar { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 1rem; height: 3.5rem; padding-inline: max(16px, 1.25rem); background: color-mix(in oklch, var(--surface-shell) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-default); }
+.brand { display: flex; align-items: center; gap: .6rem; font-weight: 600; white-space: nowrap; color: var(--fg-body); text-decoration: none; }
+.brand img { width: 1.6rem; height: 1.6rem; }
+.brand span { color: var(--fg-3); font-weight: 400; }
+.topbar .spacer { flex: 1; }
+.page-select { display: none; flex: 1; min-width: 0; font: inherit; font-size: .9rem; padding: .35rem .5rem; border-radius: var(--r5); border: 1px solid var(--border-strong); background: var(--surface-container); color: var(--fg-body); }
+.theme-switch { display: flex; background: var(--component); border-radius: 99px; padding: 2px; }
+.theme-switch button { border: 0; background: none; color: var(--fg-3); padding: .2rem .55rem; border-radius: 99px; cursor: pointer; font: inherit; font-size: .8rem; display: flex; align-items: center; gap: .3rem; }
+.theme-switch button[aria-pressed="true"] { background: var(--surface-container); color: var(--fg-body); box-shadow: 0 1px 2px rgb(0 0 0 / .12); }
+
+.layout { display: grid; grid-template-columns: var(--side-width) minmax(0, 1fr); }
+.side { position: sticky; top: 3.5rem; height: calc(100dvh - 3.5rem); overflow-y: auto; padding: 1.25rem .75rem 2rem 1rem; border-right: 1px solid var(--border-default); }
+.side h6 { margin: 1.25rem .5rem .35rem; font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--fg-4); font-weight: 600; }
+.side h6:first-child { margin-top: 0; }
+.side a { display: flex; align-items: center; gap: .55rem; padding: .32rem .5rem; border-radius: var(--r5); color: var(--fg-2); text-decoration: none; font-size: .9rem; }
+.side a i { font-size: 1.05rem; color: var(--fg-3); }
+.side a:hover { background: var(--component); color: var(--fg-body); }
+.side a.active { background: var(--component-hover); color: var(--fg-body); font-weight: 500; }
+.side a.active i { color: var(--primary-fg); }
+
+.content { min-width: 0; padding: 2rem max(16px, 2.5rem) 4rem; }
+.page { max-width: 64rem; }
+.page[hidden] { display: none; }
+.eyebrow { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--fg-4); font-weight: 600; margin: 0 0 .35rem; }
+.page > h1 { display: flex; align-items: center; gap: .75rem; font-size: 2.1rem; line-height: 1.15; font-weight: 600; letter-spacing: -.01em; margin: 0 0 .75rem; }
+.page > h1 i { color: var(--primary-fg); }
+.lead { font-size: 1.1rem; color: var(--fg-2); max-width: 46rem; margin: 0 0 2rem; }
+.page h2 { font-size: 1.35rem; font-weight: 600; margin: 2.75rem 0 .6rem; padding-top: 1.25rem; border-top: 1px solid var(--border-default); }
+.page h3 { font-size: 1.05rem; font-weight: 600; margin: 1.75rem 0 .5rem; }
+.page p, .page li { max-width: 46rem; }
+.page p { margin: 0 0 1rem; color: var(--fg-2); }
+.page ul.rules { margin: 0 0 1.25rem; padding-left: 1.2rem; color: var(--fg-2); }
+.page ul.rules li { margin-bottom: .4rem; }
+.page ul.rules li::marker { color: var(--fg-4); }
+.note { display: flex; gap: .75rem; align-items: flex-start; padding: .85rem 1rem; border-radius: var(--r7); background: var(--primary-subtle); color: var(--fg-body); margin: 0 0 1.25rem; max-width: 46rem; font-size: .95rem; }
+.note i { color: var(--primary-fg); font-size: 1.2rem; margin-top: .1rem; }
+
+.doc-table-wrap { overflow-x: auto; margin: 0 0 1.25rem; }
+.doc-table { width: 100%; font-size: .93rem; }
+.doc-table th { text-align: left; font-weight: 600; padding: .55rem .75rem; border-bottom: 1px solid var(--border-strong); white-space: nowrap; color: var(--fg-body); }
+.doc-table td { padding: .6rem .75rem; border-bottom: 1px solid var(--border-default); vertical-align: middle; color: var(--fg-2); }
+.doc-table td:first-child { color: var(--fg-body); }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: 1rem; margin: 0 0 1.5rem; }
+.card-link { display: block; padding: 1rem 1.1rem; border-radius: var(--r7); border: 1px solid var(--border-default); background: var(--surface-container); text-decoration: none; color: var(--fg-body); }
+.card-link:hover { border-color: var(--border-strong); background: var(--surface-card); }
+.card-link i { font-size: 1.5rem; color: var(--primary-fg); }
+.card-link b { display: block; margin: .5rem 0 .2rem; font-weight: 600; }
+.card-link span { font-size: .88rem; color: var(--fg-3); }
+
+.dd { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: 1.5rem; margin: 0 0 1.75rem; }
+.dd.single { grid-template-columns: 1fr; }
+figure { margin: 0; }
+.stage { background: var(--surface-container); border: 1px solid var(--border-default); border-radius: var(--r7) var(--r7) 0 0; padding: 1.5rem; min-height: 8rem; display: flex; flex-direction: column; justify-content: center; gap: .75rem; }
+.stage.plain { border-radius: var(--r7); }
+.stage.backdrop { background: color-mix(in oklch, var(--gray-500) 40%, var(--surface-container)); }
+.do .stage { border-bottom: 3px solid var(--do); }
+.dont .stage { border-bottom: 3px solid var(--dont); }
+figcaption { padding: .6rem 0 0; font-size: .9rem; color: var(--fg-3); }
+figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; font-weight: 600; margin-right: .35rem; }
+.do .verdict { color: var(--do); }
+.dont .verdict { color: var(--dont); }
+.example { margin: 0 0 1.75rem; }
+.example figcaption { padding-top: .5rem; }
+
+/* ---------- virgoOS UI pieces ---------- */
+.v-row { display: flex; align-items: center; gap: .75rem; }
+.v-row.baseline { align-items: baseline; }
+.v-row.top { align-items: flex-start; }
+.v-row.wrap { flex-wrap: wrap; }
+.v-col { display: flex; flex-direction: column; gap: .5rem; }
+.v-col.end { align-items: flex-end; }
+.v-col.start { align-items: flex-start; }
+.v-grow { flex: 1; min-width: 0; }
+.v-end { margin-left: auto; }
+.v-gap-sm { gap: .35rem; }
+.v-gap-lg { gap: 1.25rem; }
+.v-center { align-items: center; text-align: center; }
+.v-h4 { font-size: 1.2rem; font-weight: 500; margin: 0; display: flex; align-items: center; gap: .75rem; line-height: 1.2; }
+.v-h4 i { font-size: 1.35rem; }
+.v-h5 { font-size: 1rem; font-weight: 500; margin: 0; line-height: 1.2; }
+.v-lg { font-size: 1.2rem; line-height: 1.15; }
+.v-xl { font-size: 1.75rem; font-weight: 500; line-height: 1; }
+.v-sm { font-size: .875rem; }
+.v-xs { font-size: .75rem; }
+.v-label { display: block; font-size: .875rem; font-weight: lighter; line-height: 1; margin-bottom: .3rem; }
+.v-value { display: block; }
+.v-fg2 { color: var(--fg-2); }
+.v-fg3 { color: var(--fg-3); }
+.v-fg4 { color: var(--fg-4); }
+.v-light { font-weight: lighter; }
+.v-semibold { font-weight: 600; }
+.v-upper { text-transform: uppercase; letter-spacing: .04em; }
+.v-tabular { font-variant-numeric: tabular-nums; }
+.v-truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.v-break { overflow-wrap: anywhere; }
+.v-narrow { width: 100%; max-width: 16rem; padding: .75rem; background: var(--surface-card); border: 1px solid var(--border-default); border-radius: var(--r7); overflow: hidden; }
+.v-overflow { overflow: hidden; }
+.v-nowrap { flex-wrap: nowrap; white-space: nowrap; }
+.v-clamp { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; }
+.v-grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.v-grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.v-settings { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 1.5rem; }
+.v-hint { text-decoration: underline dotted var(--gray-500); text-underline-offset: .2em; }
+.v-link { color: var(--link); text-decoration: underline; text-underline-offset: .2em; white-space: nowrap; }
+.v-link i { display: inline-block; margin-right: .25rem; vertical-align: -.125em; }
+.v-link.plain { text-decoration: none; }
+.v-link.card-action { align-self: flex-start; padding-block: .5rem; margin-top: .25rem; }
+.v-c-green { color: var(--green-500); }
+.v-c-green4 { color: var(--green-400); }
+.v-c-red { color: var(--red-500); }
+.v-c-red3 { color: var(--red-300); }
+.v-c-red4 { color: var(--red-400); }
+.v-c-orange { color: var(--orange-500); }
+.v-c-orange4 { color: var(--orange-400); }
+.v-c-yellow { color: var(--yellow-500); }
+.v-c-blue { color: var(--blue-500); }
+.v-c-purple { color: var(--purple-500); }
+.v-c-gray { color: var(--gray-500); }
+.v-c-gray6 { color: var(--gray-600); }
+.v-c-primary { color: var(--primary-fg); }
+.v-c-magenta { color: oklch(60% 0.25 345); }
+.v-c-danger { color: var(--danger-fg); }
+
+.v-panel { background: var(--surface-container); color: var(--fg-body); border-radius: var(--r7); padding: 1rem; border: 1px solid var(--border-default); }
+.v-card { background: var(--surface-card); border: 1px solid var(--border-default); border-radius: var(--r7); padding: 1rem; }
+.v-card.flat { border: 0; }
+.v-sunken { background: var(--surface-sunken); border-radius: var(--r5); padding: .75rem; }
+.v-tile { width: 3rem; height: 3rem; border-radius: var(--r5); display: grid; place-items: center; flex-shrink: 0; background: var(--primary-subtle); color: var(--primary-fg); font-size: 1.25rem; align-self: flex-start; }
+.v-hostcard { display: flex; align-items: center; gap: 1rem; }
+.v-hostcard .v-lg { line-height: 1; }
+.v-hostcard .facts { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .3125rem; }
+.v-tile.gray { background: var(--component-hover); color: var(--fg-3); }
+.v-divider { border-top: 1px solid var(--border-default); margin: .75rem 0; }
+
+.v-btn { font: inherit; font-size: 1rem; display: inline-flex; align-items: center; justify-content: center; gap: .35rem; border-radius: var(--r5); padding: .4rem .875rem; min-height: 2.375rem; border: 1px solid transparent; cursor: default; white-space: nowrap; line-height: 1.25; color: var(--fg-body); background: transparent; }
+.v-btn.sm { font-size: .875rem; padding: .25rem .625rem; min-height: 2rem; }
+.v-btn.xs { font-size: .75rem; padding: .15rem .5rem; min-height: 1.6rem; border-radius: var(--r3); }
+.v-btn.primary { background: var(--brand); color: var(--white); }
+.v-btn.danger { background: var(--red-500); color: var(--white); }
+.v-btn.secondary { background: var(--component); }
+.v-btn.outline { border-color: var(--border-strong); }
+.v-btn.loud { background: linear-gradient(90deg, var(--purple), var(--blue)); color: var(--white); font-weight: 700; text-transform: uppercase; letter-spacing: .05em; border-radius: 99px; }
+.v-btn.disabled { opacity: .4; }
+.v-btn.pill { border-radius: 99px; }
+.v-icon-btn { width: 2rem; height: 2rem; border-radius: var(--r3); display: inline-grid; place-items: center; font-size: 1rem; color: var(--fg-body); flex-shrink: 0; }
+.v-icon-btn.bordered { border: 1px solid var(--border-strong); border-radius: var(--r5); width: 2.375rem; height: 2.375rem; }
+.v-icon-btn.active { background: var(--component-hover); }
+.v-icon-btn.disabled { opacity: .4; }
+.v-tray { display: inline-flex; align-items: center; background: var(--surface-sunken); border-radius: var(--r3); padding-left: .2rem; }
+.v-tray > .v-icon-btn.toggle { background: var(--component-hover); }
+.v-close { font-size: 1rem; color: currentColor; opacity: .6; flex-shrink: 0; }
+.v-relative { position: relative; display: inline-block; }
+.v-count { position: absolute; top: -.4rem; right: -.45rem; min-width: 1.1rem; height: 1.1rem; padding: 0 .3rem; border-radius: 99px; background: var(--brand); color: var(--white); font-size: .68rem; display: grid; place-items: center; line-height: 1; }
+
+.v-badge { display: inline-flex; align-items: center; gap: .3rem; padding: .2rem .45rem; border-radius: var(--r1); font-size: .75rem; line-height: 1.2; white-space: nowrap; color: var(--black); font-weight: 300; }
+.v-badge.pill { border-radius: 99px; padding: .25rem .6rem; font-weight: 400; }
+.v-badge.fact { font-size: .8125rem; padding: .2rem .6rem; gap: .25rem; }
+.v-badge .lbl { font-weight: lighter; }
+.v-badge.gray { background: light-dark(var(--gray-100), var(--gray-800)); color: light-dark(var(--black), var(--white)); }
+.v-badge.green { background: var(--green-100); }
+.v-badge.red { background: var(--red-100); }
+.v-badge.orange { background: var(--orange-100); }
+.v-badge.yellow { background: var(--yellow-100); }
+.v-badge.purple { background: var(--purple-100); }
+.v-badge.blue { background: var(--blue-100); }
+.v-badge.indigo { background: var(--indigo-400); color: var(--white); }
+.v-badge.solid-orange { background: var(--orange-500); color: var(--white); font-weight: 700; }
+.v-badge.solid-red { background: var(--red-500); color: var(--white); font-weight: 700; }
+.v-badge.solid-purple { background: var(--purple-500); color: var(--white); font-weight: 700; }
+.v-badge.bordered { box-shadow: 0 0 0 2px var(--surface-container); }
+.v-dot { width: .55rem; height: .55rem; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+.v-dot.green { background: var(--green-500); }
+.v-dot.gray { background: var(--gray-400); }
+.v-dot.red { background: var(--red-500); }
+.v-chip { display: inline-flex; align-items: center; padding: .2rem .65rem; border-radius: 99px; font-size: .85rem; border: 1px solid var(--border-strong); color: var(--fg-2); }
+.v-chip.active { background: var(--primary-subtle); border-color: transparent; color: var(--primary-fg); }
+
+.v-field { position: relative; border: 1px solid var(--border-strong); border-radius: var(--r5); padding: .45rem .875rem; min-height: 3.6rem; display: flex; flex-direction: column; justify-content: center; background: light-dark(var(--white), color-mix(in oklch, var(--white) 3.4%, transparent)); }
+.v-field .fl { font-size: .75rem; color: var(--fg-4); line-height: 1.3; }
+.v-field .val { font-size: 1rem; line-height: 1.35; }
+.v-field .v-ph { font-size: 1rem; color: var(--fg-4); }
+.v-field.single { min-height: 2.6rem; padding-block: .4rem; }
+.v-field.focus { border-color: var(--brand-400); box-shadow: 0 0 0 3px color-mix(in oklch, var(--brand) 30%, transparent); }
+.v-field.invalid { border-color: var(--red-500); }
+.v-field.readonly { background: var(--surface-sunken); }
+.v-field.disabled { opacity: .5; }
+.v-field .end { position: absolute; right: .875rem; top: 50%; transform: translateY(-50%); color: var(--fg-3); }
+.v-feedback { color: var(--danger-fg); font-size: .85rem; padding: .25rem .875rem 0; line-height: 1.2; }
+.v-help { color: var(--fg-3); font-size: .85rem; padding: .25rem .875rem 0; }
+.v-field-wrap { display: flex; flex-direction: column; }
+.v-form { display: flex; flex-direction: column; gap: .9rem; }
+.v-check { display: flex; align-items: center; gap: .6rem; font-size: .95rem; }
+.v-check .box { width: 1.1rem; height: 1.1rem; border-radius: .3rem; border: 1px solid var(--border-strong); display: grid; place-items: center; font-size: .75rem; flex-shrink: 0; background: light-dark(var(--white), transparent); }
+.v-check .box.on { background: var(--brand); border-color: var(--brand); color: var(--white); }
+.v-switch { width: 2.2rem; height: 1.25rem; border-radius: 99px; background: var(--brand); position: relative; flex-shrink: 0; }
+.v-switch::after { content: ""; position: absolute; top: .15rem; right: .15rem; width: .95rem; height: .95rem; border-radius: 50%; background: var(--white); }
+.v-otp { display: flex; gap: .4rem; }
+.v-otp span { width: 2.3rem; height: 2.8rem; border: 1px solid var(--border-strong); border-radius: var(--r5); display: grid; place-items: center; font-size: 1.2rem; }
+
+.v-dialog { background: var(--surface-modal); color: var(--fg-body); border-radius: var(--r7); box-shadow: var(--shadow-dialog); padding: 1rem; width: 100%; max-width: 500px; margin-inline: auto; display: flex; flex-direction: column; gap: 1rem; }
+.v-dialog.sm { max-width: 300px; }
+.v-dialog-title { font-size: 1rem; font-weight: 500; display: flex; align-items: center; margin: 0; }
+.v-dialog-foot { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.v-dialog-foot .v-btn:first-child.push { margin-left: auto; }
+
+.v-menu { background: var(--surface-modal); color: var(--fg-body); border-radius: var(--r5); box-shadow: var(--shadow-menu); padding: .5rem; min-width: 12rem; font-size: .95rem; display: flex; flex-direction: column; gap: 2px; }
+.v-menu .it { display: flex; align-items: center; gap: .55rem; padding: .35rem .5rem; border-radius: var(--r3); }
+.v-menu .it i { font-size: 1rem; width: 1.25rem; text-align: center; }
+.v-menu .it.danger { color: var(--danger-fg); }
+.v-menu .it.off { opacity: .4; }
+.v-menu .it.hover { background: color-mix(in oklch, var(--fg-body) 10%, transparent); }
+.v-menu .hd { font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--fg-3); padding: .35rem .5rem .2rem; font-weight: 500; }
+.v-menu hr { margin: .3rem 0; }
+.v-menu .chips { display: flex; flex-wrap: wrap; gap: .4rem; padding: .2rem .5rem .5rem; }
+
+.v-tip { display: inline-block; background: var(--surface-standout); color: var(--tooltip-fg); font-size: .875rem; padding: .3rem .55rem; border-radius: var(--r3); max-width: 18rem; box-shadow: var(--shadow-tooltip); position: relative; line-height: 1.35; }
+.v-tip.up::after { content: ""; position: absolute; left: 50%; bottom: -5px; transform: translateX(-50%); border: 5px solid transparent; border-bottom: 0; border-top-color: var(--surface-standout); }
+.v-tip.left::after { content: ""; position: absolute; top: 50%; left: -5px; transform: translateY(-50%); border: 5px solid transparent; border-left: 0; border-right-color: var(--surface-standout); }
+.v-tip-on { position: relative; display: inline-flex; align-items: center; }
+.v-tip-on > .v-tip { position: absolute; left: 50%; bottom: calc(100% + 8px); transform: translateX(-50%); white-space: nowrap; }
+.v-tip-on > .v-tip.wide { white-space: normal; width: 16rem; max-width: none; text-align: center; }
+.v-tip-room { padding-top: 2.5rem; }
+.v-tip-room.tall { padding-top: 5.5rem; }
+.v-center-row { justify-content: center; }
+.v-tip.right::after { content: ""; position: absolute; top: 50%; right: -5px; transform: translateY(-50%); border: 5px solid transparent; border-right: 0; border-left-color: var(--surface-standout); }
+.v-tip-menu { display: flex; align-items: flex-end; justify-content: flex-end; gap: .5rem; }
+.v-tip-menu > .v-tip { flex: 0 1 auto; margin-bottom: .6rem; }
+.v-tip-menu > .v-menu { flex-shrink: 0; }
+
+.v-toast { width: 100%; max-width: 22rem; border-radius: var(--r5); color: var(--white); display: flex; align-items: flex-start; gap: .5rem; padding: .75rem .9rem; font-size: .95rem; box-shadow: 0 6px 16px rgb(0 0 0 / .18); }
+.v-toast.green { background: var(--green-500); }
+.v-toast.red { background: var(--red-500); }
+.v-toast.orange { background: var(--orange-500); }
+.v-toast.blue { background: var(--blue-500); }
+.v-toast.neutral { background: light-dark(var(--gray-100), var(--gray-800)); color: var(--fg-body); }
+.v-toast b { font-weight: 600; }
+.v-toast .v-close { margin-top: .15rem; }
+.v-progress { height: 8px; border-radius: 99px; background: light-dark(var(--gray-050), var(--gray-800)); overflow: hidden; box-shadow: inset 0 1px 2px rgb(0 0 0 / .2); }
+.v-progress > span { display: block; height: 100%; border-radius: 99px; }
+.v-progress .p-cyan { background: repeating-linear-gradient(45deg, var(--cyan-300) 0 8px, color-mix(in oklch, var(--cyan-300) 70%, var(--white)) 8px 16px); }
+.v-progress .p-green { background: var(--green-200); }
+.v-progress .p-blue { background: var(--blue-500); }
+.v-progress .p-orange { background: var(--orange-500); }
+.v-progress .p-red { background: var(--red-500); }
+.w-20 { width: 20%; } .w-34 { width: 34%; } .w-62 { width: 62%; } .w-82 { width: 82%; } .w-93 { width: 93%; } .w-100 { width: 100%; }
+
+.v-table { width: 100%; font-size: .93rem; }
+.v-table th { text-align: left; font-weight: 600; padding: .45rem .5rem; border-bottom: 1px solid var(--border-strong); white-space: nowrap; }
+.v-table td { padding: .5rem; border-bottom: 1px solid var(--border-default); vertical-align: middle; }
+.v-table .num { text-align: right; }
+.v-table .narrow { width: 1%; white-space: nowrap; }
+.v-caret { color: var(--fg-4); font-size: .8rem; }
+.v-caret.on { color: var(--brand); }
+.v-avatar { width: 2rem; height: 2rem; border-radius: 50%; display: grid; place-items: center; font-size: .75rem; background: var(--primary-subtle); color: var(--primary-fg); flex-shrink: 0; }
+.v-app { width: 2rem; height: 2rem; border-radius: .5rem; display: grid; place-items: center; font-size: 1.15rem; color: var(--white); flex-shrink: 0; }
+.v-app.blue { background: #1b5fb4; }
+.v-app.teal { background: #1fa4c8; }
+.v-app.dark { background: #222; }
+.v-gray { filter: grayscale(1); }
+.v-scroll { position: relative; max-height: 9rem; overflow: hidden; border-radius: var(--r5); }
+.v-scroll::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 14px; background: radial-gradient(farthest-side at 50% 100%, rgb(0 0 0 / .2), transparent); }
+.v-scrollbar { position: absolute; right: 4px; top: 2.2rem; bottom: 4px; width: 8px; border-radius: var(--r3); background: color-mix(in oklch, var(--fg-body) 5%, transparent); }
+.v-scrollbar::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 40%; border-radius: var(--r3); background: color-mix(in oklch, var(--fg-body) 30%, transparent); }
+
+.v-spinner { width: 2rem; height: 2rem; border: .25rem solid var(--gray-600); border-right-color: transparent; border-radius: 50%; animation: v-spin .75s linear infinite; }
+.v-spin { display: inline-block; animation: v-spin 2s linear infinite; }
+@keyframes v-spin { to { transform: rotate(360deg); } }
+.v-empty { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 1.25rem; }
+.v-empty img { width: 15rem; max-width: 100%; }
+.v-empty.small img { width: 9rem; }
+
+.v-shell { display: grid; grid-template-columns: 15rem minmax(0, 1fr); background: linear-gradient(135deg, light-dark(#f6eef2, #140f12), light-dark(#eef1fb, #0d0f15)); padding: .5rem .5rem .5rem 0; border-radius: var(--r7); }
+.v-shell.collapsed { grid-template-columns: 3.75rem minmax(0, 1fr); }
+.v-rail { display: flex; flex-direction: column; gap: 1px; padding: .25rem .75rem .5rem; color: var(--fg-body); }
+.v-rail .logo { display: flex; align-items: center; gap: .3rem; height: 2.5rem; font-size: 1.25rem; white-space: nowrap; margin-left: -.375rem; }
+.v-rail .logo img { width: 2.5rem; height: 2.5rem; }
+.v-rail hr { border-top-color: var(--border-strong); margin: .75rem 0 1rem; }
+.v-rail hr.low { margin: .5rem 0; }
+.v-rail .it { display: flex; align-items: center; gap: .5rem; height: 2.25rem; padding: 0 .5rem; border-radius: .375rem; white-space: nowrap; overflow: hidden; }
+.v-rail .it > i { font-size: 1.25rem; color: light-dark(var(--gray-600), var(--gray-400)); flex-shrink: 0; }
+.v-rail .it.on { background: var(--component-hover); font-weight: 500; }
+.v-rail .it.on > i { color: var(--fg-body); }
+.v-rail .it .v-badge { margin-left: auto; }
+.v-rail .it .win { width: 1.25rem; height: 1.25rem; border-radius: .3rem; display: grid; place-items: center; font-size: .75rem; color: var(--white); flex-shrink: 0; }
+.v-rail .title { position: relative; display: flex; align-items: center; height: 1.5rem; margin-top: .75rem; padding: 0 .5rem; font-size: .875rem; font-weight: 500; color: var(--fg-3); }
+.v-rail .bottom { margin-top: auto; }
+.v-rail .toggle { color: var(--fg-3); }
+.v-rail .account { display: flex; align-items: center; gap: .5rem; padding: .5rem .5rem .5rem .125rem; border-radius: .375rem; }
+.v-rail .account .v-avatar { width: 2rem; height: 2rem; font-size: .875rem; }
+.v-rail .account .who { display: flex; flex-direction: column; min-width: 0; flex: 1; line-height: 1.2; }
+.v-rail .account .who b { font-weight: 500; font-size: .875rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.v-rail .account .who small { font-weight: 300; font-size: .8125rem; opacity: .75; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.v-rail .account > i { font-size: .8125rem; opacity: .75; }
+.v-shell.collapsed .v-rail .account { padding: .5rem 0; justify-content: center; }
+.v-shell.collapsed .v-rail .logo span, .v-shell.collapsed .v-rail .lbl, .v-shell.collapsed .v-rail .title span { display: none; }
+.v-shell.collapsed .v-rail .title::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; border-top: 1px solid var(--border-strong); }
+.v-shell.collapsed .v-rail .it { position: relative; overflow: visible; }
+.v-shell.collapsed .v-rail .it .v-badge { position: absolute; top: 0; right: -.45rem; transform: scale(.7); transform-origin: top right; }
+.v-shell .v-panel { min-width: 0; border: 0; box-shadow: 0 1px 3px rgb(0 0 0 / .06); }
+.v-phones { display: flex; flex-wrap: wrap; justify-content: center; gap: 2.5rem; padding: .75rem 0; }
+.v-device { zoom: .55; }
+.v-phone { position: relative; width: 451px; height: 957px; padding: 3px; border-radius: 64px; background: linear-gradient(135deg, #5b5e64 0%, #2e3035 18%, #46494f 50%, #2b2d31 82%, #55585e 100%); box-shadow: 0 0 0 1px #17181b, 0 30px 60px -20px rgb(0 0 0 / .45), 0 12px 24px -12px rgb(0 0 0 / .35); }
+.v-phone .key { position: absolute; right: -5px; width: 6px; border-radius: 0 3px 3px 0; background: linear-gradient(90deg, #2b2d31, #6a6d73); }
+.v-phone .key.power { top: 24%; height: 8.5%; }
+.v-phone .key.volume { top: 36%; height: 16%; }
+.v-glass { height: 100%; padding: 17px; border-radius: 61px; background: #050506; }
+.v-screen { position: relative; height: 100%; border-radius: 44px; overflow: hidden; display: flex; flex-direction: column; background: var(--surface-shell); color: var(--fg-body); font-size: 16px; }
+.v-status { position: relative; z-index: 4; display: flex; align-items: center; height: 56px; padding: 6px 30px 0; font-size: 16px; font-weight: 600; background: #658ffc; color: #111; }
+.v-status .icons { margin-left: auto; display: flex; align-items: center; gap: 4px; font-size: 15px; font-weight: 500; }
+.v-status .icons i { font-size: 17px; }
+.v-status::after { content: ""; position: absolute; left: 50%; top: 14px; width: 26px; height: 26px; transform: translateX(-50%); border-radius: 50%; background: radial-gradient(circle at 42% 40%, #2a3550 0 18%, #07080a 40%); box-shadow: 0 0 0 2px #0b0b0d; }
+.v-urlbar { position: relative; z-index: 4; display: flex; align-items: center; gap: 14px; height: 62px; padding: 0 16px; background: #658ffc; color: #111; font-size: 20px; }
+.v-urlbar .url { flex: 1; min-width: 0; height: 38px; border-radius: 99px; background: color-mix(in oklch, #fff 22%, #658ffc); display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; }
+.v-urlbar .url i { font-size: 15px; }
+.v-urlbar .tabs { width: 19px; height: 19px; border: 2px solid #111; border-radius: 4px; display: grid; place-items: center; font-size: 11px; font-weight: 700; }
+.v-viewport { position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.v-phone-body { position: relative; flex: 1; min-height: 0; overflow: hidden; padding: 12px 12px 0; background: var(--surface-container); display: flex; flex-direction: column; gap: 14px; }
+.v-phone-body .v-table td { padding-block: 8px; }
+.v-phone-body .v-table td .v-link { display: block; }
+.v-phone-body .v-thumb { position: absolute; right: 3px; top: 140px; width: 6px; height: 240px; border-radius: 99px; background: color-mix(in oklch, var(--fg-body) 30%, transparent); }
+.v-phone-bar { display: flex; align-items: center; gap: 10px; min-height: 64px; padding: 8px 12px; font-size: 20px; background: var(--surface-shell); box-shadow: 0 -8px 8px -8px rgb(0 0 0 / .2); }
+.v-phone-bar img { width: 40px; height: 40px; }
+.v-phone-bar .v-end { gap: 8px; }
+.v-phone-bar .v-avatar { width: 32px; height: 32px; font-size: 13px; }
+.v-phone-bar .toggle { width: 40px; height: 40px; display: grid; place-items: center; font-size: 20px; color: var(--fg-3); }
+.v-blur { filter: blur(6px) grayscale(.8); }
+.v-phone-shade { position: absolute; z-index: 2; inset: 0; background: linear-gradient(to bottom right, rgb(0 0 0 / .2), rgb(0 0 0 / .1)); }
+.v-drawer { position: absolute; z-index: 3; left: 0; right: 0; bottom: 0; height: 740px; max-height: 100%; display: flex; flex-direction: column; background: color-mix(in oklch, var(--surface-shell) 96%, transparent); backdrop-filter: blur(6px) grayscale(.8); }
+.v-drawer .nav { flex: 1; min-height: 0; overflow: hidden; padding: 14px 12px 0; display: flex; flex-direction: column; }
+.v-drawer .it { display: flex; align-items: center; gap: 14px; padding: 12px 8px; font-size: 16px; }
+.v-drawer .it i { font-size: 20px; color: light-dark(var(--gray-600), var(--gray-400)); }
+.v-drawer .it.on { font-weight: 500; }
+.v-drawer .it.on i { color: var(--fg-body); }
+.v-drawer .title { padding: 0 8px; margin-top: 12px; font-size: 14px; font-weight: 500; color: light-dark(var(--gray-500), var(--gray-400)); }
+.v-drawer .foot { display: flex; align-items: center; justify-content: flex-end; height: 64px; padding: 0 18px; box-shadow: 0 -8px 8px -8px rgb(0 0 0 / .2); }
+.v-drawer .foot i { font-size: 22px; }
+.v-login-bg { background: radial-gradient(circle at 20% 20%, light-dark(#dfe6ff, #1d2340), transparent 60%), radial-gradient(circle at 80% 80%, light-dark(#f6dcef, #2c1830), transparent 55%), light-dark(#eef1f8, #0f1117); border-radius: var(--r7); padding: 2rem 1rem; display: grid; place-items: center; }
+.v-login { width: 100%; max-width: 20rem; background: var(--surface-container); border-radius: var(--r7); box-shadow: 0 10px 30px rgb(0 0 0 / .15); padding: 1.5rem; display: flex; flex-direction: column; gap: .9rem; }
+.v-login img { width: 3rem; margin: 0 auto .25rem; }
+.v-tabs { display: flex; gap: 1.25rem; border-bottom: 1px solid var(--border-default); font-size: .95rem; }
+.v-tabs span { padding: .4rem .1rem; display: inline-flex; align-items: center; gap: .4rem; color: var(--fg-3); }
+.v-tabs span.on { color: var(--fg-body); border-bottom: 2px solid var(--brand); }
+.v-tabs span b { font-weight: 400; color: var(--fg-4); }
+
+.swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); gap: .75rem; margin: 0 0 1.5rem; }
+.sw { border-radius: var(--r7); border: 1px solid var(--border-default); overflow: hidden; background: var(--surface-container); }
+.sw-chip { height: 3.5rem; display: flex; align-items: flex-end; padding: .45rem .6rem; }
+.sw-body { padding: .55rem .7rem .7rem; font-size: .85rem; }
+.sw-body b { display: block; font-weight: 600; font-size: .9rem; color: var(--fg-body); }
+.sw-body span { color: var(--fg-3); }
+.bg-brand { background: var(--brand); } .bg-green { background: var(--green-500); } .bg-yellow { background: var(--yellow-500); } .bg-orange { background: var(--orange-500); } .bg-red { background: var(--red-500); } .bg-purple { background: var(--purple-500); } .bg-blue { background: var(--blue-500); } .bg-gray1 { background: light-dark(var(--gray-100), var(--gray-800)); }
+.bg-shell { background: var(--surface-shell); } .bg-page { background: var(--surface-container); } .bg-card { background: var(--surface-card); } .bg-sunken { background: var(--surface-sunken); } .bg-component { background: var(--component); } .bg-hover { background: var(--component-hover); } .bg-modal { background: var(--surface-modal); } .bg-standout { background: var(--surface-standout); } .bg-fixed-light { background: oklch(96% 0.005 245); }
+.ladder { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .5rem; margin: 0 0 1.5rem; }
+.ladder div { border-radius: var(--r5); padding: .75rem; font-size: .88rem; color: var(--black); }
+.ladder b { display: block; font-weight: 600; }
+.ladder .l1 { background: var(--green-100); } .ladder .l2 { background: var(--yellow-100); } .ladder .l3 { background: var(--orange-100); } .ladder .l4 { background: var(--red-100); }
+.layers { display: flex; flex-direction: column; gap: .5rem; padding: 1rem; border-radius: var(--r7); }
+.layers > div { border-radius: var(--r7); padding: .9rem; }
+.layers small { display: block; font-size: .78rem; color: var(--fg-3); margin-bottom: .4rem; font-family: var(--mono); }
+.scale-row { display: grid; grid-template-columns: 4rem 6rem 1fr; gap: 1rem; align-items: center; font-size: .88rem; padding: .3rem 0; border-bottom: 1px solid var(--border-default); }
+.scale-row .bar { height: .75rem; background: var(--brand); border-radius: 2px; }
+.s1 { width: .25rem; } .s2 { width: .375rem; } .s3 { width: .5rem; } .s4 { width: .75rem; } .s5 { width: 1rem; } .s6 { width: 1.25rem; } .s7 { width: 1.5rem; } .s8 { width: 1.75rem; } .s9 { width: 2rem; } .s10 { width: 2.25rem; } .s11 { width: 2.5rem; } .s12 { width: 3rem; }
+.type-row { display: grid; grid-template-columns: 10rem 1fr; gap: 1rem; align-items: center; padding: .65rem 0; border-bottom: 1px solid var(--border-default); }
+.type-row small { color: var(--fg-4); font-size: .8rem; font-family: var(--mono); }
+.icon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); gap: .75rem; margin: 0 0 1.5rem; }
+.icon-grid > div { display: flex; align-items: center; gap: .9rem; padding: .9rem; border-radius: var(--r7); background: var(--surface-card); border: 1px solid var(--border-default); }
+.icon-grid i { font-size: 1.8rem; }
+.icon-grid b { display: block; font-weight: 600; font-size: .9rem; }
+.icon-grid span { font-size: .82rem; color: var(--fg-3); }
+.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); gap: 1rem; margin: 0 0 1.5rem; }
+.gallery figure { border: 1px solid var(--border-default); border-radius: var(--r7); background: var(--surface-container); padding: .75rem; display: flex; flex-direction: column; gap: .5rem; }
+.gallery img { width: 100%; height: 7.5rem; object-fit: contain; }
+.gallery figcaption { padding: 0; font-size: .82rem; }
+.gallery figcaption b { display: block; color: var(--fg-body); font-family: var(--mono); font-size: .8rem; font-weight: 500; }
+.checklist { list-style: none; padding: 0; margin: 0; display: grid; gap: .1rem; max-width: 46rem; }
+.checklist li { display: flex; gap: .7rem; align-items: flex-start; padding: .65rem 0; border-bottom: 1px solid var(--border-default); color: var(--fg-2); }
+.checklist li i { color: var(--do); font-size: 1.2rem; margin-top: .1rem; }
+.checklist li a { margin-left: auto; white-space: nowrap; font-size: .85rem; }
+.pager { display: flex; justify-content: space-between; gap: 1rem; margin-top: 3.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border-default); }
+.pager a { display: flex; flex-direction: column; text-decoration: none; padding: .6rem .9rem; border-radius: var(--r7); border: 1px solid var(--border-default); min-width: 10rem; }
+.pager a:hover { background: var(--surface-card); }
+.pager a.next { text-align: right; margin-left: auto; }
+.pager small { color: var(--fg-4); font-size: .78rem; }
+.pager span { color: var(--fg-body); font-weight: 500; }
+.foot { margin-top: 2rem; font-size: .8rem; color: var(--fg-4); }
+
+@media (max-width: 900px) {
+	.layout { grid-template-columns: minmax(0, 1fr); }
+	.side { display: none; }
+	.page-select { display: block; }
+	.topbar .spacer { display: none; }
+	.brand span { display: none; }
+	.theme-switch .lbl { display: none; }
+	.content { padding-top: 1.5rem; }
+	.page > h1 { font-size: 1.7rem; }
+}
+@media (max-width: 560px) {
+	.v-grid3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+	.ladder { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+	.type-row { grid-template-columns: 1fr; gap: .25rem; }
+	.v-shell { grid-template-columns: minmax(0, 1fr); }
+	.v-settings { grid-template-columns: minmax(0, 1fr); gap: .75rem; }
+	.v-shell .v-rail { display: none; }
+	.scale-row { grid-template-columns: 3rem 5rem 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+	<a class="brand" href="#introduction"><img src="../src/assets/img/univrs.svg" alt="">virgoOS <span>design guide</span></a>
+	<div class="spacer"></div>
+	<select class="page-select" id="page-select" aria-label="Page"></select>
+	<div class="theme-switch" id="theme-switch">
+		<button type="button" data-theme-value="system" aria-pressed="true"><i class="ph ph-circle-half"></i><span class="lbl">Auto</span></button>
+		<button type="button" data-theme-value="light" aria-pressed="false"><i class="ph ph-sun"></i><span class="lbl">Light</span></button>
+		<button type="button" data-theme-value="dark" aria-pressed="false"><i class="ph ph-moon"></i><span class="lbl">Dark</span></button>
+	</div>
+</header>
+
+<div class="layout">
+	<nav class="side" id="side">
+		<h6>Get started</h6>
+		<a href="#introduction"><i class="ph ph-house"></i>Introduction</a>
+		<a href="#checklist"><i class="ph ph-list-checks"></i>Before you ship</a>
+		<h6>Foundations</h6>
+		<a href="#color"><i class="ph ph-palette"></i>Color</a>
+		<a href="#themes"><i class="ph ph-circle-half"></i>Themes</a>
+		<a href="#typography"><i class="ph ph-text-aa"></i>Typography</a>
+		<a href="#icons"><i class="ph ph-shapes"></i>Icons</a>
+		<a href="#illustrations"><i class="ph ph-cube"></i>Illustrations</a>
+		<a href="#spacing"><i class="ph ph-arrows-out-line-horizontal"></i>Spacing</a>
+		<a href="#layout"><i class="ph ph-layout"></i>Layout</a>
+		<a href="#motion"><i class="ph ph-wave-sine"></i>Motion</a>
+		<a href="#content"><i class="ph ph-chat-centered-text"></i>Content</a>
+		<h6>Patterns</h6>
+		<a href="#navigation"><i class="ph ph-sidebar"></i>Navigation</a>
+		<a href="#common-actions"><i class="ph ph-cursor-click"></i>Common actions</a>
+		<a href="#disclosures"><i class="ph ph-dots-three-outline-vertical"></i>Menus and disclosures</a>
+		<a href="#dialogs"><i class="ph ph-app-window"></i>Dialogs</a>
+		<a href="#forms"><i class="ph ph-textbox"></i>Forms</a>
+		<a href="#validation"><i class="ph ph-warning-circle"></i>Validation</a>
+		<a href="#search"><i class="ph ph-magnifying-glass"></i>Search</a>
+		<a href="#filtering"><i class="ph ph-funnel"></i>Filtering</a>
+		<a href="#notifications"><i class="ph ph-bell-ringing"></i>Notifications</a>
+		<a href="#status-indicators"><i class="ph ph-circles-three"></i>Status indicators</a>
+		<a href="#loading"><i class="ph ph-spinner-gap"></i>Loading</a>
+		<a href="#empty-states"><i class="ph ph-circle-dashed"></i>Empty states</a>
+		<a href="#disabled-states"><i class="ph ph-prohibit"></i>Disabled states</a>
+		<a href="#read-only-states"><i class="ph ph-lock-simple"></i>Read-only states</a>
+		<a href="#overflow-content"><i class="ph ph-dots-three"></i>Overflow content</a>
+		<a href="#login"><i class="ph ph-sign-in"></i>Login</a>
+	</nav>
+
+	<main class="content" id="content">
+
+<!-- ================= INTRODUCTION ================= -->
+<section class="page" id="introduction" data-group="Get started">
+	<p class="eyebrow">Get started</p>
+	<h1>virgoOS design guide</h1>
+	<p class="lead">How the virgoOS interface looks, behaves and speaks: the node UI, Setup and fleet. Use it before you design a screen, a dialog or a single control, and when you review one.</p>
+
+	<h2>How to use this guide</h2>
+	<ul class="rules">
+		<li>Find the closest existing screen in the app and copy its shape. Every page type, control and message already has a home here.</li>
+		<li>The examples on these pages are drawn with the app's real colors, type and icons, in both themes. Switch the theme at the top right.</li>
+		<li>Green is how virgoOS does it. Red is a mistake that has been made before.</li>
+		<li>When nothing here answers your question, ask before inventing a new pattern.</li>
+	</ul>
+	<div class="note"><i class="ph-fill ph-info"></i><div>This page renders the rules; the app's styles live in <code>src/assets/scss</code> and the text version for coding agents is <code>DESIGN.md</code>. When a rule changes, change all three.</div></div>
+
+	<h2>Principles</h2>
+	<div class="cards">
+		<div class="card-link"><i class="ph-duotone ph-feather"></i><b>Calm and quiet</b><span>Neutral surfaces, one brand blue, color only where it means something.</span></div>
+		<div class="card-link"><i class="ph-duotone ph-copy-simple"></i><b>Same job, same look</b><span>Lists, details, settings and dialogs each have one shape. People learn it once.</span></div>
+		<div class="card-link"><i class="ph-duotone ph-stack"></i><b>Stock before custom</b><span>Bootstrap 6 classes and our tokens first. No inline styles, no one-off CSS.</span></div>
+		<div class="card-link"><i class="ph-duotone ph-devices"></i><b>Every theme, every size</b><span>Light and dark, phone to wide desktop, without a separate design.</span></div>
+	</div>
+
+	<h2>Foundations</h2>
+	<div class="cards">
+		<a class="card-link" href="#color"><i class="ph-duotone ph-palette"></i><b>Color</b><span>What each color means, surfaces, text levels.</span></a>
+		<a class="card-link" href="#themes"><i class="ph-duotone ph-circle-half"></i><b>Themes</b><span>Light, dark and auto, from one set of tokens.</span></a>
+		<a class="card-link" href="#typography"><i class="ph-duotone ph-text-aa"></i><b>Typography</b><span>Inter, the size scale and weights.</span></a>
+		<a class="card-link" href="#icons"><i class="ph-duotone ph-shapes"></i><b>Icons</b><span>Phosphor, and which weight for which job.</span></a>
+		<a class="card-link" href="#illustrations"><i class="ph-duotone ph-cube"></i><b>Illustrations</b><span>The isometric scenes for empty and final states.</span></a>
+		<a class="card-link" href="#spacing"><i class="ph-duotone ph-arrows-out-line-horizontal"></i><b>Spacing</b><span>The spacer scale and how to group with space.</span></a>
+		<a class="card-link" href="#layout"><i class="ph-duotone ph-layout"></i><b>Layout</b><span>Page types and screen sizes.</span></a>
+		<a class="card-link" href="#motion"><i class="ph-duotone ph-wave-sine"></i><b>Motion</b><span>Small, quick, and always on.</span></a>
+		<a class="card-link" href="#content"><i class="ph-duotone ph-chat-centered-text"></i><b>Content</b><span>Wording, case, punctuation, numbers.</span></a>
+	</div>
+
+	<h2>Patterns</h2>
+	<div class="cards">
+		<a class="card-link" href="#navigation"><i class="ph-duotone ph-sidebar"></i><b>Navigation</b><span>The side menu, the phone drawer, page titles.</span></a>
+		<a class="card-link" href="#common-actions"><i class="ph-duotone ph-cursor-click"></i><b>Common actions</b><span>Add, edit, delete, start, stop, copy and the rest.</span></a>
+		<a class="card-link" href="#disclosures"><i class="ph-duotone ph-dots-three-outline-vertical"></i><b>Menus and disclosures</b><span>The ⋮ menu, trays, popovers, tooltips.</span></a>
+		<a class="card-link" href="#dialogs"><i class="ph-duotone ph-app-window"></i><b>Dialogs</b><span>When to use one, sizes, confirmations.</span></a>
+		<a class="card-link" href="#forms"><i class="ph-duotone ph-textbox"></i><b>Forms</b><span>Fields, labels, buttons, autocomplete.</span></a>
+		<a class="card-link" href="#validation"><i class="ph-duotone ph-warning-circle"></i><b>Validation</b><span>When fields are checked and how messages read.</span></a>
+		<a class="card-link" href="#search"><i class="ph-duotone ph-magnifying-glass"></i><b>Search</b><span>Searching lists.</span></a>
+		<a class="card-link" href="#filtering"><i class="ph-duotone ph-funnel"></i><b>Filtering</b><span>Narrowing lists with the filter menu.</span></a>
+		<a class="card-link" href="#notifications"><i class="ph-duotone ph-bell-ringing"></i><b>Notifications</b><span>Which toast, and when not to use one.</span></a>
+		<a class="card-link" href="#status-indicators"><i class="ph-duotone ph-circles-three"></i><b>Status indicators</b><span>Badges, dots and the health ladder.</span></a>
+		<a class="card-link" href="#loading"><i class="ph-duotone ph-spinner-gap"></i><b>Loading</b><span>Spinners, busy buttons, job progress.</span></a>
+		<a class="card-link" href="#empty-states"><i class="ph-duotone ph-circle-dashed"></i><b>Empty states</b><span>Nothing yet, nothing found, failed to load.</span></a>
+		<a class="card-link" href="#disabled-states"><i class="ph-duotone ph-prohibit"></i><b>Disabled states</b><span>Disable, explain, or leave out.</span></a>
+		<a class="card-link" href="#read-only-states"><i class="ph-duotone ph-lock-simple"></i><b>Read-only states</b><span>Values that are shown but fixed.</span></a>
+		<a class="card-link" href="#overflow-content"><i class="ph-duotone ph-dots-three"></i><b>Overflow content</b><span>Truncating, wrapping, scrolling.</span></a>
+		<a class="card-link" href="#login"><i class="ph-duotone ph-sign-in"></i><b>Login</b><span>The sign in screen.</span></a>
+	</div>
+</section>
+
+<!-- ================= CHECKLIST ================= -->
+<section class="page" id="checklist" data-group="Get started" hidden>
+	<p class="eyebrow">Get started</p>
+	<h1>Before you ship</h1>
+	<p class="lead">Go through every line for every new or changed screen.</p>
+	<ul class="checklist">
+		<li><i class="ph-fill ph-check-circle"></i>It matches the closest existing page type; any new pattern was agreed first.<a href="#layout">Layout</a></li>
+		<li><i class="ph-fill ph-check-circle"></i>It works in light and dark mode.<a href="#themes">Themes</a></li>
+		<li><i class="ph-fill ph-check-circle"></i>It works at phone width; nothing scrolls sideways and no action is lost.<a href="#layout">Layout</a></li>
+		<li><i class="ph-fill ph-check-circle"></i>Loading, error, empty and no results states exist.<a href="#empty-states">Empty states</a></li>
+		<li><i class="ph-fill ph-check-circle"></i>Colors follow their meaning; nothing is colored for decoration.<a href="#color">Color</a></li>
+		<li><i class="ph-fill ph-check-circle"></i>Labels sit above values; single-line rows are centered.<a href="#layout">Layout</a></li>
+		<li><i class="ph-fill ph-check-circle"></i>Icons use the right weight and their full class names.<a href="#icons">Icons</a></li>
+		<li><i class="ph-fill ph-check-circle"></i>Destructive actions are red and confirmed; data loss needs an acknowledgment.<a href="#dialogs">Dialogs</a></li>
+		<li><i class="ph-fill ph-check-circle"></i>Every form validates with the house wording and sets autocomplete.<a href="#validation">Validation</a></li>
+		<li><i class="ph-fill ph-check-circle"></i>Copy is in sentence case, uses the settled words and no dashes as punctuation.<a href="#content">Content</a></li>
+		<li><i class="ph-fill ph-check-circle"></i>No inline styles, no fixed colors, no custom CSS that a class could replace.<a href="#spacing">Spacing</a></li>
+		<li><i class="ph-fill ph-check-circle"></i>The user docs and their screenshots are updated if the screen changed.<a href="#introduction">Introduction</a></li>
+	</ul>
+</section>
+
+<!-- ================= COLOR ================= -->
+<section class="page" id="color" data-group="Foundations" hidden>
+	<p class="eyebrow">Foundations</p>
+	<h1>Color</h1>
+	<p class="lead">virgoOS is mostly neutral. Color is reserved for meaning: what can be clicked, what is healthy, what needs attention. A color means the same thing on a badge, a dot, an icon, a chart or a button.</p>
+
+	<h2>Meaning</h2>
+	<div class="swatches">
+		<div class="sw"><div class="sw-chip bg-brand"></div><div class="sw-body"><b>Brand blue</b><span>Primary actions, links, selection, active sort</span></div></div>
+		<div class="sw"><div class="sw-chip bg-green"></div><div class="sw-body"><b>Green</b><span>Running, healthy, online, unlocked</span></div></div>
+		<div class="sw"><div class="sw-chip bg-yellow"></div><div class="sw-body"><b>Yellow</b><span>Minor: partly running, warm drive, waiting on the user</span></div></div>
+		<div class="sw"><div class="sw-chip bg-orange"></div><div class="sw-body"><b>Orange</b><span>Needs attention: 80% full, on battery, drive warning</span></div></div>
+		<div class="sw"><div class="sw-chip bg-red"></div><div class="sw-body"><b>Red</b><span>Failed, critical, 90% full, destructive, locked</span></div></div>
+		<div class="sw"><div class="sw-chip bg-purple"></div><div class="sw-body"><b>Purple</b><span>Groups, roles, upload (TX)</span></div></div>
+		<div class="sw"><div class="sw-chip bg-blue"></div><div class="sw-body"><b>Blue</b><span>Download (RX), usage bars, this node</span></div></div>
+		<div class="sw"><div class="sw-chip bg-gray1"></div><div class="sw-body"><b>Gray</b><span>Neutral facts, counts, disabled icons</span></div></div>
+	</div>
+
+	<h3>The health ladder</h3>
+	<p>Health is one scale from green to red. When several conditions apply to one thing, show the worst.</p>
+	<div class="ladder">
+		<div class="l1"><b>Green</b>All 3 containers running</div>
+		<div class="l2"><b>Yellow</b>2 of 3 running, drive is warm</div>
+		<div class="l3"><b>Orange</b>Storage at 80%, UPS on battery</div>
+		<div class="l4"><b>Red</b>Storage at 90%, drive failed</div>
+	</div>
+	<figure class="example">
+		<div class="stage plain">
+			<div class="v-grid3 v-tabular">
+				<div><span class="v-label">CPU</span><span class="v-xl">24</span><span class="v-fg3"> %</span></div>
+				<div><span class="v-label">RAM</span><span class="v-xl v-c-orange4">84</span><span class="v-fg3"> %</span></div>
+				<div><span class="v-label">Data</span><span class="v-xl v-c-red4">93</span><span class="v-fg3"> %</span></div>
+			</div>
+			<div class="v-grid3">
+				<div class="v-progress"><span class="p-blue w-20"></span></div>
+				<div class="v-progress"><span class="p-orange w-82"></span></div>
+				<div class="v-progress"><span class="p-red w-93"></span></div>
+			</div>
+		</div>
+		<figcaption>Usage stays neutral or blue until it crosses 80% (orange) and 90% (red).</figcaption>
+	</figure>
+
+	<h3>Direction</h3>
+	<p>Network traffic always uses blue with an arrow down for download (RX) and purple with an arrow up for upload (TX), in charts, tables and labels.</p>
+
+	<h2>Surfaces</h2>
+	<p>Surfaces are translucent layers over the page, so they work on any background and in both themes. Pick a level, never a gray.</p>
+	<div class="layers bg-shell">
+		<small>shell: behind the page</small>
+		<div class="bg-page"><small>page: bg-body</small>
+			<div class="v-col">
+				<div class="bg-card v-card flat"><small>card: bg-1</small>
+					<div class="v-row wrap">
+						<div class="v-sunken v-grow"><small>sunken: bg-2, trays, read-only fields</small></div>
+						<div class="v-sunken bg-component v-grow"><small>component: bg-3, chips</small></div>
+						<div class="v-sunken bg-hover v-grow"><small>hover: bg-4</small></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="bg-modal v-card flat"><small>modal: dialogs and menus float on their own surface, with a shadow</small></div>
+	</div>
+
+	<h2>Text</h2>
+	<div class="doc-table-wrap">
+		<table class="doc-table">
+			<thead><tr><th>Level</th><th>Example</th><th>Use for</th></tr></thead>
+			<tbody>
+				<tr><td>Body</td><td>The name the node answers to</td><td>Values, titles, everything by default</td></tr>
+				<tr><td>Secondary</td><td class="v-fg3">The name the node answers to</td><td>Descriptions under section titles (<code>fg-emphasis-secondary</code>)</td></tr>
+				<tr><td>Muted</td><td class="v-fg4">The name the node answers to</td><td>Small labels, empty state titles, chevrons (<code>fg-4</code>)</td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<h2>Guidelines</h2>
+	<div class="dd">
+		<figure class="do">
+			<div class="stage"><p class="v-fg2">Snapshots are taken every 15 minutes and kept for a year. <span class="v-link">Edit schedule</span></p></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>keep running text neutral; blue marks what can be clicked.</figcaption>
+		</figure>
+		<figure class="dont">
+			<div class="stage"><p class="v-c-magenta">Snapshots are taken every <b class="v-c-green">15 minutes</b> and kept for a <span class="v-c-orange">year</span>.</p></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>color text for decoration; it reads as a warning or a link.</figcaption>
+		</figure>
+		<figure class="do">
+			<div class="stage"><div class="v-row wrap v-tabular"><span class="v-row v-gap-sm"><i class="ph ph-arrow-down v-c-blue"></i>139.0 Mbps</span><span class="v-row v-gap-sm"><i class="ph ph-arrow-up v-c-purple"></i>81.0 Mbps</span></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>use the same color for the same meaning everywhere.</figcaption>
+		</figure>
+		<figure class="dont">
+			<div class="stage"><div class="v-row wrap v-tabular"><span class="v-row v-gap-sm"><i class="ph ph-arrow-down v-c-green"></i>139.0 Mbps</span><span class="v-row v-gap-sm"><i class="ph ph-arrow-up v-c-orange"></i>81.0 Mbps</span></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>invent new colors for known meanings; orange already means a warning.</figcaption>
+		</figure>
+	</div>
+</section>
+
+<!-- ================= THEMES ================= -->
+<section class="page" id="themes" data-group="Foundations" hidden>
+	<p class="eyebrow">Foundations</p>
+	<h1>Themes</h1>
+	<p class="lead">virgoOS has a light and a dark theme. People pick Auto, Light or Dark under Theme in the account menu; Auto follows the device. Both themes come from one set of tokens, so a screen built with tokens works in both without extra work.</p>
+
+	<h2>How it works</h2>
+	<ul class="rules">
+		<li>Every color token holds a light and a dark value (<code>light-dark()</code>); the browser picks one from the active theme.</li>
+		<li>The token's role never changes between themes; only its value does. "Card" is a card in both.</li>
+		<li>Shadows are stronger in dark mode so raised surfaces still separate from the page.</li>
+		<li>Illustrations carry both palettes and switch with the theme.</li>
+	</ul>
+
+	<h2>Same screen, both themes</h2>
+	<div class="dd">
+		<figure>
+			<div class="stage plain force-light bg-page">
+				<div class="v-card"><div class="v-row"><span class="v-tile"><i class="ph-duotone ph-hard-drive"></i></span><div class="v-grow"><span class="v-label">Data</span><span class="v-value v-tabular">649 GiB / 1.86 TiB</span></div><span class="v-badge green">ONLINE</span></div></div>
+			</div>
+			<figcaption>Light</figcaption>
+		</figure>
+		<figure>
+			<div class="stage plain force-dark bg-page">
+				<div class="v-card"><div class="v-row"><span class="v-tile"><i class="ph-duotone ph-hard-drive"></i></span><div class="v-grow"><span class="v-label">Data</span><span class="v-value v-tabular">649 GiB / 1.86 TiB</span></div><span class="v-badge green">ONLINE</span></div></div>
+			</div>
+			<figcaption>Dark</figcaption>
+		</figure>
+	</div>
+
+	<h2>Guidelines</h2>
+	<div class="dd">
+		<figure class="do">
+			<div class="stage force-dark bg-page"><div class="v-card"><span class="v-label">Data</span><span class="v-value">649 GiB / 1.86 TiB</span></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>use surface and text levels (<code>bg-1</code>, <code>bg-2</code>, <code>fg-4</code>); they adapt.</figcaption>
+		</figure>
+		<figure class="dont">
+			<div class="stage force-dark bg-page"><div class="v-card bg-fixed-light"><span class="v-label">Data</span><span class="v-value">649 GiB / 1.86 TiB</span></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>use a fixed scale color like <code>bg-gray-050</code> as a surface; in dark mode the text turns light on light.</figcaption>
+		</figure>
+	</div>
+	<ul class="rules">
+		<li>Check every screen in both themes before it ships.</li>
+		<li>Fixed scale colors (<code>green-500</code>, <code>red-100</code>) are for meaning: badges, dots, bars. They are designed to read on both themes.</li>
+	</ul>
+</section>
+
+<!-- ================= TYPOGRAPHY ================= -->
+<section class="page" id="typography" data-group="Foundations" hidden>
+	<p class="eyebrow">Foundations</p>
+	<h1>Typography</h1>
+	<p class="lead">One typeface, Inter, in a short scale. Hierarchy comes from size and a few weights, not from color or capitals.</p>
+
+	<h2>Typeface</h2>
+	<p>Inter (the variable version), falling back to the system interface font. Code, logs and terminals use the system monospace font. Never add another typeface.</p>
+
+	<h2>Scale</h2>
+	<div class="type-row"><small>h4 · page title</small><span class="v-h4"><i class="ph-duotone ph-network"></i>Network</span></div>
+	<div class="type-row"><small>h5 · section</small><span class="v-h5">Trusted proxies</span></div>
+	<div class="type-row"><small>fs-xl · metric</small><span class="v-tabular"><span class="v-xl">24</span><span class="v-fg3"> %</span></span></div>
+	<div class="type-row"><small>fs-lg · main value</small><span class="v-lg">spica.virgo.univrs.cloud</span></div>
+	<div class="type-row"><small>body · 1rem</small><span>The name the node answers to.</span></div>
+	<div class="type-row"><small>small · .875rem</small><span class="v-sm v-fg3">How the node is connected to your network.</span></div>
+	<div class="type-row"><small>small, lighter · label</small><span class="v-label">Default gateway</span></div>
+	<div class="type-row"><small>xs · .75rem</small><span class="v-xs">Log lines, tick labels</span></div>
+
+	<h2>Weights</h2>
+	<div class="doc-table-wrap">
+		<table class="doc-table">
+			<thead><tr><th>Weight</th><th>Example</th><th>Use for</th></tr></thead>
+			<tbody>
+				<tr><td>Lighter (<code>fw-lighter</code>)</td><td class="v-light">Hostname</td><td>Small labels above values, labels inside badges</td></tr>
+				<tr><td>Normal (400)</td><td>192.168.1.20</td><td>Body text and values</td></tr>
+				<tr><td>Medium (500)</td><td><b>Trusted proxies</b></td><td>Headings and titles</td></tr>
+				<tr><td>Semibold (600)</td><td class="v-semibold">Expand pool</td><td>Emphasis inside a tooltip or message; sparingly</td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<h2>Guidelines</h2>
+	<ul class="rules">
+		<li>Numbers that line up in columns or update live use tabular figures (<code>numeric-tabular</code>).</li>
+		<li>A unit next to a big number is smaller and secondary: "24 %", not "24%" at the same size.</li>
+		<li>A term that has an explanation gets a dotted underline (<code>tooltip-hint</code>) and a tooltip: <span class="v-hint">99% cache hit</span>.</li>
+		<li>No all-caps headings. Uppercase is kept for a few small labels: menu section headers and dashboard tile status badges.</li>
+	</ul>
+	<div class="dd">
+		<figure class="do">
+			<div class="stage"><div><span class="v-h4"><i class="ph-duotone ph-user"></i>Users</span></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>let size and weight make the title.</figcaption>
+		</figure>
+		<figure class="dont">
+			<div class="stage"><div><span class="v-h4 v-upper v-c-primary">👥 USER MANAGEMENT</span></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>shout with capitals, color or emoji.</figcaption>
+		</figure>
+	</div>
+</section>
+
+<!-- ================= ICONS ================= -->
+<section class="page" id="icons" data-group="Foundations" hidden>
+	<p class="eyebrow">Foundations</p>
+	<h1>Icons</h1>
+	<p class="lead">All icons come from Phosphor. The weight of an icon tells its role, so one screen never mixes weights for the same job.</p>
+
+	<h2>Weights</h2>
+	<div class="icon-grid">
+		<div><i class="ph-duotone ph-hard-drive"></i><div><b>Duotone</b><span>Page titles, card icon tiles, feature marks</span></div></div>
+		<div><i class="ph ph-pen"></i><div><b>Regular</b><span>Buttons, card actions, inline marks</span></div></div>
+		<div><i class="ph-fill ph-dots-three-outline-vertical"></i><div><b>Fill</b><span>⋮ menus, menu items, carets, dots, tray actions</span></div></div>
+		<div><i class="ph-light ph-heartbeat"></i><div><b>Light</b><span>Quiet labels, row chevrons, fallback app images</span></div></div>
+	</div>
+
+	<h2>Size and color</h2>
+	<ul class="rules">
+		<li>Icons size with the text around them; use the size classes (<code>icon-2xs</code> to <code>icon-2xl</code>) only for a deliberate step.</li>
+		<li>Icons stacked in a column (menus, lists) use fixed width (<code>icon-fw</code>) so their labels line up.</li>
+		<li>Icons take the text color. Color one only for its meaning: green start, red stop, orange warning. A disabled icon is <code>gray-500</code>.</li>
+		<li>Write the full class name, <code>icon-pen</code>. Never build it from parts (<code>icon-${name}</code>): the build keeps only icons it finds written out, so a built name disappears.</li>
+	</ul>
+
+	<h2>Guidelines</h2>
+	<div class="dd">
+		<figure class="do">
+			<div class="stage"><div class="v-menu"><div class="it"><i class="ph-fill ph-terminal-window"></i>Terminal</div><div class="it"><i class="ph-fill ph-article"></i>Logs</div><div class="it"><i class="ph-fill ph-arrow-down"></i>Update</div></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>one weight per role, fixed width so labels line up.</figcaption>
+		</figure>
+		<figure class="dont">
+			<div class="stage"><div class="v-menu"><div class="it"><i class="ph-duotone ph-terminal-window"></i>Terminal</div><div class="it">📜 Logs</div><div class="it"><i class="ph ph-arrow-fat-down v-xl"></i>Update</div></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>mix weights, use emoji, or let an icon push its label out of line.</figcaption>
+		</figure>
+	</div>
+</section>
+
+<!-- ================= ILLUSTRATIONS ================= -->
+<section class="page" id="illustrations" data-group="Foundations" hidden>
+	<p class="eyebrow">Foundations</p>
+	<h1>Illustrations</h1>
+	<p class="lead">Small isometric scenes on a rounded platform, with brand blue accents, green for success and red for errors. They mark a moment: nothing here yet, nothing found, something finished or went wrong. They move gently and follow the theme.</p>
+
+	<h2>Library</h2>
+	<div class="gallery">
+		<figure><img src="../src/assets/img/illustrations/welcome.svg" alt=""><figcaption><b>welcome.svg</b>Setup welcome</figcaption></figure>
+		<figure><img src="../src/assets/img/illustrations/apps.svg" alt=""><figcaption><b>apps.svg</b>No apps installed</figcaption></figure>
+		<figure><img src="../src/assets/img/illustrations/shortcuts.svg" alt=""><figcaption><b>shortcuts.svg</b>No shortcuts</figcaption></figure>
+		<figure><img src="../src/assets/img/illustrations/folders.svg" alt=""><figcaption><b>folders.svg</b>No folders</figcaption></figure>
+		<figure><img src="../src/assets/img/illustrations/backup-disks.svg" alt=""><figcaption><b>backup-disks.svg</b>No backup disks</figcaption></figure>
+		<figure><img src="../src/assets/img/illustrations/storage.svg" alt=""><figcaption><b>storage.svg</b>No pool</figcaption></figure>
+		<figure><img src="../src/assets/img/illustrations/snapshots.svg" alt=""><figcaption><b>snapshots.svg</b>No snapshots</figcaption></figure>
+		<figure><img src="../src/assets/img/illustrations/sites.svg" alt=""><figcaption><b>sites.svg</b>Fleet: no sites</figcaption></figure>
+		<figure><img src="../src/assets/img/illustrations/no-results.svg" alt=""><figcaption><b>no-results.svg</b>Search or filters found nothing</figcaption></figure>
+		<figure><img src="../src/assets/img/illustrations/up-to-date.svg" alt=""><figcaption><b>up-to-date.svg</b>No updates</figcaption></figure>
+		<figure><img src="../src/assets/img/illustrations/maintenance.svg" alt=""><figcaption><b>maintenance.svg</b>Maintenance</figcaption></figure>
+		<figure><img src="../src/assets/img/illustrations/reboot.svg" alt=""><figcaption><b>reboot.svg</b>Rebooting</figcaption></figure>
+		<figure><img src="../src/assets/img/illustrations/shutdown.svg" alt=""><figcaption><b>shutdown.svg</b>Powered off</figcaption></figure>
+		<figure><img src="../src/assets/img/illustrations/error.svg" alt=""><figcaption><b>error.svg</b>Something failed</figcaption></figure>
+		<figure><img src="../src/assets/img/illustrations/not-found.svg" alt=""><figcaption><b>not-found.svg</b>Page not found</figcaption></figure>
+	</div>
+
+	<h2>Guidelines</h2>
+	<ul class="rules">
+		<li>One illustration per empty, final or full-screen state, centered above one short sentence. Never as decoration elsewhere.</li>
+		<li>Reuse the one that fits; <code>no-results.svg</code> serves every search.</li>
+		<li>A new illustration is generated by <code>scripts/illustrations.js</code> in the same style and checked in <code>scripts/illustrations.html</code>. Never draw one by hand or take one from elsewhere.</li>
+		<li>Small spaces (a card, a menu) get text only, no illustration.</li>
+	</ul>
+</section>
+
+<!-- ================= SPACING ================= -->
+<section class="page" id="spacing" data-group="Foundations" hidden>
+	<p class="eyebrow">Foundations</p>
+	<h1>Spacing</h1>
+	<p class="lead">All space comes from one scale, applied with Bootstrap's spacing utilities. Space groups things: the closer two elements, the more they belong together.</p>
+
+	<h2>Scale</h2>
+	<div class="scale-row v-semibold"><span>Step</span><span>Size</span><span></span></div>
+	<div class="scale-row"><span>1</span><span>.25rem · 4px</span><span class="bar s1"></span></div>
+	<div class="scale-row"><span>2</span><span>.375rem · 6px</span><span class="bar s2"></span></div>
+	<div class="scale-row"><span>3</span><span>.5rem · 8px</span><span class="bar s3"></span></div>
+	<div class="scale-row"><span>4</span><span>.75rem · 12px</span><span class="bar s4"></span></div>
+	<div class="scale-row"><span>5</span><span>1rem · 16px</span><span class="bar s5"></span></div>
+	<div class="scale-row"><span>6</span><span>1.25rem · 20px</span><span class="bar s6"></span></div>
+	<div class="scale-row"><span>7</span><span>1.5rem · 24px</span><span class="bar s7"></span></div>
+	<div class="scale-row"><span>8</span><span>1.75rem · 28px</span><span class="bar s8"></span></div>
+	<div class="scale-row"><span>9</span><span>2rem · 32px</span><span class="bar s9"></span></div>
+	<div class="scale-row"><span>10</span><span>2.25rem · 36px</span><span class="bar s10"></span></div>
+	<div class="scale-row"><span>11</span><span>2.5rem · 40px</span><span class="bar s11"></span></div>
+	<div class="scale-row"><span>12</span><span>3rem · 48px</span><span class="bar s12"></span></div>
+	<p class="v-sm v-fg3">Negative steps <code>mt--1</code> to <code>mt--5</code> pull an element up for optical alignment.</p>
+
+	<h2>Applying space</h2>
+	<ul class="rules">
+		<li>Use the utilities: <code>p-5</code>, <code>mb-3</code>, <code>gap-3</code>, <code>gx-7 gy-3</code>. Lay out siblings with flex or grid and a gap, not margins on each child.</li>
+		<li>Cards pad their content by step 5 (1rem).</li>
+		<li>Stock Bootstrap sizes come from modifiers (<code>btn-sm</code>, <code>btn-group-sm</code>), never from custom padding.</li>
+		<li>When nothing covers it, add a scoped modifier class in SCSS. Never <code>style=""</code>, not even for a CSS variable.</li>
+	</ul>
+
+	<h2>Guidelines</h2>
+	<div class="dd">
+		<figure class="do">
+			<div class="stage">
+				<div class="v-form">
+					<div class="v-field"><span class="fl">Name</span><span class="val">Emma Collins</span></div>
+					<div class="v-field"><span class="fl">Email address</span><span class="val">emma@example.com</span></div>
+					<div></div>
+					<div class="v-field"><span class="fl">Username</span><span class="val">emma</span></div>
+				</div>
+			</div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>separate groups of fields with space, not with lines or headings.</figcaption>
+		</figure>
+		<figure class="dont">
+			<div class="stage"><pre class="v-sunken v-sm"><code>&lt;div style="display:flex; gap:12px"&gt;
+.my-btn { padding: 3px 9px; }</code></pre></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>write inline styles or custom padding for things a utility does.</figcaption>
+		</figure>
+	</div>
+</section>
+
+<!-- ================= LAYOUT ================= -->
+<section class="page" id="layout" data-group="Foundations" hidden>
+	<p class="eyebrow">Foundations</p>
+	<h1>Layout</h1>
+	<p class="lead">Every page is one of four types, and every type adapts from a phone to a wide desktop. Copy the closest page instead of composing a new layout.</p>
+
+	<h2>Page types</h2>
+	<h3>List</h3>
+	<p>Apps, Users, Folders, Storage, Services. Search and filter on the left, the count on the right, a full width sortable table. The whole row opens the item; it ends with the ⋮ menu and a light chevron.</p>
+	<figure class="example">
+		<div class="stage plain">
+			<div class="v-row"><span class="v-h4 v-grow"><i class="ph-duotone ph-dots-nine"></i>Apps</span><span class="v-btn sm outline">App center</span></div>
+			<div class="v-row"><div class="v-field single v-grow"><span class="v-ph">Search</span></div><span class="v-icon-btn bordered"><i class="ph-fill ph-funnel"></i></span><span class="v-sm v-end">3 apps</span></div>
+			<table class="v-table v-tabular">
+				<thead><tr><th>App <i class="ph-fill ph-caret-up v-caret on"></i></th><th class="num">CPU</th><th>State</th><th class="narrow"></th><th class="narrow"></th></tr></thead>
+				<tbody>
+					<tr><td><div class="v-row"><span class="v-app blue"><i class="ph-bold ph-cloud"></i></span><div class="v-grow"><div>Nextcloud</div><span class="v-link plain v-sm">nextcloud.virgo.univrs.cloud <i class="ph ph-arrow-square-out"></i></span></div></div></td><td class="num">2.52%</td><td><span class="v-badge pill green">3 / 3</span></td><td><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td><i class="ph-light ph-caret-right v-fg4"></i></td></tr>
+					<tr><td><div class="v-row"><span class="v-app teal"><i class="ph-bold ph-stack"></i></span><div class="v-grow"><div>Traefik</div><span class="v-link plain v-sm">traefik.virgo.univrs.cloud <i class="ph ph-arrow-square-out"></i></span></div></div></td><td class="num">0.42%</td><td><span class="v-badge pill green">1 / 1</span></td><td><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td><i class="ph-light ph-caret-right v-fg4"></i></td></tr>
+				</tbody>
+			</table>
+		</div>
+		<figcaption>A list page. The row opens the item's detail page at its own address.</figcaption>
+	</figure>
+
+	<h3>Detail</h3>
+	<p>One item, at its own address. Back button, image, name with badges and its link, the action tray top right. Facts on the left with labels above values, underline tabs with counts on the right.</p>
+	<figure class="example">
+		<div class="stage plain">
+			<div class="v-row top">
+				<span class="v-icon-btn bordered"><i class="ph ph-arrow-left"></i></span>
+				<span class="v-app blue"><i class="ph-bold ph-cloud"></i></span>
+				<div class="v-grow"><div class="v-row v-gap-sm"><span class="v-lg">Nextcloud</span><span class="v-badge pill green"><i class="ph ph-arrow-down"></i></span></div><span class="v-link plain v-sm">nextcloud.virgo.univrs.cloud <i class="ph ph-arrow-square-out"></i></span></div>
+				<span class="v-tray"><span class="v-icon-btn"><i class="ph-fill ph-play v-c-gray"></i></span><span class="v-icon-btn"><i class="ph-fill ph-arrow-counter-clockwise"></i></span><span class="v-icon-btn"><i class="ph-fill ph-stop v-c-red4"></i></span><span class="v-icon-btn toggle"><i class="ph-fill ph-dots-three-outline-vertical"></i></span></span>
+			</div>
+			<div class="v-grid2">
+				<div class="v-grid2"><div><span class="v-label">State</span><span class="v-value"><span class="v-badge pill green">3 / 3</span> running</span></div><div><span class="v-label">Updates</span><span class="v-value v-c-green"><i class="ph ph-arrow-down"></i> Available</span></div></div>
+				<div class="v-tabs"><span class="on"><i class="ph ph-cube"></i>Services <b>3</b></span><span><i class="ph ph-clock-counter-clockwise"></i>Snapshots <b>78</b></span></div>
+			</div>
+		</div>
+		<figcaption>A detail page. Below 1400px the facts become a tab of their own.</figcaption>
+	</figure>
+
+	<h3>Settings style</h3>
+	<p>Network, Settings, About, Profile. Section name and one sentence on the left, one card on the right that starts with an icon tile. Routine actions are links with an icon.</p>
+	<figure class="example">
+		<div class="stage plain">
+			<div class="v-settings">
+				<div><div class="v-h5">Host</div><div class="v-sm v-fg3">The name the node answers to.</div></div>
+				<div class="v-card"><div class="v-hostcard"><span class="v-tile"><i class="ph-duotone ph-computer-tower"></i></span><div class="v-grow"><div class="v-lg v-break">spica.virgo.univrs.cloud</div><div class="facts"><span class="v-badge pill fact gray"><span class="lbl">Hostname</span>spica</span><span class="v-badge pill fact gray"><span class="lbl">Cluster</span>virgo</span><span class="v-badge pill fact gray"><span class="lbl">Domain name</span>univrs.cloud</span></div></div><span class="v-link card-action"><i class="ph ph-pen"></i>Edit</span></div></div>
+			</div>
+		</div>
+		<figcaption>A settings section. Below 992px the description stacks above the card.</figcaption>
+	</figure>
+
+	<h3>Dashboard</h3>
+	<p>Metric tiles in one strip, then app shortcuts in labelled groups. Cards are flat and lift with a soft shadow on hover.</p>
+
+	<h2>Screen sizes</h2>
+	<div class="doc-table-wrap">
+		<table class="doc-table">
+			<thead><tr><th>Width</th><th>What changes</th></tr></thead>
+			<tbody>
+				<tr><td>under 576px</td><td>Phone: no side menu. A bar at the bottom with the logo, the account and a ⋮ button that opens navigation in a drawer sliding up.</td></tr>
+				<tr><td><code>sm</code> 576px</td><td>The side menu appears, and can be collapsed to icons.</td></tr>
+				<tr><td><code>md</code> 768px</td><td>Tables show their secondary columns, detail pages show the action tray, buttons show their labels next to the icon.</td></tr>
+				<tr><td><code>lg</code> 992px</td><td>Settings style pages split into two columns. Apps open in floating windows.</td></tr>
+				<tr><td><code>xl</code> 1200px</td><td>The dashboard lays shortcuts out in a fluid grid.</td></tr>
+				<tr><td><code>2xl</code> 1400px</td><td>Detail pages keep the facts column beside the tabs.</td></tr>
+			</tbody>
+		</table>
+	</div>
+	<ul class="rules">
+		<li>Design the phone width first. Columns start full width (<code>col-12</code>) and split from <code>lg</code> up.</li>
+		<li>Use the breakpoint prefixes (<code>md:d-table-cell</code>, <code>lg:col-4</code>, <code>md:d-none</code>), not media queries.</li>
+		<li>Never drop an action on a phone; move it into the ⋮ menu.</li>
+		<li>The page never scrolls sideways.</li>
+	</ul>
+	<div class="dd">
+		<figure class="do">
+			<div class="stage">
+				<table class="v-table">
+					<thead><tr><th>User</th><th class="narrow"></th><th class="narrow"></th></tr></thead>
+					<tbody><tr><td><div>emma</div><span class="v-sm v-fg4">emma@example.com</span></td><td><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td><i class="ph-light ph-caret-right v-fg4"></i></td></tr></tbody>
+				</table>
+			</div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>on a phone, hide secondary columns and fold the key fact into the first cell; keep ⋮ and the chevron.</figcaption>
+		</figure>
+		<figure class="dont">
+			<div class="stage">
+				<div class="doc-table-wrap">
+					<table class="v-table v-tabular">
+						<thead><tr><th>User</th><th>Name</th><th>Email</th><th>Groups</th><th>State</th></tr></thead>
+						<tbody><tr><td>emma</td><td>Emma Collins</td><td>emma@example.com</td><td><span class="v-badge pill purple">staff</span></td><td><span class="v-badge pill green">unlocked</span></td></tr></tbody>
+					</table>
+				</div>
+			</div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>keep every column at every width; the row scrolls sideways and can't be opened.</figcaption>
+		</figure>
+	</div>
+
+	<h2>Alignment</h2>
+	<div class="dd">
+		<figure class="do">
+			<div class="stage"><div class="v-grid3 v-tabular"><div><span class="v-label">Name</span><span class="v-value">bond0</span></div><div><span class="v-label">MTU</span><span class="v-value">1500</span></div><div><span class="v-label">Gateway</span><span class="v-value">192.168.1.1</span></div></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>put the small label above its value.</figcaption>
+		</figure>
+		<figure class="dont">
+			<div class="stage"><div class="v-grid3 v-tabular"><div><span class="v-value">bond0</span><span class="v-label">Name</span></div><div><span class="v-value">1500</span><span class="v-label">MTU</span></div><div><span class="v-value">Gateway: 192.168.1.1</span></div></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>caption values from below, or run "Label: value" together.</figcaption>
+		</figure>
+		<figure class="do">
+			<div class="stage"><div class="v-row"><span class="v-lg">192.168.1.20/24</span><span class="v-badge pill gray">Manual</span></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>center single-line rows, even with mixed sizes.</figcaption>
+		</figure>
+		<figure class="dont">
+			<div class="stage"><div class="v-row baseline"><span class="v-lg">192.168.1.20/24</span><span class="v-badge pill gray">Manual</span></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>align to the baseline; the badge drops off the line.</figcaption>
+		</figure>
+	</div>
+</section>
+
+<!-- ================= MOTION ================= -->
+<section class="page" id="motion" data-group="Foundations" hidden>
+	<p class="eyebrow">Foundations</p>
+	<h1>Motion</h1>
+	<p class="lead">Motion in virgoOS is small and quick. It confirms a press, shows that something is alive or working, and helps a surface appear. It is on for everyone: there is no reduced motion fallback, by choice.</p>
+
+	<h2>Motion in use</h2>
+	<div class="doc-table-wrap">
+		<table class="doc-table">
+			<thead><tr><th>Where</th><th>What moves</th><th>Timing</th></tr></thead>
+			<tbody>
+				<tr><td>Buttons</td><td>Shrink slightly on press (scale .97)</td><td>with the color transition</td></tr>
+				<tr><td>Dashboard cards</td><td>Lift with a soft shadow on hover</td><td>.3s ease-in-out</td></tr>
+				<tr><td>Badges, theme switch</td><td>A hidden label slides open on hover or selection</td><td>.25s ease</td></tr>
+				<tr><td>Menus, dialogs, drawer</td><td>Fade and scale in from the trigger</td><td>Bootstrap's overlay easing</td></tr>
+				<tr><td>Running work</td><td>The gear or refresh icon spins; download bars are striped and moving</td><td>while the job runs</td></tr>
+				<tr><td>Illustrations</td><td>Float, blink and pulse in a slow loop</td><td>2 to 4s</td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<h2>Guidelines</h2>
+	<ul class="rules">
+		<li>Animate to give feedback or show state, never to decorate.</li>
+		<li>Keep transitions between .15s and .3s. Only loops (spinners, illustrations) run longer.</li>
+		<li>A spinning icon means work is happening now; stop it the moment the work ends.</li>
+		<li>Don't add <code>prefers-reduced-motion</code> blocks; the setting is off on purpose.</li>
+	</ul>
+	<div class="dd">
+		<figure class="do">
+			<div class="stage"><div class="v-row"><span class="v-icon-btn"><i class="ph-fill ph-gear v-spin"></i></span><span class="v-sm v-fg3">An app is being updated</span></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>use a spinning icon in place of the actions while a job runs on an item.</figcaption>
+		</figure>
+		<figure class="dont">
+			<div class="stage"><div class="v-row"><span class="v-btn primary sm"><i class="ph ph-sparkle v-spin"></i>Save</span><span class="v-sm v-fg3">Idle, but spinning</span></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>move things that aren't changing; motion then stops meaning anything.</figcaption>
+		</figure>
+	</div>
+</section>
+
+<!-- ================= CONTENT ================= -->
+<section class="page" id="content" data-group="Foundations" hidden>
+	<p class="eyebrow">Foundations</p>
+	<h1>Content</h1>
+	<p class="lead">Words are part of the design. virgoOS speaks plainly, from the user's side of the screen, in short sentences. Things are named by what people recognize, not by how the system is built.</p>
+
+	<h2>Case and wording</h2>
+	<ul class="rules">
+		<li>Sentence case for titles, buttons, labels and menu items: "New user", "App center", "Shut down".</li>
+		<li>A button says what happens: "Create", "Roll back", "Yes, delete". Never "OK" for an action, never "Submit".</li>
+		<li>A description is one sentence that says what the thing is for: "Where the weather on the Dashboard is for."</li>
+		<li>Don't restate validation rules in descriptions or help; the messages already say them.</li>
+	</ul>
+	<div class="doc-table-wrap">
+		<table class="doc-table">
+			<thead><tr><th>Say</th><th>Not</th></tr></thead>
+			<tbody>
+				<tr><td>Logged in as</td><td>Signed in as</td></tr>
+				<tr><td>Sign in, Sign out</td><td>Log in, Log off</td></tr>
+				<tr><td>Setup</td><td>Setup wizard, the wizard</td></tr>
+				<tr><td>virgoOS</td><td>VirgoOS, Virgo OS</td></tr>
+				<tr><td>Dashboard (the page only)</td><td>"the dashboard" for the whole interface</td></tr>
+				<tr><td>univrs node</td><td>virgoOS node</td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<h2>Punctuation</h2>
+	<p>Whether text ends with a period depends on what it is. A full sentence gets one; a name, label or short phrase doesn't.</p>
+	<div class="doc-table-wrap">
+		<table class="doc-table">
+			<thead><tr><th>Kind</th><th>Example</th><th>Ends with</th></tr></thead>
+			<tbody>
+				<tr><td>Toast title</td><td>Session ended.</td><td>period</td></tr>
+				<tr><td>Description</td><td>The name the node answers to.</td><td>period</td></tr>
+				<tr><td>Tooltip, a sentence</td><td><span class="v-tip">The pool mixes drive types.</span></td><td>period</td></tr>
+				<tr><td>Confirm question</td><td>Are you sure you want to delete the user emma?</td><td>question mark</td></tr>
+				<tr><td>Tooltip, an action</td><td><span class="v-tip">Expand pool</span></td><td>nothing</td></tr>
+				<tr><td>Tooltip, a status</td><td><span class="v-tip">Snapshots disabled</span></td><td>nothing</td></tr>
+				<tr><td>Title, label, button</td><td>New user, Default gateway, Create</td><td>nothing</td></tr>
+				<tr><td>Badge</td><td>locked, 3 / 3</td><td>nothing</td></tr>
+				<tr><td>Placeholder</td><td>"Search", "IP, CIDR, or hostname", "https://"</td><td>nothing</td></tr>
+				<tr><td>Validation message</td><td>Can't be empty</td><td>nothing</td></tr>
+				<tr><td>Something in progress</td><td>Creating pool..., Checking availability...</td><td>three periods</td></tr>
+			</tbody>
+		</table>
+	</div>
+	<ul class="rules">
+		<li>No em or en dashes as punctuation, anywhere. Use a comma, colon, period or parentheses. In page titles, use "|".</li>
+		<li>A missing value shows a dash (—) on its own, never "N/A", "null" or a blank.</li>
+	</ul>
+
+	<h2>Numbers and units</h2>
+	<div class="doc-table-wrap">
+		<table class="doc-table">
+			<thead><tr><th>Kind</th><th>Write</th></tr></thead>
+			<tbody>
+				<tr><td>Sizes</td><td>649 GiB, 1.86 TiB (binary units, a space before the unit)</td></tr>
+				<tr><td>Rates</td><td>139.0 Mbps, 251.6 Kbps</td></tr>
+				<tr><td>Percentages</td><td>24% in text, "24 %" with a smaller unit for a big metric</td></tr>
+				<tr><td>Temperature</td><td>41 °C</td></tr>
+				<tr><td>Durations</td><td>Uptime: 5d 7h, up 4d 6h 17m 42s</td></tr>
+				<tr><td>Counts of parts</td><td>3 / 3, with spaces around the slash</td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<h2>Guidelines</h2>
+	<div class="dd">
+		<figure class="do">
+			<div class="stage"><div><div class="v-h5">Location</div><div class="v-sm v-fg3">Where the weather on the Dashboard is for.</div></div><div><div class="v-h5">Trusted proxies</div><div class="v-sm v-fg3">Addresses used when reading reverse proxy headers (for example X-Forwarded-For).</div></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>say what it is for, in one plain sentence.</figcaption>
+		</figure>
+		<figure class="dont">
+			<div class="stage"><div><div class="v-h5">Location</div><div class="v-sm v-fg3">Configure latitude/longitude — must be decimal degrees between -90 and 90.</div></div><div><div class="v-h5">Trusted proxies</div><div class="v-sm v-fg3">Manage the trusted_proxies array used by the middleware.</div></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>use dashes, list validation rules, or describe system internals.</figcaption>
+		</figure>
+	</div>
+	<h3>Romanian</h3>
+	<p>Romanian copy is written to read as if a Romanian wrote it, not translated word for word from English. Do the naturalness pass every time.</p>
+</section>
+
+<!-- ================= NAVIGATION ================= -->
+<section class="page" id="navigation" data-group="Patterns" hidden>
+	<p class="eyebrow">Patterns</p>
+	<h1>Navigation</h1>
+	<p class="lead">A side menu on the left holds every page, grouped by purpose. On a phone a bar at the bottom of the screen takes its place, and the menu opens in a drawer that slides up. Each page has its own address, and its title matches its menu item.</p>
+
+	<h2>Anatomy</h2>
+	<figure class="example">
+		<div class="v-shell">
+			<div class="v-rail">
+				<div class="logo"><img src="../src/assets/img/univrs.svg" alt=""><span>univrs</span></div>
+				<hr>
+				<div class="it on"><i class="ph-duotone ph-gauge"></i><span class="lbl">Dashboard</span></div>
+				<div class="it"><span class="win v-app blue"><i class="ph-bold ph-cloud"></i></span><span class="lbl">Nextcloud</span></div>
+				<div class="it"><span class="win v-app dark"><i class="ph-bold ph-terminal"></i></span><span class="lbl">Terminal</span></div>
+				<div class="title"><span>Resources</span></div>
+				<div class="it"><i class="ph-duotone ph-dots-nine"></i><span class="lbl">Apps</span><span class="v-badge pill green"><i class="ph ph-arrow-down"></i></span></div>
+				<div class="it"><i class="ph-duotone ph-arrow-square-up-right"></i><span class="lbl">Shortcuts</span></div>
+				<div class="it"><i class="ph-duotone ph-folder"></i><span class="lbl">Folders</span></div>
+				<div class="it"><i class="ph-duotone ph-clock-counter-clockwise"></i><span class="lbl">Time capsule</span></div>
+				<div class="title"><span>System</span></div>
+				<div class="it"><i class="ph-duotone ph-hard-drive"></i><span class="lbl">Storage</span></div>
+				<div class="it"><i class="ph-duotone ph-user"></i><span class="lbl">Users</span></div>
+				<div class="it"><i class="ph-duotone ph-network"></i><span class="lbl">Network</span></div>
+				<hr class="low bottom">
+				<div class="it toggle"><i class="ph-duotone ph-sidebar"></i></div>
+				<hr class="low">
+				<div class="account"><span class="v-avatar">A</span><span class="lbl who"><b>Administrator</b><small>voyager@univrs.cloud</small></span><i class="ph-light ph-caret-up-down lbl"></i></div>
+			</div>
+			<div class="v-panel">
+				<span class="v-h4"><i class="ph-duotone ph-dots-nine"></i>Apps</span>
+				<p class="v-sm v-fg3">The page sits on a raised panel. Its title repeats the menu item and its icon.</p>
+			</div>
+		</div>
+		<figcaption>Logo, Dashboard and any open app windows, then the pages in titled groups (Resources, System, Node). A badge marks an item with something waiting. The collapse button and the account sit at the bottom.</figcaption>
+	</figure>
+
+	<h2>Phone</h2>
+	<div class="dd">
+		<figure>
+			<div class="stage plain">
+				<div class="v-phones">
+					<div class="v-device"><div class="v-phone"><span class="key power"></span><span class="key volume"></span><div class="v-glass"><div class="v-screen"><div class="v-status"><span>02:59 PM</span><span class="icons"><i class="ph-fill ph-cell-signal-high"></i>100%<i class="ph-fill ph-battery-full"></i></span></div><div class="v-urlbar"><i class="ph ph-house"></i><span class="url"><i class="ph-fill ph-lock"></i>spica.origin.univrs.cloud</span><span class="tabs">1</span><i class="ph-bold ph-dots-three-vertical"></i></div><div class="v-viewport"><div class="v-phone-body"><div class="v-row"><span class="v-h4 v-grow"><i class="ph-duotone ph-dots-nine"></i>Apps</span><span class="v-btn sm outline">App center</span></div><div class="v-row"><div class="v-field single v-grow"><span class="v-ph">Search</span></div><span class="v-icon-btn bordered"><i class="ph-fill ph-funnel"></i></span><span class="v-end">17 apps</span></div><table class="v-table"><thead><tr><th colspan="3">App <i class="ph-fill ph-caret-up-down v-caret on"></i></th></tr></thead><tbody><tr><td><div>Authelia</div><span>—</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr><tr><td><div>Dockhand</div><span class="v-link plain">dockhand.origin.univrs.cloud</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr><tr><td><div>Euro Office</div><span class="v-link plain">nextcloud.origin.univrs.cloud</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr><tr><td><div>Fleet</div><span class="v-link plain">fleet.univrs.cloud</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr><tr><td><div>Gitea</div><span class="v-link plain">gitea.origin.univrs.cloud</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr><tr><td><div>Gitea - Runner (build1)</div><span>—</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr><tr><td><div>MailServer</div><span class="v-link plain">autoconfig.univrs.cloud</span><span class="v-link plain">mail.univrs.cloud</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr><tr><td><div>Music</div><span class="v-link plain">navidrome.origin.univrs.cloud</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr><tr><td><div>Nextcloud</div><span class="v-link plain">nextcloud.origin.univrs.cloud</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr></tbody></table><span class="v-thumb"></span></div><div class="v-phone-bar"><img src="../src/assets/img/univrs.svg" alt="">univrs<span class="v-end v-row"><span class="v-avatar">A</span><span class="toggle"><i class="ph-fill ph-dots-three-outline-vertical"></i></span></span></div></div></div></div></div></div>
+					<div class="v-device"><div class="v-phone"><span class="key power"></span><span class="key volume"></span><div class="v-glass"><div class="v-screen"><div class="v-status"><span>02:59 PM</span><span class="icons"><i class="ph-fill ph-cell-signal-high"></i>100%<i class="ph-fill ph-battery-full"></i></span></div><div class="v-urlbar"><i class="ph ph-house"></i><span class="url"><i class="ph-fill ph-lock"></i>spica.origin.univrs.cloud</span><span class="tabs">1</span><i class="ph-bold ph-dots-three-vertical"></i></div><div class="v-viewport"><div class="v-blur v-viewport"><div class="v-phone-body"><div class="v-row"><span class="v-h4 v-grow"><i class="ph-duotone ph-dots-nine"></i>Apps</span><span class="v-btn sm outline">App center</span></div><div class="v-row"><div class="v-field single v-grow"><span class="v-ph">Search</span></div><span class="v-icon-btn bordered"><i class="ph-fill ph-funnel"></i></span><span class="v-end">17 apps</span></div><table class="v-table"><thead><tr><th colspan="3">App <i class="ph-fill ph-caret-up-down v-caret on"></i></th></tr></thead><tbody><tr><td><div>Authelia</div><span>—</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr><tr><td><div>Dockhand</div><span class="v-link plain">dockhand.origin.univrs.cloud</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr><tr><td><div>Euro Office</div><span class="v-link plain">nextcloud.origin.univrs.cloud</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr><tr><td><div>Fleet</div><span class="v-link plain">fleet.univrs.cloud</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr><tr><td><div>Gitea</div><span class="v-link plain">gitea.origin.univrs.cloud</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr><tr><td><div>Gitea - Runner (build1)</div><span>—</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr><tr><td><div>MailServer</div><span class="v-link plain">autoconfig.univrs.cloud</span><span class="v-link plain">mail.univrs.cloud</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr><tr><td><div>Music</div><span class="v-link plain">navidrome.origin.univrs.cloud</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr><tr><td><div>Nextcloud</div><span class="v-link plain">nextcloud.origin.univrs.cloud</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr></tbody></table><span class="v-thumb"></span></div><div class="v-phone-bar"><img src="../src/assets/img/univrs.svg" alt="">univrs<span class="v-end v-row"><span class="v-avatar">A</span><span class="toggle"><i class="ph-fill ph-dots-three-outline-vertical"></i></span></span></div></div><div class="v-phone-shade"></div><div class="v-drawer"><div class="nav"><div class="it"><i class="ph-duotone ph-gauge"></i>Dashboard</div><div class="title">Resources</div><div class="it on"><i class="ph-duotone ph-dots-nine"></i>Apps</div><div class="it"><i class="ph-duotone ph-arrow-square-up-right"></i>Shortcuts</div><div class="it"><i class="ph-duotone ph-folder"></i>Folders</div><div class="it"><i class="ph-duotone ph-clock-counter-clockwise"></i>Time capsule</div><div class="title">System</div><div class="it"><i class="ph-duotone ph-hard-drive"></i>Storage</div><div class="it"><i class="ph-duotone ph-user"></i>Users</div><div class="it"><i class="ph-duotone ph-cube"></i>Services</div><div class="it"><i class="ph-duotone ph-network"></i>Network</div><div class="it"><i class="ph-duotone ph-tree-structure"></i>Topology</div><div class="title">Node</div><div class="it"><i class="ph-duotone ph-download"></i>Updates</div><div class="it"><i class="ph-duotone ph-sliders"></i>Settings</div></div><div class="foot"><i class="ph ph-x"></i></div></div></div></div></div></div></div>
+				</div>
+			</div>
+			<figcaption>Below 576px rows drop their images, and the bar with the logo, the account and ⋮ sits at the bottom of the screen, in reach of the thumb. ⋮ opens the whole menu in a drawer that slides up over the blurred page, with the close button at the bottom. The browser bars take the brand blue from the app's theme color.</figcaption>
+		</figure>
+		<figure>
+			<div class="stage plain">
+				<div class="v-shell collapsed">
+					<div class="v-rail">
+						<div class="logo"><img src="../src/assets/img/univrs.svg" alt=""><span>univrs</span></div>
+						<hr>
+						<div class="it on"><i class="ph-duotone ph-gauge"></i><span class="lbl">Dashboard</span></div>
+						<div class="it"><span class="win v-app blue"><i class="ph-bold ph-cloud"></i></span><span class="lbl">Nextcloud</span></div>
+						<div class="it"><span class="win v-app dark"><i class="ph-bold ph-terminal"></i></span><span class="lbl">Terminal</span></div>
+						<div class="title"><span>Resources</span></div>
+						<div class="it"><i class="ph-duotone ph-dots-nine"></i><span class="lbl">Apps</span><span class="v-badge pill green"><i class="ph ph-arrow-down"></i></span></div>
+						<div class="it"><i class="ph-duotone ph-arrow-square-up-right"></i><span class="lbl">Shortcuts</span></div>
+						<div class="it"><i class="ph-duotone ph-folder"></i><span class="lbl">Folders</span></div>
+						<div class="it"><i class="ph-duotone ph-clock-counter-clockwise"></i><span class="lbl">Time capsule</span></div>
+						<div class="title"><span>System</span></div>
+						<div class="it"><i class="ph-duotone ph-hard-drive"></i><span class="lbl">Storage</span></div>
+						<div class="it"><i class="ph-duotone ph-user"></i><span class="lbl">Users</span></div>
+						<div class="it"><i class="ph-duotone ph-network"></i><span class="lbl">Network</span></div>
+						<hr class="low bottom">
+						<div class="it toggle"><i class="ph-duotone ph-sidebar"></i></div>
+						<hr class="low">
+						<div class="account"><span class="v-avatar">A</span><span class="lbl who"><b>Administrator</b><small>voyager@univrs.cloud</small></span><i class="ph-light ph-caret-up-down lbl"></i></div>
+					</div>
+					<div class="v-panel"><span class="v-h4"><i class="ph-duotone ph-dots-nine"></i>Apps</span></div>
+				</div>
+			</div>
+			<figcaption>Collapsed to 3.75rem: icons only, group titles turn into lines, badges shrink onto the icon. The choice is remembered.</figcaption>
+		</figure>
+	</div>
+
+	<h2>Guidelines</h2>
+	<ul class="rules">
+		<li>Every page and every item has its own address (<code>/apps/nextcloud</code>), so back, reload and links work.</li>
+		<li>A detail page has a back button to its list; there are no breadcrumbs.</li>
+		<li>The page title uses the same words and icon (duotone) as its menu item.</li>
+		<li>The page's one main action sits at the top right of the title row, as a small outline button.</li>
+		<li>A badge on a menu item means something waits there (an update). Use it sparingly.</li>
+	</ul>
+</section>
+
+<!-- ================= COMMON ACTIONS ================= -->
+<section class="page" id="common-actions" data-group="Patterns" hidden>
+	<p class="eyebrow">Patterns</p>
+	<h1>Common actions</h1>
+	<p class="lead">The same action always looks the same, wherever it appears. The weight of the control follows how important and how risky the action is.</p>
+
+	<h2>Buttons by weight</h2>
+	<div class="doc-table-wrap">
+		<table class="doc-table">
+			<thead><tr><th>Control</th><th>Use for</th></tr></thead>
+			<tbody>
+				<tr><td><span class="v-btn primary">Create</span></td><td>The one main action of a dialog or step, placed last. At most one per view.</td></tr>
+				<tr><td><span class="v-btn outline">Cancel</span></td><td>Cancel, and the page action at the top right (New user, App center).</td></tr>
+				<tr><td><span class="v-btn sm danger">Shut down</span></td><td>Removes, stops or interrupts something.</td></tr>
+				<tr><td><span class="v-link"><i class="ph ph-pen"></i>Edit</span></td><td>Routine actions inside a card: Edit, Add, Refresh.</td></tr>
+				<tr><td><span class="v-icon-btn"><i class="ph ph-arrows-clockwise"></i></span></td><td>Toolbars and trays; always with a tooltip naming the action.</td></tr>
+			</tbody>
+		</table>
+	</div>
+	<p>There are no green, orange or yellow buttons.</p>
+
+	<h2>Actions</h2>
+	<div class="doc-table-wrap">
+		<table class="doc-table">
+			<thead><tr><th>Action</th><th>How it appears</th></tr></thead>
+			<tbody>
+				<tr><td>Add, New</td><td>Page action top right ("New user"), or <span class="v-link"><i class="ph ph-plus"></i>Add</span> inside a card. Opens a dialog.</td></tr>
+				<tr><td>Edit</td><td><span class="v-link"><i class="ph ph-pen"></i>Edit</span> on the card, or a ⋮ menu item. Opens a dialog.</td></tr>
+				<tr><td>Start, Restart, Stop</td><td>Icons in the action tray (green play, neutral restart, red stop) and in the ⋮ menu. Restart and Stop ask for confirmation.</td></tr>
+				<tr><td>Kill, Delete, Remove</td><td>Red ⋮ menu items, at the end of the menu, always confirmed.</td></tr>
+				<tr><td>Update</td><td>First item of the ⋮ menu, with an arrow down. A green badge on the item and the menu tells that one is available.</td></tr>
+				<tr><td>Refresh, Sync</td><td><span class="v-icon-btn"><i class="ph ph-arrows-clockwise"></i></span> which spins while it runs, or <span class="v-link"><i class="ph ph-arrows-clockwise"></i>Refresh</span> in a card.</td></tr>
+				<tr><td>Copy</td><td>A small <i class="ph ph-copy"></i> after the value; see <a href="#common-actions">Copy to clipboard</a> below.</td></tr>
+				<tr><td>Cancel</td><td>Outline button left of the main action. Closes without changes.</td></tr>
+				<tr><td>Close</td><td><i class="ph ph-x"></i> only on toasts and on dialogs that show information without a form.</td></tr>
+				<tr><td>Reset</td><td>"Reset filters" at the end of the filter menu.</td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<h2>Copy to clipboard</h2>
+	<p>Values people paste elsewhere (a MAC address, a serial number, a folder address) can be copied with one click. The copied text is exactly the value shown.</p>
+	<div class="dd">
+		<figure>
+			<div class="stage plain">
+				<div class="v-row top wrap v-gap-lg">
+					<div class="v-tip-room"><span class="v-label">MAC</span><div class="v-row v-gap-sm"><span class="v-tabular">02:00:5e:10:00:14</span><span class="v-tip-on"><span class="v-tip up">Copy MAC address</span><i class="ph ph-copy v-fg3"></i></span></div></div>
+					<div class="v-tip-room"><span class="v-label">MAC</span><div class="v-row v-gap-sm"><span class="v-tabular">02:00:5e:10:00:14</span><span class="v-tip-on"><span class="v-tip up">Copied!</span><i class="ph ph-copy v-fg3"></i></span></div></div>
+				</div>
+			</div>
+			<figcaption><b>A value:</b> a small copy icon right after it. The tooltip names what is copied, then says "Copied!" for a second.</figcaption>
+		</figure>
+		<figure>
+			<div class="stage plain">
+				<div class="v-row v-tip-room tall v-center-row">
+					<span class="v-tip-on"><span class="v-tip up wide">Click to copy the folder address. Access the folder using a computer on your local network.</span><i class="ph-fill ph-windows-logo"></i></span>
+					<i class="ph-fill ph-apple-logo"></i>
+					<i class="ph-fill ph-linux-logo"></i>
+				</div>
+			</div>
+			<figcaption><b>One value, several formats:</b> each operating system's icon copies the folder address written for that system.</figcaption>
+		</figure>
+	</div>
+	<div class="dd">
+		<figure class="do">
+			<div class="stage"><div><span class="v-label">Serial number</span><div class="v-row v-gap-sm"><span class="v-tabular">VGO-2409-00417</span><i class="ph ph-copy v-fg3"></i></div></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>put a quiet icon after the value and confirm in its own tooltip.</figcaption>
+		</figure>
+		<figure class="dont">
+			<div class="stage"><div class="v-col start"><div class="v-row"><span class="v-tabular">VGO-2409-00417</span><span class="v-btn sm primary"><i class="ph ph-copy"></i>Copy</span></div><div class="v-toast green"><span class="v-grow"><b>Copied to clipboard!</b></span><i class="ph ph-x v-close"></i></div></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>use a loud button, or a toast to confirm a copy; the tooltip is enough.</figcaption>
+		</figure>
+	</div>
+
+	<h2>Friction follows impact</h2>
+	<div class="doc-table-wrap">
+		<table class="doc-table">
+			<thead><tr><th>Impact</th><th>Example</th><th>What we do</th></tr></thead>
+			<tbody>
+				<tr><td>Easy to undo</td><td>Toggle traffic, change sort</td><td>Act at once</td></tr>
+				<tr><td>Disruptive</td><td>Restart an app, reboot the node, delete a user</td><td>Confirm with a question that names the thing, and a red button that says what happens</td></tr>
+				<tr><td>Loses data</td><td>Roll back a folder, replace a drive</td><td>Confirm, and keep the button disabled until the acknowledgment is ticked</td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<h2>Guidelines</h2>
+	<div class="dd">
+		<figure class="do">
+			<div class="stage"><div class="v-dialog-foot"><span class="v-btn outline push">Cancel</span><span class="v-btn primary">Save</span></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>one primary, last; a quiet way out before it.</figcaption>
+		</figure>
+		<figure class="dont">
+			<div class="stage"><div class="v-dialog-foot"><span class="v-btn primary">Save</span><span class="v-btn primary">Apply</span><span class="v-btn danger">Cancel</span></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>stack primaries, or make Cancel red; it reads as destructive.</figcaption>
+		</figure>
+	</div>
+</section>
+
+<!-- ================= MENUS AND DISCLOSURES ================= -->
+<section class="page" id="disclosures" data-group="Patterns" hidden>
+	<p class="eyebrow">Patterns</p>
+	<h1>Menus and disclosures</h1>
+	<p class="lead">Things that open from a click: the ⋮ menu with an item's actions, the action tray on detail pages, the account and filter menus, small popovers. They open on a click, one at a time, and close on a click outside or Esc. Tooltips open on hover and only explain.</p>
+
+	<h2>The ⋮ menu</h2>
+	<p>Holds an item's actions. Grouped with dividers: update, then start, restart and stop, then removal. Each item has a fill icon. Destructive items are red and come last.</p>
+	<div class="dd">
+		<figure class="do">
+			<div class="stage"><div class="v-row top wrap">
+				<div class="v-menu"><div class="it"><i class="ph-fill ph-arrow-down"></i>Update</div><hr><div class="it"><i class="ph-fill ph-arrow-counter-clockwise"></i>Restart</div><div class="it danger"><i class="ph-fill ph-stop"></i>Stop</div><div class="it danger"><i class="ph-fill ph-skull"></i>Kill</div></div>
+			</div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>group, add icons, put destructive actions last and in red.</figcaption>
+		</figure>
+		<figure class="dont">
+			<div class="stage"><div class="v-menu"><div class="it">Kill</div><div class="it">Update</div><div class="it">Stop</div><div class="it">Restart</div></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>list actions in no order, without icons, with the riskiest first.</figcaption>
+		</figure>
+	</div>
+
+	<h2>The action tray</h2>
+	<p>On detail pages the common actions sit as icons in a soft tray, with the ⋮ menu at its end for the rest. The tray always shows the same buttons; the ones that can't run are gray. Below 768px the tray folds into the ⋮ menu.</p>
+	<div class="dd">
+		<figure class="do">
+			<div class="stage"><div class="v-col end">
+				<span class="v-tray"><span class="v-icon-btn disabled"><i class="ph-fill ph-play v-c-gray"></i></span><span class="v-icon-btn"><i class="ph-fill ph-arrow-counter-clockwise"></i></span><span class="v-icon-btn"><i class="ph-fill ph-stop v-c-red4"></i></span><span class="v-icon-btn toggle"><i class="ph-fill ph-dots-three-outline-vertical"></i></span></span>
+				<div class="v-menu"><div class="it"><i class="ph-fill ph-arrow-down"></i>Update</div><hr><div class="it danger"><i class="ph-fill ph-skull"></i>Kill</div></div>
+			</div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>the app is running, so play is gray; stop is red because it can run.</figcaption>
+		</figure>
+		<figure class="dont">
+			<div class="stage"><div class="v-row wrap"><span class="v-btn sm primary"><i class="ph-fill ph-play"></i>Start</span><span class="v-btn sm outline">Restart</span><span class="v-btn sm danger">Stop</span><span class="v-btn sm outline">More...</span></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>use a row of full buttons; Start looks available on a running app.</figcaption>
+		</figure>
+	</div>
+
+	<h2>Tooltips</h2>
+	<p>A tooltip names an icon-only control or explains a term or a state. It never holds something people must read to continue, and it never repeats the visible label.</p>
+	<div class="dd">
+		<figure class="do">
+			<div class="stage"><div class="v-col start v-gap-lg">
+				<div class="v-row"><span class="v-icon-btn"><i class="ph ph-stack-plus"></i></span><span class="v-tip left">Expand pool</span></div>
+				<div class="v-row"><span class="v-icon-btn"><i class="ph ph-warning v-c-orange"></i></span><span class="v-tip left">The pool mixes drive types.</span></div>
+				<div class="v-row"><span class="v-icon-btn"><i class="ph ph-clock-counter-clockwise v-c-gray"></i></span><span class="v-tip left">Snapshots disabled</span></div>
+			</div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>action and status without a period; a sentence with one.</figcaption>
+		</figure>
+		<figure class="dont">
+			<div class="stage"><div class="v-col start v-gap-lg">
+				<div class="v-row"><span class="v-icon-btn"><i class="ph ph-stack-plus"></i></span><span class="v-tip left">Expand pool.</span></div>
+				<div class="v-row"><span class="v-icon-btn"><i class="ph ph-warning v-c-orange"></i></span><span class="v-tip left">the pool mixes drive types</span></div>
+				<div class="v-row"><span class="v-icon-btn"><i class="ph ph-clock-counter-clockwise v-c-gray"></i></span><span class="v-tip left">Click here to see snapshots</span></div>
+			</div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>punctuate an action, drop the period from a sentence, or give instructions.</figcaption>
+		</figure>
+	</div>
+
+	<h2>Other disclosures</h2>
+	<ul class="rules">
+		<li><b>Account menu:</b> "Logged in as", Theme (Auto, Light, Dark), links, Sign out.</li>
+		<li><b>Filter menu:</b> see <a href="#filtering">Filtering</a>.</li>
+		<li><b>Popover:</b> a small picker that belongs to one field, such as the shortcut icon search.</li>
+		<li><b>Details toggle:</b> a chevron that rotates when a row expands.</li>
+		<li>Menus never hold a form that needs saving; that is a dialog.</li>
+	</ul>
+</section>
+
+<!-- ================= DIALOGS ================= -->
+<section class="page" id="dialogs" data-group="Patterns" hidden>
+	<p class="eyebrow">Patterns</p>
+	<h1>Dialogs</h1>
+	<p class="lead">A dialog is for a short task the user comes back from to the same page. It blurs and grays the page behind it, so use one only when the task needs full attention.</p>
+
+	<h2>When to use</h2>
+	<div class="dd">
+		<figure class="do">
+			<div class="stage"><ul class="rules"><li>Creating or editing one thing from the page you are on: New user, Edit host, Add trusted proxy.</li><li>A list that belongs to one row: a user's sessions.</li><li>A focused task with steps or a picker: App center, Expand pool, Replace drive, Restore snapshot.</li><li>One yes or no before something destructive: the confirm dialog.</li></ul></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Use a dialog for</span></figcaption>
+		</figure>
+		<figure class="dont">
+			<div class="stage"><ul class="rules"><li>Looking at one item: it has its own detail page.</li><li>Turning a setting on or off: a switch that applies at once.</li><li>Reporting a result or a running job: a toast.</li><li>Explaining something: a tooltip or help text.</li><li>Taking over the node, like a system update: a full page.</li></ul></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Not for</span></figcaption>
+		</figure>
+	</div>
+
+	<h2>Anatomy</h2>
+	<ul class="rules">
+		<li><b>Header:</b> the title only, in sentence case. A close button only on dialogs without a form (Sessions).</li>
+		<li><b>Body:</b> scrolls under the header and footer, which float with a blurred background.</li>
+		<li><b>Footer:</b> Cancel (outline) pushed right, the main action (solid) at the far right.</li>
+		<li>Every dialog root has <code>tabindex="-1"</code>.</li>
+	</ul>
+	<div class="doc-table-wrap">
+		<table class="doc-table">
+			<thead><tr><th>Size</th><th>Use for</th></tr></thead>
+			<tbody>
+				<tr><td><code>dialog-sm</code> 300px</td><td>A question or a few fields: confirm, Location, Fleet, Add trusted proxy</td></tr>
+				<tr><td>default 500px</td><td>A form: New user, Edit host, SMTP server</td></tr>
+				<tr><td><code>dialog-lg</code></td><td>A picker or tree: Expand pool, Replace drive, the snapshot browser</td></tr>
+				<tr><td><code>dialog-xl</code></td><td>A table or catalog: Sessions, App center</td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<h2>Form dialog</h2>
+	<div class="dd">
+		<figure class="do">
+			<div class="stage backdrop">
+				<div class="v-dialog">
+					<h3 class="v-dialog-title">New user</h3>
+					<div class="v-form">
+						<div class="v-field"><span class="fl">Name</span><span class="val">Emma Collins</span></div>
+						<div class="v-field"><span class="fl">Email address</span><span class="val">emma@example.com</span></div>
+						<div class="v-field"><span class="fl">Username</span><span class="val">emma</span></div>
+						<div class="v-field"><span class="fl">Password</span><span class="val">••••••••••••</span><i class="ph-fill ph-eye end"></i></div>
+						<div class="v-check"><span class="box"></span>Has administrator role?</div>
+					</div>
+					<div class="v-dialog-foot"><span class="v-btn outline push">Cancel</span><span class="v-btn primary">Create</span></div>
+				</div>
+			</div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>title only, floating labels, Cancel then Create on the right.</figcaption>
+		</figure>
+		<figure class="dont">
+			<div class="stage backdrop">
+				<div class="v-dialog">
+					<h3 class="v-dialog-title">Create A New User Account<i class="ph ph-x v-end"></i></h3>
+					<p class="v-sm v-fg2">Please fill in all the required fields below. Fields marked with * are mandatory.</p>
+					<div class="v-form">
+						<div><div class="v-sm v-semibold">Full Name *</div><div class="v-field single"><span class="val">Emma Collins</span></div></div>
+						<div><div class="v-sm v-semibold">Password *</div><div class="v-field single"><span class="val">••••••••••••</span></div><div class="v-help">Must be 8 to 64 characters, letters, digits and symbols.</div></div>
+					</div>
+					<div class="v-dialog-foot"><span class="v-btn primary">OK</span><span class="v-btn outline v-end">Cancel</span></div>
+				</div>
+			</div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>title case, a close button on a form, labels outside the field, rules as help text, a vague OK on the left.</figcaption>
+		</figure>
+	</div>
+
+	<h2>Confirmation</h2>
+	<p>Ask a question that names the thing. The confirm button is red and says what happens. When data can be lost, it stays disabled until the acknowledgment is ticked.</p>
+	<div class="dd">
+		<figure class="do">
+			<div class="stage backdrop"><div class="v-col v-gap-lg">
+				<div class="v-dialog sm"><h3 class="v-dialog-title">Confirmation</h3><p class="v-fg2">Are you sure you want to delete the user <b>emma</b>?</p><div class="v-dialog-foot"><span class="v-btn outline push">Cancel</span><span class="v-btn danger">Yes, delete</span></div></div>
+				<div class="v-dialog sm"><h3 class="v-dialog-title">Confirmation</h3><p class="v-fg2">Rolling back <b>Photos</b> replaces its files with the snapshot from 12 Nov.</p><div class="v-check"><span class="box"></span>I understand that newer changes are lost</div><div class="v-dialog-foot"><span class="v-btn outline push">Cancel</span><span class="v-btn danger disabled">Roll back</span></div></div>
+			</div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>name the thing; a red button that says what happens; acknowledge data loss.</figcaption>
+		</figure>
+		<figure class="dont">
+			<div class="stage backdrop"><div class="v-dialog sm"><h3 class="v-dialog-title">Warning!!!</h3><p class="v-fg2">Are you sure? This action cannot be undone.</p><div class="v-dialog-foot"><span class="v-btn outline push">No</span><span class="v-btn primary">Yes</span></div></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>ask a vague question with a blue "Yes", one click from losing data.</figcaption>
+		</figure>
+	</div>
+</section>
+
+<!-- ================= FORMS ================= -->
+<section class="page" id="forms" data-group="Patterns" hidden>
+	<p class="eyebrow">Patterns</p>
+	<h1>Forms</h1>
+	<p class="lead">Forms live in dialogs and in Setup. They ask only for what is needed, in a sensible order, with floating labels and the main action at the bottom right.</p>
+
+	<h2>Fields</h2>
+	<ul class="rules">
+		<li>Every field has a floating label inside it: short, sentence case, no colon ("Email address", "Confirm password").</li>
+		<li>Group related fields; separate the groups with space.</li>
+		<li>Pre-fill what the system already knows.</li>
+		<li>An on/off setting outside a form is a switch that applies at once. A yes/no inside a form is a checkbox, worded as a question or a statement.</li>
+		<li>Help that explains a field sits in its label as a hint, not as a paragraph above the form.</li>
+	</ul>
+	<div class="dd">
+		<figure class="do">
+			<div class="stage"><div class="v-form"><div class="v-field"><span class="fl">Email address</span><span class="val">emma@example.com</span></div><div class="v-field"><span class="fl">Hostname</span><span class="v-ph">&nbsp;</span></div></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>keep the label visible inside the field, empty or filled.</figcaption>
+		</figure>
+		<figure class="dont">
+			<div class="stage"><div class="v-form"><div class="v-field single"><span class="v-ph">Enter your E-Mail Address here...</span></div><div class="v-field single"><span class="v-ph">HOSTNAME</span></div></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>use the placeholder as the label; it disappears as soon as someone types.</figcaption>
+		</figure>
+	</div>
+
+	<h3>Placeholders</h3>
+	<p>A placeholder is a single word or the format the field expects ("IP, CIDR, or hostname", "https://", "###.###.###.###"), shown only while the field is empty. Only search fields use one instead of a label. It never gives instructions.</p>
+
+	<h2>Buttons</h2>
+	<ul class="rules">
+		<li>The main action is named after what it does ("Create", "Save", "Register"), never "Submit" or "OK".</li>
+		<li>While it runs, the button is disabled and says what is happening: "Creating pool...", "Signing in...". It can't be pressed twice.</li>
+	</ul>
+	<div class="dd">
+		<figure class="do">
+			<div class="stage"><div class="v-row"><span class="v-btn primary disabled">Updating host...</span></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>disable it and say what is happening.</figcaption>
+		</figure>
+		<figure class="dont">
+			<div class="stage"><div class="v-row"><span class="v-btn primary">Save</span><span class="v-sm v-fg3">Still clickable, nothing changes</span></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>leave the button as it was; people press it again.</figcaption>
+		</figure>
+	</div>
+
+	<h2>Autocomplete</h2>
+	<p>Only the user's own login gets real values, so the browser can fill and save it. Everything else is off, so a saved password never lands in the wrong field.</p>
+	<div class="doc-table-wrap">
+		<table class="doc-table">
+			<thead><tr><th>Field</th><th>autocomplete</th></tr></thead>
+			<tbody>
+				<tr><td>Username when signing in</td><td><code>username</code></td></tr>
+				<tr><td>Password when signing in</td><td><code>current-password</code></td></tr>
+				<tr><td>The user's own new password when signing up, or in Setup</td><td><code>new-password</code></td></tr>
+				<tr><td>The user's own name when signing up</td><td><code>name</code></td></tr>
+				<tr><td>6-digit sign in codes</td><td><code>one-time-code</code></td></tr>
+				<tr><td>Everything else: other people's details (New user, resetting a password), password changes in a profile, service credentials (SMTP, the fleet account in Setup), node names and addresses, search and filter fields</td><td><code>off</code></td></tr>
+			</tbody>
+		</table>
+	</div>
+</section>
+
+<!-- ================= VALIDATION ================= -->
+<section class="page" id="validation" data-group="Patterns" hidden>
+	<p class="eyebrow">Patterns</p>
+	<h1>Validation</h1>
+	<p class="lead">Every form checks its fields in the browser before anything is sent. A problem shows under its field, in red, in a few words that say what the field needs.</p>
+
+	<h2>When fields are checked</h2>
+	<ul class="rules">
+		<li>300 ms after the user stops typing, and again when they leave the field.</li>
+		<li>On submit, every field is checked and focus moves to the first one that fails. Nothing is sent until all pass.</li>
+		<li>Each field shows one message: the first rule that failed. Fixing the value clears it.</li>
+		<li>A check that needs the server (is this name free?) shows a status line with a spinner under the fields: "Checking availability...", then "This name is available".</li>
+		<li>If the server still rejects the request, the reason comes back as an error toast ("Incorrect username or password.").</li>
+	</ul>
+
+	<h2>How an error looks</h2>
+	<figure class="example">
+		<div class="stage plain">
+			<div class="v-dialog">
+				<h3 class="v-dialog-title">New user</h3>
+				<div class="v-form">
+					<div class="v-field-wrap"><div class="v-field"><span class="fl">Name</span><span class="val">Emma Collins</span></div></div>
+					<div class="v-field-wrap"><div class="v-field invalid"><span class="fl">Email address</span><span class="val">emma@</span></div><div class="v-feedback">Invalid email address</div></div>
+					<div class="v-field-wrap"><div class="v-field invalid"><span class="fl">Password</span><span class="val">••••</span><i class="ph-fill ph-eye end"></i></div><div class="v-feedback">At least 8 characters</div></div>
+					<div class="v-field-wrap"><div class="v-field invalid focus"><span class="fl">Confirm password</span><span class="val">•••••</span><i class="ph-fill ph-eye end"></i></div><div class="v-feedback">Passwords do not match</div></div>
+				</div>
+				<div class="v-dialog-foot"><span class="v-btn outline push">Cancel</span><span class="v-btn primary">Create</span></div>
+			</div>
+		</div>
+		<figcaption>After pressing Create: each failing field is red with its message, and focus is on the first field that fails.</figcaption>
+	</figure>
+
+	<h2>Writing messages</h2>
+	<p>A few words saying what the field needs. Sentence case, no period, no "please", no "Error:", no blame. Reuse the wording that already exists.</p>
+	<div class="dd">
+		<figure class="do">
+			<div class="stage"><div class="v-col v-c-danger"><span>Can't be empty</span><span>Invalid email address</span><span>At least 8 characters</span><span>Passwords do not match</span><span>Must be unique</span><span>Letters, digits and hyphens only</span><span>Must be a domain with a TLD, like example.com</span></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>short, specific, the same words everywhere.</figcaption>
+		</figure>
+		<figure class="dont">
+			<div class="stage"><div class="v-col v-c-danger"><span>Error: this field is required!</span><span>Please enter a valid email.</span><span>The password you entered is too short, it must contain at least 8 characters</span><span>You typed the passwords wrong</span><span>ERR_DUPLICATE_KEY</span></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>label it "Error:", shout, ramble, blame the user or show internal codes.</figcaption>
+		</figure>
+	</div>
+</section>
+
+<!-- ================= SEARCH ================= -->
+<section class="page" id="search" data-group="Patterns" hidden>
+	<p class="eyebrow">Patterns</p>
+	<h1>Search</h1>
+	<p class="lead">Every list page can be searched. The field sits above the table on the left, results update as the user types, and the count on the right always says how many items are shown.</p>
+
+	<h2>Anatomy</h2>
+	<figure class="example">
+		<div class="stage plain">
+			<div class="v-row"><div class="v-field single v-grow"><span class="val">next</span></div><span class="v-icon-btn bordered"><i class="ph-fill ph-funnel"></i></span><span class="v-sm v-end">1 app</span></div>
+			<table class="v-table"><tbody><tr><td><div class="v-row"><span class="v-app blue"><i class="ph-bold ph-cloud"></i></span>Nextcloud</div></td><td class="narrow"><span class="v-badge pill green">3 / 3</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr></tbody></table>
+		</div>
+		<figcaption>Search field without a label, the filter button next to it, the count on the right.</figcaption>
+	</figure>
+
+	<h2>Guidelines</h2>
+	<ul class="rules">
+		<li>The search field has no label; the placeholder "Search" is enough.</li>
+		<li>Results update while typing. There is no search button.</li>
+		<li>The count always shows, including when it is zero.</li>
+		<li>When nothing matches, show the no results state: "Nothing matches the search", or "Nothing matches the search or filters" when filters are active.</li>
+	</ul>
+	<div class="dd">
+		<figure class="do">
+			<div class="stage"><div class="v-empty small"><img src="../src/assets/img/illustrations/no-results.svg" alt=""><div class="v-h5 v-fg4">Nothing matches the search</div></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>replace the table with the no results state.</figcaption>
+		</figure>
+		<figure class="dont">
+			<div class="stage"><table class="v-table"><thead><tr><th>App</th><th>State</th></tr></thead><tbody><tr><td colspan="2" class="v-sm">No data available</td></tr></tbody></table></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>leave an empty table with a generic line.</figcaption>
+		</figure>
+	</div>
+</section>
+
+<!-- ================= FILTERING ================= -->
+<section class="page" id="filtering" data-group="Patterns" hidden>
+	<p class="eyebrow">Patterns</p>
+	<h1>Filtering</h1>
+	<p class="lead">Long lists can be narrowed with the filter button next to the search field. It opens a menu of chip groups; the list updates with every choice.</p>
+
+	<h2>Anatomy</h2>
+	<figure class="example">
+		<div class="stage plain">
+			<div class="v-col start">
+				<div class="v-row"><div class="v-field single"><span class="v-ph">Search</span></div><span class="v-relative"><span class="v-icon-btn bordered active"><i class="ph-fill ph-funnel"></i></span><span class="v-count">2</span></span></div>
+				<div class="v-menu">
+					<div class="hd">Status</div>
+					<div class="chips"><span class="v-chip">Any</span><span class="v-chip active">Running</span><span class="v-chip">Partly running</span><span class="v-chip">Stopped</span></div>
+					<hr>
+					<div class="hd">Category</div>
+					<div class="chips"><span class="v-chip active">Productivity</span><span class="v-chip">Media</span><span class="v-chip">Dev</span></div>
+					<hr>
+					<div class="it"><i class="ph ph-arrow-counter-clockwise"></i>Reset filters</div>
+				</div>
+			</div>
+		</div>
+		<figcaption>The count on the button shows how many filters are on, without opening the menu.</figcaption>
+	</figure>
+
+	<h2>Guidelines</h2>
+	<ul class="rules">
+		<li>Each group starts at "Any" and allows one choice; categories allow several.</li>
+		<li>Show a group only when it would narrow the list; a group with one option is noise.</li>
+		<li>Choices apply at once. There is no Apply button.</li>
+		<li>"Reset filters" at the end of the menu clears every group.</li>
+		<li>The search and filters combine; the count and the no results text account for both.</li>
+	</ul>
+</section>
+
+<!-- ================= NOTIFICATIONS ================= -->
+<section class="page" id="notifications" data-group="Patterns" hidden>
+	<p class="eyebrow">Patterns</p>
+	<h1>Notifications</h1>
+	<p class="lead">Toasts report results and background work in the bottom right corner. The title is a full sentence ending with a period. Keep them rare: a toast that isn't needed teaches people to ignore the next one.</p>
+
+	<h2>Types</h2>
+	<div class="doc-table-wrap">
+		<table class="doc-table">
+			<thead><tr><th>Toast</th><th>Use for</th><th>Lifetime</th></tr></thead>
+			<tbody>
+				<tr><td><div class="v-toast green"><span class="v-grow"><b>Session ended.</b></span><i class="ph ph-x v-close"></i></div></td><td>A user action finished</td><td>Hides after 5 seconds</td></tr>
+				<tr><td><div class="v-toast red"><span class="v-grow"><b>Failed to end the session.</b></span><i class="ph ph-x v-close"></i></div></td><td>Something failed, including a request the server rejected</td><td>Stays until dismissed</td></tr>
+				<tr><td><div class="v-toast orange"><span class="v-grow"><b>Notifications are blocked for this site. Allow them in your browser settings.</b></span><i class="ph ph-x v-close"></i></div></td><td>The user must fix something outside the app, and the toast says how</td><td>Stays until dismissed</td></tr>
+				<tr><td><div class="v-toast blue"><span class="v-grow"><b>Installing Nextcloud</b><div class="v-sm">Downloading nextcloud</div><div class="v-progress"><span class="p-cyan w-62"></span></div></span></div></td><td>A job is running, with its progress</td><td>No close button; becomes success or error when the job ends</td></tr>
+				<tr><td><div class="v-toast neutral"><span class="v-grow"><b>A reboot is needed to finish the system update.</b><br><br><span class="v-btn sm primary">Reboot now</span></span><i class="ph ph-x v-close"></i></div></td><td>A notice about the node itself, often with one action</td><td>Stays</td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<h2>When not to use a toast</h2>
+	<ul class="rules">
+		<li>A problem with one field goes under that field.</li>
+		<li>Anything the user must decide is a dialog.</li>
+	</ul>
+
+	<h2>Guidelines</h2>
+	<div class="dd">
+		<figure class="do">
+			<div class="stage"><div class="v-toast red"><span class="v-grow"><b>Failed to start system update on spica.</b></span><i class="ph ph-x v-close"></i></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>say what failed and where, in plain words.</figcaption>
+		</figure>
+		<figure class="dont">
+			<div class="stage"><div class="v-toast red"><span class="v-grow"><b>Error 500: TypeError: Cannot read properties of undefined</b></span></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>show raw errors, or an error that disappears before it is read.</figcaption>
+		</figure>
+	</div>
+</section>
+
+<!-- ================= STATUS INDICATORS ================= -->
+<section class="page" id="status-indicators" data-group="Patterns" hidden>
+	<p class="eyebrow">Patterns</p>
+	<h1>Status indicators</h1>
+	<p class="lead">Status is shown with badges, dots, colored numbers and grayscale images, always following the <a href="#color">color meanings</a>. Color never stands alone: there is always a word or a number with it.</p>
+
+	<h2>Indicators</h2>
+	<div class="doc-table-wrap">
+		<table class="doc-table">
+			<thead><tr><th>Indicator</th><th>Use for</th></tr></thead>
+			<tbody>
+				<tr><td><span class="v-badge pill green">3 / 3</span> <span class="v-badge pill yellow">2 / 3</span></td><td>Running parts of an app, colored by health</td></tr>
+				<tr><td><span class="v-badge pill green">unlocked</span> <span class="v-badge pill red">locked</span></td><td>A state in a table cell</td></tr>
+				<tr><td><span class="v-badge pill fact gray"><span class="lbl">Hostname</span>spica</span></td><td>A neutral labelled fact</td></tr>
+				<tr><td><span class="v-badge pill purple">staff</span> <span class="v-badge pill indigo"><i class="ph-fill ph-crown"></i></span></td><td>Groups and roles; the owner gets a crown</td></tr>
+				<tr><td><span class="v-badge green">ONLINE</span> <span class="v-badge orange">BATTERY</span></td><td>A dashboard tile's status: square and uppercase, the one exception in shape</td></tr>
+				<tr><td><span class="v-badge pill gray"><span class="v-dot green"></span>2</span> <span class="v-badge pill gray"><span class="v-dot gray"></span>1</span></td><td>How many of something are in a state (connected sessions)</td></tr>
+				<tr><td><span class="v-row v-gap-sm"><span class="v-dot green"></span>spica</span></td><td>Online or offline next to a name</td></tr>
+				<tr><td><span class="v-badge pill green"><i class="ph ph-arrow-down"></i></span></td><td>An update is available (menu item, app name)</td></tr>
+				<tr><td><span class="v-app blue v-gray"><i class="ph-bold ph-cloud"></i></span></td><td>Stopped: the image turns gray</td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<h2>Guidelines</h2>
+	<ul class="rules">
+		<li>Pills in light tints for states; the color comes from the meaning, never from taste.</li>
+		<li>When several statuses apply, show the worst.</li>
+		<li>A stopped item is not an error. No red rows.</li>
+		<li>Status that needs no action (everything healthy) stays quiet: a green badge, not a banner.</li>
+	</ul>
+	<div class="dd">
+		<figure class="do">
+			<div class="stage"><div class="v-row wrap"><span class="v-badge pill green">3 / 3</span><span class="v-badge pill red">locked</span><span class="v-badge pill purple">staff</span></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>quiet pills that support the text next to them.</figcaption>
+		</figure>
+		<figure class="dont">
+			<div class="stage"><div class="v-row wrap"><span class="v-badge solid-orange">RUNNING</span><span class="v-badge solid-red">LOCKED!</span><span class="v-badge solid-purple">GROUP: STAFF</span></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>use saturated, shouting badges, or orange for a healthy state.</figcaption>
+		</figure>
+		<figure class="do">
+			<div class="stage"><div class="v-row"><span class="v-app blue v-gray"><i class="ph-bold ph-cloud"></i></span><span class="v-grow">Nextcloud</span><span class="v-badge pill gray">0 / 3</span></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>show stopped with grayscale and a neutral count.</figcaption>
+		</figure>
+		<figure class="dont">
+			<div class="stage"><div class="v-row v-sunken bg-component"><span class="v-app blue"><i class="ph-bold ph-cloud"></i></span><span class="v-grow v-c-red">Nextcloud (STOPPED)</span><span class="v-dot red"></span></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>paint a normal state red, or rely on a colored dot alone.</figcaption>
+		</figure>
+	</div>
+</section>
+
+<!-- ================= LOADING ================= -->
+<section class="page" id="loading" data-group="Patterns" hidden>
+	<p class="eyebrow">Patterns</p>
+	<h1>Loading</h1>
+	<p class="lead">Something always shows that work is happening: a spinner while a page loads, a busy label on a button, progress bars for jobs, a spinning icon on the item being worked on.</p>
+
+	<h2>Kinds</h2>
+	<div class="dd">
+		<figure>
+			<div class="stage plain v-center"><div class="v-spinner"></div></div>
+			<figcaption><b>Page loading:</b> a gray spinner, centered where the content will be.</figcaption>
+		</figure>
+		<figure>
+			<div class="stage plain v-center"><span class="v-btn primary disabled">Signing in...</span></div>
+			<figcaption><b>Action running:</b> the button is disabled and says what is happening.</figcaption>
+		</figure>
+		<figure>
+			<div class="stage plain"><div class="v-toast blue"><span class="v-grow"><b>Installing Nextcloud</b><div class="v-sm">Downloading db</div><div class="v-progress"><span class="p-cyan w-34"></span></div><div class="v-sm">Pulled redis</div><div class="v-progress"><span class="p-green w-100"></span></div></span></div></div>
+			<figcaption><b>Job running:</b> an info toast with a bar per step; striped and moving while it downloads, green when done.</figcaption>
+		</figure>
+		<figure>
+			<div class="stage plain"><div class="v-row"><span class="v-app blue"><i class="ph-bold ph-cloud"></i></span><span class="v-grow">Nextcloud</span><span class="v-icon-btn"><i class="ph-fill ph-gear v-spin"></i></span></div></div>
+			<figcaption><b>Item busy:</b> its actions are replaced by a spinning gear until the job ends.</figcaption>
+		</figure>
+	</div>
+
+	<h2>Guidelines</h2>
+	<ul class="rules">
+		<li>Never show an empty page while loading; show the spinner, then the content or the error.</li>
+		<li>A failed load shows "Error fetching data" in light red where the content would be.</li>
+	</ul>
+</section>
+
+<!-- ================= EMPTY STATES ================= -->
+<section class="page" id="empty-states" data-group="Patterns" hidden>
+	<p class="eyebrow">Patterns</p>
+	<h1>Empty states</h1>
+	<p class="lead">When there is nothing to show, say so in the place of the missing content: an illustration and one short sentence, centered. Every screen that loads data designs its empty, no results and error states.</p>
+
+	<h2>Types</h2>
+	<div class="dd">
+		<figure>
+			<div class="stage plain"><div class="v-empty"><img src="../src/assets/img/illustrations/apps.svg" alt=""><div class="v-h5 v-fg4">No apps installed</div></div></div>
+			<figcaption><b>Nothing yet:</b> the page's own illustration and what is missing.</figcaption>
+		</figure>
+		<figure>
+			<div class="stage plain"><div class="v-empty"><img src="../src/assets/img/illustrations/no-results.svg" alt=""><div class="v-h5 v-fg4">Nothing matches the search or filters</div></div></div>
+			<figcaption><b>No results:</b> after a search or filter.</figcaption>
+		</figure>
+		<figure>
+			<div class="stage plain v-center"><span class="v-c-red3">Error fetching data</span></div>
+			<figcaption><b>Failed to load:</b> short, in light red.</figcaption>
+		</figure>
+		<figure>
+			<div class="stage plain"><div class="v-card"><div class="v-row"><span class="v-tile gray"><i class="ph-duotone ph-shield"></i></span><span class="v-grow">No trusted proxies configured</span><span class="v-link"><i class="ph ph-plus"></i>Add</span></div></div></div>
+			<figcaption><b>Small space:</b> text only, with the action that fills it.</figcaption>
+		</figure>
+	</div>
+
+	<h2>Guidelines</h2>
+	<ul class="rules">
+		<li>The empty state replaces the table entirely, header included.</li>
+		<li>The title is muted (<code>fg-4</code>) and says what is missing, not what went wrong.</li>
+		<li>A missing single value shows "—", never "N/A" or a blank.</li>
+	</ul>
+	<div class="dd">
+		<figure class="do">
+			<div class="stage"><div class="v-grid2"><div><span class="v-label">Cluster</span><span class="v-value">—</span></div><div><span class="v-label">Email</span><span class="v-value">—</span></div></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>show a dash for a missing value.</figcaption>
+		</figure>
+		<figure class="dont">
+			<div class="stage"><div class="v-grid2"><div><span class="v-label">Cluster</span><span class="v-value">N/A</span></div><div><span class="v-label">Email</span><span class="v-value">undefined</span></div></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>leak "N/A", "null" or "undefined".</figcaption>
+		</figure>
+	</div>
+</section>
+
+<!-- ================= DISABLED STATES ================= -->
+<section class="page" id="disabled-states" data-group="Patterns" hidden>
+	<p class="eyebrow">Patterns</p>
+	<h1>Disabled states</h1>
+	<p class="lead">An action that can't run right now is shown but disabled; an action that makes no sense here is left out. People should never wonder why something does nothing.</p>
+
+	<h2>Disable, explain, or leave out</h2>
+	<div class="doc-table-wrap">
+		<table class="doc-table">
+			<thead><tr><th>Situation</th><th>What we do</th><th>Example</th></tr></thead>
+			<tbody>
+				<tr><td>Fixed set of controls (tray, form)</td><td>Disable; icons turn gray, buttons fade to 40%</td><td>Start on a running app</td></tr>
+				<tr><td>The user expects it, and a reason blocks it</td><td>Disable, with a tooltip saying why</td><td>Expand pool when no drives are free</td></tr>
+				<tr><td>A menu of actions for one item</td><td>List only what applies to its current state</td><td>No Start in the menu of a running app</td></tr>
+				<tr><td>Not allowed for this user at all</td><td>Leave it out entirely</td><td>Admin pages for a regular user</td></tr>
+				<tr><td>A menu with nothing left</td><td>One disabled item: "No actions"</td><td>System pools</td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<h2>Guidelines</h2>
+	<div class="dd">
+		<figure class="do">
+			<div class="stage"><div class="v-tip-menu"><span class="v-tip right">The pool has no unused drives to add.</span><div class="v-menu"><div class="it"><i class="ph-fill ph-arrows-clockwise"></i>Sync</div><hr><div class="it off"><i class="ph-fill ph-stack-plus"></i>Expand pool</div></div></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>keep an expected action visible and say why it can't run.</figcaption>
+		</figure>
+		<figure class="dont">
+			<div class="stage"><div class="v-row wrap"><span class="v-btn primary disabled">Expand pool</span><span class="v-sm v-fg3">No explanation anywhere</span></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>disable silently, or disable content people need to read (use read-only).</figcaption>
+		</figure>
+	</div>
+</section>
+
+<!-- ================= READ-ONLY STATES ================= -->
+<section class="page" id="read-only-states" data-group="Patterns" hidden>
+	<p class="eyebrow">Patterns</p>
+	<h1>Read-only states</h1>
+	<p class="lead">A read-only field shows a value that something else has fixed. It stays readable and copyable, sits on the sunken surface, and can't be changed.</p>
+
+	<h2>When to use</h2>
+	<ul class="rules">
+		<li>The value is locked by an earlier choice: the fleet email once the node is registered.</li>
+		<li>An app setting is decided by the system (a gated field in App center).</li>
+		<li>Not for actions; an action that can't run is <a href="#disabled-states">disabled</a>.</li>
+	</ul>
+	<div class="dd">
+		<figure class="do">
+			<div class="stage"><div class="v-form"><div class="v-field readonly"><span class="fl">Fleet account email</span><span class="val">univrs@gmail.com</span></div><div class="v-field"><span class="fl">Password</span><span class="val">••••••••</span></div></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>keep the locked value in place, full contrast, on the sunken surface.</figcaption>
+		</figure>
+		<figure class="dont">
+			<div class="stage"><div class="v-form"><div class="v-field disabled"><span class="fl">Fleet account email</span><span class="val">univrs@gmail.com</span></div><div class="v-field"><span class="fl">Password</span><span class="val">••••••••</span></div></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>fade a value people need to read, or hide it.</figcaption>
+		</figure>
+	</div>
+</section>
+
+<!-- ================= OVERFLOW CONTENT ================= -->
+<section class="page" id="overflow-content" data-group="Patterns" hidden>
+	<p class="eyebrow">Patterns</p>
+	<h1>Overflow content</h1>
+	<p class="lead">Long names, domains and lists must never push the page sideways. Text truncates or wraps inside its own cell, and long regions scroll inside their card with a soft shadow at the edge.</p>
+
+	<h2>Choose by content</h2>
+	<div class="doc-table-wrap">
+		<table class="doc-table">
+			<thead><tr><th>Content</th><th>Treatment</th><th>Class</th></tr></thead>
+			<tbody>
+				<tr><td>Names and emails in table cells</td><td>One line, ending in an ellipsis</td><td><code>text-truncate</code> inside a <code>min-w-0</code> box</td></tr>
+				<tr><td>Hostnames and domains in cards</td><td>Wrap anywhere, never cut</td><td><code>text-break</code></td></tr>
+				<tr><td>Short descriptions</td><td>Up to three lines</td><td><code>line-clamp three-line</code></td></tr>
+				<tr><td>Lists and tables</td><td>Scroll inside the card; shadows show there is more</td><td>the table scroll helpers</td></tr>
+				<tr><td>Logs and terminals</td><td>Wrap lines, scroll the panel</td><td>built in</td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<h2>Guidelines</h2>
+	<div class="dd">
+		<figure class="do">
+			<div class="stage"><div class="v-narrow"><div class="v-row"><span class="v-avatar">EC</span><div class="v-grow"><div class="v-truncate">emma.collins.from.accounting</div><div class="v-sm v-fg4 v-truncate">emma.collins.from.accounting@example.com</div></div><span class="v-badge pill green">unlocked</span></div></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>truncate inside the cell so the row keeps its shape and the badge stays visible.</figcaption>
+		</figure>
+		<figure class="dont">
+			<div class="stage"><div class="v-narrow v-overflow"><div class="v-row v-nowrap"><span class="v-avatar">EC</span><div><div>emma.collins.from.accounting</div><div class="v-sm v-fg4">emma.collins.from.accounting@example.com</div></div><span class="v-badge pill green">unlocked</span></div></div></div>
+			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>let one long value push the rest of the row off the screen; here the badge is cut off.</figcaption>
+		</figure>
+	</div>
+	<ul class="rules">
+		<li>A domain is wrapped, not truncated; cutting it changes its meaning.</li>
+	</ul>
+</section>
+
+<!-- ================= LOGIN ================= -->
+<section class="page" id="login" data-group="Patterns" hidden>
+	<p class="eyebrow">Patterns</p>
+	<h1>Login</h1>
+	<p class="lead">The first screen people see. A single card centered on a soft moving background, with the logo, two fields and one button. Fleet adds a 6-digit code step after the password.</p>
+
+	<h2>Anatomy</h2>
+	<div class="dd">
+		<figure>
+			<div class="v-login-bg">
+				<div class="v-login">
+					<img src="../src/assets/img/univrs.svg" alt="">
+					<div class="v-h4 v-center">Authentication</div>
+					<div class="v-field"><span class="fl">Username</span><span class="val">admin</span></div>
+					<div class="v-field"><span class="fl">Password</span><span class="val">••••••••••</span><i class="ph-fill ph-eye end"></i></div>
+					<span class="v-btn primary">Sign in</span>
+				</div>
+			</div>
+			<figcaption>Node sign in.</figcaption>
+		</figure>
+		<figure>
+			<div class="v-login-bg">
+				<div class="v-login">
+					<img src="../src/assets/img/fleet.svg" alt="">
+					<div class="v-h4 v-center">Two-factor authentication</div>
+					<span class="v-sm v-fg3">6-digit code</span>
+					<div class="v-otp"><span>4</span><span>8</span><span>1</span><span>&nbsp;</span><span>&nbsp;</span><span>&nbsp;</span></div>
+					<div class="v-row"><span class="v-link plain v-grow">Use a recovery code</span><span class="v-btn primary">Verify</span></div>
+				</div>
+			</div>
+			<figcaption>Fleet code step: one box per digit, with a way to use a recovery code instead.</figcaption>
+		</figure>
+	</div>
+
+	<h2>Guidelines</h2>
+	<ul class="rules">
+		<li>The button says "Sign in" and turns into "Signing in..." while it runs. Signing out is "Sign out".</li>
+		<li>Fields set autocomplete (<code>username</code>, <code>current-password</code>, <code>one-time-code</code>) so password managers work.</li>
+		<li>A wrong username or password gets one generic error toast: "Incorrect username or password." Never say which one was wrong.</li>
+	</ul>
+</section>
+
+	<nav class="pager" id="pager"></nav>
+	<p class="foot">virgoOS design guide · univrs · examples are static drawings of the real UI</p>
+	</main>
+</div>
+
+<script>
+(() => {
+	const root = document.documentElement;
+	const pages = Array.from(document.querySelectorAll('.page'));
+	const links = Array.from(document.querySelectorAll('#side a'));
+	const select = document.querySelector('#page-select');
+	const pager = document.querySelector('#pager');
+	const themeButtons = document.querySelectorAll('#theme-switch button');
+
+	let group = '';
+	let optgroup = null;
+	pages.forEach((page) => {
+		if (page.dataset.group !== group) {
+			group = page.dataset.group;
+			optgroup = document.createElement('optgroup');
+			optgroup.label = group;
+			select.appendChild(optgroup);
+		}
+		const option = document.createElement('option');
+		option.value = page.id;
+		option.textContent = page.querySelector('h1').textContent.trim();
+		optgroup.appendChild(option);
+	});
+
+	const titleOf = (page) => { return page.querySelector('h1').textContent.trim(); };
+
+	const show = () => {
+		const id = decodeURIComponent(location.hash.slice(1));
+		const page = pages.find((candidate) => { return candidate.id === id; }) || pages[0];
+		pages.forEach((candidate) => { candidate.hidden = (candidate !== page); });
+		links.forEach((link) => { link.classList.toggle('active', link.getAttribute('href') === `#${page.id}`); });
+		select.value = page.id;
+		document.title = (page === pages[0] ? 'virgoOS design guide' : `${titleOf(page)} | virgoOS design guide`);
+		const index = pages.indexOf(page);
+		const previous = pages[index - 1];
+		const next = pages[index + 1];
+		pager.innerHTML = '';
+		if (previous) {
+			pager.insertAdjacentHTML('beforeend', `<a href="#${previous.id}"><small>Previous</small><span>${titleOf(previous)}</span></a>`);
+		}
+		if (next) {
+			pager.insertAdjacentHTML('beforeend', `<a class="next" href="#${next.id}"><small>Next</small><span>${titleOf(next)}</span></a>`);
+		}
+		window.scrollTo(0, 0);
+	};
+
+	const applyTheme = (value) => {
+		if (value === 'system') {
+			root.removeAttribute('data-theme');
+		} else {
+			root.setAttribute('data-theme', value);
+		}
+		themeButtons.forEach((button) => { button.setAttribute('aria-pressed', String(button.dataset.themeValue === value)); });
+		try {
+			localStorage.setItem('virgo-design-theme', value);
+		} catch (error) {}
+	};
+
+	select.addEventListener('change', () => { location.hash = select.value; });
+	themeButtons.forEach((button) => { button.addEventListener('click', () => { applyTheme(button.dataset.themeValue); }); });
+	window.addEventListener('hashchange', show);
+
+	let savedTheme = 'system';
+	try {
+		savedTheme = localStorage.getItem('virgo-design-theme') || 'system';
+	} catch (error) {}
+	applyTheme(savedTheme);
+	show();
+})();
+</script>
+</body>
+</html>
