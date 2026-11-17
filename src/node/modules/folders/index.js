@@ -7,6 +7,7 @@ import folderDetailsPartial from 'node/modules/folders/partials/folder_details.h
 import folderSnapshotActionsPartial from 'node/modules/folders/partials/folder_snapshot_actions.html';
 import foldersImage from 'assets/img/illustrations/folders.svg';
 import noResultsImage from 'assets/img/illustrations/no-results.svg';
+import snapshotsImage from 'assets/img/illustrations/snapshots.svg';
 import * as folderService from 'node/modules/folders/services/folder';
 import * as userService from 'node/modules/folders/services/user';
 import { renderSnapshots, clearSnapshots } from 'node/snapshots';
@@ -159,7 +160,7 @@ const renderFolderDetails = (name) => {
 	const snapshotRules = folderService.getSnapshotRules();
 	morphdom(
 		details,
-		`<div>${folderDetailsTemplate({ folder, users, jobs, accessOn, networkMaxBytesPerSec, snapshotRules, folderTab: folderTabs[name] || 'overview', folderActionsTemplate, folderSnapshotActionsTemplate, renderSnapshots, prettyBytes })}</div>`,
+		`<div>${folderDetailsTemplate({ folder, users, jobs, accessOn, networkMaxBytesPerSec, snapshotRules, folderTab: folderTabs[name] || 'overview', folderActionsTemplate, snapshotsImage, folderSnapshotActionsTemplate, renderSnapshots, prettyBytes })}</div>`,
 		{ childrenOnly: true }
 	);
 };
