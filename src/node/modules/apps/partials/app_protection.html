@@ -1,4 +1,4 @@
-<div class="snapshots card border-0">
+<div class="card border-0 bg-transparent">
 	<%if (app.snapshotPolicy) {%>
 		<%
 			const snapshotMode = _.toLower(app.snapshotPolicy.mode);
@@ -48,5 +48,4 @@
 			</div>
 		</div>
 	<%}%>
-	<%=renderSnapshots(`app:${app.name}`, { snapshots: app.snapshots, browse: (_.toLower(app.name) === 'nextcloud' ? { root: '', rootName: app.title } : null), actions: (point) => { return appSnapshotActionsTemplate({ appJobs, point }); } })%>
 </div>

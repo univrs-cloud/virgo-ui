@@ -1,0 +1,3 @@
+<div class="snapshots card border-0 pt-5">
+	<%=renderSnapshots(`app:${app.name}`, { snapshots: app.snapshots, browse: (_.toLower(app.name) === 'nextcloud' ? { root: '', rootName: app.title } : null), actions: (point) => { return appSnapshotActionsTemplate({ appJobs, point }); } })%>
+</div>

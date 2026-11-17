@@ -3,7 +3,8 @@ import modulePartial from 'node/modules/apps/partials/index.html';
 import appPartial from 'node/modules/apps/partials/app.html';
 import appActionsPartial from 'node/modules/apps/partials/app_actions.html';
 import appDetailsPartial from 'node/modules/apps/partials/app_details.html';
-import appSnapshotsPartial from 'node/modules/apps/partials/app_snapshots.html';
+import appProtectionPartial from 'node/modules/apps/partials/app_protection.html';
+import appRecoveryPartial from 'node/modules/apps/partials/app_recovery.html';
 import appSnapshotActionsPartial from 'node/modules/apps/partials/app_snapshot_actions.html';
 import filtersPartial from 'node/modules/apps/partials/filters.html';
 import appsImage from 'assets/img/illustrations/apps.svg';
@@ -16,7 +17,8 @@ const moduleTemplate = _.template(modulePartial);
 const appTemplate = _.template(appPartial);
 const appActionsTemplate = _.template(appActionsPartial);
 const appDetailsTemplate = _.template(appDetailsPartial);
-const appSnapshotsTemplate = _.template(appSnapshotsPartial);
+const appProtectionTemplate = _.template(appProtectionPartial);
+const appRecoveryTemplate = _.template(appRecoveryPartial);
 const appSnapshotActionsTemplate = _.template(appSnapshotActionsPartial);
 const filtersTemplate = _.template(filtersPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate({ appsImage, noResultsImage }));
@@ -297,7 +299,7 @@ const renderAppDetails = (name) => {
 	const networkMaxBytesPerSec = appService.getDefaultNetworkInterfaceSpeed();
 	morphdom(
 		details,
-		`<div>${appDetailsTemplate({ app, jobs, appJobs, serviceJobs, appActionsTemplate, appSnapshotsTemplate, appSnapshotActionsTemplate, renderSnapshots, networkMaxBytesPerSec, appTab: appTabs[name] || 'services', prettyBytes, prettyMilliseconds, moment })}</div>`,
+		`<div>${appDetailsTemplate({ app, jobs, appJobs, serviceJobs, appActionsTemplate, appProtectionTemplate, appRecoveryTemplate, appSnapshotActionsTemplate, renderSnapshots, networkMaxBytesPerSec, appTab: appTabs[name] || 'services', prettyBytes, prettyMilliseconds, moment })}</div>`,
 		{
 			childrenOnly: true,
 			onBeforeElUpdated: (fromEl, toEl) => {

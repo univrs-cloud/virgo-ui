@@ -155,9 +155,9 @@
 				</div>
 				<div class="detail-main">
 					<div class="nav nav-underline d-flex gap-0 border-bottom">
-						<button type="button" class="nav-link detail-facts-tab px-4 <%=(activeTab === 'overview' ? 'active border-primary fw-light' : '')%>" data-backup-disk-tab="overview"><i class="icon-light icon-info icon-fw"></i>Overview</button>
+						<button type="button" class="nav-link detail-facts-tab px-4 <%=(activeTab === 'overview' ? 'active border-primary fw-normal' : '')%>" data-backup-disk-tab="overview"><i class="icon-light icon-info icon-fw"></i>Overview</button>
 						<%if (!_.isEmpty(machines)) {%>
-							<button type="button" class="nav-link detail-default-tab px-4 <%=(activeTab === 'backups' ? 'active border-primary fw-light' : '')%>" data-backup-disk-tab="backups"><i class="icon-light icon-laptop icon-fw"></i>Backups <small class="opacity-75"><%=_.size(machines)%></small></button>
+							<button type="button" class="nav-link detail-default-tab px-4 <%=(activeTab === 'backups' ? 'active border-primary fw-normal' : '')%>" data-backup-disk-tab="backups"><i class="icon-light icon-laptop icon-fw"></i>Backups <small class="opacity-75"><%=_.size(machines)%></small></button>
 						<%}%>
 					</div>
 					<%if (!_.isEmpty(machines)) {%>

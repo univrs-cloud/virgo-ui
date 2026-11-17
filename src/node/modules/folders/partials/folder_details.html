@@ -160,14 +160,18 @@
 				</div>
 				<div class="detail-main">
 					<div class="nav nav-underline d-flex gap-0 border-bottom">
-						<button type="button" class="nav-link detail-facts-tab px-4 <%=(activeTab === 'overview' ? 'active border-primary fw-light' : '')%>" data-folder-tab="overview"><i class="icon-light icon-info icon-fw"></i>Overview</button>
+						<button type="button" class="nav-link detail-facts-tab px-4 <%=(activeTab === 'overview' ? 'active border-primary fw-normal' : '')%>" data-folder-tab="overview"><i class="icon-light icon-info icon-fw"></i>Overview</button>
 						<%if (folder.snapshotPolicy) {%>
-							<button type="button" class="nav-link detail-default-tab px-4 <%=(activeTab === 'snapshots' ? 'active border-primary fw-light' : '')%>" data-folder-tab="snapshots">
+							<button type="button" class="nav-link detail-default-tab px-4 <%=(activeTab === 'protection' ? 'active border-primary fw-normal' : '')%>" data-folder-tab="protection">
 								<span class="position-relative d-inline-flex">
-									<i class="icon-light icon-clock-counter-clockwise icon-fw"></i>
+									<i class="icon-light icon-shield icon-fw"></i>
 									<i class="icon-fill icon-circle icon-2xs icon-width-auto lh-1 position-absolute top-100 start-100 translate-middle <%=({ enabled: 'fg-green-300', paused: 'fg-orange-300', disabled: 'fg-gray-500' })[snapshotMode]%>" style="margin: -0.1875rem 0 0 -0.125rem;" data-bs-toggle="tooltip" data-bs-original-title="<%-_.upperFirst(snapshotMode)%>"></i>
 								</span>
-								Snapshots
+								Protection
+							</button>
+							<button type="button" class="nav-link px-4 <%=(activeTab === 'recovery' ? 'active border-primary fw-normal' : '')%>" data-folder-tab="recovery">
+								<i class="icon-light icon-clock-counter-clockwise icon-fw"></i>
+								Recovery
 								<%if (!_.isEmpty(folder.snapshots)) {%>
 									<small class="opacity-75"><%=_.size(folder.snapshots)%></small>
 								<%}%>
@@ -175,40 +179,42 @@
 						<%}%>
 					</div>
 					<%if (folder.snapshotPolicy) {%>
-						<div class="table-scroll overflow-y-scroll pe-5 mx-0 me--5 <%=(activeTab === 'snapshots' ? '' : 'detail-pane-off')%>">
-							<div>
-								<div class="list-group list-group-flush">
-									<div class="list-group-item pt-5 pb-7">
-										<div class="d-flex flex-wrap align-items-center justify-content-between gap-5">
-											<div class="min-w-0">
-												<small class="d-block fg-4 text-uppercase">Snapshotting</small>
-												<div class="d-flex flex-wrap align-items-center gap-3">
-													<u-badge color="<%=({ enabled: 'green', paused: 'orange', disabled: 'gray' })[snapshotMode]%>" tint="100" pill><%=_.upperFirst(snapshotMode)%></u-badge>
-													<span><%-({ enabled: `Snapshots are taken automatically${(snapshotRetention ? `, keeping ${snapshotRetention}` : '')}.`, paused: 'No new snapshots are taken. Existing ones are kept.', disabled: 'No snapshots are taken or kept.' })[snapshotMode]%></span>
-												</div>
-												<%if (!folder.canChangeSnapshots) {%>
-													<small class="d-block fg-4"><%-(folder.snapshotSource ? `Follows the snapshots of ${_.escape(folder.snapshotSource)}.` : 'Snapshots are never taken of this folder.')%></small>
-												<%}%>
+						<div class="table-scroll overflow-y-scroll pe-5 mx-0 me--5 <%=(activeTab === 'protection' ? '' : 'detail-pane-off')%>">
+							<div class="list-group list-group-flush">
+								<div class="list-group-item pt-5 pb-7">
+									<div class="d-flex flex-wrap align-items-center justify-content-between gap-5">
+										<div class="min-w-0">
+											<small class="d-block fg-4 text-uppercase">Snapshotting</small>
+											<div class="d-flex flex-wrap align-items-center gap-3">
+												<u-badge color="<%=({ enabled: 'green', paused: 'orange', disabled: 'gray' })[snapshotMode]%>" tint="100" pill><%=_.upperFirst(snapshotMode)%></u-badge>
+												<span><%-({ enabled: `Snapshots are taken automatically${(snapshotRetention ? `, keeping ${snapshotRetention}` : '')}.`, paused: 'No new snapshots are taken. Existing ones are kept.', disabled: 'No snapshots are taken or kept.' })[snapshotMode]%></span>
 											</div>
-											<%if (folder.canChangeSnapshots) {%>
-												<%if (!_.isEmpty(jobs)) {%>
-													<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-fill icon-gear icon-fw icon-spin"></i></span>
-												<%} else {%>
-													<div class="d-inline-flex align-items-center bg-2 rounded-3 px-1">
-														<%_.each([
-															{ mode: 'enabled', label: (snapshotMode === 'paused' ? 'Resume' : 'Enable'), icon: 'icon-play', color: 'fg-green-400', isAllowed: (snapshotMode !== 'enabled') },
-															{ mode: 'paused', label: 'Pause', icon: 'icon-pause', color: 'fg-orange-400', isAllowed: (snapshotMode === 'enabled') },
-															{ mode: 'disabled', label: 'Disable', icon: 'icon-prohibit-inset', color: 'fg-red-400', isAllowed: (snapshotMode !== 'disabled') }
-														], ({ mode, label, icon, color, isAllowed }) => {%>
-															<u-button variant="secondary" size="sm" class="actions-button" text icon tip="<%-label%>" data-action="snapshots" data-mode="<%-mode%>" <%=(isAllowed ? '' : 'disabled')%>><i class="icon-fill <%=icon%> icon-fw <%=(isAllowed ? color : 'fg-gray-500')%>"></i></u-button>
-														<%})%>
-													</div>
-												<%}%>
+											<%if (!folder.canChangeSnapshots) {%>
+												<small class="d-block fg-4"><%-(folder.snapshotSource ? `Follows the snapshots of ${_.escape(folder.snapshotSource)}.` : 'Snapshots are never taken of this folder.')%></small>
 											<%}%>
 										</div>
+										<%if (folder.canChangeSnapshots) {%>
+											<%if (!_.isEmpty(jobs)) {%>
+												<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-fill icon-gear icon-fw icon-spin"></i></span>
+											<%} else {%>
+												<div class="d-inline-flex align-items-center bg-2 rounded-3 px-1">
+													<%_.each([
+														{ mode: 'enabled', label: (snapshotMode === 'paused' ? 'Resume' : 'Enable'), icon: 'icon-play', color: 'fg-green-400', isAllowed: (snapshotMode !== 'enabled') },
+														{ mode: 'paused', label: 'Pause', icon: 'icon-pause', color: 'fg-orange-400', isAllowed: (snapshotMode === 'enabled') },
+														{ mode: 'disabled', label: 'Disable', icon: 'icon-prohibit-inset', color: 'fg-red-400', isAllowed: (snapshotMode !== 'disabled') }
+													], ({ mode, label, icon, color, isAllowed }) => {%>
+														<u-button variant="secondary" size="sm" class="actions-button" text icon tip="<%-label%>" data-action="snapshots" data-mode="<%-mode%>" <%=(isAllowed ? '' : 'disabled')%>><i class="icon-fill <%=icon%> icon-fw <%=(isAllowed ? color : 'fg-gray-500')%>"></i></u-button>
+													<%})%>
+												</div>
+											<%}%>
+										<%}%>
 									</div>
 								</div>
-								<div class="snapshots card border-0">
+							</div>
+						</div>
+						<div class="detail-secondary-pane table-scroll overflow-y-scroll pe-5 mx-0 me--5 <%=(activeTab === 'recovery' ? '' : 'detail-pane-off')%>">
+							<div>
+								<div class="snapshots card border-0 pt-5">
 									<%=renderSnapshots(`folder:${folder.name}`, { snapshots: folder.snapshots, browse: (folder.snapshotBrowse ? { ...folder.snapshotBrowse, rootName: folder.comment } : null), actions: (point) => { return (folder.canChangeSnapshots ? folderSnapshotActionsTemplate({ jobs, point }) : ''); } })%>
 								</div>
 							</div>

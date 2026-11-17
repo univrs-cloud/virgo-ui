@@ -140,16 +140,20 @@
 				</div>
 				<div class="detail-main">
 					<div class="nav nav-underline d-flex gap-0 border-bottom">
-						<button type="button" class="nav-link detail-default-tab px-4 <%=(appTab === 'snapshots' ? '' : 'active border-primary fw-light')%>" data-app-tab="services"><i class="icon-light icon-cube icon-fw"></i>Services <small class="opacity-75"><%=_.size(app.projectContainers)%></small></button>
+						<button type="button" class="nav-link detail-default-tab px-4 <%=(_.includes(['protection', 'recovery'], appTab) ? '' : 'active border-primary fw-normal')%>" data-app-tab="services"><i class="icon-light icon-cube icon-fw"></i>Services <small class="opacity-75"><%=_.size(app.projectContainers)%></small></button>
 						<%if (!app.isUnmanaged) {%>
-							<button type="button" class="nav-link px-4 <%=(appTab === 'snapshots' ? 'active border-primary fw-light' : '')%>" data-app-tab="snapshots">
+							<button type="button" class="nav-link px-4 <%=(appTab === 'protection' ? 'active border-primary fw-normal' : '')%>" data-app-tab="protection">
 								<span class="position-relative d-inline-flex">
-									<i class="icon-light icon-clock-counter-clockwise icon-fw"></i>
+									<i class="icon-light icon-shield icon-fw"></i>
 									<%if (app.snapshotPolicy) {%>
 										<i class="icon-fill icon-circle icon-2xs icon-width-auto lh-1 position-absolute top-100 start-100 translate-middle <%=({ enabled: 'fg-green-300', paused: 'fg-orange-300', disabled: 'fg-gray-500' })[_.toLower(app.snapshotPolicy.mode)]%>" style="margin: -0.1875rem 0 0 -0.125rem;" data-bs-toggle="tooltip" data-bs-original-title="<%-_.upperFirst(app.snapshotPolicy.mode)%>"></i>
 									<%}%>
 								</span>
-								Snapshots
+								Protection
+							</button>
+							<button type="button" class="nav-link px-4 <%=(appTab === 'recovery' ? 'active border-primary fw-normal' : '')%>" data-app-tab="recovery">
+								<i class="icon-light icon-clock-counter-clockwise icon-fw"></i>
+								Recovery
 								<%if (!_.isEmpty(app.snapshots)) {%>
 									<small class="opacity-75"><%=_.size(app.snapshots)%></small>
 								<%}%>
@@ -200,7 +204,7 @@
 					</div>
 
 					<div class="table-scroll overflow-y-scroll pe-5 mx-0 me--5">
-						<div class="<%=(appTab === 'snapshots' ? 'd-none' : '')%>">
+						<div class="<%=(_.includes(['protection', 'recovery'], appTab) ? 'd-none' : '')%>">
 							<div class="services">
 								<div class="list-group list-group-flush">
 									<%_.each(app.projectContainers, (container, index) => {%>
@@ -412,8 +416,11 @@
 								</div>
 							</div>
 						</div>
-						<div class="<%=(appTab === 'snapshots' ? '' : 'd-none')%>">
-							<%=appSnapshotsTemplate({ app, appJobs, appSnapshotActionsTemplate, renderSnapshots })%>
+						<div class="<%=(appTab === 'protection' ? '' : 'd-none')%>">
+							<%=appProtectionTemplate({ app, appJobs })%>
+						</div>
+						<div class="<%=(appTab === 'recovery' ? '' : 'd-none')%>">
+							<%=appRecoveryTemplate({ app, appJobs, appSnapshotActionsTemplate, renderSnapshots })%>
 						</div>
 					</div>
 				</div>

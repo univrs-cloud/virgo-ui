@@ -80,8 +80,8 @@
 				</div>
 				<div class="detail-main">
 					<div class="nav nav-underline d-flex gap-0 border-bottom">
-						<button type="button" class="nav-link detail-facts-tab px-4 <%=(userTab === 'overview' ? 'active border-primary fw-light' : '')%>" data-user-tab="overview"><i class="icon-light icon-info icon-fw"></i>Overview</button>
-						<button type="button" class="nav-link detail-default-tab px-4 <%=(userTab === 'sessions' ? 'active border-primary fw-light' : '')%>" data-user-tab="sessions"><i class="icon-light icon-devices icon-fw"></i>Sessions <small class="opacity-75"><%=_.size(sessions)%></small></button>
+						<button type="button" class="nav-link detail-facts-tab px-4 <%=(userTab === 'overview' ? 'active border-primary fw-normal' : '')%>" data-user-tab="overview"><i class="icon-light icon-info icon-fw"></i>Overview</button>
+						<button type="button" class="nav-link detail-default-tab px-4 <%=(userTab === 'sessions' ? 'active border-primary fw-normal' : '')%>" data-user-tab="sessions"><i class="icon-light icon-devices icon-fw"></i>Sessions <small class="opacity-75"><%=_.size(sessions)%></small></button>
 					</div>
 					<div class="table-scroll overflow-y-scroll pe-5 mx-0 me--5 <%=(userTab === 'sessions' ? '' : 'detail-pane-off')%>">
 						<div class="pt-5 pb-7">

@@ -714,6 +714,10 @@ $card-image-size: 30px;
 						display: block;
 						height: auto;
 					}
+					&:has(> .table-scroll:not(.detail-pane-off)) > .detail-pane-off,
+					> .detail-secondary-pane.detail-pane-off {
+						display: none;
+					}
 				}
 				.detail-facts-tab {
 					display: none;
