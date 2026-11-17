@@ -34,7 +34,7 @@
 	const keepsText = `Up to ${total} ${(total === 1 ? 'snapshot' : 'snapshots')} for ${moment.duration(reach, 'days').humanize()}`;
 	const whenText = (_.isEmpty(whenParts) ? 'Any time' : _.upperFirst(whenParts.join(', ')));
 %>
-<tr class="item" data-name="<%-rule.name%>">
+<tr class="item cursor-pointer" data-name="<%-rule.name%>">
 	<td class="d-none md:d-table-cell rule-image-column">
 		<div class="row-image">
 			<i class="icon-light icon-calendar-check icon-fw fg-emphasis-secondary"></i>
@@ -55,25 +55,9 @@
 		<div class="text-truncate" data-bs-toggle="tooltip" data-bs-original-title="<%-whenText%>."><small class="fg-4"><%-whenText%></small></div>
 	</td>
 	<td class="text-center px-0">
-		<%if (!_.isEmpty(jobs)) {%>
-			<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-fill icon-gear icon-fw icon-spin"></i></span>
-		<%} else {%>
-			<div class="dropdown">
-				<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i></span>
-				<div class="menu">
-					<%if (rule.isDefault) {%>
-						<span class="d-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="The default rule cannot be changed."><button type="button" class="menu-item disabled"><i class="icon-fill icon-pen icon-fw"></i>Edit</button></span>
-					<%} else {%>
-						<a href="#snapshot-rule-update" class="menu-item" data-bs-toggle="dialog"><i class="icon-fill icon-pen icon-fw"></i>Edit</a>
-					<%}%>
-					<div class="menu-divider"></div>
-					<%if (rule.isDefault || rule.isUsed) {%>
-						<span class="d-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="<%-(rule.isDefault ? 'The default rule cannot be deleted.' : 'Apps or folders still follow this rule. Choose another rule for them first.')%>"><button type="button" class="menu-item disabled"><i class="icon-fill icon-x-circle icon-fw"></i>Delete</button></span>
-					<%} else {%>
-						<a href="#" class="menu-item fg-danger" data-action="delete"><i class="icon-fill icon-x-circle icon-fw"></i>Delete</a>
-					<%}%>
-				</div>
-			</div>
-		<%}%>
+		<%=ruleActionsTemplate({ rule, jobs, inline: false })%>
+	</td>
+	<td class="text-end pe-0">
+		<i class="icon-light icon-caret-right icon-fw fg-4"></i>
 	</td>
 </tr>

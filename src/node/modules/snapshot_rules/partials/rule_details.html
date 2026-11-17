@@ -1,0 +1,167 @@
+<%
+	const activeTab = ruleTab;
+	const kinds = [['frequently', '15-minute'], ['hourly', 'Hourly'], ['daily', 'Daily'], ['weekly', 'Weekly'], ['monthly', 'Monthly'], ['yearly', 'Yearly']];
+	const dayNames = { monday: 'Mon', tuesday: 'Tue', wednesday: 'Wed', thursday: 'Thu', friday: 'Fri', saturday: 'Sat', sunday: 'Sun' };
+	const days = _.keys(dayNames);
+	const pad = (hour) => { return `${_.padStart(String(hour), 2, '0')}:00`; };
+	const runs = _.reduce(rule.schedule.days, (result, day) => {
+		const last = _.last(result);
+		if (last && _.indexOf(days, day) === _.indexOf(days, _.last(last)) + 1) {
+			last.push(day);
+		} else {
+			result.push([day]);
+		}
+		return result;
+	}, []);
+	const daysText = (_.size(rule.schedule.days) === 7 ? 'Every day' : (_.map(runs, (run) => { return (_.size(run) > 2 ? `${dayNames[_.first(run)]} to ${dayNames[_.last(run)]}` : _.map(run, (day) => { return dayNames[day]; }).join(', ')); }).join(', ') || 'None'));
+	const hoursText = (rule.schedule.from === 0 && rule.schedule.to === 24 ? 'All day' : `${pad(rule.schedule.from)} to ${pad(rule.schedule.to)}`);
+	const spanText = (kind) => { return `${rule.keep[kind].amount} ${(rule.keep[kind].amount === 1 ? _.trimEnd(rule.keep[kind].unit, 's') : rule.keep[kind].unit)}`; };
+	const createdOf = (snapshot) => {
+		const segments = String(snapshot.snapshotName ?? '').split('_');
+		const isUpdate = (_.toLower(_.first(segments)) === 'update');
+		const stamp = (isUpdate ? _.tail(segments) : segments.slice(1, -1));
+		return moment.utc(stamp.join(' '), 'YYYY-MM-DD HH:mm:ss', true).local();
+	};
+	const members = _.orderBy(_.map(rule.members, (member) => {
+		const moments = _.filter(_.map(member.snapshots, createdOf), (created) => { return created.isValid(); });
+		return { ...member, count: _.size(member.snapshots), latest: (_.isEmpty(moments) ? null : moment.max(moments)) };
+	}), [(member) => { return _.toLower(member.title); }], ['asc']);
+	const enabledCount = _.size(_.filter(members, { mode: 'enabled' }));
+	const pausedCount = _.size(_.filter(members, { mode: 'paused' }));
+	const totalSnapshots = _.sumBy(members, 'count');
+%>
+<div class="item container-fluid numeric-tabular" data-name="<%-rule.name%>">
+	<div class="card">
+		<div class="card-body">
+			<div class="card-image-row mt--3 mb-3">
+				<div class="card-image-row-back me-3">
+					<button class="compress btn-icon btn-solid theme-secondary btn-sm">
+						<i class="icon-light icon-arrow-left icon-fw"></i>
+					</button>
+				</div>
+				<div class="card-image-row-icon card-image card-spacer px-3">
+					<i class="icon-light icon-calendar-check icon-fw fg-emphasis-secondary"></i>
+				</div>
+				<div class="card-image-row-title d-flex align-items-center mb--2 ps-1 min-w-0">
+					<div class="text-truncate min-w-0"><%-rule.name%></div>
+				</div>
+				<div class="card-image-row-urls ps-1 min-w-0">
+					<div class="d-inline-flex align-items-center max-w-100">
+						<small class="text-truncate min-w-0 fg-emphasis-secondary"><%-(rule.isDefault ? 'Followed by apps and folders without a rule of their own' : `Followed by ${_.size(members)} ${(_.size(members) === 1 ? 'app or folder' : 'apps and folders')}`)%></small>
+					</div>
+				</div>
+				<div class="card-image-row-menu ps-5">
+					<div class="d-none md:d-block"><%=ruleActionsTemplate({ rule, jobs, inline: true })%></div>
+					<div class="md:d-none"><%=ruleActionsTemplate({ rule, jobs, inline: false })%></div>
+				</div>
+			</div>
+
+			<div class="position-relative detail-split">
+				<div class="detail-facts table-scroll overflow-y-scroll pe-5 mx-0 me--5 <%=(activeTab === 'overview' ? '' : 'detail-pane-off')%>">
+					<div class="list-group list-group-flush">
+						<div class="list-group-item pt-5 pb-7">
+							<div class="d-flex align-items-center min-w-0 mb-3">
+								<i class="icon-light icon-clock-counter-clockwise icon-fw fg-4 me-3"></i>
+								<div class="text-truncate min-w-0">Keeps</div>
+							</div>
+							<div class="row g-3">
+								<%_.each(kinds, ([kind, label]) => {%>
+									<div class="col-6 md:col-4 2xl:col-6">
+										<small class="fg-4 d-block text-truncate"><%-label%></small>
+										<span class="fw-light"><%-(rule.retention[kind] > 0 ? spanText(kind) : '—')%></span>
+									</div>
+								<%})%>
+							</div>
+						</div>
+						<div class="list-group-item pt-5 pb-7">
+							<div class="d-flex align-items-center min-w-0 mb-3">
+								<i class="icon-light icon-calendar-dots icon-fw fg-4 me-3"></i>
+								<div class="text-truncate min-w-0">When</div>
+							</div>
+							<div class="row g-3">
+								<div class="col-6">
+									<small class="fg-4 d-block text-truncate">Days</small>
+									<span class="fw-light"><%-daysText%></span>
+								</div>
+								<div class="col-6">
+									<small class="fg-4 d-block text-truncate">Hours</small>
+									<span class="fw-light"><%-hoursText%></span>
+								</div>
+							</div>
+							<small class="d-block fg-4 mt-3">The days and hours apply to 15-minute, hourly and daily snapshots. Weekly, monthly and yearly ones are always taken.</small>
+						</div>
+						<div class="list-group-item pt-5 pb-7">
+							<div class="d-flex align-items-center min-w-0 mb-3">
+								<i class="icon-light icon-chart-bar icon-fw fg-4 me-3"></i>
+								<div class="text-truncate min-w-0">Usage</div>
+							</div>
+							<div class="row g-3">
+								<div class="col-4">
+									<small class="fg-4 d-block text-truncate">Active</small>
+									<span class="fw-light"><%=enabledCount%></span>
+								</div>
+								<div class="col-4">
+									<small class="fg-4 d-block text-truncate">Paused</small>
+									<span class="fw-light"><%=pausedCount%></span>
+								</div>
+								<div class="col-4">
+									<small class="fg-4 d-block text-truncate">Snapshots</small>
+									<span class="fw-light"><%=totalSnapshots%></span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="detail-main">
+					<div class="nav nav-underline d-flex gap-0 border-bottom">
+						<button type="button" class="nav-link detail-facts-tab px-4 <%=(activeTab === 'overview' ? 'active border-primary fw-normal' : '')%>" data-rule-tab="overview"><i class="icon-light icon-info icon-fw"></i>Overview</button>
+						<button type="button" class="nav-link detail-default-tab px-4 <%=(activeTab === 'members' ? 'active border-primary fw-normal' : '')%>" data-rule-tab="members"><i class="icon-light icon-stack icon-fw"></i>Used by <small class="opacity-75"><%=_.size(members)%></small></button>
+					</div>
+					<div class="table-scroll overflow-y-scroll pe-5 mx-0 me--5 <%=(activeTab === 'members' ? '' : 'detail-pane-off')%>">
+						<%if (_.isEmpty(members)) {%>
+							<div class="no-content d-flex flex-column justify-content-center align-items-center h-100 py-7">
+								<div class="no-content-image"><%=ruleUnusedImage%></div>
+								<h5 class="fg-4 mt-7 mb-0">No apps or folders follow this rule yet</h5>
+							</div>
+						<%}%>
+						<div class="list-group list-group-flush">
+								<%_.each(members, (member) => {%>
+									<a href="/<%=(member.type === 'app' ? 'apps' : 'folders')%>/<%-encodeURIComponent(member.name)%>" class="list-group-item list-group-item-action pt-5 pb-7 underline-0">
+										<div class="row g-3 align-items-center">
+											<div class="col-12">
+												<div class="d-flex align-items-center min-w-0">
+													<%if (member.type === 'app') {%>
+														<i class="icon-light icon-dots-nine icon-width-auto fg-4 me-3"></i>
+													<%} else {%>
+														<i class="icon-light icon-folder icon-width-auto fg-4 me-3"></i>
+													<%}%>
+													<div class="text-truncate min-w-0 fg-body"><%-member.title%></div>
+													<u-badge color="<%=(member.mode === 'paused' ? 'orange' : 'green')%>" tint="100" class="flex-shrink-0 ms-3" pill><%=(member.mode === 'paused' ? 'Paused' : 'Enabled')%></u-badge>
+												</div>
+											</div>
+											<div class="col-12 md:col-6 lg:col-4 pt-3">
+												<div class="row g-3">
+													<div class="col-6">
+														<small class="d-block fg-4 pb-1">Snapshots</small>
+														<span class="fw-light fg-body"><%=member.count%></span>
+													</div>
+													<div class="col-6">
+														<small class="d-block fg-4 pb-1">Latest</small>
+														<%if (member.latest) {%>
+															<span class="fw-light fg-body tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="<%-member.latest.format('D MMM YYYY, HH:mm')%>"><%-member.latest.fromNow()%></span>
+														<%} else {%>
+															<span class="fw-light fg-body">None</span>
+														<%}%>
+													</div>
+												</div>
+											</div>
+										</div>
+									</a>
+								<%})%>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

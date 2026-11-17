@@ -1,0 +1,44 @@
+<%
+	const editTip = 'The default rule cannot be changed.';
+	const deleteTip = (rule.isDefault ? 'The default rule cannot be deleted.' : 'Apps or folders still follow this rule. Choose another rule for them first.');
+	const canDelete = (!rule.isDefault && !rule.isUsed);
+%>
+<%if (!_.isEmpty(jobs)) {%>
+	<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-fill icon-gear icon-fw icon-spin"></i></span>
+<%} else {%>
+	<%if (inline) {%>
+		<div class="d-inline-flex align-items-center bg-2 rounded-3">
+			<div class="d-inline-flex align-items-center px-1">
+				<%if (rule.isDefault) {%>
+					<u-button variant="secondary" size="sm" class="actions-button" text icon tip="<%-editTip%>" disabled><i class="icon-fill icon-pen icon-fw fg-gray-500"></i></u-button>
+				<%} else {%>
+					<u-button variant="secondary" size="sm" class="actions-button" text icon tip="Edit" data-bs-toggle="dialog" data-bs-target="#snapshot-rule-update"><i class="icon-fill icon-pen icon-fw fg-body"></i></u-button>
+				<%}%>
+			</div>
+	<%}%>
+	<div class="<%=(inline ? 'dropdown position-relative' : 'dropdown')%>">
+		<%if (inline) {%>
+			<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="actions-toggle btn-icon btn-text theme-secondary btn-sm rounded-3"><i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i></span>
+		<%} else {%>
+			<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i></span>
+		<%}%>
+		<div class="menu">
+			<%if (!inline) {%>
+				<%if (rule.isDefault) {%>
+					<span class="d-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="<%-editTip%>"><button type="button" class="menu-item disabled"><i class="icon-fill icon-pen icon-fw"></i>Edit</button></span>
+				<%} else {%>
+					<a href="#snapshot-rule-update" class="menu-item" data-bs-toggle="dialog"><i class="icon-fill icon-pen icon-fw"></i>Edit</a>
+				<%}%>
+				<div class="menu-divider"></div>
+			<%}%>
+			<%if (canDelete) {%>
+				<a href="#" class="menu-item fg-danger" data-action="delete"><i class="icon-fill icon-x-circle icon-fw"></i>Delete</a>
+			<%} else {%>
+				<span class="d-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="<%-deleteTip%>"><button type="button" class="menu-item disabled"><i class="icon-fill icon-x-circle icon-fw"></i>Delete</button></span>
+			<%}%>
+		</div>
+	</div>
+	<%if (inline) {%>
+		</div>
+	<%}%>
+<%}%>

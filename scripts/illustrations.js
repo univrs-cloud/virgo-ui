@@ -529,6 +529,41 @@ scenes.welcome = () => {
 	return svg('.es-wk-h{transform-box:fill-box;transform-origin:50% 100%;animation:es-wk-h 2.4s ease-in-out infinite}@keyframes es-wk-h{0%,40%,100%{transform:rotate(0)}10%,30%{transform:rotate(-14deg)}20%{transform:rotate(12deg)}}.es-wk-led{opacity:0;animation:es-wk-led 4.8s ease-in-out infinite}.es-wk-led1{animation-delay:.3s}.es-wk-led2{animation-delay:.6s}.es-wk-led3{animation-delay:.9s}@keyframes es-wk-led{0%,8%{opacity:0}14%,86%{opacity:1}94%,100%{opacity:0}}', platform() + `<g class="es-c es-pulse">${ellipse(0, 0, 0, 6.4, 'es-path')}</g><g class="es-c es-pulse es-d3">${ellipse(0, 0, 0, 6.4, 'es-path')}</g>` + body + at(0, 0, 9.6, badge, 'es-float'));
 };
 
+const unusedSlots = (frontY, sideX) => {
+	return pathOn('es-path es-dash', [[0, frontY, 0], [0, 4.7, 0], [-4, 4.7, 0]])
+		+ pathOn('es-path es-dash', [[sideX, frontY - 0.25, 0], [4.7, frontY - 0.25, 0], [4.7, -4, 0]])
+		+ `<g class="es-blink">${ghost(-6.2, 3.6, 0, 2.2, 2.2, 1.6)}</g>`
+		+ `<g class="es-blink es-d2">${ghost(3.6, -6.2, 0, 2.2, 2.2, 1.6)}</g>`;
+};
+
+scenes['rule-unused'] = () => {
+	const x0 = -2.6;
+	const w = 5.2;
+	const y0 = -1.4;
+	const d = 0.5;
+	const h = 4.8;
+	const fy = y0 + d;
+	const header = 1.2;
+	const page = poly('es-wt', roundedY(fy, x0, x0 + w, 0, h, 0.3));
+	const top = poly('es-acc', [[x0, fy, h - header], [x0 + w, fy, h - header], [x0 + w, fy, h - 0.3], [x0 + w - 0.3, fy, h], [x0 + 0.3, fy, h], [x0, fy, h - 0.3]]);
+	const cells = [];
+	for (const [row, z] of [0.5, 1.45, 2.4].entries()) {
+		for (const [col, u] of [0.5, 1.6, 2.7, 3.8].entries()) {
+			cells.push(poly((row === 1 && col === 2 ? 'es-acc' : 'es-lnf'), roundedY(fy, x0 + u, x0 + u + 0.85, z, z + 0.7, 0.12)));
+		}
+	}
+	const rings = [x0 + 1.3, x0 + w - 1.3].map((x) => pathOn('es-ln', [[x, fy, h - 0.45], [x, fy, h + 0.5], [x, y0 - 0.1, h + 0.5], [x, y0 - 0.1, h - 0.2]])).join('');
+	const body = platform()
+		+ unusedSlots(fy, x0 + w)
+		+ diamond(x0 - 0.3, y0 - 0.3, 0, w + 0.6, d + 1.2, 'es-sh')
+		+ box(x0, y0, 0, w, d, h - 0.3, '')
+		+ page
+		+ top
+		+ cells.join('')
+		+ rings;
+	return svg('', body);
+};
+
 const labels = {
 	welcome: ['Setup', 'Welcome to virgoOS'],
 	maintenance: ['Maintenance', 'Maintenance in progress'],
@@ -541,6 +576,7 @@ const labels = {
 	'backup-disks': ['Time capsule', 'No backup disks created'],
 	shortcuts: ['Shortcuts', 'No shortcuts added'],
 	snapshots: ['Snapshots', 'No snapshots yet'],
+	'rule-unused': ['Snapshot rule details', 'No apps or folders follow this rule yet'],
 	'no-results': ['Any searchable list', 'Nothing matches the search'],
 	'not-found': ['Not found', 'Page not found'],
 	error: ['Any page', 'Error fetching data'],
