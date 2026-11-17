@@ -112,7 +112,7 @@
 	),
 	$tooltip-tokens: (
 		--tooltip-color: light-dark(var(--white), var(--fg-body)),
-		--tooltip-bg: var(--surface-standout),
+		--tooltip-bg: light-dark(var(--surface-standout), var(--gray-800)),
 		--tooltip-max-width: 400px
 	),
 	$table-tokens: (
