@@ -247,9 +247,32 @@ const updateSnapshots = async (event) => {
 		return;
 	}
 
+	const rule = button.dataset.snapshotEnableRule;
 	const data = {
 		name: app.name,
-		mode
+		mode,
+		...(rule && { rule })
+	};
+	appService.updateSnapshots(data);
+};
+
+const updateSnapshotRule = (event) => {
+	const button = event.target.closest('[data-snapshot-rule]');
+	const name = button?.closest('.item')?.dataset?.name;
+	if (!name) {
+		return;
+	}
+
+	event.preventDefault();
+	const app = _.find(appService.getApps(), { name });
+	const rule = button.dataset.snapshotRule;
+	if (!app || _.toLower(app.snapshotPolicy?.rule) === _.toLower(rule)) {
+		return;
+	}
+
+	const data = {
+		name: app.name,
+		rule
 	};
 	appService.updateSnapshots(data);
 };
@@ -297,9 +320,10 @@ const renderAppDetails = (name) => {
 
 	const { jobs, appJobs, serviceJobs } = filterJobsByApp(appService.getJobs(), app);
 	const networkMaxBytesPerSec = appService.getDefaultNetworkInterfaceSpeed();
+	const snapshotRules = appService.getSnapshotRules();
 	morphdom(
 		details,
-		`<div>${appDetailsTemplate({ app, jobs, appJobs, serviceJobs, appActionsTemplate, appProtectionTemplate, appRecoveryTemplate, appSnapshotActionsTemplate, renderSnapshots, networkMaxBytesPerSec, appTab: appTabs[name] || 'services', prettyBytes, prettyMilliseconds, moment })}</div>`,
+		`<div>${appDetailsTemplate({ app, jobs, appJobs, serviceJobs, snapshotRules, appActionsTemplate, appProtectionTemplate, appRecoveryTemplate, appSnapshotActionsTemplate, renderSnapshots, networkMaxBytesPerSec, appTab: appTabs[name] || 'services', prettyBytes, prettyMilliseconds, moment })}</div>`,
 		{
 			childrenOnly: true,
 			onBeforeElUpdated: (fromEl, toEl) => {
@@ -435,6 +459,7 @@ module.addEventListener('click', performAppAction);
 module.addEventListener('click', performServiceAction);
 module.addEventListener('click', selectTab);
 module.addEventListener('click', updateSnapshots);
+module.addEventListener('click', updateSnapshotRule);
 module.addEventListener('click', rollback);
 module.addEventListener('mouseenter', toggleStateTooltip, true);
 module.addEventListener('mouseleave', toggleStateTooltip, true);

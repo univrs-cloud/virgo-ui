@@ -19,9 +19,32 @@ const updateSnapshots = async (event) => {
 		return;
 	}
 
+	const rule = button.dataset.enableRule;
 	const data = {
 		name: folder.name,
-		mode
+		mode,
+		...(rule && { rule })
+	};
+	folderService.updateFolderSnapshots(data);
+};
+
+const updateSnapshotRule = (event) => {
+	const button = event.target.closest('[data-snapshot-rule]');
+	const name = button?.closest('.item')?.dataset?.id;
+	if (!name) {
+		return;
+	}
+
+	event.preventDefault();
+	const folder = _.find(folderService.getFolders(), { name });
+	const rule = button.dataset.snapshotRule;
+	if (!folder || _.toLower(folder.snapshotPolicy?.rule) === _.toLower(rule)) {
+		return;
+	}
+
+	const data = {
+		name: folder.name,
+		rule
 	};
 	folderService.updateFolderSnapshots(data);
 };
@@ -51,4 +74,5 @@ const rollback = async (event) => {
 };
 
 module.addEventListener('click', updateSnapshots);
+module.addEventListener('click', updateSnapshotRule);
 module.addEventListener('click', rollback);

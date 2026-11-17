@@ -6,6 +6,7 @@ const moduleLoaders = {
 		'shortcuts': () => import('node/modules/shortcuts'),
 		'folders': () => import('node/modules/folders'),
 		'time-capsule': () => import('node/modules/time_capsule'),
+		'snapshot-rules': () => import('node/modules/snapshot_rules'),
 		'users': () => import('node/modules/users'),
 		'storage': () => import('node/modules/storage'),
 		'network': () => import('node/modules/network'),

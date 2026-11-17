@@ -15,7 +15,7 @@ const { subscribe } = createSubscription({
 		},
 		{
 			store: Host,
-			propertyNames: ['system', 'snapshots']
+			propertyNames: ['system', 'snapshots', 'snapshotRules']
 		},
 		{
 			store: Docker,
@@ -124,6 +124,10 @@ const getFolders = () => {
 	return composeFolders(Share.getShares(), Share.getClients(), Host.getSnapshots(), Docker.getConfigured());
 };
 
+const getSnapshotRules = () => {
+	return Host.getSnapshotRules();
+};
+
 const getDefaultNetworkInterface = () => {
 	return _.find(Host.getSystem()?.networkInterfaces, { default: true });
 };
@@ -167,6 +171,7 @@ export {
 	getJobs,
 	getSystem,
 	getFolders,
+	getSnapshotRules,
 	getDefaultNetworkInterface,
 	getDefaultNetworkInterfaceSpeed,
 	getCustomPaths,

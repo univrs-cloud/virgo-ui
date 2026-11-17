@@ -1,0 +1,29 @@
+<%
+	const ruleSummary = (rule) => {
+		const kinds = ['frequently', 'hourly', 'daily', 'weekly', 'monthly', 'yearly'];
+		const dayNames = { monday: 'Mon', tuesday: 'Tue', wednesday: 'Wed', thursday: 'Thu', friday: 'Fri', saturday: 'Sat', sunday: 'Sun' };
+		const days = _.keys(dayNames);
+		const pad = (hour) => { return `${_.padStart(String(hour), 2, '0')}:00`; };
+		const runs = _.reduce(rule.schedule.days, (result, day) => {
+			const last = _.last(result);
+			if (last && _.indexOf(days, day) === _.indexOf(days, _.last(last)) + 1) {
+				last.push(day);
+			} else {
+				result.push([day]);
+			}
+			return result;
+		}, []);
+		const daysText = _.map(runs, (run) => { return (_.size(run) > 2 ? `${dayNames[_.first(run)]} to ${dayNames[_.last(run)]}` : _.map(run, (day) => { return dayNames[day]; }).join(', ')); }).join(', ');
+		const kindNames = { frequently: '15-minute', hourly: 'hourly', daily: 'daily', weekly: 'weekly', monthly: 'monthly', yearly: 'yearly' };
+		const detail = (label, value) => { return `<span class="d-flex flex-column text-nowrap"><small class="fg-4">${label}</small><small>${_.escape(value)}</small></span>`; };
+		const keepDetails = _.map(_.filter(kinds, (kind) => { return rule.retention[kind] > 0; }), (kind) => { return detail(_.upperFirst(kindNames[kind]), `${rule.keep[kind].amount} ${(rule.keep[kind].amount === 1 ? _.trimEnd(rule.keep[kind].unit, 's') : rule.keep[kind].unit)}`); });
+		const whenDetails = [
+			detail('Days', (_.size(rule.schedule.days) < 7 ? (daysText || 'none') : 'every day')),
+			detail('Hours', (rule.schedule.from > 0 || rule.schedule.to < 24 ? `${pad(rule.schedule.from)} to ${pad(rule.schedule.to)}` : 'all day'))
+		];
+		return `<span class="d-flex flex-wrap gap-4 mt-2">${keepDetails.join('')}</span><span class="d-flex flex-wrap gap-4 mt-2">${whenDetails.join('')}</span>`;
+	};
+%>
+<%if (rule) {%>
+	<%=ruleSummary(rule)%>
+<%}%>

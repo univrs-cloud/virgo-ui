@@ -111,6 +111,7 @@ const routes = [
 	{ path: '/shortcuts', module: 'shortcuts', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/folders/:folderName?', module: 'folders', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/time-capsule/:backupDiskName?', module: 'time-capsule', middleware: [requireAuth, requiresAdmin] },
+	{ path: '/snapshot-rules', module: 'snapshot-rules', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/users/:uid(\\d+)?', module: 'users', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/storage/:poolName?', module: 'storage', middleware: [requireAuth, requiresAdmin] },
 	{ path: '/network', module: 'network', middleware: [requireAuth, requiresAdmin] },

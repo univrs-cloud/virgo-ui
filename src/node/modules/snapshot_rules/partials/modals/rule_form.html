@@ -1,0 +1,76 @@
+<%
+	const days = [['monday', 'Mon'], ['tuesday', 'Tue'], ['wednesday', 'Wed'], ['thursday', 'Thu'], ['friday', 'Fri'], ['saturday', 'Sat'], ['sunday', 'Sun']];
+	const pad = (hour) => { return `${_.padStart(String(hour), 2, '0')}:00`; };
+	const suggested = { frequently: { amount: 2, unit: 'hours' }, hourly: { amount: 36, unit: 'hours' }, daily: { amount: 30, unit: 'days' }, weekly: { amount: 8, unit: 'weeks' }, monthly: { amount: 12, unit: 'months' }, yearly: { amount: 5, unit: 'years' } };
+	const units = { frequently: ['hours', 'days'], hourly: ['hours', 'days', 'weeks'], daily: ['days', 'weeks', 'months'], weekly: ['weeks', 'months'], monthly: ['months', 'years'], yearly: ['years'] };
+	const keepField = (kind, label) => {
+%>
+<%
+		const isOn = (rule.keep[kind].amount > 0);
+		const keep = (isOn ? rule.keep[kind] : suggested[kind]);
+%>
+		<u-checkbox class="kind-toggle d-block mb-3" data-kind="<%-kind%>" label="<%-label%>" <%=(isOn ? 'checked' : '')%>></u-checkbox>
+		<div class="keep-fields ps-7 <%=(isOn ? '' : 'd-none')%>" data-kind="<%-kind%>">
+			<div class="row g-3">
+				<div class="col-12 md:col-4">
+					<u-input type="number" name="<%-kind%>" label="Keep for" class="keep-amount" value="<%-keep.amount%>" autocomplete="off">
+						<select slot="suffix" name="<%-kind%>Unit" class="keep-unit">
+							<%_.each(units[kind], (unit) => {%>
+								<option value="<%-unit%>" <%=(unit === keep.unit ? 'selected' : '')%>><%-unit%></option>
+							<%})%>
+						</select>
+					</u-input>
+				</div>
+			</div>
+		</div>
+<%
+	};
+%>
+<%if (previousName) {%>
+	<u-input type="hidden" name="previousName" value="<%-previousName%>"></u-input>
+<%}%>
+<div class="row g-3">
+	<div class="col-12 md:col-8">
+		<u-input name="name" label="Name" class="rule-name" value="<%-rule.name%>" autocomplete="off"></u-input>
+	</div>
+</div>
+<small class="d-block fg-4 text-uppercase">On a schedule</small>
+<small class="d-block fg-emphasis-secondary mb-3">Check the kinds of snapshots to take, and set how long to keep them.</small>
+<%keepField('frequently', '15-minute')%>
+<%keepField('hourly', 'Hourly')%>
+<%keepField('daily', 'Daily')%>
+<div class="schedule-section <%=(_.some(['frequently', 'hourly', 'daily'], (kind) => { return rule.keep[kind].amount > 0; }) ? '' : 'd-none')%>">
+	<small class="d-block fg-4 mb-2">On these days</small>
+	<div class="d-flex flex-wrap gap-3">
+		<%_.each(days, ([day, label]) => {%>
+			<button type="button" class="chip schedule-day <%=(_.includes(rule.schedule.days, day) ? 'active' : '')%>" data-day="<%-day%>"><%-label%></button>
+		<%})%>
+	</div>
+	<div class="d-flex flex-wrap gap-4 mb-5">
+		<button type="button" class="btn-link border-0 px-0 py-2 min-h-0" data-days-preset="all">All days</button>
+		<button type="button" class="btn-link border-0 px-0 py-2 min-h-0" data-days-preset="work">Work days</button>
+		<button type="button" class="btn-link border-0 px-0 py-2 min-h-0" data-days-preset="weekend">Weekends</button>
+	</div>
+	<small class="d-block fg-4">Between these hours (15-minute and hourly)</small>
+	<span class="hour-range-value d-block mb-3 numeric-tabular"><%-pad(rule.schedule.from)%> to <%-pad(rule.schedule.to)%></span>
+	<div class="row g-3">
+		<div class="col-12 md:col-8">
+			<div class="hour-range form-range">
+				<input type="range" name="from" class="hour-range-from form-range-input" min="0" max="24" step="1" value="<%-rule.schedule.from%>">
+				<input type="range" name="to" class="hour-range-to form-range-input" min="0" max="24" step="1" value="<%-rule.schedule.to%>">
+			</div>
+			<div class="d-flex justify-content-between mt-2 mb-5">
+				<%_.each([0, 6, 12, 18, 24], (hour) => {%>
+					<small class="fg-4 numeric-tabular"><%-pad(hour)%></small>
+				<%})%>
+			</div>
+		</div>
+	</div>
+</div>
+<hr class="my-7 opacity-25">
+<small class="d-block fg-4 text-uppercase">Always</small>
+<small class="d-block fg-emphasis-secondary mb-3">Taken whatever the days and hours above.</small>
+<%keepField('weekly', 'Weekly')%>
+<%keepField('monthly', 'Monthly')%>
+<%keepField('yearly', 'Yearly')%>
+<div class="kinds-error invalid-feedback mt-3">Check at least one</div>

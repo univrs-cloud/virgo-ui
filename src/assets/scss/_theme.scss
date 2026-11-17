@@ -3,7 +3,7 @@
 @use "bootstrap/scss/layout/breakpoints" as *;
 @use "variables" as vars;
 
-$list-pages: "#apps, #shortcuts, #folders, #time-capsule, #users, #storage, #system-services, #topology";
+$list-pages: "#apps, #shortcuts, #folders, #time-capsule, #snapshot-rules, #users, #storage, #system-services, #topology";
 $detail-pages: "#apps, #folders, #time-capsule, #users, #storage, #system-services";
 
 @mixin fill-column {
@@ -735,6 +735,7 @@ $card-image-size: 30px;
 #system-services,
 #folders,
 #time-capsule,
+#snapshot-rules,
 #storage {
 	.row-image {
 		display: flex;
@@ -1264,6 +1265,68 @@ $card-image-size: 30px;
 	}
 }
 
+#snapshot-rules {
+	.rule-image-column {
+		width: 1px;
+	}
+	.rule-name-column {
+		min-width: 13.125rem;
+		max-width: 0;
+	}
+	.rule-keeps-column {
+		width: 22rem;
+	}
+	.rule-when-column {
+		width: 16rem;
+	}
+	.rule-actions-column {
+		width: 1.875rem;
+		min-width: 1.875rem;
+	}
+}
+#snapshot-rule-create,
+#snapshot-rule-update {
+	.keep-unit {
+		padding: 0;
+		font: inherit;
+		color: inherit;
+		pointer-events: auto;
+		cursor: pointer;
+		background: transparent;
+		border: 0;
+		&:focus {
+			outline: 0;
+		}
+	}
+	.hour-range {
+		height: calc(var(--range-thumb-height) + (var(--focus-ring-width) * 2));
+		.form-range-input {
+			position: absolute;
+			inset: 0;
+			pointer-events: none;
+			&::-webkit-slider-thumb {
+				pointer-events: auto;
+			}
+			&::-moz-range-thumb {
+				pointer-events: auto;
+			}
+			&::-webkit-slider-runnable-track {
+				background-image: linear-gradient(to right, transparent calc(var(--hour-range-from, 0) * 100%), var(--range-track-fill-bg) calc(var(--hour-range-from, 0) * 100%), var(--range-track-fill-bg) calc(var(--hour-range-to, 1) * 100%), transparent calc(var(--hour-range-to, 1) * 100%));
+			}
+			&::-moz-range-track {
+				background-image: linear-gradient(to right, transparent calc(var(--hour-range-from, 0) * 100%), var(--range-track-fill-bg) calc(var(--hour-range-from, 0) * 100%), var(--range-track-fill-bg) calc(var(--hour-range-to, 1) * 100%), transparent calc(var(--hour-range-to, 1) * 100%));
+			}
+		}
+		.hour-range-to {
+			&::-webkit-slider-runnable-track {
+				background: transparent;
+			}
+			&::-moz-range-track {
+				background: transparent;
+			}
+		}
+	}
+}
 .tooltip .tooltip-inner {
 	box-shadow: 0px 2px 4px -1px color-mix(in oklch, var(--black) 20%, transparent), 0px 4px 5px 0px color-mix(in oklch, var(--black) 14%, transparent), 0px 1px 10px 0px color-mix(in oklch, var(--black) 12%, transparent);
 }

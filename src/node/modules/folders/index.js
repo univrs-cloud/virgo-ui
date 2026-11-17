@@ -156,9 +156,10 @@ const renderFolderDetails = (name) => {
 	const users = userService.getUsers();
 	const accessOn = getShareAddress(folderService.getSystem());
 	const networkMaxBytesPerSec = folderService.getDefaultNetworkInterfaceSpeed();
+	const snapshotRules = folderService.getSnapshotRules();
 	morphdom(
 		details,
-		`<div>${folderDetailsTemplate({ folder, users, jobs, accessOn, networkMaxBytesPerSec, folderTab: folderTabs[name] || 'overview', folderActionsTemplate, folderSnapshotActionsTemplate, renderSnapshots, prettyBytes })}</div>`,
+		`<div>${folderDetailsTemplate({ folder, users, jobs, accessOn, networkMaxBytesPerSec, snapshotRules, folderTab: folderTabs[name] || 'overview', folderActionsTemplate, folderSnapshotActionsTemplate, renderSnapshots, prettyBytes })}</div>`,
 		{ childrenOnly: true }
 	);
 };

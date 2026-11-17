@@ -2,6 +2,30 @@
 	<%if (app.snapshotPolicy) {%>
 		<%
 			const snapshotMode = _.toLower(app.snapshotPolicy.mode);
+			const ruleSummary = (rule) => {
+				const kinds = ['frequently', 'hourly', 'daily', 'weekly', 'monthly', 'yearly'];
+				const dayNames = { monday: 'Mon', tuesday: 'Tue', wednesday: 'Wed', thursday: 'Thu', friday: 'Fri', saturday: 'Sat', sunday: 'Sun' };
+				const days = _.keys(dayNames);
+				const pad = (hour) => { return `${_.padStart(String(hour), 2, '0')}:00`; };
+				const runs = _.reduce(rule.schedule.days, (result, day) => {
+					const last = _.last(result);
+					if (last && _.indexOf(days, day) === _.indexOf(days, _.last(last)) + 1) {
+						last.push(day);
+					} else {
+						result.push([day]);
+					}
+					return result;
+				}, []);
+				const daysText = _.map(runs, (run) => { return (_.size(run) > 2 ? `${dayNames[_.first(run)]} to ${dayNames[_.last(run)]}` : _.map(run, (day) => { return dayNames[day]; }).join(', ')); }).join(', ');
+						const kindNames = { frequently: '15-minute', hourly: 'hourly', daily: 'daily', weekly: 'weekly', monthly: 'monthly', yearly: 'yearly' };
+		const detail = (label, value) => { return `<span class="d-flex flex-column text-nowrap"><small class="fg-4">${label}</small><small>${_.escape(value)}</small></span>`; };
+		const keepDetails = _.map(_.filter(kinds, (kind) => { return rule.retention[kind] > 0; }), (kind) => { return detail(_.upperFirst(kindNames[kind]), `${rule.keep[kind].amount} ${(rule.keep[kind].amount === 1 ? _.trimEnd(rule.keep[kind].unit, 's') : rule.keep[kind].unit)}`); });
+		const whenDetails = [
+			detail('Days', (_.size(rule.schedule.days) < 7 ? (daysText || 'none') : 'every day')),
+			detail('Hours', (rule.schedule.from > 0 || rule.schedule.to < 24 ? `${pad(rule.schedule.from)} to ${pad(rule.schedule.to)}` : 'all day'))
+		];
+		return `<span class="d-flex gap-4 pb-2">${keepDetails.join('')}<span class="d-flex gap-4 border-start ps-4">${whenDetails.join('')}</span></span>`;
+			};
 			const snapshotRetention = _.map(_.filter(['frequently', 'hourly', 'daily', 'weekly', 'monthly', 'yearly'], (tier) => { return app.snapshotPolicy.retention[tier] > 0; }), (tier) => { return `${app.snapshotPolicy.retention[tier]} ${tier}`; }).join(', ');
 			const snapshotModeTexts = {
 				enabled: `Snapshots are taken automatically${(snapshotRetention ? `, keeping ${snapshotRetention}` : '')}.`,
@@ -25,9 +49,26 @@
 			}
 		%>
 		<div class="card-body flex-grow-0">
-			<div class="d-flex flex-wrap align-items-center justify-content-between gap-5">
+			<div class="d-flex flex-wrap align-items-start justify-content-between gap-5">
 				<div class="min-w-0">
-					<small class="d-block fg-4 text-uppercase">Snapshotting</small>
+					<%if (snapshotMode !== 'disabled') {%>
+						<small class="d-block fg-4 text-uppercase">Rule</small>
+						<%if (app.canBeRemoved && app.hasDatasetMounts && _.isEmpty(appJobs) && !_.isEmpty(snapshotRules)) {%>
+							<div class="dropdown d-inline-block">
+								<a href="#" class="d-inline-flex align-items-center gap-1 underline-0 hover:underline-80" data-bs-toggle="menu"><%-(app.snapshotPolicy.rule || '—')%><i class="icon-fill icon-caret-down icon-xs"></i></a>
+								<div class="menu">
+									<%_.each(snapshotRules, (rule) => {%>
+										<button type="button" class="menu-item align-items-start" data-snapshot-rule="<%-rule.name%>"><i class="icon-regular icon-check icon-fw mt-1 <%=(_.toLower(rule.name) === _.toLower(app.snapshotPolicy.rule) ? '' : 'invisible')%>"></i><span class="d-block"><%-rule.name%><%=ruleSummary(rule)%></span></button>
+									<%})%>
+									<div class="menu-divider"></div>
+									<a href="/snapshot-rules" class="menu-item"><i class="icon-regular icon-calendar-check icon-fw"></i>Manage rules</a>
+								</div>
+							</div>
+						<%} else {%>
+							<span><%-(app.snapshotPolicy.rule || '—')%></span>
+						<%}%>
+					<%}%>
+					<small class="d-block fg-4 text-uppercase<%=(snapshotMode !== 'disabled' ? ' mt-5' : '')%>">Snapshotting</small>
 					<div class="d-flex flex-wrap align-items-center gap-3">
 						<u-badge color="<%=snapshotModeColors[snapshotMode]%>" tint="100" pill><%=_.upperFirst(snapshotMode)%></u-badge>
 						<span><%-snapshotModeTexts[snapshotMode]%></span>
@@ -41,7 +82,21 @@
 				<%} else {%>
 					<div class="d-inline-flex align-items-center bg-2 rounded-3 px-1">
 						<%_.each(snapshotActions, ({ mode, label, icon, color, isAllowed }) => {%>
-							<u-button variant="secondary" size="sm" class="actions-button" text icon tip="<%-label%>" data-snapshot-mode="<%-mode%>" <%=(isAllowed ? '' : 'disabled')%>><i class="icon-fill <%=icon%> icon-fw <%=(isAllowed ? color : 'fg-gray-500')%>"></i></u-button>
+							<%if (isAllowed && mode === 'enabled' && snapshotMode === 'disabled' && _.size(snapshotRules) > 1) {%>
+								<div class="dropdown">
+									<u-button variant="secondary" size="sm" class="actions-button" text icon tip="<%-label%>" data-bs-toggle="menu" data-bs-placement="bottom-end"><i class="icon-fill <%=icon%> icon-fw <%=color%>"></i></u-button>
+									<div class="menu">
+										<h6 class="menu-header text-uppercase">Enable with rule</h6>
+										<%_.each(snapshotRules, (rule) => {%>
+											<button type="button" class="menu-item" data-snapshot-mode="enabled" data-snapshot-enable-rule="<%-rule.name%>"><span class="d-block"><%-rule.name%><%=ruleSummary(rule)%></span></button>
+										<%})%>
+										<div class="menu-divider"></div>
+										<a href="/snapshot-rules" class="menu-item"><i class="icon-regular icon-calendar-check icon-fw"></i>Manage rules</a>
+									</div>
+								</div>
+							<%} else {%>
+								<u-button variant="secondary" size="sm" class="actions-button" text icon tip="<%-label%>" data-snapshot-mode="<%-mode%>" <%=(isAllowed ? '' : 'disabled')%>><i class="icon-fill <%=icon%> icon-fw <%=(isAllowed ? color : 'fg-gray-500')%>"></i></u-button>
+							<%}%>
 						<%})%>
 					</div>
 				<%}%>

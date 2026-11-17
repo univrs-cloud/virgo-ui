@@ -18,7 +18,7 @@ const { subscribe } = createSubscription({
 		},
 		{
 			store: Host,
-			propertyNames: ['snapshots']
+			propertyNames: ['snapshots', 'snapshotRules']
 		}
 	],
 	filters: {
@@ -146,6 +146,10 @@ const getApps = () => {
 	return composeAllApps(Docker.getConfigured(), Docker.getContainers(), Docker.getAppsResourceMetrics(), Docker.getImageUpdates(), Host.getSnapshots());
 };
 
+const getSnapshotRules = () => {
+	return Host.getSnapshotRules();
+};
+
 const getDefaultNetworkInterface = () => {
 	return _.find(Host.getSystem()?.networkInterfaces, { default: true });
 };
@@ -207,6 +211,7 @@ export {
 	getSocket,
 	getJobs,
 	getApps,
+	getSnapshotRules,
 	getDefaultNetworkInterface,
 	getDefaultNetworkInterfaceSpeed,
 	update,

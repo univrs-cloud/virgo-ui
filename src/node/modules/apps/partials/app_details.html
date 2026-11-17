@@ -417,7 +417,7 @@
 							</div>
 						</div>
 						<div class="<%=(appTab === 'protection' ? '' : 'd-none')%>">
-							<%=appProtectionTemplate({ app, appJobs })%>
+							<%=appProtectionTemplate({ app, appJobs, snapshotRules })%>
 						</div>
 						<div class="<%=(appTab === 'recovery' ? '' : 'd-none')%>">
 							<%=appRecoveryTemplate({ app, appJobs, appSnapshotActionsTemplate, renderSnapshots })%>

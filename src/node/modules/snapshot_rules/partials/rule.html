@@ -1,0 +1,79 @@
+<%
+	const kinds = ['frequently', 'hourly', 'daily', 'weekly', 'monthly', 'yearly'];
+	const kindNames = { frequently: '15-minute', hourly: 'hourly', daily: 'daily', weekly: 'weekly', monthly: 'monthly', yearly: 'yearly' };
+	const kept = _.upperFirst(_.map(_.filter(kinds, (kind) => { return rule.retention[kind] > 0; }), (kind) => { return `${kindNames[kind]} for ${rule.keep[kind].amount} ${(rule.keep[kind].amount === 1 ? _.trimEnd(rule.keep[kind].unit, 's') : rule.keep[kind].unit)}`; }).join(', '));
+	const dayNames = { monday: 'Mon', tuesday: 'Tue', wednesday: 'Wed', thursday: 'Thu', friday: 'Fri', saturday: 'Sat', sunday: 'Sun' };
+	const days = _.keys(dayNames);
+	const daysText = (list) => {
+		if (_.size(list) === 7) {
+			return 'every day';
+		}
+
+		const runs = _.reduce(list, (result, day) => {
+			const last = _.last(result);
+			if (last && _.indexOf(days, day) === _.indexOf(days, _.last(last)) + 1) {
+				last.push(day);
+			} else {
+				result.push([day]);
+			}
+			return result;
+		}, []);
+		return _.map(runs, (run) => { return (_.size(run) > 2 ? `${dayNames[_.first(run)]} to ${dayNames[_.last(run)]}` : _.map(run, (day) => { return dayNames[day]; }).join(', ')); }).join(', ');
+	};
+	const pad = (hour) => { return `${_.padStart(String(hour), 2, '0')}:00`; };
+	const isAllDay = (rule.schedule.from === 0 && rule.schedule.to === 24);
+	const usesDays = (rule.retention.frequently > 0 || rule.retention.hourly > 0 || rule.retention.daily > 0);
+	const usesHours = (rule.retention.frequently > 0 || rule.retention.hourly > 0);
+	const whenParts = _.compact([
+		(usesDays ? (_.isEmpty(rule.schedule.days) ? 'no days' : _.upperFirst(daysText(rule.schedule.days))) : ''),
+		(usesHours && !isAllDay ? `${pad(rule.schedule.from)} to ${pad(rule.schedule.to)}` : '')
+	]);
+	const unitDays = { hours: 1 / 24, days: 1, weeks: 7, months: 30.4375, years: 365.25 };
+	const total = _.sum(_.map(kinds, (kind) => { return rule.retention[kind]; }));
+	const reach = _.max(_.map(kinds, (kind) => { return (rule.retention[kind] > 0 ? rule.keep[kind].amount * unitDays[rule.keep[kind].unit] : 0); }));
+	const keepsText = `Up to ${total} ${(total === 1 ? 'snapshot' : 'snapshots')} for ${moment.duration(reach, 'days').humanize()}`;
+	const whenText = (_.isEmpty(whenParts) ? 'Any time' : _.upperFirst(whenParts.join(', ')));
+%>
+<tr class="item" data-name="<%-rule.name%>">
+	<td class="d-none md:d-table-cell rule-image-column">
+		<div class="row-image">
+			<i class="icon-light icon-calendar-check icon-fw fg-emphasis-secondary"></i>
+		</div>
+	</td>
+	<td class="rule-name-column">
+		<div class="d-flex align-items-center mb--1">
+			<div class="text-truncate"><%-rule.name%></div>
+		</div>
+		<div class="d-flex">
+			<div class="text-truncate"><small class="fg-4"><%-kept%></small></div>
+		</div>
+	</td>
+	<td class="d-none md:d-table-cell">
+		<div class="text-truncate"><small class="fg-4"><%-keepsText%></small></div>
+	</td>
+	<td class="d-none md:d-table-cell">
+		<div class="text-truncate" data-bs-toggle="tooltip" data-bs-original-title="<%-whenText%>."><small class="fg-4"><%-whenText%></small></div>
+	</td>
+	<td class="text-center px-0">
+		<%if (!_.isEmpty(jobs)) {%>
+			<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-fill icon-gear icon-fw icon-spin"></i></span>
+		<%} else {%>
+			<div class="dropdown">
+				<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i></span>
+				<div class="menu">
+					<%if (rule.isDefault) {%>
+						<span class="d-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="The default rule cannot be changed."><button type="button" class="menu-item disabled"><i class="icon-fill icon-pen icon-fw"></i>Edit</button></span>
+					<%} else {%>
+						<a href="#snapshot-rule-update" class="menu-item" data-bs-toggle="dialog"><i class="icon-fill icon-pen icon-fw"></i>Edit</a>
+					<%}%>
+					<div class="menu-divider"></div>
+					<%if (rule.isDefault || rule.isUsed) {%>
+						<span class="d-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="<%-(rule.isDefault ? 'The default rule cannot be deleted.' : 'Apps or folders still follow this rule. Choose another rule for them first.')%>"><button type="button" class="menu-item disabled"><i class="icon-fill icon-x-circle icon-fw"></i>Delete</button></span>
+					<%} else {%>
+						<a href="#" class="menu-item fg-danger" data-action="delete"><i class="icon-fill icon-x-circle icon-fw"></i>Delete</a>
+					<%}%>
+				</div>
+			</div>
+		<%}%>
+	</td>
+</tr>

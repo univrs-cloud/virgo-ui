@@ -24,6 +24,7 @@ class Host extends Store {
 			storage: null,
 			importable: null,
 			snapshots: null,
+			snapshotRules: null,
 			drives: null,
 			topologies: null,
 			services: null,
@@ -142,6 +143,10 @@ class Host extends Store {
 
 		this.socket.on('host:storage:snapshots', (snapshots) => {
 			this.setState({ snapshots }, 'get_snapshots');
+		});
+
+		this.socket.on('host:snapshotRules', (snapshotRules) => {
+			this.setState({ snapshotRules }, 'get_snapshot_rules');
 		});
 
 		this.socket.on('host:ups', (ups) => {
@@ -309,6 +314,22 @@ class Host extends Store {
 
 	getSnapshots() {
 		return this.getStateProperty('snapshots');
+	}
+
+	getSnapshotRules() {
+		return this.getStateProperty('snapshotRules');
+	}
+
+	createSnapshotRule(data) {
+		this.socket.emit('host:snapshotRules:create', data);
+	}
+
+	updateSnapshotRule(data) {
+		this.socket.emit('host:snapshotRules:update', data);
+	}
+
+	deleteSnapshotRule(data) {
+		this.socket.emit('host:snapshotRules:delete', data);
 	}
 
 	getServices() {

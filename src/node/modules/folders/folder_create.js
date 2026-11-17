@@ -1,9 +1,11 @@
 import folderModalPartial from 'node/modules/folders/partials/modals/folder_create.html';
 import validUserPartial from 'node/modules/folders/partials/valid_user.html';
+import snapshotRuleDetailsPartial from 'node/modules/folders/partials/modals/snapshot_rule_details.html';
 import * as folderService from 'node/modules/folders/services/folder';
 import * as userService from 'node/modules/folders/services/user';
 
 const validUserTemplate = _.template(validUserPartial);
+const snapshotRuleDetailsTemplate = _.template(snapshotRuleDetailsPartial);
 
 document.querySelector('body').insertAdjacentHTML('beforeend', folderModalPartial);
 
@@ -14,6 +16,19 @@ const content = modal.querySelector('.content');
 const pathSelect = form.querySelector('.path');
 const refquota = form.querySelector('.refquota');
 const snapshots = form.querySelector('.snapshots');
+const snapshotRuleField = form.querySelector('.snapshot-rule-field');
+const snapshotRule = form.querySelector('.snapshot-rule');
+
+const snapshotRuleDetails = form.querySelector('.snapshot-rule-details');
+
+const renderSnapshotRuleDetails = () => {
+	const rule = _.find(folderService.getSnapshotRules(), (current) => { return _.toLower(current.name) === _.toLower(snapshotRule.value); });
+	snapshotRuleDetails.innerHTML = snapshotRuleDetailsTemplate({ rule: rule ?? null });
+};
+
+const toggleSnapshotRule = () => {
+	snapshotRuleField.classList.toggle('d-none', !!pathSelect.value || !snapshots.checked);
+};
 
 const render = async () => {
 	const customPaths = await folderService.getCustomPaths();
@@ -30,6 +45,11 @@ const render = async () => {
 	pathSelect.options = options;
 	refquota.classList.remove('d-none');
 	snapshots.classList.remove('d-none');
+	const rules = folderService.getSnapshotRules() || [];
+	snapshotRule.options = _.map(rules, (rule) => { return { value: rule.name, label: rule.name, default: rule.isDefault }; });
+	snapshotRule.value = (_.find(rules, 'isDefault') ?? _.first(rules))?.name ?? '';
+	renderSnapshotRuleDetails();
+	toggleSnapshotRule();
 
 	const users = userService.getUsers();
 	const validUsers = form.querySelector('.valid-users');
@@ -52,7 +72,8 @@ const createFolder = (event) => {
 		comment: data.comment,
 		path: data.path,
 		validUsers,
-		...(isNewShare && { refquota: Number(data.refquota) * 1024 * 1024 * 1024, snapshots: snapshots.checked })
+		...(isNewShare && { refquota: Number(data.refquota) * 1024 * 1024 * 1024, snapshots: snapshots.checked }),
+		...(isNewShare && snapshots.checked && !_.find(folderService.getSnapshotRules(), { name: data.snapshotRule })?.isDefault && { snapshotRule: data.snapshotRule })
 	};
 	folderService.createFolder(config);
 	bootstrap.Dialog.getInstance(modal)?.hide();
@@ -108,7 +129,11 @@ form.validation = [
 pathSelect.addEventListener('value-changed', () => {
 	refquota.classList.toggle('d-none', !!pathSelect.value);
 	snapshots.classList.toggle('d-none', !!pathSelect.value);
+	toggleSnapshotRule();
 });
+snapshots.addEventListener('checked-changed', toggleSnapshotRule);
+snapshotRule.addEventListener('value-changed', renderSnapshotRuleDetails);
+form.querySelector('.manage-rules').addEventListener('click', () => { bootstrap.Dialog.getInstance(modal)?.hide(); });
 
 form.addEventListener('valid', createFolder);
 modal.addEventListener('show.bs.dialog', render);
