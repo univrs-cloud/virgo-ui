@@ -45,28 +45,30 @@
 			</div>
 		</div>
 
-		<div class="col col-12">
-			<div class="row gx-7 gy-3">
-				<div class="col-12 lg:col-4 2xl:col-3 lg:pt-5">
-					<h5 class="m-0">Passkey sign-in</h5>
-					<p class="fg-emphasis-secondary small mt-1 mb-0">Sign in with a passkey on your devices.</p>
-				</div>
-				<div class="col-12 lg:col-8 2xl:col-9">
-					<div class="card border-0 mb-0">
-						<div class="card-body">
-							<div class="d-flex align-items-center gap-5">
-								<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-5 bg-subtle-primary fg-primary align-self-start"><i class="icon-duotone icon-user-focus"></i></div>
-								<div class="min-w-0 me-auto">
-									<div>Passkey sign-in</div>
-									<small class="d-block fw-lighter fg-4 passkey-hint">Sign in with a passkey instead of your password and code.</small>
+		<% if (!isInApp) { %>
+			<div class="col col-12">
+				<div class="row gx-7 gy-3">
+					<div class="col-12 lg:col-4 2xl:col-3 lg:pt-5">
+						<h5 class="m-0">Passkey sign-in</h5>
+						<p class="fg-emphasis-secondary small mt-1 mb-0">Sign in with a passkey on your devices.</p>
+					</div>
+					<div class="col-12 lg:col-8 2xl:col-9">
+						<div class="card border-0 mb-0">
+							<div class="card-body">
+								<div class="d-flex align-items-center gap-5">
+									<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-5 bg-subtle-primary fg-primary align-self-start"><i class="icon-duotone icon-user-focus"></i></div>
+									<div class="min-w-0 me-auto">
+										<div>Passkey sign-in</div>
+										<small class="d-block fw-lighter fg-4 passkey-hint">Sign in with a passkey instead of your password and code.</small>
+									</div>
+									<u-switch class="passkey-switch flex-shrink-0" on-label="Enabled" <%=(account.passkeyEnabled ? 'checked' : '')%> disabled></u-switch>
 								</div>
-								<u-switch class="passkey-switch flex-shrink-0" on-label="Enabled" <%=(account.passkeyEnabled ? 'checked' : '')%> disabled></u-switch>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
+		<% } %>
 
 		<% if (isInApp) { %>
 			<div class="col col-12">

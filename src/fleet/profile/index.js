@@ -30,8 +30,9 @@ window.addEventListener('account-changed', render);
 import('fleet/profile/sessions');
 import('fleet/profile/profile');
 import('fleet/profile/password');
-import('fleet/profile/passkey');
 if (biometricService.isInApp()) {
 	import('fleet/profile/biometric');
+} else {
+	import('fleet/profile/passkey');
 }
 import('fleet/profile/notifications');
