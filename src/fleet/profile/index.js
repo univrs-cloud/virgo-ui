@@ -1,5 +1,6 @@
 import modulePartial from 'fleet/profile/partials/index.html';
 import profilePartial from 'fleet/profile/partials/profile.html';
+import * as biometricService from 'fleet/services/biometric';
 
 const moduleTemplate = _.template(modulePartial);
 const profileTemplate = _.template(profilePartial);
@@ -10,14 +11,14 @@ const container = module.querySelector('.profile');
 const render = () => {
 	morphdom(
 		container,
-		profileTemplate({ account }),
+		profileTemplate({ account, isInApp: biometricService.isInApp() }),
 		{
 			// Both hints are runtime/per-device (browser permission, and whether this device holds a
 			// passkey) rather than account state, so they're JS-managed — leave them untouched on
 			// re-render. The toggles' checked state comes from the account in the template, so
 			// morphdom can update those normally.
 			onBeforeElUpdated: (fromEl) => {
-				return !fromEl.classList?.contains('notifications-hint') && !fromEl.classList?.contains('passkey-hint');
+				return !fromEl.classList?.contains('notifications-hint') && !fromEl.classList?.contains('passkey-hint') && !fromEl.classList?.contains('biometric-hint');
 			}
 		}
 	);
@@ -30,4 +31,7 @@ import('fleet/profile/sessions');
 import('fleet/profile/profile');
 import('fleet/profile/password');
 import('fleet/profile/passkey');
+if (biometricService.isInApp()) {
+	import('fleet/profile/biometric');
+}
 import('fleet/profile/notifications');

@@ -1,6 +1,7 @@
 import signinPartial from 'fleet/partials/signin.html';
 import * as fleetAuthService from 'libs/services/fleet_auth';
 import * as webauthnService from 'fleet/services/webauthn';
+import * as biometricService from 'fleet/services/biometric';
 
 const ensureSucceeded = (result) => {
 	if (result.status !== 'succeeded') {
@@ -19,7 +20,6 @@ const mountPasskey = async (main) => {
 
 	const panel = main.querySelector('.passkey');
 	const button = panel.querySelector('.passkey-action');
-	const hint = panel.querySelector('.passkey-hint');
 	panel.classList.remove('d-none');
 
 	// One ceremony at a time: a second navigator.credentials.get() aborts the first, so a stray
@@ -33,7 +33,6 @@ const mountPasskey = async (main) => {
 		}
 		inFlight = true;
 		button.disabled = true;
-		hint.textContent = 'Waiting for your device…';
 		try {
 			if (await webauthnService.authenticate()) {
 				// Session is already satisfied server-side; a full navigation re-reads the cookie and
@@ -41,16 +40,7 @@ const mountPasskey = async (main) => {
 				window.location.replace('/');
 				return;
 			}
-			// Dismissed — or never shown at all, since Safari can require a tap before it will open
-			// the prompt. The two are indistinguishable here, so invite the tap rather than assert a
-			// cancel the user may not have made.
-			hint.textContent = automatic
-				? 'Tap above to use your passkey, or sign in with your password and code below.'
-				: 'Sign in with your password and code below.';
 		} catch (error) {
-			hint.textContent = `Passkey sign-in didn't work. Sign in with your password and code below.`;
-			// Only worth a toast when the user asked for it. On the automatic attempt the hint says
-			// enough, and a toast on every launch would just be noise.
 			if (!automatic) {
 				notifier.add({ title: error.message || 'Passkey sign-in failed.', type: 'error', duration: 0 });
 			}
@@ -65,9 +55,45 @@ const mountPasskey = async (main) => {
 	// button: it's a best-effort localStorage write that a privacy setting can silently refuse, and
 	// a forgotten breadcrumb must never hide a credential the device still holds.
 	if (!webauthnService.isEnrolledOnThisDevice()) {
-		hint.textContent = 'Tap above if you have a passkey on this device.';
 		return false;
 	}
+
+	run({ automatic: true });
+	return true;
+};
+
+const mountBiometric = async (main) => {
+	const { available, enrolled } = await biometricService.getStatus();
+	if (!available || !enrolled) {
+		return false;
+	}
+
+	const panel = main.querySelector('.biometric');
+	const button = panel.querySelector('.biometric-action');
+	panel.classList.remove('d-none');
+
+	let inFlight = false;
+	const run = async ({ automatic = false } = {}) => {
+		if (inFlight) {
+			return;
+		}
+		inFlight = true;
+		button.disabled = true;
+		try {
+			if (await biometricService.authenticate()) {
+				window.location.replace('/');
+				return;
+			}
+		} catch (error) {
+			if (!automatic) {
+				notifier.add({ title: error.message || 'Biometric sign-in failed.', type: 'error', duration: 0 });
+			}
+		}
+		button.disabled = false;
+		inFlight = false;
+	};
+
+	button.addEventListener('click', () => run());
 
 	run({ automatic: true });
 	return true;
@@ -100,7 +126,11 @@ export const mount = async () => {
 	];
 	form.addEventListener('valid', login);
 
-	if (await mountPasskey(main)) {
+	if (biometricService.isInApp()) {
+		if (await mountBiometric(main)) {
+			return;
+		}
+	} else if (await mountPasskey(main)) {
 		return;
 	}
 
