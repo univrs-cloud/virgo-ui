@@ -5,7 +5,7 @@ const { subscribe } = createSubscription({
 	stores: [
 		{
 			store: Runtime,
-			propertyNames: ['role']
+			propertyNames: ['role', 'starting']
 		}
 	],
 	attachStore: storeAttach.afterCallbacks,

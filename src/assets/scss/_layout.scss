@@ -56,7 +56,8 @@ body {
 	}
 	&.reboot,
 	&.powered-off,
-	&.maintenance {
+	&.maintenance,
+	&.starting {
 		header,
 		main {
 			display: none !important;

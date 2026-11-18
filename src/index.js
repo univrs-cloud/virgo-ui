@@ -22,6 +22,7 @@ try {
 window.isAuthenticated = !_.isEmpty(account);
 window.isAdmin = isAuthenticated && _.includes(account.groups, 'admins');
 window.runtimeRole = null;
+let wasStarting = false;
 
 const viewedNodeId = new URL(document.baseURI).pathname.match(/^\/nodes\/([^/]+)\//)?.[1] ?? null;
 const onNodeView = Boolean(viewedNodeId);
@@ -80,7 +81,18 @@ const render = async (state) => {
 };
 
 const runtime = async (state) => {
+	if (state.starting) {
+		wasStarting = true;
+		await import('node/starting');
+		return;
+	}
+
 	if (_.isNull(state.role)) {
+		return;
+	}
+
+	if (wasStarting) {
+		location.reload();
 		return;
 	}
 
