@@ -1,7 +1,7 @@
 import * as request from 'stores/request';
 
 /**
- * Network layer for WebAuthn (biometric / passkey) sign-in against the fleet controller's
+ * Network layer for WebAuthn (passkey) sign-in against the fleet controller's
  * `/auth/webauthn/*` HTTP endpoints. A plain fetch client like `stores/fleet_auth`.
  *
  * Every ceremony is two calls: an `*Options` request that returns a server-issued challenge plus

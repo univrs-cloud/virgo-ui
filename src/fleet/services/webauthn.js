@@ -1,7 +1,7 @@
 import FleetWebauthn from 'stores/fleet_webauthn';
 
 /**
- * Biometric sign-in (WebAuthn passkeys) for the fleet role.
+ * Passkey sign-in (WebAuthn) for the fleet role.
  *
  * The credential is created as a discoverable key with user verification required, so the
  * authenticator both names the account and proves the person is present — which is why a verified
@@ -13,7 +13,7 @@ import FleetWebauthn from 'stores/fleet_webauthn';
  */
 
 // Set once this device has enrolled. The sign-in screen runs before any session exists, so the
-// account cookie can't tell it whether to offer biometrics — this marker is the only signal
+// account cookie can't tell it whether to offer a passkey — this marker is the only signal
 // available at that point. It is a hint, never an authorisation: the server re-checks everything.
 const DEVICE_KEY = 'virgo.fleet.passkey';
 
@@ -40,10 +40,10 @@ const ensureSucceeded = (result) => {
 //
 // Memoised: it can't change within a page load, and both the sign-in screen and the profile ask.
 // The optional call also covers a browser with no WebAuthn at all, which answers the same way.
-let biometricsAvailable = null;
-const hasBiometrics = () => {
-	if (!biometricsAvailable) {
-		biometricsAvailable = (async () => {
+let passkeySupport = null;
+const supportsPasskeys = () => {
+	if (!passkeySupport) {
+		passkeySupport = (async () => {
 			try {
 				return await window.PublicKeyCredential?.isUserVerifyingPlatformAuthenticatorAvailable() === true;
 			} catch (error) {
@@ -51,7 +51,7 @@ const hasBiometrics = () => {
 			}
 		})();
 	}
-	return biometricsAvailable;
+	return passkeySupport;
 };
 
 const isEnrolledOnThisDevice = () => {
@@ -135,8 +135,8 @@ const serializeAuthentication = (credential) => {
  * path when the local marker has been lost.
  */
 const enroll = async () => {
-	if (!await hasBiometrics()) {
-		throw new Error('This device does not support biometric sign-in.');
+	if (!await supportsPasskeys()) {
+		throw new Error('This device does not support passkeys.');
 	}
 	const { options, challengeId } = ensureSucceeded(await FleetWebauthn.registerOptions());
 	let credential = null;
@@ -157,12 +157,12 @@ const enroll = async () => {
 };
 
 /**
- * Sign in with this device's biometrics. On success the server has already set a satisfied session
+ * Sign in with this device's passkey. On success the server has already set a satisfied session
  * cookie, so the caller only needs to navigate. Resolves false when the user dismisses the prompt.
  */
 const authenticate = async () => {
-	if (!await hasBiometrics()) {
-		throw new Error('This device does not support biometric sign-in.');
+	if (!await supportsPasskeys()) {
+		throw new Error('This device does not support passkeys.');
 	}
 	const { options, challengeId } = ensureSucceeded(await FleetWebauthn.authenticateOptions());
 	let credential = null;
@@ -196,7 +196,7 @@ const disable = async () => {
 };
 
 export {
-	hasBiometrics,
+	supportsPasskeys,
 	isEnrolledOnThisDevice,
 	enroll,
 	authenticate,

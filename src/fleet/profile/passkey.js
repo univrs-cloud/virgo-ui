@@ -2,8 +2,8 @@ import * as accountService from 'fleet/services/account';
 import * as webauthnService from 'fleet/services/webauthn';
 
 const module = document.querySelector('#profile');
-const toggle = module?.querySelector('.biometrics-switch');
-const hint = module?.querySelector('.biometrics-hint');
+const toggle = module?.querySelector('.passkey-switch');
+const hint = module?.querySelector('.passkey-hint');
 
 // Enrolling a second device doesn't change the account-level flag, so it can't ride on the toggle.
 // It gets this link instead — the same shape as the notifications permission hint.
@@ -31,10 +31,10 @@ const setHint = (html) => {
 // device is one of them, which the account can't tell us — it's held in local storage by the
 // service that enrolled it.
 const refresh = async () => {
-	if (!await webauthnService.hasBiometrics()) {
+	if (!await webauthnService.supportsPasskeys()) {
 		toggle.checked = false;
 		toggle.disabled = true;
-		setHint('This device has no fingerprint or face sensor — sign in with your password and code.');
+		setHint("This device can't store a passkey. Sign in with your password and code.");
 		return;
 	}
 
@@ -42,9 +42,9 @@ const refresh = async () => {
 	toggle.disabled = false;
 
 	if (!toggle.checked) {
-		setHint('Sign in with your fingerprint or face instead of your password and code.');
+		setHint('Sign in with a passkey instead of your password and code.');
 	} else if (webauthnService.isEnrolledOnThisDevice()) {
-		setHint(`This device is enrolled — you won't be asked for your password or code here.`);
+		setHint(`This device has a passkey. You won't be asked for your password or code here.`);
 	} else {
 		setHint('Enabled on another device. <a href="#" class="passkey-add">Enroll this device</a> to use it here.');
 	}
@@ -76,7 +76,7 @@ const onChange = async () => {
 			await webauthnService.disable();
 			accountService.patch({ passkeyEnabled: false });
 		} catch (error) {
-			notifier.add({ title: error.message || 'Could not turn off biometric sign-in.', type: 'error', duration: 0 });
+			notifier.add({ title: error.message || 'Could not turn off passkey sign-in.', type: 'error', duration: 0 });
 		}
 	}
 	await refresh();

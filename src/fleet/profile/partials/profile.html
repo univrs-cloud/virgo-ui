@@ -48,7 +48,7 @@
 		<div class="col col-12">
 			<div class="row gx-7 gy-3">
 				<div class="col-12 lg:col-4 2xl:col-3 lg:pt-5">
-					<h5 class="m-0">Biometric sign-in</h5>
+					<h5 class="m-0">Passkey sign-in</h5>
 					<p class="fg-emphasis-secondary small mt-1 mb-0">Sign in with a passkey on your devices.</p>
 				</div>
 				<div class="col-12 lg:col-8 2xl:col-9">
@@ -57,10 +57,10 @@
 							<div class="d-flex align-items-center gap-5">
 								<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-5 bg-subtle-primary fg-primary align-self-start"><i class="icon-duotone icon-fingerprint-simple"></i></div>
 								<div class="min-w-0 me-auto">
-									<div>Biometric sign-in</div>
-									<small class="d-block fw-lighter fg-4 biometrics-hint">Sign in with your fingerprint or face instead of your password and code.</small>
+									<div>Passkey sign-in</div>
+									<small class="d-block fw-lighter fg-4 passkey-hint">Sign in with a passkey instead of your password and code.</small>
 								</div>
-								<u-switch class="biometrics-switch flex-shrink-0" on-label="Enabled" <%=(account.passkeyEnabled ? 'checked' : '')%> disabled></u-switch>
+								<u-switch class="passkey-switch flex-shrink-0" on-label="Enabled" <%=(account.passkeyEnabled ? 'checked' : '')%> disabled></u-switch>
 							</div>
 						</div>
 					</div>

@@ -17,7 +17,7 @@ const render = () => {
 			// re-render. The toggles' checked state comes from the account in the template, so
 			// morphdom can update those normally.
 			onBeforeElUpdated: (fromEl) => {
-				return !fromEl.classList?.contains('notifications-hint') && !fromEl.classList?.contains('biometrics-hint');
+				return !fromEl.classList?.contains('notifications-hint') && !fromEl.classList?.contains('passkey-hint');
 			}
 		}
 	);
@@ -29,5 +29,5 @@ window.addEventListener('account-changed', render);
 import('fleet/profile/sessions');
 import('fleet/profile/profile');
 import('fleet/profile/password');
-import('fleet/profile/biometrics');
+import('fleet/profile/passkey');
 import('fleet/profile/notifications');

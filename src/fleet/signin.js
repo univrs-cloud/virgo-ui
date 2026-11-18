@@ -9,17 +9,17 @@ const ensureSucceeded = (result) => {
 	return result;
 };
 
-// The panel is offered on any device that can do biometrics; the password form below is untouched
+// The panel is offered on any device that supports passkeys; the password form below is untouched
 // either way. Returns whether a prompt was opened unasked, so the caller knows not to steal focus
 // into the email field — that would pop the keyboard up behind the system dialog on mobile.
-const mountBiometrics = async (main) => {
-	if (!await webauthnService.hasBiometrics()) {
+const mountPasskey = async (main) => {
+	if (!await webauthnService.supportsPasskeys()) {
 		return false;
 	}
 
-	const panel = main.querySelector('.biometrics');
-	const button = panel.querySelector('.biometrics-action');
-	const hint = panel.querySelector('.biometrics-hint');
+	const panel = main.querySelector('.passkey');
+	const button = panel.querySelector('.passkey-action');
+	const hint = panel.querySelector('.passkey-hint');
 	panel.classList.remove('d-none');
 
 	// One ceremony at a time: a second navigator.credentials.get() aborts the first, so a stray
@@ -45,14 +45,14 @@ const mountBiometrics = async (main) => {
 			// the prompt. The two are indistinguishable here, so invite the tap rather than assert a
 			// cancel the user may not have made.
 			hint.textContent = automatic
-				? 'Tap above to use biometrics, or sign in with your password and code below.'
+				? 'Tap above to use your passkey, or sign in with your password and code below.'
 				: 'Sign in with your password and code below.';
 		} catch (error) {
-			hint.textContent = `Biometric sign-in didn't work — sign in with your password and code below.`;
+			hint.textContent = `Passkey sign-in didn't work. Sign in with your password and code below.`;
 			// Only worth a toast when the user asked for it. On the automatic attempt the hint says
 			// enough, and a toast on every launch would just be noise.
 			if (!automatic) {
-				notifier.add({ title: error.message || 'Biometric sign-in failed.', type: 'error', duration: 0 });
+				notifier.add({ title: error.message || 'Passkey sign-in failed.', type: 'error', duration: 0 });
 			}
 		}
 		button.disabled = false;
@@ -65,7 +65,7 @@ const mountBiometrics = async (main) => {
 	// button: it's a best-effort localStorage write that a privacy setting can silently refuse, and
 	// a forgotten breadcrumb must never hide a credential the device still holds.
 	if (!webauthnService.isEnrolledOnThisDevice()) {
-		hint.textContent = 'Tap above if you have set up biometrics here.';
+		hint.textContent = 'Tap above if you have a passkey on this device.';
 		return false;
 	}
 
@@ -100,7 +100,7 @@ export const mount = async () => {
 	];
 	form.addEventListener('valid', login);
 
-	if (await mountBiometrics(main)) {
+	if (await mountPasskey(main)) {
 		return;
 	}
 
