@@ -1,5 +1,6 @@
 @use "sass:map";
 @use "bootstrap/scss/config" as *;
+@use "variables" as vars;
 
 ::-ms-reveal {
 	display: none;
@@ -57,6 +58,20 @@ textarea {
 	> label:has(~ .form-adorn:not(:focus-within) .form-ghost:placeholder-shown) {
 		transform: none;
 	}
+	> .menu {
+		--menu-zindex: 2001;
+		--menu-padding-y: var(--menu-padding-x);
+		--menu-item-padding-y: var(--menu-item-padding-x);
+		--menu-max-height: 20rem;
+		> .menu-options {
+			display: flex;
+			flex-direction: column;
+			gap: var(--menu-gap);
+			min-height: 0;
+			overflow-y: auto;
+			@include vars.styled-scrollbar;
+		}
+	}
 	&:has(> textarea:not(:disabled, [readonly]):is(:focus, :not(:placeholder-shown)))::before {
 		content: "";
 		position: absolute;
@@ -85,7 +100,6 @@ textarea {
 	}
 	> label:has(~ .form-control:not(:placeholder-shown)):not(:has(~ .form-adorn:not(:focus-within) .form-ghost:placeholder-shown)) {
 		opacity: 1;
-		color: var(--fg-4);
 	}
 	.form-control {
 		&:focus::placeholder {
@@ -125,7 +139,8 @@ textarea {
 			}
 		}
 	}
-	select.form-control {
+	select.form-control,
+	.form-control-caret {
 		--control-select-bg: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236c757d%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22m7 15 5 5 5-5%22%3E%3C/path%3E%3Cpath d=%22m7 9 5-5 5 5%22%3E%3C/path%3E%3C/svg%3E");
 		background-size: 24px 16px;
 	}
