@@ -1,0 +1,62 @@
+<%
+	const isChecking = _.some(nextcloudJobs, { name: 'app:nextcloud:updates:check' });
+	const isBusy = (!_.isEmpty(appJobs) || !_.isEmpty(nextcloudJobs));
+	const hasUpdates = !_.isEmpty(nextcloudAppUpdates);
+	const updateTip = (app.hasUpdates ? 'Use Update at the top to update Nextcloud together with its apps.' : '');
+	let statusText = `${_.pluralize('update', _.size(nextcloudAppUpdates), true)} available.`;
+	if (isChecking) {
+		statusText = 'Checking for updates...';
+	} else if (_.isNil(nextcloudAppUpdates)) {
+		statusText = 'Not checked yet.';
+	} else if (nextcloudAppUpdates === false) {
+		statusText = 'Could not check for updates. Make sure Nextcloud is running and try again.';
+	} else if (!hasUpdates) {
+		statusText = 'All apps are up to date.';
+	}
+%>
+<div class="card border-0 bg-transparent">
+	<div class="card-body flex-grow-0">
+		<div class="d-flex flex-wrap align-items-center justify-content-between gap-5">
+			<div class="min-w-0">
+				<small class="d-block fg-4 text-uppercase">App updates</small>
+				<span><%-statusText%></span>
+			</div>
+			<%if (isBusy) {%>
+				<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-fill icon-gear icon-fw icon-spin"></i></span>
+			<%} else {%>
+				<div class="d-flex align-items-center gap-3">
+					<u-button variant="secondary" size="sm" text icon tip="Check for new updates" data-nextcloud-action="check"><i class="icon-regular icon-arrows-clockwise icon-fw"></i></u-button>
+					<%if (hasUpdates) {%>
+						<u-button variant="primary" size="sm" data-nextcloud-action="update" tip="<%-updateTip%>" <%=(app.hasUpdates ? 'disabled' : '')%>>Update all</u-button>
+					<%}%>
+				</div>
+			<%}%>
+		</div>
+	</div>
+	<%if (hasUpdates) {%>
+		<div class="list-group list-group-flush">
+			<%_.each(nextcloudAppUpdates, (update) => {%>
+				<div class="list-group-item pt-5 pb-7">
+					<div class="d-flex align-items-center justify-content-between gap-3">
+						<div class="d-flex align-items-center min-w-0">
+							<i class="icon-light icon-puzzle-piece icon-fw fg-4 me-3"></i>
+							<div class="min-w-0">
+								<div class="text-truncate"><%-update.id%></div>
+								<small class="d-block fg-4 text-truncate">
+									<%if (update.currentVersion) {%>
+										<%-update.currentVersion%> &rarr; <%-update.version%>
+									<%} else {%>
+										<%-update.version%>
+									<%}%>
+								</small>
+							</div>
+						</div>
+						<u-button variant="secondary" size="xs" data-nextcloud-action="update" data-nextcloud-app="<%-update.id%>" tip="<%-updateTip%>" <%=(isBusy || app.hasUpdates ? 'disabled' : '')%>>
+							<i class="icon-regular icon-arrow-down icon-fw"></i><span class="d-none md:d-inline">Update</span>
+						</u-button>
+					</div>
+				</div>
+			<%})%>
+		</div>
+	<%}%>
+</div>

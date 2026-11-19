@@ -7,7 +7,7 @@ const { subscribe } = createSubscription({
 	stores: [
 		{
 			store: Docker,
-			propertyNames: ['configured', 'containers', 'imageUpdates']
+			propertyNames: ['configured', 'containers', 'imageUpdates', 'nextcloudAppUpdates']
 		}
 	],
 	attachStore: storeAttach.beforeCallbacks,
@@ -39,6 +39,7 @@ function composeDashboardApps(properties) {
 					return container.id === containerId;
 				});
 			});
+			entity.hasNextcloudAppUpdates = (_.toLower(entity.name) === 'nextcloud' && !_.isEmpty(properties?.nextcloudAppUpdates));
 			let activeCount = _.size(_.filter(entity.projectContainers, (container) => { return _.includes(['running', 'restarting'], container.state); }));
 			if (activeCount === _.size(entity.projectContainers)) {
 				entity.state = 'success'; // All containers are running or restarting

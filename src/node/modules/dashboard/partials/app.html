@@ -13,7 +13,7 @@
 				<div class="col overflow-hidden">
 					<div class="d-flex align-items-center">
 						<div class="text-truncate <%=(runningContainers === 0 || _.isEmpty(app.urls) ? 'fg-gray-500' : '')%>"><%-app.title%></div>
-						<%if (app.hasUpdates) {%>
+						<%if (app.hasUpdates || app.hasNextcloudAppUpdates) {%>
 							<u-badge color="green" class="ms-3" pill>
 								<i class="icon-regular icon-arrow-down icon-fw"></i>
 							</u-badge>

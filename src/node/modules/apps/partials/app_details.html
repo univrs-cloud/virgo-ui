@@ -19,7 +19,7 @@
 					<%if (app.isUnmanaged) {%>
 						<u-badge color="gray" tint="100" class="ms-3" pill>Unmanaged</u-badge>
 					<%}%>
-					<%if (app.hasUpdates) {%>
+					<%if (app.hasUpdates || app.hasNextcloudAppUpdates) {%>
 						<u-badge color="green" class="ms-3" tip="Updates available" pill>
 							<i class="icon-regular icon-arrow-down icon-fw"></i>
 						</u-badge>
@@ -61,6 +61,8 @@
 										<small class="fg-4 d-block text-truncate">Updates</small>
 										<%if (app.hasUpdates) {%>
 											<span class="fg-green-500"><i class="icon-regular icon-arrow-down icon-fw me-1"></i>Available</span>
+										<%} else if (app.hasNextcloudAppUpdates) {%>
+											<span class="fg-green-500"><i class="icon-regular icon-arrow-down icon-fw me-1"></i><%=_.pluralize('app update', _.size(nextcloudAppUpdates), true)%></span>
 										<%} else {%>
 											<span>Up to date</span>
 										<%}%>
@@ -140,7 +142,7 @@
 				</div>
 				<div class="detail-main">
 					<div class="nav nav-underline d-flex gap-0 border-bottom">
-						<button type="button" class="nav-link detail-default-tab px-4 <%=(_.includes(['protection', 'recovery'], appTab) ? '' : 'active border-primary fw-normal')%>" data-app-tab="services"><i class="icon-light icon-cube icon-fw"></i>Services <small class="opacity-75"><%=_.size(app.projectContainers)%></small></button>
+						<button type="button" class="nav-link detail-default-tab px-4 <%=(_.includes(['protection', 'recovery', 'nextcloud-apps'], appTab) ? '' : 'active border-primary fw-normal')%>" data-app-tab="services"><i class="icon-light icon-cube icon-fw"></i>Services <small class="opacity-75"><%=_.size(app.projectContainers)%></small></button>
 						<%if (!app.isUnmanaged) {%>
 							<button type="button" class="nav-link px-4 <%=(appTab === 'protection' ? 'active border-primary fw-normal' : '')%>" data-app-tab="protection">
 								<span class="position-relative d-inline-flex">
@@ -156,6 +158,15 @@
 								Recovery
 								<%if (!_.isEmpty(app.snapshots)) {%>
 									<small class="opacity-75"><%=_.size(app.snapshots)%></small>
+								<%}%>
+							</button>
+						<%}%>
+						<%if (_.toLower(app.name) === 'nextcloud') {%>
+							<button type="button" class="nav-link px-4 <%=(appTab === 'nextcloud-apps' ? 'active border-primary fw-normal' : '')%>" data-app-tab="nextcloud-apps">
+								<i class="icon-light icon-puzzle-piece icon-fw"></i>
+								Apps
+								<%if (!_.isEmpty(nextcloudAppUpdates)) {%>
+									<small class="opacity-75"><%=_.size(nextcloudAppUpdates)%></small>
 								<%}%>
 							</button>
 						<%}%>
@@ -204,7 +215,7 @@
 					</div>
 
 					<div class="table-scroll overflow-y-scroll pe-5 mx-0 me--5">
-						<div class="<%=(_.includes(['protection', 'recovery'], appTab) ? 'd-none' : '')%>">
+						<div class="<%=(_.includes(['protection', 'recovery', 'nextcloud-apps'], appTab) ? 'd-none' : '')%>">
 							<div class="services">
 								<div class="list-group list-group-flush">
 									<%_.each(app.projectContainers, (container, index) => {%>
@@ -422,6 +433,11 @@
 						<div class="<%=(appTab === 'recovery' ? '' : 'd-none')%>">
 							<%=appRecoveryTemplate({ app, appJobs, appSnapshotActionsTemplate, renderSnapshots })%>
 						</div>
+						<%if (_.toLower(app.name) === 'nextcloud') {%>
+							<div class="<%=(appTab === 'nextcloud-apps' ? '' : 'd-none')%>">
+								<%=appNextcloudAppsTemplate({ app, appJobs, nextcloudJobs, nextcloudAppUpdates })%>
+							</div>
+						<%}%>
 					</div>
 				</div>
 			</div>

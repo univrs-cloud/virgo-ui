@@ -79,7 +79,7 @@ const update = async (event) => {
 	pending.set(name, setTimeout(() => { clearPending(name); render(); }, PENDING_TIMEOUT_MS));
 	render();
 	try {
-		const result = await nodeService.startAppUpdate({ nodeId, name });
+		const result = await (button.dataset.nextcloudApps === 'true' ? nodeService.startNextcloudAppUpdate({ nodeId, name, containers: (button.dataset.containers === 'true') }) : nodeService.startAppUpdate({ nodeId, name }));
 		if (result?.status === 'succeeded') {
 			return;
 		}

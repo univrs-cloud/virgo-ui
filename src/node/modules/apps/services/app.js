@@ -14,7 +14,7 @@ const { subscribe } = createSubscription({
 		},
 		{
 			store: Docker,
-			propertyNames: ['configured', 'containers', 'imageUpdates', 'appsResourceMetrics']
+			propertyNames: ['configured', 'containers', 'imageUpdates', 'nextcloudAppUpdates', 'appsResourceMetrics']
 		},
 		{
 			store: Host,
@@ -27,8 +27,9 @@ const { subscribe } = createSubscription({
 	attachStore: storeAttach.beforeCallbacks,
 	mapState: (properties) => {
 		return {
-			apps: composeAllApps(properties?.configured, properties?.containers, properties?.appsResourceMetrics, properties?.imageUpdates, properties?.snapshots),
-			jobs: properties?.jobs || []
+			apps: composeAllApps(properties?.configured, properties?.containers, properties?.appsResourceMetrics, properties?.imageUpdates, properties?.nextcloudAppUpdates, properties?.snapshots),
+			jobs: properties?.jobs || [],
+			nextcloudAppUpdates: properties?.nextcloudAppUpdates
 		};
 	}
 });
@@ -37,7 +38,7 @@ function isAppsJob(job) {
 	return _.startsWith(job?.name, 'app');
 }
 
-function composeApps(configured, containers, appsResourceMetrics, imageUpdates, snapshots) {
+function composeApps(configured, containers, appsResourceMetrics, imageUpdates, nextcloudAppUpdates, snapshots) {
 	if (_.isNull(configured) || _.isNull(containers)) {
 		return null;
 	}
@@ -61,6 +62,7 @@ function composeApps(configured, containers, appsResourceMetrics, imageUpdates, 
 					return container.id === containerId;
 				});
 			});
+			entity.hasNextcloudAppUpdates = (_.toLower(entity.name) === 'nextcloud' && !_.isEmpty(nextcloudAppUpdates));
 			entity.projectContainers = _.map(entity.projectContainers, (container) => {
 				container.hasUpdates = !_.isEmpty(_.filter(imageUpdates, { containerId: container.id }));
 				container.urls = Docker.composeUrlFromLabels([container]);
@@ -125,8 +127,8 @@ function composeUnmanaged(configured, containers, appsResourceMetrics, imageUpda
 	});
 }
 
-function composeAllApps(configured, containers, appsResourceMetrics, imageUpdates, snapshots) {
-	const apps = composeApps(configured, containers, appsResourceMetrics, imageUpdates, snapshots);
+function composeAllApps(configured, containers, appsResourceMetrics, imageUpdates, nextcloudAppUpdates, snapshots) {
+	const apps = composeApps(configured, containers, appsResourceMetrics, imageUpdates, nextcloudAppUpdates, snapshots);
 	if (_.isNull(apps)) {
 		return null;
 	}
@@ -143,7 +145,11 @@ const getJobs = () => {
 };
 
 const getApps = () => {
-	return composeAllApps(Docker.getConfigured(), Docker.getContainers(), Docker.getAppsResourceMetrics(), Docker.getImageUpdates(), Host.getSnapshots());
+	return composeAllApps(Docker.getConfigured(), Docker.getContainers(), Docker.getAppsResourceMetrics(), Docker.getImageUpdates(), Docker.getNextcloudAppUpdates(), Host.getSnapshots());
+};
+
+const getNextcloudAppUpdates = () => {
+	return Docker.getNextcloudAppUpdates();
 };
 
 const getSnapshotRules = () => {
@@ -160,6 +166,14 @@ const getDefaultNetworkInterfaceSpeed = () => {
 
 const update = (data) => {
 	Docker.update(data);
+};
+
+const checkNextcloudAppUpdates = () => {
+	Docker.checkNextcloudAppUpdates();
+};
+
+const updateNextcloudApps = (data) => {
+	Docker.updateNextcloudApps(data);
 };
 
 const performAppAction = (data) => {
@@ -211,10 +225,13 @@ export {
 	getSocket,
 	getJobs,
 	getApps,
+	getNextcloudAppUpdates,
 	getSnapshotRules,
 	getDefaultNetworkInterface,
 	getDefaultNetworkInterfaceSpeed,
 	update,
+	checkNextcloudAppUpdates,
+	updateNextcloudApps,
 	performAppAction,
 	performServiceAction,
 	updateSnapshots,

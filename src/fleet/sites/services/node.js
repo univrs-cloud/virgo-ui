@@ -70,6 +70,10 @@ const startAppUpdate = (data) => {
 	return Node.startAppUpdate(data);
 };
 
+const startNextcloudAppUpdate = (data) => {
+	return Node.startNextcloudAppUpdate(data);
+};
+
 export {
 	subscribe,
 	getNodes,
@@ -81,5 +85,6 @@ export {
 	revokeGroup,
 	startSystemUpdate,
 	completeSystemUpdate,
-	startAppUpdate
+	startAppUpdate,
+	startNextcloudAppUpdate
 };

@@ -6,6 +6,7 @@ import appDetailsPartial from 'node/modules/apps/partials/app_details.html';
 import appProtectionPartial from 'node/modules/apps/partials/app_protection.html';
 import appRecoveryPartial from 'node/modules/apps/partials/app_recovery.html';
 import appSnapshotActionsPartial from 'node/modules/apps/partials/app_snapshot_actions.html';
+import appNextcloudAppsPartial from 'node/modules/apps/partials/app_nextcloud_apps.html';
 import filtersPartial from 'node/modules/apps/partials/filters.html';
 import appsImage from 'assets/img/illustrations/apps.svg';
 import noResultsImage from 'assets/img/illustrations/no-results.svg';
@@ -20,6 +21,7 @@ const appDetailsTemplate = _.template(appDetailsPartial);
 const appProtectionTemplate = _.template(appProtectionPartial);
 const appRecoveryTemplate = _.template(appRecoveryPartial);
 const appSnapshotActionsTemplate = _.template(appSnapshotActionsPartial);
+const appNextcloudAppsTemplate = _.template(appNextcloudAppsPartial);
 const filtersTemplate = _.template(filtersPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate({ appsImage, noResultsImage }));
 const module = document.querySelector('#apps');
@@ -136,7 +138,34 @@ const update = (event) => {
 	const data = {
 		name: app.name
 	};
+	if (_.toLower(app.name) === 'nextcloud') {
+		data.containers = true;
+		appService.updateNextcloudApps(data);
+		return;
+	}
+
 	appService.update(data);
+};
+
+const performNextcloudAction = (event) => {
+	const button = event.target.closest('[data-nextcloud-action]');
+	if (!button || button.hasAttribute('disabled')) {
+		return;
+	}
+
+	event.preventDefault();
+	if (button.dataset.nextcloudAction === 'check') {
+		appService.checkNextcloudAppUpdates();
+		return;
+	}
+
+	const data = {
+		name: button.closest('.item').dataset.name
+	};
+	if (button.dataset.nextcloudApp) {
+		data.app = button.dataset.nextcloudApp;
+	}
+	appService.updateNextcloudApps(data);
 };
 
 const performAppAction = async (event) => {
@@ -319,11 +348,13 @@ const renderAppDetails = (name) => {
 	}
 
 	const { jobs, appJobs, serviceJobs } = filterJobsByApp(appService.getJobs(), app);
+	const nextcloudJobs = _.filter(appService.getJobs(), (job) => { return _.startsWith(job.name, 'app:nextcloud:'); });
+	const nextcloudAppUpdates = appService.getNextcloudAppUpdates();
 	const networkMaxBytesPerSec = appService.getDefaultNetworkInterfaceSpeed();
 	const snapshotRules = appService.getSnapshotRules();
 	morphdom(
 		details,
-		`<div>${appDetailsTemplate({ app, jobs, appJobs, serviceJobs, snapshotRules, appActionsTemplate, appProtectionTemplate, appRecoveryTemplate, appSnapshotActionsTemplate, renderSnapshots, networkMaxBytesPerSec, appTab: appTabs[name] || 'services', prettyBytes, prettyMilliseconds, moment })}</div>`,
+		`<div>${appDetailsTemplate({ app, jobs, appJobs, serviceJobs, nextcloudJobs, nextcloudAppUpdates, snapshotRules, appActionsTemplate, appProtectionTemplate, appRecoveryTemplate, appSnapshotActionsTemplate, appNextcloudAppsTemplate, renderSnapshots, networkMaxBytesPerSec, appTab: appTabs[name] || 'services', prettyBytes, prettyMilliseconds, moment })}</div>`,
 		{
 			childrenOnly: true,
 			onBeforeElUpdated: (fromEl, toEl) => {
@@ -359,7 +390,7 @@ const render = (state) => {
 	const categories = _.sortBy(_.uniqBy([..._.compact(_.map(state.apps, 'category')), ...filterValues.category], _.toLower), _.toLower);
 	const present = {
 		status: _.uniq(_.map(state.apps, (app) => { return _.invert(statusStates)[app.state]; })),
-		updates: _.uniq(_.map(state.apps, (app) => { return (app.hasUpdates ? 'available' : 'current'); })),
+		updates: _.uniq(_.map(state.apps, (app) => { return (app.hasUpdates || app.hasNextcloudAppUpdates ? 'available' : 'current'); })),
 		snapshots: _.uniq(_.map(state.apps, (app) => { return _.toLower(app.snapshotPolicy?.mode); }))
 	};
 	morphdom(
@@ -379,7 +410,7 @@ const render = (state) => {
 		if (filterValues.status && app.state !== statusStates[filterValues.status]) {
 			return false;
 		}
-		if (filterValues.updates && app.hasUpdates !== (filterValues.updates === 'available')) {
+		if (filterValues.updates && (app.hasUpdates || app.hasNextcloudAppUpdates) !== (filterValues.updates === 'available')) {
 			return false;
 		}
 		if (filterValues.snapshots && _.toLower(app.snapshotPolicy?.mode) !== _.toLower(filterValues.snapshots)) {
@@ -456,6 +487,7 @@ module.onRoute = handleRoute;
 module.addEventListener('click', compress);
 module.addEventListener('click', update);
 module.addEventListener('click', performAppAction);
+module.addEventListener('click', performNextcloudAction);
 module.addEventListener('click', performServiceAction);
 module.addEventListener('click', selectTab);
 module.addEventListener('click', updateSnapshots);

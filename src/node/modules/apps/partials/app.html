@@ -15,7 +15,7 @@
 			<%if (app.isUnmanaged) {%>
 				<u-badge color="gray" tint="100" class="ms-3" pill>Unmanaged</u-badge>
 			<%}%>
-			<%if (app.hasUpdates) {%>
+			<%if (app.hasUpdates || app.hasNextcloudAppUpdates) {%>
 				<u-badge color="green" class="ms-3" tip="Updates available" pill>
 					<i class="icon-regular icon-arrow-down icon-fw"></i>
 				</u-badge>

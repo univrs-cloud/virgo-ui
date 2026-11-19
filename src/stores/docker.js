@@ -6,6 +6,7 @@ class Docker extends Store {
 			configured: null,
 			containers: null,
 			imageUpdates: null,
+			nextcloudAppUpdates: null,
 			appsResourceMetrics: null,
 			templates: null
 		};
@@ -38,6 +39,10 @@ class Docker extends Store {
 
 		this.socket.on('app:updates', (imageUpdates) => {
 			this.setState({ imageUpdates }, 'set_container_updates');
+		});
+
+		this.socket.on('app:nextcloud:updates', (nextcloudAppUpdates) => {
+			this.setState({ nextcloudAppUpdates }, 'set_nextcloud_app_updates');
 		});
 
 		this.socket.on('app:templates', (templates) => {
@@ -75,6 +80,10 @@ class Docker extends Store {
 		return this.getStateProperty('imageUpdates');
 	}
 
+	getNextcloudAppUpdates() {
+		return this.getStateProperty('nextcloudAppUpdates');
+	}
+
 	getTemplates() {
 		return this.getStateProperty('templates');
 	}
@@ -85,6 +94,14 @@ class Docker extends Store {
 
 	update(data) {
 		this.socket.emit('app:update', data);
+	}
+
+	checkNextcloudAppUpdates() {
+		this.socket.emit('app:nextcloud:updates:check', {});
+	}
+
+	updateNextcloudApps(data) {
+		this.socket.emit('app:nextcloud:update', data);
 	}
 
 	performAppAction(data) {

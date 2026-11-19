@@ -181,6 +181,10 @@ class Node extends Store {
 	startAppUpdate(data) {
 		return this.socket.timeout(10000).emitWithAck('node:app:update', data);
 	}
+
+	startNextcloudAppUpdate(data) {
+		return this.socket.timeout(10000).emitWithAck('node:app:nextcloud:update', data);
+	}
 }
 
 export default new Node();

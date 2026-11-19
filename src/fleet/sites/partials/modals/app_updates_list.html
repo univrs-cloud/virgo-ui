@@ -13,12 +13,17 @@
 							<i class="icon-light icon-cube icon-fw fg-4 me-1"></i><%-service%>
 						</small>
 					<%})%>
+					<%if (!_.isEmpty(app.nextcloudApps)) {%>
+						<small class="fg-secondary d-inline-flex align-items-center me-3" data-bs-toggle="tooltip" data-bs-original-title="<%-_.join(app.nextcloudApps, ', ')%>">
+							<i class="icon-light icon-puzzle-piece icon-fw fg-4 me-1"></i><%=_.pluralize('app update', _.size(app.nextcloudApps), true)%>
+						</small>
+					<%}%>
 				</div>
 			</div>
 			<%if (isUpdating) {%>
 				<i class="icon-fill icon-gear icon-fw icon-spin ms-auto flex-shrink-0"></i>
 			<%} else {%>
-				<u-button variant="primary" size="sm" class="update ms-auto flex-shrink-0" data-name="<%-app.name%>" tip="<%=(isUpdatingSystem ? 'A system update is in progress' : '')%>" <%=(isUpdatingSystem ? 'disabled' : '')%>>Update</u-button>
+				<u-button variant="primary" size="sm" class="update ms-auto flex-shrink-0" data-name="<%-app.name%>" data-nextcloud-apps="<%=!_.isEmpty(app.nextcloudApps)%>" data-containers="<%=!_.isEmpty(app.services)%>" tip="<%=(isUpdatingSystem ? 'A system update is in progress' : '')%>" <%=(isUpdatingSystem ? 'disabled' : '')%>><%=(_.isEmpty(app.services) ? 'Update apps' : 'Update')%></u-button>
 			<%}%>
 		</div>
 	<%})%>
