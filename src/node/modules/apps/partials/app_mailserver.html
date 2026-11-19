@@ -63,9 +63,9 @@
 								<%}%>
 								<div class="menu-divider"></div>
 								<%if (domain.accounts === 0 && domain.aliases === 0) {%>
-									<a href="#" class="menu-item fg-danger" data-mail-action="domain:remove" data-domain="<%-domain.name%>"><i class="icon-fill icon-x-circle icon-fw"></i>Remove</a>
+									<a href="#" class="menu-item fg-danger" data-mail-action="domain:delete" data-domain="<%-domain.name%>"><i class="icon-fill icon-x-circle icon-fw"></i>Delete</a>
 								<%} else {%>
-									<span class="d-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="Remove its accounts and aliases first."><button type="button" class="menu-item disabled"><i class="icon-fill icon-x-circle icon-fw"></i>Remove</button></span>
+									<span class="d-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="Delete its accounts and remove its aliases first."><button type="button" class="menu-item disabled"><i class="icon-fill icon-x-circle icon-fw"></i>Delete</button></span>
 								<%}%>
 							</div>
 						</div>
@@ -103,7 +103,7 @@
 								<a href="#mail-account-password" class="menu-item" data-bs-toggle="dialog" data-email="<%-account.email%>"><i class="icon-fill icon-key icon-fw"></i>Change password</a>
 								<a href="#mail-account-quota" class="menu-item" data-bs-toggle="dialog" data-email="<%-account.email%>"><i class="icon-fill icon-hard-drive icon-fw"></i>Storage limit</a>
 								<div class="menu-divider"></div>
-								<a href="#" class="menu-item fg-danger" data-mail-action="account:remove" data-email="<%-account.email%>"><i class="icon-fill icon-x-circle icon-fw"></i>Remove</a>
+								<a href="#" class="menu-item fg-danger" data-mail-action="account:delete" data-email="<%-account.email%>"><i class="icon-fill icon-x-circle icon-fw"></i>Delete</a>
 							</div>
 						</div>
 					</div>
