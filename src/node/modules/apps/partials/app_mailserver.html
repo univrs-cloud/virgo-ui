@@ -164,7 +164,7 @@
 						<div class="min-w-0">
 							<div class="d-flex align-items-center gap-3 min-w-0">
 								<div class="text-truncate"><%-ban.ip%></div>
-								<u-button variant="secondary" size="xs" class="flex-shrink-0" data-mail-action="ban:remove" data-ip="<%-ban.ip%>" <%=(isDisabled ? 'disabled' : '')%>>Unblock</u-button>
+								<u-button variant="secondary" size="xs" class="flex-shrink-0" outline data-mail-action="ban:remove" data-ip="<%-ban.ip%>" <%=(isDisabled ? 'disabled' : '')%>>Unblock</u-button>
 							</div>
 							<small class="d-block fg-4 text-truncate"><%-_.join(_.uniq(_.map(ban.jails, (jail) => { return ({ custom: 'Blocked by hand', dovecot: 'Failed mailbox logins', 'postfix-sasl': 'Failed sending logins' })[_.toLower(jail)] || jail; })), ', ')%></small>
 							<%if (_.isNumber(ban.since)) {%>

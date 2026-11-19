@@ -30,7 +30,7 @@
 	<%if (inline) {%>
 		<div class="d-inline-flex align-items-center bg-2 rounded-3">
 			<div class="d-inline-flex align-items-center px-1">
-				<u-button variant="secondary" size="sm" class="actions-button" text icon data-action="sync"><i class="icon-regular icon-arrows-clockwise icon-fw fg-body"></i></u-button>
+				<u-button variant="secondary" size="sm" class="actions-button" text icon tip="Refresh" data-action="sync"><i class="icon-regular icon-arrows-clockwise icon-fw fg-body"></i></u-button>
 				<u-button variant="secondary" size="sm" class="actions-button" text icon tip="Start" data-action="start" <%=(canStart ? '' : 'disabled')%>><i class="icon-fill icon-play icon-fw <%=(canStart ? 'fg-green-400' : 'fg-gray-500')%>"></i></u-button>
 				<u-button variant="secondary" size="sm" class="actions-button <%=(canRestart ? 'confirm' : '')%>" text icon tip="Restart" data-action="restart" <%=(canRestart ? '' : 'disabled')%>><i class="icon-regular icon-arrow-counter-clockwise icon-fw <%=(canRestart ? 'fg-body' : 'fg-gray-500')%>"></i></u-button>
 			</div>
