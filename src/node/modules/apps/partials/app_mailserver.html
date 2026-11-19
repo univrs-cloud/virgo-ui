@@ -62,7 +62,11 @@
 									<a href="#" class="menu-item" data-mail-action="domain:add" data-domain="<%-domain.name%>"><i class="icon-fill icon-key icon-fw"></i>Create DKIM key</a>
 								<%}%>
 								<div class="menu-divider"></div>
-								<a href="#" class="menu-item fg-danger" data-mail-action="domain:remove" data-domain="<%-domain.name%>"><i class="icon-fill icon-x-circle icon-fw"></i>Remove</a>
+								<%if (domain.accounts === 0 && domain.aliases === 0) {%>
+									<a href="#" class="menu-item fg-danger" data-mail-action="domain:remove" data-domain="<%-domain.name%>"><i class="icon-fill icon-x-circle icon-fw"></i>Remove</a>
+								<%} else {%>
+									<span class="d-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="Remove its accounts and aliases first."><button type="button" class="menu-item disabled"><i class="icon-fill icon-x-circle icon-fw"></i>Remove</button></span>
+								<%}%>
 							</div>
 						</div>
 					</div>

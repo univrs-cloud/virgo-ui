@@ -215,12 +215,12 @@ const performMailAction = async (event) => {
 	event.preventDefault();
 	const { mailAction: action, domain, email, address, recipient, ip } = button.dataset;
 	const confirmations = {
-		'domain:remove': [`Are you sure you want to remove the domain ${domain}?<br><br>Its DKIM key is deleted. Remove its accounts and aliases first.`, 'Remove'],
+		'domain:remove': [`Are you sure you want to remove the domain ${domain}?<br><br>Its DKIM key is <strong>permanently deleted</strong> and can only be recovered from a snapshot of MailServer. If you add ${domain} again, it gets a new key and its DKIM record has to be replaced in its DNS. Remove the domain's DNS records at your DNS provider too.`, 'Remove', 'I understand the DKIM key of this domain is deleted'],
 		'dkim:regenerate': [`Are you sure you want to create a new DKIM key for ${domain}?<br><br>The current key is replaced right away. Mail sent from ${domain} is signed with the new key from then on, and receiving servers can only check it once the new record is in the DNS of ${domain}. Until then, that mail can be <strong>marked as spam or rejected</strong>.<br><br>Right after creating it, open <strong>DNS records</strong> under ${domain}, copy the new value of the TXT record <strong>${_.find(appService.getMailserver()?.domains, { name: domain })?.dkim?.selector ?? 'dms'}._domainkey.${domain}</strong>, and replace the old value at your DNS provider. The change can take a few hours to reach every server.`, 'Create new key'],
-		'account:remove': [`Are you sure you want to remove the account ${email}?<br><br>All of its mail and its aliases are <strong>permanently deleted</strong>.`, 'Remove'],
+		'account:remove': [`Are you sure you want to remove the account ${email}?<br><br>All of its mail, its aliases and its storage limit are <strong>permanently deleted</strong>. The mail can only be recovered from a snapshot of MailServer.`, 'Remove', 'I understand all mail of this account is deleted'],
 		'alias:remove': [`Are you sure you want ${address} to stop forwarding to ${recipient}?`, 'Remove']
 	};
-	if (confirmations[action] && !await confirm(confirmations[action][0], { buttons: [{ text: confirmations[action][1], class: 'btn-solid theme-danger' }] })) {
+	if (confirmations[action] && !await confirm(confirmations[action][0], { buttons: [{ text: confirmations[action][1], class: 'btn-solid theme-danger' }], acknowledge: confirmations[action][2] })) {
 		return;
 	}
 
