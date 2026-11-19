@@ -240,9 +240,11 @@ export class Form extends LitElement {
 			const inputs = this.#form.querySelectorAll(field.selector);
 			inputs.forEach((input, index) => {
 				const uniqueId = `${field.selector}-${index}`;
-				if (this.#validationControllers.has(uniqueId)) {
+				const existing = this.#validationControllers.get(uniqueId);
+				if (existing?.input === input) {
 					return;
 				}
+				existing?.controller.abort();
 
 				const valueChangedListener = () => {
 					if (this.#isResetting) {
@@ -269,7 +271,7 @@ export class Form extends LitElement {
 				input.addEventListener('value-changed', valueChangedListener, { signal });
 				input.addEventListener('blur', blurListener, { signal });
 
-				this.#validationControllers.set(uniqueId, controller);
+				this.#validationControllers.set(uniqueId, { input, controller });
 			});
 		});
 	}
@@ -293,7 +295,7 @@ export class Form extends LitElement {
 	}
 
 	#clearValidationListeners() {
-		this.#validationControllers.forEach((controller) => {
+		this.#validationControllers.forEach(({ controller }) => {
 			controller.abort();
 		});
 		this.#validationControllers.clear();
