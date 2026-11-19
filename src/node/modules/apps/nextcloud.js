@@ -2,13 +2,14 @@ import groupModalPartial from 'node/modules/apps/partials/modals/nextcloud_group
 import accountModalPartial from 'node/modules/apps/partials/modals/nextcloud_account_create.html';
 import deleteModalPartial from 'node/modules/apps/partials/modals/nextcloud_account_delete.html';
 import updateModalPartial from 'node/modules/apps/partials/modals/nextcloud_account_update.html';
+import passwordModalPartial from 'node/modules/apps/partials/modals/nextcloud_account_password.html';
 import * as appService from 'node/modules/apps/services/app';
 
 const APP_NAME = 'nextcloud';
 const USER_ID_PATTERN = /^[a-z0-9_.@-]{1,64}$/i;
 const GIB = 1024 * 1024 * 1024;
 
-document.querySelector('body').insertAdjacentHTML('beforeend', groupModalPartial + accountModalPartial + deleteModalPartial + updateModalPartial);
+document.querySelector('body').insertAdjacentHTML('beforeend', groupModalPartial + accountModalPartial + deleteModalPartial + updateModalPartial + passwordModalPartial);
 
 const module = document.querySelector('#apps');
 const groupModal = document.querySelector('#nextcloud-group-create');
@@ -76,6 +77,25 @@ const updateAccount = () => {
 	bootstrap.Dialog.getInstance(updateModal)?.hide();
 };
 
+const passwordModal = document.querySelector('#nextcloud-account-password');
+const passwordForm = passwordModal.querySelector('u-form');
+let passwordUser = null;
+
+const renderPasswordForm = (event) => {
+	passwordUser = _.find(appService.getNextcloudAccounts()?.users, { id: event.relatedTarget?.dataset.user }) ?? null;
+	passwordForm.querySelector('.title-user').textContent = (passwordUser?.id ?? '');
+};
+
+const changePassword = () => {
+	if (!passwordUser) {
+		return;
+	}
+
+	_.each(passwordForm.querySelectorAll('.dialog-footer u-button'), (button) => { button.disabled = true; });
+	appService.manageNextcloudAccounts('user:password', { name: APP_NAME, user: passwordUser.id, password: passwordForm.getData().password });
+	bootstrap.Dialog.getInstance(passwordModal)?.hide();
+};
+
 const deleteModal = document.querySelector('#nextcloud-account-delete');
 const deleteForm = deleteModal.querySelector('u-form');
 const deleteButton = deleteForm.querySelector('.delete');
@@ -128,7 +148,7 @@ const setUserEnabled = async (event) => {
 	}
 
 	const action = trigger.dataset.nextcloudUserAction;
-	if (action === 'disable' && !await confirm(`Are you sure you want to disable ${_.escape(user.displayName)}?<br><br>They can no longer log in or sync until the account is enabled again. Their files are kept.`, { buttons: [{ text: 'Disable', class: 'btn-solid theme-danger' }] })) {
+	if (action === 'disable' && !await confirm(`Are you sure you want to lock ${_.escape(user.displayName)}?<br><br>They can no longer log in or sync until the account is unlocked. Their files are kept.`, { buttons: [{ text: 'Lock', class: 'btn-solid theme-danger' }] })) {
 		return;
 	}
 
@@ -272,6 +292,38 @@ updateForm.validation = [
 		}
 	}
 ];
+passwordForm.validation = [
+	{
+		selector: '.password',
+		rules: {
+			isEmpty: `Can't be empty`,
+			isStrongPassword: {
+				message: `At least 8 characters`,
+				minLength: 8,
+				minLowercase: 0,
+				minUppercase: 0,
+				minNumbers: 0,
+				minSymbols: 0
+			}
+		}
+	},
+	{
+		selector: '.password-check',
+		rules: {
+			isEmpty: `Can't be empty`,
+			equals: {
+				message: `Passwords do not match`,
+				comparison: () => { return passwordForm.querySelector('.password').value; }
+			}
+		}
+	}
+];
+passwordForm.addEventListener('valid', changePassword);
+passwordModal.addEventListener('show.bs.dialog', renderPasswordForm);
+passwordModal.addEventListener('hidden.bs.dialog', () => {
+	passwordUser = null;
+	passwordForm.reset();
+});
 updateForm.addEventListener('valid', updateAccount);
 updateModal.addEventListener('show.bs.dialog', renderUpdateForm);
 updateModal.addEventListener('hidden.bs.dialog', () => {
