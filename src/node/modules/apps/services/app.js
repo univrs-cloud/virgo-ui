@@ -14,7 +14,7 @@ const { subscribe } = createSubscription({
 		},
 		{
 			store: Docker,
-			propertyNames: ['configured', 'containers', 'imageUpdates', 'nextcloudAppUpdates', 'appsResourceMetrics']
+			propertyNames: ['configured', 'containers', 'imageUpdates', 'nextcloudAppUpdates', 'mailserver', 'appsResourceMetrics']
 		},
 		{
 			store: Host,
@@ -29,10 +29,25 @@ const { subscribe } = createSubscription({
 		return {
 			apps: composeAllApps(properties?.configured, properties?.containers, properties?.appsResourceMetrics, properties?.imageUpdates, properties?.nextcloudAppUpdates, properties?.snapshots),
 			jobs: properties?.jobs || [],
-			nextcloudAppUpdates: properties?.nextcloudAppUpdates
+			nextcloudAppUpdates: properties?.nextcloudAppUpdates,
+			mailserver: sortMailserver(properties?.mailserver)
 		};
 	}
 });
+
+function sortMailserver(mailserver) {
+	if (!_.isObject(mailserver)) {
+		return mailserver;
+	}
+
+	return {
+		...mailserver,
+		domains: _.orderBy(mailserver.domains, [(domain) => { return _.toLower(domain.name); }], ['asc']),
+		accounts: _.orderBy(mailserver.accounts, [(account) => { return _.toLower(account.email); }], ['asc']),
+		aliases: _.orderBy(mailserver.aliases, [(alias) => { return _.toLower(alias.address); }], ['asc']),
+		bans: _.orderBy(mailserver.bans, ['since', 'ip'], ['desc', 'asc'])
+	};
+}
 
 function isAppsJob(job) {
 	return _.startsWith(job?.name, 'app');
@@ -152,12 +167,25 @@ const getNextcloudAppUpdates = () => {
 	return Docker.getNextcloudAppUpdates();
 };
 
+const getMailserver = () => {
+	return sortMailserver(Docker.getMailserver());
+};
+
 const getSnapshotRules = () => {
 	return Host.getSnapshotRules();
 };
 
 const getDefaultNetworkInterface = () => {
 	return _.find(Host.getSystem()?.networkInterfaces, { default: true });
+};
+
+const getNodeAddress = () => {
+	const virtualIp = Host.getSystem()?.virtualIp?.address;
+	if (virtualIp) {
+		return virtualIp;
+	}
+
+	return _.find(getDefaultNetworkInterface()?.addrInfo, { family: 'inet' })?.local ?? null;
 };
 
 const getDefaultNetworkInterfaceSpeed = () => {
@@ -174,6 +202,14 @@ const checkNextcloudAppUpdates = () => {
 
 const updateNextcloudApps = (data) => {
 	Docker.updateNextcloudApps(data);
+};
+
+const fetchMailserver = () => {
+	Docker.fetchMailserver();
+};
+
+const manageMailserver = (action, data) => {
+	Docker.manageMailserver(action, data);
 };
 
 const performAppAction = (data) => {
@@ -226,12 +262,16 @@ export {
 	getJobs,
 	getApps,
 	getNextcloudAppUpdates,
+	getMailserver,
 	getSnapshotRules,
 	getDefaultNetworkInterface,
 	getDefaultNetworkInterfaceSpeed,
+	getNodeAddress,
 	update,
 	checkNextcloudAppUpdates,
 	updateNextcloudApps,
+	fetchMailserver,
+	manageMailserver,
 	performAppAction,
 	performServiceAction,
 	updateSnapshots,

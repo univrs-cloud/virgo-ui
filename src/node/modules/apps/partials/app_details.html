@@ -142,7 +142,7 @@
 				</div>
 				<div class="detail-main">
 					<div class="nav nav-underline d-flex gap-0 border-bottom">
-						<button type="button" class="nav-link detail-default-tab px-4 <%=(_.includes(['protection', 'recovery', 'nextcloud-apps'], appTab) ? '' : 'active border-primary fw-normal')%>" data-app-tab="services"><i class="icon-light icon-cube icon-fw"></i>Services <small class="opacity-75"><%=_.size(app.projectContainers)%></small></button>
+						<button type="button" class="nav-link detail-default-tab px-4 <%=(_.includes(['protection', 'recovery', 'nextcloud-apps', 'mail-domains', 'mail-accounts', 'mail-blocked'], appTab) ? '' : 'active border-primary fw-normal')%>" data-app-tab="services"><i class="icon-light icon-cube icon-fw"></i>Services <small class="opacity-75"><%=_.size(app.projectContainers)%></small></button>
 						<%if (!app.isUnmanaged) {%>
 							<button type="button" class="nav-link px-4 <%=(appTab === 'protection' ? 'active border-primary fw-normal' : '')%>" data-app-tab="protection">
 								<span class="position-relative d-inline-flex">
@@ -169,6 +169,21 @@
 									<small class="opacity-75"><%=_.size(nextcloudAppUpdates)%></small>
 								<%}%>
 							</button>
+						<%}%>
+						<%if (_.toLower(app.name) === 'mailserver') {%>
+							<%_.each([
+								{ tab: 'mail-domains', label: 'Domains', icon: 'icon-globe', count: _.size(mailserver?.domains) },
+								{ tab: 'mail-accounts', label: 'Accounts', icon: 'icon-envelope-simple', count: _.size(mailserver?.accounts) },
+								{ tab: 'mail-blocked', label: 'Blocked IPs', icon: 'icon-prohibit', count: _.size(mailserver?.bans) }
+							], (mailTabItem) => {%>
+								<button type="button" class="nav-link px-4 <%=(appTab === mailTabItem.tab ? 'active border-primary fw-normal' : '')%>" data-app-tab="<%-mailTabItem.tab%>">
+									<i class="icon-light <%=mailTabItem.icon%> icon-fw"></i>
+									<%-mailTabItem.label%>
+									<%if (mailTabItem.count > 0) {%>
+										<small class="opacity-75"><%=mailTabItem.count%></small>
+									<%}%>
+								</button>
+							<%})%>
 						<%}%>
 						<%if (app.composeFile) {%>
 							<small class="fg-emphasis-secondary text-truncate align-self-center ms-auto px-3"><%-app.composeFile%></small>
@@ -215,7 +230,7 @@
 					</div>
 
 					<div class="table-scroll overflow-y-scroll pe-5 mx-0 me--5">
-						<div class="<%=(_.includes(['protection', 'recovery', 'nextcloud-apps'], appTab) ? 'd-none' : '')%>">
+						<div class="<%=(_.includes(['protection', 'recovery', 'nextcloud-apps', 'mail-domains', 'mail-accounts', 'mail-blocked'], appTab) ? 'd-none' : '')%>">
 							<div class="services">
 								<div class="list-group list-group-flush">
 									<%_.each(app.projectContainers, (container, index) => {%>
@@ -437,6 +452,9 @@
 							<div class="<%=(appTab === 'nextcloud-apps' ? '' : 'd-none')%>">
 								<%=appNextcloudAppsTemplate({ app, appJobs, nextcloudJobs, nextcloudAppUpdates, expandedChangelogs, renderChangelog })%>
 							</div>
+						<%}%>
+						<%if (_.toLower(app.name) === 'mailserver' && _.startsWith(appTab, 'mail-')) {%>
+							<%=appMailserverTemplate({ app, appJobs, mailserver, mailTab: appTab, expandedDns, mailDnsRecordsTemplate, prettyBytes, moment })%>
 						<%}%>
 					</div>
 				</div>

@@ -1,0 +1,47 @@
+<%
+	const mxDomain = (mailserver.defaultDomain || domain.name);
+	const mailHost = `mail.${mxDomain}`;
+	const publicIp = 'Your public IP address';
+	const records = _.compact([
+		{ type: 'MX', name: domain.name, value: mailHost, note: 'Priority 10' },
+		{ type: 'TXT', name: domain.name, value: 'v=spf1 mx -all' },
+		(domain.dkim ? { type: 'TXT', name: `${domain.dkim.selector}._domainkey.${domain.name}`, value: domain.dkim.record } : null),
+		{ type: 'TXT', name: `_dmarc.${domain.name}`, value: 'v=DMARC1; p=quarantine' },
+		{ type: 'SRV', name: `_imaps._tcp.${domain.name}`, value: `0 1 993 ${mailHost}` },
+		{ type: 'SRV', name: `_submissions._tcp.${domain.name}`, value: `0 1 465 ${mailHost}` },
+		{ type: 'SRV', name: `_autodiscover._tcp.${domain.name}`, value: `0 1 443 autodiscover.${mxDomain}` },
+		{ type: 'TXT', name: domain.name, value: `mailconf=https://autoconfig.${mxDomain}/mail/config-v1.1.xml` },
+		...(domain.name === mxDomain ? [
+			{ type: 'A', name: mailHost, value: publicIp, isPlaceholder: true },
+			{ type: 'A', name: `autoconfig.${mxDomain}`, value: publicIp, isPlaceholder: true },
+			{ type: 'A', name: `autodiscover.${mxDomain}`, value: publicIp, isPlaceholder: true },
+			{ type: 'PTR', name: publicIp, value: mailHost, note: 'Set by your internet provider, not in your DNS', isNamePlaceholder: true }
+		] : [])
+	]);
+%>
+<div class="small min-w-0 flex-fill">
+	<div class="row g-3 d-none md:d-flex">
+		<div class="col-1"><small class="fg-4">Type</small></div>
+		<div class="col-4"><small class="fg-4">Name</small></div>
+		<div class="col-7"><small class="fg-4">Value</small></div>
+	</div>
+	<%_.each(records, (record) => {%>
+		<div class="row g-3 border-top md:border-0 pt-2 md:pt-0 mt-1">
+			<div class="col-12 md:col-1">
+				<small class="d-block fg-4 md:d-none">Type</small>
+				<span><%-record.type%></span>
+			</div>
+			<div class="col-12 md:col-4">
+				<small class="d-block fg-4 md:d-none">Name</small>
+				<span class="text-break <%=(record.isNamePlaceholder ? 'fg-4' : '')%>"><%-record.name%></span>
+			</div>
+			<div class="col-12 md:col-7">
+				<small class="d-block fg-4 md:d-none">Value</small>
+				<span class="d-block text-break <%=(record.isPlaceholder ? 'fg-4' : 'font-monospace')%>"><%-record.value%></span>
+				<%if (record.note) {%>
+					<small class="d-block fg-4"><%-record.note%></small>
+				<%}%>
+			</div>
+		</div>
+	<%})%>
+</div>

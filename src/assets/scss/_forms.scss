@@ -48,16 +48,6 @@ textarea {
 			pointer-events: all;
 		}
 	}
-	> .form-adorn:not(:focus-within):has(.form-ghost:placeholder-shown) {
-		padding-top: var(--form-floating-padding-y);
-		padding-bottom: var(--form-floating-padding-y);
-		.form-adorn-text {
-			visibility: hidden;
-		}
-	}
-	> label:has(~ .form-adorn:not(:focus-within) .form-ghost:placeholder-shown) {
-		transform: none;
-	}
 	> .menu {
 		--menu-zindex: 2001;
 		--menu-padding-y: var(--menu-padding-x);
@@ -85,20 +75,19 @@ textarea {
 		border-top-left-radius: var(--btn-input-border-radius);
 		pointer-events: none;
 	}
-	> label:has(~ input.form-control:placeholder-shown:not(:focus)),
-	> label:has(~ .form-adorn:not(:focus-within) .form-ghost:placeholder-shown) {
+	> label:has(~ input.form-control:placeholder-shown:not(:focus)) {
 		// Optical correction for Inter's visible glyphs within the centered line box.
 		padding-top: calc(var(--form-floating-padding-y) + 0.5px);
 		padding-bottom: calc(var(--form-floating-padding-y) - 0.5px);
 	}
 	> label:has(~ .form-control:focus),
-	> label:has(~ .form-control:not(:placeholder-shown)):not(:has(~ .form-adorn:not(:focus-within) .form-ghost:placeholder-shown)) {
+	> label:has(~ .form-control:not(:placeholder-shown)) {
 		height: auto;
 		padding-top: 0.4rem;
 		padding-bottom: 0;
 		margin-top: map.get($spacers, 3);
 	}
-	> label:has(~ .form-control:not(:placeholder-shown)):not(:has(~ .form-adorn:not(:focus-within) .form-ghost:placeholder-shown)) {
+	> label:has(~ .form-control:not(:placeholder-shown)) {
 		opacity: 1;
 	}
 	.form-control {

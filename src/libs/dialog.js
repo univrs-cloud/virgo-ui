@@ -1,5 +1,7 @@
 (() => {
-	const createModal = (title, content, buttons, focusIndex = 0, escValue = null, acknowledge = null) => {
+	const SIZE_CLASSES = { sm: 'dialog-sm', md: '', lg: 'dialog-lg' };
+
+	const createModal = (title, content, buttons, focusIndex = 0, escValue = null, acknowledge = null, size = 'sm') => {
 		return new Promise((resolve) => {
 			const modalId = `dialog-${Math.random().toString(36).slice(2)}`;
 			const acknowledgeHtml = (acknowledge ? `
@@ -9,7 +11,7 @@
 								</div>
 			` : '');
 			const modalHtml = `
-				<dialog id="${modalId}" class="dialog dialog-sm dialog-scrollable" tabindex="-1" data-bs-keyboard="true" data-attention>
+				<dialog id="${modalId}" class="dialog ${SIZE_CLASSES[size] ?? SIZE_CLASSES.sm} dialog-scrollable" tabindex="-1" data-bs-keyboard="true" data-attention>
 					<div class="dialog-header">
 						<h1 class="dialog-title">${title}</h1>
 					</div>
@@ -80,7 +82,7 @@
 			return { ...defaultBtn, ...override };
 		});
 		const focus = options.focus ?? 1;
-		const result = await createModal('Confirmation', text, buttons, focus, false, options.acknowledge ?? null);
+		const result = await createModal('Confirmation', text, buttons, focus, false, options.acknowledge ?? null, 'md');
 		try {
 			return JSON.parse(result);
 		} catch (error) {

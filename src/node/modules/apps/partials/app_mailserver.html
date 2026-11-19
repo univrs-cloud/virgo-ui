@@ -1,0 +1,182 @@
+<%
+	const isBusy = !_.isEmpty(appJobs);
+	const isReady = Boolean(mailserver?.isRunning);
+	const isDisabled = (isBusy || !isReady);
+	const accountEmails = _.map(mailserver?.accounts, 'email');
+	const externalAliases = _.flatMap(mailserver?.aliases, (alias) => {
+		return _.map(_.reject(alias.recipients, (recipient) => { return _.includes(accountEmails, recipient); }), (recipient) => { return { address: alias.address, recipient }; });
+	});
+	const headers = {
+		'mail-domains': { label: 'Domains', summary: _.pluralize('domain', _.size(mailserver?.domains), true), actions: [{ target: '#mail-domain-create', text: 'New domain' }] },
+		'mail-accounts': { label: 'Accounts', summary: `${_.pluralize('account', _.size(mailserver?.accounts), true)}, ${_.pluralize('alias', _.size(mailserver?.aliases), true)}`, actions: [{ target: '#mail-account-create', text: 'New account' }] },
+		'mail-blocked': { label: 'Blocked IPs', summary: _.pluralize('blocked IP', _.size(mailserver?.bans), true), actions: [{ target: '#mail-ban-create', text: 'New blocked IP' }] }
+	};
+	const header = headers[mailTab];
+%>
+<div class="card border-0 bg-transparent">
+	<div class="card-body flex-grow-0">
+		<div class="d-flex flex-wrap align-items-center justify-content-between gap-5">
+			<div class="min-w-0">
+				<small class="d-block fg-4 text-uppercase"><%-header.label%></small>
+				<%if (_.isNil(mailserver)) {%>
+					<span>Loading...</span>
+				<%} else if (!isReady) {%>
+					<span>MailServer is not running. Start it to make changes.</span>
+				<%} else {%>
+					<span><%-header.summary%></span>
+				<%}%>
+			</div>
+			<%if (isBusy) {%>
+				<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-fill icon-gear icon-fw icon-spin"></i></span>
+			<%} else {%>
+				<div class="d-flex align-items-center gap-3">
+					<%_.each(header.actions, (action) => {%>
+						<a href="<%-action.target%>" class="btn-sm btn-outline theme-secondary py-1 min-h-0 <%=(isDisabled ? 'disabled' : '')%>" data-bs-toggle="dialog"><%-action.text%></a>
+					<%})%>
+				</div>
+			<%}%>
+		</div>
+	</div>
+	<div class="list-group list-group-flush">
+		<%if (mailTab === 'mail-domains') {%>
+			<%_.each(mailserver?.domains, (domain) => {%>
+				<div class="list-group-item pt-5 pb-7">
+					<div class="d-flex align-items-center justify-content-between gap-3">
+						<div class="d-flex align-items-start min-w-0">
+							<i class="icon-light icon-globe icon-fw lh-md fg-4 me-3"></i>
+							<div class="min-w-0">
+								<div class="text-truncate"><%-domain.name%></div>
+								<small class="d-block fg-4 text-truncate"><%=_.pluralize('account', domain.accounts, true)%>, <%=_.pluralize('alias', domain.aliases, true)%></small>
+								<%if (!domain.dkim) {%>
+									<small class="d-block fg-orange-500">No DKIM key, so mail from this domain is not signed.</small>
+								<%}%>
+								<a href="#" class="d-inline-block small underline-0 hover:underline-80" data-mail-dns="<%-domain.name%>">DNS records<i class="icon-fill <%=(_.includes(expandedDns, domain.name) ? 'icon-caret-up' : 'icon-caret-down')%> icon-xs align-middle ms-1"></i></a>
+							</div>
+						</div>
+						<div class="dropdown">
+							<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm <%=(isDisabled ? 'disabled' : '')%>"><i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i></span>
+							<div class="menu">
+								<%if (domain.dkim) {%>
+									<a href="#" class="menu-item" data-mail-action="dkim:regenerate" data-domain="<%-domain.name%>"><i class="icon-fill icon-key icon-fw"></i>New DKIM key</a>
+								<%} else {%>
+									<a href="#" class="menu-item" data-mail-action="domain:add" data-domain="<%-domain.name%>"><i class="icon-fill icon-key icon-fw"></i>Create DKIM key</a>
+								<%}%>
+								<div class="menu-divider"></div>
+								<a href="#" class="menu-item fg-danger" data-mail-action="domain:remove" data-domain="<%-domain.name%>"><i class="icon-fill icon-x-circle icon-fw"></i>Remove</a>
+							</div>
+						</div>
+					</div>
+					<%if (_.includes(expandedDns, domain.name)) {%>
+						<div class="d-flex mt-3">
+							<i class="icon-light icon-globe icon-fw invisible flex-shrink-0 me-3"></i>
+							<%=mailDnsRecordsTemplate({ domain, mailserver })%>
+						</div>
+					<%}%>
+				</div>
+			<%})%>
+		<%} else if (mailTab === 'mail-accounts') {%>
+			<%_.each(mailserver?.accounts, (account) => {%>
+				<div class="list-group-item pt-5 pb-7">
+					<div class="d-flex align-items-center justify-content-between gap-3">
+						<div class="d-flex align-items-start min-w-0">
+							<i class="icon-light icon-envelope-simple icon-fw lh-md fg-4 me-3"></i>
+							<div class="min-w-0">
+								<div class="text-truncate"><%-account.email%></div>
+								<small class="d-block fg-4 text-truncate">
+									<%const limit = (account.limit || account.quota);%>
+									<%const limitText = (limit ? `${prettyBytes(limit, { binary: true })}${(account.quota ? '' : ' (default)')}` : '');%>
+									<%if (_.isNumber(account.used)) {%>
+										<%=prettyBytes(account.used, { binary: true })%> used<%=(limit ? ` of ${limitText}` : ', no storage limit')%>
+									<%} else {%>
+										<%=(limit ? `Storage limit ${limitText}` : (account.quota === 0 ? 'No storage limit' : 'Default storage limit'))%>
+									<%}%>
+								</small>
+							</div>
+						</div>
+						<div class="dropdown">
+							<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm <%=(isDisabled ? 'disabled' : '')%>"><i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i></span>
+							<div class="menu">
+								<a href="#mail-account-password" class="menu-item" data-bs-toggle="dialog" data-email="<%-account.email%>"><i class="icon-fill icon-key icon-fw"></i>Change password</a>
+								<a href="#mail-account-quota" class="menu-item" data-bs-toggle="dialog" data-email="<%-account.email%>"><i class="icon-fill icon-hard-drive icon-fw"></i>Storage limit</a>
+								<a href="#mail-alias-create" class="menu-item" data-bs-toggle="dialog" data-email="<%-account.email%>"><i class="icon-fill icon-arrow-bend-up-right icon-fw"></i>Add alias</a>
+								<div class="menu-divider"></div>
+								<a href="#" class="menu-item fg-danger" data-mail-action="account:remove" data-email="<%-account.email%>"><i class="icon-fill icon-x-circle icon-fw"></i>Remove</a>
+							</div>
+						</div>
+					</div>
+					<%if ((account.limit || account.quota) && _.isNumber(account.used)) {%>
+						<div class="d-flex mt-3">
+							<i class="icon-light icon-envelope-simple icon-fw invisible flex-shrink-0 me-3"></i>
+							<div class="row flex-fill">
+								<div class="col-12 md:col-6 lg:col-4">
+									<u-progress shadow="false" class="d-block">
+										<u-progress-bar width="<%=_.min([account.used / (account.limit || account.quota) * 100, 100])%>"></u-progress-bar>
+									</u-progress>
+								</div>
+							</div>
+						</div>
+					<%}%>
+					<%const accountAliases = _.filter(mailserver?.aliases, (alias) => { return _.includes(alias.recipients, account.email); });%>
+					<%if (!_.isEmpty(accountAliases)) {%>
+						<div class="d-flex mt-3">
+							<i class="icon-light icon-envelope-simple icon-fw invisible flex-shrink-0 me-3"></i>
+							<div class="min-w-0 flex-fill">
+								<small class="d-block fg-4">Aliases</small>
+								<%_.each(accountAliases, (alias) => {%>
+									<div class="d-flex align-items-center gap-1 min-w-0">
+										<small class="text-truncate"><%-alias.address%></small>
+										<u-button variant="secondary" size="sm" text icon tip="Remove" data-mail-action="alias:remove" data-address="<%-alias.address%>" data-recipient="<%-account.email%>" <%=(isDisabled ? 'disabled' : '')%>><i class="icon-regular icon-x icon-fw <%=(isDisabled ? 'fg-gray-500' : 'fg-red-400')%>"></i></u-button>
+									</div>
+								<%})%>
+							</div>
+						</div>
+					<%}%>
+				</div>
+			<%})%>
+			<%if (!_.isEmpty(externalAliases)) {%>
+				<div class="list-group-item pt-5 pb-7">
+					<div class="d-flex align-items-start min-w-0">
+						<i class="icon-light icon-arrow-bend-up-right icon-fw lh-md fg-4 me-3"></i>
+						<div class="min-w-0 flex-fill">
+							<div class="text-truncate">Forwarded elsewhere</div>
+							<small class="d-block fg-4">Aliases that deliver to addresses outside this mail server</small>
+							<%_.each(externalAliases, (alias) => {%>
+								<div class="d-flex align-items-center gap-1 min-w-0">
+									<small class="text-truncate"><%-alias.address%> &rarr; <%-alias.recipient%></small>
+									<u-button variant="secondary" size="sm" text icon tip="Remove" data-mail-action="alias:remove" data-address="<%-alias.address%>" data-recipient="<%-alias.recipient%>" <%=(isDisabled ? 'disabled' : '')%>><i class="icon-regular icon-x icon-fw <%=(isDisabled ? 'fg-gray-500' : 'fg-red-400')%>"></i></u-button>
+								</div>
+							<%})%>
+						</div>
+					</div>
+				</div>
+			<%}%>
+		<%} else if (mailTab === 'mail-blocked') {%>
+			<%_.each(mailserver?.bans, (ban) => {%>
+				<div class="list-group-item pt-5 pb-7">
+					<div class="d-flex align-items-start min-w-0">
+						<i class="icon-light icon-prohibit icon-fw lh-md fg-4 me-3"></i>
+						<div class="min-w-0">
+							<div class="d-flex align-items-center gap-3 min-w-0">
+								<div class="text-truncate"><%-ban.ip%></div>
+								<u-button variant="secondary" size="xs" class="flex-shrink-0" data-mail-action="ban:remove" data-ip="<%-ban.ip%>" <%=(isDisabled ? 'disabled' : '')%>>Unblock</u-button>
+							</div>
+							<small class="d-block fg-4 text-truncate"><%-_.join(_.uniq(_.map(ban.jails, (jail) => { return ({ custom: 'Blocked by hand', dovecot: 'Failed mailbox logins', 'postfix-sasl': 'Failed sending logins' })[_.toLower(jail)] || jail; })), ', ')%></small>
+							<%if (_.isNumber(ban.since)) {%>
+								<div class="d-flex flex-wrap gap-5 mt-2">
+									<div>
+										<small class="d-block fg-4">Since</small>
+										<small><%=moment(ban.since).format('MMM D, YYYY [at] HH:mm')%></small>
+									</div>
+									<div>
+										<small class="d-block fg-4">Until</small>
+										<small><%=(_.isNumber(ban.until) ? moment(ban.until).format('MMM D, YYYY [at] HH:mm') : 'Permanently')%></small>
+									</div>
+								</div>
+							<%}%>
+						</div>
+					</div>
+				</div>
+			<%})%>
+		<%}%>
+	</div>
+</div>

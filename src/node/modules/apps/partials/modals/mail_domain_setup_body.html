@@ -1,0 +1,21 @@
+<p>To send and receive mail for <strong><%-domain.name%></strong>, do these two things once. Changes to DNS can take a few hours to reach every server.</p>
+
+<h6 class="mt-5 mb-2">1. Forward the mail ports</h6>
+<p class="mb-3">In your router, forward these TCP ports to <strong><%-(nodeAddress || 'this node')%></strong>. Skip this if you already did it for another domain.</p>
+<div class="small">
+	<%_.each([
+		{ port: '25', use: 'Receiving mail from other servers' },
+		{ port: '465', use: 'Sending mail from mail apps' },
+		{ port: '587', use: 'Sending mail from older mail apps' },
+		{ port: '993', use: 'Reading mail in mail apps' }
+	], (forward) => {%>
+		<div class="row g-3 mt-1">
+			<div class="col-3 md:col-1"><span class="font-monospace"><%-forward.port%></span></div>
+			<div class="col-9 md:col-11"><span><%-forward.use%></span></div>
+		</div>
+	<%})%>
+</div>
+
+<h6 class="mt-6 mb-2">2. Add the DNS records</h6>
+<p class="mb-3">At the company that manages the DNS of <%-domain.name%>, add these records.</p>
+<%=mailDnsRecordsTemplate({ domain, mailserver })%>

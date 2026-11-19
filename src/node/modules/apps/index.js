@@ -9,6 +9,8 @@ import appProtectionPartial from 'node/modules/apps/partials/app_protection.html
 import appRecoveryPartial from 'node/modules/apps/partials/app_recovery.html';
 import appSnapshotActionsPartial from 'node/modules/apps/partials/app_snapshot_actions.html';
 import appNextcloudAppsPartial from 'node/modules/apps/partials/app_nextcloud_apps.html';
+import appMailserverPartial from 'node/modules/apps/partials/app_mailserver.html';
+import appMailDnsRecordsPartial from 'node/modules/apps/partials/app_mail_dns_records.html';
 import filtersPartial from 'node/modules/apps/partials/filters.html';
 import appsImage from 'assets/img/illustrations/apps.svg';
 import noResultsImage from 'assets/img/illustrations/no-results.svg';
@@ -24,6 +26,8 @@ const appProtectionTemplate = _.template(appProtectionPartial);
 const appRecoveryTemplate = _.template(appRecoveryPartial);
 const appSnapshotActionsTemplate = _.template(appSnapshotActionsPartial);
 const appNextcloudAppsTemplate = _.template(appNextcloudAppsPartial);
+const appMailserverTemplate = _.template(appMailserverPartial);
+const mailDnsRecordsTemplate = _.template(appMailDnsRecordsPartial);
 const filtersTemplate = _.template(filtersPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate({ appsImage, noResultsImage }));
 const module = document.querySelector('#apps');
@@ -50,6 +54,7 @@ let tableOrder = {
 let apps = [];
 const appTabs = {};
 const expandedChangelogs = new Set();
+const expandedDns = new Set();
 
 const renderChangelog = (changelog) => {
 	const template = document.createElement('template');
@@ -183,6 +188,45 @@ const toggleChangelog = (event) => {
 	renderAppDetails(name);
 };
 
+const toggleDns = (event) => {
+	const toggle = event.target.closest('[data-mail-dns]');
+	const name = toggle?.closest('.item')?.dataset?.name;
+	if (!name) {
+		return;
+	}
+
+	event.preventDefault();
+	const domain = toggle.dataset.mailDns;
+	if (expandedDns.has(domain)) {
+		expandedDns.delete(domain);
+	} else {
+		expandedDns.add(domain);
+	}
+	renderAppDetails(name);
+};
+
+const performMailAction = async (event) => {
+	const button = event.target.closest('[data-mail-action]');
+	const name = button?.closest('.item')?.dataset?.name;
+	if (!name || button.hasAttribute('disabled')) {
+		return;
+	}
+
+	event.preventDefault();
+	const { mailAction: action, domain, email, address, recipient, ip } = button.dataset;
+	const confirmations = {
+		'domain:remove': [`Are you sure you want to remove the domain ${domain}?<br><br>Its DKIM key is deleted. Remove its accounts and aliases first.`, 'Remove'],
+		'dkim:regenerate': [`Are you sure you want to create a new DKIM key for ${domain}?<br><br>The current key is replaced right away. Mail sent from ${domain} is signed with the new key from then on, and receiving servers can only check it once the new record is in the DNS of ${domain}. Until then, that mail can be <strong>marked as spam or rejected</strong>.<br><br>Right after creating it, open <strong>DNS records</strong> under ${domain}, copy the new value of the TXT record <strong>${_.find(appService.getMailserver()?.domains, { name: domain })?.dkim?.selector ?? 'dms'}._domainkey.${domain}</strong>, and replace the old value at your DNS provider. The change can take a few hours to reach every server.`, 'Create new key'],
+		'account:remove': [`Are you sure you want to remove the account ${email}?<br><br>All of its mail and its aliases are <strong>permanently deleted</strong>.`, 'Remove'],
+		'alias:remove': [`Are you sure you want ${address} to stop forwarding to ${recipient}?`, 'Remove']
+	};
+	if (confirmations[action] && !await confirm(confirmations[action][0], { buttons: [{ text: confirmations[action][1], class: 'btn-solid theme-danger' }] })) {
+		return;
+	}
+
+	appService.manageMailserver(action, _.omitBy({ name, domain, email, address, recipient, ip }, _.isUndefined));
+};
+
 const performNextcloudAction = (event) => {
 	const button = event.target.closest('[data-nextcloud-action]');
 	if (!button || button.hasAttribute('disabled')) {
@@ -288,6 +332,9 @@ const selectTab = (event) => {
 	}
 
 	appTabs[name] = button.dataset.appTab;
+	if (_.startsWith(button.dataset.appTab, 'mail-')) {
+		appService.fetchMailserver();
+	}
 	renderAppDetails(name);
 };
 
@@ -386,11 +433,12 @@ const renderAppDetails = (name) => {
 	const { jobs, appJobs, serviceJobs } = filterJobsByApp(appService.getJobs(), app);
 	const nextcloudJobs = _.filter(appService.getJobs(), (job) => { return _.startsWith(job.name, 'app:nextcloud:'); });
 	const nextcloudAppUpdates = appService.getNextcloudAppUpdates();
+	const mailserver = appService.getMailserver();
 	const networkMaxBytesPerSec = appService.getDefaultNetworkInterfaceSpeed();
 	const snapshotRules = appService.getSnapshotRules();
 	morphdom(
 		details,
-		`<div>${appDetailsTemplate({ app, jobs, appJobs, serviceJobs, nextcloudJobs, nextcloudAppUpdates, snapshotRules, appActionsTemplate, appProtectionTemplate, appRecoveryTemplate, appSnapshotActionsTemplate, appNextcloudAppsTemplate, expandedChangelogs: [...expandedChangelogs], renderChangelog, renderSnapshots, networkMaxBytesPerSec, appTab: appTabs[name] || 'services', prettyBytes, prettyMilliseconds, moment })}</div>`,
+		`<div>${appDetailsTemplate({ app, jobs, appJobs, serviceJobs, nextcloudJobs, nextcloudAppUpdates, mailserver, snapshotRules, appActionsTemplate, appProtectionTemplate, appRecoveryTemplate, appSnapshotActionsTemplate, appNextcloudAppsTemplate, appMailserverTemplate, mailDnsRecordsTemplate, expandedChangelogs: [...expandedChangelogs], expandedDns: [...expandedDns], renderChangelog, renderSnapshots, networkMaxBytesPerSec, appTab: appTabs[name] || 'services', prettyBytes, prettyMilliseconds, moment })}</div>`,
 		{
 			childrenOnly: true,
 			onBeforeElUpdated: (fromEl, toEl) => {
@@ -410,6 +458,9 @@ const clearAppState = (name) => {
 	});
 	if (_.isUndefined(name) || _.toLower(name) === 'nextcloud') {
 		expandedChangelogs.clear();
+	}
+	if (_.isUndefined(name) || _.toLower(name) === 'mailserver') {
+		expandedDns.clear();
 	}
 	clearSnapshots((key) => { return (_.isUndefined(name) ? _.startsWith(key, 'app:') : _.toLower(key) === _.toLower(`app:${name}`)); });
 };
@@ -528,6 +579,8 @@ module.addEventListener('click', update);
 module.addEventListener('click', performAppAction);
 module.addEventListener('click', performNextcloudAction);
 module.addEventListener('click', toggleChangelog);
+module.addEventListener('click', toggleDns);
+module.addEventListener('click', performMailAction);
 module.addEventListener('click', performServiceAction);
 module.addEventListener('click', selectTab);
 module.addEventListener('click', updateSnapshots);
@@ -549,3 +602,4 @@ import('node/modules/apps/logs');
 import('node/modules/apps/terminal');
 import('node/modules/apps/app_center');
 import('node/modules/apps/app_install');
+import('node/modules/apps/mailserver');

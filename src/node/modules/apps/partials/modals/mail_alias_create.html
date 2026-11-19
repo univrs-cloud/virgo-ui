@@ -1,0 +1,24 @@
+<dialog id="mail-alias-create" class="dialog dialog-scrollable">
+	<u-form>
+		<u-input type="hidden" name="recipient" class="recipient"></u-input>
+		<div class="dialog-header">
+			<h1 class="dialog-title">New alias</h1>
+		</div>
+		<div class="dialog-body">
+			<div class="alert theme-secondary mb-5">
+				<dl class="m-0">
+					<dt class="fw-light fg-4"><small>Forward to</small></dt>
+					<dd class="title-email m-0"></dd>
+				</dl>
+			</div>
+			<u-select name="domain" label="Domain" class="domain"></u-select>
+			<u-input name="localPart" label="Name" class="local-part" autocomplete="off">
+				<span slot="suffix" class="domain-suffix"></span>
+			</u-input>
+		</div>
+		<div class="dialog-footer">
+			<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="dialog" outline>Cancel</u-button>
+			<u-button type="submit" variant="primary">Add</u-button>
+		</div>
+	</u-form>
+</dialog>
