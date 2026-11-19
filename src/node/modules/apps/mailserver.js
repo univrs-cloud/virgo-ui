@@ -90,37 +90,29 @@ const passwordRules = (form) => {
 	];
 };
 
-const quotaRule = (form) => {
-	return {
-		selector: '.quota',
-		rules: {
-			custom: {
-				validate: (value) => {
-					if (form.querySelector('.unlimited').checked) {
-						return true;
-					}
-					if (_.trim(value) === '') {
-						return `Can't be empty`;
-					}
-					if (!/^\d+$/.test(_.trim(value))) {
-						return `Must be a whole number`;
-					}
-					return (Number(value) >= 1 ? true : `At least 1`);
+const quotaRule = {
+	selector: '.quota',
+	rules: {
+		custom: {
+			validate: (value) => {
+				if (_.trim(value) === '') {
+					return `Can't be empty`;
 				}
+				if (!/^\d+$/.test(_.trim(value))) {
+					return `Must be a whole number`;
+				}
+				return (Number(value) >= 1 ? true : `At least 1`);
 			}
 		}
-	};
-};
-
-const toggleQuotaField = (form) => {
-	form.querySelector('.quota-field').classList.toggle('d-none', form.querySelector('.unlimited').checked);
-};
-
-const quotaOf = (form, quota, defaultQuota = null) => {
-	if (form.querySelector('.unlimited').checked) {
-		return 'unlimited';
 	}
+};
 
+const defaultQuotaValue = () => {
+	const defaultLimit = appService.getMailserver()?.defaultLimit;
+	return (defaultLimit > 0 ? String(Math.round(defaultLimit / GIB)) : null);
+};
+
+const quotaOf = (quota, defaultQuota = null) => {
 	const value = _.trim(quota);
 	return (value === defaultQuota ? 'default' : Number(value));
 };
@@ -155,7 +147,6 @@ const wire = (selector, { validation, action, toData, render }) => {
 	const form = modal.querySelector('u-form');
 	let context = {};
 	form.validation = validation(form);
-	form.querySelector('.unlimited')?.addEventListener('checked-changed', () => { toggleQuotaField(form); });
 	form.addEventListener('valid', () => {
 		_.each(form.querySelectorAll('.dialog-footer u-button'), (button) => { button.disabled = true; });
 		appService.manageMailserver(action, { name: APP_NAME, ...toData(form.getData(), context, form) });
@@ -168,9 +159,6 @@ const wire = (selector, { validation, action, toData, render }) => {
 	modal.addEventListener('hidden.bs.dialog', () => {
 		context = {};
 		form.reset();
-		if (form.querySelector('.unlimited')) {
-			toggleQuotaField(form);
-		}
 	});
 };
 
@@ -257,18 +245,15 @@ wire('#mail-account-create', {
 			localPartRule(form, addressTakenReason),
 			{ selector: '.domain', rules: { isEmpty: `Can't be empty` } },
 			...passwordRules(form),
-			quotaRule(form)
+			quotaRule
 		];
 	},
 	render: (form, context) => {
-		const defaultLimit = appService.getMailserver()?.defaultLimit;
 		renderDomainField(form);
-		context.defaultQuota = (defaultLimit > 0 ? String(Math.round(defaultLimit / GIB)) : null);
-		form.querySelector('.unlimited').checked = (defaultLimit === 0);
+		context.defaultQuota = defaultQuotaValue();
 		form.querySelector('.quota').value = (context.defaultQuota ?? '');
-		toggleQuotaField(form);
 	},
-	toData: (data, context, form) => { return { email: `${_.toLower(_.trim(data.localPart))}@${data.domain}`, password: data.password, quota: quotaOf(form, data.quota, context.defaultQuota) }; }
+	toData: (data, context) => { return { email: `${_.toLower(_.trim(data.localPart))}@${data.domain}`, password: data.password, quota: quotaOf(data.quota, context.defaultQuota) }; }
 });
 
 watchDomainField('#mail-account-create');
@@ -282,16 +267,14 @@ wire('#mail-account-password', {
 
 wire('#mail-account-quota', {
 	action: 'account:quota',
-	validation: (form) => { return [quotaRule(form)]; },
+	validation: () => { return [quotaRule]; },
 	render: (form, context) => {
 		const account = _.find(appService.getMailserver()?.accounts, { email: context.email });
-		context.defaultQuota = (_.isNull(account?.quota) && account?.limit ? String(Math.round(account.limit / GIB)) : null);
+		context.defaultQuota = (account?.quota ? null : defaultQuotaValue());
 		form.querySelector('.title-email').textContent = context.email;
-		form.querySelector('.unlimited').checked = (account?.quota === 0);
 		form.querySelector('.quota').value = (account?.quota ? String(Math.round(account.quota / GIB)) : (context.defaultQuota ?? ''));
-		toggleQuotaField(form);
 	},
-	toData: (data, context, form) => { return { email: context.email, quota: quotaOf(form, data.quota, context.defaultQuota) }; }
+	toData: (data, context) => { return { email: context.email, quota: quotaOf(data.quota, context.defaultQuota) }; }
 });
 
 wire('#mail-alias-create', {

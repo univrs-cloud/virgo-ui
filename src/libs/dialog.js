@@ -16,7 +16,7 @@
 						<h1 class="dialog-title">${title}</h1>
 					</div>
 					<div class="dialog-body">
-						<p${acknowledge ? '' : ' class="m-0"'}>${content}</p>
+						<p class="${acknowledge ? '' : 'm-0'}">${content}</p>
 						${acknowledgeHtml}
 					</div>
 					<div class="dialog-footer">

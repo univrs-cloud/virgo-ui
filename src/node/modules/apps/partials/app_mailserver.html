@@ -87,7 +87,7 @@
 							<div class="min-w-0">
 								<div class="text-truncate"><%-account.email%></div>
 								<small class="d-block fg-4 text-truncate">
-									<%const limit = (account.limit || account.quota);%>
+									<%const limit = (account.quota || account.limit);%>
 									<%const limitText = (limit ? `${prettyBytes(limit, { binary: true })}${(account.quota ? '' : ' (default)')}` : '');%>
 									<%if (_.isNumber(account.used)) {%>
 										<%=prettyBytes(account.used, { binary: true })%> used<%=(limit ? ` of ${limitText}` : ', no storage limit')%>
@@ -102,39 +102,39 @@
 							<div class="menu">
 								<a href="#mail-account-password" class="menu-item" data-bs-toggle="dialog" data-email="<%-account.email%>"><i class="icon-fill icon-key icon-fw"></i>Change password</a>
 								<a href="#mail-account-quota" class="menu-item" data-bs-toggle="dialog" data-email="<%-account.email%>"><i class="icon-fill icon-hard-drive icon-fw"></i>Storage limit</a>
-								<a href="#mail-alias-create" class="menu-item" data-bs-toggle="dialog" data-email="<%-account.email%>"><i class="icon-fill icon-arrow-bend-up-right icon-fw"></i>Add alias</a>
 								<div class="menu-divider"></div>
 								<a href="#" class="menu-item fg-danger" data-mail-action="account:remove" data-email="<%-account.email%>"><i class="icon-fill icon-x-circle icon-fw"></i>Remove</a>
 							</div>
 						</div>
 					</div>
-					<%if ((account.limit || account.quota) && _.isNumber(account.used)) {%>
+					<%if ((account.quota || account.limit) && _.isNumber(account.used)) {%>
 						<div class="d-flex mt-3">
 							<i class="icon-light icon-envelope-simple icon-fw invisible flex-shrink-0 me-3"></i>
 							<div class="row flex-fill">
 								<div class="col-12 md:col-6 lg:col-4">
 									<u-progress shadow="false" class="d-block">
-										<u-progress-bar width="<%=_.min([account.used / (account.limit || account.quota) * 100, 100])%>"></u-progress-bar>
+										<u-progress-bar width="<%=_.min([account.used / (account.quota || account.limit) * 100, 100])%>"></u-progress-bar>
 									</u-progress>
 								</div>
 							</div>
 						</div>
 					<%}%>
 					<%const accountAliases = _.filter(mailserver?.aliases, (alias) => { return _.includes(alias.recipients, account.email); });%>
-					<%if (!_.isEmpty(accountAliases)) {%>
-						<div class="d-flex mt-3">
-							<i class="icon-light icon-envelope-simple icon-fw invisible flex-shrink-0 me-3"></i>
-							<div class="min-w-0 flex-fill">
-								<small class="d-block fg-4">Aliases</small>
+					<div class="d-flex mt-3">
+						<i class="icon-light icon-envelope-simple icon-fw invisible flex-shrink-0 me-3"></i>
+						<div class="min-w-0 flex-fill">
+							<small class="d-block fg-4">Aliases</small>
+							<div class="d-flex flex-wrap align-items-center gap-3 mt-1">
 								<%_.each(accountAliases, (alias) => {%>
-									<div class="d-flex align-items-center gap-1 min-w-0">
-										<small class="text-truncate"><%-alias.address%></small>
-										<u-button variant="secondary" size="sm" text icon tip="Remove" data-mail-action="alias:remove" data-address="<%-alias.address%>" data-recipient="<%-account.email%>" <%=(isDisabled ? 'disabled' : '')%>><i class="icon-regular icon-x icon-fw <%=(isDisabled ? 'fg-gray-500' : 'fg-red-400')%>"></i></u-button>
+									<div class="chip theme-secondary cursor-default">
+										<%-alias.address%>
+										<button type="button" class="chip-dismiss chip-dismiss-danger" data-mail-action="alias:remove" data-address="<%-alias.address%>" data-recipient="<%-account.email%>" data-bs-toggle="tooltip" data-bs-original-title="Remove" <%=(isDisabled ? 'disabled' : '')%>><i class="icon-fill icon-x-circle"></i></button>
 									</div>
 								<%})%>
+								<a href="#mail-alias-create" class="chip theme-secondary underline-0 <%=(isDisabled ? 'disabled' : '')%>" data-bs-toggle="dialog" data-email="<%-account.email%>"><span class="chip-icon"><i class="icon-regular icon-plus"></i></span>Alias</a>
 							</div>
 						</div>
-					<%}%>
+					</div>
 				</div>
 			<%})%>
 			<%if (!_.isEmpty(externalAliases)) {%>
@@ -144,12 +144,14 @@
 						<div class="min-w-0 flex-fill">
 							<div class="text-truncate">Forwarded elsewhere</div>
 							<small class="d-block fg-4">Aliases that deliver to addresses outside this mail server</small>
-							<%_.each(externalAliases, (alias) => {%>
-								<div class="d-flex align-items-center gap-1 min-w-0">
-									<small class="text-truncate"><%-alias.address%> &rarr; <%-alias.recipient%></small>
-									<u-button variant="secondary" size="sm" text icon tip="Remove" data-mail-action="alias:remove" data-address="<%-alias.address%>" data-recipient="<%-alias.recipient%>" <%=(isDisabled ? 'disabled' : '')%>><i class="icon-regular icon-x icon-fw <%=(isDisabled ? 'fg-gray-500' : 'fg-red-400')%>"></i></u-button>
-								</div>
-							<%})%>
+							<div class="d-flex flex-wrap align-items-center gap-3 mt-2">
+								<%_.each(externalAliases, (alias) => {%>
+									<div class="chip theme-secondary cursor-default">
+										<%-alias.address%> &rarr; <%-alias.recipient%>
+										<button type="button" class="chip-dismiss chip-dismiss-danger" data-mail-action="alias:remove" data-address="<%-alias.address%>" data-recipient="<%-alias.recipient%>" data-bs-toggle="tooltip" data-bs-original-title="Remove" <%=(isDisabled ? 'disabled' : '')%>><i class="icon-fill icon-x-circle"></i></button>
+									</div>
+								<%})%>
+							</div>
 						</div>
 					</div>
 				</div>

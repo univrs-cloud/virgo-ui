@@ -4,7 +4,7 @@
 		<dt class="fw-lighter"><small><i class="icon-light icon-heartbeat icon-fw me-1"></i>Health</small></dt>
 		<dd class="<%=(pool.properties?.health?.value === 'ONLINE' ? '' : 'fg-warning')%>"><%-(pool.properties?.health?.value || '—')%></dd>
 		<dt class="fw-lighter"><small><i class="icon-light icon-chart-pie icon-fw me-1"></i>Capacity</small></dt>
-		<dd<%=(_.isEmpty(poolGroups) ? ' class="m-0"' : '')%>>
+		<dd class="<%=(_.isEmpty(poolGroups) ? 'm-0' : '')%>">
 			<%=prettyBytes(pool.properties?.free?.value || 0, { binary: true })%> free
 			<small class="fg-4">of <%=prettyBytes(pool.properties?.size?.value || 0, { binary: true })%></small>
 		</dd>

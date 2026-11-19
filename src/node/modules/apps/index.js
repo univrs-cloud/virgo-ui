@@ -10,6 +10,7 @@ import appRecoveryPartial from 'node/modules/apps/partials/app_recovery.html';
 import appSnapshotActionsPartial from 'node/modules/apps/partials/app_snapshot_actions.html';
 import appNextcloudAppsPartial from 'node/modules/apps/partials/app_nextcloud_apps.html';
 import appMailserverPartial from 'node/modules/apps/partials/app_mailserver.html';
+import appNextcloudAccountsPartial from 'node/modules/apps/partials/app_nextcloud_accounts.html';
 import appMailDnsRecordsPartial from 'node/modules/apps/partials/app_mail_dns_records.html';
 import filtersPartial from 'node/modules/apps/partials/filters.html';
 import appsImage from 'assets/img/illustrations/apps.svg';
@@ -27,6 +28,7 @@ const appRecoveryTemplate = _.template(appRecoveryPartial);
 const appSnapshotActionsTemplate = _.template(appSnapshotActionsPartial);
 const appNextcloudAppsTemplate = _.template(appNextcloudAppsPartial);
 const appMailserverTemplate = _.template(appMailserverPartial);
+const appNextcloudAccountsTemplate = _.template(appNextcloudAccountsPartial);
 const mailDnsRecordsTemplate = _.template(appMailDnsRecordsPartial);
 const filtersTemplate = _.template(filtersPartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate({ appsImage, noResultsImage }));
@@ -227,6 +229,17 @@ const performMailAction = async (event) => {
 	appService.manageMailserver(action, _.omitBy({ name, domain, email, address, recipient, ip }, _.isUndefined));
 };
 
+const changeNextcloudGroup = (event) => {
+	const trigger = event.target.closest('[data-nextcloud-group-action]');
+	const name = trigger?.closest('.item')?.dataset?.name;
+	if (!name) {
+		return;
+	}
+
+	event.preventDefault();
+	appService.manageNextcloudAccounts(`group:${trigger.dataset.nextcloudGroupAction}`, { name, user: trigger.dataset.user, group: trigger.dataset.group });
+};
+
 const performNextcloudAction = (event) => {
 	const button = event.target.closest('[data-nextcloud-action]');
 	if (!button || button.hasAttribute('disabled')) {
@@ -335,6 +348,9 @@ const selectTab = (event) => {
 	if (_.startsWith(button.dataset.appTab, 'mail-')) {
 		appService.fetchMailserver();
 	}
+	if (button.dataset.appTab === 'nextcloud-accounts') {
+		appService.fetchNextcloudAccounts();
+	}
 	renderAppDetails(name);
 };
 
@@ -434,11 +450,15 @@ const renderAppDetails = (name) => {
 	const nextcloudJobs = _.filter(appService.getJobs(), (job) => { return _.startsWith(job.name, 'app:nextcloud:'); });
 	const nextcloudAppUpdates = appService.getNextcloudAppUpdates();
 	const mailserver = appService.getMailserver();
+	const nextcloudAccounts = appService.getNextcloudAccounts();
 	const networkMaxBytesPerSec = appService.getDefaultNetworkInterfaceSpeed();
 	const snapshotRules = appService.getSnapshotRules();
+	const isIntegrationRunning = _.some(app.projectContainers, (container) => { return _.toLower(container.labels?.comDockerComposeService) === _.toLower(app.name) && container.state === 'running'; });
+	const requestedTab = (appTabs[name] || 'services');
+	const appTab = (!isIntegrationRunning && (_.startsWith(requestedTab, 'mail-') || _.startsWith(requestedTab, 'nextcloud-')) ? 'services' : requestedTab);
 	morphdom(
 		details,
-		`<div>${appDetailsTemplate({ app, jobs, appJobs, serviceJobs, nextcloudJobs, nextcloudAppUpdates, mailserver, snapshotRules, appActionsTemplate, appProtectionTemplate, appRecoveryTemplate, appSnapshotActionsTemplate, appNextcloudAppsTemplate, appMailserverTemplate, mailDnsRecordsTemplate, expandedChangelogs: [...expandedChangelogs], expandedDns: [...expandedDns], renderChangelog, renderSnapshots, networkMaxBytesPerSec, appTab: appTabs[name] || 'services', prettyBytes, prettyMilliseconds, moment })}</div>`,
+		`<div>${appDetailsTemplate({ app, jobs, appJobs, serviceJobs, nextcloudJobs, nextcloudAppUpdates, nextcloudAccounts, mailserver, snapshotRules, appActionsTemplate, appProtectionTemplate, appRecoveryTemplate, appSnapshotActionsTemplate, appNextcloudAppsTemplate, appNextcloudAccountsTemplate, appMailserverTemplate, mailDnsRecordsTemplate, expandedChangelogs: [...expandedChangelogs], expandedDns: [...expandedDns], renderChangelog, renderSnapshots, networkMaxBytesPerSec, isIntegrationRunning, appTab, prettyBytes, prettyMilliseconds, moment })}</div>`,
 		{
 			childrenOnly: true,
 			onBeforeElUpdated: (fromEl, toEl) => {
@@ -578,6 +598,7 @@ module.addEventListener('click', compress);
 module.addEventListener('click', update);
 module.addEventListener('click', performAppAction);
 module.addEventListener('click', performNextcloudAction);
+module.addEventListener('click', changeNextcloudGroup);
 module.addEventListener('click', toggleChangelog);
 module.addEventListener('click', toggleDns);
 module.addEventListener('click', performMailAction);
@@ -603,3 +624,4 @@ import('node/modules/apps/terminal');
 import('node/modules/apps/app_center');
 import('node/modules/apps/app_install');
 import('node/modules/apps/mailserver');
+import('node/modules/apps/nextcloud');

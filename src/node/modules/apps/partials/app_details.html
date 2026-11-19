@@ -142,7 +142,7 @@
 				</div>
 				<div class="detail-main">
 					<div class="nav nav-underline d-flex gap-0 border-bottom">
-						<button type="button" class="nav-link detail-default-tab px-4 <%=(_.includes(['protection', 'recovery', 'nextcloud-apps', 'mail-domains', 'mail-accounts', 'mail-blocked'], appTab) ? '' : 'active border-primary fw-normal')%>" data-app-tab="services"><i class="icon-light icon-cube icon-fw"></i>Services <small class="opacity-75"><%=_.size(app.projectContainers)%></small></button>
+						<button type="button" class="nav-link detail-default-tab px-4 <%=(_.includes(['protection', 'recovery', 'nextcloud-apps', 'nextcloud-accounts', 'mail-domains', 'mail-accounts', 'mail-blocked'], appTab) ? '' : 'active border-primary fw-normal')%>" data-app-tab="services"><i class="icon-light icon-cube icon-fw"></i>Services <small class="opacity-75"><%=_.size(app.projectContainers)%></small></button>
 						<%if (!app.isUnmanaged) {%>
 							<button type="button" class="nav-link px-4 <%=(appTab === 'protection' ? 'active border-primary fw-normal' : '')%>" data-app-tab="protection">
 								<span class="position-relative d-inline-flex">
@@ -161,7 +161,7 @@
 								<%}%>
 							</button>
 						<%}%>
-						<%if (_.toLower(app.name) === 'nextcloud') {%>
+						<%if (_.toLower(app.name) === 'nextcloud' && isIntegrationRunning) {%>
 							<button type="button" class="nav-link px-4 <%=(appTab === 'nextcloud-apps' ? 'active border-primary fw-normal' : '')%>" data-app-tab="nextcloud-apps">
 								<i class="icon-light icon-puzzle-piece icon-fw"></i>
 								Apps
@@ -169,8 +169,15 @@
 									<small class="opacity-75"><%=_.size(nextcloudAppUpdates)%></small>
 								<%}%>
 							</button>
+							<button type="button" class="nav-link px-4 <%=(appTab === 'nextcloud-accounts' ? 'active border-primary fw-normal' : '')%>" data-app-tab="nextcloud-accounts">
+								<i class="icon-light icon-users icon-fw"></i>
+								Accounts
+								<%if (!_.isEmpty(nextcloudAccounts?.users)) {%>
+									<small class="opacity-75"><%=_.size(nextcloudAccounts.users)%></small>
+								<%}%>
+							</button>
 						<%}%>
-						<%if (_.toLower(app.name) === 'mailserver') {%>
+						<%if (_.toLower(app.name) === 'mailserver' && isIntegrationRunning) {%>
 							<%_.each([
 								{ tab: 'mail-domains', label: 'Domains', icon: 'icon-globe', count: _.size(mailserver?.domains) },
 								{ tab: 'mail-accounts', label: 'Accounts', icon: 'icon-envelope-simple', count: _.size(mailserver?.accounts) },
@@ -230,7 +237,7 @@
 					</div>
 
 					<div class="table-scroll overflow-y-scroll pe-5 mx-0 me--5">
-						<div class="<%=(_.includes(['protection', 'recovery', 'nextcloud-apps', 'mail-domains', 'mail-accounts', 'mail-blocked'], appTab) ? 'd-none' : '')%>">
+						<div class="<%=(_.includes(['protection', 'recovery', 'nextcloud-apps', 'nextcloud-accounts', 'mail-domains', 'mail-accounts', 'mail-blocked'], appTab) ? 'd-none' : '')%>">
 							<div class="services">
 								<div class="list-group list-group-flush">
 									<%_.each(app.projectContainers, (container, index) => {%>
@@ -317,7 +324,7 @@
 														<%if (!_.isEmpty(container.mounts)) {%>
 															<%const mountLines = _.map(_.sortBy(container.mounts, 'destination'), (mount) => {
 																const source = (mount.type === 'volume' ? mount.name : mount.source);
-																const readOnly = (mount.rw === false ? ' <span class=\'opacity-75\'>&middot; read-only</span>' : '');
+																const readOnly = (mount.rw === false ? `<span class='opacity-75'>&middot; read-only</span>` : '');
 																return `<div class='mt-1'><div>${_.escape(mount.destination)}${readOnly}</div><div class='small opacity-75'>${_.escape(source)}</div></div>`;
 															});%>
 															<u-badge color="orange" tint="100" tip="<div class='text-start'><div class='fw-semibold'><%=_.pluralize('volume', _.size(container.mounts), true)%> mounted</div><%=mountLines.join('')%></div>" pill>
@@ -448,12 +455,15 @@
 						<div class="<%=(appTab === 'recovery' ? '' : 'd-none')%>">
 							<%=appRecoveryTemplate({ app, appJobs, appSnapshotActionsTemplate, renderSnapshots })%>
 						</div>
-						<%if (_.toLower(app.name) === 'nextcloud') {%>
+						<%if (_.toLower(app.name) === 'nextcloud' && isIntegrationRunning) {%>
 							<div class="<%=(appTab === 'nextcloud-apps' ? '' : 'd-none')%>">
 								<%=appNextcloudAppsTemplate({ app, appJobs, nextcloudJobs, nextcloudAppUpdates, expandedChangelogs, renderChangelog })%>
 							</div>
+							<div class="<%=(appTab === 'nextcloud-accounts' ? '' : 'd-none')%>">
+								<%=appNextcloudAccountsTemplate({ appJobs, nextcloudAccounts, prettyBytes, moment })%>
+							</div>
 						<%}%>
-						<%if (_.toLower(app.name) === 'mailserver' && _.startsWith(appTab, 'mail-')) {%>
+						<%if (_.toLower(app.name) === 'mailserver' && _.startsWith(appTab, 'mail-') && isIntegrationRunning) {%>
 							<%=appMailserverTemplate({ app, appJobs, mailserver, mailTab: appTab, expandedDns, mailDnsRecordsTemplate, prettyBytes, moment })%>
 						<%}%>
 					</div>

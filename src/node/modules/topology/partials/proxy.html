@@ -5,7 +5,7 @@
 	const stateColor = (active === _.size(proxy.containers) ? 'fg-success' : (active === 0 ? 'fg-danger' : 'fg-orange-500'));
 %>
 <li class="topology-edge-primary" data-traffic="app:<%-proxy.name%>" data-traffic-subtree="<%-_.map(topology.routed, (stack) => { return `app:${stack.name}`; }).join(' ')%>">
-	<div class="topology-node<%=(running === 0 ? ' stopped' : '')%>">
+	<div class="topology-node <%=(running === 0 ? 'stopped' : '')%>">
 		<div class="topology-icon">
 			<%if (proxy.icon) {%>
 				<img src="<%-(_.includes(proxy.icon, '/') ? proxy.icon : `assets/img/apps/${proxy.icon}`)%>" alt="">

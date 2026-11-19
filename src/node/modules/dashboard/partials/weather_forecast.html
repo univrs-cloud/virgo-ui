@@ -7,7 +7,7 @@
 						<div class="weather-column-rain"></div>
 					<%}%>
 					<%if (data.sunriseColumn <= i && data.sunsetColumn >= i) {%>
-						<div class="weather-column-daylight <%=(data.sunriseColumn === i ? 'weather-column-daylight-sunrise' : '')%> <%=(data.sunsetColumn === i ? ' weather-column-daylight-sunset' : '')%>"></div>
+						<div class="weather-column-daylight <%=(data.sunriseColumn === i ? 'weather-column-daylight-sunrise' : '')%> <%=(data.sunsetColumn === i ? 'weather-column-daylight-sunset' : '')%>"></div>
 					<%}%>
 					<div class="weather-column-value <%=(column.temperature < 0 ? 'weather-column-value-negative' : '')%>"><%=column.temperature%></div>
 					<div class="weather-bar" style="--weather-bar-height: <%=column.scale.toFixed(2)%>;"></div>

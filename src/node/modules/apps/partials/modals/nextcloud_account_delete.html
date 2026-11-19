@@ -1,0 +1,22 @@
+<dialog id="nextcloud-account-delete" class="dialog dialog-scrollable" tabindex="-1">
+	<u-form>
+		<div class="dialog-header">
+			<h1 class="dialog-title">Delete account</h1>
+		</div>
+		<div class="dialog-body">
+			<div class="alert theme-secondary mb-5">
+				<dl class="m-0">
+					<dt class="fw-light fg-4"><small>Account</small></dt>
+					<dd class="title-user m-0"></dd>
+				</dl>
+			</div>
+			<u-select name="transferTo" label="Transfer ownership to" class="transfer-to"></u-select>
+			<p class="mb-5">Files that are not transferred are <strong>permanently deleted</strong> with the account. After that, they can only be recovered from a snapshot of Nextcloud.</p>
+			<u-checkbox class="acknowledge d-block" label="I understand the account is deleted, together with any files not transferred"></u-checkbox>
+		</div>
+		<div class="dialog-footer">
+			<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="dialog" outline>Cancel</u-button>
+			<u-button type="submit" variant="danger" class="delete" disabled>Delete</u-button>
+		</div>
+	</u-form>
+</dialog>

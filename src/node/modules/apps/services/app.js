@@ -14,7 +14,7 @@ const { subscribe } = createSubscription({
 		},
 		{
 			store: Docker,
-			propertyNames: ['configured', 'containers', 'imageUpdates', 'nextcloudAppUpdates', 'mailserver', 'appsResourceMetrics']
+			propertyNames: ['configured', 'containers', 'imageUpdates', 'nextcloudAppUpdates', 'nextcloudAccounts', 'mailserver', 'appsResourceMetrics']
 		},
 		{
 			store: Host,
@@ -30,7 +30,8 @@ const { subscribe } = createSubscription({
 			apps: composeAllApps(properties?.configured, properties?.containers, properties?.appsResourceMetrics, properties?.imageUpdates, properties?.nextcloudAppUpdates, properties?.snapshots),
 			jobs: properties?.jobs || [],
 			nextcloudAppUpdates: properties?.nextcloudAppUpdates,
-			mailserver: sortMailserver(properties?.mailserver)
+			mailserver: sortMailserver(properties?.mailserver),
+			nextcloudAccounts: sortNextcloudAccounts(properties?.nextcloudAccounts)
 		};
 	}
 });
@@ -46,6 +47,18 @@ function sortMailserver(mailserver) {
 		accounts: _.orderBy(mailserver.accounts, [(account) => { return _.toLower(account.email); }], ['asc']),
 		aliases: _.orderBy(mailserver.aliases, [(alias) => { return _.toLower(alias.address); }], ['asc']),
 		bans: _.orderBy(mailserver.bans, ['since', 'ip'], ['desc', 'asc'])
+	};
+}
+
+function sortNextcloudAccounts(nextcloudAccounts) {
+	if (!_.isObject(nextcloudAccounts)) {
+		return nextcloudAccounts;
+	}
+
+	return {
+		...nextcloudAccounts,
+		users: _.orderBy(nextcloudAccounts.users, [(user) => { return _.toLower(user.displayName); }, (user) => { return _.toLower(user.id); }], ['asc', 'asc']),
+		groups: _.orderBy(nextcloudAccounts.groups, [(group) => { return _.toLower(group.displayName); }], ['asc'])
 	};
 }
 
@@ -167,6 +180,10 @@ const getNextcloudAppUpdates = () => {
 	return Docker.getNextcloudAppUpdates();
 };
 
+const getNextcloudAccounts = () => {
+	return sortNextcloudAccounts(Docker.getNextcloudAccounts());
+};
+
 const getMailserver = () => {
 	return sortMailserver(Docker.getMailserver());
 };
@@ -202,6 +219,14 @@ const checkNextcloudAppUpdates = () => {
 
 const updateNextcloudApps = (data) => {
 	Docker.updateNextcloudApps(data);
+};
+
+const fetchNextcloudAccounts = () => {
+	Docker.fetchNextcloudAccounts();
+};
+
+const manageNextcloudAccounts = (action, data) => {
+	Docker.manageNextcloudAccounts(action, data);
 };
 
 const fetchMailserver = () => {
@@ -262,6 +287,7 @@ export {
 	getJobs,
 	getApps,
 	getNextcloudAppUpdates,
+	getNextcloudAccounts,
 	getMailserver,
 	getSnapshotRules,
 	getDefaultNetworkInterface,
@@ -270,6 +296,8 @@ export {
 	update,
 	checkNextcloudAppUpdates,
 	updateNextcloudApps,
+	fetchNextcloudAccounts,
+	manageNextcloudAccounts,
 	fetchMailserver,
 	manageMailserver,
 	performAppAction,
