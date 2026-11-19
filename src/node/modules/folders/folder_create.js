@@ -46,7 +46,7 @@ const render = async () => {
 	refquota.classList.remove('d-none');
 	snapshots.classList.remove('d-none');
 	const rules = folderService.getSnapshotRules() || [];
-	snapshotRule.options = _.map(rules, (rule) => { return { value: rule.name, label: rule.name, default: rule.isDefault }; });
+	snapshotRule.options = _.map(rules, (rule) => { return { value: rule.name, label: rule.name, content: snapshotRuleDetailsTemplate({ rule }), default: rule.isDefault }; });
 	snapshotRule.value = (_.find(rules, 'isDefault') ?? _.first(rules))?.name ?? '';
 	renderSnapshotRuleDetails();
 	toggleSnapshotRule();
