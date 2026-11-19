@@ -30,7 +30,8 @@
 					<small class="fg-4 text-truncate d-block min-w-0"><%-tolerance%></small>
 				</div>
 				<div class="col-auto ps-5 ms-auto">
-					<%=poolActionsTemplate({ pool, expandJob, inline: true, prettyBytes })%>
+					<div class="d-none md:d-block"><%=poolActionsTemplate({ pool, expandJob, inline: true, prettyBytes })%></div>
+					<div class="md:d-none"><%=poolActionsTemplate({ pool, expandJob, inline: false, prettyBytes })%></div>
 				</div>
 			</div>
 
