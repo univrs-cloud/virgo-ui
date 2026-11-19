@@ -1,12 +1,26 @@
-<div class="dropdown">
-	<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i></span>
+<%if (inline) {%>
+	<div class="d-inline-flex align-items-center bg-2 rounded-3">
+		<div class="d-inline-flex align-items-center px-1">
+			<u-button variant="secondary" size="sm" class="actions-button" text icon tip="Edit" data-bs-toggle="dialog" data-bs-target="#user-update"><i class="icon-fill icon-pen icon-fw fg-body"></i></u-button>
+		</div>
+<%}%>
+<div class="<%=(inline ? 'dropdown position-relative' : 'dropdown')%>">
+	<%if (inline) {%>
+		<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="actions-toggle btn-icon btn-text theme-secondary btn-sm rounded-3 <%=(!user.isOwner && user.username !== account.user ? '' : 'disabled')%>"><i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i></span>
+	<%} else {%>
+		<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm"><i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i></span>
+	<%}%>
 	<div class="menu">
-		<a href="#user-update" class="menu-item" data-bs-toggle="dialog"><i class="icon-fill icon-pen icon-fw"></i>Edit</a>
+		<%if (!inline) {%>
+			<a href="#user-update" class="menu-item" data-bs-toggle="dialog"><i class="icon-fill icon-pen icon-fw"></i>Edit</a>
+		<%}%>
 		<%if (!user.isOwner && user.username !== account.user) {%>
 			<%if (!user.isDisabled) {%>
 				<a href="#user-password" class="menu-item" data-bs-toggle="dialog"><i class="icon-fill icon-key icon-fw"></i>Change password</a>
 			<%}%>
-			<div class="menu-divider"></div>
+			<%if (!inline || !user.isDisabled) {%>
+				<div class="menu-divider"></div>
+			<%}%>
 			<%if (user.isDisabled) {%>
 				<a href="#" class="menu-item" data-action="unlock"><i class="icon-fill icon-lock-open icon-fw"></i>Unlock</a>
 			<%} else {%>
@@ -17,3 +31,6 @@
 		<%}%>
 	</div>
 </div>
+<%if (inline) {%>
+	</div>
+<%}%>

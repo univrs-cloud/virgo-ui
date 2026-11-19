@@ -61,15 +61,14 @@
 			<u-badge color="green" pill>unlocked</u-badge>
 		<%}%>
 	</td>
-	<td class="<%=(isSameAsLoggedIn ? 'text-end pe-0' : 'text-center px-0')%>">
+	<td class="text-center px-0">
 		<%if (!_.isEmpty(jobs)) {%>
 			<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-fill icon-gear icon-fw icon-spin"></i></span>
-		<%} else if (isSameAsLoggedIn) {%>
-			<a href="/users/profile" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="This is you! Edit your profile or change your password in your <strong><u>Profile</u></strong> page.">
-				<i class="icon-light icon-caret-right icon-fw fg-4"></i>
-			</a>
-		<%} else {%>
-			<%=userActionsTemplate({ user })%>
+		<%} else if (!isSameAsLoggedIn) {%>
+			<%=userActionsTemplate({ user, inline: false })%>
 		<%}%>
+	</td>
+	<td class="text-end pe-0">
+		<i class="icon-light icon-caret-right icon-fw fg-4"></i>
 	</td>
 </tr>

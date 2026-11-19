@@ -28,7 +28,8 @@
 					<%} else if (isSameAsLoggedIn) {%>
 						<a href="/users/profile" class="btn-sm btn-outline theme-secondary py-1 min-h-0">Your profile</a>
 					<%} else {%>
-						<%=userActionsTemplate({ user })%>
+						<div class="d-none md:d-block"><%=userActionsTemplate({ user, inline: true })%></div>
+						<div class="md:d-none"><%=userActionsTemplate({ user, inline: false })%></div>
 					<%}%>
 				</div>
 			</div>
