@@ -69,7 +69,7 @@ textarea {
 			gap: var(--menu-gap);
 			min-height: 0;
 			overflow-y: auto;
-			@include vars.styled-scrollbar;
+			@include vars.styled-scrollbar($gap: 4px);
 		}
 	}
 	&:has(> textarea:not(:disabled, [readonly]):is(:focus, :not(:placeholder-shown)))::before {
