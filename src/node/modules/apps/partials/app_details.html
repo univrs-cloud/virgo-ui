@@ -435,7 +435,7 @@
 						</div>
 						<%if (_.toLower(app.name) === 'nextcloud') {%>
 							<div class="<%=(appTab === 'nextcloud-apps' ? '' : 'd-none')%>">
-								<%=appNextcloudAppsTemplate({ app, appJobs, nextcloudJobs, nextcloudAppUpdates })%>
+								<%=appNextcloudAppsTemplate({ app, appJobs, nextcloudJobs, nextcloudAppUpdates, expandedChangelogs, renderChangelog })%>
 							</div>
 						<%}%>
 					</div>

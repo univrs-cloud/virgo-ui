@@ -1,4 +1,6 @@
 import page from 'page';
+import { marked } from 'marked';
+import DOMPurify from 'dompurify';
 import modulePartial from 'node/modules/apps/partials/index.html';
 import appPartial from 'node/modules/apps/partials/app.html';
 import appActionsPartial from 'node/modules/apps/partials/app_actions.html';
@@ -47,6 +49,23 @@ let tableOrder = {
 };
 let apps = [];
 const appTabs = {};
+const expandedChangelogs = new Set();
+
+const renderChangelog = (changelog) => {
+	const template = document.createElement('template');
+	template.innerHTML = DOMPurify.sanitize(marked.parse(String(changelog ?? '')));
+	_.each(template.content.querySelectorAll('h1, h2, h3, h4, h5, h6'), (heading) => {
+		const title = document.createElement('div');
+		title.className = (heading === template.content.firstElementChild ? 'fw-semibold mb-1' : 'fw-semibold mt-3 mb-1');
+		title.innerHTML = heading.innerHTML;
+		heading.replaceWith(title);
+	});
+	_.each(template.content.querySelectorAll('a'), (link) => {
+		link.setAttribute('target', '_blank');
+		link.setAttribute('rel', 'noopener noreferrer');
+	});
+	return template.innerHTML;
+};
 
 const search = (event) => {
 	clearTimeout(searchTimer);
@@ -145,6 +164,23 @@ const update = (event) => {
 	}
 
 	appService.update(data);
+};
+
+const toggleChangelog = (event) => {
+	const toggle = event.target.closest('[data-nextcloud-changelog]');
+	const name = toggle?.closest('.item')?.dataset?.name;
+	if (!name) {
+		return;
+	}
+
+	event.preventDefault();
+	const id = toggle.dataset.nextcloudChangelog;
+	if (expandedChangelogs.has(id)) {
+		expandedChangelogs.delete(id);
+	} else {
+		expandedChangelogs.add(id);
+	}
+	renderAppDetails(name);
 };
 
 const performNextcloudAction = (event) => {
@@ -354,7 +390,7 @@ const renderAppDetails = (name) => {
 	const snapshotRules = appService.getSnapshotRules();
 	morphdom(
 		details,
-		`<div>${appDetailsTemplate({ app, jobs, appJobs, serviceJobs, nextcloudJobs, nextcloudAppUpdates, snapshotRules, appActionsTemplate, appProtectionTemplate, appRecoveryTemplate, appSnapshotActionsTemplate, appNextcloudAppsTemplate, renderSnapshots, networkMaxBytesPerSec, appTab: appTabs[name] || 'services', prettyBytes, prettyMilliseconds, moment })}</div>`,
+		`<div>${appDetailsTemplate({ app, jobs, appJobs, serviceJobs, nextcloudJobs, nextcloudAppUpdates, snapshotRules, appActionsTemplate, appProtectionTemplate, appRecoveryTemplate, appSnapshotActionsTemplate, appNextcloudAppsTemplate, expandedChangelogs: [...expandedChangelogs], renderChangelog, renderSnapshots, networkMaxBytesPerSec, appTab: appTabs[name] || 'services', prettyBytes, prettyMilliseconds, moment })}</div>`,
 		{
 			childrenOnly: true,
 			onBeforeElUpdated: (fromEl, toEl) => {
@@ -372,6 +408,9 @@ const clearAppState = (name) => {
 			delete appTabs[key];
 		}
 	});
+	if (_.isUndefined(name) || _.toLower(name) === 'nextcloud') {
+		expandedChangelogs.clear();
+	}
 	clearSnapshots((key) => { return (_.isUndefined(name) ? _.startsWith(key, 'app:') : _.toLower(key) === _.toLower(`app:${name}`)); });
 };
 
@@ -488,6 +527,7 @@ module.addEventListener('click', compress);
 module.addEventListener('click', update);
 module.addEventListener('click', performAppAction);
 module.addEventListener('click', performNextcloudAction);
+module.addEventListener('click', toggleChangelog);
 module.addEventListener('click', performServiceAction);
 module.addEventListener('click', selectTab);
 module.addEventListener('click', updateSnapshots);

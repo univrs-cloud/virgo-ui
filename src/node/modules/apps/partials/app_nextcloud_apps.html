@@ -38,8 +38,8 @@
 			<%_.each(nextcloudAppUpdates, (update) => {%>
 				<div class="list-group-item pt-5 pb-7">
 					<div class="d-flex align-items-center justify-content-between gap-3">
-						<div class="d-flex align-items-center min-w-0">
-							<i class="icon-light icon-puzzle-piece icon-fw fg-4 me-3"></i>
+						<div class="d-flex align-items-start min-w-0">
+							<i class="icon-light icon-puzzle-piece icon-fw lh-md fg-4 me-3"></i>
 							<div class="min-w-0">
 								<div class="text-truncate"><%-update.id%></div>
 								<small class="d-block fg-4 text-truncate">
@@ -49,12 +49,21 @@
 										<%-update.version%>
 									<%}%>
 								</small>
+								<%if (update.changelog) {%>
+									<a href="#" class="d-inline-block small underline-0 hover:underline-80" data-nextcloud-changelog="<%-update.id%>">What's new<i class="icon-fill <%=(_.includes(expandedChangelogs, update.id) ? 'icon-caret-up' : 'icon-caret-down')%> icon-xs align-middle ms-1"></i></a>
+								<%}%>
 							</div>
 						</div>
 						<u-button variant="secondary" size="xs" data-nextcloud-action="update" data-nextcloud-app="<%-update.id%>" tip="<%-updateTip%>" <%=(isBusy || app.hasUpdates ? 'disabled' : '')%>>
 							<i class="icon-regular icon-arrow-down icon-fw"></i><span class="d-none md:d-inline">Update</span>
 						</u-button>
 					</div>
+					<%if (update.changelog && _.includes(expandedChangelogs, update.id)) {%>
+						<div class="d-flex mt-3">
+							<i class="icon-light icon-puzzle-piece icon-fw invisible flex-shrink-0 me-3"></i>
+							<div class="small fg-secondary text-break min-w-0"><%=renderChangelog(update.changelog)%></div>
+						</div>
+					<%}%>
 				</div>
 			<%})%>
 		</div>
