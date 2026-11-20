@@ -153,9 +153,12 @@
 					</div>
 				</div>
 				<div class="detail-main">
-					<div class="nav nav-underline d-flex gap-0 border-bottom">
-						<button type="button" class="nav-link detail-facts-tab px-4 <%=(poolTab === 'overview' ? 'active border-primary fw-normal' : '')%>" data-pool-tab="overview"><i class="icon-info icon-fw"></i>Overview</button>
-						<button type="button" class="nav-link detail-default-tab px-4 <%=(poolTab === 'topology' ? 'active border-primary fw-normal' : '')%>" data-pool-tab="topology"><i class="icon-list-tree icon-fw"></i>Topology</button>
+					<div class="nav-overflow" data-bs-toggle="nav-overflow">
+						<ul class="nav nav-underline d-flex gap-0 border-bottom">
+							<li class="nav-item"><button type="button" class="nav-link detail-facts-tab px-4 <%=(poolTab === 'overview' ? 'active border-primary fw-normal' : '')%>" data-pool-tab="overview"><i class="icon-info icon-fw"></i>Overview</button></li>
+							<li class="nav-item"><button type="button" class="nav-link detail-default-tab px-4 <%=(poolTab === 'topology' ? 'active border-primary fw-normal' : '')%>" data-pool-tab="topology"><i class="icon-list-tree icon-fw"></i>Topology</button></li>
+						</ul>
+						<i class="icon-ellipsis" data-bs-overflow-icon></i>
 					</div>
 					<div class="table-scroll overflow-y-scroll pe-5 mx-0 me--5 <%=(poolTab === 'topology' ? '' : 'detail-pane-off')%>">
 						<div class="list-group list-group-flush">

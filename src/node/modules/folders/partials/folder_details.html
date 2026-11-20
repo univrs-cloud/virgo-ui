@@ -183,24 +183,31 @@
 					</div>
 				</div>
 				<div class="detail-main">
-					<div class="nav nav-underline d-flex gap-0 border-bottom">
-						<button type="button" class="nav-link detail-facts-tab px-4 <%=(activeTab === 'overview' ? 'active border-primary fw-normal' : '')%>" data-folder-tab="overview"><i class="icon-info icon-fw"></i>Overview</button>
-						<button type="button" class="nav-link detail-default-tab px-4 <%=(activeTab === 'protection' ? 'active border-primary fw-normal' : '')%>" data-folder-tab="protection">
-							<span class="position-relative d-inline-flex">
-								<i class="icon-shield icon-fw"></i>
-								<%if (folder.snapshotPolicy) {%>
-									<i class="icon-circle icon-2xs icon-width-auto lh-1 position-absolute top-100 start-100 translate-middle <%=({ enabled: 'fg-green-300', paused: 'fg-orange-300', disabled: 'fg-gray-500' })[snapshotMode]%>" style="margin: -0.1875rem 0 0 -0.125rem;" data-bs-toggle="tooltip" data-bs-original-title="<%-_.upperFirst(snapshotMode)%>"></i>
-								<%}%>
-							</span>
-							Protection
-						</button>
-						<button type="button" class="nav-link px-4 <%=(activeTab === 'recovery' ? 'active border-primary fw-normal' : '')%>" data-folder-tab="recovery">
-							<i class="icon-history icon-fw"></i>
-							Recovery
-							<%if (!_.isEmpty(folder.snapshots)) {%>
-								<small class="opacity-75"><%=_.size(folder.snapshots)%></small>
-							<%}%>
-						</button>
+					<div class="nav-overflow" data-bs-toggle="nav-overflow">
+						<ul class="nav nav-underline d-flex gap-0 border-bottom">
+							<li class="nav-item"><button type="button" class="nav-link detail-facts-tab px-4 <%=(activeTab === 'overview' ? 'active border-primary fw-normal' : '')%>" data-folder-tab="overview"><i class="icon-info icon-fw"></i>Overview</button></li>
+							<li class="nav-item">
+								<button type="button" class="nav-link detail-default-tab px-4 <%=(activeTab === 'protection' ? 'active border-primary fw-normal' : '')%>" data-folder-tab="protection">
+									<span class="position-relative d-inline-flex">
+										<i class="icon-shield icon-fw"></i>
+										<%if (folder.snapshotPolicy) {%>
+											<i class="icon-circle icon-2xs icon-width-auto lh-1 position-absolute top-100 start-100 translate-middle <%=({ enabled: 'fg-green-300', paused: 'fg-orange-300', disabled: 'fg-gray-500' })[snapshotMode]%>" style="margin: -0.1875rem 0 0 -0.125rem;" data-bs-toggle="tooltip" data-bs-original-title="<%-_.upperFirst(snapshotMode)%>"></i>
+										<%}%>
+									</span>
+									Protection
+								</button>
+							</li>
+							<li class="nav-item">
+								<button type="button" class="nav-link px-4 <%=(activeTab === 'recovery' ? 'active border-primary fw-normal' : '')%>" data-folder-tab="recovery">
+									<i class="icon-history icon-fw"></i>
+									Recovery
+									<%if (!_.isEmpty(folder.snapshots)) {%>
+										<small class="opacity-75"><%=_.size(folder.snapshots)%></small>
+									<%}%>
+								</button>
+							</li>
+						</ul>
+						<i class="icon-ellipsis" data-bs-overflow-icon></i>
 					</div>
 					<%if (folder.snapshotPolicy) {%>
 						<div class="table-scroll overflow-y-scroll pe-5 mx-0 me--5 <%=(activeTab === 'protection' ? '' : 'detail-pane-off')%>">

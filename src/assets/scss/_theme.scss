@@ -404,7 +404,7 @@ $card-image-size: 30px;
 	}
 	@include media-breakpoint-up(2xl) {
 		.detail-split:has(.detail-default-tab) > .detail-main {
-			> .nav {
+			> .nav-overflow {
 				display: none !important;
 			}
 			> .service-logs {
@@ -681,8 +681,12 @@ $card-image-size: 30px;
 			}
 			> .detail-main {
 				display: contents;
-				> .nav {
+				> .nav-overflow {
+					flex: none;
 					order: -1;
+				}
+				.nav-overflow-toggle {
+					padding-inline: map.get($spacers, 4);
 				}
 			}
 			.detail-pane-off,

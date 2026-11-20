@@ -21,9 +21,36 @@ const removeTooltips = (node) => {
 	node.querySelectorAll(TOOLTIP_SELECTOR).forEach(removeTooltip);
 };
 
+const NAV_OVERFLOW_SELECTOR = '[data-bs-toggle="nav-overflow"]';
+const pendingNavOverflows = new WeakMap();
+
+const isNavOverflowOpen = (element) => {
+	return Boolean(element.querySelector('.nav-overflow-menu.show'));
+};
+
+const disposeNavOverflow = (element) => {
+	bootstrap.NavOverflow.getInstance(element)?.dispose();
+};
+
+const disposeNavOverflows = (node) => {
+	if (node.nodeType !== Node.ELEMENT_NODE) {
+		return;
+	}
+
+	if (node.matches(NAV_OVERFLOW_SELECTOR)) {
+		disposeNavOverflow(node);
+	}
+	node.querySelectorAll(NAV_OVERFLOW_SELECTOR).forEach(disposeNavOverflow);
+};
+
 const morphdom = (fromNode, toNode, options) => {
 	let onBeforeElUpdated = options?.onBeforeElUpdated;
 	let onBeforeNodeDiscarded = options?.onBeforeNodeDiscarded;
+	fromNode.querySelectorAll(NAV_OVERFLOW_SELECTOR).forEach((element) => {
+		if (!isNavOverflowOpen(element)) {
+			disposeNavOverflow(element);
+		}
+	});
 	mdom(fromNode, toNode, {
 		...options,
 		onBeforeElUpdated: (fromEl, toEl) => {
@@ -32,6 +59,11 @@ const morphdom = (fromNode, toNode, options) => {
 				if (result === false) {
 					return false;
 				}
+			}
+
+			if (fromEl.matches(NAV_OVERFLOW_SELECTOR) && isNavOverflowOpen(fromEl)) {
+				pendingNavOverflows.set(fromEl, toEl);
+				return false;
 			}
 
 			if (!fromEl.classList.contains('show')) {
@@ -66,8 +98,25 @@ const morphdom = (fromNode, toNode, options) => {
 			}
 
 			removeTooltips(node);
+			disposeNavOverflows(node);
 		}
 	});
+	fromNode.querySelectorAll(NAV_OVERFLOW_SELECTOR).forEach((element) => {
+		bootstrap.NavOverflow.getOrCreateInstance(element);
+	});
 };
+
+document.addEventListener('hidden.bs.menu', (event) => {
+	const element = event.target.closest(NAV_OVERFLOW_SELECTOR);
+	const pending = (element ? pendingNavOverflows.get(element) : undefined);
+	if (!pending) {
+		return;
+	}
+
+	pendingNavOverflows.delete(element);
+	disposeNavOverflow(element);
+	morphdom(element, pending);
+	bootstrap.NavOverflow.getOrCreateInstance(element);
+});
 
 export default morphdom;

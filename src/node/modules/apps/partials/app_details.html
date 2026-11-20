@@ -141,60 +141,75 @@
 					</div>
 				</div>
 				<div class="detail-main">
-					<div class="nav nav-underline d-flex gap-0 border-bottom">
-						<button type="button" class="nav-link detail-default-tab px-4 <%=(_.includes(['protection', 'recovery', 'nextcloud-apps', 'nextcloud-accounts', 'mail-domains', 'mail-accounts', 'mail-blocked'], appTab) ? '' : 'active border-primary fw-normal')%>" data-app-tab="services"><i class="icon-box icon-fw"></i>Services <small class="opacity-75"><%=_.size(app.projectContainers)%></small></button>
-						<%if (!app.isUnmanaged) {%>
-							<button type="button" class="nav-link px-4 <%=(appTab === 'protection' ? 'active border-primary fw-normal' : '')%>" data-app-tab="protection">
-								<span class="position-relative d-inline-flex">
-									<i class="icon-shield icon-fw"></i>
-									<%if (app.snapshotPolicy) {%>
-										<i class="icon-circle icon-2xs icon-width-auto lh-1 position-absolute top-100 start-100 translate-middle <%=({ enabled: 'fg-green-300', paused: 'fg-orange-300', disabled: 'fg-gray-500' })[_.toLower(app.snapshotPolicy.mode)]%>" style="margin: -0.1875rem 0 0 -0.125rem;" data-bs-toggle="tooltip" data-bs-original-title="<%-_.upperFirst(app.snapshotPolicy.mode)%>"></i>
-									<%}%>
-								</span>
-								Protection
-							</button>
-							<button type="button" class="nav-link px-4 <%=(appTab === 'recovery' ? 'active border-primary fw-normal' : '')%>" data-app-tab="recovery">
-								<i class="icon-history icon-fw"></i>
-								Recovery
-								<%if (!_.isEmpty(app.snapshots)) {%>
-									<small class="opacity-75"><%=_.size(app.snapshots)%></small>
-								<%}%>
-							</button>
-						<%}%>
-						<%if (_.toLower(app.name) === 'nextcloud' && isIntegrationRunning) {%>
-							<button type="button" class="nav-link px-4 <%=(appTab === 'nextcloud-apps' ? 'active border-primary fw-normal' : '')%>" data-app-tab="nextcloud-apps">
-								<i class="icon-puzzle icon-fw"></i>
-								Apps
-								<%if (!_.isEmpty(nextcloudAppUpdates)) {%>
-									<small class="opacity-75"><%=_.size(nextcloudAppUpdates)%></small>
-								<%}%>
-							</button>
-							<button type="button" class="nav-link px-4 <%=(appTab === 'nextcloud-accounts' ? 'active border-primary fw-normal' : '')%>" data-app-tab="nextcloud-accounts">
-								<i class="icon-users icon-fw"></i>
-								Accounts
-								<%if (!_.isEmpty(nextcloudAccounts?.users)) {%>
-									<small class="opacity-75"><%=_.size(nextcloudAccounts.users)%></small>
-								<%}%>
-							</button>
-						<%}%>
-						<%if (_.toLower(app.name) === 'mailserver' && isIntegrationRunning) {%>
-							<%_.each([
-								{ tab: 'mail-domains', label: 'Domains', icon: 'icon-globe', count: _.size(mailserver?.domains) },
-								{ tab: 'mail-accounts', label: 'Accounts', icon: 'icon-mail', count: _.size(mailserver?.accounts) },
-								{ tab: 'mail-blocked', label: 'Blocked IPs', icon: 'icon-ban', count: _.size(mailserver?.bans) }
-							], (mailTabItem) => {%>
-								<button type="button" class="nav-link px-4 <%=(appTab === mailTabItem.tab ? 'active border-primary fw-normal' : '')%>" data-app-tab="<%-mailTabItem.tab%>">
-									<i class="<%=mailTabItem.icon%> icon-fw"></i>
-									<%-mailTabItem.label%>
-									<%if (mailTabItem.count > 0) {%>
-										<small class="opacity-75"><%=mailTabItem.count%></small>
-									<%}%>
-								</button>
-							<%})%>
-						<%}%>
-						<%if (app.composeFile) {%>
-							<small class="fg-emphasis-secondary text-truncate align-self-center ms-auto px-3"><%-app.composeFile%></small>
-						<%}%>
+					<div class="nav-overflow" data-bs-toggle="nav-overflow">
+						<ul class="nav nav-underline d-flex gap-0 border-bottom">
+							<li class="nav-item"><button type="button" class="nav-link detail-default-tab px-4 <%=(_.includes(['protection', 'recovery', 'nextcloud-apps', 'nextcloud-accounts', 'mail-domains', 'mail-accounts', 'mail-blocked'], appTab) ? '' : 'active border-primary fw-normal')%>" data-app-tab="services"><i class="icon-box icon-fw"></i>Services <small class="opacity-75"><%=_.size(app.projectContainers)%></small></button></li>
+							<%if (!app.isUnmanaged) {%>
+								<li class="nav-item">
+									<button type="button" class="nav-link px-4 <%=(appTab === 'protection' ? 'active border-primary fw-normal' : '')%>" data-app-tab="protection">
+										<span class="position-relative d-inline-flex">
+											<i class="icon-shield icon-fw"></i>
+											<%if (app.snapshotPolicy) {%>
+												<i class="icon-circle icon-2xs icon-width-auto lh-1 position-absolute top-100 start-100 translate-middle <%=({ enabled: 'fg-green-300', paused: 'fg-orange-300', disabled: 'fg-gray-500' })[_.toLower(app.snapshotPolicy.mode)]%>" style="margin: -0.1875rem 0 0 -0.125rem;" data-bs-toggle="tooltip" data-bs-original-title="<%-_.upperFirst(app.snapshotPolicy.mode)%>"></i>
+											<%}%>
+										</span>
+										Protection
+									</button>
+								</li>
+								<li class="nav-item">
+									<button type="button" class="nav-link px-4 <%=(appTab === 'recovery' ? 'active border-primary fw-normal' : '')%>" data-app-tab="recovery">
+										<i class="icon-history icon-fw"></i>
+										Recovery
+										<%if (!_.isEmpty(app.snapshots)) {%>
+											<small class="opacity-75"><%=_.size(app.snapshots)%></small>
+										<%}%>
+									</button>
+								</li>
+							<%}%>
+							<%if (_.toLower(app.name) === 'nextcloud' && isIntegrationRunning) {%>
+								<li class="nav-item">
+									<button type="button" class="nav-link px-4 <%=(appTab === 'nextcloud-apps' ? 'active border-primary fw-normal' : '')%>" data-app-tab="nextcloud-apps">
+										<i class="icon-puzzle icon-fw"></i>
+										Apps
+										<%if (!_.isEmpty(nextcloudAppUpdates)) {%>
+											<small class="opacity-75"><%=_.size(nextcloudAppUpdates)%></small>
+										<%}%>
+									</button>
+								</li>
+								<li class="nav-item">
+									<button type="button" class="nav-link px-4 <%=(appTab === 'nextcloud-accounts' ? 'active border-primary fw-normal' : '')%>" data-app-tab="nextcloud-accounts">
+										<i class="icon-users icon-fw"></i>
+										Accounts
+										<%if (!_.isEmpty(nextcloudAccounts?.users)) {%>
+											<small class="opacity-75"><%=_.size(nextcloudAccounts.users)%></small>
+										<%}%>
+									</button>
+								</li>
+							<%}%>
+							<%if (_.toLower(app.name) === 'mailserver' && isIntegrationRunning) {%>
+								<%_.each([
+									{ tab: 'mail-domains', label: 'Domains', icon: 'icon-globe', count: _.size(mailserver?.domains) },
+									{ tab: 'mail-accounts', label: 'Accounts', icon: 'icon-mail', count: _.size(mailserver?.accounts) },
+									{ tab: 'mail-blocked', label: 'Blocked IPs', icon: 'icon-ban', count: _.size(mailserver?.bans) }
+								], (mailTabItem) => {%>
+									<li class="nav-item">
+										<button type="button" class="nav-link px-4 <%=(appTab === mailTabItem.tab ? 'active border-primary fw-normal' : '')%>" data-app-tab="<%-mailTabItem.tab%>">
+											<i class="<%=mailTabItem.icon%> icon-fw"></i>
+											<%-mailTabItem.label%>
+											<%if (mailTabItem.count > 0) {%>
+												<small class="opacity-75"><%=mailTabItem.count%></small>
+											<%}%>
+										</button>
+									</li>
+								<%})%>
+							<%}%>
+							<%if (app.composeFile) {%>
+								<li class="nav-item nav-overflow-keep d-flex flex-shrink-1 min-w-0 overflow-hidden ms-auto">
+									<small class="fg-emphasis-secondary text-truncate align-self-center px-3"><%-app.composeFile%></small>
+								</li>
+							<%}%>
+						</ul>
+						<i class="icon-ellipsis" data-bs-overflow-icon></i>
 					</div>
 
 					<div class="logs-container bd-black rounded-5 shadow-sm d-none">
