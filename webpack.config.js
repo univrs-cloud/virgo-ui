@@ -10,6 +10,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const connect = require('connect');
 
 module.exports = (env, argv) => {
 	let upstream = '';
@@ -52,7 +53,10 @@ module.exports = (env, argv) => {
 	return {
 		devtool: (argv.mode === 'production' ? 'source-map' : 'eval'),
 		devServer: {
-			server: 'https',
+			server: 'http2',
+			app: () => {
+				return connect();
+			},
 			port: 443,
 			allowedHosts: 'all',
 			compress: true,
