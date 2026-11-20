@@ -60,9 +60,12 @@
 	<tr>
 		<td class="<%=cellStateClass%> <%=(isGrouped ? 'ps-7' : '')%>" style="min-width: 180px; max-width: 0;">
 			<div class="d-flex align-items-center">
-				<div class="text-truncate min-w-0">
-					<i class="icon-circle icon-fw me-1 <%=statusDotColor%>" data-bs-toggle="tooltip" data-bs-original-title="<%-statusDotTip%>"></i><%if (node.online) {%><a href="/nodes/<%-node.nodeId%>" rel="external" class="text-decoration-none fg-body"><%-node.name%></a><%} else {%><span class="fg-body"><%-node.name%></span><%}%>
-				</div>
+				<i class="icon-circle icon-fw flex-shrink-0 me-1 <%=statusDotColor%>" data-bs-toggle="tooltip" data-bs-original-title="<%-statusDotTip%>"></i>
+				<%if (node.online) {%>
+					<a href="/nodes/<%-node.nodeId%>" rel="external" class="text-decoration-none fg-body text-truncate min-w-0"><%-node.name%></a>
+				<%} else {%>
+					<span class="fg-body text-truncate min-w-0"><%-node.name%></span>
+				<%}%>
 				<%if (!node.isOwner) {%>
 					<u-badge color="gray" tint="100" class="ms-3" pill>Invited</u-badge>
 				<%}%>
