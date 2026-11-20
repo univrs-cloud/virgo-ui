@@ -529,6 +529,33 @@ scenes.welcome = () => {
 	return svg('.es-wk-h{transform-box:fill-box;transform-origin:50% 100%;animation:es-wk-h 2.4s ease-in-out infinite}@keyframes es-wk-h{0%,40%,100%{transform:rotate(0)}10%,30%{transform:rotate(-14deg)}20%{transform:rotate(12deg)}}.es-wk-led{opacity:0;animation:es-wk-led 4.8s ease-in-out infinite}.es-wk-led1{animation-delay:.3s}.es-wk-led2{animation-delay:.6s}.es-wk-led3{animation-delay:.9s}@keyframes es-wk-led{0%,8%{opacity:0}14%,86%{opacity:1}94%,100%{opacity:0}}', platform() + `<g class="es-c es-pulse">${ellipse(0, 0, 0, 6.4, 'es-path')}</g><g class="es-c es-pulse es-d3">${ellipse(0, 0, 0, 6.4, 'es-path')}</g>` + body + at(0, 0, 9.6, badge, 'es-float'));
 };
 
+const nodeBadge = (led, badge, css = '') => {
+	K = 0.8;
+	const body = nas(led);
+	K = 1;
+	return svg(css, platform() + body + at(0, 0, 9.6, badge, 'es-float'));
+};
+
+scenes['node-unverified'] = () => {
+	const shield = '<path class="es-err" d="M0 -18L15 -12V-1C15 8 8.5 14.5 0 18C-8.5 14.5 -15 8 -15 -1V-12Z"/><path class="es-ws" d="M0 -8V2"/><circle class="es-w" cy="8" r="2"/>';
+	return nodeBadge(() => 'es-blink', shield);
+};
+
+scenes['node-offline'] = () => {
+	const globe = '<circle class="es-nu-off" r="17"/><circle class="es-ws es-thin" r="9"/><ellipse class="es-ws es-thin" rx="4" ry="9"/><path class="es-ws es-thin" d="M-9 0H9"/><path class="es-nu-cut" d="M-12 -12L12 12"/>';
+	return nodeBadge(() => 'es-sd-dark', globe, '.es-sd-dark{opacity:0}.es-nu-off{fill:light-dark(#aab4c3,#4b4c53)}.es-nu-cut{fill:none;stroke:#f0616d;stroke-width:3;stroke-linecap:round}');
+};
+
+scenes['node-timeout'] = () => {
+	const clock = '<circle class="es-io" r="17"/><circle class="es-ws es-thin" r="10"/><path class="es-ws es-thin" d="M0 0H5"/><path class="es-ws es-nu-hand" d="M0 0V-7"/>';
+	return nodeBadge((i) => `es-rb-led es-rb-led${i}`, clock, '.es-nu-hand{transform-origin:0 0;animation:es-nu-hand 3s linear infinite}@keyframes es-nu-hand{to{transform:rotate(360deg)}}.es-rb-led{opacity:0;animation:es-rb-led 2.4s ease-in-out infinite}.es-rb-led1{animation-delay:.3s}.es-rb-led2{animation-delay:.6s}.es-rb-led3{animation-delay:.9s}@keyframes es-rb-led{0%,100%{opacity:0}40%,60%{opacity:1}}');
+};
+
+scenes['node-denied'] = () => {
+	const lock = '<circle class="es-acc" r="17"/><path class="es-ws" d="M-4.5 -2V-6A4.5 4.5 0 0 1 4.5 -6V-2"/><rect class="es-w" x="-7.5" y="-2" width="15" height="11" rx="2"/><circle class="es-acc" cy="3.5" r="1.8"/>';
+	return nodeBadge(() => '', lock);
+};
+
 const unusedSlots = (frontY, sideX) => {
 	return pathOn('es-path es-dash', [[0, frontY, 0], [0, 4.7, 0], [-4, 4.7, 0]])
 		+ pathOn('es-path es-dash', [[sideX, frontY - 0.25, 0], [4.7, frontY - 0.25, 0], [4.7, -4, 0]])
@@ -580,7 +607,11 @@ const labels = {
 	'no-results': ['Any searchable list', 'Nothing matches the search'],
 	'not-found': ['Not found', 'Page not found'],
 	error: ['Any page', 'Error fetching data'],
-	sites: ['Fleet: Sites', 'No sites yet']
+	sites: ['Fleet: Sites', 'No sites yet'],
+	'node-unverified': ['Fleet: Node', 'Node could not be verified'],
+	'node-offline': ['Fleet: Node', 'Node is offline'],
+	'node-timeout': ['Fleet: Node', 'Node did not respond'],
+	'node-denied': ['Fleet: Node', 'No access to this node']
 };
 
 const overview = (rendered) => `<!doctype html>

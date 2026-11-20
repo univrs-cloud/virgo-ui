@@ -1,6 +1,10 @@
 import modulePartial from 'fleet/node_unavailable/partials/index.html';
 import nodeUnavailablePartial from 'fleet/node_unavailable/partials/node_unavailable.html';
 import errorImage from 'assets/img/illustrations/error.svg';
+import unverifiedImage from 'assets/img/illustrations/node-unverified.svg';
+import offlineImage from 'assets/img/illustrations/node-offline.svg';
+import timeoutImage from 'assets/img/illustrations/node-timeout.svg';
+import deniedImage from 'assets/img/illustrations/node-denied.svg';
 import * as nodeService from 'fleet/node_unavailable/services/node';
 
 const moduleTemplate = _.template(modulePartial);
@@ -15,7 +19,7 @@ const render = (state) => {
 	const node = _.find(state.nodes, { nodeId });
 	morphdom(
 		container,
-		nodeUnavailableTemplate({ errorImage, name: (node?.name || 'This node'), reason })
+		nodeUnavailableTemplate({ errorImage, unverifiedImage, offlineImage, timeoutImage, deniedImage, name: (node?.name || 'This node'), reason })
 	);
 };
 

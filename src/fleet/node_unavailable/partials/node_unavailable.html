@@ -1,21 +1,26 @@
 <div class="no-content d-flex flex-column justify-content-center align-items-center text-center">
-	<div class="no-content-image"><%=errorImage%></div>
 <%if (reason === 'unverified') {%>
+	<div class="no-content-image"><%=unverifiedImage%></div>
 	<h5 class="fg-4 mt-7"><%-name%> could not be verified</h5>
 	<p class="fg-4">Fleet only opens nodes running an official virgoOS release. Update this node from your node list, then open it again.</p>
 <%} else if (reason === 'offline') {%>
+	<div class="no-content-image"><%=offlineImage%></div>
 	<h5 class="fg-4 mt-7"><%-name%> is offline</h5>
 	<p class="fg-4">It opens here again as soon as it reconnects to the fleet.</p>
 <%} else if (reason === 'timeout') {%>
+	<div class="no-content-image"><%=timeoutImage%></div>
 	<h5 class="fg-4 mt-7"><%-name%> did not respond</h5>
 	<p class="fg-4">Try again in a moment.</p>
 <%} else if (reason === 'denied') {%>
+	<div class="no-content-image"><%=deniedImage%></div>
 	<h5 class="fg-4 mt-7">You do not have access to this node</h5>
 	<p class="fg-4">Ask its owner to share it with you.</p>
 <%} else if (reason === 'unavailable') {%>
+	<div class="no-content-image"><%=errorImage%></div>
 	<h5 class="fg-4 mt-7">Nodes cannot be opened right now</h5>
 	<p class="fg-4">Fleet cannot check node software at the moment. Try again later.</p>
 <%} else {%>
+	<div class="no-content-image"><%=errorImage%></div>
 	<h5 class="fg-4 mt-7"><%-name%> could not show this page</h5>
 	<p class="fg-4">Try again in a moment.</p>
 <%}%>
