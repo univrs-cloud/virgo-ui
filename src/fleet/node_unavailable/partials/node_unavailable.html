@@ -2,7 +2,7 @@
 <%if (reason === 'unverified') {%>
 	<div class="no-content-image"><%=unverifiedImage%></div>
 	<h5 class="fg-4 mt-7"><%-name%> could not be verified</h5>
-	<p class="fg-4">Fleet only opens nodes running an official virgoOS release. Update this node from your node list, then open it again.</p>
+	<p class="fg-4">Its files do not match an official virgoOS release, they may have been changed.<br>Update this node, then open it again.</p>
 <%} else if (reason === 'offline') {%>
 	<div class="no-content-image"><%=offlineImage%></div>
 	<h5 class="fg-4 mt-7"><%-name%> is offline</h5>
