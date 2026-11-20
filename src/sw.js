@@ -61,8 +61,10 @@ const ASSET_HEAD_TIMEOUT_MS = 5000;
 const ASSET_MAX_FRAME_BYTES = 64 * 1024;
 const ASSET_MAX_BUFFERED_BYTES = 8 * 1024 * 1024;
 const ASSET_ACCEPT_ENCODING = (typeof DecompressionStream === 'function') ? 'gzip' : null;
+const ICON_FOLDERS = ['assets/img/apps/', 'assets/img/shortcuts/'];
 
 const readyClients = new Map();
+const releases = new Map();
 
 self.addEventListener('message', (event) => {
 	const clientId = event.source?.id;
@@ -230,6 +232,46 @@ const bufferAssetBody = async (stream) => {
 	}
 };
 
+const loadRelease = (nodeId, isFresh) => {
+	if (!isFresh && releases.has(nodeId)) {
+		return releases.get(nodeId);
+	}
+
+	const files = fetch(`/nodes/${nodeId}/release.json`, { cache: 'no-store' }).then(async (response) => {
+		if (!response.ok) {
+			throw new Error(`Release list answered ${response.status}`);
+		}
+		return ((await response.json())?.files || {});
+	});
+	releases.set(nodeId, files);
+	files.catch(() => {
+		if (releases.get(nodeId) === files) {
+			releases.delete(nodeId);
+		}
+	});
+	return files;
+};
+
+const hashOf = async (body) => {
+	const digest = await crypto.subtle.digest('SHA-256', await body.arrayBuffer());
+	return [...new Uint8Array(digest)].map((byte) => { return byte.toString(16).padStart(2, '0'); }).join('');
+};
+
+const verifyAsset = async (nodeId, path, body) => {
+	const name = path.split('?')[0].slice(1);
+	if (ICON_FOLDERS.some((folder) => { return name.startsWith(folder); })) {
+		return;
+	}
+
+	const hash = await hashOf(body);
+	for (const isFresh of [false, true]) {
+		if ((await loadRelease(nodeId, isFresh))[name] === hash) {
+			return;
+		}
+	}
+	throw new Error('Asset does not match the node release');
+};
+
 const routeNodeAsset = async (event, nodeId, path) => {
 	const client = await self.clients.get(event.clientId);
 	if (!client) {
@@ -243,6 +285,7 @@ const routeNodeAsset = async (event, nodeId, path) => {
 	}
 
 	const body = await bufferAssetBody(decodeAssetBody(stream, headers['content-encoding']));
+	await verifyAsset(nodeId, path, body);
 	const responseHeaders = new Headers();
 	if (headers['content-type']) {
 		responseHeaders.set('Content-Type', headers['content-type']);

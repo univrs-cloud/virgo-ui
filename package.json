@@ -6,7 +6,7 @@
 	"license": "UNLICENSED",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"build": "webpack --mode production",
+		"build": "webpack --mode production && node scripts/sign-release.js",
 		"changelog": "bash scripts/changelog.sh",
 		"deb": "npm run changelog && node-deb --no-default-package-dependencies --no-rebuild --install-strategy auto ${DEB_ARCH:+--architecture $DEB_ARCH} -- dist/",
 		"serve": "webpack serve --mode development --env=upstream=$npm_config_upstream"
