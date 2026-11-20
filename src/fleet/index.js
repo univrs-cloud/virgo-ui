@@ -1,5 +1,6 @@
 const moduleLoaders = {
 	'not-found': () => import('node/modules/not_found'),
+	'node-unavailable': () => import('fleet/node_unavailable'),
 	'sites': () => import('fleet/sites'),
 	'profile': () => import('fleet/profile')
 };

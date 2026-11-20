@@ -122,6 +122,8 @@ const routes = [
 	{ path: '/mfa/challenge', middleware: [requireChallenge], handler: showAuthScreen(() => import('fleet/mfa_challenge')) },
 	{ path: '/', middleware: [requireSatisfied], handler: showApp('sites') },
 	{ path: '/users/profile', middleware: [requireSatisfied], handler: showApp('profile') },
+	{ path: '/nodes/:nodeId', middleware: [requireSatisfied], handler: showApp('node-unavailable') },
+	{ path: '/nodes/:nodeId/*', middleware: [requireSatisfied], handler: showApp('node-unavailable') },
 	// Catch-all, must be last. Unknown paths land on not-found for a satisfied user, or bounce to
 	// sign-in via the guard otherwise.
 	{ path: '*', middleware: [requireSatisfied], handler: showApp('not-found') }

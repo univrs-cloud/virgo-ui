@@ -322,7 +322,7 @@ $card-image-size: 30px;
 
 .no-content {
 	height: calc(100dvh - 72px - var(--chrome));
-	:is(#not-found, #sites) & {
+	:is(#not-found, #node-unavailable, #sites) & {
 		height: calc(100dvh - 32px - var(--chrome));
 	}
 }
