@@ -24,16 +24,16 @@ The fastest way to get a new screen right is to find the closest existing screen
 
 ### Page title (every page)
 
-- Duotone icon of the page, then the page name, as an `h4`. The icon is the same one the rail uses.
+- Icon of the page, then the page name, as an `h4`. The icon is the same one the rail uses.
 - The page's single primary action sits at the top right as a small outline secondary button ("App center", "New user").
 
 ### List pages (Apps, Users, Folders, Storage, Services...)
 
 - Under the title: a search field (no floating label, placeholder "Search"), an optional filter icon button next to it, and the item count on the far right ("3 apps").
 - A full width table. Sortable columns show a faint up/down caret; the active direction turns brand blue. Numeric and icon-only columns are compact; icon-only headers carry a tooltip.
-- The whole row opens the item's detail page at its own address; it ends with a ⋮ menu and a light chevron (`icon-light icon-caret-right fg-4`). Clicks on links and the menu stay with them. Never a "View details" button per row.
+- The whole row opens the item's detail page at its own address; it ends with a ⋮ menu and a faint chevron (`icon-chevron-right fg-4`). Clicks on links and the menu stay with them. Never a "View details" button per row.
 - Secondary columns hide below the `md` breakpoint so the table still reads on a phone; the ⋮ menu and the chevron always stay.
-- Each row starts with the item image (app logo, avatar with initials, or a light weight icon). Stopped items show their image in grayscale.
+- Each row starts with the item image (app logo, avatar with initials, or an icon). Stopped items show their image in grayscale.
 
 ### Detail pages
 
@@ -46,7 +46,7 @@ The fastest way to get a new screen right is to find the closest existing screen
 ### Settings style pages (Network, Settings, About, Profile)
 
 - Two columns. Left: the section name (`h5`) and one plain sentence saying what the section is for ("The name the node answers to."). Right: one card for that section.
-- A card starts with a square icon tile (soft brand blue background, duotone icon). Next to it the main value in large text, with supporting values as small gray pill badges written as "Label value" ("Hostname spica").
+- A card starts with a square icon tile (soft brand blue background, icon). Next to it the main value in large text, with supporting values as small gray pill badges written as "Label value" ("Hostname spica").
 - Further values below, in a grid, each with its small label **above** the value. Never put labels under values.
 - Card actions are text links with an icon on the right side of the card: "Edit" (pen), "Add" (plus), "Refresh" (arrows).
 - Dangerous actions (Reboot, Shut down) are a row with a title and a one-line consequence ("The node stays off until you power it on again.") and a small solid red button on the right.
@@ -186,17 +186,13 @@ A problem with one field goes under the field, not in a toast. Anything the user
 
 ## Icons
 
-- Phosphor icons only. Weights by role:
-  - **duotone:** page titles, card icon tiles, feature marks
-  - **regular:** buttons, actions, menu items, inline marks
-  - **fill:** small glyphs (⋮ menu, carets, status dots, icons inside badges)
-  - **light:** quiet labels and fallback item images
+- Lucide icons only, in its one outline style. An icon needs only its name class (`icon-pencil`).
 - Use fixed width (`icon-fw`) wherever icons stack in a column (menus, lists).
-- Always write the full icon class name (`icon-pen`). Never build it from parts (`icon-${name}`). The build keeps only the icons it can find written out in full, so a built name disappears.
+- Always write the full icon class name (`icon-pencil`). Never build it from parts (`icon-${name}`). The build keeps only the icons it can find written out in full, so a built name disappears.
 
 ## Menus and actions
 
-- The ⋮ menu (`icon-dots-three-outline-vertical`) holds an item's actions, grouped with dividers: updates first, then start, then restart, stop and kill, then removal.
+- The ⋮ menu (`icon-ellipsis-vertical`) holds an item's actions, grouped with dividers: updates first, then start, then restart, stop and kill, then removal.
 - Destructive menu items are red. An action that cannot run right now stays visible but disabled, with a tooltip that says why.
 - In a list row the ⋮ menu holds every action; on the detail page the common ones move into the action tray.
 - While a job runs on an item, its action area shows a spinning gear instead of buttons.

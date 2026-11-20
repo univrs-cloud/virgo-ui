@@ -2,7 +2,7 @@
 <tr class="item <%=(isPool ? 'cursor-pointer' : '')%>" data-id="<%-pool.poolGuid%>"<%=(isPool ? ` data-name="${_.escape(pool.name)}"` : '')%>>
 	<td class="d-none md:d-table-cell" style="width: 1px;">
 		<div class="row-image">
-			<i class="icon-light <%=(isPool ? 'icon-stack' : 'icon-hard-drive')%> icon-fw fg-emphasis-secondary"></i>
+			<i class="<%=(isPool ? 'icon-layers' : 'icon-hard-drive')%> icon-fw fg-emphasis-secondary"></i>
 		</div>
 	</td>
 	<td style="min-width: 210px; max-width: 0;">
@@ -16,7 +16,7 @@
 			</div>
 			<%const driveHealth = poolHealth(pool)%>
 			<%if (driveHealth) {%>
-				<i class="icon-fill icon-warning icon-fw fg-<%-driveHealth.color%>-300 ms-1 flex-shrink-0" data-bs-toggle="tooltip" data-bs-custom-class="storage-device" data-bs-original-title="<%=driveHealth.tip%>"></i>
+				<i class="icon-triangle-alert icon-fw fg-<%-driveHealth.color%>-300 ms-1 flex-shrink-0" data-bs-toggle="tooltip" data-bs-custom-class="storage-device" data-bs-original-title="<%=driveHealth.tip%>"></i>
 			<%}%>
 			<%const rootVdev = pool.vdevs?.[pool.name]%>
 			<%const childVdevs = (rootVdev?.vdevs ? Object.values(rootVdev.vdevs) : [])%>
@@ -60,9 +60,9 @@
 				<%const duration = moment.duration(moment.unix(pool.scanStats.endTime).diff(moment.unix(pool.scanStats.startTime))).humanize()%>
 				<%const tip = `Completed ${moment.unix(pool.scanStats.endTime).fromNow()}.<br>Took ${duration} to scan <strong>${prettyBytes(pool.scanStats.toExamine || 0, { binary: true })}</strong>.<br>Repaired <strong>${prettyBytes(pool.scanStats.processed || 0, { binary: true })}</strong>, ${pool.scanStats.errors || 0} errors.`%>
 				<%if (pool.scanStats.errors > 0) {%>
-					<i class="icon-fill icon-warning icon-fw fg-red-300" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
+					<i class="icon-triangle-alert icon-fw fg-red-300" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
 				<%} else {%>
-					<i class="icon-fill icon-check-circle icon-fw fg-green-300" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
+					<i class="icon-circle-check icon-fw fg-green-300" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
 				<%}%>
 			<%}%>
 			<%if (pool.scanStats?.state.toLowerCase() === 'scanning') {%>
@@ -89,7 +89,7 @@
 	</td>
 	<td class="text-end pe-0">
 		<%if (isPool) {%>
-			<i class="icon-light icon-caret-right icon-fw fg-4"></i>
+			<i class="icon-chevron-right icon-fw fg-4"></i>
 		<%}%>
 	</td>
 </tr>

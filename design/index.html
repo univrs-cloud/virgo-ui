@@ -8,11 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap">
-<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.2/src/regular/style.css">
-<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.2/src/fill/style.css">
-<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.2/src/duotone/style.css">
-<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.2/src/light/style.css">
-<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.2/src/bold/style.css">
+<link rel="stylesheet" href="https://unpkg.com/lucide-static@1.69.0/font/lucide.css">
 <style>
 :root {
 	color-scheme: light dark;
@@ -482,11 +478,6 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 .s1 { width: .25rem; } .s2 { width: .375rem; } .s3 { width: .5rem; } .s4 { width: .75rem; } .s5 { width: 1rem; } .s6 { width: 1.25rem; } .s7 { width: 1.5rem; } .s8 { width: 1.75rem; } .s9 { width: 2rem; } .s10 { width: 2.25rem; } .s11 { width: 2.5rem; } .s12 { width: 3rem; }
 .type-row { display: grid; grid-template-columns: 10rem 1fr; gap: 1rem; align-items: center; padding: .65rem 0; border-bottom: 1px solid var(--border-default); }
 .type-row small { color: var(--fg-4); font-size: .8rem; font-family: var(--mono); }
-.icon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); gap: .75rem; margin: 0 0 1.5rem; }
-.icon-grid > div { display: flex; align-items: center; gap: .9rem; padding: .9rem; border-radius: var(--r7); background: var(--surface-card); border: 1px solid var(--border-default); }
-.icon-grid i { font-size: 1.8rem; }
-.icon-grid b { display: block; font-weight: 600; font-size: .9rem; }
-.icon-grid span { font-size: .82rem; color: var(--fg-3); }
 .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); gap: 1rem; margin: 0 0 1.5rem; }
 .gallery figure { border: 1px solid var(--border-default); border-radius: var(--r7); background: var(--surface-container); padding: .75rem; display: flex; flex-direction: column; gap: .5rem; }
 .gallery img { width: 100%; height: 7.5rem; object-fit: contain; }
@@ -532,44 +523,44 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 	<div class="spacer"></div>
 	<select class="page-select" id="page-select" aria-label="Page"></select>
 	<div class="theme-switch" id="theme-switch">
-		<button type="button" data-theme-value="system" aria-pressed="true"><i class="ph ph-circle-half"></i><span class="lbl">Auto</span></button>
-		<button type="button" data-theme-value="light" aria-pressed="false"><i class="ph ph-sun"></i><span class="lbl">Light</span></button>
-		<button type="button" data-theme-value="dark" aria-pressed="false"><i class="ph ph-moon"></i><span class="lbl">Dark</span></button>
+		<button type="button" data-theme-value="system" aria-pressed="true"><i class="icon-contrast"></i><span class="lbl">Auto</span></button>
+		<button type="button" data-theme-value="light" aria-pressed="false"><i class="icon-sun"></i><span class="lbl">Light</span></button>
+		<button type="button" data-theme-value="dark" aria-pressed="false"><i class="icon-moon"></i><span class="lbl">Dark</span></button>
 	</div>
 </header>
 
 <div class="layout">
 	<nav class="side" id="side">
 		<h6>Get started</h6>
-		<a href="#introduction"><i class="ph ph-house"></i>Introduction</a>
-		<a href="#checklist"><i class="ph ph-list-checks"></i>Before you ship</a>
+		<a href="#introduction"><i class="icon-house"></i>Introduction</a>
+		<a href="#checklist"><i class="icon-list-checks"></i>Before you ship</a>
 		<h6>Foundations</h6>
-		<a href="#color"><i class="ph ph-palette"></i>Color</a>
-		<a href="#themes"><i class="ph ph-circle-half"></i>Themes</a>
-		<a href="#typography"><i class="ph ph-text-aa"></i>Typography</a>
-		<a href="#icons"><i class="ph ph-shapes"></i>Icons</a>
-		<a href="#illustrations"><i class="ph ph-cube"></i>Illustrations</a>
-		<a href="#spacing"><i class="ph ph-arrows-out-line-horizontal"></i>Spacing</a>
-		<a href="#layout"><i class="ph ph-layout"></i>Layout</a>
-		<a href="#motion"><i class="ph ph-wave-sine"></i>Motion</a>
-		<a href="#content"><i class="ph ph-chat-centered-text"></i>Content</a>
+		<a href="#color"><i class="icon-palette"></i>Color</a>
+		<a href="#themes"><i class="icon-contrast"></i>Themes</a>
+		<a href="#typography"><i class="icon-type"></i>Typography</a>
+		<a href="#icons"><i class="icon-shapes"></i>Icons</a>
+		<a href="#illustrations"><i class="icon-box"></i>Illustrations</a>
+		<a href="#spacing"><i class="icon-move-horizontal"></i>Spacing</a>
+		<a href="#layout"><i class="icon-layout-dashboard"></i>Layout</a>
+		<a href="#motion"><i class="icon-audio-waveform"></i>Motion</a>
+		<a href="#content"><i class="icon-message-square-text"></i>Content</a>
 		<h6>Patterns</h6>
-		<a href="#navigation"><i class="ph ph-sidebar"></i>Navigation</a>
-		<a href="#common-actions"><i class="ph ph-cursor-click"></i>Common actions</a>
-		<a href="#disclosures"><i class="ph ph-dots-three-outline-vertical"></i>Menus and disclosures</a>
-		<a href="#dialogs"><i class="ph ph-app-window"></i>Dialogs</a>
-		<a href="#forms"><i class="ph ph-textbox"></i>Forms</a>
-		<a href="#validation"><i class="ph ph-warning-circle"></i>Validation</a>
-		<a href="#search"><i class="ph ph-magnifying-glass"></i>Search</a>
-		<a href="#filtering"><i class="ph ph-funnel"></i>Filtering</a>
-		<a href="#notifications"><i class="ph ph-bell-ringing"></i>Notifications</a>
-		<a href="#status-indicators"><i class="ph ph-circles-three"></i>Status indicators</a>
-		<a href="#loading"><i class="ph ph-spinner-gap"></i>Loading</a>
-		<a href="#empty-states"><i class="ph ph-circle-dashed"></i>Empty states</a>
-		<a href="#disabled-states"><i class="ph ph-prohibit"></i>Disabled states</a>
-		<a href="#read-only-states"><i class="ph ph-lock-simple"></i>Read-only states</a>
-		<a href="#overflow-content"><i class="ph ph-dots-three"></i>Overflow content</a>
-		<a href="#login"><i class="ph ph-sign-in"></i>Login</a>
+		<a href="#navigation"><i class="icon-panel-left"></i>Navigation</a>
+		<a href="#common-actions"><i class="icon-mouse-pointer-click"></i>Common actions</a>
+		<a href="#disclosures"><i class="icon-ellipsis-vertical"></i>Menus and disclosures</a>
+		<a href="#dialogs"><i class="icon-app-window"></i>Dialogs</a>
+		<a href="#forms"><i class="icon-text-cursor-input"></i>Forms</a>
+		<a href="#validation"><i class="icon-circle-alert"></i>Validation</a>
+		<a href="#search"><i class="icon-search"></i>Search</a>
+		<a href="#filtering"><i class="icon-funnel"></i>Filtering</a>
+		<a href="#notifications"><i class="icon-bell-ring"></i>Notifications</a>
+		<a href="#status-indicators"><i class="icon-circle-dot"></i>Status indicators</a>
+		<a href="#loading"><i class="icon-loader"></i>Loading</a>
+		<a href="#empty-states"><i class="icon-circle-dashed"></i>Empty states</a>
+		<a href="#disabled-states"><i class="icon-ban"></i>Disabled states</a>
+		<a href="#read-only-states"><i class="icon-lock"></i>Read-only states</a>
+		<a href="#overflow-content"><i class="icon-ellipsis"></i>Overflow content</a>
+		<a href="#login"><i class="icon-log-in"></i>Login</a>
 	</nav>
 
 	<main class="content" id="content">
@@ -587,47 +578,47 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 		<li>Green is how virgoOS does it. Red is a mistake that has been made before.</li>
 		<li>When nothing here answers your question, ask before inventing a new pattern.</li>
 	</ul>
-	<div class="note"><i class="ph-fill ph-info"></i><div>This page renders the rules; the app's styles live in <code>src/assets/scss</code> and the text version for coding agents is <code>DESIGN.md</code>. When a rule changes, change all three.</div></div>
+	<div class="note"><i class="icon-info"></i><div>This page renders the rules; the app's styles live in <code>src/assets/scss</code> and the text version for coding agents is <code>DESIGN.md</code>. When a rule changes, change all three.</div></div>
 
 	<h2>Principles</h2>
 	<div class="cards">
-		<div class="card-link"><i class="ph-duotone ph-feather"></i><b>Calm and quiet</b><span>Neutral surfaces, one brand blue, color only where it means something.</span></div>
-		<div class="card-link"><i class="ph-duotone ph-copy-simple"></i><b>Same job, same look</b><span>Lists, details, settings and dialogs each have one shape. People learn it once.</span></div>
-		<div class="card-link"><i class="ph-duotone ph-stack"></i><b>Stock before custom</b><span>Bootstrap 6 classes and our tokens first. No inline styles, no one-off CSS.</span></div>
-		<div class="card-link"><i class="ph-duotone ph-devices"></i><b>Every theme, every size</b><span>Light and dark, phone to wide desktop, without a separate design.</span></div>
+		<div class="card-link"><i class="icon-feather"></i><b>Calm and quiet</b><span>Neutral surfaces, one brand blue, color only where it means something.</span></div>
+		<div class="card-link"><i class="icon-copy"></i><b>Same job, same look</b><span>Lists, details, settings and dialogs each have one shape. People learn it once.</span></div>
+		<div class="card-link"><i class="icon-layers"></i><b>Stock before custom</b><span>Bootstrap 6 classes and our tokens first. No inline styles, no one-off CSS.</span></div>
+		<div class="card-link"><i class="icon-monitor-smartphone"></i><b>Every theme, every size</b><span>Light and dark, phone to wide desktop, without a separate design.</span></div>
 	</div>
 
 	<h2>Foundations</h2>
 	<div class="cards">
-		<a class="card-link" href="#color"><i class="ph-duotone ph-palette"></i><b>Color</b><span>What each color means, surfaces, text levels.</span></a>
-		<a class="card-link" href="#themes"><i class="ph-duotone ph-circle-half"></i><b>Themes</b><span>Light, dark and auto, from one set of tokens.</span></a>
-		<a class="card-link" href="#typography"><i class="ph-duotone ph-text-aa"></i><b>Typography</b><span>Inter, the size scale and weights.</span></a>
-		<a class="card-link" href="#icons"><i class="ph-duotone ph-shapes"></i><b>Icons</b><span>Phosphor, and which weight for which job.</span></a>
-		<a class="card-link" href="#illustrations"><i class="ph-duotone ph-cube"></i><b>Illustrations</b><span>The isometric scenes for empty and final states.</span></a>
-		<a class="card-link" href="#spacing"><i class="ph-duotone ph-arrows-out-line-horizontal"></i><b>Spacing</b><span>The spacer scale and how to group with space.</span></a>
-		<a class="card-link" href="#layout"><i class="ph-duotone ph-layout"></i><b>Layout</b><span>Page types and screen sizes.</span></a>
-		<a class="card-link" href="#motion"><i class="ph-duotone ph-wave-sine"></i><b>Motion</b><span>Small, quick, and always on.</span></a>
-		<a class="card-link" href="#content"><i class="ph-duotone ph-chat-centered-text"></i><b>Content</b><span>Wording, case, punctuation, numbers.</span></a>
+		<a class="card-link" href="#color"><i class="icon-palette"></i><b>Color</b><span>What each color means, surfaces, text levels.</span></a>
+		<a class="card-link" href="#themes"><i class="icon-contrast"></i><b>Themes</b><span>Light, dark and auto, from one set of tokens.</span></a>
+		<a class="card-link" href="#typography"><i class="icon-type"></i><b>Typography</b><span>Inter, the size scale and weights.</span></a>
+		<a class="card-link" href="#icons"><i class="icon-shapes"></i><b>Icons</b><span>Lucide, one outline style, names written in full.</span></a>
+		<a class="card-link" href="#illustrations"><i class="icon-box"></i><b>Illustrations</b><span>The isometric scenes for empty and final states.</span></a>
+		<a class="card-link" href="#spacing"><i class="icon-move-horizontal"></i><b>Spacing</b><span>The spacer scale and how to group with space.</span></a>
+		<a class="card-link" href="#layout"><i class="icon-layout-dashboard"></i><b>Layout</b><span>Page types and screen sizes.</span></a>
+		<a class="card-link" href="#motion"><i class="icon-audio-waveform"></i><b>Motion</b><span>Small, quick, and always on.</span></a>
+		<a class="card-link" href="#content"><i class="icon-message-square-text"></i><b>Content</b><span>Wording, case, punctuation, numbers.</span></a>
 	</div>
 
 	<h2>Patterns</h2>
 	<div class="cards">
-		<a class="card-link" href="#navigation"><i class="ph-duotone ph-sidebar"></i><b>Navigation</b><span>The side menu, the phone drawer, page titles.</span></a>
-		<a class="card-link" href="#common-actions"><i class="ph-duotone ph-cursor-click"></i><b>Common actions</b><span>Add, edit, delete, start, stop, copy and the rest.</span></a>
-		<a class="card-link" href="#disclosures"><i class="ph-duotone ph-dots-three-outline-vertical"></i><b>Menus and disclosures</b><span>The ⋮ menu, trays, popovers, tooltips.</span></a>
-		<a class="card-link" href="#dialogs"><i class="ph-duotone ph-app-window"></i><b>Dialogs</b><span>When to use one, sizes, confirmations.</span></a>
-		<a class="card-link" href="#forms"><i class="ph-duotone ph-textbox"></i><b>Forms</b><span>Fields, labels, buttons, autocomplete.</span></a>
-		<a class="card-link" href="#validation"><i class="ph-duotone ph-warning-circle"></i><b>Validation</b><span>When fields are checked and how messages read.</span></a>
-		<a class="card-link" href="#search"><i class="ph-duotone ph-magnifying-glass"></i><b>Search</b><span>Searching lists.</span></a>
-		<a class="card-link" href="#filtering"><i class="ph-duotone ph-funnel"></i><b>Filtering</b><span>Narrowing lists with the filter menu.</span></a>
-		<a class="card-link" href="#notifications"><i class="ph-duotone ph-bell-ringing"></i><b>Notifications</b><span>Which toast, and when not to use one.</span></a>
-		<a class="card-link" href="#status-indicators"><i class="ph-duotone ph-circles-three"></i><b>Status indicators</b><span>Badges, dots and the health ladder.</span></a>
-		<a class="card-link" href="#loading"><i class="ph-duotone ph-spinner-gap"></i><b>Loading</b><span>Spinners, busy buttons, job progress.</span></a>
-		<a class="card-link" href="#empty-states"><i class="ph-duotone ph-circle-dashed"></i><b>Empty states</b><span>Nothing yet, nothing found, failed to load.</span></a>
-		<a class="card-link" href="#disabled-states"><i class="ph-duotone ph-prohibit"></i><b>Disabled states</b><span>Disable, explain, or leave out.</span></a>
-		<a class="card-link" href="#read-only-states"><i class="ph-duotone ph-lock-simple"></i><b>Read-only states</b><span>Values that are shown but fixed.</span></a>
-		<a class="card-link" href="#overflow-content"><i class="ph-duotone ph-dots-three"></i><b>Overflow content</b><span>Truncating, wrapping, scrolling.</span></a>
-		<a class="card-link" href="#login"><i class="ph-duotone ph-sign-in"></i><b>Login</b><span>The sign in screen.</span></a>
+		<a class="card-link" href="#navigation"><i class="icon-panel-left"></i><b>Navigation</b><span>The side menu, the phone drawer, page titles.</span></a>
+		<a class="card-link" href="#common-actions"><i class="icon-mouse-pointer-click"></i><b>Common actions</b><span>Add, edit, delete, start, stop, copy and the rest.</span></a>
+		<a class="card-link" href="#disclosures"><i class="icon-ellipsis-vertical"></i><b>Menus and disclosures</b><span>The ⋮ menu, trays, popovers, tooltips.</span></a>
+		<a class="card-link" href="#dialogs"><i class="icon-app-window"></i><b>Dialogs</b><span>When to use one, sizes, confirmations.</span></a>
+		<a class="card-link" href="#forms"><i class="icon-text-cursor-input"></i><b>Forms</b><span>Fields, labels, buttons, autocomplete.</span></a>
+		<a class="card-link" href="#validation"><i class="icon-circle-alert"></i><b>Validation</b><span>When fields are checked and how messages read.</span></a>
+		<a class="card-link" href="#search"><i class="icon-search"></i><b>Search</b><span>Searching lists.</span></a>
+		<a class="card-link" href="#filtering"><i class="icon-funnel"></i><b>Filtering</b><span>Narrowing lists with the filter menu.</span></a>
+		<a class="card-link" href="#notifications"><i class="icon-bell-ring"></i><b>Notifications</b><span>Which toast, and when not to use one.</span></a>
+		<a class="card-link" href="#status-indicators"><i class="icon-circle-dot"></i><b>Status indicators</b><span>Badges, dots and the health ladder.</span></a>
+		<a class="card-link" href="#loading"><i class="icon-loader"></i><b>Loading</b><span>Spinners, busy buttons, job progress.</span></a>
+		<a class="card-link" href="#empty-states"><i class="icon-circle-dashed"></i><b>Empty states</b><span>Nothing yet, nothing found, failed to load.</span></a>
+		<a class="card-link" href="#disabled-states"><i class="icon-ban"></i><b>Disabled states</b><span>Disable, explain, or leave out.</span></a>
+		<a class="card-link" href="#read-only-states"><i class="icon-lock"></i><b>Read-only states</b><span>Values that are shown but fixed.</span></a>
+		<a class="card-link" href="#overflow-content"><i class="icon-ellipsis"></i><b>Overflow content</b><span>Truncating, wrapping, scrolling.</span></a>
+		<a class="card-link" href="#login"><i class="icon-log-in"></i><b>Login</b><span>The sign in screen.</span></a>
 	</div>
 </section>
 
@@ -637,18 +628,18 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 	<h1>Before you ship</h1>
 	<p class="lead">Go through every line for every new or changed screen.</p>
 	<ul class="checklist">
-		<li><i class="ph-fill ph-check-circle"></i>It matches the closest existing page type; any new pattern was agreed first.<a href="#layout">Layout</a></li>
-		<li><i class="ph-fill ph-check-circle"></i>It works in light and dark mode.<a href="#themes">Themes</a></li>
-		<li><i class="ph-fill ph-check-circle"></i>It works at phone width; nothing scrolls sideways and no action is lost.<a href="#layout">Layout</a></li>
-		<li><i class="ph-fill ph-check-circle"></i>Loading, error, empty and no results states exist.<a href="#empty-states">Empty states</a></li>
-		<li><i class="ph-fill ph-check-circle"></i>Colors follow their meaning; nothing is colored for decoration.<a href="#color">Color</a></li>
-		<li><i class="ph-fill ph-check-circle"></i>Labels sit above values; single-line rows are centered.<a href="#layout">Layout</a></li>
-		<li><i class="ph-fill ph-check-circle"></i>Icons use the right weight and their full class names.<a href="#icons">Icons</a></li>
-		<li><i class="ph-fill ph-check-circle"></i>Destructive actions are red and confirmed; data loss needs an acknowledgment.<a href="#dialogs">Dialogs</a></li>
-		<li><i class="ph-fill ph-check-circle"></i>Every form validates with the house wording and sets autocomplete.<a href="#validation">Validation</a></li>
-		<li><i class="ph-fill ph-check-circle"></i>Copy is in sentence case, uses the settled words and no dashes as punctuation.<a href="#content">Content</a></li>
-		<li><i class="ph-fill ph-check-circle"></i>No inline styles, no fixed colors, no custom CSS that a class could replace.<a href="#spacing">Spacing</a></li>
-		<li><i class="ph-fill ph-check-circle"></i>The user docs and their screenshots are updated if the screen changed.<a href="#introduction">Introduction</a></li>
+		<li><i class="icon-circle-check"></i>It matches the closest existing page type; any new pattern was agreed first.<a href="#layout">Layout</a></li>
+		<li><i class="icon-circle-check"></i>It works in light and dark mode.<a href="#themes">Themes</a></li>
+		<li><i class="icon-circle-check"></i>It works at phone width; nothing scrolls sideways and no action is lost.<a href="#layout">Layout</a></li>
+		<li><i class="icon-circle-check"></i>Loading, error, empty and no results states exist.<a href="#empty-states">Empty states</a></li>
+		<li><i class="icon-circle-check"></i>Colors follow their meaning; nothing is colored for decoration.<a href="#color">Color</a></li>
+		<li><i class="icon-circle-check"></i>Labels sit above values; single-line rows are centered.<a href="#layout">Layout</a></li>
+		<li><i class="icon-circle-check"></i>Icons use the right weight and their full class names.<a href="#icons">Icons</a></li>
+		<li><i class="icon-circle-check"></i>Destructive actions are red and confirmed; data loss needs an acknowledgment.<a href="#dialogs">Dialogs</a></li>
+		<li><i class="icon-circle-check"></i>Every form validates with the house wording and sets autocomplete.<a href="#validation">Validation</a></li>
+		<li><i class="icon-circle-check"></i>Copy is in sentence case, uses the settled words and no dashes as punctuation.<a href="#content">Content</a></li>
+		<li><i class="icon-circle-check"></i>No inline styles, no fixed colors, no custom CSS that a class could replace.<a href="#spacing">Spacing</a></li>
+		<li><i class="icon-circle-check"></i>The user docs and their screenshots are updated if the screen changed.<a href="#introduction">Introduction</a></li>
 	</ul>
 </section>
 
@@ -731,19 +722,19 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 	<div class="dd">
 		<figure class="do">
 			<div class="stage"><p class="v-fg2">Snapshots are taken every 15 minutes and kept for a year. <span class="v-link">Edit schedule</span></p></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>keep running text neutral; blue marks what can be clicked.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-check"></i>Do</span>keep running text neutral; blue marks what can be clicked.</figcaption>
 		</figure>
 		<figure class="dont">
 			<div class="stage"><p class="v-c-magenta">Snapshots are taken every <b class="v-c-green">15 minutes</b> and kept for a <span class="v-c-orange">year</span>.</p></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>color text for decoration; it reads as a warning or a link.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-x"></i>Don't</span>color text for decoration; it reads as a warning or a link.</figcaption>
 		</figure>
 		<figure class="do">
-			<div class="stage"><div class="v-row wrap v-tabular"><span class="v-row v-gap-sm"><i class="ph ph-arrow-down v-c-blue"></i>139.0 Mbps</span><span class="v-row v-gap-sm"><i class="ph ph-arrow-up v-c-purple"></i>81.0 Mbps</span></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>use the same color for the same meaning everywhere.</figcaption>
+			<div class="stage"><div class="v-row wrap v-tabular"><span class="v-row v-gap-sm"><i class="icon-arrow-down v-c-blue"></i>139.0 Mbps</span><span class="v-row v-gap-sm"><i class="icon-arrow-up v-c-purple"></i>81.0 Mbps</span></div></div>
+			<figcaption><span class="verdict"><i class="icon-circle-check"></i>Do</span>use the same color for the same meaning everywhere.</figcaption>
 		</figure>
 		<figure class="dont">
-			<div class="stage"><div class="v-row wrap v-tabular"><span class="v-row v-gap-sm"><i class="ph ph-arrow-down v-c-green"></i>139.0 Mbps</span><span class="v-row v-gap-sm"><i class="ph ph-arrow-up v-c-orange"></i>81.0 Mbps</span></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>invent new colors for known meanings; orange already means a warning.</figcaption>
+			<div class="stage"><div class="v-row wrap v-tabular"><span class="v-row v-gap-sm"><i class="icon-arrow-down v-c-green"></i>139.0 Mbps</span><span class="v-row v-gap-sm"><i class="icon-arrow-up v-c-orange"></i>81.0 Mbps</span></div></div>
+			<figcaption><span class="verdict"><i class="icon-circle-x"></i>Don't</span>invent new colors for known meanings; orange already means a warning.</figcaption>
 		</figure>
 	</div>
 </section>
@@ -766,13 +757,13 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 	<div class="dd">
 		<figure>
 			<div class="stage plain force-light bg-page">
-				<div class="v-card"><div class="v-row"><span class="v-tile"><i class="ph-duotone ph-hard-drive"></i></span><div class="v-grow"><span class="v-label">Data</span><span class="v-value v-tabular">649 GiB / 1.86 TiB</span></div><span class="v-badge green">ONLINE</span></div></div>
+				<div class="v-card"><div class="v-row"><span class="v-tile"><i class="icon-hard-drive"></i></span><div class="v-grow"><span class="v-label">Data</span><span class="v-value v-tabular">649 GiB / 1.86 TiB</span></div><span class="v-badge green">ONLINE</span></div></div>
 			</div>
 			<figcaption>Light</figcaption>
 		</figure>
 		<figure>
 			<div class="stage plain force-dark bg-page">
-				<div class="v-card"><div class="v-row"><span class="v-tile"><i class="ph-duotone ph-hard-drive"></i></span><div class="v-grow"><span class="v-label">Data</span><span class="v-value v-tabular">649 GiB / 1.86 TiB</span></div><span class="v-badge green">ONLINE</span></div></div>
+				<div class="v-card"><div class="v-row"><span class="v-tile"><i class="icon-hard-drive"></i></span><div class="v-grow"><span class="v-label">Data</span><span class="v-value v-tabular">649 GiB / 1.86 TiB</span></div><span class="v-badge green">ONLINE</span></div></div>
 			</div>
 			<figcaption>Dark</figcaption>
 		</figure>
@@ -782,11 +773,11 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 	<div class="dd">
 		<figure class="do">
 			<div class="stage force-dark bg-page"><div class="v-card"><span class="v-label">Data</span><span class="v-value">649 GiB / 1.86 TiB</span></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>use surface and text levels (<code>bg-1</code>, <code>bg-2</code>, <code>fg-4</code>); they adapt.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-check"></i>Do</span>use surface and text levels (<code>bg-1</code>, <code>bg-2</code>, <code>fg-4</code>); they adapt.</figcaption>
 		</figure>
 		<figure class="dont">
 			<div class="stage force-dark bg-page"><div class="v-card bg-fixed-light"><span class="v-label">Data</span><span class="v-value">649 GiB / 1.86 TiB</span></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>use a fixed scale color like <code>bg-gray-050</code> as a surface; in dark mode the text turns light on light.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-x"></i>Don't</span>use a fixed scale color like <code>bg-gray-050</code> as a surface; in dark mode the text turns light on light.</figcaption>
 		</figure>
 	</div>
 	<ul class="rules">
@@ -805,7 +796,7 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 	<p>Inter (the variable version), falling back to the system interface font. Code, logs and terminals use the system monospace font. Never add another typeface.</p>
 
 	<h2>Scale</h2>
-	<div class="type-row"><small>h4 · page title</small><span class="v-h4"><i class="ph-duotone ph-network"></i>Network</span></div>
+	<div class="type-row"><small>h4 · page title</small><span class="v-h4"><i class="icon-network"></i>Network</span></div>
 	<div class="type-row"><small>h5 · section</small><span class="v-h5">Trusted proxies</span></div>
 	<div class="type-row"><small>fs-xl · metric</small><span class="v-tabular"><span class="v-xl">24</span><span class="v-fg3"> %</span></span></div>
 	<div class="type-row"><small>fs-lg · main value</small><span class="v-lg">spica.virgo.univrs.cloud</span></div>
@@ -814,69 +805,23 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 	<div class="type-row"><small>small, lighter · label</small><span class="v-label">Default gateway</span></div>
 	<div class="type-row"><small>xs · .75rem</small><span class="v-xs">Log lines, tick labels</span></div>
 
-	<h2>Weights</h2>
-	<div class="doc-table-wrap">
-		<table class="doc-table">
-			<thead><tr><th>Weight</th><th>Example</th><th>Use for</th></tr></thead>
-			<tbody>
-				<tr><td>Lighter (<code>fw-lighter</code>)</td><td class="v-light">Hostname</td><td>Small labels above values, labels inside badges</td></tr>
-				<tr><td>Normal (400)</td><td>192.168.1.20</td><td>Body text and values</td></tr>
-				<tr><td>Medium (500)</td><td><b>Trusted proxies</b></td><td>Headings and titles</td></tr>
-				<tr><td>Semibold (600)</td><td class="v-semibold">Expand pool</td><td>Emphasis inside a tooltip or message; sparingly</td></tr>
-			</tbody>
-		</table>
-	</div>
-
-	<h2>Guidelines</h2>
-	<ul class="rules">
-		<li>Numbers that line up in columns or update live use tabular figures (<code>numeric-tabular</code>).</li>
-		<li>A unit next to a big number is smaller and secondary: "24 %", not "24%" at the same size.</li>
-		<li>A term that has an explanation gets a dotted underline (<code>tooltip-hint</code>) and a tooltip: <span class="v-hint">99% cache hit</span>.</li>
-		<li>No all-caps headings. Uppercase is kept for a few small labels: menu section headers and dashboard tile status badges.</li>
-	</ul>
-	<div class="dd">
-		<figure class="do">
-			<div class="stage"><div><span class="v-h4"><i class="ph-duotone ph-user"></i>Users</span></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>let size and weight make the title.</figcaption>
-		</figure>
-		<figure class="dont">
-			<div class="stage"><div><span class="v-h4 v-upper v-c-primary">👥 USER MANAGEMENT</span></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>shout with capitals, color or emoji.</figcaption>
-		</figure>
-	</div>
-</section>
-
-<!-- ================= ICONS ================= -->
-<section class="page" id="icons" data-group="Foundations" hidden>
-	<p class="eyebrow">Foundations</p>
-	<h1>Icons</h1>
-	<p class="lead">All icons come from Phosphor. The weight of an icon tells its role, so one screen never mixes weights for the same job.</p>
-
-	<h2>Weights</h2>
-	<div class="icon-grid">
-		<div><i class="ph-duotone ph-hard-drive"></i><div><b>Duotone</b><span>Page titles, card icon tiles, feature marks</span></div></div>
-		<div><i class="ph ph-pen"></i><div><b>Regular</b><span>Buttons, card actions, inline marks</span></div></div>
-		<div><i class="ph-fill ph-dots-three-outline-vertical"></i><div><b>Fill</b><span>⋮ menus, menu items, carets, dots, tray actions</span></div></div>
-		<div><i class="ph-light ph-heartbeat"></i><div><b>Light</b><span>Quiet labels, row chevrons, fallback app images</span></div></div>
-	</div>
-
 	<h2>Size and color</h2>
 	<ul class="rules">
 		<li>Icons size with the text around them; use the size classes (<code>icon-2xs</code> to <code>icon-2xl</code>) only for a deliberate step.</li>
 		<li>Icons stacked in a column (menus, lists) use fixed width (<code>icon-fw</code>) so their labels line up.</li>
 		<li>Icons take the text color. Color one only for its meaning: green start, red stop, orange warning. A disabled icon is <code>gray-500</code>.</li>
-		<li>Write the full class name, <code>icon-pen</code>. Never build it from parts (<code>icon-${name}</code>): the build keeps only icons it finds written out, so a built name disappears.</li>
+		<li>Write the full class name, <code>icon-pencil</code>. Never build it from parts (<code>icon-${name}</code>): the build keeps only icons it finds written out, so a built name disappears.</li>
 	</ul>
 
 	<h2>Guidelines</h2>
 	<div class="dd">
 		<figure class="do">
-			<div class="stage"><div class="v-menu"><div class="it"><i class="ph-fill ph-terminal-window"></i>Terminal</div><div class="it"><i class="ph-fill ph-article"></i>Logs</div><div class="it"><i class="ph-fill ph-arrow-down"></i>Update</div></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>one weight per role, fixed width so labels line up.</figcaption>
+			<div class="stage"><div class="v-menu"><div class="it"><i class="icon-square-terminal"></i>Terminal</div><div class="it"><i class="icon-file-text"></i>Logs</div><div class="it"><i class="icon-arrow-down"></i>Update</div></div></div>
+			<figcaption><span class="verdict"><i class="icon-circle-check"></i>Do</span>fixed width so labels line up.</figcaption>
 		</figure>
 		<figure class="dont">
-			<div class="stage"><div class="v-menu"><div class="it"><i class="ph-duotone ph-terminal-window"></i>Terminal</div><div class="it">📜 Logs</div><div class="it"><i class="ph ph-arrow-fat-down v-xl"></i>Update</div></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>mix weights, use emoji, or let an icon push its label out of line.</figcaption>
+			<div class="stage"><div class="v-menu"><div class="it"><i class="icon-square-terminal"></i>Terminal</div><div class="it">📜 Logs</div><div class="it"><i class="icon-arrow-big-down v-xl"></i>Update</div></div></div>
+			<figcaption><span class="verdict"><i class="icon-circle-x"></i>Don't</span>use emoji, or let an icon push its label out of line.</figcaption>
 		</figure>
 	</div>
 </section>
@@ -956,12 +901,12 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 					<div class="v-field"><span class="fl">Username</span><span class="val">emma</span></div>
 				</div>
 			</div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>separate groups of fields with space, not with lines or headings.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-check"></i>Do</span>separate groups of fields with space, not with lines or headings.</figcaption>
 		</figure>
 		<figure class="dont">
 			<div class="stage"><pre class="v-sunken v-sm"><code>&lt;div style="display:flex; gap:12px"&gt;
 .my-btn { padding: 3px 9px; }</code></pre></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>write inline styles or custom padding for things a utility does.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-x"></i>Don't</span>write inline styles or custom padding for things a utility does.</figcaption>
 		</figure>
 	</div>
 </section>
@@ -977,13 +922,13 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 	<p>Apps, Users, Folders, Storage, Services. Search and filter on the left, the count on the right, a full width sortable table. The whole row opens the item; it ends with the ⋮ menu and a light chevron.</p>
 	<figure class="example">
 		<div class="stage plain">
-			<div class="v-row"><span class="v-h4 v-grow"><i class="ph-duotone ph-dots-nine"></i>Apps</span><span class="v-btn sm outline">App center</span></div>
-			<div class="v-row"><div class="v-field single v-grow"><span class="v-ph">Search</span></div><span class="v-icon-btn bordered"><i class="ph-fill ph-funnel"></i></span><span class="v-sm v-end">3 apps</span></div>
+			<div class="v-row"><span class="v-h4 v-grow"><i class="icon-grip"></i>Apps</span><span class="v-btn sm outline">App center</span></div>
+			<div class="v-row"><div class="v-field single v-grow"><span class="v-ph">Search</span></div><span class="v-icon-btn bordered"><i class="icon-funnel"></i></span><span class="v-sm v-end">3 apps</span></div>
 			<table class="v-table v-tabular">
-				<thead><tr><th>App <i class="ph-fill ph-caret-up v-caret on"></i></th><th class="num">CPU</th><th>State</th><th class="narrow"></th><th class="narrow"></th></tr></thead>
+				<thead><tr><th>App <i class="icon-chevron-up v-caret on"></i></th><th class="num">CPU</th><th>State</th><th class="narrow"></th><th class="narrow"></th></tr></thead>
 				<tbody>
-					<tr><td><div class="v-row"><span class="v-app blue"><i class="ph-bold ph-cloud"></i></span><div class="v-grow"><div>Nextcloud</div><span class="v-link plain v-sm">nextcloud.virgo.univrs.cloud <i class="ph ph-arrow-square-out"></i></span></div></div></td><td class="num">2.52%</td><td><span class="v-badge pill green">3 / 3</span></td><td><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td><i class="ph-light ph-caret-right v-fg4"></i></td></tr>
-					<tr><td><div class="v-row"><span class="v-app teal"><i class="ph-bold ph-stack"></i></span><div class="v-grow"><div>Traefik</div><span class="v-link plain v-sm">traefik.virgo.univrs.cloud <i class="ph ph-arrow-square-out"></i></span></div></div></td><td class="num">0.42%</td><td><span class="v-badge pill green">1 / 1</span></td><td><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td><i class="ph-light ph-caret-right v-fg4"></i></td></tr>
+					<tr><td><div class="v-row"><span class="v-app blue"><i class="icon-cloud"></i></span><div class="v-grow"><div>Nextcloud</div><span class="v-link plain v-sm">nextcloud.virgo.univrs.cloud <i class="icon-external-link"></i></span></div></div></td><td class="num">2.52%</td><td><span class="v-badge pill green">3 / 3</span></td><td><i class="icon-ellipsis-vertical v-fg3"></i></td><td><i class="icon-chevron-right v-fg4"></i></td></tr>
+					<tr><td><div class="v-row"><span class="v-app teal"><i class="icon-layers"></i></span><div class="v-grow"><div>Traefik</div><span class="v-link plain v-sm">traefik.virgo.univrs.cloud <i class="icon-external-link"></i></span></div></div></td><td class="num">0.42%</td><td><span class="v-badge pill green">1 / 1</span></td><td><i class="icon-ellipsis-vertical v-fg3"></i></td><td><i class="icon-chevron-right v-fg4"></i></td></tr>
 				</tbody>
 			</table>
 		</div>
@@ -995,14 +940,14 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 	<figure class="example">
 		<div class="stage plain">
 			<div class="v-row top">
-				<span class="v-icon-btn bordered"><i class="ph ph-arrow-left"></i></span>
-				<span class="v-app blue"><i class="ph-bold ph-cloud"></i></span>
-				<div class="v-grow"><div class="v-row v-gap-sm"><span class="v-lg">Nextcloud</span><span class="v-badge pill green"><i class="ph ph-arrow-down"></i></span></div><span class="v-link plain v-sm">nextcloud.virgo.univrs.cloud <i class="ph ph-arrow-square-out"></i></span></div>
-				<span class="v-tray"><span class="v-icon-btn"><i class="ph-fill ph-play v-c-gray"></i></span><span class="v-icon-btn"><i class="ph-fill ph-arrow-counter-clockwise"></i></span><span class="v-icon-btn"><i class="ph-fill ph-stop v-c-red4"></i></span><span class="v-icon-btn toggle"><i class="ph-fill ph-dots-three-outline-vertical"></i></span></span>
+				<span class="v-icon-btn bordered"><i class="icon-arrow-left"></i></span>
+				<span class="v-app blue"><i class="icon-cloud"></i></span>
+				<div class="v-grow"><div class="v-row v-gap-sm"><span class="v-lg">Nextcloud</span><span class="v-badge pill green"><i class="icon-arrow-down"></i></span></div><span class="v-link plain v-sm">nextcloud.virgo.univrs.cloud <i class="icon-external-link"></i></span></div>
+				<span class="v-tray"><span class="v-icon-btn"><i class="icon-play v-c-gray"></i></span><span class="v-icon-btn"><i class="icon-rotate-ccw"></i></span><span class="v-icon-btn"><i class="icon-square v-c-red4"></i></span><span class="v-icon-btn toggle"><i class="icon-ellipsis-vertical"></i></span></span>
 			</div>
 			<div class="v-grid2">
-				<div class="v-grid2"><div><span class="v-label">State</span><span class="v-value"><span class="v-badge pill green">3 / 3</span> running</span></div><div><span class="v-label">Updates</span><span class="v-value v-c-green"><i class="ph ph-arrow-down"></i> Available</span></div></div>
-				<div class="v-tabs"><span class="on"><i class="ph ph-cube"></i>Services <b>3</b></span><span><i class="ph ph-clock-counter-clockwise"></i>Snapshots <b>78</b></span></div>
+				<div class="v-grid2"><div><span class="v-label">State</span><span class="v-value"><span class="v-badge pill green">3 / 3</span> running</span></div><div><span class="v-label">Updates</span><span class="v-value v-c-green"><i class="icon-arrow-down"></i> Available</span></div></div>
+				<div class="v-tabs"><span class="on"><i class="icon-box"></i>Services <b>3</b></span><span><i class="icon-history"></i>Snapshots <b>78</b></span></div>
 			</div>
 		</div>
 		<figcaption>A detail page. Below 1400px the facts become a tab of their own.</figcaption>
@@ -1014,7 +959,7 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 		<div class="stage plain">
 			<div class="v-settings">
 				<div><div class="v-h5">Host</div><div class="v-sm v-fg3">The name the node answers to.</div></div>
-				<div class="v-card"><div class="v-hostcard"><span class="v-tile"><i class="ph-duotone ph-computer-tower"></i></span><div class="v-grow"><div class="v-lg v-break">spica.virgo.univrs.cloud</div><div class="facts"><span class="v-badge pill fact gray"><span class="lbl">Hostname</span>spica</span><span class="v-badge pill fact gray"><span class="lbl">Cluster</span>virgo</span><span class="v-badge pill fact gray"><span class="lbl">Domain name</span>univrs.cloud</span></div></div><span class="v-link card-action"><i class="ph ph-pen"></i>Edit</span></div></div>
+				<div class="v-card"><div class="v-hostcard"><span class="v-tile"><i class="icon-server-nas"></i></span><div class="v-grow"><div class="v-lg v-break">spica.virgo.univrs.cloud</div><div class="facts"><span class="v-badge pill fact gray"><span class="lbl">Hostname</span>spica</span><span class="v-badge pill fact gray"><span class="lbl">Cluster</span>virgo</span><span class="v-badge pill fact gray"><span class="lbl">Domain name</span>univrs.cloud</span></div></div><span class="v-link card-action"><i class="icon-pencil"></i>Edit</span></div></div>
 			</div>
 		</div>
 		<figcaption>A settings section. Below 992px the description stacks above the card.</figcaption>
@@ -1048,10 +993,10 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 			<div class="stage">
 				<table class="v-table">
 					<thead><tr><th>User</th><th class="narrow"></th><th class="narrow"></th></tr></thead>
-					<tbody><tr><td><div>emma</div><span class="v-sm v-fg4">emma@example.com</span></td><td><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td><i class="ph-light ph-caret-right v-fg4"></i></td></tr></tbody>
+					<tbody><tr><td><div>emma</div><span class="v-sm v-fg4">emma@example.com</span></td><td><i class="icon-ellipsis-vertical v-fg3"></i></td><td><i class="icon-chevron-right v-fg4"></i></td></tr></tbody>
 				</table>
 			</div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>on a phone, hide secondary columns and fold the key fact into the first cell; keep ⋮ and the chevron.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-check"></i>Do</span>on a phone, hide secondary columns and fold the key fact into the first cell; keep ⋮ and the chevron.</figcaption>
 		</figure>
 		<figure class="dont">
 			<div class="stage">
@@ -1062,7 +1007,7 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 					</table>
 				</div>
 			</div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>keep every column at every width; the row scrolls sideways and can't be opened.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-x"></i>Don't</span>keep every column at every width; the row scrolls sideways and can't be opened.</figcaption>
 		</figure>
 	</div>
 
@@ -1070,19 +1015,19 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 	<div class="dd">
 		<figure class="do">
 			<div class="stage"><div class="v-grid3 v-tabular"><div><span class="v-label">Name</span><span class="v-value">bond0</span></div><div><span class="v-label">MTU</span><span class="v-value">1500</span></div><div><span class="v-label">Gateway</span><span class="v-value">192.168.1.1</span></div></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>put the small label above its value.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-check"></i>Do</span>put the small label above its value.</figcaption>
 		</figure>
 		<figure class="dont">
 			<div class="stage"><div class="v-grid3 v-tabular"><div><span class="v-value">bond0</span><span class="v-label">Name</span></div><div><span class="v-value">1500</span><span class="v-label">MTU</span></div><div><span class="v-value">Gateway: 192.168.1.1</span></div></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>caption values from below, or run "Label: value" together.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-x"></i>Don't</span>caption values from below, or run "Label: value" together.</figcaption>
 		</figure>
 		<figure class="do">
 			<div class="stage"><div class="v-row"><span class="v-lg">192.168.1.20/24</span><span class="v-badge pill gray">Manual</span></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>center single-line rows, even with mixed sizes.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-check"></i>Do</span>center single-line rows, even with mixed sizes.</figcaption>
 		</figure>
 		<figure class="dont">
 			<div class="stage"><div class="v-row baseline"><span class="v-lg">192.168.1.20/24</span><span class="v-badge pill gray">Manual</span></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>align to the baseline; the badge drops off the line.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-x"></i>Don't</span>align to the baseline; the badge drops off the line.</figcaption>
 		</figure>
 	</div>
 </section>
@@ -1117,12 +1062,12 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 	</ul>
 	<div class="dd">
 		<figure class="do">
-			<div class="stage"><div class="v-row"><span class="v-icon-btn"><i class="ph-fill ph-gear v-spin"></i></span><span class="v-sm v-fg3">An app is being updated</span></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>use a spinning icon in place of the actions while a job runs on an item.</figcaption>
+			<div class="stage"><div class="v-row"><span class="v-icon-btn"><i class="icon-settings v-spin"></i></span><span class="v-sm v-fg3">An app is being updated</span></div></div>
+			<figcaption><span class="verdict"><i class="icon-circle-check"></i>Do</span>use a spinning icon in place of the actions while a job runs on an item.</figcaption>
 		</figure>
 		<figure class="dont">
-			<div class="stage"><div class="v-row"><span class="v-btn primary sm"><i class="ph ph-sparkle v-spin"></i>Save</span><span class="v-sm v-fg3">Idle, but spinning</span></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>move things that aren't changing; motion then stops meaning anything.</figcaption>
+			<div class="stage"><div class="v-row"><span class="v-btn primary sm"><i class="icon-sparkle v-spin"></i>Save</span><span class="v-sm v-fg3">Idle, but spinning</span></div></div>
+			<figcaption><span class="verdict"><i class="icon-circle-x"></i>Don't</span>move things that aren't changing; motion then stops meaning anything.</figcaption>
 		</figure>
 	</div>
 </section>
@@ -1198,11 +1143,11 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 	<div class="dd">
 		<figure class="do">
 			<div class="stage"><div><div class="v-h5">Location</div><div class="v-sm v-fg3">Where the weather on the Dashboard is for.</div></div><div><div class="v-h5">Trusted proxies</div><div class="v-sm v-fg3">Addresses used when reading reverse proxy headers (for example X-Forwarded-For).</div></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>say what it is for, in one plain sentence.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-check"></i>Do</span>say what it is for, in one plain sentence.</figcaption>
 		</figure>
 		<figure class="dont">
 			<div class="stage"><div><div class="v-h5">Location</div><div class="v-sm v-fg3">Configure latitude/longitude — must be decimal degrees between -90 and 90.</div></div><div><div class="v-h5">Trusted proxies</div><div class="v-sm v-fg3">Manage the trusted_proxies array used by the middleware.</div></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>use dashes, list validation rules, or describe system internals.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-x"></i>Don't</span>use dashes, list validation rules, or describe system internals.</figcaption>
 		</figure>
 	</div>
 	<h3>Romanian</h3>
@@ -1221,25 +1166,25 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 			<div class="v-rail">
 				<div class="logo"><img src="../src/assets/img/univrs.svg" alt=""><span>univrs</span></div>
 				<hr>
-				<div class="it on"><i class="ph-duotone ph-gauge"></i><span class="lbl">Dashboard</span></div>
-				<div class="it"><span class="win v-app blue"><i class="ph-bold ph-cloud"></i></span><span class="lbl">Nextcloud</span></div>
-				<div class="it"><span class="win v-app dark"><i class="ph-bold ph-terminal"></i></span><span class="lbl">Terminal</span></div>
+				<div class="it on"><i class="icon-gauge"></i><span class="lbl">Dashboard</span></div>
+				<div class="it"><span class="win v-app blue"><i class="icon-cloud"></i></span><span class="lbl">Nextcloud</span></div>
+				<div class="it"><span class="win v-app dark"><i class="icon-terminal"></i></span><span class="lbl">Terminal</span></div>
 				<div class="title"><span>Resources</span></div>
-				<div class="it"><i class="ph-duotone ph-dots-nine"></i><span class="lbl">Apps</span><span class="v-badge pill green"><i class="ph ph-arrow-down"></i></span></div>
-				<div class="it"><i class="ph-duotone ph-arrow-square-up-right"></i><span class="lbl">Shortcuts</span></div>
-				<div class="it"><i class="ph-duotone ph-folder"></i><span class="lbl">Folders</span></div>
-				<div class="it"><i class="ph-duotone ph-clock-counter-clockwise"></i><span class="lbl">Time capsule</span></div>
+				<div class="it"><i class="icon-grip"></i><span class="lbl">Apps</span><span class="v-badge pill green"><i class="icon-arrow-down"></i></span></div>
+				<div class="it"><i class="icon-square-arrow-up-right"></i><span class="lbl">Shortcuts</span></div>
+				<div class="it"><i class="icon-folder"></i><span class="lbl">Folders</span></div>
+				<div class="it"><i class="icon-history"></i><span class="lbl">Time capsule</span></div>
 				<div class="title"><span>System</span></div>
-				<div class="it"><i class="ph-duotone ph-hard-drive"></i><span class="lbl">Storage</span></div>
-				<div class="it"><i class="ph-duotone ph-user"></i><span class="lbl">Users</span></div>
-				<div class="it"><i class="ph-duotone ph-network"></i><span class="lbl">Network</span></div>
+				<div class="it"><i class="icon-hard-drive"></i><span class="lbl">Storage</span></div>
+				<div class="it"><i class="icon-user-round"></i><span class="lbl">Users</span></div>
+				<div class="it"><i class="icon-network"></i><span class="lbl">Network</span></div>
 				<hr class="low bottom">
-				<div class="it toggle"><i class="ph-duotone ph-sidebar"></i></div>
+				<div class="it toggle"><i class="icon-panel-left"></i></div>
 				<hr class="low">
-				<div class="account"><span class="v-avatar">A</span><span class="lbl who"><b>Administrator</b><small>voyager@univrs.cloud</small></span><i class="ph-light ph-caret-up-down lbl"></i></div>
+				<div class="account"><span class="v-avatar">A</span><span class="lbl who"><b>Administrator</b><small>voyager@univrs.cloud</small></span><i class="icon-chevrons-up-down lbl"></i></div>
 			</div>
 			<div class="v-panel">
-				<span class="v-h4"><i class="ph-duotone ph-dots-nine"></i>Apps</span>
+				<span class="v-h4"><i class="icon-grip"></i>Apps</span>
 				<p class="v-sm v-fg3">The page sits on a raised panel. Its title repeats the menu item and its icon.</p>
 			</div>
 		</div>
@@ -1251,8 +1196,8 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 		<figure>
 			<div class="stage plain">
 				<div class="v-phones">
-					<div class="v-device"><div class="v-phone"><span class="key power"></span><span class="key volume"></span><div class="v-glass"><div class="v-screen"><div class="v-status"><span>02:59 PM</span><span class="icons"><i class="ph-fill ph-cell-signal-high"></i>100%<i class="ph-fill ph-battery-full"></i></span></div><div class="v-urlbar"><i class="ph ph-house"></i><span class="url"><i class="ph-fill ph-lock"></i>spica.origin.univrs.cloud</span><span class="tabs">1</span><i class="ph-bold ph-dots-three-vertical"></i></div><div class="v-viewport"><div class="v-phone-body"><div class="v-row"><span class="v-h4 v-grow"><i class="ph-duotone ph-dots-nine"></i>Apps</span><span class="v-btn sm outline">App center</span></div><div class="v-row"><div class="v-field single v-grow"><span class="v-ph">Search</span></div><span class="v-icon-btn bordered"><i class="ph-fill ph-funnel"></i></span><span class="v-end">17 apps</span></div><table class="v-table"><thead><tr><th colspan="3">App <i class="ph-fill ph-caret-up-down v-caret on"></i></th></tr></thead><tbody><tr><td><div>Authelia</div><span>—</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr><tr><td><div>Dockhand</div><span class="v-link plain">dockhand.origin.univrs.cloud</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr><tr><td><div>Euro Office</div><span class="v-link plain">nextcloud.origin.univrs.cloud</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr><tr><td><div>Fleet</div><span class="v-link plain">fleet.univrs.cloud</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr><tr><td><div>Gitea</div><span class="v-link plain">gitea.origin.univrs.cloud</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr><tr><td><div>Gitea - Runner (build1)</div><span>—</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr><tr><td><div>MailServer</div><span class="v-link plain">autoconfig.univrs.cloud</span><span class="v-link plain">mail.univrs.cloud</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr><tr><td><div>Music</div><span class="v-link plain">navidrome.origin.univrs.cloud</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr><tr><td><div>Nextcloud</div><span class="v-link plain">nextcloud.origin.univrs.cloud</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr></tbody></table><span class="v-thumb"></span></div><div class="v-phone-bar"><img src="../src/assets/img/univrs.svg" alt="">univrs<span class="v-end v-row"><span class="v-avatar">A</span><span class="toggle"><i class="ph-fill ph-dots-three-outline-vertical"></i></span></span></div></div></div></div></div></div>
-					<div class="v-device"><div class="v-phone"><span class="key power"></span><span class="key volume"></span><div class="v-glass"><div class="v-screen"><div class="v-status"><span>02:59 PM</span><span class="icons"><i class="ph-fill ph-cell-signal-high"></i>100%<i class="ph-fill ph-battery-full"></i></span></div><div class="v-urlbar"><i class="ph ph-house"></i><span class="url"><i class="ph-fill ph-lock"></i>spica.origin.univrs.cloud</span><span class="tabs">1</span><i class="ph-bold ph-dots-three-vertical"></i></div><div class="v-viewport"><div class="v-blur v-viewport"><div class="v-phone-body"><div class="v-row"><span class="v-h4 v-grow"><i class="ph-duotone ph-dots-nine"></i>Apps</span><span class="v-btn sm outline">App center</span></div><div class="v-row"><div class="v-field single v-grow"><span class="v-ph">Search</span></div><span class="v-icon-btn bordered"><i class="ph-fill ph-funnel"></i></span><span class="v-end">17 apps</span></div><table class="v-table"><thead><tr><th colspan="3">App <i class="ph-fill ph-caret-up-down v-caret on"></i></th></tr></thead><tbody><tr><td><div>Authelia</div><span>—</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr><tr><td><div>Dockhand</div><span class="v-link plain">dockhand.origin.univrs.cloud</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr><tr><td><div>Euro Office</div><span class="v-link plain">nextcloud.origin.univrs.cloud</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr><tr><td><div>Fleet</div><span class="v-link plain">fleet.univrs.cloud</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr><tr><td><div>Gitea</div><span class="v-link plain">gitea.origin.univrs.cloud</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr><tr><td><div>Gitea - Runner (build1)</div><span>—</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr><tr><td><div>MailServer</div><span class="v-link plain">autoconfig.univrs.cloud</span><span class="v-link plain">mail.univrs.cloud</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr><tr><td><div>Music</div><span class="v-link plain">navidrome.origin.univrs.cloud</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr><tr><td><div>Nextcloud</div><span class="v-link plain">nextcloud.origin.univrs.cloud</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr></tbody></table><span class="v-thumb"></span></div><div class="v-phone-bar"><img src="../src/assets/img/univrs.svg" alt="">univrs<span class="v-end v-row"><span class="v-avatar">A</span><span class="toggle"><i class="ph-fill ph-dots-three-outline-vertical"></i></span></span></div></div><div class="v-phone-shade"></div><div class="v-drawer"><div class="nav"><div class="it"><i class="ph-duotone ph-gauge"></i>Dashboard</div><div class="title">Resources</div><div class="it on"><i class="ph-duotone ph-dots-nine"></i>Apps</div><div class="it"><i class="ph-duotone ph-arrow-square-up-right"></i>Shortcuts</div><div class="it"><i class="ph-duotone ph-folder"></i>Folders</div><div class="it"><i class="ph-duotone ph-clock-counter-clockwise"></i>Time capsule</div><div class="title">System</div><div class="it"><i class="ph-duotone ph-hard-drive"></i>Storage</div><div class="it"><i class="ph-duotone ph-user"></i>Users</div><div class="it"><i class="ph-duotone ph-cube"></i>Services</div><div class="it"><i class="ph-duotone ph-network"></i>Network</div><div class="it"><i class="ph-duotone ph-tree-structure"></i>Topology</div><div class="title">Node</div><div class="it"><i class="ph-duotone ph-download"></i>Updates</div><div class="it"><i class="ph-duotone ph-sliders"></i>Settings</div></div><div class="foot"><i class="ph ph-x"></i></div></div></div></div></div></div></div>
+					<div class="v-device"><div class="v-phone"><span class="key power"></span><span class="key volume"></span><div class="v-glass"><div class="v-screen"><div class="v-status"><span>02:59 PM</span><span class="icons"><i class="icon-signal-high"></i>100%<i class="icon-battery-full"></i></span></div><div class="v-urlbar"><i class="icon-house"></i><span class="url"><i class="icon-lock"></i>spica.origin.univrs.cloud</span><span class="tabs">1</span><i class="icon-ellipsis-vertical"></i></div><div class="v-viewport"><div class="v-phone-body"><div class="v-row"><span class="v-h4 v-grow"><i class="icon-grip"></i>Apps</span><span class="v-btn sm outline">App center</span></div><div class="v-row"><div class="v-field single v-grow"><span class="v-ph">Search</span></div><span class="v-icon-btn bordered"><i class="icon-funnel"></i></span><span class="v-end">17 apps</span></div><table class="v-table"><thead><tr><th colspan="3">App <i class="icon-chevrons-up-down v-caret on"></i></th></tr></thead><tbody><tr><td><div>Authelia</div><span>—</span></td><td class="narrow"><i class="icon-ellipsis-vertical v-fg3"></i></td><td class="narrow"><i class="icon-chevron-right v-fg4"></i></td></tr><tr><td><div>Dockhand</div><span class="v-link plain">dockhand.origin.univrs.cloud</span></td><td class="narrow"><i class="icon-ellipsis-vertical v-fg3"></i></td><td class="narrow"><i class="icon-chevron-right v-fg4"></i></td></tr><tr><td><div>Euro Office</div><span class="v-link plain">nextcloud.origin.univrs.cloud</span></td><td class="narrow"><i class="icon-ellipsis-vertical v-fg3"></i></td><td class="narrow"><i class="icon-chevron-right v-fg4"></i></td></tr><tr><td><div>Fleet</div><span class="v-link plain">fleet.univrs.cloud</span></td><td class="narrow"><i class="icon-ellipsis-vertical v-fg3"></i></td><td class="narrow"><i class="icon-chevron-right v-fg4"></i></td></tr><tr><td><div>Gitea</div><span class="v-link plain">gitea.origin.univrs.cloud</span></td><td class="narrow"><i class="icon-ellipsis-vertical v-fg3"></i></td><td class="narrow"><i class="icon-chevron-right v-fg4"></i></td></tr><tr><td><div>Gitea - Runner (build1)</div><span>—</span></td><td class="narrow"><i class="icon-ellipsis-vertical v-fg3"></i></td><td class="narrow"><i class="icon-chevron-right v-fg4"></i></td></tr><tr><td><div>MailServer</div><span class="v-link plain">autoconfig.univrs.cloud</span><span class="v-link plain">mail.univrs.cloud</span></td><td class="narrow"><i class="icon-ellipsis-vertical v-fg3"></i></td><td class="narrow"><i class="icon-chevron-right v-fg4"></i></td></tr><tr><td><div>Music</div><span class="v-link plain">navidrome.origin.univrs.cloud</span></td><td class="narrow"><i class="icon-ellipsis-vertical v-fg3"></i></td><td class="narrow"><i class="icon-chevron-right v-fg4"></i></td></tr><tr><td><div>Nextcloud</div><span class="v-link plain">nextcloud.origin.univrs.cloud</span></td><td class="narrow"><i class="icon-ellipsis-vertical v-fg3"></i></td><td class="narrow"><i class="icon-chevron-right v-fg4"></i></td></tr></tbody></table><span class="v-thumb"></span></div><div class="v-phone-bar"><img src="../src/assets/img/univrs.svg" alt="">univrs<span class="v-end v-row"><span class="v-avatar">A</span><span class="toggle"><i class="icon-ellipsis-vertical"></i></span></span></div></div></div></div></div></div>
+					<div class="v-device"><div class="v-phone"><span class="key power"></span><span class="key volume"></span><div class="v-glass"><div class="v-screen"><div class="v-status"><span>02:59 PM</span><span class="icons"><i class="icon-signal-high"></i>100%<i class="icon-battery-full"></i></span></div><div class="v-urlbar"><i class="icon-house"></i><span class="url"><i class="icon-lock"></i>spica.origin.univrs.cloud</span><span class="tabs">1</span><i class="icon-ellipsis-vertical"></i></div><div class="v-viewport"><div class="v-blur v-viewport"><div class="v-phone-body"><div class="v-row"><span class="v-h4 v-grow"><i class="icon-grip"></i>Apps</span><span class="v-btn sm outline">App center</span></div><div class="v-row"><div class="v-field single v-grow"><span class="v-ph">Search</span></div><span class="v-icon-btn bordered"><i class="icon-funnel"></i></span><span class="v-end">17 apps</span></div><table class="v-table"><thead><tr><th colspan="3">App <i class="icon-chevrons-up-down v-caret on"></i></th></tr></thead><tbody><tr><td><div>Authelia</div><span>—</span></td><td class="narrow"><i class="icon-ellipsis-vertical v-fg3"></i></td><td class="narrow"><i class="icon-chevron-right v-fg4"></i></td></tr><tr><td><div>Dockhand</div><span class="v-link plain">dockhand.origin.univrs.cloud</span></td><td class="narrow"><i class="icon-ellipsis-vertical v-fg3"></i></td><td class="narrow"><i class="icon-chevron-right v-fg4"></i></td></tr><tr><td><div>Euro Office</div><span class="v-link plain">nextcloud.origin.univrs.cloud</span></td><td class="narrow"><i class="icon-ellipsis-vertical v-fg3"></i></td><td class="narrow"><i class="icon-chevron-right v-fg4"></i></td></tr><tr><td><div>Fleet</div><span class="v-link plain">fleet.univrs.cloud</span></td><td class="narrow"><i class="icon-ellipsis-vertical v-fg3"></i></td><td class="narrow"><i class="icon-chevron-right v-fg4"></i></td></tr><tr><td><div>Gitea</div><span class="v-link plain">gitea.origin.univrs.cloud</span></td><td class="narrow"><i class="icon-ellipsis-vertical v-fg3"></i></td><td class="narrow"><i class="icon-chevron-right v-fg4"></i></td></tr><tr><td><div>Gitea - Runner (build1)</div><span>—</span></td><td class="narrow"><i class="icon-ellipsis-vertical v-fg3"></i></td><td class="narrow"><i class="icon-chevron-right v-fg4"></i></td></tr><tr><td><div>MailServer</div><span class="v-link plain">autoconfig.univrs.cloud</span><span class="v-link plain">mail.univrs.cloud</span></td><td class="narrow"><i class="icon-ellipsis-vertical v-fg3"></i></td><td class="narrow"><i class="icon-chevron-right v-fg4"></i></td></tr><tr><td><div>Music</div><span class="v-link plain">navidrome.origin.univrs.cloud</span></td><td class="narrow"><i class="icon-ellipsis-vertical v-fg3"></i></td><td class="narrow"><i class="icon-chevron-right v-fg4"></i></td></tr><tr><td><div>Nextcloud</div><span class="v-link plain">nextcloud.origin.univrs.cloud</span></td><td class="narrow"><i class="icon-ellipsis-vertical v-fg3"></i></td><td class="narrow"><i class="icon-chevron-right v-fg4"></i></td></tr></tbody></table><span class="v-thumb"></span></div><div class="v-phone-bar"><img src="../src/assets/img/univrs.svg" alt="">univrs<span class="v-end v-row"><span class="v-avatar">A</span><span class="toggle"><i class="icon-ellipsis-vertical"></i></span></span></div></div><div class="v-phone-shade"></div><div class="v-drawer"><div class="nav"><div class="it"><i class="icon-gauge"></i>Dashboard</div><div class="title">Resources</div><div class="it on"><i class="icon-grip"></i>Apps</div><div class="it"><i class="icon-square-arrow-up-right"></i>Shortcuts</div><div class="it"><i class="icon-folder"></i>Folders</div><div class="it"><i class="icon-history"></i>Time capsule</div><div class="title">System</div><div class="it"><i class="icon-hard-drive"></i>Storage</div><div class="it"><i class="icon-user-round"></i>Users</div><div class="it"><i class="icon-box"></i>Services</div><div class="it"><i class="icon-network"></i>Network</div><div class="it"><i class="icon-network"></i>Topology</div><div class="title">Node</div><div class="it"><i class="icon-download"></i>Updates</div><div class="it"><i class="icon-sliders-vertical"></i>Settings</div></div><div class="foot"><i class="icon-x"></i></div></div></div></div></div></div></div>
 				</div>
 			</div>
 			<figcaption>Below 576px rows drop their images, and the bar with the logo, the account and ⋮ sits at the bottom of the screen, in reach of the thumb. ⋮ opens the whole menu in a drawer that slides up over the blurred page, with the close button at the bottom. The browser bars take the brand blue from the app's theme color.</figcaption>
@@ -1263,24 +1208,24 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 					<div class="v-rail">
 						<div class="logo"><img src="../src/assets/img/univrs.svg" alt=""><span>univrs</span></div>
 						<hr>
-						<div class="it on"><i class="ph-duotone ph-gauge"></i><span class="lbl">Dashboard</span></div>
-						<div class="it"><span class="win v-app blue"><i class="ph-bold ph-cloud"></i></span><span class="lbl">Nextcloud</span></div>
-						<div class="it"><span class="win v-app dark"><i class="ph-bold ph-terminal"></i></span><span class="lbl">Terminal</span></div>
+						<div class="it on"><i class="icon-gauge"></i><span class="lbl">Dashboard</span></div>
+						<div class="it"><span class="win v-app blue"><i class="icon-cloud"></i></span><span class="lbl">Nextcloud</span></div>
+						<div class="it"><span class="win v-app dark"><i class="icon-terminal"></i></span><span class="lbl">Terminal</span></div>
 						<div class="title"><span>Resources</span></div>
-						<div class="it"><i class="ph-duotone ph-dots-nine"></i><span class="lbl">Apps</span><span class="v-badge pill green"><i class="ph ph-arrow-down"></i></span></div>
-						<div class="it"><i class="ph-duotone ph-arrow-square-up-right"></i><span class="lbl">Shortcuts</span></div>
-						<div class="it"><i class="ph-duotone ph-folder"></i><span class="lbl">Folders</span></div>
-						<div class="it"><i class="ph-duotone ph-clock-counter-clockwise"></i><span class="lbl">Time capsule</span></div>
+						<div class="it"><i class="icon-grip"></i><span class="lbl">Apps</span><span class="v-badge pill green"><i class="icon-arrow-down"></i></span></div>
+						<div class="it"><i class="icon-square-arrow-up-right"></i><span class="lbl">Shortcuts</span></div>
+						<div class="it"><i class="icon-folder"></i><span class="lbl">Folders</span></div>
+						<div class="it"><i class="icon-history"></i><span class="lbl">Time capsule</span></div>
 						<div class="title"><span>System</span></div>
-						<div class="it"><i class="ph-duotone ph-hard-drive"></i><span class="lbl">Storage</span></div>
-						<div class="it"><i class="ph-duotone ph-user"></i><span class="lbl">Users</span></div>
-						<div class="it"><i class="ph-duotone ph-network"></i><span class="lbl">Network</span></div>
+						<div class="it"><i class="icon-hard-drive"></i><span class="lbl">Storage</span></div>
+						<div class="it"><i class="icon-user-round"></i><span class="lbl">Users</span></div>
+						<div class="it"><i class="icon-network"></i><span class="lbl">Network</span></div>
 						<hr class="low bottom">
-						<div class="it toggle"><i class="ph-duotone ph-sidebar"></i></div>
+						<div class="it toggle"><i class="icon-panel-left"></i></div>
 						<hr class="low">
-						<div class="account"><span class="v-avatar">A</span><span class="lbl who"><b>Administrator</b><small>voyager@univrs.cloud</small></span><i class="ph-light ph-caret-up-down lbl"></i></div>
+						<div class="account"><span class="v-avatar">A</span><span class="lbl who"><b>Administrator</b><small>voyager@univrs.cloud</small></span><i class="icon-chevrons-up-down lbl"></i></div>
 					</div>
-					<div class="v-panel"><span class="v-h4"><i class="ph-duotone ph-dots-nine"></i>Apps</span></div>
+					<div class="v-panel"><span class="v-h4"><i class="icon-grip"></i>Apps</span></div>
 				</div>
 			</div>
 			<figcaption>Collapsed to 3.75rem: icons only, group titles turn into lines, badges shrink onto the icon. The choice is remembered.</figcaption>
@@ -1291,7 +1236,7 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 	<ul class="rules">
 		<li>Every page and every item has its own address (<code>/apps/nextcloud</code>), so back, reload and links work.</li>
 		<li>A detail page has a back button to its list; there are no breadcrumbs.</li>
-		<li>The page title uses the same words and icon (duotone) as its menu item.</li>
+		<li>The page title uses the same words and icon as its menu item.</li>
 		<li>The page's one main action sits at the top right of the title row, as a small outline button.</li>
 		<li>A badge on a menu item means something waits there (an update). Use it sparingly.</li>
 	</ul>
@@ -1311,8 +1256,8 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 				<tr><td><span class="v-btn primary">Create</span></td><td>The one main action of a dialog or step, placed last. At most one per view.</td></tr>
 				<tr><td><span class="v-btn outline">Cancel</span></td><td>Cancel, and the page action at the top right (New user, App center).</td></tr>
 				<tr><td><span class="v-btn sm danger">Shut down</span></td><td>Removes, stops or interrupts something.</td></tr>
-				<tr><td><span class="v-link"><i class="ph ph-pen"></i>Edit</span></td><td>Routine actions inside a card: Edit, Add, Refresh.</td></tr>
-				<tr><td><span class="v-icon-btn"><i class="ph ph-arrows-clockwise"></i></span></td><td>Toolbars and trays; always with a tooltip naming the action.</td></tr>
+				<tr><td><span class="v-link"><i class="icon-pencil"></i>Edit</span></td><td>Routine actions inside a card: Edit, Add, Refresh.</td></tr>
+				<tr><td><span class="v-icon-btn"><i class="icon-refresh-cw"></i></span></td><td>Toolbars and trays; always with a tooltip naming the action.</td></tr>
 			</tbody>
 		</table>
 	</div>
@@ -1323,15 +1268,15 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 		<table class="doc-table">
 			<thead><tr><th>Action</th><th>How it appears</th></tr></thead>
 			<tbody>
-				<tr><td>Add, New</td><td>Page action top right ("New user"), or <span class="v-link"><i class="ph ph-plus"></i>Add</span> inside a card. Opens a dialog.</td></tr>
-				<tr><td>Edit</td><td><span class="v-link"><i class="ph ph-pen"></i>Edit</span> on the card, or a ⋮ menu item. Opens a dialog.</td></tr>
+				<tr><td>Add, New</td><td>Page action top right ("New user"), or <span class="v-link"><i class="icon-plus"></i>Add</span> inside a card. Opens a dialog.</td></tr>
+				<tr><td>Edit</td><td><span class="v-link"><i class="icon-pencil"></i>Edit</span> on the card, or a ⋮ menu item. Opens a dialog.</td></tr>
 				<tr><td>Start, Restart, Stop</td><td>Icons in the action tray (green play, neutral restart, red stop) and in the ⋮ menu. Restart and Stop ask for confirmation.</td></tr>
 				<tr><td>Kill, Delete, Remove</td><td>Red ⋮ menu items, at the end of the menu, always confirmed.</td></tr>
 				<tr><td>Update</td><td>First item of the ⋮ menu, with an arrow down. A green badge on the item and the menu tells that one is available.</td></tr>
-				<tr><td>Refresh, Sync</td><td><span class="v-icon-btn"><i class="ph ph-arrows-clockwise"></i></span> which spins while it runs, or <span class="v-link"><i class="ph ph-arrows-clockwise"></i>Refresh</span> in a card.</td></tr>
-				<tr><td>Copy</td><td>A small <i class="ph ph-copy"></i> after the value; see <a href="#common-actions">Copy to clipboard</a> below.</td></tr>
+				<tr><td>Refresh, Sync</td><td><span class="v-icon-btn"><i class="icon-refresh-cw"></i></span> which spins while it runs, or <span class="v-link"><i class="icon-refresh-cw"></i>Refresh</span> in a card.</td></tr>
+				<tr><td>Copy</td><td>A small <i class="icon-copy"></i> after the value; see <a href="#common-actions">Copy to clipboard</a> below.</td></tr>
 				<tr><td>Cancel</td><td>Outline button left of the main action. Closes without changes.</td></tr>
-				<tr><td>Close</td><td><i class="ph ph-x"></i> only on toasts and on dialogs that show information without a form.</td></tr>
+				<tr><td>Close</td><td><i class="icon-x"></i> only on toasts and on dialogs that show information without a form.</td></tr>
 				<tr><td>Reset</td><td>"Reset filters" at the end of the filter menu.</td></tr>
 			</tbody>
 		</table>
@@ -1343,8 +1288,8 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 		<figure>
 			<div class="stage plain">
 				<div class="v-row top wrap v-gap-lg">
-					<div class="v-tip-room"><span class="v-label">MAC</span><div class="v-row v-gap-sm"><span class="v-tabular">02:00:5e:10:00:14</span><span class="v-tip-on"><span class="v-tip up">Copy MAC address</span><i class="ph ph-copy v-fg3"></i></span></div></div>
-					<div class="v-tip-room"><span class="v-label">MAC</span><div class="v-row v-gap-sm"><span class="v-tabular">02:00:5e:10:00:14</span><span class="v-tip-on"><span class="v-tip up">Copied!</span><i class="ph ph-copy v-fg3"></i></span></div></div>
+					<div class="v-tip-room"><span class="v-label">MAC</span><div class="v-row v-gap-sm"><span class="v-tabular">02:00:5e:10:00:14</span><span class="v-tip-on"><span class="v-tip up">Copy MAC address</span><i class="icon-copy v-fg3"></i></span></div></div>
+					<div class="v-tip-room"><span class="v-label">MAC</span><div class="v-row v-gap-sm"><span class="v-tabular">02:00:5e:10:00:14</span><span class="v-tip-on"><span class="v-tip up">Copied!</span><i class="icon-copy v-fg3"></i></span></div></div>
 				</div>
 			</div>
 			<figcaption><b>A value:</b> a small copy icon right after it. The tooltip names what is copied, then says "Copied!" for a second.</figcaption>
@@ -1352,9 +1297,9 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 		<figure>
 			<div class="stage plain">
 				<div class="v-row v-tip-room tall v-center-row">
-					<span class="v-tip-on"><span class="v-tip up wide">Click to copy the folder address. Access the folder using a computer on your local network.</span><i class="ph-fill ph-windows-logo"></i></span>
-					<i class="ph-fill ph-apple-logo"></i>
-					<i class="ph-fill ph-linux-logo"></i>
+					<span class="v-tip-on"><span class="v-tip up wide">Click to copy the folder address. Access the folder using a computer on your local network.</span><i class="icon-monitor"></i></span>
+					<i class="icon-apple"></i>
+					<i class="icon-terminal"></i>
 				</div>
 			</div>
 			<figcaption><b>One value, several formats:</b> each operating system's icon copies the folder address written for that system.</figcaption>
@@ -1362,12 +1307,12 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 	</div>
 	<div class="dd">
 		<figure class="do">
-			<div class="stage"><div><span class="v-label">Serial number</span><div class="v-row v-gap-sm"><span class="v-tabular">VGO-2409-00417</span><i class="ph ph-copy v-fg3"></i></div></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>put a quiet icon after the value and confirm in its own tooltip.</figcaption>
+			<div class="stage"><div><span class="v-label">Serial number</span><div class="v-row v-gap-sm"><span class="v-tabular">VGO-2409-00417</span><i class="icon-copy v-fg3"></i></div></div></div>
+			<figcaption><span class="verdict"><i class="icon-circle-check"></i>Do</span>put a quiet icon after the value and confirm in its own tooltip.</figcaption>
 		</figure>
 		<figure class="dont">
-			<div class="stage"><div class="v-col start"><div class="v-row"><span class="v-tabular">VGO-2409-00417</span><span class="v-btn sm primary"><i class="ph ph-copy"></i>Copy</span></div><div class="v-toast green"><span class="v-grow"><b>Copied to clipboard!</b></span><i class="ph ph-x v-close"></i></div></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>use a loud button, or a toast to confirm a copy; the tooltip is enough.</figcaption>
+			<div class="stage"><div class="v-col start"><div class="v-row"><span class="v-tabular">VGO-2409-00417</span><span class="v-btn sm primary"><i class="icon-copy"></i>Copy</span></div><div class="v-toast green"><span class="v-grow"><b>Copied to clipboard!</b></span><i class="icon-x v-close"></i></div></div></div>
+			<figcaption><span class="verdict"><i class="icon-circle-x"></i>Don't</span>use a loud button, or a toast to confirm a copy; the tooltip is enough.</figcaption>
 		</figure>
 	</div>
 
@@ -1387,11 +1332,11 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 	<div class="dd">
 		<figure class="do">
 			<div class="stage"><div class="v-dialog-foot"><span class="v-btn outline push">Cancel</span><span class="v-btn primary">Save</span></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>one primary, last; a quiet way out before it.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-check"></i>Do</span>one primary, last; a quiet way out before it.</figcaption>
 		</figure>
 		<figure class="dont">
 			<div class="stage"><div class="v-dialog-foot"><span class="v-btn primary">Save</span><span class="v-btn primary">Apply</span><span class="v-btn danger">Cancel</span></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>stack primaries, or make Cancel red; it reads as destructive.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-x"></i>Don't</span>stack primaries, or make Cancel red; it reads as destructive.</figcaption>
 		</figure>
 	</div>
 </section>
@@ -1403,17 +1348,17 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 	<p class="lead">Things that open from a click: the ⋮ menu with an item's actions, the action tray on detail pages, the account and filter menus, small popovers. They open on a click, one at a time, and close on a click outside or Esc. Tooltips open on hover and only explain.</p>
 
 	<h2>The ⋮ menu</h2>
-	<p>Holds an item's actions. Grouped with dividers: update, then start, restart and stop, then removal. Each item has a fill icon. Destructive items are red and come last.</p>
+	<p>Holds an item's actions. Grouped with dividers: update, then start, restart and stop, then removal. Each item has an icon. Destructive items are red and come last.</p>
 	<div class="dd">
 		<figure class="do">
 			<div class="stage"><div class="v-row top wrap">
-				<div class="v-menu"><div class="it"><i class="ph-fill ph-arrow-down"></i>Update</div><hr><div class="it"><i class="ph-fill ph-arrow-counter-clockwise"></i>Restart</div><div class="it danger"><i class="ph-fill ph-stop"></i>Stop</div><div class="it danger"><i class="ph-fill ph-skull"></i>Kill</div></div>
+				<div class="v-menu"><div class="it"><i class="icon-arrow-down"></i>Update</div><hr><div class="it"><i class="icon-rotate-ccw"></i>Restart</div><div class="it danger"><i class="icon-square"></i>Stop</div><div class="it danger"><i class="icon-skull"></i>Kill</div></div>
 			</div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>group, add icons, put destructive actions last and in red.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-check"></i>Do</span>group, add icons, put destructive actions last and in red.</figcaption>
 		</figure>
 		<figure class="dont">
 			<div class="stage"><div class="v-menu"><div class="it">Kill</div><div class="it">Update</div><div class="it">Stop</div><div class="it">Restart</div></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>list actions in no order, without icons, with the riskiest first.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-x"></i>Don't</span>list actions in no order, without icons, with the riskiest first.</figcaption>
 		</figure>
 	</div>
 
@@ -1422,14 +1367,14 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 	<div class="dd">
 		<figure class="do">
 			<div class="stage"><div class="v-col end">
-				<span class="v-tray"><span class="v-icon-btn disabled"><i class="ph-fill ph-play v-c-gray"></i></span><span class="v-icon-btn"><i class="ph-fill ph-arrow-counter-clockwise"></i></span><span class="v-icon-btn"><i class="ph-fill ph-stop v-c-red4"></i></span><span class="v-icon-btn toggle"><i class="ph-fill ph-dots-three-outline-vertical"></i></span></span>
-				<div class="v-menu"><div class="it"><i class="ph-fill ph-arrow-down"></i>Update</div><hr><div class="it danger"><i class="ph-fill ph-skull"></i>Kill</div></div>
+				<span class="v-tray"><span class="v-icon-btn disabled"><i class="icon-play v-c-gray"></i></span><span class="v-icon-btn"><i class="icon-rotate-ccw"></i></span><span class="v-icon-btn"><i class="icon-square v-c-red4"></i></span><span class="v-icon-btn toggle"><i class="icon-ellipsis-vertical"></i></span></span>
+				<div class="v-menu"><div class="it"><i class="icon-arrow-down"></i>Update</div><hr><div class="it danger"><i class="icon-skull"></i>Kill</div></div>
 			</div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>the app is running, so play is gray; stop is red because it can run.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-check"></i>Do</span>the app is running, so play is gray; stop is red because it can run.</figcaption>
 		</figure>
 		<figure class="dont">
-			<div class="stage"><div class="v-row wrap"><span class="v-btn sm primary"><i class="ph-fill ph-play"></i>Start</span><span class="v-btn sm outline">Restart</span><span class="v-btn sm danger">Stop</span><span class="v-btn sm outline">More...</span></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>use a row of full buttons; Start looks available on a running app.</figcaption>
+			<div class="stage"><div class="v-row wrap"><span class="v-btn sm primary"><i class="icon-play"></i>Start</span><span class="v-btn sm outline">Restart</span><span class="v-btn sm danger">Stop</span><span class="v-btn sm outline">More...</span></div></div>
+			<figcaption><span class="verdict"><i class="icon-circle-x"></i>Don't</span>use a row of full buttons; Start looks available on a running app.</figcaption>
 		</figure>
 	</div>
 
@@ -1438,19 +1383,19 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 	<div class="dd">
 		<figure class="do">
 			<div class="stage"><div class="v-col start v-gap-lg">
-				<div class="v-row"><span class="v-icon-btn"><i class="ph ph-stack-plus"></i></span><span class="v-tip left">Expand pool</span></div>
-				<div class="v-row"><span class="v-icon-btn"><i class="ph ph-warning v-c-orange"></i></span><span class="v-tip left">The pool mixes drive types.</span></div>
-				<div class="v-row"><span class="v-icon-btn"><i class="ph ph-clock-counter-clockwise v-c-gray"></i></span><span class="v-tip left">Snapshots disabled</span></div>
+				<div class="v-row"><span class="v-icon-btn"><i class="icon-layers-plus"></i></span><span class="v-tip left">Expand pool</span></div>
+				<div class="v-row"><span class="v-icon-btn"><i class="icon-triangle-alert v-c-orange"></i></span><span class="v-tip left">The pool mixes drive types.</span></div>
+				<div class="v-row"><span class="v-icon-btn"><i class="icon-history v-c-gray"></i></span><span class="v-tip left">Snapshots disabled</span></div>
 			</div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>action and status without a period; a sentence with one.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-check"></i>Do</span>action and status without a period; a sentence with one.</figcaption>
 		</figure>
 		<figure class="dont">
 			<div class="stage"><div class="v-col start v-gap-lg">
-				<div class="v-row"><span class="v-icon-btn"><i class="ph ph-stack-plus"></i></span><span class="v-tip left">Expand pool.</span></div>
-				<div class="v-row"><span class="v-icon-btn"><i class="ph ph-warning v-c-orange"></i></span><span class="v-tip left">the pool mixes drive types</span></div>
-				<div class="v-row"><span class="v-icon-btn"><i class="ph ph-clock-counter-clockwise v-c-gray"></i></span><span class="v-tip left">Click here to see snapshots</span></div>
+				<div class="v-row"><span class="v-icon-btn"><i class="icon-layers-plus"></i></span><span class="v-tip left">Expand pool.</span></div>
+				<div class="v-row"><span class="v-icon-btn"><i class="icon-triangle-alert v-c-orange"></i></span><span class="v-tip left">the pool mixes drive types</span></div>
+				<div class="v-row"><span class="v-icon-btn"><i class="icon-history v-c-gray"></i></span><span class="v-tip left">Click here to see snapshots</span></div>
 			</div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>punctuate an action, drop the period from a sentence, or give instructions.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-x"></i>Don't</span>punctuate an action, drop the period from a sentence, or give instructions.</figcaption>
 		</figure>
 	</div>
 
@@ -1474,11 +1419,11 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 	<div class="dd">
 		<figure class="do">
 			<div class="stage"><ul class="rules"><li>Creating or editing one thing from the page you are on: New user, Edit host, Add trusted proxy.</li><li>A list that belongs to one row: a user's sessions.</li><li>A focused task with steps or a picker: App center, Expand pool, Replace drive, Restore snapshot.</li><li>One yes or no before something destructive: the confirm dialog.</li></ul></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Use a dialog for</span></figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-check"></i>Use a dialog for</span></figcaption>
 		</figure>
 		<figure class="dont">
 			<div class="stage"><ul class="rules"><li>Looking at one item: it has its own detail page.</li><li>Turning a setting on or off: a switch that applies at once.</li><li>Reporting a result or a running job: a toast.</li><li>Explaining something: a tooltip or help text.</li><li>Taking over the node, like a system update: a full page.</li></ul></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Not for</span></figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-x"></i>Not for</span></figcaption>
 		</figure>
 	</div>
 
@@ -1511,18 +1456,18 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 						<div class="v-field"><span class="fl">Name</span><span class="val">Emma Collins</span></div>
 						<div class="v-field"><span class="fl">Email address</span><span class="val">emma@example.com</span></div>
 						<div class="v-field"><span class="fl">Username</span><span class="val">emma</span></div>
-						<div class="v-field"><span class="fl">Password</span><span class="val">••••••••••••</span><i class="ph-fill ph-eye end"></i></div>
+						<div class="v-field"><span class="fl">Password</span><span class="val">••••••••••••</span><i class="icon-eye end"></i></div>
 						<div class="v-check"><span class="box"></span>Has administrator role?</div>
 					</div>
 					<div class="v-dialog-foot"><span class="v-btn outline push">Cancel</span><span class="v-btn primary">Create</span></div>
 				</div>
 			</div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>title only, floating labels, Cancel then Create on the right.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-check"></i>Do</span>title only, floating labels, Cancel then Create on the right.</figcaption>
 		</figure>
 		<figure class="dont">
 			<div class="stage backdrop">
 				<div class="v-dialog">
-					<h3 class="v-dialog-title">Create A New User Account<i class="ph ph-x v-end"></i></h3>
+					<h3 class="v-dialog-title">Create A New User Account<i class="icon-x v-end"></i></h3>
 					<p class="v-sm v-fg2">Please fill in all the required fields below. Fields marked with * are mandatory.</p>
 					<div class="v-form">
 						<div><div class="v-sm v-semibold">Full Name *</div><div class="v-field single"><span class="val">Emma Collins</span></div></div>
@@ -1531,7 +1476,7 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 					<div class="v-dialog-foot"><span class="v-btn primary">OK</span><span class="v-btn outline v-end">Cancel</span></div>
 				</div>
 			</div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>title case, a close button on a form, labels outside the field, rules as help text, a vague OK on the left.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-x"></i>Don't</span>title case, a close button on a form, labels outside the field, rules as help text, a vague OK on the left.</figcaption>
 		</figure>
 	</div>
 
@@ -1543,11 +1488,11 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 				<div class="v-dialog sm"><h3 class="v-dialog-title">Confirmation</h3><p class="v-fg2">Are you sure you want to delete the user <b>emma</b>?</p><div class="v-dialog-foot"><span class="v-btn outline push">Cancel</span><span class="v-btn danger">Yes, delete</span></div></div>
 				<div class="v-dialog sm"><h3 class="v-dialog-title">Confirmation</h3><p class="v-fg2">Rolling back <b>Photos</b> replaces its files with the snapshot from 12 Nov.</p><div class="v-check"><span class="box"></span>I understand that newer changes are lost</div><div class="v-dialog-foot"><span class="v-btn outline push">Cancel</span><span class="v-btn danger disabled">Roll back</span></div></div>
 			</div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>name the thing; a red button that says what happens; acknowledge data loss.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-check"></i>Do</span>name the thing; a red button that says what happens; acknowledge data loss.</figcaption>
 		</figure>
 		<figure class="dont">
 			<div class="stage backdrop"><div class="v-dialog sm"><h3 class="v-dialog-title">Warning!!!</h3><p class="v-fg2">Are you sure? This action cannot be undone.</p><div class="v-dialog-foot"><span class="v-btn outline push">No</span><span class="v-btn primary">Yes</span></div></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>ask a vague question with a blue "Yes", one click from losing data.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-x"></i>Don't</span>ask a vague question with a blue "Yes", one click from losing data.</figcaption>
 		</figure>
 	</div>
 </section>
@@ -1569,11 +1514,11 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 	<div class="dd">
 		<figure class="do">
 			<div class="stage"><div class="v-form"><div class="v-field"><span class="fl">Email address</span><span class="val">emma@example.com</span></div><div class="v-field"><span class="fl">Hostname</span><span class="v-ph">&nbsp;</span></div></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>keep the label visible inside the field, empty or filled.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-check"></i>Do</span>keep the label visible inside the field, empty or filled.</figcaption>
 		</figure>
 		<figure class="dont">
 			<div class="stage"><div class="v-form"><div class="v-field single"><span class="v-ph">Enter your E-Mail Address here...</span></div><div class="v-field single"><span class="v-ph">HOSTNAME</span></div></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>use the placeholder as the label; it disappears as soon as someone types.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-x"></i>Don't</span>use the placeholder as the label; it disappears as soon as someone types.</figcaption>
 		</figure>
 	</div>
 
@@ -1588,11 +1533,11 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 	<div class="dd">
 		<figure class="do">
 			<div class="stage"><div class="v-row"><span class="v-btn primary disabled">Updating host...</span></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>disable it and say what is happening.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-check"></i>Do</span>disable it and say what is happening.</figcaption>
 		</figure>
 		<figure class="dont">
 			<div class="stage"><div class="v-row"><span class="v-btn primary">Save</span><span class="v-sm v-fg3">Still clickable, nothing changes</span></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>leave the button as it was; people press it again.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-x"></i>Don't</span>leave the button as it was; people press it again.</figcaption>
 		</figure>
 	</div>
 
@@ -1636,8 +1581,8 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 				<div class="v-form">
 					<div class="v-field-wrap"><div class="v-field"><span class="fl">Name</span><span class="val">Emma Collins</span></div></div>
 					<div class="v-field-wrap"><div class="v-field invalid"><span class="fl">Email address</span><span class="val">emma@</span></div><div class="v-feedback">Invalid email address</div></div>
-					<div class="v-field-wrap"><div class="v-field invalid"><span class="fl">Password</span><span class="val">••••</span><i class="ph-fill ph-eye end"></i></div><div class="v-feedback">At least 8 characters</div></div>
-					<div class="v-field-wrap"><div class="v-field invalid focus"><span class="fl">Confirm password</span><span class="val">•••••</span><i class="ph-fill ph-eye end"></i></div><div class="v-feedback">Passwords do not match</div></div>
+					<div class="v-field-wrap"><div class="v-field invalid"><span class="fl">Password</span><span class="val">••••</span><i class="icon-eye end"></i></div><div class="v-feedback">At least 8 characters</div></div>
+					<div class="v-field-wrap"><div class="v-field invalid focus"><span class="fl">Confirm password</span><span class="val">•••••</span><i class="icon-eye end"></i></div><div class="v-feedback">Passwords do not match</div></div>
 				</div>
 				<div class="v-dialog-foot"><span class="v-btn outline push">Cancel</span><span class="v-btn primary">Create</span></div>
 			</div>
@@ -1650,11 +1595,11 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 	<div class="dd">
 		<figure class="do">
 			<div class="stage"><div class="v-col v-c-danger"><span>Can't be empty</span><span>Invalid email address</span><span>At least 8 characters</span><span>Passwords do not match</span><span>Must be unique</span><span>Letters, digits and hyphens only</span><span>Must be a domain with a TLD, like example.com</span></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>short, specific, the same words everywhere.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-check"></i>Do</span>short, specific, the same words everywhere.</figcaption>
 		</figure>
 		<figure class="dont">
 			<div class="stage"><div class="v-col v-c-danger"><span>Error: this field is required!</span><span>Please enter a valid email.</span><span>The password you entered is too short, it must contain at least 8 characters</span><span>You typed the passwords wrong</span><span>ERR_DUPLICATE_KEY</span></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>label it "Error:", shout, ramble, blame the user or show internal codes.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-x"></i>Don't</span>label it "Error:", shout, ramble, blame the user or show internal codes.</figcaption>
 		</figure>
 	</div>
 </section>
@@ -1668,8 +1613,8 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 	<h2>Anatomy</h2>
 	<figure class="example">
 		<div class="stage plain">
-			<div class="v-row"><div class="v-field single v-grow"><span class="val">next</span></div><span class="v-icon-btn bordered"><i class="ph-fill ph-funnel"></i></span><span class="v-sm v-end">1 app</span></div>
-			<table class="v-table"><tbody><tr><td><div class="v-row"><span class="v-app blue"><i class="ph-bold ph-cloud"></i></span>Nextcloud</div></td><td class="narrow"><span class="v-badge pill green">3 / 3</span></td><td class="narrow"><i class="ph-fill ph-dots-three-outline-vertical v-fg3"></i></td><td class="narrow"><i class="ph-light ph-caret-right v-fg4"></i></td></tr></tbody></table>
+			<div class="v-row"><div class="v-field single v-grow"><span class="val">next</span></div><span class="v-icon-btn bordered"><i class="icon-funnel"></i></span><span class="v-sm v-end">1 app</span></div>
+			<table class="v-table"><tbody><tr><td><div class="v-row"><span class="v-app blue"><i class="icon-cloud"></i></span>Nextcloud</div></td><td class="narrow"><span class="v-badge pill green">3 / 3</span></td><td class="narrow"><i class="icon-ellipsis-vertical v-fg3"></i></td><td class="narrow"><i class="icon-chevron-right v-fg4"></i></td></tr></tbody></table>
 		</div>
 		<figcaption>Search field without a label, the filter button next to it, the count on the right.</figcaption>
 	</figure>
@@ -1684,11 +1629,11 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 	<div class="dd">
 		<figure class="do">
 			<div class="stage"><div class="v-empty small"><img src="../src/assets/img/illustrations/no-results.svg" alt=""><div class="v-h5 v-fg4">Nothing matches the search</div></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>replace the table with the no results state.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-check"></i>Do</span>replace the table with the no results state.</figcaption>
 		</figure>
 		<figure class="dont">
 			<div class="stage"><table class="v-table"><thead><tr><th>App</th><th>State</th></tr></thead><tbody><tr><td colspan="2" class="v-sm">No data available</td></tr></tbody></table></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>leave an empty table with a generic line.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-x"></i>Don't</span>leave an empty table with a generic line.</figcaption>
 		</figure>
 	</div>
 </section>
@@ -1703,7 +1648,7 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 	<figure class="example">
 		<div class="stage plain">
 			<div class="v-col start">
-				<div class="v-row"><div class="v-field single"><span class="v-ph">Search</span></div><span class="v-relative"><span class="v-icon-btn bordered active"><i class="ph-fill ph-funnel"></i></span><span class="v-count">2</span></span></div>
+				<div class="v-row"><div class="v-field single"><span class="v-ph">Search</span></div><span class="v-relative"><span class="v-icon-btn bordered active"><i class="icon-funnel"></i></span><span class="v-count">2</span></span></div>
 				<div class="v-menu">
 					<div class="hd">Status</div>
 					<div class="chips"><span class="v-chip">Any</span><span class="v-chip active">Running</span><span class="v-chip">Partly running</span><span class="v-chip">Stopped</span></div>
@@ -1711,7 +1656,7 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 					<div class="hd">Category</div>
 					<div class="chips"><span class="v-chip active">Productivity</span><span class="v-chip">Media</span><span class="v-chip">Dev</span></div>
 					<hr>
-					<div class="it"><i class="ph ph-arrow-counter-clockwise"></i>Reset filters</div>
+					<div class="it"><i class="icon-rotate-ccw"></i>Reset filters</div>
 				</div>
 			</div>
 		</div>
@@ -1739,11 +1684,11 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 		<table class="doc-table">
 			<thead><tr><th>Toast</th><th>Use for</th><th>Lifetime</th></tr></thead>
 			<tbody>
-				<tr><td><div class="v-toast green"><span class="v-grow"><b>Session ended.</b></span><i class="ph ph-x v-close"></i></div></td><td>A user action finished</td><td>Hides after 5 seconds</td></tr>
-				<tr><td><div class="v-toast red"><span class="v-grow"><b>Failed to end the session.</b></span><i class="ph ph-x v-close"></i></div></td><td>Something failed, including a request the server rejected</td><td>Stays until dismissed</td></tr>
-				<tr><td><div class="v-toast orange"><span class="v-grow"><b>Notifications are blocked for this site. Allow them in your browser settings.</b></span><i class="ph ph-x v-close"></i></div></td><td>The user must fix something outside the app, and the toast says how</td><td>Stays until dismissed</td></tr>
+				<tr><td><div class="v-toast green"><span class="v-grow"><b>Session ended.</b></span><i class="icon-x v-close"></i></div></td><td>A user action finished</td><td>Hides after 5 seconds</td></tr>
+				<tr><td><div class="v-toast red"><span class="v-grow"><b>Failed to end the session.</b></span><i class="icon-x v-close"></i></div></td><td>Something failed, including a request the server rejected</td><td>Stays until dismissed</td></tr>
+				<tr><td><div class="v-toast orange"><span class="v-grow"><b>Notifications are blocked for this site. Allow them in your browser settings.</b></span><i class="icon-x v-close"></i></div></td><td>The user must fix something outside the app, and the toast says how</td><td>Stays until dismissed</td></tr>
 				<tr><td><div class="v-toast blue"><span class="v-grow"><b>Installing Nextcloud</b><div class="v-sm">Downloading nextcloud</div><div class="v-progress"><span class="p-cyan w-62"></span></div></span></div></td><td>A job is running, with its progress</td><td>No close button; becomes success or error when the job ends</td></tr>
-				<tr><td><div class="v-toast neutral"><span class="v-grow"><b>A reboot is needed to finish the system update.</b><br><br><span class="v-btn sm primary">Reboot now</span></span><i class="ph ph-x v-close"></i></div></td><td>A notice about the node itself, often with one action</td><td>Stays</td></tr>
+				<tr><td><div class="v-toast neutral"><span class="v-grow"><b>A reboot is needed to finish the system update.</b><br><br><span class="v-btn sm primary">Reboot now</span></span><i class="icon-x v-close"></i></div></td><td>A notice about the node itself, often with one action</td><td>Stays</td></tr>
 			</tbody>
 		</table>
 	</div>
@@ -1757,12 +1702,12 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 	<h2>Guidelines</h2>
 	<div class="dd">
 		<figure class="do">
-			<div class="stage"><div class="v-toast red"><span class="v-grow"><b>Failed to start system update on spica.</b></span><i class="ph ph-x v-close"></i></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>say what failed and where, in plain words.</figcaption>
+			<div class="stage"><div class="v-toast red"><span class="v-grow"><b>Failed to start system update on spica.</b></span><i class="icon-x v-close"></i></div></div>
+			<figcaption><span class="verdict"><i class="icon-circle-check"></i>Do</span>say what failed and where, in plain words.</figcaption>
 		</figure>
 		<figure class="dont">
 			<div class="stage"><div class="v-toast red"><span class="v-grow"><b>Error 500: TypeError: Cannot read properties of undefined</b></span></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>show raw errors, or an error that disappears before it is read.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-x"></i>Don't</span>show raw errors, or an error that disappears before it is read.</figcaption>
 		</figure>
 	</div>
 </section>
@@ -1781,12 +1726,12 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 				<tr><td><span class="v-badge pill green">3 / 3</span> <span class="v-badge pill yellow">2 / 3</span></td><td>Running parts of an app, colored by health</td></tr>
 				<tr><td><span class="v-badge pill green">unlocked</span> <span class="v-badge pill red">locked</span></td><td>A state in a table cell</td></tr>
 				<tr><td><span class="v-badge pill fact gray"><span class="lbl">Hostname</span>spica</span></td><td>A neutral labelled fact</td></tr>
-				<tr><td><span class="v-badge pill purple">staff</span> <span class="v-badge pill indigo"><i class="ph-fill ph-crown"></i></span></td><td>Groups and roles; the owner gets a crown</td></tr>
+				<tr><td><span class="v-badge pill purple">staff</span> <span class="v-badge pill indigo"><i class="icon-crown"></i></span></td><td>Groups and roles; the owner gets a crown</td></tr>
 				<tr><td><span class="v-badge green">ONLINE</span> <span class="v-badge orange">BATTERY</span></td><td>A dashboard tile's status: square and uppercase, the one exception in shape</td></tr>
 				<tr><td><span class="v-badge pill gray"><span class="v-dot green"></span>2</span> <span class="v-badge pill gray"><span class="v-dot gray"></span>1</span></td><td>How many of something are in a state (connected sessions)</td></tr>
 				<tr><td><span class="v-row v-gap-sm"><span class="v-dot green"></span>spica</span></td><td>Online or offline next to a name</td></tr>
-				<tr><td><span class="v-badge pill green"><i class="ph ph-arrow-down"></i></span></td><td>An update is available (menu item, app name)</td></tr>
-				<tr><td><span class="v-app blue v-gray"><i class="ph-bold ph-cloud"></i></span></td><td>Stopped: the image turns gray</td></tr>
+				<tr><td><span class="v-badge pill green"><i class="icon-arrow-down"></i></span></td><td>An update is available (menu item, app name)</td></tr>
+				<tr><td><span class="v-app blue v-gray"><i class="icon-cloud"></i></span></td><td>Stopped: the image turns gray</td></tr>
 			</tbody>
 		</table>
 	</div>
@@ -1801,19 +1746,19 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 	<div class="dd">
 		<figure class="do">
 			<div class="stage"><div class="v-row wrap"><span class="v-badge pill green">3 / 3</span><span class="v-badge pill red">locked</span><span class="v-badge pill purple">staff</span></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>quiet pills that support the text next to them.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-check"></i>Do</span>quiet pills that support the text next to them.</figcaption>
 		</figure>
 		<figure class="dont">
 			<div class="stage"><div class="v-row wrap"><span class="v-badge solid-orange">RUNNING</span><span class="v-badge solid-red">LOCKED!</span><span class="v-badge solid-purple">GROUP: STAFF</span></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>use saturated, shouting badges, or orange for a healthy state.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-x"></i>Don't</span>use saturated, shouting badges, or orange for a healthy state.</figcaption>
 		</figure>
 		<figure class="do">
-			<div class="stage"><div class="v-row"><span class="v-app blue v-gray"><i class="ph-bold ph-cloud"></i></span><span class="v-grow">Nextcloud</span><span class="v-badge pill gray">0 / 3</span></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>show stopped with grayscale and a neutral count.</figcaption>
+			<div class="stage"><div class="v-row"><span class="v-app blue v-gray"><i class="icon-cloud"></i></span><span class="v-grow">Nextcloud</span><span class="v-badge pill gray">0 / 3</span></div></div>
+			<figcaption><span class="verdict"><i class="icon-circle-check"></i>Do</span>show stopped with grayscale and a neutral count.</figcaption>
 		</figure>
 		<figure class="dont">
-			<div class="stage"><div class="v-row v-sunken bg-component"><span class="v-app blue"><i class="ph-bold ph-cloud"></i></span><span class="v-grow v-c-red">Nextcloud (STOPPED)</span><span class="v-dot red"></span></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>paint a normal state red, or rely on a colored dot alone.</figcaption>
+			<div class="stage"><div class="v-row v-sunken bg-component"><span class="v-app blue"><i class="icon-cloud"></i></span><span class="v-grow v-c-red">Nextcloud (STOPPED)</span><span class="v-dot red"></span></div></div>
+			<figcaption><span class="verdict"><i class="icon-circle-x"></i>Don't</span>paint a normal state red, or rely on a colored dot alone.</figcaption>
 		</figure>
 	</div>
 </section>
@@ -1839,7 +1784,7 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 			<figcaption><b>Job running:</b> an info toast with a bar per step; striped and moving while it downloads, green when done.</figcaption>
 		</figure>
 		<figure>
-			<div class="stage plain"><div class="v-row"><span class="v-app blue"><i class="ph-bold ph-cloud"></i></span><span class="v-grow">Nextcloud</span><span class="v-icon-btn"><i class="ph-fill ph-gear v-spin"></i></span></div></div>
+			<div class="stage plain"><div class="v-row"><span class="v-app blue"><i class="icon-cloud"></i></span><span class="v-grow">Nextcloud</span><span class="v-icon-btn"><i class="icon-settings v-spin"></i></span></div></div>
 			<figcaption><b>Item busy:</b> its actions are replaced by a spinning gear until the job ends.</figcaption>
 		</figure>
 	</div>
@@ -1872,7 +1817,7 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 			<figcaption><b>Failed to load:</b> short, in light red.</figcaption>
 		</figure>
 		<figure>
-			<div class="stage plain"><div class="v-card"><div class="v-row"><span class="v-tile gray"><i class="ph-duotone ph-shield"></i></span><span class="v-grow">No trusted proxies configured</span><span class="v-link"><i class="ph ph-plus"></i>Add</span></div></div></div>
+			<div class="stage plain"><div class="v-card"><div class="v-row"><span class="v-tile gray"><i class="icon-shield"></i></span><span class="v-grow">No trusted proxies configured</span><span class="v-link"><i class="icon-plus"></i>Add</span></div></div></div>
 			<figcaption><b>Small space:</b> text only, with the action that fills it.</figcaption>
 		</figure>
 	</div>
@@ -1886,11 +1831,11 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 	<div class="dd">
 		<figure class="do">
 			<div class="stage"><div class="v-grid2"><div><span class="v-label">Cluster</span><span class="v-value">—</span></div><div><span class="v-label">Email</span><span class="v-value">—</span></div></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>show a dash for a missing value.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-check"></i>Do</span>show a dash for a missing value.</figcaption>
 		</figure>
 		<figure class="dont">
 			<div class="stage"><div class="v-grid2"><div><span class="v-label">Cluster</span><span class="v-value">N/A</span></div><div><span class="v-label">Email</span><span class="v-value">undefined</span></div></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>leak "N/A", "null" or "undefined".</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-x"></i>Don't</span>leak "N/A", "null" or "undefined".</figcaption>
 		</figure>
 	</div>
 </section>
@@ -1918,12 +1863,12 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 	<h2>Guidelines</h2>
 	<div class="dd">
 		<figure class="do">
-			<div class="stage"><div class="v-tip-menu"><span class="v-tip right">The pool has no unused drives to add.</span><div class="v-menu"><div class="it"><i class="ph-fill ph-arrows-clockwise"></i>Sync</div><hr><div class="it off"><i class="ph-fill ph-stack-plus"></i>Expand pool</div></div></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>keep an expected action visible and say why it can't run.</figcaption>
+			<div class="stage"><div class="v-tip-menu"><span class="v-tip right">The pool has no unused drives to add.</span><div class="v-menu"><div class="it"><i class="icon-refresh-cw"></i>Sync</div><hr><div class="it off"><i class="icon-layers-plus"></i>Expand pool</div></div></div></div>
+			<figcaption><span class="verdict"><i class="icon-circle-check"></i>Do</span>keep an expected action visible and say why it can't run.</figcaption>
 		</figure>
 		<figure class="dont">
 			<div class="stage"><div class="v-row wrap"><span class="v-btn primary disabled">Expand pool</span><span class="v-sm v-fg3">No explanation anywhere</span></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>disable silently, or disable content people need to read (use read-only).</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-x"></i>Don't</span>disable silently, or disable content people need to read (use read-only).</figcaption>
 		</figure>
 	</div>
 </section>
@@ -1943,11 +1888,11 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 	<div class="dd">
 		<figure class="do">
 			<div class="stage"><div class="v-form"><div class="v-field readonly"><span class="fl">Fleet account email</span><span class="val">univrs@gmail.com</span></div><div class="v-field"><span class="fl">Password</span><span class="val">••••••••</span></div></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>keep the locked value in place, full contrast, on the sunken surface.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-check"></i>Do</span>keep the locked value in place, full contrast, on the sunken surface.</figcaption>
 		</figure>
 		<figure class="dont">
 			<div class="stage"><div class="v-form"><div class="v-field disabled"><span class="fl">Fleet account email</span><span class="val">univrs@gmail.com</span></div><div class="v-field"><span class="fl">Password</span><span class="val">••••••••</span></div></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>fade a value people need to read, or hide it.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-x"></i>Don't</span>fade a value people need to read, or hide it.</figcaption>
 		</figure>
 	</div>
 </section>
@@ -1976,11 +1921,11 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 	<div class="dd">
 		<figure class="do">
 			<div class="stage"><div class="v-narrow"><div class="v-row"><span class="v-avatar">EC</span><div class="v-grow"><div class="v-truncate">emma.collins.from.accounting</div><div class="v-sm v-fg4 v-truncate">emma.collins.from.accounting@example.com</div></div><span class="v-badge pill green">unlocked</span></div></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-check-circle"></i>Do</span>truncate inside the cell so the row keeps its shape and the badge stays visible.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-check"></i>Do</span>truncate inside the cell so the row keeps its shape and the badge stays visible.</figcaption>
 		</figure>
 		<figure class="dont">
 			<div class="stage"><div class="v-narrow v-overflow"><div class="v-row v-nowrap"><span class="v-avatar">EC</span><div><div>emma.collins.from.accounting</div><div class="v-sm v-fg4">emma.collins.from.accounting@example.com</div></div><span class="v-badge pill green">unlocked</span></div></div></div>
-			<figcaption><span class="verdict"><i class="ph-fill ph-x-circle"></i>Don't</span>let one long value push the rest of the row off the screen; here the badge is cut off.</figcaption>
+			<figcaption><span class="verdict"><i class="icon-circle-x"></i>Don't</span>let one long value push the rest of the row off the screen; here the badge is cut off.</figcaption>
 		</figure>
 	</div>
 	<ul class="rules">
@@ -2002,7 +1947,7 @@ figcaption .verdict { display: inline-flex; align-items: center; gap: .3rem; fon
 					<img src="../src/assets/img/univrs.svg" alt="">
 					<div class="v-h4 v-center">Authentication</div>
 					<div class="v-field"><span class="fl">Username</span><span class="val">admin</span></div>
-					<div class="v-field"><span class="fl">Password</span><span class="val">••••••••••</span><i class="ph-fill ph-eye end"></i></div>
+					<div class="v-field"><span class="fl">Password</span><span class="val">••••••••••</span><i class="icon-eye end"></i></div>
 					<span class="v-btn primary">Sign in</span>
 				</div>
 			</div>

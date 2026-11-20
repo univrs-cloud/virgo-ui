@@ -250,7 +250,7 @@ $card-image-size: 30px;
 			min-height: $card-image-size;
 			max-height: $card-image-size;
 		}
-		.icon-light {
+		i {
 			font-size: 1.24em;
 			display: flex;
 			justify-content: center;
@@ -417,7 +417,7 @@ $card-image-size: 30px;
 }
 #notifications {
 	[data-bs-toggle="menu"] {
-		&.icon-dot::before {
+		&.bell-dot::before {
 			content: '';
 			z-index: var(--z-1);
 			position: absolute;
@@ -746,7 +746,7 @@ $card-image-size: 30px;
 			min-height: $card-image-size;
 			max-height: $card-image-size;
 		}
-		.icon-light {
+		i {
 			font-size: 1.24em;
 		}
 		&.stopped {
@@ -884,7 +884,7 @@ $card-image-size: 30px;
 		height: 100dvh;
 	}
 }
-.details-toggle[aria-expanded="true"] .icon-fill {
+.details-toggle[aria-expanded="true"] i {
 	transform: rotate(180deg);
 }
 #storage,

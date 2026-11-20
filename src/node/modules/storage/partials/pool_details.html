@@ -19,11 +19,11 @@
 			<div class="row g-0 align-items-center mt--3 mb-3">
 				<div class="col-auto me-3">
 					<button class="compress btn-icon btn-solid theme-secondary btn-sm">
-						<i class="icon-light icon-arrow-left icon-fw"></i>
+						<i class="icon-arrow-left icon-fw"></i>
 					</button>
 				</div>
 				<div class="col-auto p-3 lh-1">
-					<i class="icon-duotone icon-stack icon-fw" style="font-size: 1.875rem; width: 2rem;"></i>
+					<i class="icon-layers icon-fw" style="font-size: 1.875rem; width: 2rem;"></i>
 				</div>
 				<div class="col ps-1 min-w-0">
 					<div class="text-truncate min-w-0 mb--1"><%-pool.name%></div>
@@ -40,12 +40,12 @@
 					<div class="list-group list-group-flush">
 						<div class="list-group-item pt-5 pb-7">
 							<div class="d-flex flex-column md:flex-row md:align-items-center 2xl:flex-column 2xl:align-items-start gap-1 md:gap-5 2xl:gap-1">
-								<small class="fg-4 flex-shrink-0 text-truncate" style="width: 8.5rem;"><i class="icon-fill icon-heartbeat icon-fw me-1"></i>Health</small>
+								<small class="fg-4 flex-shrink-0 text-truncate" style="width: 8.5rem;"><i class="icon-heart-pulse icon-fw me-1"></i>Health</small>
 								<h4 class="m-0 flex-grow-1 <%-healthClass%>"><%-health || '—'%></h4>
 							</div>
 							<hr class="my-3 border-0 border-top opacity-50">
 							<div class="d-flex flex-column md:flex-row 2xl:flex-column gap-1 md:gap-5 2xl:gap-1">
-								<small class="fg-4 flex-shrink-0 text-truncate" style="width: 8.5rem;"><i class="icon-fill icon-binary icon-fw me-1"></i>Data integrity</small>
+								<small class="fg-4 flex-shrink-0 text-truncate" style="width: 8.5rem;"><i class="icon-binary icon-fw me-1"></i>Data integrity</small>
 								<div class="flex-grow-1 min-w-0">
 								<%const scan = pool.scanStats%>
 								<%const scanFunction = _.toUpper(scan?.function || 'NONE')%>
@@ -108,24 +108,24 @@
 
 						<div class="list-group-item pt-5 pb-7">
 							<div class="d-flex align-items-center min-w-0 mb-3">
-								<i class="icon-light icon-chart-pie icon-fw fg-4 me-3"></i>
+								<i class="icon-chart-pie icon-fw fg-4 me-3"></i>
 								<span>Usage</span>
 							</div>
 							<div class="row g-3 mb-5">
 								<div class="col-6 md:col-3 2xl:col-6">
-									<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-circle icon-fw me-1"></i>Capacity</small>
+									<small class="fg-4 d-block text-truncate"><i class="icon-circle icon-fw me-1"></i>Capacity</small>
 									<h4 class="m-0"><%=prettyBytes(size, { binary: true })%></h4>
 								</div>
 								<div class="col-6 md:col-3 2xl:col-6">
-									<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-chart-pie-slice icon-fw me-1"></i>Used</small>
+									<small class="fg-4 d-block text-truncate"><i class="icon-chart-pie icon-fw me-1"></i>Used</small>
 									<h4 class="m-0"><%=prettyBytes(allocated, { binary: true })%> <small class="fs-md fw-light fg-4">(<%=capacity.toFixed(2)%>%)</small></h4>
 								</div>
 								<div class="col-6 md:col-3 2xl:col-6">
-									<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-chart-pie icon-fw me-1"></i>Free</small>
+									<small class="fg-4 d-block text-truncate"><i class="icon-chart-pie icon-fw me-1"></i>Free</small>
 									<h4 class="m-0"><%=prettyBytes(free, { binary: true })%></h4>
 								</div>
 								<div class="col-6 md:col-3 2xl:col-6">
-									<small class="fg-4 d-block text-truncate"><i class="icon-regular icon-arrows-in-simple icon-fw me-1"></i>Space saved</small>
+									<small class="fg-4 d-block text-truncate"><i class="icon-minimize-2 icon-fw me-1"></i>Space saved</small>
 									<h4 class="m-0">
 										<%if (compressRatio > 0) {%>
 											<%=prettyBytes(saved, { binary: true })%> <small class="fs-md fw-light fg-4">(<%=compressRatio.toFixed(2)%>x compression)</small>
@@ -141,11 +141,11 @@
 							</u-progress>
 							<div class="row g-3 mt-3">
 								<div class="col-6 md:col-3 2xl:col-6">
-									<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-database icon-fw me-1 fg-blue-300"></i>Data</small>
+									<small class="fg-4 d-block text-truncate"><i class="icon-database icon-fw me-1 fg-blue-300"></i>Data</small>
 									<span class="fw-light"><%=prettyBytes(data, { binary: true })%></span>
 								</div>
 								<div class="col-6 md:col-3 2xl:col-6">
-									<small class="fg-4 d-block text-truncate"><i class="icon-regular icon-clock-counter-clockwise icon-fw me-1 fg-indigo-100"></i>Snapshots (<%=_.size(pool.snapshots)%>)</small>
+									<small class="fg-4 d-block text-truncate"><i class="icon-history icon-fw me-1 fg-indigo-100"></i>Snapshots (<%=_.size(pool.snapshots)%>)</small>
 									<span class="fw-light"><%=prettyBytes(snapshots, { binary: true })%></span>
 								</div>
 							</div>
@@ -154,8 +154,8 @@
 				</div>
 				<div class="detail-main">
 					<div class="nav nav-underline d-flex gap-0 border-bottom">
-						<button type="button" class="nav-link detail-facts-tab px-4 <%=(poolTab === 'overview' ? 'active border-primary fw-normal' : '')%>" data-pool-tab="overview"><i class="icon-light icon-info icon-fw"></i>Overview</button>
-						<button type="button" class="nav-link detail-default-tab px-4 <%=(poolTab === 'topology' ? 'active border-primary fw-normal' : '')%>" data-pool-tab="topology"><i class="icon-light icon-tree-view icon-fw"></i>Topology</button>
+						<button type="button" class="nav-link detail-facts-tab px-4 <%=(poolTab === 'overview' ? 'active border-primary fw-normal' : '')%>" data-pool-tab="overview"><i class="icon-info icon-fw"></i>Overview</button>
+						<button type="button" class="nav-link detail-default-tab px-4 <%=(poolTab === 'topology' ? 'active border-primary fw-normal' : '')%>" data-pool-tab="topology"><i class="icon-list-tree icon-fw"></i>Topology</button>
 					</div>
 					<div class="table-scroll overflow-y-scroll pe-5 mx-0 me--5 <%=(poolTab === 'topology' ? '' : 'detail-pane-off')%>">
 						<div class="list-group list-group-flush">
@@ -183,12 +183,12 @@
 														<div class="vdev-stem"></div>
 														<div class="position-relative d-flex justify-content-center w-100">
 															<%if (role === 'new') {%>
-																<i class="icon-regular icon-arrow-right icon-xs icon-width-auto lh-1 fg-4 position-absolute top-50 start-0 translate-middle"></i>
+																<i class="icon-arrow-right icon-xs icon-width-auto lh-1 fg-4 position-absolute top-50 start-0 translate-middle"></i>
 															<%}%>
 															<span class="position-relative d-inline-flex <%=(canReplace ? 'cursor-pointer' : '')%>"<%=(canReplace ? ` data-bs-toggle="dialog" data-bs-target="#pool-drive-replace" data-replace="${_.escape(vdev.name)}"` : '')%>>
-																<i class="vdev-disk icon-duotone icon-hard-drive <%-diskColor%> <%=(activity && activity !== 'awaiting' ? 'icon-fade' : '')%>"<%=(diskTip ? ` data-bs-toggle="tooltip" data-bs-original-title="${diskTip}"` : '')%>></i>
+																<i class="vdev-disk icon-hard-drive <%-diskColor%> <%=(activity && activity !== 'awaiting' ? 'icon-fade' : '')%>"<%=(diskTip ? ` data-bs-toggle="tooltip" data-bs-original-title="${diskTip}"` : '')%>></i>
 																<%if (usedIn) {%>
-																	<i class="icon-regular icon-link icon-2xs icon-width-auto lh-1 fg-blue-500 position-absolute top-0 start-100 translate-middle"></i>
+																	<i class="icon-link icon-2xs icon-width-auto lh-1 fg-blue-500 position-absolute top-0 start-100 translate-middle"></i>
 																<%}%>
 															</span>
 														</div>
@@ -203,7 +203,7 @@
 								</div>
 								<div class="details-toggle d-inline-flex align-items-center cursor-pointer ps-5 pb-3" data-bs-toggle="collapse" data-bs-target="#vdev-details-<%-_.kebabCase(pool.name)%>" aria-expanded="false">
 									<small class="fg-4">Details</small>
-									<i class="icon-fill icon-caret-down icon-fw icon-xs fg-secondary ms-1"></i>
+									<i class="icon-chevron-down icon-fw icon-xs fg-secondary ms-1"></i>
 								</div>
 								<div class="tree-rows collapse pb-3" id="vdev-details-<%-_.kebabCase(pool.name)%>">
 									<%_.each(vdevSections, (section) => {%>

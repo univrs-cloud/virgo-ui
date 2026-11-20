@@ -21,7 +21,7 @@
 				<span><%-statusText%></span>
 			</div>
 			<%if (nextcloudAccounts?.isReadable) {%>
-				<a href="#nextcloud-account-create" class="btn-sm btn-outline theme-secondary py-1 min-h-0 <%=(isDisabled ? 'disabled' : '')%>" data-bs-toggle="dialog">New account</a>
+				<a href="#nextcloud-account-create" class="btn-sm btn-outline theme-secondary py-1 min-h-0 <%=(isDisabled ? 'disabled' : '')%>" data-bs-toggle="dialog"><i class="icon-user-round-plus icon-fw me-1"></i>New account</a>
 			<%}%>
 		</div>
 	</div>
@@ -29,7 +29,7 @@
 		<%_.each(users, (user) => {%>
 			<div class="list-group-item pt-5 pb-7">
 				<div class="d-flex align-items-start min-w-0">
-					<i class="icon-light icon-user icon-fw lh-md fg-4 me-3"></i>
+					<i class="icon-user icon-fw lh-md fg-4 me-3"></i>
 					<div class="min-w-0 flex-fill">
 						<div class="d-flex align-items-center gap-3 min-w-0">
 							<div class="text-truncate"><%-user.displayName%></div>
@@ -52,15 +52,15 @@
 								<div class="chip theme-secondary cursor-default">
 									<%-(groupNames[groupId] || groupId)%>
 									<%if (isLastAdmin) {%>
-										<span class="d-flex" tabindex="0" data-bs-toggle="tooltip" data-bs-original-title="Nextcloud needs at least one administrator."><button type="button" class="chip-dismiss" disabled><i class="icon-fill icon-x-circle"></i></button></span>
+										<span class="d-flex" tabindex="0" data-bs-toggle="tooltip" data-bs-original-title="Nextcloud needs at least one administrator."><button type="button" class="chip-dismiss" disabled><i class="icon-circle-x"></i></button></span>
 									<%} else {%>
-										<button type="button" class="chip-dismiss chip-dismiss-danger" data-nextcloud-group-action="removeuser" data-group="<%-groupId%>" data-user="<%-user.id%>" data-bs-toggle="tooltip" data-bs-original-title="Remove from group" <%=(isDisabled ? 'disabled' : '')%>><i class="icon-fill icon-x-circle"></i></button>
+										<button type="button" class="chip-dismiss chip-dismiss-danger" data-nextcloud-group-action="removeuser" data-group="<%-groupId%>" data-user="<%-user.id%>" data-bs-toggle="tooltip" data-bs-original-title="Remove from group" <%=(isDisabled ? 'disabled' : '')%>><i class="icon-circle-x"></i></button>
 									<%}%>
 								</div>
 							<%})%>
 							<%if (!_.isEmpty(availableGroups)) {%>
 								<div class="dropdown d-inline-flex">
-									<button type="button" class="chip theme-secondary" data-bs-toggle="menu" data-bs-placement="bottom-start" <%=(isDisabled ? 'disabled' : '')%>><span class="chip-icon"><i class="icon-regular icon-plus"></i></span>Group</button>
+									<button type="button" class="chip theme-secondary" data-bs-toggle="menu" data-bs-placement="bottom-start" <%=(isDisabled ? 'disabled' : '')%>><span class="chip-icon"><i class="icon-plus"></i></span>Group</button>
 									<div class="menu">
 										<%_.each(availableGroups, (group) => {%>
 											<button type="button" class="menu-item" data-nextcloud-group-action="adduser" data-group="<%-group.id%>" data-user="<%-user.id%>"><%-group.displayName%></button>
@@ -91,27 +91,27 @@
 					<%const isLastAdmin = (_.includes(adminGroup?.users, user.id) && _.size(adminGroup?.users) === 1);%>
 					<div class="d-inline-flex align-items-center flex-shrink-0 bg-2 rounded-3 ms-3">
 						<div class="d-inline-flex align-items-center px-1">
-							<u-button variant="secondary" size="sm" class="actions-button" text icon tip="Edit" data-bs-toggle="dialog" data-bs-target="#nextcloud-account-update" data-user="<%-user.id%>" <%=(isDisabled ? 'disabled' : '')%>><i class="icon-fill icon-pen icon-fw <%=(isDisabled ? 'fg-gray-500' : 'fg-body')%>"></i></u-button>
+							<u-button variant="secondary" size="sm" class="actions-button" text icon tip="Edit" data-bs-toggle="dialog" data-bs-target="#nextcloud-account-update" data-user="<%-user.id%>" <%=(isDisabled ? 'disabled' : '')%>><i class="icon-pencil icon-fw <%=(isDisabled ? 'fg-gray-500' : 'fg-body')%>"></i></u-button>
 						</div>
 						<div class="dropdown position-relative">
-							<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="actions-toggle btn-icon btn-text theme-secondary btn-sm rounded-3 <%=(isDisabled ? 'disabled' : '')%>"><i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i></span>
+							<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="actions-toggle btn-icon btn-text theme-secondary btn-sm rounded-3 <%=(isDisabled ? 'disabled' : '')%>"><i class="icon-ellipsis-vertical icon-fw fg-secondary"></i></span>
 							<div class="menu">
 								<%if (user.enabled) {%>
-									<a href="#nextcloud-account-password" class="menu-item" data-bs-toggle="dialog" data-user="<%-user.id%>"><i class="icon-fill icon-key icon-fw"></i>Change password</a>
+									<a href="#nextcloud-account-password" class="menu-item" data-bs-toggle="dialog" data-user="<%-user.id%>"><i class="icon-key-round icon-fw"></i>Change password</a>
 									<div class="menu-divider"></div>
 								<%}%>
 								<%if (!user.enabled) {%>
-									<a href="#" class="menu-item" data-nextcloud-user-action="enable" data-user="<%-user.id%>"><i class="icon-fill icon-lock-open icon-fw"></i>Unlock</a>
+									<a href="#" class="menu-item" data-nextcloud-user-action="enable" data-user="<%-user.id%>"><i class="icon-lock-open icon-fw"></i>Unlock</a>
 								<%} else if (isLastAdmin) {%>
-									<span class="d-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="Nextcloud needs at least one administrator."><button type="button" class="menu-item disabled"><i class="icon-fill icon-lock icon-fw"></i>Lock</button></span>
+									<span class="d-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="Nextcloud needs at least one administrator."><button type="button" class="menu-item disabled"><i class="icon-lock icon-fw"></i>Lock</button></span>
 								<%} else {%>
-									<a href="#" class="menu-item fg-danger" data-nextcloud-user-action="disable" data-user="<%-user.id%>"><i class="icon-fill icon-lock icon-fw"></i>Lock</a>
+									<a href="#" class="menu-item fg-danger" data-nextcloud-user-action="disable" data-user="<%-user.id%>"><i class="icon-lock icon-fw"></i>Lock</a>
 								<%}%>
 								<div class="menu-divider"></div>
 								<%if (isLastAdmin) {%>
-									<span class="d-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="Nextcloud needs at least one administrator."><button type="button" class="menu-item disabled"><i class="icon-fill icon-x-circle icon-fw"></i>Delete</button></span>
+									<span class="d-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="Nextcloud needs at least one administrator."><button type="button" class="menu-item disabled"><i class="icon-circle-x icon-fw"></i>Delete</button></span>
 								<%} else {%>
-									<a href="#nextcloud-account-delete" class="menu-item fg-danger" data-bs-toggle="dialog" data-user="<%-user.id%>"><i class="icon-fill icon-x-circle icon-fw"></i>Delete</a>
+									<a href="#nextcloud-account-delete" class="menu-item fg-danger" data-bs-toggle="dialog" data-user="<%-user.id%>"><i class="icon-circle-x icon-fw"></i>Delete</a>
 								<%}%>
 							</div>
 						</div>
@@ -135,19 +135,19 @@
 				<div class="list-group-item pt-5 pb-7">
 					<div class="d-flex align-items-center justify-content-between gap-3">
 						<div class="d-flex align-items-start min-w-0">
-							<i class="icon-light icon-users-three icon-fw lh-md fg-4 me-3"></i>
+							<i class="icon-users icon-fw lh-md fg-4 me-3"></i>
 							<div class="min-w-0">
 								<div class="text-truncate"><%-group.displayName%></div>
 								<small class="d-block fg-4"><%=_.pluralize('member', _.size(group.users), true)%></small>
 							</div>
 						</div>
 						<div class="dropdown">
-							<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm <%=(isDisabled ? 'disabled' : '')%>"><i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i></span>
+							<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm <%=(isDisabled ? 'disabled' : '')%>"><i class="icon-ellipsis-vertical icon-fw fg-secondary"></i></span>
 							<div class="menu">
 								<%if (group.id === 'admin') {%>
-									<span class="d-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="Nextcloud keeps its admin group."><button type="button" class="menu-item disabled"><i class="icon-fill icon-x-circle icon-fw"></i>Delete</button></span>
+									<span class="d-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="Nextcloud keeps its admin group."><button type="button" class="menu-item disabled"><i class="icon-circle-x icon-fw"></i>Delete</button></span>
 								<%} else {%>
-									<a href="#" class="menu-item fg-danger" data-nextcloud-group-delete="<%-group.id%>"><i class="icon-fill icon-x-circle icon-fw"></i>Delete</a>
+									<a href="#" class="menu-item fg-danger" data-nextcloud-group-delete="<%-group.id%>"><i class="icon-circle-x icon-fw"></i>Delete</a>
 								<%}%>
 							</div>
 						</div>

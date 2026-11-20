@@ -8,7 +8,7 @@
 <tr class="item cursor-pointer" data-id="<%-backupDisk.name%>">
 	<td class="d-none md:d-table-cell" style="width: 1px;">
 		<div class="row-image">
-			<i class="icon-light icon-archive-box icon-fw fg-emphasis-secondary"></i>
+			<i class="icon-package icon-fw fg-emphasis-secondary"></i>
 		</div>
 	</td>
 	<td style="min-width: 210px; max-width: 0;">
@@ -22,12 +22,12 @@
 	<td class="text-nowrap d-none md:d-table-cell">
 		<%if (_.isEmpty(backupDisk.clients)) {%>
 			<u-badge color="gray" tint="100" pill>
-				<i class="icon-fill icon-user icon-xs"></i>
+				<i class="icon-user icon-xs"></i>
 				<small>0</small>
 			</u-badge>
 		<%} else {%>
 			<u-badge color="gray" tint="100" tip="<%-_.map(backupDisk.clients, (client) => { return _.escape(`${_.join(client.usernames, ', ')} (${client.address})`); }).join('<br>')%>" pill>
-				<i class="icon-fill icon-user icon-xs fg-green-500"></i>
+				<i class="icon-user icon-xs fg-green-500"></i>
 				<small><%-_.size(backupDisk.clients)%></small>
 			</u-badge>
 		<%}%>
@@ -44,13 +44,13 @@
 	<td class="text-end text-nowrap d-none md:d-table-cell">
 		<small class="fw-light fg-emphasis-secondary d-flex">
 			<span class="d-inline-block text-start" style="width: 12px;">
-				<i class="icon-regular icon-arrow-down icon-fw icon-2xs fg-blue-500"></i>
+				<i class="icon-arrow-down icon-fw icon-2xs fg-blue-500"></i>
 			</span>
 			<span class="ms-auto"><%=_.prettyBitRate(backupDisk.network.rx)%></span>
 		</small>
 		<small class="fw-light fg-emphasis-secondary d-flex">
 			<span class="d-inline-block text-start" style="width: 12px;">
-				<i class="icon-regular icon-arrow-up icon-fw icon-2xs fg-purple-500"></i>
+				<i class="icon-arrow-up icon-fw icon-2xs fg-purple-500"></i>
 			</span>
 			<span class="ms-auto"><%=_.prettyBitRate(backupDisk.network.tx)%></span>
 		</small>
@@ -71,6 +71,6 @@
 		<%=backupDiskActionsTemplate({ backupDisk, jobs, inline: false })%>
 	</td>
 	<td class="text-end pe-0">
-		<i class="icon-light icon-caret-right icon-fw fg-4"></i>
+		<i class="icon-chevron-right icon-fw fg-4"></i>
 	</td>
 </tr>

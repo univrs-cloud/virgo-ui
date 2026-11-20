@@ -36,11 +36,11 @@
 			<div class="card-image-row mt--3 mb-3">
 				<div class="card-image-row-back me-3">
 					<button class="compress btn-icon btn-solid theme-secondary btn-sm">
-						<i class="icon-light icon-arrow-left icon-fw"></i>
+						<i class="icon-arrow-left icon-fw"></i>
 					</button>
 				</div>
 				<div class="card-image-row-icon card-image card-spacer px-3">
-					<i class="icon-light icon-calendar-check icon-fw fg-emphasis-secondary"></i>
+					<i class="icon-calendar-range icon-fw fg-emphasis-secondary"></i>
 				</div>
 				<div class="card-image-row-title d-flex align-items-center mb--2 ps-1 min-w-0">
 					<div class="text-truncate min-w-0"><%-rule.name%></div>
@@ -61,7 +61,7 @@
 					<div class="list-group list-group-flush">
 						<div class="list-group-item pt-5 pb-7">
 							<div class="d-flex align-items-center min-w-0 mb-3">
-								<i class="icon-light icon-clock-counter-clockwise icon-fw fg-4 me-3"></i>
+								<i class="icon-history icon-fw fg-4 me-3"></i>
 								<div class="text-truncate min-w-0">Keeps</div>
 							</div>
 							<div class="row g-3">
@@ -75,7 +75,7 @@
 						</div>
 						<div class="list-group-item pt-5 pb-7">
 							<div class="d-flex align-items-center min-w-0 mb-3">
-								<i class="icon-light icon-calendar-dots icon-fw fg-4 me-3"></i>
+								<i class="icon-calendar-days icon-fw fg-4 me-3"></i>
 								<div class="text-truncate min-w-0">When</div>
 							</div>
 							<div class="row g-3">
@@ -92,7 +92,7 @@
 						</div>
 						<div class="list-group-item pt-5 pb-7">
 							<div class="d-flex align-items-center min-w-0 mb-3">
-								<i class="icon-light icon-chart-bar icon-fw fg-4 me-3"></i>
+								<i class="icon-chart-column icon-fw fg-4 me-3"></i>
 								<div class="text-truncate min-w-0">Usage</div>
 							</div>
 							<div class="row g-3">
@@ -114,8 +114,8 @@
 				</div>
 				<div class="detail-main">
 					<div class="nav nav-underline d-flex gap-0 border-bottom">
-						<button type="button" class="nav-link detail-facts-tab px-4 <%=(activeTab === 'overview' ? 'active border-primary fw-normal' : '')%>" data-rule-tab="overview"><i class="icon-light icon-info icon-fw"></i>Overview</button>
-						<button type="button" class="nav-link detail-default-tab px-4 <%=(activeTab === 'members' ? 'active border-primary fw-normal' : '')%>" data-rule-tab="members"><i class="icon-light icon-stack icon-fw"></i>Used by <small class="opacity-75"><%=_.size(members)%></small></button>
+						<button type="button" class="nav-link detail-facts-tab px-4 <%=(activeTab === 'overview' ? 'active border-primary fw-normal' : '')%>" data-rule-tab="overview"><i class="icon-info icon-fw"></i>Overview</button>
+						<button type="button" class="nav-link detail-default-tab px-4 <%=(activeTab === 'members' ? 'active border-primary fw-normal' : '')%>" data-rule-tab="members"><i class="icon-shapes icon-fw"></i>Used by <small class="opacity-75"><%=_.size(members)%></small></button>
 					</div>
 					<div class="table-scroll overflow-y-scroll pe-5 mx-0 me--5 <%=(activeTab === 'members' ? '' : 'detail-pane-off')%>">
 						<%if (_.isEmpty(members)) {%>
@@ -131,9 +131,9 @@
 											<div class="col-12">
 												<div class="d-flex align-items-center min-w-0">
 													<%if (member.type === 'app') {%>
-														<i class="icon-light icon-dots-nine icon-width-auto fg-4 me-3"></i>
+														<i class="icon-grip icon-width-auto fg-4 me-3"></i>
 													<%} else {%>
-														<i class="icon-light icon-folder icon-width-auto fg-4 me-3"></i>
+														<i class="icon-folder icon-width-auto fg-4 me-3"></i>
 													<%}%>
 													<div class="text-truncate min-w-0 fg-body"><%-member.title%></div>
 													<u-badge color="<%=(member.mode === 'paused' ? 'orange' : 'green')%>" tint="100" class="flex-shrink-0 ms-3" pill><%=(member.mode === 'paused' ? 'Paused' : 'Enabled')%></u-badge>

@@ -7,19 +7,19 @@
 		<%if (folder.isLoading) {%>
 			<span class="d-flex justify-content-center" style="width: 0.9375rem;"><span class="spinner-border spinner-sm fg-gray-600"></span></span>
 		<%} else {%>
-			<a href="#" class="folder-toggle fg-4 text-decoration-none <%=(isBusy ? 'pe-none' : '')%>"><i class="icon-fill <%=(folder.isOpen ? 'icon-caret-down' : 'icon-caret-right')%> icon-fw icon-xs"></i></a>
+			<a href="#" class="folder-toggle fg-4 text-decoration-none <%=(isBusy ? 'pe-none' : '')%>"><i class="<%=(folder.isOpen ? 'icon-chevron-down' : 'icon-chevron-right')%> icon-fw icon-xs"></i></a>
 		<%}%>
 		<div class="d-flex align-items-center gap-1 flex-grow-1 min-w-0 rounded-4 px-3 py-1 <%=(folder.path === selected ? 'bg-subtle-primary' : '')%>">
 			<a href="#" class="folder-select d-flex align-items-center gap-3 flex-grow-1 min-w-0 fg-body text-decoration-none <%=(isBusy ? 'pe-none' : '')%>">
-				<i class="icon-light <%=(folder.isOpen ? 'icon-folder-open' : 'icon-folder')%> icon-fw fg-4"></i>
+				<i class="<%=(folder.isOpen ? 'icon-folder-open' : 'icon-folder')%> icon-fw fg-4"></i>
 				<span class="text-truncate"><%-folder.name%></span>
 				<%if (folder.isVirtual) {%>
 					<small class="fg-4 flex-shrink-0">New</small>
 				<%}%>
 			</a>
-			<a href="#" class="folder-add fg-4 text-decoration-none <%=(isBusy ? 'pe-none' : '')%>" data-bs-toggle="tooltip" data-bs-original-title="New folder"><i class="icon-light icon-folder-plus icon-fw"></i></a>
+			<a href="#" class="folder-add fg-4 text-decoration-none <%=(isBusy ? 'pe-none' : '')%>" data-bs-toggle="tooltip" data-bs-original-title="New folder"><i class="icon-folder-plus icon-fw"></i></a>
 			<%if (folder.isVirtual) {%>
-				<a href="#" class="folder-remove fg-4 text-decoration-none <%=(isBusy ? 'pe-none' : '')%>" data-bs-toggle="tooltip" data-bs-original-title="Remove"><i class="icon-regular icon-x icon-fw"></i></a>
+				<a href="#" class="folder-remove fg-4 text-decoration-none <%=(isBusy ? 'pe-none' : '')%>" data-bs-toggle="tooltip" data-bs-original-title="Remove"><i class="icon-x icon-fw"></i></a>
 			<%}%>
 		</div>
 	</div>
@@ -27,7 +27,7 @@
 		<%if (isDrafting) {%>
 			<div class="restore-draft tree-row <%=(_.isEmpty(folder.children) ? '' : 'tree-line')%>" data-depth="<%=depth + 1%>" style="--tree-elbow-x: 1rem; --tree-elbow-width: 1.1rem; --tree-elbow-height: 1.25rem; --tree-line-x: 1rem; --tree-line-top: 0; padding-left: 1.5rem;">
 				<div class="d-flex align-items-center gap-3 px-3 py-1">
-					<i class="icon-light icon-folder-plus icon-fw fg-4"></i>
+					<i class="icon-folder-plus icon-fw fg-4"></i>
 					<input type="text" class="folder-name form-control form-control-sm" placeholder="Folder name" value="<%-draft.name%>">
 					<u-button variant="primary" size="sm" class="draft-add">Add</u-button>
 					<u-button variant="secondary" outline size="sm" class="draft-cancel">Cancel</u-button>

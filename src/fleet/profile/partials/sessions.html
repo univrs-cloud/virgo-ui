@@ -9,7 +9,7 @@
 				<div class="card-body">
 					<%if (_.size(sessions) > 1) {%>
 						<div class="d-flex mb-1">
-							<a href="#" class="revoke-others btn-link btn-sm p-0 ms-auto fg-danger text-decoration-none min-h-0">Sign out everywhere else<i class="icon-regular icon-sign-out icon-fw ms-1"></i></a>
+							<a href="#" class="revoke-others btn-link btn-sm p-0 ms-auto fg-danger text-decoration-none min-h-0">Sign out everywhere else<i class="icon-log-out icon-fw ms-1"></i></a>
 						</div>
 					<%}%>
 					<%if (_.isNull(sessions)) {%>
@@ -19,7 +19,7 @@
 							<%_.each(sessions, (session) => {%>
 								<div class="list-group-item bg-transparent px-0 small d-flex align-items-start md:align-items-center gap-3">
 									<span class="d-flex align-items-center flex-shrink-0" style="height: 1lh;">
-										<i class="icon-fill icon-circle icon-fw icon-2xs <%=(session.connected ? 'fg-green-500' : 'fg-4')%>"></i>
+										<i class="icon-circle icon-fw icon-2xs <%=(session.connected ? 'fg-green-500' : 'fg-4')%>"></i>
 									</span>
 									<div class="d-flex flex-wrap md:flex-nowrap align-items-center column-gap-3 flex-grow-1 min-w-0">
 										<span class="text-nowrap numeric-tabular flex-shrink-0"><%-session.ipAddress || 'Unknown address'%></span>
@@ -46,7 +46,7 @@
 												<span class="current-session fg-primary d-flex align-items-center"><i></i><span class="d-none md:d-inline">Current session</span></span>
 											<%} else {%>
 												<a href="#" class="fg-danger revoke" data-session-id="<%-session.id%>" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="Sign this session out">
-													<i class="icon-regular icon-sign-out"></i>
+													<i class="icon-log-out"></i>
 												</a>
 											<%}%>
 										</span>

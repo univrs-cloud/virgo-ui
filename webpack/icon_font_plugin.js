@@ -7,8 +7,8 @@ const subsetFont = require('subset-font');
 const sourcePath = path.resolve(__dirname, '../src');
 const scssPath = path.join(sourcePath, 'assets/scss/webfonts');
 const variables = path.join(scssPath, '_variables.scss');
-const fontPath = path.resolve(__dirname, '../node_modules/@phosphor-icons/web/src');
-const scheme = 'phosphor';
+const fontPath = path.resolve(__dirname, '../node_modules/lucide-static');
+const scheme = 'lucide';
 const outputPath = 'assets/webfonts';
 const prefix = 'icons-';
 const fonts = new Set();
@@ -43,13 +43,12 @@ const resolveExpression = (expression, source) => {
 	return Array.from(source.matchAll(new RegExp(`(?<![\\w$])${identifier}\\s*[:=](?!=)\\s*([^,;}\\n]*)`, 'g')), ([, value]) => { return readQuoted(value); }).flat();
 };
 
-const readCodepoints = (weight, selector, pseudo) => {
-	return new Map(Array.from(fs.readFileSync(path.join(fontPath, weight, 'style.css'), 'utf8').matchAll(new RegExp(`\\.${selector}\\.ph-([a-z0-9-]+):${pseudo}\\s*\\{\\s*content:\\s*"\\\\([0-9a-f]+)"`, 'g')), ([, name, hex]) => { return [name, parseInt(hex, 16)]; }));
+const readCodepoints = () => {
+	return new Map(Object.entries(JSON.parse(fs.readFileSync(path.join(fontPath, 'font/codepoints.json'), 'utf8'))));
 };
 
 const readUsedIcons = () => {
-	const codepoints = readCodepoints('regular', 'ph', 'before');
-	const duotone = readCodepoints('duotone', 'ph-duotone', 'after');
+	const codepoints = readCodepoints();
 	const files = listSourceFiles(sourcePath).map((file) => { return { file, content: fs.readFileSync(file, 'utf8') }; });
 	const source = files.map(({ content }) => { return content; }).join('\n');
 	const used = new Set();
@@ -79,7 +78,6 @@ const readUsedIcons = () => {
 	const names = Array.from(used).sort().filter((name) => { return codepoints.has(name); });
 	return {
 		icons: new Map(names.map((name) => { return [name, codepoints.get(name)]; })),
-		duotoneIcons: new Map(names.filter((name) => { return duotone.has(name); }).map((name) => { return [name, duotone.get(name)]; })),
 		unresolved
 	};
 };
@@ -89,8 +87,8 @@ const writeMap = (icons) => {
 };
 
 const fillIcons = (content) => {
-	const { icons, duotoneIcons } = readUsedIcons();
-	return content.replace(/^\$icons: \(\);$/m, `$icons: (${writeMap(icons)}\n);`).replace(/^\$duotone-icons: \(\);$/m, `$duotone-icons: (${writeMap(duotoneIcons)}\n);`);
+	const { icons } = readUsedIcons();
+	return content.replace(/^\$icons: \(\);$/m, `$icons: (${writeMap(icons)}\n);`);
 };
 
 const resolveScss = (file) => {
@@ -132,9 +130,9 @@ class IconFontPlugin {
 		compiler.hooks.thisCompilation.tap('IconFontPlugin', (compilation) => {
 			compilation.hooks.processAssets.tapPromise({ name: 'IconFontPlugin', stage: webpack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL }, async () => {
 				compilation.contextDependencies.add(sourcePath);
-				const { icons, duotoneIcons, unresolved } = readUsedIcons();
+				const { icons, unresolved } = readUsedIcons();
 				unresolved.forEach((location) => { compilation.warnings.push(new webpack.WebpackError(`IconFontPlugin: cannot work out the icon name at src/${location}`)); });
-				const text = String.fromCodePoint(...icons.values(), ...duotoneIcons.values());
+				const text = String.fromCodePoint(...icons.values());
 				const { hashFunction, hashDigest, hashDigestLength } = compilation.outputOptions;
 				const renames = await Promise.all(Array.from(fonts).map(async (file) => {
 					const key = `${file}:${text}`;

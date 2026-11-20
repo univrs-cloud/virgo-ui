@@ -9,7 +9,7 @@
 		const usageTip = `${prettyBytes(properties.allocated?.value || 0, { binary: true })} of ${prettyBytes(properties.size?.value || 0, { binary: true })} used`;
 	%>
 	<div class="d-flex align-items-center border shadow-sm fs-xs px-3 py-1 rounded-9 <%=(view === 'table' ? 'bg-body' : '')%>">
-		<i class="icon-fill icon-circle icon-fw me-1 <%=healthColor%>" data-bs-toggle="tooltip" data-bs-original-title="<%-healthLabel%>"></i>
+		<i class="icon-circle icon-fw me-1 <%=healthColor%>" data-bs-toggle="tooltip" data-bs-original-title="<%-healthLabel%>"></i>
 		<span class="fg-emphasis-secondary me-3"><%-pool.name%></span>
 		<%if (scanState === 'scanning') {%>
 			<%
@@ -19,19 +19,19 @@
 				const issued = `${prettyBytes(scan.issued || 0, { binary: true })} / ${total}`;
 				const tip = (isPaused ? `<strong>Data integrity check is paused</strong> since ${moment.unix(scan.scrubPause).fromNow()}.<br>` : ``) + `Data integrity check started ${moment.unix(scan.startTime).fromNow()}.<br>Scanned ${scanned}.<br>Issued ${issued}.<br>Repaired <strong>${prettyBytes(scan.processed || 0, { binary: true })}</strong>, ${scan.errors || 0} errors.`;
 			%>
-			<span class="d-inline-flex me-3" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"><i class="<%=(isPaused ? 'icon-fill icon-pause fg-4' : 'icon-regular icon-arrows-clockwise icon-spin fg-cyan-600')%>"></i></span>
+			<span class="d-inline-flex me-3" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"><i class="<%=(isPaused ? 'icon-pause fg-4' : 'icon-refresh-cw icon-spin fg-cyan-600')%>"></i></span>
 		<%} else if (scanState === 'finished') {%>
 			<%
 				const duration = moment.duration(moment.unix(scan.endTime).diff(moment.unix(scan.startTime))).humanize();
 				const tip = `Data integrity check completed ${moment.unix(scan.endTime).fromNow()}.<br>Took ${duration} to scan <strong>${prettyBytes(scan.toExamine || 0, { binary: true })}</strong>.<br>Repaired <strong>${prettyBytes(scan.processed || 0, { binary: true })}</strong>, ${scan.errors || 0} errors.`;
 			%>
 			<%if (scan.errors > 0) {%>
-				<i class="icon-fill icon-warning icon-fw fg-red-300 me-3" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
+				<i class="icon-triangle-alert icon-fw fg-red-300 me-3" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
 			<%} else {%>
-				<i class="icon-fill icon-binary icon-fw fg-green-300 me-3" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
+				<i class="icon-binary icon-fw fg-green-300 me-3" data-bs-toggle="tooltip" data-bs-original-title="<%=tip%>" data-bs-custom-class="storage-scan-progress"></i>
 			<%}%>
 		<%} else {%>
-			<i class="icon-fill icon-binary icon-fw fg-gray-300 me-3" data-bs-toggle="tooltip" data-bs-original-title="Data integrity check has not run yet."></i>
+			<i class="icon-binary icon-fw fg-gray-300 me-3" data-bs-toggle="tooltip" data-bs-original-title="Data integrity check has not run yet."></i>
 		<%}%>
 		<div class="flex-grow-1 me-3" data-bs-toggle="tooltip" data-bs-original-title="<%=usageTip%>">
 			<u-progress shadow="false">

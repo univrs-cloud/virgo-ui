@@ -172,7 +172,7 @@ export class Input extends LitElement {
 					${!this.noFloating || this.label ? html`
 						<label class="${classMap({ 'form-label': this.noFloating })}">
 							${this.label}
-							${this.tip ? html`<span class="help-inline ms-1" data-bs-toggle="tooltip" data-bs-original-title="${this.tip}"><i class="icon-fill icon-question"></i></span>` : ''}
+							${this.tip ? html`<span class="help-inline ms-1" data-bs-toggle="tooltip" data-bs-original-title="${this.tip}"><i class="icon-circle-help"></i></span>` : ''}
 						</label>
 					` : ''}
 					${hasAdorn ? html`

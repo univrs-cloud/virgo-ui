@@ -11,9 +11,9 @@
 	<%}%>
 	<%if (state.cpuSensors) {%>
 		<div class="resource-legend d-flex align-items-center justify-content-between gap-3 lh-1 fs-xs fg-gray-500 text-nowrap">
-			<span class="d-inline-flex align-items-center gap-1"><i class="icon-regular icon-thermometer-simple icon-fw"></i><%=state.cpuSensors.temperature?.main?.toFixed(0)%> °C</span>
+			<span class="d-inline-flex align-items-center gap-1"><i class="icon-thermometer icon-fw"></i><%=state.cpuSensors.temperature?.main?.toFixed(0)%> °C</span>
 			<%if (state.cpuSensors.fan) {%>
-				<span class="d-inline-flex align-items-center gap-1"><i class="icon-regular icon-fan icon-fw"></i><%=state.cpuSensors.fan%> rpm</span>
+				<span class="d-inline-flex align-items-center gap-1"><i class="icon-fan icon-fw"></i><%=state.cpuSensors.fan%> rpm</span>
 			<%}%>
 		</div>
 	<%}%>

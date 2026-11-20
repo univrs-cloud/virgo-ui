@@ -97,7 +97,7 @@ export class Checkbox extends LitElement {
 				>
 				<label for="input">
 					${this.label}
-					${this.tip ? html`<span class="help-inline ms-1" data-bs-toggle="tooltip" data-bs-original-title="${this.tip}"><i class="icon-fill icon-question"></i></span>` : ''}
+					${this.tip ? html`<span class="help-inline ms-1" data-bs-toggle="tooltip" data-bs-original-title="${this.tip}"><i class="icon-circle-help"></i></span>` : ''}
 				</label>
 			</div>
 		`;

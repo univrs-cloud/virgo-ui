@@ -38,13 +38,13 @@
 						<tr>
 							<td>
 								<div class="d-flex align-items-center gap-3 min-w-0">
-									<i class="icon-light <%=(entry.kind === 'file' ? 'icon-file' : 'icon-folder')%> icon-fw fg-4"></i>
+									<i class="<%=(entry.kind === 'file' ? 'icon-file' : 'icon-folder')%> icon-fw fg-4"></i>
 									<div class="min-w-0">
 										<span class="d-block text-truncate"><%-displayPath(entry.path)%></span>
 										<%if (entry.kind === 'group') {%>
-											<a href="#" class="browse-expand d-block small text-decoration-none" data-path="<%-entry.path%>"><%=_.size(entry.items)%> files<i class="icon-fill <%=(entry.isOpen ? 'icon-caret-up' : 'icon-caret-down')%> icon-xs ms-1"></i></a>
+											<a href="#" class="browse-expand d-block small text-decoration-none" data-path="<%-entry.path%>"><%=_.size(entry.items)%> files<i class="<%=(entry.isOpen ? 'icon-chevron-up' : 'icon-chevron-down')%> icon-xs ms-1"></i></a>
 										<%} else if (entry.kind === 'folder' && !_.isEmpty(entry.items)) {%>
-											<a href="#" class="browse-expand d-block small text-decoration-none" data-path="<%-entry.path%>">Everything except <%=_.size(entry.items)%><i class="icon-fill <%=(entry.isOpen ? 'icon-caret-up' : 'icon-caret-down')%> icon-xs ms-1"></i></a>
+											<a href="#" class="browse-expand d-block small text-decoration-none" data-path="<%-entry.path%>">Everything except <%=_.size(entry.items)%><i class="<%=(entry.isOpen ? 'icon-chevron-up' : 'icon-chevron-down')%> icon-xs ms-1"></i></a>
 										<%} else if (entry.kind === 'folder') {%>
 											<small class="d-block fg-4">Everything inside</small>
 										<%}%>
@@ -52,14 +52,14 @@
 								</div>
 							</td>
 							<td class="text-end text-nowrap fg-emphasis-secondary"><%=(entry.kind === 'folder' ? 'Folder' : prettyBytes(entry.size || 0, { binary: true }))%></td>
-							<td class="text-end"><a href="#" class="<%=(entry.kind === 'group' ? 'browse-remove-group' : 'browse-remove')%> fg-4 text-decoration-none" data-path="<%-entry.path%>"><i class="icon-regular icon-x icon-fw"></i></a></td>
+							<td class="text-end"><a href="#" class="<%=(entry.kind === 'group' ? 'browse-remove-group' : 'browse-remove')%> fg-4 text-decoration-none" data-path="<%-entry.path%>"><i class="icon-x icon-fw"></i></a></td>
 						</tr>
 						<%if (entry.isOpen) {%>
 							<%_.each(entry.items, (item) => {%>
 								<tr>
 									<td>
 										<div class="d-flex align-items-center gap-3 min-w-0 ps-7">
-											<i class="icon-light <%=(item.isDir ? 'icon-folder' : 'icon-file')%> icon-fw fg-4"></i>
+											<i class="<%=(item.isDir ? 'icon-folder' : 'icon-file')%> icon-fw fg-4"></i>
 											<span class="text-truncate <%=(entry.kind === 'folder' ? 'fg-4 text-decoration-line-through' : '')%>"><%-item.path.slice(entry.path.length + 1)%></span>
 										</div>
 									</td>
@@ -67,7 +67,7 @@
 										<td colspan="2" class="text-end text-nowrap"><a href="#" class="browse-include small text-decoration-none" data-path="<%-item.path%>">Put back</a></td>
 									<%} else {%>
 										<td class="text-end text-nowrap fg-emphasis-secondary"><%=prettyBytes(item.size || 0, { binary: true })%></td>
-										<td class="text-end"><a href="#" class="browse-remove fg-4 text-decoration-none" data-path="<%-item.path%>"><i class="icon-regular icon-x icon-fw"></i></a></td>
+										<td class="text-end"><a href="#" class="browse-remove fg-4 text-decoration-none" data-path="<%-item.path%>"><i class="icon-x icon-fw"></i></a></td>
 									<%}%>
 								</tr>
 							<%})%>
@@ -100,7 +100,7 @@
 														<a href="#" class="browse-go btn-text theme-secondary px-3 py-1 border-0 text-break min-h-0" style="<%=crumbPartStyle%>" data-path="<%-crumb.path%>"><%-crumb.name%></a>
 													<%}%>
 													<%if (!_.isEmpty(crumb.siblings)) {%>
-														<a href="#" class="btn-text theme-secondary px-1 py-1 border-0 min-h-0" style="<%=crumbPartStyle%>" data-bs-toggle="menu" data-bs-strategy="fixed"><i class="icon-fill icon-caret-down icon-xs"></i></a>
+														<a href="#" class="btn-text theme-secondary px-1 py-1 border-0 min-h-0" style="<%=crumbPartStyle%>" data-bs-toggle="menu" data-bs-strategy="fixed"><i class="icon-chevron-down icon-xs"></i></a>
 														<div class="menu shadow shadow-opacity-100 overflow-y-auto" style="max-height: 16rem; overscroll-behavior: contain;">
 															<%_.each(crumb.siblings, (sibling) => {%>
 																<a href="#" class="browse-go menu-item <%=(sibling.path === crumb.path ? 'active' : '')%>" data-path="<%-sibling.path%>"><%-sibling.name%></a>
@@ -135,7 +135,7 @@
 								<%if (!isUsersList) {%>
 									<span class="dropdown fw-normal">
 										<a href="#" class="d-inline-flex align-items-center text-decoration-none <%=(_.isEmpty(state.filter) ? 'fg-4' : 'fg-primary')%>" data-bs-toggle="menu" data-bs-auto-close="outside" data-bs-strategy="fixed">
-											<i class="icon-fill icon-funnel icon-xs"></i>
+											<i class="icon-funnel icon-xs"></i>
 											<%if (!_.isEmpty(state.filter)) {%>
 												<small class="ms-1"><%=_.size(state.filter)%></small>
 											<%}%>
@@ -177,7 +177,7 @@
 								<td><input type="checkbox" class="browse-check check align-middle" data-path="<%-row.path%>" <%=(row.isChecked ? 'checked' : '')%> <%=(state.busyPath === row.path ? 'disabled' : '')%> data-partial="<%=row.isPartial%>"></td>
 								<td>
 									<div class="d-flex align-items-center gap-3 min-w-0">
-										<i class="icon-light <%=(row.isDir ? 'icon-folder' : 'icon-file')%> icon-fw fg-4"></i>
+										<i class="<%=(row.isDir ? 'icon-folder' : 'icon-file')%> icon-fw fg-4"></i>
 										<div class="min-w-0">
 											<%if (row.isDir) {%>
 												<a href="#" class="browse-go d-block fg-body text-decoration-none text-truncate" data-path="<%-row.path%>"><%-row.label%></a>

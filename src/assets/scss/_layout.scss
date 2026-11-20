@@ -168,7 +168,7 @@ header,
 		display: block;
 		font-weight: 400;
 		color: var(--shell-fg);
-		.icon-duotone {
+		.nav-icon {
 			color: var(--shell-icon);
 		}
 		&:not(.active):hover {
@@ -180,7 +180,7 @@ header,
 		&.active,
 		&:hover {
 			color: var(--shell-fg) !important;
-			.icon-duotone {
+			.nav-icon {
 				color: var(--shell-fg);
 			}
 			svg {
@@ -764,7 +764,7 @@ html:not(:has(head > base[href="/"])) {
 				.nav-title,
 				[data-bs-toggle="menu"] + a,
 				[data-bs-toggle="menu"] > span,
-				[data-bs-toggle="menu"] > .icon-caret-down {
+				[data-bs-toggle="menu"] > .icon-chevron-down {
 					display: none;
 				}
 				[data-bs-toggle="menu"] {

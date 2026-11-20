@@ -1,12 +1,12 @@
 <div class="col col-12">
 	<div class="d-flex align-items-center gap-5">
-		<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-5 bg-subtle-primary fg-primary"><i class="icon-regular icon-arrow-down"></i></div>
+		<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-5 bg-subtle-primary fg-primary"><i class="icon-arrow-down"></i></div>
 		<div class="min-w-0 me-auto">
 			<div class="fs-lg lh-xs"><%=_.pluralize('update', _.size(updates), true)%> available</div>
 			<small class="d-block fg-4 lh-xs">Ready to install</small>
 		</div>
 		<a href="#" class="check-updates btn-link d-inline-block text-nowrap border-0 text-decoration-none px-0 py-3 min-h-0 <%=(checkUpdates ? 'disabled' : '')%>" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="<%=(checkUpdates ? 'Checking for updates...' : 'Check for new updates')%>">
-			<i class="icon-regular icon-arrows-clockwise icon-fw <%=(checkUpdates ? 'icon-spin' : '')%>"></i>
+			<i class="icon-refresh-cw icon-fw <%=(checkUpdates ? 'icon-spin' : '')%>"></i>
 		</a>
 		<u-button variant="primary" size="sm" class="install flex-shrink-0" tip="<%=(hasUpdatingApps ? 'An app update is in progress.' : '')%>" <%=(checkUpdates || hasUpdatingApps ? 'disabled' : '')%>>Install</u-button>
 	</div>

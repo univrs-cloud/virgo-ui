@@ -37,7 +37,7 @@
 			const snapshotActions = [
 				{ mode: 'enabled', label: (snapshotMode === 'paused' ? 'Resume' : 'Enable'), icon: 'icon-play', color: 'fg-green-400', isAllowed: (app.canBeRemoved && app.hasDatasetMounts && snapshotMode !== 'enabled') },
 				{ mode: 'paused', label: 'Pause', icon: 'icon-pause', color: 'fg-orange-400', isAllowed: (app.canBeRemoved && app.hasDatasetMounts && !isSnapshotLocked && snapshotMode === 'enabled') },
-				{ mode: 'disabled', label: 'Disable', icon: 'icon-prohibit-inset', color: 'fg-red-400', isAllowed: (app.canBeRemoved && !isSnapshotLocked && snapshotMode !== 'disabled') }
+				{ mode: 'disabled', label: 'Disable', icon: 'icon-circle-slash', color: 'fg-red-400', isAllowed: (app.canBeRemoved && !isSnapshotLocked && snapshotMode !== 'disabled') }
 			];
 			let snapshotModeNote = '';
 			if (!app.canBeRemoved) {
@@ -55,13 +55,13 @@
 						<small class="d-block fg-4 text-uppercase">Rule</small>
 						<%if (app.canBeRemoved && app.hasDatasetMounts && _.isEmpty(appJobs) && !_.isEmpty(snapshotRules)) {%>
 							<div class="dropdown d-inline-block">
-								<a href="#" class="d-inline-flex align-items-center gap-1 underline-0 hover:underline-80" data-bs-toggle="menu"><%-(app.snapshotPolicy.rule || '—')%><i class="icon-fill icon-caret-down icon-xs"></i></a>
+								<a href="#" class="d-inline-flex align-items-center gap-1 underline-0 hover:underline-80" data-bs-toggle="menu"><%-(app.snapshotPolicy.rule || '—')%><i class="icon-chevron-down icon-xs"></i></a>
 								<div class="menu">
 									<%_.each(snapshotRules, (rule) => {%>
-										<button type="button" class="menu-item align-items-start" data-snapshot-rule="<%-rule.name%>"><i class="icon-regular icon-check icon-fw mt-1 <%=(_.toLower(rule.name) === _.toLower(app.snapshotPolicy.rule) ? '' : 'invisible')%>"></i><span class="d-block"><%-rule.name%><%=ruleSummary(rule)%></span></button>
+										<button type="button" class="menu-item align-items-start" data-snapshot-rule="<%-rule.name%>"><i class="icon-check icon-fw mt-1 <%=(_.toLower(rule.name) === _.toLower(app.snapshotPolicy.rule) ? '' : 'invisible')%>"></i><span class="d-block"><%-rule.name%><%=ruleSummary(rule)%></span></button>
 									<%})%>
 									<div class="menu-divider"></div>
-									<a href="/snapshot-rules" class="menu-item"><i class="icon-regular icon-calendar-check icon-fw"></i>Manage rules</a>
+									<a href="/snapshot-rules" class="menu-item"><i class="icon-calendar-check icon-fw"></i>Manage rules</a>
 								</div>
 							</div>
 						<%} else {%>
@@ -78,24 +78,24 @@
 					<%}%>
 				</div>
 				<%if (!_.isEmpty(appJobs)) {%>
-					<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-fill icon-gear icon-fw icon-spin"></i></span>
+					<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-settings icon-fw icon-spin"></i></span>
 				<%} else {%>
 					<div class="d-inline-flex align-items-center bg-2 rounded-3 px-1">
 						<%_.each(snapshotActions, ({ mode, label, icon, color, isAllowed }) => {%>
 							<%if (isAllowed && mode === 'enabled' && snapshotMode === 'disabled' && _.size(snapshotRules) > 1) {%>
 								<div class="dropdown">
-									<u-button variant="secondary" size="sm" class="actions-button" text icon tip="<%-label%>" data-bs-toggle="menu" data-bs-placement="bottom-end"><i class="icon-fill <%=icon%> icon-fw <%=color%>"></i></u-button>
+									<u-button variant="secondary" size="sm" class="actions-button" text icon tip="<%-label%>" data-bs-toggle="menu" data-bs-placement="bottom-end"><i class="<%=icon%> icon-fw <%=color%>"></i></u-button>
 									<div class="menu">
 										<h6 class="menu-header text-uppercase">Enable with rule</h6>
 										<%_.each(snapshotRules, (rule) => {%>
 											<button type="button" class="menu-item" data-snapshot-mode="enabled" data-snapshot-enable-rule="<%-rule.name%>"><span class="d-block"><%-rule.name%><%=ruleSummary(rule)%></span></button>
 										<%})%>
 										<div class="menu-divider"></div>
-										<a href="/snapshot-rules" class="menu-item"><i class="icon-regular icon-calendar-check icon-fw"></i>Manage rules</a>
+										<a href="/snapshot-rules" class="menu-item"><i class="icon-calendar-check icon-fw"></i>Manage rules</a>
 									</div>
 								</div>
 							<%} else {%>
-								<u-button variant="secondary" size="sm" class="actions-button" text icon tip="<%-label%>" data-snapshot-mode="<%-mode%>" <%=(isAllowed ? '' : 'disabled')%>><i class="icon-fill <%=icon%> icon-fw <%=(isAllowed ? color : 'fg-gray-500')%>"></i></u-button>
+								<u-button variant="secondary" size="sm" class="actions-button" text icon tip="<%-label%>" data-snapshot-mode="<%-mode%>" <%=(isAllowed ? '' : 'disabled')%>><i class="<%=icon%> icon-fw <%=(isAllowed ? color : 'fg-gray-500')%>"></i></u-button>
 							<%}%>
 						<%})%>
 					</div>

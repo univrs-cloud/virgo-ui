@@ -4,7 +4,7 @@
 			<div class="card-image-row mt--3 mb-3">
 				<div class="card-image-row-back me-3">
 					<button class="compress btn-icon btn-solid theme-secondary btn-sm">
-						<i class="icon-light icon-arrow-left icon-fw"></i>
+						<i class="icon-arrow-left icon-fw"></i>
 					</button>
 				</div>
 				<div class="card-image-row-icon card-spacer px-3">
@@ -13,7 +13,7 @@
 				<div class="card-image-row-title d-flex align-items-center mb--2 ps-1 min-w-0">
 					<div class="text-truncate min-w-0"><%-user.username%></div>
 					<%if (user.isOwner) {%>
-						<u-badge color="indigo" tint="400" class="ms-3" tip="Owner" pill><i class="icon-fill icon-crown fg-white"></i></u-badge>
+						<u-badge color="indigo" tint="400" class="ms-3" tip="Owner" pill><i class="icon-crown fg-white"></i></u-badge>
 					<%}%>
 					<%if (isSameAsLoggedIn) {%>
 						<u-badge class="ms-3" pill><small>YOU</small></u-badge>
@@ -24,7 +24,7 @@
 				</div>
 				<div class="card-image-row-menu ps-5">
 					<%if (!_.isEmpty(jobs)) {%>
-						<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-fill icon-gear icon-fw icon-spin"></i></span>
+						<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-settings icon-fw icon-spin"></i></span>
 					<%} else if (isSameAsLoggedIn) {%>
 						<a href="/users/profile" class="btn-sm btn-outline theme-secondary py-1 min-h-0">Your profile</a>
 					<%} else {%>
@@ -81,8 +81,8 @@
 				</div>
 				<div class="detail-main">
 					<div class="nav nav-underline d-flex gap-0 border-bottom">
-						<button type="button" class="nav-link detail-facts-tab px-4 <%=(userTab === 'overview' ? 'active border-primary fw-normal' : '')%>" data-user-tab="overview"><i class="icon-light icon-info icon-fw"></i>Overview</button>
-						<button type="button" class="nav-link detail-default-tab px-4 <%=(userTab === 'sessions' ? 'active border-primary fw-normal' : '')%>" data-user-tab="sessions"><i class="icon-light icon-devices icon-fw"></i>Sessions <small class="opacity-75"><%=_.size(sessions)%></small></button>
+						<button type="button" class="nav-link detail-facts-tab px-4 <%=(userTab === 'overview' ? 'active border-primary fw-normal' : '')%>" data-user-tab="overview"><i class="icon-info icon-fw"></i>Overview</button>
+						<button type="button" class="nav-link detail-default-tab px-4 <%=(userTab === 'sessions' ? 'active border-primary fw-normal' : '')%>" data-user-tab="sessions"><i class="icon-monitor-smartphone icon-fw"></i>Sessions <small class="opacity-75"><%=_.size(sessions)%></small></button>
 					</div>
 					<div class="table-scroll overflow-y-scroll pe-5 mx-0 me--5 <%=(userTab === 'sessions' ? '' : 'detail-pane-off')%>">
 						<div class="pt-5 pb-7">
@@ -97,7 +97,7 @@
 											<%} else {%>
 												Sign out all sessions
 											<%}%>
-											<i class="icon-regular icon-sign-out icon-fw ms-1"></i>
+											<i class="icon-log-out icon-fw ms-1"></i>
 										</a>
 									</div>
 								<%}%>

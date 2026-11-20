@@ -7,42 +7,42 @@
 				<span class="d-block text-truncate fw-light opacity-75" style="font-size: 0.8125rem;"><%-account.email%></span>
 			<%}%>
 		</span>
-		<i class="icon-light icon-caret-up-down icon-fw d-none sm:d-inline-block flex-shrink-0 opacity-75" style="font-size: 0.8125rem;"></i>
+		<i class="icon-chevrons-up-down icon-fw d-none sm:d-inline-block flex-shrink-0 opacity-75" style="font-size: 0.8125rem;"></i>
 	</button>
 	<div class="menu" style="max-width: min(18rem, calc(100vw - 1.5rem));">
 		<h6 class="menu-header">Logged in as</h6>
 		<p class="text-truncate fw-medium px-3 pb-3 mt--1 mb-0" title="<%-account.name || '—'%>"><%-account.name || '—'%></p>
 		<div class="menu-divider"></div>
 		<a href="/users/profile" class="menu-item">
-			<i class="icon-duotone icon-identification-card icon-fw"></i>
+			<i class="icon-user-round icon-fw"></i>
 			Your profile
 		</a>
 		<div class="menu-divider"></div>
 		<div class="menu-item">
-			<i class="icon-duotone icon-circle-half icon-fw"></i>
+			<i class="icon-contrast icon-fw"></i>
 			Theme
 			<div class="color-mode d-flex align-items-center gap-1 ms-auto">
 				<button type="button" class="btn-text theme-secondary btn-xs rounded-pill <%=(document.documentElement.dataset.colorMode === 'auto' ? 'active' : '')%>" data-color-mode="auto">
-					<i class="icon-regular icon-circle-half icon-fw"></i><span class="color-mode-label">Auto</span>
+					<i class="icon-contrast icon-fw"></i><span class="color-mode-label">Auto</span>
 				</button>
 				<button type="button" class="btn-text theme-secondary btn-xs rounded-pill <%=(document.documentElement.dataset.colorMode === 'light' ? 'active' : '')%>" data-color-mode="light">
-					<i class="icon-regular icon-sun icon-fw"></i><span class="color-mode-label">Light</span>
+					<i class="icon-sun icon-fw"></i><span class="color-mode-label">Light</span>
 				</button>
 				<button type="button" class="btn-text theme-secondary btn-xs rounded-pill <%=(document.documentElement.dataset.colorMode === 'dark' ? 'active' : '')%>" data-color-mode="dark">
-					<i class="icon-regular icon-moon icon-fw"></i><span class="color-mode-label">Dark</span>
+					<i class="icon-moon icon-fw"></i><span class="color-mode-label">Dark</span>
 				</button>
 			</div>
 		</div>
 		<div class="menu-divider"></div>
 		<a href="https://docs.univrs.cloud" target="_blank" rel="noopener noreferrer" class="menu-item">
-			<i class="icon-duotone icon-book-open icon-fw"></i>
+			<i class="icon-book-open icon-fw"></i>
 			Documentation
-			<i class="icon-regular icon-sm icon-arrow-square-out ms-3"></i>
+			<i class="icon-sm icon-external-link ms-3"></i>
 		</a>
 		<div class="menu-divider"></div>
 		<a href="#" class="sign-out menu-item">
 			Sign out
-			<i class="icon-duotone icon-sign-out icon-fw"></i>
+			<i class="icon-log-out icon-fw"></i>
 		</a>
 	</div>
 </div>

@@ -9,7 +9,7 @@
 	]);
 	return (_.isEmpty(items) ? '' : ` data-bs-toggle="tooltip" data-bs-custom-class="storage-device" data-bs-original-title="<div class='text-start'>${items.join('')}</div>"`);
 };%>
-<dt class="fw-lighter mb-3"><small><i class="icon-light icon-tree-view icon-fw me-1"></i>Topology</small></dt>
+<dt class="fw-lighter mb-3"><small><i class="icon-list-tree icon-fw me-1"></i>Topology</small></dt>
 <dd class="vdev-tree overflow-y-auto min-h-0 m-0">
 	<%_.each(topologyGroups, (group, groupIndex) => {%>
 		<%if (_.size(topologyGroups) > 1) {%>
@@ -66,7 +66,7 @@
 									<%_.each(vdevDrives, (drive) => {%>
 										<span class="vdev-slot">
 											<span class="vdev-stem d-block"></span>
-											<i class="vdev-disk icon-duotone icon-hard-drive fg-blue-500"<%=driveTip(drive)%>></i>
+											<i class="vdev-disk icon-hard-drive fg-blue-500"<%=driveTip(drive)%>></i>
 											<small class="fg-4 text-truncate w-100 mt-1"><%-drive.name%></small>
 										</span>
 									<%})%>
@@ -84,7 +84,7 @@
 									<%_.each(unusedDrives, (drive) => {%>
 										<span class="vdev-slot">
 											<span class="vdev-stem d-block invisible"></span>
-											<i class="vdev-disk icon-duotone icon-hard-drive fg-4"<%=driveTip(drive)%>></i>
+											<i class="vdev-disk icon-hard-drive fg-4"<%=driveTip(drive)%>></i>
 											<small class="fg-4 text-truncate w-100 mt-1"><%-drive.name%></small>
 										</span>
 									<%})%>
@@ -101,11 +101,11 @@
 					<%}%>
 				</u-progress>
 				<span class="d-flex flex-wrap gap-5 mt-3">
-					<small class="fg-emphasis-secondary"><i class="icon-fill icon-circle icon-2xs fg-blue-500 me-1 align-middle"></i>Capacity: <%=prettyBytes(topology.usableBytes, { binary: true })%></small>
-					<small class="fg-emphasis-secondary"><i class="icon-fill icon-circle icon-2xs fg-pink-400 me-1 align-middle"></i>Protection: <%=_.pluralize('drive', protectionDrives, true)%></small>
+					<small class="fg-emphasis-secondary"><i class="icon-circle icon-2xs fg-blue-500 me-1 align-middle"></i>Capacity: <%=prettyBytes(topology.usableBytes, { binary: true })%></small>
+					<small class="fg-emphasis-secondary"><i class="icon-circle icon-2xs fg-pink-400 me-1 align-middle"></i>Protection: <%=_.pluralize('drive', protectionDrives, true)%></small>
 					<%if (unusedPercent > 0) {%>
 						<small class="fg-emphasis-secondary">
-							<i class="icon-fill icon-circle icon-2xs fg-gray-500 me-1 align-middle"></i>Unused: <%=prettyBytes(unusedBytes, { binary: true })%>
+							<i class="icon-circle icon-2xs fg-gray-500 me-1 align-middle"></i>Unused: <%=prettyBytes(unusedBytes, { binary: true })%>
 							<%if (!_.isEmpty(unusedDrives)) {%>
 								<span class="fg-4">(<%=_.pluralize('drive', _.size(unusedDrives), true)%> left out of the pool)</span>
 							<%} else {%>

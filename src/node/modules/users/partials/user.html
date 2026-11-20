@@ -6,7 +6,7 @@
 				<div class="d-flex align-items-center mb--1">
 					<div class="text-truncate"><%-user.username%></div>
 					<%if (user.isOwner) {%>
-						<u-badge color="indigo" tint="400" class="ms-3" tip="Owner" pill><i class="icon-fill icon-crown fg-white"></i></u-badge>
+						<u-badge color="indigo" tint="400" class="ms-3" tip="Owner" pill><i class="icon-crown fg-white"></i></u-badge>
 					<%}%>
 					<%if (isSameAsLoggedIn) {%>
 						<u-badge class="ms-3" pill><small>YOU</small></u-badge>
@@ -29,25 +29,25 @@
 		<%})%>
 	</td>
 	<td class="text-center text-nowrap d-none md:d-table-cell">
-		<%=(_.includes(user.shell, 'nologin') ? '<i class="icon-regular icon-x fg-gray-300"></i>' : '<i class="icon-regular icon-check fg-gray-300"></i>')%>
+		<%=(_.includes(user.shell, 'nologin') ? '<i class="icon-x fg-gray-300"></i>' : '<i class="icon-check fg-gray-300"></i>')%>
 	</td>
 	<td class="text-nowrap">
 		<%if (_.isEmpty(sessions)) {%>
 			<u-badge color="gray" tint="100" pill>
-				<i class="icon-fill icon-circle icon-2xs"></i>
+				<i class="icon-circle icon-2xs"></i>
 				<small>0</small>
 			</u-badge>
 		<%} else {%>
 			<a href="#user-sessions" class="d-inline-flex align-items-center gap-1 text-decoration-none" data-bs-toggle="dialog">
 				<%if (_.some(sessions, 'isConnected')) {%>
 					<u-badge color="gray" tint="100" pill>
-						<i class="icon-fill icon-circle icon-2xs fg-green-500"></i>
+						<i class="icon-circle icon-2xs fg-green-500"></i>
 						<small><%-_.size(_.filter(sessions, 'isConnected'))%></small>
 					</u-badge>
 				<%}%>
 				<%if (!_.every(sessions, 'isConnected')) {%>
 					<u-badge color="gray" tint="100" pill>
-						<i class="icon-fill icon-circle icon-2xs"></i>
+						<i class="icon-circle icon-2xs"></i>
 						<small><%-_.size(_.reject(sessions, 'isConnected'))%></small>
 					</u-badge>
 				<%}%>
@@ -63,12 +63,12 @@
 	</td>
 	<td class="text-center px-0">
 		<%if (!_.isEmpty(jobs)) {%>
-			<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-fill icon-gear icon-fw icon-spin"></i></span>
+			<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-settings icon-fw icon-spin"></i></span>
 		<%} else if (!isSameAsLoggedIn) {%>
 			<%=userActionsTemplate({ user, inline: false })%>
 		<%}%>
 	</td>
 	<td class="text-end pe-0">
-		<i class="icon-light icon-caret-right icon-fw fg-4"></i>
+		<i class="icon-chevron-right icon-fw fg-4"></i>
 	</td>
 </tr>

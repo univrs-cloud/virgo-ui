@@ -4,22 +4,22 @@
 			<div class="row g-0 align-items-center mt--3 mb-3">
 				<div class="col-auto me-3">
 					<button class="compress btn-icon btn-solid theme-secondary btn-sm">
-						<i class="icon-light icon-arrow-left icon-fw"></i>
+						<i class="icon-arrow-left icon-fw"></i>
 					</button>
 				</div>
 				<div class="col-auto p-3 lh-1">
-					<i class="icon-duotone <%=({ timer: 'icon-timer', socket: 'icon-plugs-connected', target: 'icon-target', path: 'icon-path' }[_.toLower(service.type)] || 'icon-cube')%> icon-fw" style="font-size: 1.875rem; width: 2rem;"></i>
+					<i class="<%=({ timer: 'icon-timer', socket: 'icon-plug-zap', target: 'icon-target', path: 'icon-route' }[_.toLower(service.type)] || 'icon-box')%> icon-fw" style="font-size: 1.875rem; width: 2rem;"></i>
 				</div>
 				<div class="col ps-1 min-w-0">
 					<div class="d-flex align-items-center mb--2 min-w-0">
 						<div class="text-truncate min-w-0"><%-service.unit%></div>
 						<%if (service.broken) {%>
 							<u-badge color="red" class="ms-3" tip="Service not found or failed to load." pill>
-								<i class="icon-fill icon-warning icon-fw"></i>
+								<i class="icon-triangle-alert icon-fw"></i>
 							</u-badge>
 						<%} else if (service.unitFileState === 'masked') {%>
 							<u-badge color="orange" class="ms-3" tip="Service is masked and cannot be started or enabled." pill>
-								<i class="icon-fill icon-prohibit-inset icon-fw"></i>
+								<i class="icon-circle-slash icon-fw"></i>
 							</u-badge>
 						<%}%>
 					</div>
@@ -37,19 +37,19 @@
 						<div class="list-group-item pt-5 pb-7">
 							<div class="row g-5">
 								<div class="col-6 md:col-3 2xl:col-6">
-									<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-record icon-fw me-1"></i>State</small>
+									<small class="fg-4 d-block text-truncate"><i class="icon-circle-dot icon-fw me-1"></i>State</small>
 									<h4 class="m-0"><%-service.sub%></h4>
 								</div>
 								<div class="col-6 md:col-3 2xl:col-6">
-									<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-circle-half icon-fw me-1"></i>Activity</small>
+									<small class="fg-4 d-block text-truncate"><i class="icon-contrast icon-fw me-1"></i>Activity</small>
 									<h4 class="m-0"><%-service.active%></h4>
 								</div>
 								<div class="col-6 md:col-3 2xl:col-6">
-									<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-toggle-right icon-fw me-1"></i>Startup</small>
+									<small class="fg-4 d-block text-truncate"><i class="icon-toggle-right icon-fw me-1"></i>Startup</small>
 									<h4 class="m-0"><%-service.unitFileState%></h4>
 								</div>
 								<div class="col-6 md:col-3 2xl:col-6">
-									<small class="fg-4 d-block text-truncate"><i class="icon-fill icon-memory icon-fw me-1"></i>RAM</small>
+									<small class="fg-4 d-block text-truncate"><i class="icon-memory-stick icon-fw me-1"></i>RAM</small>
 									<h4 class="m-0">
 										<%if (service.type === 'service' && service.active === 'active') {%>
 											<span class="tooltip-hint" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(service.memory?.usage || 0, { binary: true })%>"><%=service.memory?.percent.toFixed(2)%>%</span>
@@ -64,17 +64,17 @@
 				</div>
 				<div class="detail-main">
 					<div class="nav nav-underline d-flex gap-0 border-bottom">
-						<button type="button" class="nav-link detail-facts-tab px-4 <%=(serviceTab === 'overview' ? 'active border-primary fw-normal' : '')%>" data-service-tab="overview"><i class="icon-light icon-info icon-fw"></i>Overview</button>
-						<button type="button" class="nav-link detail-default-tab px-4 <%=(serviceTab === 'logs' ? 'active border-primary fw-normal' : '')%>" data-service-tab="logs"><i class="icon-light icon-article icon-fw"></i>Logs</button>
+						<button type="button" class="nav-link detail-facts-tab px-4 <%=(serviceTab === 'overview' ? 'active border-primary fw-normal' : '')%>" data-service-tab="overview"><i class="icon-info icon-fw"></i>Overview</button>
+						<button type="button" class="nav-link detail-default-tab px-4 <%=(serviceTab === 'logs' ? 'active border-primary fw-normal' : '')%>" data-service-tab="logs"><i class="icon-file-text icon-fw"></i>Logs</button>
 					</div>
 					<div class="service-logs <%=(serviceTab === 'logs' ? '' : 'detail-pane-off')%>">
 						<div class="logs-container bd-black rounded-5 shadow-sm">
 							<div class="service d-flex align-items-center justify-content-between border-bottom border-gray-800 px-3 py-1">
 								<div class="d-flex align-items-center">
-									<i class="icon-light icon-cube icon-fw me-1 fg-gray-300"></i>
+									<i class="icon-box icon-fw me-1 fg-gray-300"></i>
 									<span class="name"></span>
 									<small class="fg-gray-300 border-start border-gray-800 ps-3 ms-3">
-										<i class="icon-fill icon-broadcast icon-fw me-1"></i>
+										<i class="icon-radio icon-fw me-1"></i>
 										Connecting...
 									</small>
 								</div>

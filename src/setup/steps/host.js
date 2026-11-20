@@ -34,15 +34,10 @@ const availabilityRow = access.querySelector('.availability');
 const availabilityMessage = access.querySelector('.availability-message');
 const availabilityIcon = access.querySelector('.availability-icon');
 const AVAILABILITY_ICONS = {
-	checking: 'icon-regular icon-circle-notch icon-fw icon-spin me-3',
-	available: 'icon-duotone icon-check-circle icon-fw me-3',
-	taken: 'icon-duotone icon-x-circle icon-fw me-3',
-	unknown: 'icon-duotone icon-warning icon-fw me-3'
-};
-const AVAILABILITY_COLOURS = {
-	available: 'var(--green-500)',
-	taken: 'var(--red-500)',
-	unknown: 'var(--red-500)'
+	checking: 'icon-loader-circle icon-fw icon-spin me-3',
+	available: 'icon-circle-check icon-fw me-3',
+	taken: 'icon-circle-x icon-fw me-3',
+	unknown: 'icon-triangle-alert icon-fw me-3'
 };
 const AVAILABILITY_ERRORS = {
 	taken: 'This name is already taken',
@@ -146,7 +141,6 @@ const renderAvailability = () => {
 		available: 'This name is available'
 	}[availability.status] || AVAILABILITY_ERRORS[availability.status] || '';
 	availabilityIcon.className = `availability-icon ${AVAILABILITY_ICONS[availability.status] || AVAILABILITY_ICONS.checking}`;
-	availabilityIcon.style.setProperty('--icon-secondary-color', AVAILABILITY_COLOURS[availability.status] || '');
 };
 
 const checkAvailability = _.debounce(() => {

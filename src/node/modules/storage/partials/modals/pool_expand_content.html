@@ -26,10 +26,10 @@
 							<div class="vdev-stem"></div>
 							<div class="position-relative d-flex justify-content-center w-100">
 								<%if (role === 'new') {%>
-									<i class="icon-regular icon-arrow-right icon-xs icon-width-auto lh-1 fg-4 position-absolute top-50 start-0 translate-middle"></i>
+									<i class="icon-arrow-right icon-xs icon-width-auto lh-1 fg-4 position-absolute top-50 start-0 translate-middle"></i>
 								<%}%>
 								<span class="position-relative d-inline-flex">
-									<i class="vdev-disk icon-duotone icon-hard-drive <%-diskColor%> <%=(activity && activity !== 'awaiting' ? 'icon-fade' : '')%>"<%=(diskTip ? ` data-bs-toggle="tooltip" data-bs-original-title="${diskTip}"` : '')%>></i>
+									<i class="vdev-disk icon-hard-drive <%-diskColor%> <%=(activity && activity !== 'awaiting' ? 'icon-fade' : '')%>"<%=(diskTip ? ` data-bs-toggle="tooltip" data-bs-original-title="${diskTip}"` : '')%>></i>
 								</span>
 							</div>
 							<small class="fg-4 text-truncate w-100 mt-1"><%-diskLabel%></small>
@@ -54,7 +54,7 @@
 							<div class="vdev-stem"></div>
 							<div class="position-relative d-flex justify-content-center w-100">
 								<span class="position-relative d-inline-flex">
-									<i class="vdev-disk icon-duotone icon-hard-drive fg-green-400" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(disk.size, { binary: true })%>"></i>
+									<i class="vdev-disk icon-hard-drive fg-green-400" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(disk.size, { binary: true })%>"></i>
 								</span>
 							</div>
 							<small class="fg-4 text-truncate w-100 mt-1"><%-disk.name%></small>
@@ -76,7 +76,7 @@
 							<div class="vdev-stem invisible"></div>
 							<div class="position-relative d-flex justify-content-center w-100">
 								<span class="position-relative d-inline-flex">
-									<i class="vdev-disk icon-duotone icon-hard-drive fg-4" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(disk.size, { binary: true })%>"></i>
+									<i class="vdev-disk icon-hard-drive fg-4" data-bs-toggle="tooltip" data-bs-original-title="<%=prettyBytes(disk.size, { binary: true })%>"></i>
 								</span>
 							</div>
 							<small class="fg-4 text-truncate w-100 mt-1"><%-disk.name%></small>
@@ -92,8 +92,8 @@
 		<u-progress-bar color="green" tint="400" width="<%=(100 - capacityWidth)%>" warning-threshold="999" danger-threshold="999" tip="Added: <%=prettyBytes(addedBytes, { binary: true })%>"></u-progress-bar>
 	</u-progress>
 	<div class="d-flex flex-wrap gap-5 mt-3">
-		<small class="fg-emphasis-secondary"><i class="icon-fill icon-circle icon-2xs fg-blue-300 me-1 align-middle"></i>Capacity now: <%=prettyBytes(capacityBytes, { binary: true })%></small>
-		<small class="fg-emphasis-secondary"><i class="icon-fill icon-circle icon-2xs fg-green-400 me-1 align-middle"></i>Added: <%=prettyBytes(addedBytes, { binary: true })%></small>
+		<small class="fg-emphasis-secondary"><i class="icon-circle icon-2xs fg-blue-300 me-1 align-middle"></i>Capacity now: <%=prettyBytes(capacityBytes, { binary: true })%></small>
+		<small class="fg-emphasis-secondary"><i class="icon-circle icon-2xs fg-green-400 me-1 align-middle"></i>Added: <%=prettyBytes(addedBytes, { binary: true })%></small>
 		<small class="fg-emphasis-secondary ms-auto">New capacity: <%=prettyBytes(totalBytes, { binary: true })%></small>
 	</div>
 </div>

@@ -1,5 +1,5 @@
 <%if (!_.isEmpty(jobs)) {%>
-	<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-fill icon-gear icon-fw icon-spin"></i></span>
+	<span class="btn-icon btn-text theme-secondary btn-sm pe-none"><i class="icon-settings icon-fw icon-spin"></i></span>
 <%} else {%>
 	<%
 	const hasStartStop = (service.type !== 'target' && !service.broken && service.unitFileState !== 'masked');
@@ -14,8 +14,8 @@
 	const menuGroups = _.filter(_.map([
 		[
 			{ action: 'start', label: 'Start', icon: 'icon-play', className: '', iconClassName: 'fg-green-400', isAllowed: (!inline && canStart) },
-			{ action: 'restart', label: 'Restart', icon: 'icon-arrow-counter-clockwise', className: 'confirm', iconClassName: '', isAllowed: (!inline && canRestart) },
-			{ action: 'stop', label: 'Stop', icon: 'icon-stop', className: 'fg-danger confirm', iconClassName: '', isAllowed: canStop }
+			{ action: 'restart', label: 'Restart', icon: 'icon-rotate-ccw', className: 'confirm', iconClassName: '', isAllowed: (!inline && canRestart) },
+			{ action: 'stop', label: 'Stop', icon: 'icon-square', className: 'fg-danger confirm', iconClassName: '', isAllowed: canStop }
 		],
 		[
 			{ action: 'enable', label: 'Enable', icon: 'icon-toggle-right', className: '', iconClassName: '', isAllowed: canEnable },
@@ -30,16 +30,16 @@
 	<%if (inline) {%>
 		<div class="d-inline-flex align-items-center bg-2 rounded-3">
 			<div class="d-inline-flex align-items-center px-1">
-				<u-button variant="secondary" size="sm" class="actions-button" text icon tip="Refresh" data-action="sync"><i class="icon-regular icon-arrows-clockwise icon-fw fg-body"></i></u-button>
-				<u-button variant="secondary" size="sm" class="actions-button" text icon tip="Start" data-action="start" <%=(canStart ? '' : 'disabled')%>><i class="icon-fill icon-play icon-fw <%=(canStart ? 'fg-green-400' : 'fg-gray-500')%>"></i></u-button>
-				<u-button variant="secondary" size="sm" class="actions-button <%=(canRestart ? 'confirm' : '')%>" text icon tip="Restart" data-action="restart" <%=(canRestart ? '' : 'disabled')%>><i class="icon-regular icon-arrow-counter-clockwise icon-fw <%=(canRestart ? 'fg-body' : 'fg-gray-500')%>"></i></u-button>
+				<u-button variant="secondary" size="sm" class="actions-button" text icon tip="Refresh" data-action="sync"><i class="icon-refresh-cw icon-fw fg-body"></i></u-button>
+				<u-button variant="secondary" size="sm" class="actions-button" text icon tip="Start" data-action="start" <%=(canStart ? '' : 'disabled')%>><i class="icon-play icon-fw <%=(canStart ? 'fg-green-400' : 'fg-gray-500')%>"></i></u-button>
+				<u-button variant="secondary" size="sm" class="actions-button <%=(canRestart ? 'confirm' : '')%>" text icon tip="Restart" data-action="restart" <%=(canRestart ? '' : 'disabled')%>><i class="icon-rotate-ccw icon-fw <%=(canRestart ? 'fg-body' : 'fg-gray-500')%>"></i></u-button>
 			</div>
 	<%}%>
 	<div class="<%=(inline ? 'dropdown position-relative' : 'dropdown')%>">
 		<%if (inline) {%>
-			<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="actions-toggle btn-icon btn-text theme-secondary btn-sm rounded-3 <%=(_.isEmpty(menuGroups) ? 'disabled' : '')%>"><i class="icon-fill icon-dots-three-outline-vertical icon-fw"></i></span>
+			<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="actions-toggle btn-icon btn-text theme-secondary btn-sm rounded-3 <%=(_.isEmpty(menuGroups) ? 'disabled' : '')%>"><i class="icon-ellipsis-vertical icon-fw"></i></span>
 		<%} else {%>
-			<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm <%=(_.isEmpty(menuGroups) ? 'disabled' : '')%>"><i class="icon-fill icon-dots-three-outline-vertical icon-fw fg-secondary"></i></span>
+			<span data-bs-toggle="menu" data-bs-placement="bottom-end" class="btn-icon btn-text theme-secondary btn-sm <%=(_.isEmpty(menuGroups) ? 'disabled' : '')%>"><i class="icon-ellipsis-vertical icon-fw fg-secondary"></i></span>
 		<%}%>
 		<div class="menu">
 			<%_.each(menuGroups, (items, index) => {%>
@@ -47,7 +47,7 @@
 					<div class="menu-divider"></div>
 				<%}%>
 				<%_.each(items, ({ action, label, icon, className, iconClassName }) => {%>
-					<a href="#" class="menu-item <%=className%>" data-action="<%-action%>"><i class="icon-fill <%=icon%> icon-fw <%=iconClassName%>"></i><%-label%></a>
+					<a href="#" class="menu-item <%=className%>" data-action="<%-action%>"><i class="<%=icon%> icon-fw <%=iconClassName%>"></i><%-label%></a>
 				<%})%>
 			<%})%>
 		</div>

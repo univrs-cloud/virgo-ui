@@ -5,7 +5,6 @@ $glyph-scale: math.div(16, 13) !default;
 $baseline-shift: -0.0625em !default;
 $font-display: block !default;
 $fw-width: calc((20 / 16) * 1em) !default;
-$secondary-opacity: 0.2 !default;
 $size-scale-base: 16 !default;
 $sizes: (
 	"2xs": 10,
@@ -17,4 +16,3 @@ $sizes: (
 ) !default;
 
 $icons: ();
-$duotone-icons: ();

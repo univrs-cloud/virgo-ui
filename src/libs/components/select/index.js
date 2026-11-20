@@ -203,7 +203,7 @@ export class Select extends LitElement {
 					<span>${option.label}</span>
 					${option.content ? html`<span class="d-block">${unsafeHTML(option.content)}</span>` : ''}
 				</span>
-				<i class="icon-regular icon-check menu-item-check"></i>
+				<i class="icon-check menu-item-check"></i>
 			</button>
 		`;
 	}
@@ -217,7 +217,7 @@ export class Select extends LitElement {
 				<div class="form-floating form-floating-always">
 					<label>
 						${this.label}
-						${this.tip ? html`<span class="help-inline ms-1" data-bs-toggle="tooltip" data-bs-original-title="${this.tip}"><i class="icon-fill icon-question"></i></span>` : ''}
+						${this.tip ? html`<span class="help-inline ms-1" data-bs-toggle="tooltip" data-bs-original-title="${this.tip}"><i class="icon-circle-help"></i></span>` : ''}
 					</label>
 					<button
 						type="button"

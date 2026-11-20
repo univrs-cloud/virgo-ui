@@ -48,7 +48,7 @@ let isSyncing = false;
 const renderSyncButtons = () => {
 	_.each(module.querySelectorAll('[data-action="sync"]'), (button) => {
 		button.disabled = isSyncing;
-		button.querySelector('.icon-arrows-clockwise').classList.toggle('icon-spin', isSyncing);
+		button.querySelector('.icon-refresh-cw').classList.toggle('icon-spin', isSyncing);
 	});
 };
 

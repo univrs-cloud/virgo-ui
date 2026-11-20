@@ -1,47 +1,20 @@
-@use "sass:map";
 @use "sass:string";
 @use "variables" as v;
 
 @font-face {
-	font-family: "Phosphor";
+	font-family: "Lucide";
 	font-style: normal;
 	font-weight: normal;
 	font-display: v.$font-display;
-	src: url("#{v.$font-path}/regular/Phosphor.woff2") format("woff2");
+	src: url("#{v.$font-path}/font/lucide.woff2") format("woff2");
 }
 
-@font-face {
-	font-family: "Phosphor-Fill";
-	font-style: normal;
-	font-weight: normal;
-	font-display: v.$font-display;
-	src: url("#{v.$font-path}/fill/Phosphor-Fill.woff2") format("woff2");
-}
-
-@font-face {
-	font-family: "Phosphor-Light";
-	font-style: normal;
-	font-weight: normal;
-	font-display: v.$font-display;
-	src: url("#{v.$font-path}/light/Phosphor-Light.woff2") format("woff2");
-}
-
-@font-face {
-	font-family: "Phosphor-Duotone";
-	font-style: normal;
-	font-weight: normal;
-	font-display: v.$font-display;
-	src: url("#{v.$font-path}/duotone/Phosphor-Duotone.woff2") format("woff2");
-}
-
-.icon-regular,
-.icon-fill,
-.icon-light,
-.icon-duotone {
+[class^="icon-"],
+[class*=" icon-"] {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	display: var(--icon-display, inline-block);
-	font-family: var(--icon-family);
+	font-family: "Lucide";
 	font-feature-settings: normal;
 	font-style: normal;
 	font-synthesis: none;
@@ -56,38 +29,8 @@
 	width: var(--icon-width, #{v.$fw-width});
 	&::before {
 		content: var(--icon) / "";
-	}
-	&::before,
-	&::after {
 		display: inline-block;
 		transform: scale(v.$glyph-scale);
-	}
-}
-
-.icon-regular {
-	--icon-family: "Phosphor";
-}
-
-.icon-fill {
-	--icon-family: "Phosphor-Fill";
-}
-
-.icon-light {
-	--icon-family: "Phosphor-Light";
-}
-
-.icon-duotone {
-	--icon-family: "Phosphor-Duotone";
-	position: relative;
-	&::before {
-		position: absolute;
-		color: var(--icon-secondary-color, currentColor);
-		opacity: var(--icon-secondary-opacity, #{v.$secondary-opacity});
-	}
-	&::after {
-		content: var(--icon-duotone) / "";
-		color: var(--icon-primary-color, currentColor);
-		opacity: var(--icon-primary-opacity, 1);
 	}
 }
 
@@ -195,8 +138,5 @@
 @each $name, $icon in v.$icons {
 	.icon-#{$name} {
 		--icon: #{string.unquote("\"#{$icon}\"")};
-		@if map.has-key(v.$duotone-icons, $name) {
-			--icon-duotone: #{string.unquote("\"#{map.get(v.$duotone-icons, $name)}\"")};
-		}
 	}
 }

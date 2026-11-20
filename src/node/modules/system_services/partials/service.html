@@ -1,7 +1,7 @@
 <tr class="item cursor-pointer <%=(service.active === 'failed' ? 'theme-danger' : (service.broken ? 'theme-warning' : ''))%>" data-unit="<%-service.unit%>">
 	<td class="d-none md:d-table-cell" style="width: 1px;">
 		<div class="row-image">
-			<i class="icon-light <%=({ timer: 'icon-timer', socket: 'icon-plugs-connected', target: 'icon-target', path: 'icon-path' }[_.toLower(service.type)] || 'icon-cube')%> icon-fw fg-emphasis-secondary"></i>
+			<i class="<%=({ timer: 'icon-timer', socket: 'icon-plug-zap', target: 'icon-target', path: 'icon-route' }[_.toLower(service.type)] || 'icon-box')%> icon-fw fg-emphasis-secondary"></i>
 		</div>
 	</td>
 	<td style="min-width: 200px; max-width: 0;">
@@ -9,11 +9,11 @@
 			<div class="text-truncate"><%-service.unit%></div>
 			<%if (service.broken) {%>
 				<u-badge color="red" class="ms-3 flex-shrink-0" tip="Service not found or failed to load." pill>
-					<i class="icon-fill icon-warning icon-fw"></i>
+					<i class="icon-triangle-alert icon-fw"></i>
 				</u-badge>
 			<%} else if (service.unitFileState === 'masked') {%>
 				<u-badge color="orange" class="ms-3 flex-shrink-0" tip="Service is masked and cannot be started or enabled." pill>
-					<i class="icon-fill icon-prohibit-inset icon-fw"></i>
+					<i class="icon-circle-slash icon-fw"></i>
 				</u-badge>
 			<%}%>
 		</div>
@@ -43,6 +43,6 @@
 		<%=serviceActionsTemplate({ service, jobs, inline: false })%>
 	</td>
 	<td class="text-end pe-0">
-		<i class="icon-light icon-caret-right icon-fw fg-4"></i>
+		<i class="icon-chevron-right icon-fw fg-4"></i>
 	</td>
 </tr>

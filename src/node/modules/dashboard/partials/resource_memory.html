@@ -19,8 +19,8 @@
 		<%const inUseLabel = `${(Math.floor((inUse / 1024 ** totalExponent) * 100) / 100).toFixed(2)} / ${prettyBytes(state.memory.total || 0, { binary: true, minimumFractionDigits: 2, maximumFractionDigits: 2 })}`%>
 		<%const cacheLabel = (state.arc?.max ? `${(Math.floor(((_.last(state.stats)?.arc || 0) / 1024 ** cacheMaxExponent) * 100) / 100).toFixed(2)} / ${prettyBytes(state.arc.max, { binary: true })}` : prettyBytes(_.last(state.stats)?.arc || 0, { binary: true, minimumFractionDigits: 2, maximumFractionDigits: 2 }))%>
 		<div class="resource-legend d-flex align-items-center justify-content-between gap-3 lh-1 fs-xs fg-gray-500 text-nowrap">
-			<span data-bs-toggle="tooltip" data-bs-original-title="<%=inUseLabel%>"><i class="icon-fill icon-circle icon-2xs icon-fw me-1 fg-blue-500"></i><span class="tooltip-hint">In use</span></span>
-			<span data-bs-toggle="tooltip" data-bs-original-title="ZFS ARC<br>Gives memory back when apps need it.<%=(state.arc?.max ? '<br>Limit set in Settings, RAM cache.' : '')%><br><br><%=cacheLabel%>"><i class="icon-fill icon-circle icon-2xs icon-fw me-1 fg-purple-500"></i><span class="tooltip-hint">Cache</span></span>
+			<span data-bs-toggle="tooltip" data-bs-original-title="<%=inUseLabel%>"><i class="icon-circle icon-2xs icon-fw me-1 fg-blue-500"></i><span class="tooltip-hint">In use</span></span>
+			<span data-bs-toggle="tooltip" data-bs-original-title="ZFS ARC<br>Gives memory back when apps need it.<%=(state.arc?.max ? '<br>Limit set in Settings, RAM cache.' : '')%><br><br><%=cacheLabel%>"><i class="icon-circle icon-2xs icon-fw me-1 fg-purple-500"></i><span class="tooltip-hint">Cache</span></span>
 		</div>
 	<%}%>
 </li>
