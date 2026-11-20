@@ -38,7 +38,20 @@ export const mount = () => {
 	form.validation = [
 		{ selector: '.name', rules: { isEmpty: `Can't be empty` } },
 		{ selector: '.email', rules: { isEmpty: `Can't be empty`, isEmail: 'Invalid email address' } },
-		{ selector: '.password', rules: { isEmpty: `Can't be empty` } },
+		{
+			selector: '.password',
+			rules: {
+				isEmpty: `Can't be empty`,
+				isStrongPassword: {
+					message: `At least 8 characters`,
+					minLength: 8,
+					minLowercase: 0,
+					minUppercase: 0,
+					minNumbers: 0,
+					minSymbols: 0
+				}
+			}
+		},
 		{
 			selector: '.password-confirm',
 			rules: {
