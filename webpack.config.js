@@ -32,6 +32,23 @@ module.exports = (env, argv) => {
 		changeOrigin: true
 	};
 
+	const sourcePath = path.join(__dirname, 'src');
+	const sourceSegments = (module) => {
+		const resource = module.nameForCondition() || '';
+		return (resource.startsWith(`${sourcePath}${path.sep}`) ? path.relative(sourcePath, resource).split(path.sep) : []);
+	};
+	const areas = ['setup', 'node', 'fleet'];
+	const loadingAreas = (chunks) => {
+		return new Set(chunks.flatMap((chunk) => {
+			return Array.from(chunk.groupsIterable).flatMap((group) => {
+				return group.origins.map(({ module, request }) => {
+					const [importer] = (module ? sourceSegments(module) : []);
+					return (areas.includes(importer) ? importer : (request || '').split('/')[0]);
+				});
+			});
+		}));
+	};
+
 	return {
 		devtool: (argv.mode === 'production' ? 'source-map' : 'eval'),
 		devServer: {
@@ -73,8 +90,8 @@ module.exports = (env, argv) => {
 		output: {
 			publicPath: '',
 			path: path.resolve(__dirname, 'dist'),
-			filename: 'assets/js/[name].[fullhash].js',
-			chunkFilename: 'assets/js/[name].[chunkhash].js',
+			filename: 'assets/js/[name].[contenthash].js',
+			chunkFilename: 'assets/js/[name].[contenthash].js',
 			// assetModuleFilename: 'assets/img/[name].[hash].[ext][query]',
 			clean: true
 		},
@@ -83,6 +100,10 @@ module.exports = (env, argv) => {
 				VERSION: JSON.stringify(version)
 			}),
 			new CleanWebpackPlugin(),
+			new webpack.IgnorePlugin({
+				resourceRegExp: /^\.\/locale$/,
+				contextRegExp: /moment$/
+			}),
 			new webpack.ProvidePlugin({
 				'bootstrap': 'bootstrap',
 				'_': ['lodash-es', 'default'],
@@ -252,10 +273,45 @@ module.exports = (env, argv) => {
 			runtimeChunk: 'single',
 			splitChunks: {
 				cacheGroups: {
-					vendor: {
+					vendors: {
 						test: /[\\/]node_modules[\\/]/,
 						name: 'vendors',
-						chunks: 'all'
+						chunks: 'all',
+						enforce: true
+					},
+					vendor: {
+						test: /[\\/]node_modules[\\/]/,
+						chunks: 'all',
+						priority: 10,
+						minSize: 100000,
+						name: (module) => {
+							const [, packageName] = module.nameForCondition().match(/[\\/]node_modules[\\/](@[^\\/]+[\\/][^\\/]+|[^\\/]+)/);
+							return `vendor-${packageName.replace('@', '').replace(/[\\/]/, '-')}`;
+						}
+					},
+					pages: {
+						test: (module) => {
+							return sourceSegments(module).length > 0;
+						},
+						chunks: 'async',
+						priority: 5,
+						enforce: true,
+						name: (module, chunks) => {
+							const [area, ...rest] = sourceSegments(module);
+							const loaders = loadingAreas(chunks);
+							if (!areas.includes(area) || loaders.size > 1) {
+								return 'shared';
+							}
+							const [loader] = loaders;
+							if (areas.includes(loader) && loader !== area) {
+								return loader;
+							}
+							const folders = (rest[0] === 'modules' ? rest.slice(1) : rest).slice(0, -1);
+							if (area === 'setup' || folders.length === 0 || ['partials', 'services'].includes(folders[0])) {
+								return area;
+							}
+							return (area === 'node' ? 'node-pages' : `${area}-${folders[0]}`);
+						}
 					}
 				}
 			},
