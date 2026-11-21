@@ -161,7 +161,8 @@ header,
 	.close-window:hover {
 		color: var(--danger-base);
 		&.rail-only {
-			background: radial-gradient(closest-side, var(--white) 70%, transparent 75%);
+			color: var(--white);
+			background: radial-gradient(circle closest-side, var(--danger-base) 95%, transparent 100%);
 		}
 	}
 	.nav-link {
