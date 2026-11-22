@@ -17,7 +17,6 @@ const selectTemplate = _.template(selectPartial);
 document.querySelector('body').insertAdjacentHTML('beforeend', appModalPartial);
 
 const FLEET_ZONE = 'univrs.cloud';
-const CORE_APPS = ['wetty', 'authelia', 'traefik'];
 const modal = document.querySelector('#app-install');
 const form = modal.querySelector('u-form');
 let app;
@@ -90,7 +89,7 @@ const render = (event) => {
 	form.querySelector('.note').classList[app.note ? 'remove' : 'add']('d-none');
 	const fqdn = appCenterService.getFQDN();
 	const domainName = appCenterService.getDomainName();
-	appDomain = (_.includes(CORE_APPS, app.name) ? fqdn : domainName);
+	appDomain = (_.toLower(app.scope) === 'node' ? fqdn : domainName);
 	nodeResolver = appCenterService.getCertresolver();
 	_.each(app.env, (env) => {
 		if (env?.type === 'hidden') {

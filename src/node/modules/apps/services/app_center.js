@@ -12,6 +12,10 @@ const { subscribe } = createSubscription({
 		{
 			store: Docker,
 			propertyNames: ['configured', 'containers', 'templates']
+		},
+		{
+			store: Host,
+			propertyNames: ['system']
 		}
 	],
 	filters: {
@@ -21,7 +25,8 @@ const { subscribe } = createSubscription({
 	mapState: (properties) => {
 		return {
 			templates: mapTemplates(properties),
-			jobs: properties?.jobs || []
+			jobs: properties?.jobs || [],
+			isVirtualIpHolder: Boolean(properties?.system?.virtualIp?.holding)
 		};
 	}
 });

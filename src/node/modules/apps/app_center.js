@@ -31,12 +31,12 @@ const render = (state) => {
 	const installable = _.filter(state.templates, { isInstalled: false });
 	const exploreRows = _.join(_.map(installable, (app) => {
 		const jobs = _.filter(state.jobs, (job) => { return job.data?.config?.name === app.name && job.progress?.state === 'active'; });
-		return itemTemplate({ app, jobs });
+		return itemTemplate({ app, jobs, isVirtualIpHolder: state.isVirtualIpHolder });
 	}), '');
 
 	const installed = _.filter(state.templates, { isInstalled: true });
 	const installedRows = _.join(_.map(installed, (app) => {
-		return itemTemplate({ app, jobs: [] });
+		return itemTemplate({ app, jobs: [], isVirtualIpHolder: state.isVirtualIpHolder });
 	}), '');
 
 	modal.querySelector('.count-explore').innerHTML = _.size(installable);
