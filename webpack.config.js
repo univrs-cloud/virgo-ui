@@ -159,7 +159,7 @@ module.exports = (env, argv) => {
 				filename: 'fleet-manifest.json',
 				icons: [
 					{
-						src: path.resolve(__dirname, './src/assets/img/fleet.png'),
+						src: path.resolve(__dirname, './src/assets/img/univrs.png'),
 						destination: 'assets/fleet-icons/',
 						sizes: [36, 48, 72, 96, 144, 192, 512]
 					}

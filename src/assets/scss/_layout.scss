@@ -117,10 +117,6 @@ header {
 		background-position: 0 50%;
 		background-repeat: no-repeat;
 	}
-	&.fleet .navbar-brand,
-	.navbar-brand.fleet {
-		background-image: url('../img/fleet.svg');
-	}
 	.navbar-toggler {
 		&:focus {
 			box-shadow: none;
@@ -369,26 +365,6 @@ html:not(:has(head > base[href="/"])) {
 }
 .login-logo {
 	filter: drop-shadow(0 8px 6px rgba(56, 96, 224, 0.18));
-	.login-logo-orb {
-		animation: login-logo-rise 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.4s backwards;
-	}
-}
-.fleet-logo {
-	.fleet-logo-cube {
-		animation: fleet-logo-drop 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) calc(0.4s + var(--fleet-logo-cube) * 0.09s) backwards;
-	}
-}
-@keyframes fleet-logo-drop {
-	from {
-		opacity: 0;
-		transform: translateY(-70px);
-	}
-}
-@keyframes login-logo-rise {
-	from {
-		opacity: 0;
-		transform: translateY(-90px);
-	}
 }
 
 .icon-fall {

@@ -13,49 +13,7 @@
 	<div class="card login-card position-relative shadow w-100" style="max-width: 24rem;">
 		<div class="card-body p-7">
 			<div class="text-center mb-7">
-				<svg class="login-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="60" height="60">
-					<defs>
-						<linearGradient id="login-logo-top" gradientUnits="userSpaceOnUse" x1="0" y1="12" x2="0" y2="256">
-							<stop offset="0%" stop-color="#C4D0FB"/>
-							<stop offset="100%" stop-color="#93ABF5"/>
-						</linearGradient>
-						<linearGradient id="login-logo-left" gradientUnits="userSpaceOnUse" x1="0" y1="134" x2="0" y2="500">
-							<stop offset="0%" stop-color="#6388F6"/>
-							<stop offset="100%" stop-color="#3A5FE0"/>
-						</linearGradient>
-						<linearGradient id="login-logo-right" gradientUnits="userSpaceOnUse" x1="0" y1="134" x2="0" y2="500">
-							<stop offset="0%" stop-color="#3A4FC0"/>
-							<stop offset="100%" stop-color="#232C86"/>
-						</linearGradient>
-						<radialGradient id="login-logo-glow">
-							<stop offset="0%" stop-color="#F0B0D8" stop-opacity=".7"/>
-							<stop offset="100%" stop-color="#F0B0D8" stop-opacity="0"/>
-						</radialGradient>
-						<radialGradient id="login-logo-orb" fx="34%" fy="30%">
-							<stop offset="0%" stop-color="#FFFFFF"/>
-							<stop offset="50%" stop-color="#FBE3F2"/>
-							<stop offset="100%" stop-color="#F0B0D8"/>
-						</radialGradient>
-						<clipPath id="login-logo-cube">
-							<path d="M228.4 27.9Q256 12 283.6 27.9L439.7 118.1Q467.3 134 467.3 165.8L467.3 346.2Q467.3 378 439.7 393.9L283.6 484.1Q256 500 228.4 484.1L72.3 393.9Q44.7 378 44.7 346.2L44.7 165.8Q44.7 134 72.3 118.1Z"/>
-						</clipPath>
-					</defs>
-					<g clip-path="url(#login-logo-cube)">
-						<polygon points="256,12 467.3,134 256,256 44.7,134" fill="url(#login-logo-top)"/>
-						<polygon points="44.7,134 256,256 256,500 44.7,378" fill="url(#login-logo-left)"/>
-						<polygon points="467.3,134 256,256 256,500 467.3,378" fill="url(#login-logo-right)"/>
-						<path d="M150.3 195L44.7 134M361.7 195L467.3 134M256 378L256 500" fill="none" stroke="#FFFFFF" stroke-opacity=".3" stroke-width="8" stroke-linecap="round"/>
-					</g>
-					<polygon points="256,256 361.7,317 256,378 150.3,317" fill="#3A4FC0"/>
-					<polygon points="256,134 361.7,195 361.7,317 256,256" fill="#232C86"/>
-					<polygon points="256,134 150.3,195 150.3,317 256,256" fill="#11143F"/>
-					<circle cx="256" cy="256" r="127.3" fill="url(#login-logo-glow)" opacity=".75">
-						<animate attributeName="opacity" values=".75;.3;.75" dur="5s" begin="1.4s" repeatCount="indefinite" calcMode="spline" keyTimes="0;.5;1" keySplines=".45 0 .55 1;.45 0 .55 1"/>
-					</circle>
-					<circle class="login-logo-orb" cx="256" cy="256" r="69" fill="url(#login-logo-orb)">
-						<animate attributeName="cy" values="256;240;256" dur="5s" begin="1.4s" repeatCount="indefinite" calcMode="spline" keyTimes="0;.5;1" keySplines=".45 0 .55 1;.45 0 .55 1"/>
-					</circle>
-				</svg>
+				<img class="login-logo" src="assets/img/univrs.svg" width="60" height="60" alt="">
 			</div>
 			<u-form>
 				<h4 class="text-center mb-5">Authentication</h4>
