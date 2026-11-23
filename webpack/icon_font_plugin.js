@@ -11,8 +11,35 @@ const fontPath = path.resolve(__dirname, '../node_modules/lucide-static');
 const scheme = 'lucide';
 const outputPath = 'assets/webfonts';
 const prefix = 'icons-';
+const unusedTables = ['GSUB'];
 const fonts = new Set();
 const cache = new Map();
+
+const dropTables = (font, tags) => {
+	const tables = Array.from({ length: font.readUInt16BE(4) }, (_, index) => {
+		const entry = 12 + index * 16;
+		return { tag: font.toString('latin1', entry, entry + 4), checksum: font.readUInt32BE(entry + 4), start: font.readUInt32BE(entry + 8), length: font.readUInt32BE(entry + 12) };
+	}).filter(({ tag }) => { return !tags.includes(tag); });
+	const power = 2 ** Math.floor(Math.log2(tables.length));
+	const header = Buffer.alloc(12 + tables.length * 16);
+	font.copy(header, 0, 0, 4);
+	header.writeUInt16BE(tables.length, 4);
+	header.writeUInt16BE(power * 16, 6);
+	header.writeUInt16BE(Math.log2(power), 8);
+	header.writeUInt16BE((tables.length - power) * 16, 10);
+	let position = header.length;
+	const data = tables.map(({ tag, checksum, start, length }, index) => {
+		const entry = 12 + index * 16;
+		const padding = (4 - (length % 4)) % 4;
+		header.write(tag, entry, 'latin1');
+		header.writeUInt32BE(checksum, entry + 4);
+		header.writeUInt32BE(position, entry + 8);
+		header.writeUInt32BE(length, entry + 12);
+		position += length + padding;
+		return Buffer.concat([font.subarray(start, start + length), Buffer.alloc(padding)]);
+	});
+	return Buffer.concat([header, ...data]);
+};
 
 const listSourceFiles = (directory) => {
 	return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
@@ -137,7 +164,7 @@ class IconFontPlugin {
 				const renames = await Promise.all(Array.from(fonts).map(async (file) => {
 					const key = `${file}:${text}`;
 					if (!cache.has(key)) {
-						const buffer = await subsetFont(fs.readFileSync(path.join(fontPath, file)), text, { targetFormat: 'woff2' });
+						const buffer = await subsetFont(dropTables(fs.readFileSync(path.join(fontPath, file)), unusedTables), text, { targetFormat: 'woff2' });
 						const hash = webpack.util.createHash(hashFunction).update(buffer).digest(hashDigest).slice(0, hashDigestLength);
 						cache.set(key, { buffer, name: `${prefix}${path.dirname(file)}.${hash}.woff2` });
 					}
