@@ -190,7 +190,7 @@ const withAlerts = (name, columns) => {
 const tooltipPlugin = () => {
 	const pointer = { x: 0, y: 0 };
 	const tooltip = document.createElement('div');
-	tooltip.className = 'uplot-tooltip position-fixed d-none pe-none text-nowrap numeric-tabular rounded shadow bd-black px-2 py-1 fs-xs';
+	tooltip.className = 'uplot-tooltip position-fixed d-none pe-none text-nowrap font-tabular-nums rounded shadow bd-black px-2 py-1 fs-xs';
 	document.body.appendChild(tooltip);
 
 	const place = () => {

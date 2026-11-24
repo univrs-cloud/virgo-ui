@@ -30,7 +30,7 @@
 	const pausedCount = _.size(_.filter(members, { mode: 'paused' }));
 	const totalSnapshots = _.sumBy(members, 'count');
 %>
-<div class="item container-fluid numeric-tabular" data-name="<%-rule.name%>">
+<div class="item container-fluid font-tabular-nums" data-name="<%-rule.name%>">
 	<div class="card">
 		<div class="card-body">
 			<div class="card-image-row mt--3 mb-3">

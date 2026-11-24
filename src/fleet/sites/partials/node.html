@@ -11,7 +11,7 @@
 	const resilveringPools = pools.filter(isResilvering);
 	const resilverPercent = resilveringPools.length ? Math.round(Math.min(...resilveringPools.map((pool) => { return pool.scanStats?.toExamine ? (pool.scanStats.issued / pool.scanStats.toExamine) * 100 : 0; }))) : null;
 	const cardStateClass = !node.online ? '' : (hasCriticalPool ? 'border border-red-300' : (hasDegradedPool ? 'border border-orange-300' : ''));
-	const cellStateClass = !node.online ? '' : (hasCriticalPool ? 'bg-danger bg-10' : (hasDegradedPool ? 'bg-warning bg-10' : ''));
+	const cellStateClass = !node.online ? '' : (hasCriticalPool ? 'bg-danger bg-opacity-10' : (hasDegradedPool ? 'bg-warning bg-opacity-10' : ''));
 	// Offline has no pools so it stays a neutral gray Offline.
 	const statusColor = !node.online ? 'gray' : (hasCriticalPool ? 'red' : (hasDegradedPool ? 'orange' : 'green'));
 	const statusLabel = !node.online ? 'Offline' : (hasCriticalPool ? 'Faulted' : (hasDegradedPool ? 'Degraded' : 'Online'));
@@ -109,7 +109,7 @@
 					</div>
 					<%=menuTemplate({ node })%>
 				</div>
-				<div class="d-flex align-items-center numeric-tabular mt-3 pt-1 mb-5">
+				<div class="d-flex align-items-center font-tabular-nums mt-3 pt-1 mb-5">
 					<%=badgesTemplate({ node, isRebuilding, statusColor, resilverPercent, upsBadge })%>
 				</div>
 				<%if (!node.online && node.lastSeenAt) {%>

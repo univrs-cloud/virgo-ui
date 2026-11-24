@@ -27,7 +27,7 @@
 	};
 	const snapshotRetention = (folder.snapshotPolicy ? _.map(_.filter(['frequently', 'hourly', 'daily', 'weekly', 'monthly', 'yearly'], (tier) => { return folder.snapshotPolicy.retention[tier] > 0; }), (tier) => { return `${folder.snapshotPolicy.retention[tier]} ${tier}`; }).join(', ') : '');
 %>
-<div class="item container-fluid numeric-tabular" data-id="<%-folder.name%>">
+<div class="item container-fluid font-tabular-nums" data-id="<%-folder.name%>">
 	<div class="card">
 		<div class="card-body">
 			<div class="card-image-row mt--3 mb-3">

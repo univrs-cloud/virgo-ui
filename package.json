@@ -33,7 +33,7 @@
 		"@xterm/addon-web-links": "^0.12.0",
 		"@xterm/xterm": "^6.0.0",
 		"@yaireo/tagify": "^4.39.0",
-		"bootstrap": "^6.0.0-alpha.1",
+		"bootstrap": "^6.0.0-alpha.2",
 		"bytes": "^3.1.2",
 		"copy-to-clipboard": "^4.0.2",
 		"dompurify": "^3.5.0",
@@ -42,7 +42,7 @@
 		"lit": "^3.3.3",
 		"lodash-es": "^4.18.1",
 		"lodash-inflection": "^1.5.0",
-		"marked": "^18.2.1",
+		"marked": "^18.3.0",
 		"moment": "^2.31.0",
 		"moment-timezone": "^0.6.6",
 		"morphdom": "^2.7.8",
@@ -55,7 +55,7 @@
 		"sortablejs": "^1.15.7",
 		"uplot": "^1.6.32",
 		"validator": "^13.15.35",
-		"vanilla-calendar-pro": "^3.4.1"
+		"vanilla-calendar-pro": "^3.4.2"
 	},
 	"devDependencies": {
 		"autoprefixer": "^10.7.0",
@@ -67,7 +67,7 @@
 		"cssnano": "^9.9.0",
 		"dotenv": "^18.0.10",
 		"html-webpack-plugin": "^5.6.8",
-		"lucide-static": "1.78.0",
+		"lucide-static": "1.79.0",
 		"mini-css-extract-plugin": "^2.10.2",
 		"node-deb": "^0.10.7",
 		"postcss": "^8.5.33",

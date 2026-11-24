@@ -132,7 +132,6 @@
 );
 
 @use "bootstrap/scss/mixins/color-mode" as *;
-@use "bootstrap/scss/layout/breakpoints" as *;
 
 @layer vendor {
 	// --------
@@ -184,27 +183,9 @@
 	color-scheme: dark;
 }
 
-// Bootstrap's root gutter is unlayered; this override must be unlayered too.
-:root.dialog-open {
-	scrollbar-gutter: auto;
-}
-
-@include media-breakpoint-up(lg) {
-	:root:has(u-window[maximized]:not([minimized], [closing])) {
-		scrollbar-gutter: auto;
-	}
-}
-
 :root:has(.full-screen:not(.d-none), body > main > .modules:empty) {
-	scrollbar-gutter: auto;
 	> body {
 		overflow: hidden;
-	}
-}
-
-@include media-breakpoint-up(sm) {
-	:root:has(header nav) {
-		scrollbar-gutter: auto;
 	}
 }
 

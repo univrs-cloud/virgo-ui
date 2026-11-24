@@ -33,7 +33,7 @@
 %>
 <div class="tree-row <%=(depth > 0 && !isLast ? 'tree-line' : '')%>" data-guid="<%-vdev.guid%>" data-depth="<%-depth%>" style="--tree-elbow-x: 0.5rem; --tree-elbow-height: 1.25rem; --tree-line-x: 0.5rem; --tree-line-top: 0; padding-left: <%=(depth > 0 ? '1.5rem' : 'var(--card-spacer-x)')%>;">
 <div class="tree-row py-3 pe-5 <%=(hasChildren ? 'tree-line' : '')%>" data-depth="0" style="--tree-line-x: 0.5rem; --tree-line-top: calc(50% + var(--tree-icon-radius));">
-	<div class="d-flex align-items-center numeric-tabular min-w-0 <%=(role === 'old' ? 'opacity-50' : '')%>">
+	<div class="d-flex align-items-center font-tabular-nums min-w-0 <%=(role === 'old' ? 'opacity-50' : '')%>">
 		<span class="state-icon position-relative d-inline-flex me-3 flex-shrink-0">
 			<i class="<%-icon%> icon-width-auto fg-4"></i>
 			<i class="state-dot icon-circle icon-2xs icon-width-auto lh-1 position-absolute top-0 start-100 translate-middle fg-<%-badgeColor%>-300" data-bs-original-title="<%-_.upperFirst(_.toLower(vdev.state))%>"></i>

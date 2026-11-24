@@ -2,7 +2,7 @@
 	const machines = _.sortBy(backupDisk.backups || [], (machine) => { return _.toLower(machine.name); });
 	const activeTab = (_.isEmpty(machines) ? 'overview' : backupDiskTab);
 %>
-<div class="item container-fluid numeric-tabular" data-id="<%-backupDisk.name%>">
+<div class="item container-fluid font-tabular-nums" data-id="<%-backupDisk.name%>">
 	<div class="card">
 		<div class="card-body">
 			<div class="card-image-row mt--3 mb-3">

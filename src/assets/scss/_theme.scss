@@ -24,6 +24,9 @@ u-toast {
 .dropdown {
 	position: relative;
 }
+.row > .container-fluid {
+	padding-inline: 0;
+}
 .menu {
 	--menu-zindex: 1029;
 	--menu-bg: var(--surface-modal);
@@ -33,6 +36,7 @@ u-toast {
 }
 .menu-item {
 	--menu-item-hover-bg: color-mix(in oklch, var(--fg-body) 10%, transparent);
+	white-space: nowrap;
 	&.fg-danger:hover {
 		background-color: color-mix(in oklab, lab(48.4493% 77.4328 61.5452)10%, transparent);
 	}
@@ -122,6 +126,9 @@ u-badge:hover .hover-reveal-text {
 	--dialog-footer-border-width: 0;
 	--dialog-backdrop-blur: 6px;
 	background-clip: initial;
+	@include media-breakpoint-down(sm) {
+		--dialog-margin: #{map.get($spacers, 3)};
+	}
 	&:not(.hiding)::backdrop {
 		backdrop-filter: blur(var(--dialog-backdrop-blur)) grayscale(0.8);
 	}
@@ -288,9 +295,6 @@ $card-image-size: 30px;
 	> :is(p, ul, ol, dl, pre, blockquote, figure, .table) {
 		margin-bottom: map.get($spacers, 5);
 	}
-	> .row {
-		margin-top: calc(-1 * var(--gutter-y));
-	}
 }
 :host(.indicator) .badge {
 	font-size: 0.65em !important;
@@ -384,11 +388,11 @@ $card-image-size: 30px;
 	}
 }
 :is(#network, #settings, #system-updates, #about, #profile) > .row > .container-fluid {
-	max-width: 87.5rem;
+	max-width: 86rem;
 	margin-inline: 0;
 }
 #update > .container > .row {
-	max-width: 87.5rem;
+	max-width: 86rem;
 }
 #system-services .details {
 	.service-logs {
@@ -536,7 +540,7 @@ $card-image-size: 30px;
 		height: calc(100dvh - 170px - var(--chrome));
 	}
 	> .row > .col-12 > .position-absolute.end-0 {
-		padding-right: calc(#{map.get($spacers, 4)} + var(--list-inset-right)) !important;
+		padding-right: var(--list-inset-right) !important;
 	}
 	> .row > .container-fluid > .card {
 		--card-bg: transparent;
@@ -775,6 +779,7 @@ $card-image-size: 30px;
 		inset: 0;
 		display: none;
 		.container-fluid {
+			padding-inline: 0;
 			padding-bottom: 1px;
 		}
 	}

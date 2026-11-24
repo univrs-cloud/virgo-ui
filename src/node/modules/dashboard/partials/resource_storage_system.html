@@ -1,5 +1,5 @@
 <%const pool = (state.storage === false ? false : _.find(state.storage, (pool) => { return pool.name === 'system'; }))%>
-<li class="list-group-item storage-system numeric-tabular d-flex flex-column gap-2 px-4 pt-4 pb-3">
+<li class="list-group-item storage-system font-tabular-nums d-flex flex-column gap-2 px-4 pt-4 pb-3">
 	<%const flaggedDrives = []%>
 	<%_.each(_.filter(state.drives, 'system'), (drive) => {%>
 		<%let color = ''%>

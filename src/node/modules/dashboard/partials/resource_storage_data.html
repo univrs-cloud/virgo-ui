@@ -1,6 +1,6 @@
 <%const pool = (state.storage === false ? false : _.find(state.storage, (pool) => { return pool.name === 'messier'; }))%>
 <%const poolColor = (pool ? poolStateColor(pool.properties.health.value) : 'green')%>
-<li class="list-group-item storage-data numeric-tabular d-flex flex-column gap-2 px-4 pt-4 pb-3 <%=(poolColor === 'red' ? 'tint-red' : (poolColor === 'yellow' ? 'tint-yellow' : ''))%>">
+<li class="list-group-item storage-data font-tabular-nums d-flex flex-column gap-2 px-4 pt-4 pb-3 <%=(poolColor === 'red' ? 'tint-red' : (poolColor === 'yellow' ? 'tint-yellow' : ''))%>">
 	<%const flattenVdevs = (vdevs) => { return _.flatMap(_.values(vdevs || {}), (vdev) => { return [vdev, ...flattenVdevs(vdev.vdevs)]; }); }%>
 	<%const poolDisks = (pool ? _.filter(_.flatMap([pool.vdevs?.[pool.name]?.vdevs, pool.dedup, pool.special, pool.logs, pool.l2cache, pool.spares], flattenVdevs), (vdev) => { return _.toLower(vdev.vdevType) === 'disk'; }) : [])%>
 	<%const vdevErrors = (vdev) => { return (vdev?.readErrors || 0) + (vdev?.writeErrors || 0) + (vdev?.checksumErrors || 0); }%>

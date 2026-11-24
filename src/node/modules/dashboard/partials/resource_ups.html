@@ -5,7 +5,7 @@
 	const mode = (unreachable ? 'unreachable' : (missing ? 'missing' : (failed ? 'failed' : (state.ups === null ? 'loading' : 'reading'))));
 	const fault = (mode === 'unreachable' ? "can't connect" : (mode === 'missing' ? 'not found' : (state.ups?.message || 'error')));
 %>
-<li class="list-group-item ups numeric-tabular d-flex flex-column gap-2 px-4 pt-4 pb-3 <%=(mode === 'missing' ? 'tint-red' : (mode === 'failed' || (mode === 'reading' && state.ups.powerSource === 'battery') ? 'tint-orange' : ''))%>">
+<li class="list-group-item ups font-tabular-nums d-flex flex-column gap-2 px-4 pt-4 pb-3 <%=(mode === 'missing' ? 'tint-red' : (mode === 'failed' || (mode === 'reading' && state.ups.powerSource === 'battery') ? 'tint-orange' : ''))%>">
 	<div class="d-flex align-items-center justify-content-between gap-2 fs-sm fg-gray-500">
 		<span>UPS</span>
 		<%if (mode === 'missing') {%>

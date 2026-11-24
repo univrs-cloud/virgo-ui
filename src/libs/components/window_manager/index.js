@@ -12,6 +12,7 @@ export class WindowManager extends LitElement {
 	`];
 
 	#counter = 0;
+	#frame = null;
 
 	constructor() {
 		super();
@@ -24,12 +25,19 @@ export class WindowManager extends LitElement {
 		super.connectedCallback();
 		window.addEventListener('resize', this.#layout);
 		window.addEventListener('blur', this.#onBlur);
+		document.body.addEventListener('transitionrun', this.#onMenuTransitionRun);
+		document.body.addEventListener('transitionend', this.#onMenuTransitionEnd);
+		document.body.addEventListener('transitioncancel', this.#onMenuTransitionEnd);
 	}
 
 	disconnectedCallback() {
 		super.disconnectedCallback();
 		window.removeEventListener('resize', this.#layout);
 		window.removeEventListener('blur', this.#onBlur);
+		document.body.removeEventListener('transitionrun', this.#onMenuTransitionRun);
+		document.body.removeEventListener('transitionend', this.#onMenuTransitionEnd);
+		document.body.removeEventListener('transitioncancel', this.#onMenuTransitionEnd);
+		cancelAnimationFrame(this.#frame);
 	}
 
 	get available() {
@@ -120,6 +128,28 @@ export class WindowManager extends LitElement {
 		if (this.available) {
 			this.windows.forEach((item) => { item.fit(); });
 		}
+	};
+
+	#onMenuTransitionRun = (event) => {
+		if (event.target !== document.body || event.propertyName !== '--menu-width') {
+			return;
+		}
+
+		cancelAnimationFrame(this.#frame);
+		const step = () => {
+			this.#layout();
+			this.#frame = requestAnimationFrame(step);
+		};
+		step();
+	};
+
+	#onMenuTransitionEnd = (event) => {
+		if (event.target !== document.body || event.propertyName !== '--menu-width') {
+			return;
+		}
+
+		cancelAnimationFrame(this.#frame);
+		this.#frame = null;
 	};
 
 	#onBlur = () => {

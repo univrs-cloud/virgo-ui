@@ -36,11 +36,6 @@ $utilities: (
 		class: lh,
 		values: (xs: var(--line-height-xs))
 	),
-	"font-variant-numeric": (
-		property: font-variant-numeric,
-		class: numeric,
-		values: (tabular: tabular-nums)
-	),
 	"size": (
 		property: width height,
 		class: size,

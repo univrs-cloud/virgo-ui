@@ -104,7 +104,7 @@
 							</div>
 							<div class="flex-grow-1 py-1 min-w-0">
 								<div class="d-flex flex-wrap align-items-center column-gap-2">
-									<span class="numeric-tabular"><%=row.label%></span>
+									<span class="font-tabular-nums"><%=row.label%></span>
 									<%_.each(point.tiers, (tier) => {%>
 										<span class="badge bg-transparent rounded-pill border fw-normal fg-<%-snapshotTierColors[tier]%> border-<%-snapshotTierColors[tier]%>"><%=_.startCase(tier)%></span>
 									<%})%>

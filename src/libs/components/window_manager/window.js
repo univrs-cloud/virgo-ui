@@ -264,7 +264,7 @@ export class FloatingWindow extends LitElement {
 			<div class="card h-100 overflow-hidden ${classMap({ 'shadow': this.active && !this.maximized, 'shadow-opacity-100': this.active && !this.maximized, 'shadow-sm': !this.active && !this.maximized })}" style=${(this.maximized ? '--card-border-color: var(--shell-border, var(--border-color));' : '')}>
 				${this.maximized ? '' : html`
 					<div class="titlebar card-header flex-row align-items-center border-0 py-1 ps-5 pe-1 user-select-none" @pointerdown=${this.#onTitlePointerDown} @dblclick=${this.#onTitleDoubleClick}>
-						<small class="fw-bold text-truncate me-auto ${classMap({ 'fg-body': !this.active, 'fg-50': !this.active })}">${this.label}</small>
+						<small class="fw-bold text-truncate me-auto ${classMap({ 'fg-body': !this.active, 'fg-opacity-50': !this.active })}">${this.label}</small>
 						<div class="btn-group btn-group-sm">
 							<button type="button" class="btn-text theme-secondary border-0" @click=${() => { this.minimize(); }}><i class="icon-minus icon-fw"></i></button>
 							<button type="button" class="btn-text theme-secondary border-0" @click=${() => { this.toggleMaximize(); }}><i class="icon-square icon-fw"></i></button>
@@ -317,7 +317,7 @@ export class FloatingWindow extends LitElement {
 
 	#renderSnapPreview() {
 		const rect = getSnapRect(this.snapZone, this.parentElement);
-		return html`<div class="snap-preview position-absolute pe-none rounded-9 border border-primary bg-primary bg-10" style="left: ${rect.x - this.x}px; top: ${rect.y - this.y}px; width: ${rect.width}px; height: ${rect.height}px;"></div>`;
+		return html`<div class="snap-preview position-absolute pe-none rounded-9 border border-primary bg-primary bg-opacity-10" style="left: ${rect.x - this.x}px; top: ${rect.y - this.y}px; width: ${rect.width}px; height: ${rect.height}px;"></div>`;
 	}
 
 	#unsnap(start) {

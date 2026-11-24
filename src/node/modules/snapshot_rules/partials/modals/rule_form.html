@@ -52,7 +52,7 @@
 		<button type="button" class="btn-link border-0 px-0 py-2 min-h-0" data-days-preset="weekend">Weekends</button>
 	</div>
 	<small class="d-block fg-4">Between these hours (15-minute and hourly)</small>
-	<span class="hour-range-value d-block mb-3 numeric-tabular"><%-pad(rule.schedule.from)%> to <%-pad(rule.schedule.to)%></span>
+	<span class="hour-range-value d-block mb-3 font-tabular-nums"><%-pad(rule.schedule.from)%> to <%-pad(rule.schedule.to)%></span>
 	<div class="row g-3">
 		<div class="col-12 md:col-8">
 			<div class="hour-range form-range">
@@ -61,7 +61,7 @@
 			</div>
 			<div class="d-flex justify-content-between mt-2 mb-5">
 				<%_.each([0, 6, 12, 18, 24], (hour) => {%>
-					<small class="fg-4 numeric-tabular"><%-pad(hour)%></small>
+					<small class="fg-4 font-tabular-nums"><%-pad(hour)%></small>
 				<%})%>
 			</div>
 		</div>
