@@ -15,12 +15,14 @@ const render = (state) => {
 
 	const system = state.system;
 	const adopted = state.peers;
+	const externalPeers = state.externalPeers;
 	const discovered = state.discovery;
 	morphdom(
 		container,
 		`<div>${peerTemplate({
 			system,
 			adopted,
+			externalPeers,
 			discovered,
 			available: _.reject(discovered, (node) => { return _.some(adopted, { id: node.id }); }),
 			isVirtualIpConfigured: (!_.isEmpty(system?.virtualIp) || _.some(discovered, (node) => { return Boolean(node?.virtualIp); }))
@@ -40,7 +42,8 @@ const performActions = (event) => {
 	const actions = {
 		adopt: () => { peerService.adoptPeer({ peerId }); },
 		remove: async () => {
-			if (await confirm(`This node will no longer be adopted. The virtual IP is not affected.`, { buttons: [{ text: 'Remove node', class: 'btn-solid theme-danger' }] })) {
+			const message = (_.some(peerService.getExternalPeers(), { id: peerId }) ? 'Backups between the two nodes will stop.' : 'This node will no longer be adopted. The virtual IP is not affected.');
+			if (await confirm(message, { buttons: [{ text: 'Remove node', class: 'btn-solid theme-danger' }] })) {
 				peerService.removePeer({ peerId });
 			}
 		},

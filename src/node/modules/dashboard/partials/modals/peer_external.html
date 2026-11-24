@@ -1,0 +1,18 @@
+<dialog id="peer-external" class="dialog dialog-scrollable" tabindex="-1">
+	<u-form>
+		<div class="dialog-header">
+			<h1 class="dialog-title">External backup node</h1>
+		</div>
+		<div class="dialog-body">
+			<u-input name="address" label="IP address" class="address"></u-input>
+			<div class="d-flex align-items-start fg-emphasis-secondary">
+				<i class="icon-info icon-fw fg-blue-500 me-3 mt-1"></i>
+				<small>The node at this address is asked to keep the backups of this node. Its admin has 5 minutes to accept.</small>
+			</div>
+		</div>
+		<div class="dialog-footer">
+			<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="dialog" outline>Cancel</u-button>
+			<u-button type="submit" variant="primary">Adopt</u-button>
+		</div>
+	</u-form>
+</dialog>

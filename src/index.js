@@ -67,6 +67,7 @@ const render = async (state) => {
 				import('node/main'),
 				import('node/power'),
 				import('node/reboot_required'),
+				import('node/peer_requests'),
 				import('node/session'),
 				...(isAdmin ? [] : [import('node/maintenance')])
 			]);

@@ -4,6 +4,7 @@ const moduleTemplate = _.template(modulePartial);
 document.querySelector('main .modules').insertAdjacentHTML('beforeend', moduleTemplate());
 
 import('node/modules/dashboard/peer');
+import('node/modules/dashboard/peer_external');
 import('node/modules/dashboard/resources_monitor');
 import('node/modules/dashboard/apps_shortcuts');
 import('node/modules/dashboard/shares');

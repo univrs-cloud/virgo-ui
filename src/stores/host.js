@@ -21,6 +21,8 @@ class Host extends Store {
 			stats: null,
 			discovery: null,
 			peers: null,
+			externalPeers: null,
+			peerRequests: null,
 			storage: null,
 			importable: null,
 			snapshots: null,
@@ -107,6 +109,14 @@ class Host extends Store {
 			this.setState({ peers }, 'get_peers');
 		});
 
+		this.socket.on('host:peers:external', (externalPeers) => {
+			this.setState({ externalPeers }, 'get_external_peers');
+		});
+
+		this.socket.on('host:peer:requests', (peerRequests) => {
+			this.setState({ peerRequests }, 'get_peer_requests');
+		});
+
 		this.socket.on('host:discovery', (discovery) => {
 			this.setState({ discovery }, 'get_discovery');
 		});
@@ -173,6 +183,22 @@ class Host extends Store {
 
 	removePeer(data) {
 		this.socket.emit('host:peer:remove', data);
+	}
+
+	adoptExternalPeer(data) {
+		this.socket.emit('host:peer:external:adopt', data);
+	}
+
+	acceptPeerRequest(data) {
+		this.socket.emit('host:peer:request:accept', data);
+	}
+
+	denyPeerRequest(data) {
+		this.socket.emit('host:peer:request:deny', data);
+	}
+
+	blockPeerRequest(data) {
+		this.socket.emit('host:peer:request:block', data);
 	}
 
 	promoteVirtualIp() {
@@ -262,6 +288,10 @@ class Host extends Store {
 
 	getPeers() {
 		return this.getStateProperty('peers');
+	}
+
+	getExternalPeers() {
+		return this.getStateProperty('externalPeers');
 	}
 
 	getDiscovery() {

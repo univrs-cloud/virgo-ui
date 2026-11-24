@@ -63,7 +63,7 @@
 				grid-row: 1;
 				grid-column: 3;
 			}
-			> :is(.dropdown, u-button) {
+			> :is(.dropdown, u-button), .node-actions > .dropdown {
 				margin-block: calc((1.5rem - var(--btn-input-sm-min-height)) / 2);
 			}
 			.node-addresses {
