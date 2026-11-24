@@ -7,7 +7,7 @@
 <%if (isAdmin) {%>
 	<div class="nav-title sm:ps-3 mt-3 sm:mt-4"><small>Resources</small></div>
 	<a href="/apps" class="nav-item nav-link d-flex align-items-center <%=(active === '/apps' && 'active')%>">
-		<span>
+		<span class="d-flex align-items-center">
 			<i class="nav-icon icon-grip icon-fw"></i>
 			<span class="nav-label ms-3">Apps</span>
 		</span>
@@ -33,7 +33,7 @@
 	</a>
 	<div class="nav-title sm:ps-3 mt-3 sm:mt-4"><small>System</small></div>
 	<a href="/storage" class="nav-item nav-link d-flex align-items-center <%=(active === '/storage' && 'active')%>">
-		<span>
+		<span class="d-flex align-items-center">
 			<i class="nav-icon icon-hard-drive icon-fw"></i>
 			<span class="nav-label ms-3">Storage</span>
 		</span>
@@ -59,7 +59,7 @@
 	</a>
 	<div class="nav-title sm:ps-3 mt-3 sm:mt-4"><small>Node</small></div>
 	<a href="/system-updates" class="nav-item nav-link d-flex align-items-center <%=(active === '/system-updates' && 'active')%>">
-		<span>
+		<span class="d-flex align-items-center">
 			<i class="nav-icon icon-download icon-fw"></i>
 			<span class="nav-label ms-3">Updates</span>
 		</span>

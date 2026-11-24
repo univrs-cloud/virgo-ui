@@ -162,17 +162,17 @@ header,
 		}
 	}
 	.nav-link {
-		display: block;
+		display: flex;
+		align-items: center;
+		min-height: calc(1.5em + 2 * var(--nav-link-padding-y));
 		font-weight: 400;
 		color: var(--shell-fg);
 		.nav-icon {
+			flex-shrink: 0;
 			color: var(--shell-icon);
 		}
 		&:not(.active):hover {
 			color: var(--shell-fg);
-		}
-		&.active {
-			font-weight: 500;
 		}
 		&.active,
 		&:hover {
