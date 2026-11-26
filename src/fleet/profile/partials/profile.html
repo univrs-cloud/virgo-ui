@@ -45,6 +45,37 @@
 			</div>
 		</div>
 
+		<div class="col col-12">
+			<div class="row gx-7 gy-3">
+				<div class="col-12 lg:col-4 2xl:col-3 lg:pt-5">
+					<h5 class="m-0">Recovery codes</h5>
+					<p class="fg-emphasis-secondary small mt-1 mb-0">One-time codes for when you lose your authenticator app.</p>
+				</div>
+				<div class="col-12 lg:col-8 2xl:col-9">
+					<div class="card border-0 mb-0">
+						<div class="card-body">
+							<div class="d-flex align-items-center gap-5">
+								<div class="d-flex align-items-center justify-content-center flex-shrink-0 size-5 rounded-5 bg-subtle-primary fg-primary align-self-start"><i class="icon-life-buoy"></i></div>
+								<div class="min-w-0 me-auto">
+									<div>Recovery codes</div>
+									<small class="d-block fw-lighter fg-4">Generating new codes makes your old ones stop working.</small>
+									<% if (recoveryCodes) { %>
+										<div class="d-flex flex-wrap gap-3 mt-2">
+											<u-badge color="<%=(recoveryCodes.remaining === 0 ? 'red' : recoveryCodes.remaining <= 3 ? 'orange' : 'gray')%>" tint="100" pill><small><span class="fw-lighter me-1">Left</span><%-recoveryCodes.remaining%> of <%-recoveryCodes.total%></small></u-badge>
+											<% if (recoveryCodes.generatedAt) { %>
+												<u-badge color="gray" tint="100" pill><small><span class="fw-lighter me-1">Generated</span><%-moment(recoveryCodes.generatedAt).format('MMM D, YYYY')%></small></u-badge>
+											<% } %>
+										</div>
+									<% } %>
+								</div>
+								<a href="#fleet-user-recovery-codes" class="btn-link d-inline-block text-nowrap align-self-start border-0 px-0 py-3 mt-1 min-h-0" data-bs-toggle="dialog"><i class="icon-refresh-cw icon-fw me-1"></i>Regenerate</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<% if (!isInApp) { %>
 			<div class="col col-12">
 				<div class="row gx-7 gy-3">

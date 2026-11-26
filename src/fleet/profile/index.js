@@ -1,6 +1,7 @@
 import modulePartial from 'fleet/profile/partials/index.html';
 import profilePartial from 'fleet/profile/partials/profile.html';
 import * as biometricService from 'fleet/services/biometric';
+import * as userService from 'fleet/profile/services/user';
 
 const moduleTemplate = _.template(modulePartial);
 const profileTemplate = _.template(profilePartial);
@@ -11,7 +12,7 @@ const container = module.querySelector('.profile');
 const render = () => {
 	morphdom(
 		container,
-		profileTemplate({ account, isInApp: biometricService.isInApp() }),
+		profileTemplate({ account, recoveryCodes: userService.getRecoveryCodes(), isInApp: biometricService.isInApp(), moment }),
 		{
 			// Both hints are runtime/per-device (browser permission, and whether this device holds a
 			// passkey) rather than account state, so they're JS-managed — leave them untouched on
@@ -26,10 +27,12 @@ const render = () => {
 
 render();
 window.addEventListener('account-changed', render);
+userService.subscribe([render]);
 
 import('fleet/profile/sessions');
 import('fleet/profile/profile');
 import('fleet/profile/password');
+import('fleet/profile/recovery_codes');
 if (biometricService.isInApp()) {
 	import('fleet/profile/biometric');
 } else {

@@ -32,6 +32,10 @@ class FleetAuth {
 	mfaVerify(data) {
 		return request.post('/auth/mfa/verify', data);
 	}
+
+	regenerateRecoveryCodes(data) {
+		return request.post('/auth/mfa/recovery-codes', data);
+	}
 }
 
 export default new FleetAuth();

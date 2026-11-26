@@ -5,7 +5,7 @@ const { subscribe } = createSubscription({
 	stores: [
 		{
 			store: FleetUser,
-			propertyNames: ['sessions']
+			propertyNames: ['sessions', 'recoveryCodes']
 		}
 	],
 	attachStore: storeAttach.afterCallbacks,
@@ -20,6 +20,10 @@ const updateUser = (data) => {
 
 const getSessions = () => {
 	return FleetUser.getSessions();
+};
+
+const getRecoveryCodes = () => {
+	return FleetUser.getRecoveryCodes();
 };
 
 const listSessions = () => {
@@ -42,6 +46,7 @@ export {
 	subscribe,
 	updateUser,
 	getSessions,
+	getRecoveryCodes,
 	listSessions,
 	revokeSession,
 	revokeOtherSessions,

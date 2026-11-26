@@ -32,6 +32,10 @@ const mfaVerify = (data) => {
 	return FleetAuth.mfaVerify(data);
 };
 
+const regenerateRecoveryCodes = (data) => {
+	return FleetAuth.regenerateRecoveryCodes(data);
+};
+
 export {
 	login,
 	signup,
@@ -40,5 +44,6 @@ export {
 	changePassword,
 	mfaSetup,
 	mfaSetupVerify,
-	mfaVerify
+	mfaVerify,
+	regenerateRecoveryCodes
 };

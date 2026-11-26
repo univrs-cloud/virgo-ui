@@ -9,7 +9,8 @@ import Store from 'stores/store';
 class FleetUser extends Store {
 	constructor() {
 		const initialState = {
-			sessions: null
+			sessions: null,
+			recoveryCodes: null
 		};
 
 		super({
@@ -23,6 +24,10 @@ class FleetUser extends Store {
 		this.socket.on('user:sessions', (sessions) => {
 			this.setState({ sessions }, 'get_sessions');
 		});
+
+		this.socket.on('user:recovery-codes', (recoveryCodes) => {
+			this.setState({ recoveryCodes }, 'get_recovery_codes');
+		});
 	}
 
 	updateUser(data) {
@@ -31,6 +36,10 @@ class FleetUser extends Store {
 
 	getSessions() {
 		return this.getStateProperty('sessions');
+	}
+
+	getRecoveryCodes() {
+		return this.getStateProperty('recoveryCodes');
 	}
 
 	listSessions() {
