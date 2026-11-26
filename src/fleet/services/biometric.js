@@ -67,7 +67,8 @@ const enroll = async () => {
 			credentialId: reply.credentialId,
 			publicKey: reply.publicKey,
 			signature: reply.signature,
-			certificates: reply.certificates
+			certificates: reply.certificates,
+			attestation: reply.attestation
 		}));
 	} catch (error) {
 		await forget();
