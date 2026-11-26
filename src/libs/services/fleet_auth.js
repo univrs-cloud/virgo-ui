@@ -32,6 +32,14 @@ const mfaVerify = (data) => {
 	return FleetAuth.mfaVerify(data);
 };
 
+const authenticatorChange = (data) => {
+	return FleetAuth.authenticatorChange(data);
+};
+
+const authenticatorChangeVerify = (data) => {
+	return FleetAuth.authenticatorChangeVerify(data);
+};
+
 const regenerateRecoveryCodes = (data) => {
 	return FleetAuth.regenerateRecoveryCodes(data);
 };
@@ -45,5 +53,7 @@ export {
 	mfaSetup,
 	mfaSetupVerify,
 	mfaVerify,
+	authenticatorChange,
+	authenticatorChangeVerify,
 	regenerateRecoveryCodes
 };

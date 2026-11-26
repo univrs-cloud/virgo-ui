@@ -33,6 +33,14 @@ class FleetAuth {
 		return request.post('/auth/mfa/verify', data);
 	}
 
+	authenticatorChange(data) {
+		return request.post('/auth/mfa/authenticator', data);
+	}
+
+	authenticatorChangeVerify(data) {
+		return request.post('/auth/mfa/authenticator/verify', data);
+	}
+
 	regenerateRecoveryCodes(data) {
 		return request.post('/auth/mfa/recovery-codes', data);
 	}

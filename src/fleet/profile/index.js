@@ -32,6 +32,7 @@ userService.subscribe([render]);
 import('fleet/profile/sessions');
 import('fleet/profile/profile');
 import('fleet/profile/password');
+import('fleet/profile/authenticator');
 import('fleet/profile/recovery_codes');
 if (biometricService.isInApp()) {
 	import('fleet/profile/biometric');

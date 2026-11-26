@@ -1,0 +1,54 @@
+<dialog id="fleet-user-authenticator" class="dialog" tabindex="-1">
+	<u-form>
+		<div class="dialog-header">
+			<h1 class="dialog-title">Change authenticator app</h1>
+		</div>
+		<div class="dialog-body password-step">
+			<div class="alert theme-secondary mb-5">
+				<dl class="m-0">
+					<dt class="fw-light fg-4"><small>Logged in as</small></dt>
+					<dd class="title-email m-0"></dd>
+				</dl>
+			</div>
+			<u-input type="password" name="password" label="Password" class="password" autocomplete="off"></u-input>
+			<p class="fg-4 mt-3 mb-0"><small>Your current app keeps working until the new one is confirmed.</small></p>
+		</div>
+		<div class="dialog-footer password-step">
+			<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="dialog" outline>Cancel</u-button>
+			<u-button type="submit" variant="primary">Continue</u-button>
+		</div>
+		<div class="dialog-body scan-step d-none">
+			<p class="fg-emphasis-secondary small text-center mb-5">
+				Scan this QR code with your new authenticator app, then enter the 6-digit code it shows.
+			</p>
+			<div class="text-center mb-5">
+				<img class="qr border rounded-4" width="180" height="180" alt="Authenticator QR code">
+			</div>
+			<p class="fg-emphasis-secondary small text-center mb-5">
+				Can't scan? Enter this key manually:<br>
+				<code class="secret user-select-all"></code>
+			</p>
+			<u-otp name="code" label="6-digit code" class="code" align="center" autocomplete="one-time-code"></u-otp>
+		</div>
+		<div class="dialog-footer scan-step d-none">
+			<u-button variant="secondary" class="d-flex ms-auto" data-bs-dismiss="dialog" outline>Cancel</u-button>
+			<u-button type="submit" variant="primary">Verify</u-button>
+		</div>
+		<div class="dialog-body codes-step d-none">
+			<div class="alert theme-danger flex-column mb-5">
+				<div class="d-flex align-items-center">
+					<i class="icon-triangle-alert icon-fw me-3"></i>
+					<strong>Save your new recovery codes in a safe place.</strong>
+				</div>
+				<div class="small ps-7 ms-1">
+					Your new app is set up and these codes have replaced your old ones. They are the last way into your account if you lose your authenticator app. If you can't find them, you will lose access to your account.
+				</div>
+			</div>
+			<ul class="recovery-codes d-grid grid-cols-2 gap-3 list-unstyled border rounded-4 p-5 m-0 text-center font-monospace"></ul>
+		</div>
+		<div class="dialog-footer codes-step d-none">
+			<u-button variant="secondary" class="download d-flex ms-auto" outline>Download</u-button>
+			<u-button variant="primary" data-bs-dismiss="dialog">I've saved them</u-button>
+		</div>
+	</u-form>
+</dialog>
