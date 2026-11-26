@@ -34,11 +34,16 @@ const revokeOtherSessions = () => {
 	return FleetUser.revokeOtherSessions();
 };
 
+const deleteAccount = () => {
+	return FleetUser.deleteAccount();
+};
+
 export {
 	subscribe,
 	updateUser,
 	getSessions,
 	listSessions,
 	revokeSession,
-	revokeOtherSessions
+	revokeOtherSessions,
+	deleteAccount
 };

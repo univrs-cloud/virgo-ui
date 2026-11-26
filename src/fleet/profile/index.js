@@ -36,3 +36,4 @@ if (biometricService.isInApp()) {
 	import('fleet/profile/passkey');
 }
 import('fleet/profile/notifications');
+import('fleet/profile/delete');

@@ -44,6 +44,10 @@ class FleetUser extends Store {
 	revokeOtherSessions() {
 		return this.socket.timeout(10000).emitWithAck('user:sessions:revoke-others', {});
 	}
+
+	deleteAccount() {
+		return this.socket.timeout(10000).emitWithAck('user:delete', {});
+	}
 }
 
 export default new FleetUser();
