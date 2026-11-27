@@ -16,7 +16,7 @@ const { subscribe } = createSubscription({
 		},
 		{
 			store: Docker,
-			propertyNames: ['configured', 'containers', 'imageUpdates', 'nextcloudAppUpdates', 'nextcloudAccounts', 'mailserver', 'appsResourceMetrics', 'templates']
+			propertyNames: ['configured', 'containers', 'imageUpdates', 'nextcloud', 'mailserver', 'appsResourceMetrics', 'templates']
 		},
 		{
 			store: Host,
@@ -29,11 +29,11 @@ const { subscribe } = createSubscription({
 	attachStore: storeAttach.beforeCallbacks,
 	mapState: (properties) => {
 		return {
-			apps: composeAllApps(properties?.configured, properties?.containers, properties?.appsResourceMetrics, properties?.imageUpdates, properties?.nextcloudAppUpdates, properties?.snapshots, properties?.templates),
+			apps: composeAllApps(properties?.configured, properties?.containers, properties?.appsResourceMetrics, properties?.imageUpdates, properties?.nextcloud?.appUpdates, properties?.snapshots, properties?.templates),
 			jobs: properties?.jobs || [],
-			nextcloudAppUpdates: properties?.nextcloudAppUpdates,
+			nextcloudAppUpdates: properties?.nextcloud?.appUpdates,
 			mailserver: sortMailserver(properties?.mailserver),
-			nextcloudAccounts: sortNextcloudAccounts(properties?.nextcloudAccounts)
+			nextcloudAccounts: sortNextcloudAccounts(properties?.nextcloud?.accounts)
 		};
 	}
 });
@@ -222,15 +222,15 @@ const getJobs = () => {
 };
 
 const getApps = () => {
-	return composeAllApps(Docker.getConfigured(), Docker.getContainers(), Docker.getAppsResourceMetrics(), Docker.getImageUpdates(), Docker.getNextcloudAppUpdates(), Host.getSnapshots());
+	return composeAllApps(Docker.getConfigured(), Docker.getContainers(), Docker.getAppsResourceMetrics(), Docker.getImageUpdates(), Docker.getNextcloud()?.appUpdates, Host.getSnapshots());
 };
 
 const getNextcloudAppUpdates = () => {
-	return Docker.getNextcloudAppUpdates();
+	return Docker.getNextcloud()?.appUpdates;
 };
 
 const getNextcloudAccounts = () => {
-	return sortNextcloudAccounts(Docker.getNextcloudAccounts());
+	return sortNextcloudAccounts(Docker.getNextcloud()?.accounts);
 };
 
 const getMailserver = () => {

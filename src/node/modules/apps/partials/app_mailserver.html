@@ -1,6 +1,6 @@
 <%
 	const isBusy = !_.isEmpty(appJobs);
-	const isReady = Boolean(mailserver?.isRunning);
+	const isReady = _.isObject(mailserver);
 	const isDisabled = (isBusy || !isReady);
 	const accountEmails = _.map(mailserver?.accounts, 'email');
 	const externalAliases = _.flatMap(mailserver?.aliases, (alias) => {
@@ -21,7 +21,7 @@
 				<%if (_.isNil(mailserver)) {%>
 					<span>Loading...</span>
 				<%} else if (!isReady) {%>
-					<span>MailServer is not running. Start it to make changes.</span>
+					<span>Could not read the MailServer settings. Try again later.</span>
 				<%} else {%>
 					<span><%-header.summary%></span>
 				<%}%>

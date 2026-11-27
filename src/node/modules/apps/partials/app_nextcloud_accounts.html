@@ -2,14 +2,13 @@
 	const users = (nextcloudAccounts?.users || []);
 	const groups = (nextcloudAccounts?.groups || []);
 	const groupNames = _.fromPairs(_.map(groups, (group) => { return [group.id, group.displayName]; }));
-	const isDisabled = (!_.isEmpty(appJobs) || !nextcloudAccounts?.isReadable);
+	const isReadable = _.isObject(nextcloudAccounts);
+	const isDisabled = (!_.isEmpty(appJobs) || !isReadable);
 	const adminGroup = _.find(groups, { id: 'admin' });
 	let statusText = _.pluralize('account', _.size(users), true);
 	if (_.isNil(nextcloudAccounts)) {
 		statusText = 'Loading...';
-	} else if (!nextcloudAccounts.isRunning) {
-		statusText = 'Nextcloud is not running. Start it to see its accounts.';
-	} else if (!nextcloudAccounts.isReadable) {
+	} else if (!isReadable) {
 		statusText = 'Could not read the accounts. Try again later.';
 	}
 %>
@@ -20,7 +19,7 @@
 				<small class="d-block fg-4 text-uppercase">Accounts</small>
 				<span><%-statusText%></span>
 			</div>
-			<%if (nextcloudAccounts?.isReadable) {%>
+			<%if (isReadable) {%>
 				<a href="#nextcloud-account-create" class="btn-sm btn-outline theme-secondary py-1 min-h-0 <%=(isDisabled ? 'disabled' : '')%>" data-bs-toggle="dialog"><i class="icon-user-round-plus icon-fw me-1"></i>New account</a>
 			<%}%>
 		</div>
@@ -120,7 +119,7 @@
 			</div>
 		<%})%>
 	</div>
-	<%if (nextcloudAccounts?.isReadable) {%>
+	<%if (isReadable) {%>
 		<div class="card-body flex-grow-0 mt-5">
 			<div class="d-flex flex-wrap align-items-center justify-content-between gap-5">
 				<div class="min-w-0">

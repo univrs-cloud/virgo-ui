@@ -6,9 +6,8 @@ class Docker extends Store {
 			configured: null,
 			containers: null,
 			imageUpdates: null,
-			nextcloudAppUpdates: null,
+			nextcloud: null,
 			mailserver: null,
-			nextcloudAccounts: null,
 			appsResourceMetrics: null,
 			templates: null
 		};
@@ -43,12 +42,8 @@ class Docker extends Store {
 			this.setState({ imageUpdates }, 'set_container_updates');
 		});
 
-		this.socket.on('app:nextcloud:updates', (nextcloudAppUpdates) => {
-			this.setState({ nextcloudAppUpdates }, 'set_nextcloud_app_updates');
-		});
-
-		this.socket.on('app:nextcloud:accounts', (nextcloudAccounts) => {
-			this.setState({ nextcloudAccounts }, 'set_nextcloud_accounts');
+		this.socket.on('app:nextcloud', (nextcloud) => {
+			this.setState({ nextcloud }, 'set_nextcloud');
 		});
 
 		this.socket.on('app:mailserver', (mailserver) => {
@@ -90,12 +85,8 @@ class Docker extends Store {
 		return this.getStateProperty('imageUpdates');
 	}
 
-	getNextcloudAppUpdates() {
-		return this.getStateProperty('nextcloudAppUpdates');
-	}
-
-	getNextcloudAccounts() {
-		return this.getStateProperty('nextcloudAccounts');
+	getNextcloud() {
+		return this.getStateProperty('nextcloud');
 	}
 
 	getMailserver() {
