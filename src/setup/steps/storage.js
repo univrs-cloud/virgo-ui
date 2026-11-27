@@ -149,7 +149,7 @@ const importPool = (event) => {
 };
 
 const selectTopology = (event) => {
-	const input = event.target.closest('input[name="topology"]');
+	const input = event.target.closest('.topology-option');
 	if (input) {
 		selectedKey = input.value;
 		render(lastState);

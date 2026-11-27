@@ -64,7 +64,7 @@ const render = async () => {
 const createFolder = (event) => {
 	_.each(form.querySelectorAll('.dialog-footer u-button'), (button) => { button.disabled = true; });
 	const data = form.getData();
-	const validUsers = Array.from(form.querySelectorAll('.valid-users u-checkbox'))
+	const validUsers = Array.from(form.querySelectorAll('.valid-user'))
 		.filter((cb) => cb.checked)
 		.map((cb) => cb.onValue);
 	const isNewShare = !data.path;

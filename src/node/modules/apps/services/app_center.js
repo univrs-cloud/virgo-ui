@@ -1,7 +1,9 @@
 import Job from 'stores/job'; // need to init store
 import Host from 'stores/host';
 import Docker from 'stores/docker';
+import Shortcut from 'stores/shortcut';
 import { createSubscription, storeAttach } from 'libs/services/module_store_subscription';
+import { getPortConflictTip } from 'node/modules/apps/services/port_conflicts';
 
 const { subscribe } = createSubscription({
 	stores: [
@@ -42,6 +44,7 @@ function isInstallable(template) {
 function mapTemplates(properties) {
 	const templates = _.filter(properties?.templates, isInstallable);
 	const cards = _.flatMap(templates, (template) => {
+		template.portConflictTip = getPortConflictTip(template.ports, properties?.containers, properties?.configured, null, 'installing this app');
 		if (template.multiple !== true) {
 			template.isInstalled = (_.find(properties?.containers, (container) => {
 				return template.name === container.labels?.comDockerComposeProject;
@@ -95,8 +98,32 @@ const getApps = () => {
 	return _.filter(Docker.getConfigured(), { type: 'app' });
 };
 
+const getContainers = () => {
+	return Docker.getContainers();
+};
+
+const getSnapshotRules = () => {
+	return Host.getSnapshotRules();
+};
+
+const getShortcuts = () => {
+	return Shortcut.getConfigured();
+};
+
 const install = (data) => {
 	Docker.install(data);
+};
+
+const installCustom = (data) => {
+	Docker.installCustom(data);
+};
+
+const update = (data) => {
+	Docker.update(data);
+};
+
+const updateCustom = (data) => {
+	Docker.updateCustom(data);
 };
 
 export {
@@ -107,5 +134,11 @@ export {
 	getCertresolver,
 	getTemplates,
 	getApps,
-	install
+	getContainers,
+	getShortcuts,
+	getSnapshotRules,
+	install,
+	installCustom,
+	update,
+	updateCustom
 };

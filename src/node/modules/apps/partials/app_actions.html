@@ -4,9 +4,13 @@
 	<%
 		const isActive = _.includes(['success', 'warning'], app.state);
 		const canStop = (app.canBeRemoved && isActive);
+		const isStartDisabled = Boolean(app.portConflictTip);
 		const menuGroups = _.filter(_.map([
 			[
 				{ action: 'update', label: 'Update', icon: 'icon-arrow-down', className: '', iconClassName: '', isAllowed: (app.hasUpdates && !app.isUnmanaged) }
+			],
+			[
+				{ action: 'edit', label: 'Edit', icon: 'icon-pencil', className: '', iconClassName: '', isAllowed: (app.isCustom || app.isEditable) }
 			],
 			[
 				{ action: 'start', label: 'Start', icon: 'icon-play', className: '', iconClassName: 'fg-green-400', isAllowed: (!inline && app.state !== 'success') }
@@ -30,8 +34,8 @@
 	<%if (inline) {%>
 		<div class="d-inline-flex align-items-center bg-2 rounded-3">
 			<div class="d-inline-flex align-items-center px-1">
-				<u-button variant="secondary" size="sm" class="actions-button" text icon tip="Start" data-action="start" <%=(app.state === 'success' ? 'disabled' : '')%>><i class="icon-play icon-fw <%=(app.state === 'success' ? 'fg-gray-500' : 'fg-green-400')%>"></i></u-button>
-				<u-button variant="secondary" size="sm" class="actions-button <%=(isActive ? 'confirm' : '')%>" text icon tip="Restart" data-action="restart" <%=(isActive ? '' : 'disabled')%>><i class="icon-rotate-ccw icon-fw <%=(isActive ? 'fg-body' : 'fg-gray-500')%>"></i></u-button>
+				<u-button variant="secondary" size="sm" class="actions-button" text icon tip="<%-app.portConflictTip || 'Start'%>" data-action="start" <%=((app.state === 'success' || isStartDisabled) ? 'disabled' : '')%>><i class="icon-play icon-fw <%=(app.state === 'success' || isStartDisabled ? 'fg-gray-500' : 'fg-green-400')%>"></i></u-button>
+				<u-button variant="secondary" size="sm" class="actions-button <%=(isActive && !isStartDisabled ? 'confirm' : '')%>" text icon tip="<%-app.portConflictTip || 'Restart'%>" data-action="restart" <%=((!isActive || isStartDisabled) ? 'disabled' : '')%>><i class="icon-rotate-ccw icon-fw <%=(isActive && !isStartDisabled ? 'fg-body' : 'fg-gray-500')%>"></i></u-button>
 				<u-button variant="secondary" size="sm" class="actions-button <%=(canStop ? 'confirm' : '')%>" text icon tip="Stop" data-action="stop" <%=(canStop ? '' : 'disabled')%>><i class="icon-square icon-fw <%=(canStop ? 'fg-red-400' : 'fg-gray-500')%>"></i></u-button>
 			</div>
 	<%}%>
@@ -47,7 +51,11 @@
 					<div class="menu-divider"></div>
 				<%}%>
 				<%_.each(items, ({ action, label, icon, className, iconClassName }) => {%>
-					<a href="#" class="menu-item <%=className%>" data-action="<%-action%>"><i class="<%=icon%> icon-fw <%=iconClassName%>"></i><%-label%></a>
+					<%if (_.includes(['start', 'restart', 'recreate'], action) && isStartDisabled) {%>
+						<span class="d-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="<%-app.portConflictTip%>"><a href="#" class="menu-item disabled" aria-disabled="true" data-action="<%-action%>"><i class="<%=icon%> icon-fw fg-gray-500"></i><%-label%></a></span>
+					<%} else {%>
+						<a href="#" class="menu-item <%=className%>" data-action="<%-action%>"><i class="<%=icon%> icon-fw <%=iconClassName%>"></i><%-label%></a>
+					<%}%>
 				<%})%>
 			<%})%>
 		</div>

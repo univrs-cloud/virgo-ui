@@ -20,6 +20,7 @@ const FLEET_ZONE = 'univrs.cloud';
 const modal = document.querySelector('#app-install');
 const form = modal.querySelector('u-form');
 let app;
+let editedApp = null;
 let appDomain = '';
 let certResolverEnv = null;
 let nodeResolver = null;
@@ -28,6 +29,31 @@ let isCertResolverHidden = null;
 
 const isFleetDomain = (domain) => {
 	return _.endsWith(domain?.toLowerCase(), `.${FLEET_ZONE}`);
+};
+
+const findTemplate = (name) => {
+	const appName = _.toLower(name);
+	return _.find(appCenterService.getTemplates(), (template) => {
+		const templateName = _.toLower(template.name);
+		return templateName === appName || (template.multiple === true && _.startsWith(appName, `${templateName}-`));
+	});
+};
+
+const withCurrentValue = (env) => {
+	const value = editedApp.env?.[env.name];
+	if (env.type === 'password') {
+		return { ...env, default: '', description: `${env.description} Leave it empty to keep the current one.` };
+	}
+
+	if (_.isNil(value)) {
+		return env;
+	}
+
+	if (env.type === 'radio' || env.type === 'select') {
+		return { ...env, select: _.map(env.select, (option) => { return { ...option, default: String(option.value).toLowerCase() === String(value).toLowerCase() }; }) };
+	}
+
+	return { ...env, default: value };
 };
 
 const isGated = (env) => {
@@ -72,18 +98,28 @@ const renderCertResolver = (domain) => {
 const install = (event) => {
 	_.each(form.querySelectorAll('.dialog-footer u-button'), (button) => { button.disabled = true; });
 	const env = form.getData();
-	const data = {
-		name: app.name,
-		env
-	};
-	appCenterService.install(data);
+	if (editedApp) {
+		const passwordNames = _.map(_.filter(app.env, { type: 'password' }), 'name');
+		appCenterService.update({
+			name: editedApp.name,
+			env: _.omitBy(env, (value, key) => { return _.includes(passwordNames, key) && _.isEmpty(value); })
+		});
+	} else {
+		appCenterService.install({
+			name: app.name,
+			env
+		});
+	}
 	bootstrap.Dialog.getInstance(modal)?.hide();
 };
 
 const render = (event) => {
 	const name = event.relatedTarget.closest('.item').dataset.name;
-	app = _.find(appCenterService.getTemplates(), { name });
-	form.querySelector('.dialog-title').textContent = app.title;
+	editedApp = (event.relatedTarget.dataset.action === 'edit' ? _.find(appCenterService.getApps(), { name }) || null : null);
+	app = (editedApp ? findTemplate(name) : _.find(appCenterService.getTemplates(), { name }));
+	certResolverChoice = (editedApp?.env?.CERTRESOLVER ?? null);
+	form.querySelector('.dialog-title').textContent = (editedApp ? editedApp.title : app.title);
+	form.querySelector('[type="submit"]').textContent = (editedApp ? 'Update' : 'Install');
 	form.querySelector('.description').textContent = app.description;
 	form.querySelector('.note').textContent = app.note || '';
 	form.querySelector('.note').classList[app.note ? 'remove' : 'add']('d-none');
@@ -91,7 +127,7 @@ const render = (event) => {
 	const domainName = appCenterService.getDomainName();
 	appDomain = (_.toLower(app.scope) === 'node' ? fqdn : domainName);
 	nodeResolver = appCenterService.getCertresolver();
-	_.each(app.env, (env) => {
+	_.each((editedApp ? _.map(_.filter(app.env, (env) => { return env.editable === true && !isGated(env); }), withCurrentValue) : app.env), (env) => {
 		if (env?.type === 'hidden') {
 			form.querySelector('.inputs').innerHTML += inputHiddenTemplate({ env });
 			return;
@@ -102,7 +138,7 @@ const render = (event) => {
 				...env,
 				readonly: env.readonly === true || isGated(env)
 			};
-			if (env.name.toLowerCase() === 'domain' || isGated(env)) {
+			if (isGated(env) || (env.name.toLowerCase() === 'domain' && !editedApp)) {
 				env.default = appDomain;
 			}
 			if (env.name.toLowerCase() === 'nextcloud_trusted_domains') {
@@ -138,19 +174,20 @@ const render = (event) => {
 			return;
 		}
 	});
-	const domainInput = form.querySelector('[name="DOMAIN"]');
-	renderCertResolver(domainInput ? domainInput.value : appDomain);
+	form.querySelector('.password-note').classList.toggle('d-none', !editedApp || !form.querySelector('.env-password'));
+	const domainInput = form.querySelector('.env-domain');
+	renderCertResolver(domainInput ? domainInput.value : (editedApp?.env?.DOMAIN ?? appDomain));
 	domainInput?.addEventListener('value-changed', () => { renderCertResolver(domainInput.value); });
 	form.querySelector('.certresolver')?.addEventListener('change', (event) => { certResolverChoice = event.target.value; });
 	form.validation = [
 		{
-			selector: 'u-input:not([type="hidden"]), u-select, u-textarea',
+			selector: (editedApp ? '.env-field:not(.env-password)' : '.env-field'),
 			rules: {
 				isEmpty: `Can't be empty`
 			}
 		},
 		{
-			selector: 'u-input[name="DOMAIN" i]',
+			selector: '.env-domain',
 			rules: {
 				isFQDN: { require_tld: false, message: 'Must be a valid domain name' },
 				custom: {
@@ -163,7 +200,7 @@ const render = (event) => {
 			}
 		},
 		{
-			selector: 'u-input[name="INSTANCE" i]',
+			selector: '.env-instance',
 			rules: {
 				isAlphanumeric: 'Can only contain letters and numbers',
 				custom: {
@@ -180,6 +217,7 @@ const render = (event) => {
 
 const restore = (event) => {
 	app = null;
+	editedApp = null;
 	appDomain = '';
 	certResolverEnv = null;
 	nodeResolver = null;
@@ -187,6 +225,7 @@ const restore = (event) => {
 	isCertResolverHidden = null;
 	_.each(form.querySelectorAll('.dialog-title, .description, .note, .inputs'), (node) => { node.innerHTML = ''; });
 	form.querySelector('.note').classList.add('d-none');
+	form.querySelector('.password-note').classList.add('d-none');
 	form.validation = [];
 	form.reset();
 }

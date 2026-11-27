@@ -6,6 +6,8 @@
 				<div class="card-image card-spacer col-auto position-relative p-3">
 					<%if (app.isUnmanaged) {%>
 						<i class="icon-layers"></i>
+					<%} else if (!app.icon) {%>
+						<i class="icon-package"></i>
 					<%} else {%>
 						<img src="<%-(_.includes(app.icon, '/') ? app.icon : `assets/img/apps/${app.icon}`)%>">
 					<%}%>

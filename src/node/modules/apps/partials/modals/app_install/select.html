@@ -1,3 +1,3 @@
-<u-select name="<%-env.name%>" label="<%-env.label%>" tip="<%-env.description%>">
+<u-select class="env-field" name="<%-env.name%>" label="<%-env.label%>" tip="<%-env.description%>">
 	<%=_.join(_.map(env.select, (option) => { return `<option value="${_.escape(option.value)}" ${option.default ? 'selected' : ''}>${_.escape(option.text)}</option>`; }), '')%>
 </u-select>

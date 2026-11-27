@@ -35,7 +35,7 @@
 			<%const unusedPercent = toPercent(unusedBytes)%>
 			<label class="topology d-block border rounded-5 p-5 mb-3 <%=(isSelected ? 'border-primary bg-subtle-primary' : '')%>" for="<%-id%>">
 				<span class="d-flex align-items-start gap-5">
-					<input type="radio" class="radio m-0 mt-1 flex-shrink-0" name="topology" id="<%-id%>" value="<%-option.key%>" <%=(isSelected ? 'checked' : '')%>>
+					<input type="radio" class="topology-option radio m-0 mt-1 flex-shrink-0" name="topology" id="<%-id%>" value="<%-option.key%>" <%=(isSelected ? 'checked' : '')%>>
 					<span class="flex-grow-1 min-w-0">
 						<span class="d-flex flex-wrap align-items-center gap-3">
 							<span><%-LABELS[option.type]%></span>

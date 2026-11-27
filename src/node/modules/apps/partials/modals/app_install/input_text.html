@@ -1,7 +1,9 @@
 <u-input
 	<%if (env.readonly) {%>
+		class="env-field"
 		disabled
 	<%} else {%>
+		class="env-field env-<%-_.toLower(env.name)%>"
 		name="<%-env.name%>"
 	<%}%>
 	value="<%-env?.default || ''%>"

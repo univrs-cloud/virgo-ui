@@ -5,13 +5,13 @@ export const mount = () => {
 	const main = document.querySelector('main');
 	main.innerHTML = challengePartial;
 
-	const challengeForm = main.querySelector('u-form.challenge');
-	const recoveryForm = main.querySelector('u-form.recovery');
+	const challengeForm = main.querySelector('#mfa-challenge');
+	const recoveryForm = main.querySelector('#mfa-recovery');
 
 	// challengeForm sends { code }, recoveryForm sends { recoveryCode }; the server checks whichever
 	// is present. On success the session becomes satisfied, so a full navigation lands on the app.
 	const submit = (form) => async () => {
-		const button = form.querySelector('u-button[type="submit"]');
+		const button = form.querySelector('[type="submit"]');
 		button.disabled = true;
 		const data = form.getData();
 		try {
@@ -31,7 +31,7 @@ export const mount = () => {
 		hide.reset();
 		hide.classList.add('d-none');
 		show.classList.remove('d-none');
-		const shownInput = show.querySelector('u-otp, u-input');
+		const shownInput = show.querySelector('.code, .recovery-code');
 		shownInput?.updateComplete?.then(() => shownInput.focus());
 	};
 
@@ -52,6 +52,6 @@ export const mount = () => {
 	});
 	main.querySelector('.sign-out').addEventListener('click', signOut);
 
-	const input = challengeForm.querySelector('u-otp');
+	const input = challengeForm.querySelector('.code');
 	input?.updateComplete?.then(() => input.focus());
 };

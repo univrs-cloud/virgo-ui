@@ -24,7 +24,7 @@ const populateValidUsers = (folder) => {
 const updateFolder = (event) => {
 	_.each(form.querySelectorAll('.dialog-footer u-button'), (button) => { button.disabled = true; });
 	const data = form.getData();
-	const validUsers = Array.from(form.querySelectorAll('.valid-users u-checkbox'))
+	const validUsers = Array.from(form.querySelectorAll('.valid-user'))
 		.filter((cb) => cb.checked)
 		.map((cb) => cb.onValue);
 	const isNextcloudPath = currentFolder?.path?.startsWith('/messier/apps/nextcloud/');

@@ -15,7 +15,7 @@
 			<div class="text-center mb-7">
 				<img src="assets/img/univrs.svg" width="60" alt="">
 			</div>
-			<u-form class="challenge">
+			<u-form id="mfa-challenge">
 				<h4 class="text-center mb-5">Two-factor authentication</h4>
 				<u-otp name="code" label="6-digit code" class="code" align="center" autocomplete="one-time-code"></u-otp>
 				<div class="d-flex align-items-center justify-content-between mt-5">
@@ -23,7 +23,7 @@
 					<u-button type="submit" variant="primary">Verify</u-button>
 				</div>
 			</u-form>
-			<u-form class="recovery d-none">
+			<u-form id="mfa-recovery" class="d-none">
 				<h4 class="text-center mb-5">Enter a recovery code</h4>
 				<u-input name="recoveryCode" label="Recovery code" class="recovery-code"></u-input>
 				<div class="d-flex align-items-center justify-content-between mt-5">

@@ -1,0 +1,62 @@
+<div class="service card bg-1 mb-5">
+	<div class="card-body">
+		<div class="d-flex align-items-center gap-3">
+			<div class="d-flex align-items-center gap-2 min-w-0">
+				<span class="service-title fw-medium text-truncate">Service</span>
+				<span class="service-subtitle fs-sm fg-4 text-truncate"></span>
+			</div>
+			<div class="d-flex align-items-center gap-2 ms-auto">
+				<button type="button" class="toggle-service btn-icon btn-text theme-secondary btn-sm"><i class="icon-chevron-up icon-fw"></i></button>
+				<u-button variant="secondary" size="sm" class="remove-service d-flex" outline><i class="icon-x icon-fw"></i></u-button>
+			</div>
+		</div>
+		<div class="service-body collapse show">
+			<div class="row g-3 pt-5">
+				<div class="col-4">
+					<u-input label="Name" class="service-name" value="<%-service.name%>"></u-input>
+				</div>
+				<div class="col-8">
+					<u-input label="Image" class="service-image" value="<%-service.image%>" placeholder="nginx:latest"></u-input>
+				</div>
+			</div>
+			<u-select label="Restart" class="service-restart" tip="When the service starts again after it stops or the node restarts.">
+				<option value="unless-stopped" <%=(service.restart === 'unless-stopped' ? 'selected' : '')%>>Unless stopped by hand</option>
+				<option value="always" <%=(service.restart === 'always' ? 'selected' : '')%>>Always</option>
+				<option value="on-failure" <%=(service.restart === 'on-failure' ? 'selected' : '')%>>Only after a crash</option>
+				<option value="no" <%=(service.restart === 'no' ? 'selected' : '')%>>Never</option>
+			</u-select>
+			<div class="fg-emphasis-secondary mb-3">Network</div>
+			<div class="d-flex align-items-center gap-5 mb-5">
+				<u-checkbox class="service-public" label="External" tip="Connects to the shared network, allowing access through a domain or published ports." <%=(service.network !== 'internal' ? 'checked' : '')%>></u-checkbox>
+				<u-checkbox class="service-internal" label="Internal" tip="Can reach the other internal services of this app, like a database." <%=(service.network !== 'public' ? 'checked' : '')%>></u-checkbox>
+			</div>
+			<div class="public">
+				<div class="row g-3">
+					<div class="col-8">
+						<u-input label="Domain" class="service-domain" value="<%-service.domain%>" placeholder="app.<%-domainName%>" tip="Address people open in the browser. Leave it empty when the service has no web page.">
+							<span slot="prefix">https://</span>
+						</u-input>
+					</div>
+					<div class="col-4">
+						<u-input label="Web port" class="service-port" value="<%-service.port%>" tip="Port the web page listens on inside the container."></u-input>
+					</div>
+				</div>
+				<div class="private">
+					<u-checkbox class="service-private" label="Private access" tip="Only logged-in users can open it." <%=(service.isPrivate ? 'checked' : '')%>></u-checkbox>
+				</div>
+				<div class="www">
+					<u-checkbox class="service-www" label="Redirect www" tip="Sends visitors of the www address to the address without www." <%=(service.isRedirectingWww ? 'checked' : '')%>></u-checkbox>
+				</div>
+				<div class="fg-emphasis-secondary mt-5 mb-3">Ports</div>
+				<div class="ports"><%=_.join(_.map(service.ports, (port) => { return portTemplate({ port }); }), '')%></div>
+				<button type="button" class="add-port btn-link d-inline-block p-0 min-h-0"><i class="icon-plus icon-fw me-1"></i>Add port</button>
+			</div>
+			<div class="fg-emphasis-secondary mt-5 mb-3">Volumes</div>
+			<div class="volumes"><%=_.join(_.map(service.volumes, (volume) => { return volumeTemplate({ volume, appFolder }); }), '')%></div>
+			<button type="button" class="add-volume btn-link d-inline-block p-0 min-h-0"><i class="icon-plus icon-fw me-1"></i>Add volume</button>
+			<div class="fg-emphasis-secondary mt-5 mb-3">Variables</div>
+			<div class="variables"><%=_.join(_.map(service.variables, (variable) => { return variableTemplate({ variable }); }), '')%></div>
+			<button type="button" class="add-variable btn-link d-inline-block p-0 min-h-0"><i class="icon-plus icon-fw me-1"></i>Add variable</button>
+		</div>
+	</div>
+</div>

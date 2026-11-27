@@ -4,6 +4,8 @@
 		<div class="row-image <%=(hasActiveContainers ? '' : 'stopped')%>">
 			<%if (app.isUnmanaged) {%>
 				<i class="icon-layers icon-fw fg-emphasis-secondary"></i>
+			<%} else if (app.isCustom && !app.icon) {%>
+				<i class="icon-package icon-fw fg-emphasis-secondary"></i>
 			<%} else {%>
 				<img src="<%-(_.includes(app.icon, '/') ? app.icon : `assets/img/apps/${app.icon}`)%>">
 			<%}%>
@@ -14,6 +16,9 @@
 			<div class="text-truncate"><%-app.title%></div>
 			<%if (app.isUnmanaged) {%>
 				<u-badge color="gray" tint="100" class="ms-3" pill>Unmanaged</u-badge>
+			<%}%>
+			<%if (app.isCustom) {%>
+				<u-badge color="gray" tint="100" class="ms-3" pill>Custom</u-badge>
 			<%}%>
 			<%if (app.hasUpdates || app.hasNextcloudAppUpdates) {%>
 				<u-badge color="green" class="ms-3" tip="Updates available" pill>

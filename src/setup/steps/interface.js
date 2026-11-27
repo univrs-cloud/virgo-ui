@@ -46,19 +46,19 @@ const addDnsRow = (event) => {
 
 	row.classList.remove('d-none');
 	toggleAddDnsButton();
-	row.querySelector('u-input').focus();
+	row.querySelector('.dns-server-input').focus();
 };
 
 const removeDnsRow = (event) => {
 	const row = event.target.closest('.dns-server');
-	const input = row.querySelector('u-input');
+	const input = row.querySelector('.dns-server-input');
 	input.value = '';
 	input.error = '';
 	row.classList.add('d-none');
 	// Keep the visible rows contiguous so the servers stay in query order
-	const values = _.map(_.filter(dnsRows, isVisible), (row) => { return row.querySelector('u-input').value; });
+	const values = _.map(_.filter(dnsRows, isVisible), (row) => { return row.querySelector('.dns-server-input').value; });
 	_.each(dnsRows, (row, index) => {
-		row.querySelector('u-input').value = values[index] || '';
+		row.querySelector('.dns-server-input').value = values[index] || '';
 	});
 	showDnsRows(values.length);
 };
@@ -230,7 +230,7 @@ const render = (state) => {
 	form.querySelector('.netmask').value = current.netmask;
 	form.querySelector('.gateway').value = current.gateway;
 	_.each(dnsRows, (row, index) => {
-		row.querySelector('u-input').value = current.dnsServers[index] || '';
+		row.querySelector('.dns-server-input').value = current.dnsServers[index] || '';
 	});
 	showDnsRows(Math.max(1, Math.min(current.dnsServers.length, MAX_DNS_SERVERS)));
 	isPrefilled = true;
@@ -249,9 +249,9 @@ const updateInterface = (event) => {
 		data.virtualIp = _.trim(data.virtualIp);
 	}
 	data.dnsServers = _.compact(_.map(_.filter(dnsRows, isVisible), (row) => {
-		return data[row.querySelector('u-input').getAttribute('name')];
+		return data[row.querySelector('.dns-server-input').getAttribute('name')];
 	}));
-	_.each(dnsRows, (row) => { delete data[row.querySelector('u-input').getAttribute('name')]; });
+	_.each(dnsRows, (row) => { delete data[row.querySelector('.dns-server-input').getAttribute('name')]; });
 	// Nothing to apply when the interface already holds this configuration — move on without a job. A
 	// virtual IP left out of the submission is left out of the comparison too, so a locked field never
 	// reads as a change.

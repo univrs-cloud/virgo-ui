@@ -1,0 +1,18 @@
+<div class="volume border rounded-4 p-3 pb-0 mb-3">
+	<div class="row gx-3 gy-0 align-items-center">
+		<div class="col-12">
+			<u-input label="Folder" class="volume-source" value="<%-volume.source%>">
+				<span slot="prefix" class="volume-prefix"><%-appFolder%></span>
+			</u-input>
+		</div>
+		<div class="col">
+			<u-input label="Path in container" class="volume-target" value="<%-volume.target%>" placeholder="/data"></u-input>
+		</div>
+		<div class="col-auto mb-7">
+			<u-checkbox class="volume-read-only" label="Read-only" <%=(volume.isReadOnly ? 'checked' : '')%>></u-checkbox>
+		</div>
+		<div class="col-auto mb-7">
+			<u-button variant="secondary" class="remove-row d-flex" outline><i class="icon-x icon-fw"></i></u-button>
+		</div>
+	</div>
+</div>

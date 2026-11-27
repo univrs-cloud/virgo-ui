@@ -2,8 +2,10 @@ import Job from 'stores/job';
 import Docker from 'stores/docker';
 import Host from 'stores/host';
 import { createSubscription, storeAttach } from 'libs/services/module_store_subscription';
+import { getPortConflictTip } from 'node/modules/apps/services/port_conflicts';
 
 const DEFAULT_NETWORK_INTERFACE_SPEED_BPS = 1_000_000_000;
+const FLEET_ZONE = 'univrs.cloud';
 const FILTERS_KEY = 'apps:filters';
 
 const { subscribe } = createSubscription({
@@ -14,7 +16,7 @@ const { subscribe } = createSubscription({
 		},
 		{
 			store: Docker,
-			propertyNames: ['configured', 'containers', 'imageUpdates', 'nextcloudAppUpdates', 'nextcloudAccounts', 'mailserver', 'appsResourceMetrics']
+			propertyNames: ['configured', 'containers', 'imageUpdates', 'nextcloudAppUpdates', 'nextcloudAccounts', 'mailserver', 'appsResourceMetrics', 'templates']
 		},
 		{
 			store: Host,
@@ -27,7 +29,7 @@ const { subscribe } = createSubscription({
 	attachStore: storeAttach.beforeCallbacks,
 	mapState: (properties) => {
 		return {
-			apps: composeAllApps(properties?.configured, properties?.containers, properties?.appsResourceMetrics, properties?.imageUpdates, properties?.nextcloudAppUpdates, properties?.snapshots),
+			apps: composeAllApps(properties?.configured, properties?.containers, properties?.appsResourceMetrics, properties?.imageUpdates, properties?.nextcloudAppUpdates, properties?.snapshots, properties?.templates),
 			jobs: properties?.jobs || [],
 			nextcloudAppUpdates: properties?.nextcloudAppUpdates,
 			mailserver: sortMailserver(properties?.mailserver),
@@ -66,7 +68,44 @@ function isAppsJob(job) {
 	return _.startsWith(job?.name, 'app');
 }
 
-function composeApps(configured, containers, appsResourceMetrics, imageUpdates, nextcloudAppUpdates, snapshots) {
+function isGated(field) {
+	const policy = _.toLower(field.auth?.policy);
+	if (_.isEmpty(policy) || policy === 'none') {
+		return false;
+	}
+
+	if (policy === 'optional') {
+		return field.auth.default === true;
+	}
+
+	return true;
+}
+
+function isEditable(template, entity) {
+	const system = Host.getSystem();
+	const fqdn = _.toLower(system?.osInfo?.fqdn);
+	const domainName = _.replace(fqdn, `${_.toLower(system?.osInfo?.hostname)}.`, '');
+	const appDomain = (_.toLower(template?.scope) === 'node' ? fqdn : domainName);
+	const domain = _.toLower(entity.env?.DOMAIN ?? appDomain);
+	const isCertResolverHidden = (domain === appDomain && _.endsWith(domain, `.${FLEET_ZONE}`));
+	return _.some(template?.env, (field) => {
+		if (field?.editable !== true || isGated(field)) {
+			return false;
+		}
+
+		return !(_.toLower(field.name) === 'certresolver' && isCertResolverHidden);
+	});
+}
+
+function findTemplate(templates, name) {
+	const appName = _.toLower(name);
+	return _.find(templates, (template) => {
+		const templateName = _.toLower(template.name);
+		return templateName === appName || (template.multiple === true && _.startsWith(appName, `${templateName}-`));
+	});
+}
+
+function composeApps(configured, containers, appsResourceMetrics, imageUpdates, nextcloudAppUpdates, snapshots, templates) {
 	if (_.isNull(configured) || _.isNull(containers)) {
 		return null;
 	}
@@ -91,7 +130,17 @@ function composeApps(configured, containers, appsResourceMetrics, imageUpdates, 
 				});
 			});
 			entity.hasNextcloudAppUpdates = (_.toLower(entity.name) === 'nextcloud' && !_.isEmpty(nextcloudAppUpdates));
+			entity.isCustom = _.isObject(entity.custom);
+			const template = findTemplate(templates, entity.name);
+			entity.isEditable = isEditable(template, entity);
+			const requiredPorts = (entity.isCustom
+				? _.flatMap(entity.custom.services, 'ports')
+				: template?.ports);
+			entity.portConflictTip = getPortConflictTip(requiredPorts, containers, configured, entity.name, 'starting this app');
 			entity.projectContainers = _.map(entity.projectContainers, (container) => {
+				const service = _.find(entity.custom?.services, { name: container.labels?.comDockerComposeService });
+				const servicePorts = (entity.isCustom ? service?.ports : requiredPorts);
+				container.portConflictTip = getPortConflictTip(servicePorts, containers, configured, entity.name, `starting ${service?.name || 'this service'}`);
 				container.hasUpdates = !_.isEmpty(_.filter(imageUpdates, { containerId: container.id }));
 				container.urls = Docker.composeUrlFromLabels([container]);
 				return container;
@@ -155,8 +204,8 @@ function composeUnmanaged(configured, containers, appsResourceMetrics, imageUpda
 	});
 }
 
-function composeAllApps(configured, containers, appsResourceMetrics, imageUpdates, nextcloudAppUpdates, snapshots) {
-	const apps = composeApps(configured, containers, appsResourceMetrics, imageUpdates, nextcloudAppUpdates, snapshots);
+function composeAllApps(configured, containers, appsResourceMetrics, imageUpdates, nextcloudAppUpdates, snapshots, templates) {
+	const apps = composeApps(configured, containers, appsResourceMetrics, imageUpdates, nextcloudAppUpdates, snapshots, templates);
 	if (_.isNull(apps)) {
 		return null;
 	}
@@ -209,8 +258,8 @@ const getDefaultNetworkInterfaceSpeed = () => {
 	return ((getDefaultNetworkInterface()?.speed || (DEFAULT_NETWORK_INTERFACE_SPEED_BPS / 1_000_000)) * 1_000_000 / 8);
 };
 
-const update = (data) => {
-	Docker.update(data);
+const updateStack = (data) => {
+	Docker.updateStack(data);
 };
 
 const checkNextcloudAppUpdates = () => {
@@ -293,7 +342,7 @@ export {
 	getDefaultNetworkInterface,
 	getDefaultNetworkInterfaceSpeed,
 	getNodeAddress,
-	update,
+	updateStack,
 	checkNextcloudAppUpdates,
 	updateNextcloudApps,
 	fetchNextcloudAccounts,

@@ -106,7 +106,7 @@ export const mount = async () => {
 	const form = main.querySelector('u-form');
 
 	const login = async () => {
-		const button = form.querySelector('u-button[type="submit"]');
+		const button = form.querySelector('[type="submit"]');
 		button.disabled = true;
 		const data = form.getData();
 		try {
@@ -134,6 +134,6 @@ export const mount = async () => {
 		return;
 	}
 
-	const input = form.querySelector('u-input');
+	const input = form.querySelector('.email');
 	input?.updateComplete?.then(() => input.focus());
 };

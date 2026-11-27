@@ -50,6 +50,18 @@ bootstrap.Dialog.addScrollbar = (modal) => {
 			return;
 		}
 
+		if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
+			return;
+		}
+
+		const inner = event.target.closest('.overflow-auto');
+		if (inner && inner !== modalBody && modalBody.contains(inner)) {
+			const canScroll = (event.deltaY < 0 ? inner.scrollTop > 0 : inner.scrollTop < inner.scrollHeight - inner.clientHeight);
+			if (canScroll) {
+				return;
+			}
+		}
+
 		event.preventDefault();
 		modalBody.scrollTop += event.deltaY;
 		updateScrollbar();
@@ -93,6 +105,7 @@ bootstrap.Dialog.addScrollbar = (modal) => {
 
 	const resizeObserver = new ResizeObserver(updateScrollbar);
 	resizeObserver.observe(modalBody);
+	_.each(modalBody.children, (child) => { resizeObserver.observe(child); });
 	modalBody.addEventListener('scroll', updateScrollbar, { signal });
 	modalBody.addEventListener('wheel', wheelHandler, { signal, passive: false });
 	scrollbar.addEventListener('wheel', wheelHandler, { signal, passive: false });

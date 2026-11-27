@@ -1212,6 +1212,15 @@ $card-image-size: 30px;
 	}
 }
 
+.app-custom-compose {
+	pre {
+		@include vars.styled-scrollbar;
+	}
+	@include media-breakpoint-up(lg) {
+		height: calc(100dvh - var(--dialog-margin) * 2 - 136px);
+	}
+}
+
 .shortcut-icon-results {
 	display: grid;
 	grid-template-columns: repeat(6, 1fr);

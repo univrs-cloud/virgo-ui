@@ -51,7 +51,7 @@ export const mount = () => {
 	};
 
 	const verify = async () => {
-		const button = form.querySelector('u-button[type="submit"]');
+		const button = form.querySelector('[type="submit"]');
 		button.disabled = true;
 		const data = form.getData();
 		try {
@@ -78,7 +78,7 @@ export const mount = () => {
 	form.addEventListener('valid', verify);
 	main.querySelector('.sign-out').addEventListener('click', signOut);
 
-	const input = form.querySelector('u-otp');
+	const input = form.querySelector('.code');
 	input?.updateComplete?.then(() => input.focus());
 
 	begin();

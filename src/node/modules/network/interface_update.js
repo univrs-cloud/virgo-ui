@@ -37,19 +37,19 @@ const addDnsRow = (event) => {
 
 	row.classList.remove('d-none');
 	toggleAddDnsButton();
-	row.querySelector('u-input').focus();
+	row.querySelector('.dns-server-input').focus();
 };
 
 const removeDnsRow = (event) => {
 	const row = event.target.closest('.dns-server');
-	const input = row.querySelector('u-input');
+	const input = row.querySelector('.dns-server-input');
 	input.value = '';
 	input.error = '';
 	row.classList.add('d-none');
 	// Keep the visible rows contiguous so the servers stay in query order
-	const values = _.map(_.filter(dnsRows, isVisible), (row) => { return row.querySelector('u-input').value; });
+	const values = _.map(_.filter(dnsRows, isVisible), (row) => { return row.querySelector('.dns-server-input').value; });
 	_.each(dnsRows, (row, index) => {
-		row.querySelector('u-input').value = values[index] || '';
+		row.querySelector('.dns-server-input').value = values[index] || '';
 	});
 	showDnsRows(values.length);
 };
@@ -69,9 +69,9 @@ const updateInterface = (event) => {
 		data.virtualIp = (!isAuto ? _.trim(data.virtualIp) : null);
 	}
 	data.dnsServers = (!isAuto ? _.compact(_.map(_.filter(dnsRows, isVisible), (row) => {
-		return _.trim(data[row.querySelector('u-input').getAttribute('name')]);
+		return _.trim(data[row.querySelector('.dns-server-input').getAttribute('name')]);
 	})) : null);
-	_.each(dnsRows, (row) => { delete data[row.querySelector('u-input').getAttribute('name')]; });
+	_.each(dnsRows, (row) => { delete data[row.querySelector('.dns-server-input').getAttribute('name')]; });
 	networkService.updateInterface(data);
 	bootstrap.Dialog.getInstance(modal)?.hide();
 };
@@ -152,7 +152,7 @@ const render = (event) => {
 	form.querySelector('.gateway').value = networkInterface?.gateway || '';
 		const dnsServers = networkInterface?.dnsServers || [];
 	_.each(dnsRows, (row, index) => {
-		row.querySelector('u-input').value = dnsServers[index] || '';
+		row.querySelector('.dns-server-input').value = dnsServers[index] || '';
 	});
 	showDnsRows(Math.max(1, Math.min(dnsServers.length, MAX_DNS_SERVERS)));
 	applyDhcp();

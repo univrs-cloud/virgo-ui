@@ -33,7 +33,9 @@
 							<u-button variant="primary" size="sm" disabled><div class="spinner-border spinner-sm me-3"></div>Installing...</u-button>
 						<%}%>
 						<%if (!app.isInstalled && _.isEmpty(jobs)) {%>
-							<%if (isVirtualIpHolder || _.toLower(app.scope) === 'node') {%>
+							<%if (app.portConflictTip) {%>
+								<u-button variant="primary" size="sm" tip="<%-app.portConflictTip%>" disabled>Install</u-button>
+							<%} else if (isVirtualIpHolder || _.toLower(app.scope) === 'node') {%>
 								<u-button variant="primary" size="sm" class="install" data-bs-target="#app-install">Install</u-button>
 							<%} else {%>
 								<u-button variant="primary" size="sm" tip="This app runs for the whole cluster, so it can only be installed on the virtual IP holder." disabled>Install</u-button>

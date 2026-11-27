@@ -3,7 +3,7 @@ import Job from 'stores/job';
 import { createSubscription, storeAttach } from 'libs/services/module_store_subscription';
 
 function isAppUpdateJob(job) {
-	return job?.name === 'app:update';
+	return job?.name === 'app:stack:update';
 }
 
 const { subscribe } = createSubscription({

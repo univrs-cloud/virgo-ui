@@ -110,8 +110,20 @@ class Docker extends Store {
 		this.socket.emit('app:install', data);
 	}
 
+	installCustom(data) {
+		this.socket.emit('app:custom:install', data);
+	}
+
 	update(data) {
 		this.socket.emit('app:update', data);
+	}
+
+	updateCustom(data) {
+		this.socket.emit('app:custom:update', data);
+	}
+
+	updateStack(data) {
+		this.socket.emit('app:stack:update', data);
 	}
 
 	checkNextcloudAppUpdates() {

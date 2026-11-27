@@ -23,7 +23,7 @@ export const mount = () => {
 	};
 
 	const register = async () => {
-		const button = form.querySelector('u-button[type="submit"]');
+		const button = form.querySelector('[type="submit"]');
 		button.disabled = true;
 		const data = form.getData();
 		try {
@@ -65,6 +65,6 @@ export const mount = () => {
 	];
 	form.addEventListener('valid', register);
 
-	const input = form.querySelector('u-input');
+	const input = form.querySelector('.name');
 	input?.updateComplete?.then(() => input.focus());
 };

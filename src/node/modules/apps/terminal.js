@@ -76,7 +76,7 @@ const openSearch = (event) => {
 	terminal.options.theme = SEARCH_THEME;
 	const search = terminalContainer.querySelector('.search');
 	search.classList.remove('d-none');
-	const input = search.querySelector('input');
+	const input = search.querySelector('.form-control');
 	input.focus();
 	input.select();
 };
@@ -88,7 +88,7 @@ const closeSearch = () => {
 	}
 
 	search.classList.add('d-none');
-	search.querySelector('input').value = '';
+	search.querySelector('.form-control').value = '';
 	search.querySelector('.results').textContent = '';
 	searchAddon?.clearDecorations();
 	if (terminal) {
@@ -103,7 +103,7 @@ const find = (isPrevious = false, isIncremental = false) => {
 		return;
 	}
 
-	const term = search.querySelector('input').value;
+	const term = search.querySelector('.form-control').value;
 	if (!term) {
 		searchAddon.clearDecorations();
 		search.querySelector('.results').textContent = '';

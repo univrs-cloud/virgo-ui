@@ -20,7 +20,7 @@ const restore = (event) => {
 const render = (event) => {
 	const configuration = configurationService.getConfiguration();
 	const isRegistered = !_.isEmpty(configuration?.fleet?.token);
-	form.querySelector('.dialog-footer u-button[type="submit"]').textContent = (isRegistered ? 'Update' : 'Register');
+	form.querySelector('[type="submit"]').textContent = (isRegistered ? 'Update' : 'Register');
 	modal.querySelector('.fleet-link span').textContent = (isRegistered ? 'View fleet' : 'Create account');
 	const email = configuration?.fleet?.email || '';
 	form.querySelector('.email').value = email;

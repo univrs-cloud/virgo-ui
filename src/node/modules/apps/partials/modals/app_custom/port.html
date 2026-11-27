@@ -1,0 +1,18 @@
+<div class="port row g-3 align-items-center">
+	<div class="col-4">
+		<u-input label="Node port" class="port-published" value="<%-port.published%>"></u-input>
+	</div>
+	<div class="col-4">
+		<u-input label="Container port" class="port-target" value="<%-port.target%>"></u-input>
+	</div>
+	<div class="col">
+		<u-select label="Protocol" class="port-protocol">
+			<option value="tcp" <%=(port.protocol === 'tcp' ? 'selected' : '')%>>TCP</option>
+			<option value="udp" <%=(port.protocol === 'udp' ? 'selected' : '')%>>UDP</option>
+			<option value="both" <%=(port.protocol === 'both' ? 'selected' : '')%>>TCP and UDP</option>
+		</u-select>
+	</div>
+	<div class="col-auto mb-7">
+		<u-button variant="secondary" class="remove-row d-flex" outline><i class="icon-x icon-fw"></i></u-button>
+	</div>
+</div>

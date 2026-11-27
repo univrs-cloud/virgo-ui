@@ -5,6 +5,7 @@ $font-family-sans-serif: "'InterVariable', 'Inter', system-ui, -apple-system, 'S
 @mixin styled-scrollbar($gap: 0px, $track-margin: 0) {
 	&::-webkit-scrollbar {
 		width: calc(12px + #{$gap});
+		height: calc(12px + #{$gap});
 	}
 	&::-webkit-scrollbar-track,
 	&::-webkit-scrollbar-thumb {
@@ -22,6 +23,21 @@ $font-family-sans-serif: "'InterVariable', 'Inter', system-ui, -apple-system, 'S
 		&:hover {
 			background-color: var(--scrollbar-thumb-hover-bg);
 		}
+	}
+	&::-webkit-scrollbar-track:horizontal,
+	&::-webkit-scrollbar-thumb:horizontal {
+		border-top: $gap solid transparent;
+		border-right: 0;
+		border-bottom: 4px solid transparent;
+		border-left: 0;
+		border-radius: var(--radius-3) / calc(var(--radius-3) + #{$gap}) calc(var(--radius-3) + #{$gap}) calc(var(--radius-3) + 4px) calc(var(--radius-3) + 4px);
+	}
+	&::-webkit-scrollbar-track:horizontal {
+		margin-block: 0;
+		margin-inline: $track-margin;
+	}
+	&::-webkit-scrollbar-corner {
+		background-color: transparent;
 	}
 	@supports not selector(::-webkit-scrollbar) {
 		scrollbar-width: thin;

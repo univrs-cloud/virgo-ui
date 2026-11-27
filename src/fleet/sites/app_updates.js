@@ -67,7 +67,7 @@ const restore = () => {
 };
 
 const update = async (event) => {
-	const button = event.target.closest('u-button.update');
+	const button = event.target.closest('.update');
 	if (_.isNull(button) || _.isNull(nodeId)) {
 		return;
 	}

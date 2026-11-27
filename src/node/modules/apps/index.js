@@ -170,7 +170,7 @@ const update = (event) => {
 		return;
 	}
 
-	appService.update(data);
+	appService.updateStack(data);
 };
 
 const toggleChangelog = (event) => {
@@ -267,11 +267,17 @@ const performAppAction = async (event) => {
 	}
 
 	const button = event.target.closest('[data-action]:not([data-action="reset-filters"])');
-	if (!button || button.dataset.action === 'update') {
+	if (!button || button.dataset.action === 'update' || button.disabled || button.getAttribute('aria-disabled') === 'true' || button.classList.contains('disabled')) {
 		return;
 	}
 
 	event.preventDefault();
+	if (button.dataset.action === 'edit') {
+		const app = _.find(appService.getApps(), { name: button.closest('.item').dataset.name });
+		bootstrap.Dialog.getOrCreateInstance(app?.isCustom ? '#app-custom-edit' : '#app-install').show(button);
+		return;
+	}
+
 	const row = button.closest('.item');
 	const app = _.find(appService.getApps(), { name: row.dataset.name });
 	
@@ -301,7 +307,7 @@ const performServiceAction = async (event) => {
 	}
 
 	const button = event.target.closest('[data-action]:not([data-action="reset-filters"])');
-	if (!button) {
+	if (!button || button.disabled || button.getAttribute('aria-disabled') === 'true' || button.classList.contains('disabled')) {
 		return;
 	}
 
@@ -623,5 +629,6 @@ import('node/modules/apps/logs');
 import('node/modules/apps/terminal');
 import('node/modules/apps/app_center');
 import('node/modules/apps/app_install');
+import('node/modules/apps/app_custom');
 import('node/modules/apps/mailserver');
 import('node/modules/apps/nextcloud');
