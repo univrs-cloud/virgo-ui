@@ -8,13 +8,16 @@
 	<div class="node card border-0 mb-0 d-grid sm:d-flex flex-row align-items-center column-gap-3 row-gap-1 px-4 py-2">
 		<div class="node-info d-contents sm:d-flex flex-wrap flex-grow-1 align-items-center column-gap-3 row-gap-1">
 			<div class="d-contents sm:d-flex align-items-center gap-3">
-				<i class="icon-circle icon-2xs icon-width-auto fg-green-400"></i>
+				<span class="node-icon">
+					<i class="icon-server-nas icon-fw fg-gray-500"></i>
+					<span class="rounded-circle bg-success"></span>
+				</span>
 				<span class="fg-emphasis-secondary"><%-system?.osInfo?.hostname%></span>
 			</div>
 			<div class="node-addresses d-flex flex-column sm:flex-row sm:flex-wrap align-items-start sm:align-items-center column-gap-3 row-gap-1">
-				<span class="d-inline-flex align-items-center gap-1 font-monospace fs-sm fg-gray-500"><i class="icon-network icon-fw"></i><%-_.find(_.reject(_.find(system?.networkInterfaces, { 'default': true })?.addrInfo, { local: system?.virtualIp?.address }), { family: 'inet' })?.local%></span>
+				<u-badge color="gray" tint="100" class="font-monospace"><i class="icon-network icon-fw me-1"></i><%-_.find(_.reject(_.find(system?.networkInterfaces, { 'default': true })?.addrInfo, { local: system?.virtualIp?.address }), { family: 'inet' })?.local%></u-badge>
 				<%if (system?.virtualIp?.holding) {%>
-					<span class="d-inline-flex align-items-center gap-1 font-monospace fs-sm fg-gray-500"><i class="icon-ghost icon-fw"></i><%-system?.virtualIp?.address%></span>
+					<u-badge color="gray" tint="100" class="font-monospace"><i class="icon-ghost icon-fw me-1"></i><%-system?.virtualIp?.address%></u-badge>
 				<%}%>
 			</div>
 		</div>
@@ -25,7 +28,10 @@
 		<div class="node card border-0 mb-0 d-grid sm:d-flex flex-row align-items-center column-gap-3 row-gap-1 ps-4 pe-2 py-2">
 			<div class="node-info d-contents sm:d-flex flex-wrap flex-grow-1 align-items-center column-gap-3 row-gap-1">
 				<div class="d-contents sm:d-flex align-items-center gap-3">
-					<i class="icon-circle icon-2xs icon-width-auto <%=(seen ? 'fg-green-400' : 'fg-red-400')%>" data-bs-toggle="tooltip" data-bs-original-title="<%=(seen ? 'Online' : 'Offline')%>"></i>
+					<span class="node-icon">
+						<i class="icon-server-nas icon-fw fg-gray-500"></i>
+						<span class="rounded-circle <%=(seen ? 'bg-success' : 'bg-danger')%>" data-bs-toggle="tooltip" data-bs-original-title="<%=(seen ? 'Online' : 'Offline')%>"></span>
+					</span>
 					<%if (seen?.name && seen?.cluster) {%>
 						<a href="https://<%-_.toLower(`${seen.name}.${seen.cluster}`)%>" target="_blank" rel="noopener noreferrer" class="fg-emphasis-secondary underline-0 hover:underline-80"><%-node.name%></a>
 					<%} else {%>
@@ -33,9 +39,9 @@
 					<%}%>
 				</div>
 				<div class="node-addresses d-flex flex-column sm:flex-row sm:flex-wrap align-items-start sm:align-items-center column-gap-3 row-gap-1">
-					<span class="d-inline-flex align-items-center gap-1 font-monospace fs-sm fg-gray-500"><i class="icon-network icon-fw"></i><%-(seen?.address) || node?.address%></span>
+					<u-badge color="gray" tint="100" class="font-monospace"><i class="icon-network icon-fw me-1"></i><%-(seen?.address) || node?.address%></u-badge>
 					<%if (seen?.holdsVirtualIp) {%>
-						<span class="d-inline-flex align-items-center gap-1 font-monospace fs-sm fg-gray-500"><i class="icon-ghost icon-fw"></i><%-seen.virtualIp%></span>
+						<u-badge color="gray" tint="100" class="font-monospace"><i class="icon-ghost icon-fw me-1"></i><%-seen.virtualIp%></u-badge>
 					<%}%>
 				</div>
 			</div>
@@ -58,11 +64,14 @@
 		<div class="node card border-0 mb-0 d-grid sm:d-flex flex-row align-items-center column-gap-3 row-gap-1 ps-4 pe-2 py-2">
 			<div class="node-info d-contents sm:d-flex flex-wrap flex-grow-1 align-items-center column-gap-3 row-gap-1">
 				<div class="d-contents sm:d-flex align-items-center gap-3">
-					<i class="icon-circle icon-2xs icon-width-auto fg-gray-400"></i>
+					<span class="node-icon">
+						<i class="icon-server-nas icon-fw fg-gray-500"></i>
+						<i class="icon-circle fg-3"></i>
+					</span>
 					<span class="fg-emphasis-secondary"><%-node?.name || 'unknown'%></span>
 				</div>
 				<div class="node-addresses d-flex flex-column sm:flex-row sm:flex-wrap align-items-start sm:align-items-center column-gap-3 row-gap-1">
-					<span class="d-inline-flex align-items-center gap-1 font-monospace fs-sm fg-gray-500"><i class="icon-network icon-fw"></i><%-node?.address%></span>
+					<u-badge color="gray" tint="100" class="font-monospace"><i class="icon-network icon-fw me-1"></i><%-node?.address%></u-badge>
 				</div>
 			</div>
 			<div class="node-actions d-flex align-items-center gap-3">
@@ -80,7 +89,10 @@
 		<div class="node adoptable card mb-0 d-grid sm:d-flex flex-row align-items-center column-gap-3 row-gap-1 ps-4 pe-2 py-2">
 			<div class="node-info d-contents sm:d-flex flex-wrap flex-grow-1 align-items-center column-gap-3 row-gap-1">
 				<div class="d-contents sm:d-flex align-items-center gap-3">
-					<i class="icon-circle-dashed icon-xs icon-width-auto fg-gray-500"></i>
+					<span class="node-icon">
+						<i class="icon-server-nas icon-fw fg-gray-500"></i>
+						<i class="icon-circle-dashed fg-3"></i>
+					</span>
 					<%if (node?.name && node?.cluster) {%>
 						<a href="https://<%-_.toLower(`${node.name}.${node.cluster}`)%>" target="_blank" rel="noopener noreferrer" class="fg-emphasis-secondary underline-0 hover:underline-80"><%-node.name%></a>
 					<%} else {%>
@@ -88,9 +100,9 @@
 					<%}%>
 				</div>
 				<div class="node-addresses d-flex flex-column sm:flex-row sm:flex-wrap align-items-start sm:align-items-center column-gap-3 row-gap-1">
-					<span class="d-inline-flex align-items-center gap-1 font-monospace fs-sm fg-gray-500"><i class="icon-network icon-fw"></i><%-node?.address%></span>
+					<u-badge color="gray" tint="100" class="font-monospace"><i class="icon-network icon-fw me-1"></i><%-node?.address%></u-badge>
 					<%if (node?.holdsVirtualIp) {%>
-						<span class="d-inline-flex align-items-center gap-1 font-monospace fs-sm fg-gray-500"><i class="icon-ghost icon-fw"></i><%-node.virtualIp%></span>
+						<u-badge color="gray" tint="100" class="font-monospace"><i class="icon-ghost icon-fw me-1"></i><%-node.virtualIp%></u-badge>
 					<%}%>
 				</div>
 			</div>
@@ -100,7 +112,10 @@
 	<div class="node adoptable card mb-0 d-grid sm:d-flex flex-row align-items-center column-gap-3 row-gap-1 ps-4 pe-2 py-2">
 		<div class="node-info d-contents sm:d-flex flex-wrap flex-grow-1 align-items-center column-gap-3 row-gap-1">
 			<div class="d-contents sm:d-flex align-items-center gap-3">
-				<i class="icon-circle-dashed icon-xs icon-width-auto fg-gray-500"></i>
+				<span class="node-icon">
+					<i class="icon-server-nas icon-fw fg-gray-500"></i>
+					<i class="icon-circle-dashed fg-3"></i>
+				</span>
 				<span class="fg-emphasis-secondary">External backup node</span>
 			</div>
 		</div>
