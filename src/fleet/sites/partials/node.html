@@ -14,7 +14,8 @@
 	const cellStateClass = !node.online ? '' : (hasCriticalPool ? 'bg-danger bg-opacity-10' : (hasDegradedPool ? 'bg-warning bg-opacity-10' : ''));
 	// Offline has no pools so it stays a neutral gray Offline.
 	const statusColor = !node.online ? 'gray' : (hasCriticalPool ? 'red' : (hasDegradedPool ? 'orange' : 'green'));
-	const statusLabel = !node.online ? 'Offline' : (hasCriticalPool ? 'Faulted' : (hasDegradedPool ? 'Degraded' : 'Online'));
+	const isUpdatingAway = (!node.online && node.update?.state === 'running');
+	const statusLabel = !node.online ? (isUpdatingAway ? 'Disconnected while updating' : 'Offline') : (hasCriticalPool ? 'Faulted' : (hasDegradedPool ? 'Degraded' : 'Online'));
 	const isRebuilding = node.online && hasResilveringPool && !hasUnhealthyNonResilver;
 	const statusTip = (node.online && hasCriticalPool) ? 'Online · storage faulted' : ((node.online && hasDegradedPool) ? 'Online · storage degraded' : '');
 	const statusDotColor = !node.online ? 'bg-gray-500' : (hasCriticalPool ? 'bg-danger' : (hasDegradedPool ? 'bg-warning' : 'bg-success'));
@@ -73,7 +74,7 @@
 					<u-badge size="sm" color="gray" tint="500" class="ms-3" pill outline>Invited</u-badge>
 				<%}%>
 			</div>
-			<%if (!node.online && node.lastSeenAt) {%>
+			<%if (!node.online && !isUpdatingAway && node.lastSeenAt) {%>
 				<small class="d-block fg-4 text-truncate" data-bs-toggle="tooltip" data-bs-original-title="<%=moment(node.lastSeenAt).format('MMM D, YYYY [at] HH:mm')%>">Last seen <%=moment(node.lastSeenAt).fromNow()%></small>
 			<%}%>
 		</td>
@@ -126,7 +127,7 @@
 				<div class="d-flex align-items-center font-tabular-nums mt-3 pt-1 mb-5">
 					<%=badgesTemplate({ node, isRebuilding, statusColor, resilverPercent, upsBadge })%>
 				</div>
-				<%if (!node.online && node.lastSeenAt) {%>
+				<%if (!node.online && !isUpdatingAway && node.lastSeenAt) {%>
 					<div class="fg-4 fs-xs mt-5">
 						Last seen <%=moment(node.lastSeenAt).fromNow()%>, on <%=moment(node.lastSeenAt).format('MMM D, YYYY [at] HH:mm')%>.
 					</div>

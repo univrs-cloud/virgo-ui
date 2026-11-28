@@ -13,9 +13,24 @@
 	background: transparent;
 }
 
+@property --node-icon-size {
+	syntax: "<length>";
+	inherits: true;
+	initial-value: 0px;
+}
+
 .node-icon {
+	--node-icon-size: 1em;
 	position: relative;
 	display: inline-flex;
+	> [data-bs-toggle="tooltip"]::after {
+		content: "";
+		position: absolute;
+		top: .125rem;
+		right: .125rem;
+		width: calc(var(--node-icon-size) * 1.25);
+		height: var(--node-icon-size);
+	}
 	> :first-child {
 		mask: radial-gradient(circle at calc(100% - .125rem) .125rem, transparent .375rem, #000 calc(.375rem + .5px)) no-repeat;
 	}

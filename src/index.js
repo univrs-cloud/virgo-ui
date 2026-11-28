@@ -56,8 +56,10 @@ const render = async (state) => {
 	} else if (isAdmin && !_.isNull(state.update)) {
 		const updateView = await import('node/update');
 		updateView.enter({ startRouter: true });
+		await import('node/favicon');
 	} else if (state.update?.state === 'running') {
 		await import('node/maintenance');
+		await import('node/favicon');
 	} else {
 		try {
 			await Promise.all([
@@ -69,6 +71,7 @@ const render = async (state) => {
 				import('node/reboot_required'),
 				import('node/peer_requests'),
 				import('node/session'),
+				import('node/favicon'),
 				...(isAdmin ? [] : [import('node/maintenance')])
 			]);
 			const { modulesLoaded } = await import('node/modules');
