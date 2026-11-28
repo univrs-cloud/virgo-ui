@@ -2,8 +2,11 @@ import * as faviconService from 'node/services/favicon';
 import { setBadge } from 'libs/favicon';
 
 const FINISHED_STATES = ['completed', 'succeeded', 'failed'];
+const GRACE_MS = 3000;
 
 let wasConnected = false;
+let isConnectionLost = false;
+let lostTimer = null;
 let runningKeys = new Set();
 let outcome = null;
 let lastState = null;
@@ -26,11 +29,11 @@ const trackOutcomes = (activities) => {
 };
 
 const pickBadge = (state) => {
-	if (!state.isConnected && wasConnected && runtimeRole === 'fleet') {
+	if (isConnectionLost && runtimeRole === 'fleet') {
 		return { color: 'red-500', mark: 'dot' };
 	}
 
-	if ((!state.isConnected && wasConnected) || state.isRestarting) {
+	if (isConnectionLost || state.isRestarting) {
 		return { color: 'gray-400', darkColor: 'gray-200', mark: 'dot' };
 	}
 
@@ -65,6 +68,15 @@ const render = (state) => {
 	lastState = state;
 	if (state.isConnected) {
 		wasConnected = true;
+		isConnectionLost = false;
+		clearTimeout(lostTimer);
+		lostTimer = null;
+	} else if (wasConnected && !isConnectionLost && !lostTimer) {
+		lostTimer = setTimeout(() => {
+			lostTimer = null;
+			isConnectionLost = true;
+			setBadge(pickBadge(lastState));
+		}, GRACE_MS);
 	}
 
 	const activities = _.map(state.jobs, (job) => { return { key: `job:${job.id}`, state: job.state }; });
