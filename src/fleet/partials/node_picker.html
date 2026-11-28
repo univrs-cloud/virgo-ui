@@ -44,18 +44,27 @@
 				<%_.each(group.members, (node) => {%>
 					<%if (node.nodeId === currentNodeId) {%>
 						<div class="menu-item d-flex align-items-center bg-subtle-primary pe-none">
-							<i class="icon-circle-small flex-shrink-0 <%-node.online ? 'fg-green-400' : 'fg-red-500'%>"></i>
+							<span class="node-icon flex-shrink-0">
+								<i class="icon-server-nas icon-fw fg-gray-500"></i>
+								<span class="rounded-circle <%-node.online ? 'bg-success' : 'bg-danger'%>"></span>
+							</span>
 							<span class="text-truncate min-w-0"><%-node.name || node.nodeId%></span>
 							<i class="icon-circle-check icon-sm flex-shrink-0 fg-primary ms-auto ps-3"></i>
 						</div>
 					<%} else if (node.online) {%>
 						<a href="/nodes/<%-node.nodeId%>" rel="external" class="menu-item d-flex align-items-center">
-							<i class="icon-circle-small flex-shrink-0 fg-green-400"></i>
+							<span class="node-icon flex-shrink-0">
+								<i class="icon-server-nas icon-fw fg-gray-500"></i>
+								<span class="rounded-circle bg-success"></span>
+							</span>
 							<span class="text-truncate min-w-0"><%-node.name || node.nodeId%></span>
 						</a>
 					<%} else {%>
 						<div class="menu-item d-flex align-items-center disabled fg-4">
-							<i class="icon-circle-small flex-shrink-0 fg-red-500"></i>
+							<span class="node-icon flex-shrink-0">
+								<i class="icon-server-nas icon-fw fg-gray-500"></i>
+								<span class="rounded-circle bg-danger"></span>
+							</span>
 							<span class="text-truncate min-w-0"><%-node.name || node.nodeId%></span>
 						</div>
 					<%}%>

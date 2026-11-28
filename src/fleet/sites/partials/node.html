@@ -17,7 +17,7 @@
 	const statusLabel = !node.online ? 'Offline' : (hasCriticalPool ? 'Faulted' : (hasDegradedPool ? 'Degraded' : 'Online'));
 	const isRebuilding = node.online && hasResilveringPool && !hasUnhealthyNonResilver;
 	const statusTip = (node.online && hasCriticalPool) ? 'Online · storage faulted' : ((node.online && hasDegradedPool) ? 'Online · storage degraded' : '');
-	const statusDotColor = !node.online ? 'fg-gray-500' : (hasCriticalPool ? 'fg-red-300' : (hasDegradedPool ? 'fg-orange-300' : 'fg-green-300'));
+	const statusDotColor = !node.online ? 'bg-gray-500' : (hasCriticalPool ? 'bg-danger' : (hasDegradedPool ? 'bg-warning' : 'bg-success'));
 	const statusDotTip = statusTip || statusLabel;
 	// UPS reads the same host:ups shape the node dashboard uses: a status object, or one carrying an error when the reading is unusable. Nodes older than that shape send the bare 'remote i/o error' string.
 	const ups = (node.online && _.isObject(node.ups) && !node.ups.error && node.ups.batteryCharge !== false) ? node.ups : null;
@@ -60,7 +60,10 @@
 	<tr>
 		<td class="<%=cellStateClass%> <%=(isGrouped ? 'ps-7' : '')%>" style="min-width: 180px; max-width: 0;">
 			<div class="d-flex align-items-center">
-				<i class="icon-circle icon-fw flex-shrink-0 me-1 <%=statusDotColor%>" data-bs-toggle="tooltip" data-bs-original-title="<%-statusDotTip%>"></i>
+				<span class="node-icon flex-shrink-0 me-2">
+					<i class="icon-server-nas icon-fw fg-gray-500"></i>
+					<span class="rounded-circle <%=statusDotColor%>" data-bs-toggle="tooltip" data-bs-original-title="<%-statusDotTip%>"></span>
+				</span>
 				<%if (node.online) {%>
 					<a href="/nodes/<%-node.nodeId%>" rel="external" class="text-decoration-none fg-body text-truncate min-w-0"><%-node.name%></a>
 				<%} else {%>
@@ -99,11 +102,17 @@
 				<div class="d-flex align-items-center justify-content-between">
 					<div class="flex-grow-1 me-3 min-w-0">
 						<h5 class="mb-0 d-flex align-items-center">
-							<i class="icon-circle icon-fw z-2 position-relative me-1 <%=statusDotColor%>" data-bs-toggle="tooltip" data-bs-original-title="<%-statusDotTip%>"></i>
+							<span class="node-icon z-2 me-2">
+								<i class="icon-server-nas icon-fw fg-gray-500"></i>
+								<span class="rounded-circle <%=statusDotColor%>" data-bs-toggle="tooltip" data-bs-original-title="<%-statusDotTip%>"></span>
+							</span>
 							<%if (node.online) {%>
 								<a href="/nodes/<%-node.nodeId%>" rel="external" class="stretched-link text-decoration-none fg-body text-truncate min-w-0"><%-node.name%></a>
 							<%} else {%>
 								<span class="fg-body text-truncate min-w-0"><%-node.name%></span>
+							<%}%>
+							<%if (!node.isOwner) {%>
+								<u-badge color="gray" tint="100" class="flex-shrink-0 ms-3" pill>Invited</u-badge>
 							<%}%>
 						</h5>
 					</div>
@@ -123,9 +132,6 @@
 					</div>
 				<%}%>
 			</div>
-			<%if (!node.isOwner) {%>
-				<u-badge color="gray" tint="100" class="indicator" style="top: auto; bottom: -1.65rem;" pill>Invited</u-badge>
-			<%}%>
 		</div>
 	</div>
 <%}%>

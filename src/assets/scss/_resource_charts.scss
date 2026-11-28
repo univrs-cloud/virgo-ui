@@ -74,24 +74,6 @@
 			--card-bg: transparent;
 			border-style: dashed;
 		}
-		.node-icon {
-			position: relative;
-			display: inline-flex;
-			> :first-child {
-				mask: radial-gradient(circle at calc(100% - .125rem) .125rem, transparent .375rem, #000 calc(.375rem + .5px)) no-repeat;
-			}
-			> :last-child {
-				position: absolute;
-				top: -.125rem;
-				right: -.125rem;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				width: .5rem;
-				height: .5rem;
-				font-size: .5rem;
-			}
-		}
 	}
 	#resources-monitor {
 		display: contents;
