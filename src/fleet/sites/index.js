@@ -44,9 +44,25 @@ const switchView = (event) => {
 	render({ nodes: nodeService.getNodes() });
 };
 
+const open = (event) => {
+	if (event.target.closest('a, .dropdown')) {
+		return;
+	}
+
+	const row = event.target.closest('.item');
+	const nodeId = row?.dataset.nodeId;
+	if (!nodeId) {
+		return;
+	}
+
+	event.preventDefault();
+	location.assign(`/nodes/${encodeURIComponent(nodeId)}`);
+};
+
 nodeService.subscribe([render]);
 setInterval(() => render({ nodes: nodeService.getNodes() }), 60000);
 module.addEventListener('click', switchView);
+module.addEventListener('click', open);
 desktopQuery.addEventListener('change', () => render({ nodes: nodeService.getNodes() }));
 
 import('fleet/sites/admin_add');

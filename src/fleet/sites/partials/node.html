@@ -57,7 +57,7 @@
 	})();
 %>
 <%if (view === 'table') {%>
-	<tr>
+	<tr class="item <%=(node.online ? 'cursor-pointer' : '')%>"<%=(node.online ? ` data-node-id="${_.escape(node.nodeId)}"` : '')%>>
 		<td class="<%=cellStateClass%> <%=(isGrouped ? 'ps-7' : '')%>" style="min-width: 180px; max-width: 0;">
 			<div class="d-flex align-items-center">
 				<span class="node-icon flex-shrink-0 me-2">
@@ -70,7 +70,7 @@
 					<span class="fg-body text-truncate min-w-0"><%-node.name%></span>
 				<%}%>
 				<%if (!node.isOwner) {%>
-					<u-badge color="gray" tint="100" class="ms-3" pill>Invited</u-badge>
+					<u-badge size="sm" color="gray" tint="500" class="ms-3" pill outline>Invited</u-badge>
 				<%}%>
 			</div>
 			<%if (!node.online && node.lastSeenAt) {%>
@@ -91,8 +91,13 @@
 				<small class="fg-4">&mdash;</small>
 			<%}%>
 		</td>
-		<td class="<%=cellStateClass%> ps-0" style="width: 30px; min-width: 30px;">
+		<td class="<%=cellStateClass%> text-center px-0">
 			<%=menuTemplate({ node })%>
+		</td>
+		<td class="<%=cellStateClass%> text-end pe-0">
+			<%if (node.online) {%>
+				<i class="icon-chevron-right icon-fw fg-4"></i>
+			<%}%>
 		</td>
 	</tr>
 <%} else {%>
@@ -112,7 +117,7 @@
 								<span class="fg-body text-truncate min-w-0"><%-node.name%></span>
 							<%}%>
 							<%if (!node.isOwner) {%>
-								<u-badge color="gray" tint="100" class="flex-shrink-0 ms-3" pill>Invited</u-badge>
+								<u-badge size="sm" color="gray" tint="500" class="ms-3" pill outline>Invited</u-badge>
 							<%}%>
 						</h5>
 					</div>

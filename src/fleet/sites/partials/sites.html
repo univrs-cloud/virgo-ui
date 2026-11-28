@@ -95,14 +95,15 @@
 								<th class="text-nowrap">Node</th>
 								<th class="text-nowrap" style="width: 340px; min-width: 340px;">Activity</th>
 								<th class="text-nowrap" style="width: 320px; min-width: 320px;">Storage</th>
-								<th class="ps-0" style="width: 30px; min-width: 30px;"></th>
+								<th style="width: 30px; min-width: 30px;"></th>
+								<th style="width: 30px; min-width: 30px;"></th>
 							</tr>
 						</thead>
 						<%_.each(groups, (group) => {%>
 							<tbody>
 								<%if (showLabels) {%>
 									<tr>
-										<th colspan="4" class="fg-4 fw-normal"><%-group.label%><u-badge color="gray" tint="100" class="align-middle ms-2" pill><%=group.members.length%></u-badge></th>
+										<th colspan="5" class="fg-4 fw-normal"><%-group.label%><u-badge color="gray" tint="100" class="align-middle ms-2" pill><%=group.members.length%></u-badge></th>
 									</tr>
 								<%}%>
 								<%_.each(group.members, (node) => {%>
