@@ -103,7 +103,7 @@
 							<tbody>
 								<%if (showLabels) {%>
 									<tr>
-										<th colspan="5" class="fg-4 fw-normal"><%-group.label%><u-badge size="sm" color="gray" tint="100" class="align-middle ms-2" pill><%=group.members.length%></u-badge></th>
+										<th colspan="5" class="fg-4 fw-normal"><div class="d-flex align-items-center"><%-group.label%><u-badge size="sm" color="gray" tint="100" class="ms-2" pill><%=group.members.length%></u-badge></div></th>
 									</tr>
 								<%}%>
 								<%_.each(group.members, (node) => {%>
