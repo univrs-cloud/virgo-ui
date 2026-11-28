@@ -39,7 +39,7 @@
 					<%if (index > 0) {%>
 						<hr class="menu-divider">
 					<%}%>
-					<h6 class="menu-header text-truncate" title="<%-group.label%>"><%-group.label%> &middot; <%=_.pluralize('node', group.members.length, true)%></h6>
+					<h6 class="menu-header d-flex align-items-center" title="<%-group.label%>"><span class="text-truncate min-w-0"><%-group.label%></span><u-badge size="sm" color="gray" tint="100" class="flex-shrink-0 ms-2" pill><%=group.members.length%></u-badge></h6>
 				<%}%>
 				<%_.each(group.members, (node) => {%>
 					<%if (node.nodeId === currentNodeId) {%>

@@ -64,7 +64,7 @@
 			<span class="nav-label ms-3">Updates</span>
 		</span>
 		<%if (systemUpdates > 0) {%>
-			<u-badge color="white" class="md:ms-auto ms-auto" pill><small><%=systemUpdates%></small></u-badge>
+			<u-badge size="sm" color="white" class="md:ms-auto ms-auto" pill><%=systemUpdates%></u-badge>
 		<%}%>
 	</a>
 	<a href="/settings" class="nav-item nav-link <%=(active === '/settings' && 'active')%>">

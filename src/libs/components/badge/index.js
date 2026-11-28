@@ -3,7 +3,15 @@ import { classMap } from 'lit/directives/class-map.js';
 import { sheet } from '../styles.js';
 
 export class Badge extends LitElement {
-	static styles = [sheet, css`:host { display: inline-block; }`];
+	static styles = [sheet, css`
+		:host { display: inline-block; }
+		.badge-sm {
+			--badge-font-size: .65625rem;
+			--badge-padding-x: .5em;
+			--badge-padding-y: .125em;
+			min-height: 1rem;
+		}
+	`];
 
 	static get properties() {
 		return {
@@ -13,6 +21,7 @@ export class Badge extends LitElement {
 			tint: { type: String, reflect: true, converter: {
 				fromAttribute: (value) => { return value ?? 100; }
 			}},
+			size: { type: String, reflect: true },
 			pill: { type: Boolean, reflect: true },
 			outline: { type: Boolean, reflect: true },
 			tip: { type: String, reflect: true }
@@ -49,6 +58,8 @@ export class Badge extends LitElement {
 			[`bd-${tone}`]: !this.outline,
 			[`fg-${tone}`]: this.outline,
 			[`border-${tone}`]: this.outline,
+			'badge-sm': this.size === 'sm',
+			'badge-lg': this.size === 'lg',
 			'rounded-pill': this.pill,
 			'border': this.outline
 		};

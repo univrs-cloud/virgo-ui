@@ -102,7 +102,7 @@
 							<tbody>
 								<%if (showLabels) {%>
 									<tr>
-										<th colspan="4" class="fg-4 fw-normal"><%-group.label%> &middot; <%=_.pluralize('node', group.members.length, true)%></th>
+										<th colspan="4" class="fg-4 fw-normal"><%-group.label%><u-badge color="gray" tint="100" class="align-middle ms-2" pill><%=group.members.length%></u-badge></th>
 									</tr>
 								<%}%>
 								<%_.each(group.members, (node) => {%>
@@ -117,7 +117,7 @@
 			<%_.each(groups, (group, index) => {%>
 				<%if (showLabels) {%>
 					<div class="col-12">
-						<h5 class="fg-4 ps-1 mb-3 <%=index > 0 ? 'mt-5' : ''%>"><%-group.label%> &middot; <%=_.pluralize('node', group.members.length, true)%></h5>
+						<h5 class="d-flex align-items-center fg-4 ps-1 mb-3 <%=index > 0 ? 'mt-5' : ''%>"><%-group.label%><u-badge color="gray" tint="100" class="ms-2" pill><%=group.members.length%></u-badge></h5>
 					</div>
 				<%}%>
 				<%_.each(group.members, (node) => {%>

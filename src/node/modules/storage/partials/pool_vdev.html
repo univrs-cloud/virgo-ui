@@ -72,17 +72,17 @@
 			<span class="d-inline-flex ms-3 flex-shrink-0" data-bs-toggle="tooltip" data-bs-original-title="<%-{ resilvering: 'Resilvering', repairing: 'Repairing', awaiting: 'Awaiting resilver' }[activity]%>"><i class="icon-disc icon-fw lh-1 fg-blue-400 <%=(activity === 'awaiting' ? '' : 'icon-spin')%>"></i></span>
 		<%}%>
 		<%if (size) {%>
-			<u-badge color="gray" tint="100" class="ms-3 flex-shrink-0" pill><small><%=prettyBytes(size, { binary: true })%></small></u-badge>
+			<u-badge size="sm" color="gray" tint="100" class="ms-3 flex-shrink-0" pill><%=prettyBytes(size, { binary: true })%></u-badge>
 		<%}%>
 		<%if (errors > 0) {%>
-			<u-badge color="red" tint="100" class="ms-3 flex-shrink-0" tip="Errors: <%-errorsTip%>" pill><small><%-readErrors%> / <%-writeErrors%> / <%-checksumErrors%></small></u-badge>
+			<u-badge size="sm" color="red" tint="100" class="ms-3 flex-shrink-0" tip="Errors: <%-errorsTip%>" pill><%-readErrors%> / <%-writeErrors%> / <%-checksumErrors%></u-badge>
 		<%}%>
 		<%if (vdev.slowIos > 0) {%>
-			<u-badge color="orange" tint="100" class="ms-3 flex-shrink-0" tip="Slow I/O operations" pill><small><%-vdev.slowIos%></small></u-badge>
+			<u-badge size="sm" color="orange" tint="100" class="ms-3 flex-shrink-0" tip="Slow I/O operations" pill><%-vdev.slowIos%></u-badge>
 		<%}%>
 		<%if (isDisk && !_.isNil(drive?.temperature)) {%>
-			<u-badge color="<%-temperatureColor%>" tint="<%=temperatureTint%>" class="ms-3 flex-shrink-0" tip="Warning at <%-drive.temperatureWarningThreshold%> °C, critical at <%-drive.temperatureCriticalThreshold%> °C" pill>
-				<small><%-drive.temperature%> °C</small>
+			<u-badge size="sm" color="<%-temperatureColor%>" tint="<%=temperatureTint%>" class="ms-3 flex-shrink-0" tip="Warning at <%-drive.temperatureWarningThreshold%> °C, critical at <%-drive.temperatureCriticalThreshold%> °C" pill>
+				<%-drive.temperature%> °C
 			</u-badge>
 		<%}%>
 		<%const healthColorName = (isDisk ? healthColor(drive?.health) : null)%>

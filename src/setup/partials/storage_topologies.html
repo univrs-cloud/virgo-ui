@@ -40,7 +40,7 @@
 						<span class="d-flex flex-wrap align-items-center gap-3">
 							<span><%-LABELS[option.type]%></span>
 							<%if (topology.recommended) {%>
-								<u-badge color="green" pill><small>Recommended</small></u-badge>
+								<u-badge size="sm" color="green" pill>Recommended</u-badge>
 							<%}%>
 						</span>
 						<small class="d-block fg-4">
@@ -59,7 +59,7 @@
 					<%_.each(_.chunk(usedDrives, topology.width), (vdevDrives, index) => {%>
 						<span class="vdev-group text-center">
 							<span class="d-block">
-								<u-badge color="gray" pill><small><%-topology.type%>-<%=index%></small></u-badge>
+								<u-badge size="sm" color="gray" pill><%-topology.type%>-<%=index%></u-badge>
 							</span>
 							<span class="d-block mt-2">
 								<span class="vdev-slots">
@@ -77,7 +77,7 @@
 					<%if (!_.isEmpty(unusedDrives)) {%>
 						<span class="vdev-group vdev-group-unused text-center">
 							<span class="d-block">
-								<u-badge color="gray" pill><small>Unused</small></u-badge>
+								<u-badge size="sm" color="gray" pill>Unused</u-badge>
 							</span>
 							<span class="d-block mt-2">
 								<span class="vdev-slots">

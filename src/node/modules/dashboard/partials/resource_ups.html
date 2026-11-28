@@ -9,14 +9,14 @@
 	<div class="d-flex align-items-center justify-content-between gap-2 fs-sm fg-gray-500">
 		<span>UPS</span>
 		<%if (mode === 'missing') {%>
-			<u-badge color="red" tint="100">
-				<small><%-fault%></small>
+			<u-badge size="sm" color="red" tint="100">
+				<%-fault%>
 			</u-badge>
 		<%} else if (mode === 'unreachable' || mode === 'failed') {%>
 			<span class="<%=(mode === 'failed' ? 'fg-orange-700' : '')%>"><%-fault%></span>
 		<%} else if (mode === 'reading' && state.ups.powerSource) {%>
-			<u-badge color="<%=(state.ups.powerSource === 'battery' ? 'orange' : 'green')%>">
-				<small><%=state.ups.powerSource.toUpperCase()%></small>
+			<u-badge size="sm" color="<%=(state.ups.powerSource === 'battery' ? 'orange' : 'green')%>">
+				<%=state.ups.powerSource.toUpperCase()%>
 			</u-badge>
 		<%}%>
 	</div>

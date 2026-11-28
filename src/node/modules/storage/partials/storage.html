@@ -23,10 +23,10 @@
 			<%const firstVdev = childVdevs[0]%>
 			<%const poolConfig = ((firstVdev && firstVdev.vdevType !== 'disk') ? _.replace(firstVdev.name, /-\d+$/, '') : null)%>
 			<%if (poolConfig) {%>
-				<u-badge class="ms-3" pill>
-					<small><%-poolConfig%></small>
+				<u-badge size="sm" class="ms-3" pill>
+					<%-poolConfig%>
 					<%if (childVdevs.length > 1) {%>
-						<small class="ms-1 opacity-75">&times;<%-childVdevs.length%></small>
+						<span class="ms-1 opacity-75">&times;<%-childVdevs.length%></span>
 					<%}%>
 				</u-badge>
 			<%}%>
@@ -82,7 +82,7 @@
 		<%}%>
 	</td>
 	<td>
-		<u-badge color="<%=stateColor(pool.properties.health.value)%>" pill><small><%-pool.properties.health.value%></small></u-badge>
+		<u-badge color="<%=stateColor(pool.properties.health.value)%>" pill><%-pool.properties.health.value%></u-badge>
 	</td>
 	<td class="text-center px-0">
 		<%=poolActionsTemplate({ pool, expandJob, inline: false, prettyBytes })%>

@@ -79,10 +79,10 @@
 							<%if (!_.isEmpty(topology.nodes) || system?.virtualIp?.holding) {%>
 								<div class="d-flex flex-wrap justify-content-center gap-1 mt-1">
 									<%if (!_.isEmpty(topology.nodes)) {%>
-										<u-badge class="topology-detail" color="green" tint="100" pill><small>This node</small></u-badge>
+										<u-badge size="sm" class="topology-detail" color="green" tint="100" pill>This node</u-badge>
 									<%}%>
 									<%if (system?.virtualIp?.holding) {%>
-										<u-badge class="topology-detail" color="gray" tint="100" tip="Virtual IP" pill><small><i class="icon-ghost icon-fw me-1"></i><%-system.virtualIp.address%></small></u-badge>
+										<u-badge size="sm" class="topology-detail" color="gray" tint="100" tip="Virtual IP" pill><i class="icon-ghost icon-fw me-1"></i><%-system.virtualIp.address%></u-badge>
 									<%}%>
 								</div>
 							<%}%>
@@ -118,9 +118,9 @@
 									<small class="d-block fg-4 text-truncate max-w-100"><%-node.address%></small>
 								<%}%>
 								<div class="d-flex flex-wrap justify-content-center gap-1 mt-1">
-									<u-badge color="<%=(node.isAdopted ? 'blue' : 'gray')%>" tint="100" pill><small><%=(node.isAdopted ? 'Adopted' : 'Not adopted')%></small></u-badge>
+									<u-badge size="sm" color="<%=(node.isAdopted ? 'blue' : 'gray')%>" tint="100" pill><%=(node.isAdopted ? 'Adopted' : 'Not adopted')%></u-badge>
 									<%if (node.virtualIp) {%>
-										<u-badge color="gray" tint="100" tip="Virtual IP" pill><small><i class="icon-ghost icon-fw me-1"></i><%-node.virtualIp%></small></u-badge>
+										<u-badge size="sm" color="gray" tint="100" tip="Virtual IP" pill><i class="icon-ghost icon-fw me-1"></i><%-node.virtualIp%></u-badge>
 									<%}%>
 								</div>
 							</div>

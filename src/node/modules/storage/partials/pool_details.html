@@ -99,9 +99,9 @@
 								<%}%>
 								</div>
 								<%if (errorCount > 0) {%>
-									<u-badge color="red" class="flex-shrink-0 align-self-start" pill><small><%=_.pluralize('data error', errorCount, true)%></small></u-badge>
+									<u-badge color="red" class="flex-shrink-0 align-self-start" pill><%=_.pluralize('data error', errorCount, true)%></u-badge>
 								<%} else {%>
-									<u-badge color="green" class="flex-shrink-0 align-self-start" pill><small>No known data errors</small></u-badge>
+									<u-badge color="green" class="flex-shrink-0 align-self-start" pill>No known data errors</u-badge>
 								<%}%>
 							</div>
 						</div>
@@ -169,7 +169,7 @@
 										<%const groupColor = stateColor(group.vdev.state)%>
 										<div class="text-center">
 											<div>
-												<u-badge color="<%-groupColor%>" pill><small><%-_.compact([_.omit(SECTION_LABELS, 'data')[group.section], group.name]).join(' · ')%></small></u-badge>
+												<u-badge size="sm" color="<%-groupColor%>" pill><%-_.compact([_.omit(SECTION_LABELS, 'data')[group.section], group.name]).join(' · ')%></u-badge>
 											</div>
 											<div class="d-inline-block">
 												<div class="vdev-bar"></div>

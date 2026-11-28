@@ -24,10 +24,10 @@
 		<%if (!_.isEmpty(stack.ports) || stack.isHostNetwork) {%>
 			<div class="d-flex flex-wrap justify-content-center gap-1 mt-1">
 				<%_.each(stack.ports, (port) => {%>
-					<u-badge class="topology-detail" color="gray" tint="100" tip="<%=`${port.port} (${_.join(port.protocols, ', ')})`%>" pill><small>:<%=port.port%></small></u-badge>
+					<u-badge size="sm" class="topology-detail" color="gray" tint="100" tip="<%=`${port.port} (${_.join(port.protocols, ', ')})`%>" pill>:<%=port.port%></u-badge>
 				<%})%>
 				<%if (stack.isHostNetwork) {%>
-					<u-badge class="topology-detail" color="purple" tint="100" pill><small>Host network</small></u-badge>
+					<u-badge size="sm" class="topology-detail" color="purple" tint="100" pill>Host network</u-badge>
 				<%}%>
 			</div>
 		<%}%>

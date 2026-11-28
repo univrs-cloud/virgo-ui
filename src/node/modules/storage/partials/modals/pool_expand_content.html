@@ -11,7 +11,7 @@
 		<%_.each(existingGroups, (group) => {%>
 			<div class="text-center">
 				<div>
-					<u-badge color="<%-stateColor(group.vdev.state)%>" pill><small><%-group.name%></small></u-badge>
+					<u-badge size="sm" color="<%-stateColor(group.vdev.state)%>" pill><%-group.name%></u-badge>
 				</div>
 				<div class="d-inline-block">
 					<div class="vdev-bar"></div>
@@ -44,7 +44,7 @@
 		<%_.each(newGroups, (group) => {%>
 			<div class="text-center">
 				<div>
-					<u-badge color="green" tint="400" pill outline><small>New <%-expansion.type%></small></u-badge>
+					<u-badge size="sm" color="green" tint="400" pill outline>New <%-expansion.type%></u-badge>
 				</div>
 				<div class="d-inline-block">
 					<div class="vdev-bar"></div>
@@ -67,7 +67,7 @@
 		<%if (!_.isEmpty(unusedDisks)) {%>
 			<div class="text-center">
 				<div>
-					<u-badge color="gray" pill><small>Unused</small></u-badge>
+					<u-badge size="sm" color="gray" pill>Unused</u-badge>
 				</div>
 				<div class="d-inline-block">
 					<div class="vdev-slots">

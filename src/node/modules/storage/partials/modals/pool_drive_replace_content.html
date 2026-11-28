@@ -23,13 +23,13 @@
 				<span class="d-block text-truncate"><%-candidate.label%></span>
 				<small class="d-block fg-4 text-truncate"><%-_.compact([candidate.model, (candidate.serialNumber ? `S/N ${candidate.serialNumber}` : null)]).join(' · ') || candidate.id%></small>
 			</span>
-			<u-badge color="gray" tint="100" class="flex-shrink-0" pill><small><%=prettyBytes(candidate.size, { binary: true })%></small></u-badge>
+			<u-badge size="sm" color="gray" tint="100" class="flex-shrink-0" pill><%=prettyBytes(candidate.size, { binary: true })%></u-badge>
 		</label>
 	<%})%>
 	<div class="vdev-tree d-flex justify-content-center py-5">
 		<div class="text-center">
 			<div>
-				<u-badge color="<%-stateColor(group.state)%>" pill><small><%-group.name%></small></u-badge>
+				<u-badge size="sm" color="<%-stateColor(group.state)%>" pill><%-group.name%></u-badge>
 			</div>
 			<div class="d-inline-block">
 				<div class="vdev-bar"></div>

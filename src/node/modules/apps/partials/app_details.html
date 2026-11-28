@@ -55,8 +55,8 @@
 								<div class="col-6">
 									<small class="fg-4 d-block text-truncate">State</small>
 									<div class="d-flex align-items-center gap-3">
-										<u-badge color="<%=(({ success: 'green', warning: 'yellow' })[app.state] || 'red')%>" pill>
-											<small><%=_.size(_.filter(app.projectContainers, { state: 'running' }))%> / <%=_.size(app.projectContainers)%></small>
+										<u-badge color="<%=(({ success: 'green', warning: 'yellow' })[app.state] || 'red')%>" class="font-tabular-nums" pill>
+											<%=_.size(_.filter(app.projectContainers, { state: 'running' }))%> / <%=_.size(app.projectContainers)%>
 										</u-badge>
 										<span>running</span>
 									</div>

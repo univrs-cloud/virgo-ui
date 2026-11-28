@@ -115,8 +115,8 @@
 		<%if (app.state === 'success') color = 'green'%>
 		<%if (app.state === 'warning') color = 'yellow'%>
 		<%if (_.includes(['danger', undefined], app.state)) color = 'red'%>
-		<u-badge color="<%=color%>" pill>
-			<small><%=_.size(_.filter(app.projectContainers, { state: 'running' }))%> / <%=_.size(app.projectContainers)%></small>
+		<u-badge color="<%=color%>" class="font-tabular-nums" pill>
+			<%=_.size(_.filter(app.projectContainers, { state: 'running' }))%> / <%=_.size(app.projectContainers)%>
 		</u-badge>
 	</td>
 	<td class="text-center px-0">
